@@ -1,0 +1,5 @@
+text,date,time,media
+"New game coming this Friday. Who's ready?",2026-10-05,10:30,preview.mp4
+"Which bonus would you pick — free spins or cashback?",2026-10-05,1:15 PM,image.png
+"Two screenshots from the new release",2026-10-06,18:00,shot1.jpg;shot2.jpg
+"Text only — date left empty so Auto Schedule can place it",,,

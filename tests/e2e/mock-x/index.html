@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Mock X</title>
+    <!--
+      A small stand-in for x.com used by the end-to-end test. It mimics the
+      parts of X's DOM the extension relies on (data-testids, ARIA roles,
+      labelled <select>s, "Will send on" banner, submit label changing to
+      "Schedule", toast). It is NOT a copy of X - it encodes the assumptions in
+      src/content/xSelectors.ts so the whole pipeline can be exercised.
+
+      localStorage flags:
+        mock.mode = normal | brokenSchedule | noScheduleButton | nopaste
+      Results:
+        mock.scheduled / mock.published / mock.drafts (JSON arrays)
+    -->
+    <style>
+      body { font-family: sans-serif; margin: 0; }
+      nav { position: fixed; left: 0; top: 0; width: 200px; padding: 10px; }
+      main { margin-left: 220px; padding: 10px; }
+      [role="dialog"] { position: fixed; top: 40px; left: 260px; width: 560px; background: #fff; border: 1px solid #999; padding: 12px; }
+      .layer2 { top: 80px; left: 300px; background: #eef; }
+      [contenteditable] { min-height: 60px; border: 1px solid #ccc; padding: 4px; }
+      [data-testid="toast"] { position: fixed; bottom: 10px; left: 10px; background: #333; color: #fff; padding: 6px; }
+      button[aria-disabled="true"] { opacity: 0.5; }
+      [role="alertdialog"] { position: fixed; top: 200px; left: 320px; background: #ffd; border: 1px solid #333; padding: 10px; }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="/home">Home</a>
+      <div data-testid="SideNav_AccountSwitcher_Button" role="button">
+        <div data-testid="UserAvatar-Container-mockuser"></div>
+        <span>Mock User</span><br /><span>@mockuser</span>
+      </div>
+    </nav>
+    <main>
+      <h1>Home</h1>
+      <!-- Inline composer on the timeline: must be ignored by the extension. -->
+      <div class="inline">
+        <div data-testid="tweetTextarea_0" role="textbox" contenteditable="true" aria-multiline="true"></div>
+        <button data-testid="tweetButtonInline" aria-disabled="true">Post</button>
+      </div>
+    </main>
+    <script>
+      const mode = localStorage.getItem('mock.mode') || 'normal';
+      const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      const push = (key, v) => { const a = JSON.parse(localStorage.getItem(key) || '[]'); a.push(v); localStorage.setItem(key, JSON.stringify(a)); };
+      const el = (tag, attrs = {}, ...kids) => { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) { if (k === 'text') e.textContent = v; else if (k.startsWith('on')) e.addEventListener(k.slice(2), v); else e.setAttribute(k, v); } kids.forEach((c) => e.append(c)); return e; };
+      const toast = (msg) => { const t = el('div', { 'data-testid': 'toast', role: 'alert', text: msg }); document.body.append(t); setTimeout(() => t.remove(), 4000); };
+      const fmtWhen = (w) => { const d = new Date(w.y, w.m - 1, w.d, w.h, w.min); const h = w.h % 12 || 12; return `${DAYS[d.getDay()]}, ${MONTHS[w.m - 1].slice(0, 3)} ${w.d}, ${w.y} at ${h}:${String(w.min).padStart(2, '0')} ${w.h < 12 ? 'AM' : 'PM'}`; };
+
+      function openComposer() {
+        let schedule = null;
+        let uploading = 0;
+        const attachments = [];
+        const box = el('div', { 'data-testid': 'tweetTextarea_0', role: 'textbox', contenteditable: 'true', 'aria-multiline': 'true' });
+        const banner = el('div', { class: 'banner' });
+        const attach = el('div', { 'data-testid': 'attachments' });
+        const submit = el('button', { 'data-testid': 'tweetButton', 'aria-disabled': 'true', text: 'Post' });
+        const fileInput = el('input', { type: 'file', 'data-testid': 'fileInput', accept: 'image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime', multiple: '', style: 'display:none' });
+        const counter = el('div', { role: 'progressbar', 'aria-valuenow': '0', text: '' }); // like X's char counter
+        const tools = el('div', {}, fileInput);
+        if (mode !== 'noScheduleButton') tools.append(el('button', { 'data-testid': 'scheduleOption', 'aria-label': 'Schedule post', text: '📅', onclick: openScheduler }));
+        const close = el('button', { 'data-testid': 'app-bar-close', 'aria-label': 'Close', text: 'X', onclick: tryClose });
+        const dlg = el('div', { role: 'dialog', 'aria-modal': 'true', id: 'composer' }, close, banner, box, attach, tools, counter, submit);
+        document.body.append(dlg);
+
+        const text = () => box.innerText.trim();
+        const refresh = () => {
+          const ok = (text().length > 0 || attachments.length > 0) && uploading === 0 && text().length <= 280;
+          submit.setAttribute('aria-disabled', ok ? 'false' : 'true');
+          submit.textContent = schedule && mode !== 'brokenSchedule' ? 'Schedule' : 'Post';
+          banner.textContent = schedule && mode !== 'brokenSchedule' ? `Will send on ${fmtWhen(schedule)}` : '';
+          counter.setAttribute('aria-valuenow', String(text().length));
+        };
+        box.addEventListener('input', refresh);
+        box.addEventListener('paste', (e) => {
+          if (mode === 'nopaste') return; // simulate an editor that ignores synthetic paste
+          e.preventDefault();
+          const t = e.clipboardData.getData('text/plain');
+          box.innerHTML = '';
+          t.split('\n').forEach((line) => box.append(el('div', {}, line ? line : el('br'))));
+          refresh();
+        });
+        fileInput.addEventListener('change', () => {
+          for (const f of fileInput.files) {
+            uploading++;
+            refresh();
+            const prog = el('div', { role: 'progressbar', text: 'Uploading' });
+            attach.append(prog);
+            setTimeout(() => {
+              prog.remove();
+              const url = URL.createObjectURL(f);
+              const item = f.type.startsWith('video/') ? el('video', { src: url }) : el('img', { src: url });
+              attach.append(el('div', {}, item, el('button', { 'aria-label': 'Remove media', text: 'x' })));
+              attachments.push({ name: f.name, size: f.size, type: f.type });
+              uploading--;
+              refresh();
+            }, f.type.startsWith('video/') ? 1500 : 600);
+          }
+        });
+        submit.addEventListener('click', () => {
+          if (submit.getAttribute('aria-disabled') === 'true') return;
+          const rec = { text: box.innerText.replace(/\n+$/, ''), media: attachments.map((a) => a.name), at: Date.now() };
+          if (schedule && mode !== 'brokenSchedule') {
+            push('mock.scheduled', { ...rec, when: schedule, label: fmtWhen(schedule) });
+            toast(`Your post will be sent on ${fmtWhen(schedule)}`);
+          } else {
+            push('mock.published', rec);
+            toast('Your post was sent.');
+          }
+          dlg.remove();
+          history.replaceState(null, '', '/home');
+        });
+
+        function tryClose() {
+          if (!text() && !attachments.length) { dlg.remove(); history.replaceState(null, '', '/home'); return; }
+          const sheet = el('div', { role: 'alertdialog' },
+            el('div', { text: 'Save post?' }),
+            el('button', { 'data-testid': 'confirmationSheetConfirm', text: 'Save', onclick: () => { push('mock.drafts', { text: text() }); sheet.remove(); dlg.remove(); history.replaceState(null, '', '/home'); } }),
+            el('button', { 'data-testid': 'confirmationSheetCancel', text: 'Discard', onclick: () => { sheet.remove(); dlg.remove(); history.replaceState(null, '', '/home'); } }));
+          document.body.append(sheet);
+        }
+
+        function openScheduler() {
+          const now = new Date(Date.now() + 3600e3);
+          const w = schedule ? { ...schedule } : { y: now.getFullYear(), m: now.getMonth() + 1, d: now.getDate(), h: now.getHours(), min: now.getMinutes() };
+          const mk = (id, label, opts, cur) => {
+            const s = el('select', { id, 'aria-labelledby': id + '_LABEL' });
+            opts.forEach(([v, t]) => s.append(el('option', { value: String(v), text: t })));
+            s.value = String(cur);
+            return [el('label', { for: id, id: id + '_LABEL' }, el('span', { text: label })), s];
+          };
+          const [lm, sm] = mk('SELECTOR_1', 'Month', MONTHS.map((n, i) => [i + 1, n]), w.m);
+          const [ld, sd] = mk('SELECTOR_2', 'Day', Array.from({ length: 31 }, (_, i) => [i + 1, String(i + 1)]), w.d);
+          const [ly, sy] = mk('SELECTOR_3', 'Year', [2026, 2027, 2028].map((y) => [y, String(y)]), w.y);
+          const [lh, sh] = mk('SELECTOR_4', 'Hour', Array.from({ length: 12 }, (_, i) => [i + 1, String(i + 1)]), w.h % 12 || 12);
+          const [lmi, smi] = mk('SELECTOR_5', 'Minute', Array.from({ length: 60 }, (_, i) => [i, String(i).padStart(2, '0')]), w.min);
+          const [la, sa] = mk('SELECTOR_6', 'AM/PM', [['AM', 'AM'], ['PM', 'PM']], w.h < 12 ? 'AM' : 'PM');
+          const preview = el('div');
+          const err = el('div');
+          const confirm = el('button', { 'data-testid': 'scheduledConfirmationPrimaryAction', text: 'Confirm' });
+          const read = () => ({ y: +sy.value, m: +sm.value, d: +sd.value, h: (+sh.value % 12) + (sa.value === 'PM' ? 12 : 0), min: +smi.value });
+          const upd = () => {
+            const r = read();
+            const past = new Date(r.y, r.m - 1, r.d, r.h, r.min).getTime() < Date.now();
+            preview.textContent = `Will send on ${fmtWhen(r)}`;
+            err.textContent = past ? "You can't schedule a post to send in the past." : '';
+            confirm.setAttribute('aria-disabled', past ? 'true' : 'false');
+          };
+          [sm, sd, sy, sh, smi, sa].forEach((s) => s.addEventListener('change', upd));
+          upd();
+          const sdlg = el('div', { role: 'dialog', 'aria-modal': 'true', class: 'layer2' },
+            el('button', { 'aria-label': 'Close', text: '<', onclick: () => sdlg.remove() }),
+            confirm, preview, lm, sm, ld, sd, ly, sy, lh, sh, lmi, smi, la, sa, err,
+            el('div', { text: 'Central European Summer Time' }));
+          confirm.addEventListener('click', () => {
+            if (confirm.getAttribute('aria-disabled') === 'true') return;
+            schedule = read();
+            sdlg.remove();
+            refresh();
+          });
+          document.body.append(sdlg);
+        }
+      }
+
+      function openScheduledList() {
+        const items = JSON.parse(localStorage.getItem('mock.scheduled') || '[]');
+        const list = el('div', { style: 'max-height:200px; overflow-y:auto' });
+        if (!items.length) list.append(el('div', { text: "You don't have any scheduled posts" }));
+        items.forEach((it) => list.append(el('div', { style: 'height:90px' }, el('div', { text: `Will send on ${it.label}` }), el('div', { text: it.text }))));
+        document.body.append(el('div', { role: 'dialog', 'aria-modal': 'true' }, el('h2', { text: 'Unsent posts' }), list));
+      }
+
+      // Simulate SPA render delay.
+      setTimeout(() => {
+        const p = location.pathname;
+        if (p === '/compose/post/unsent/scheduled') openScheduledList();
+        else if (p.startsWith('/compose/post')) openComposer();
+      }, 400);
+    </script>
+  </body>
+</html>

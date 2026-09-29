@@ -407,7 +407,7 @@ input[type='checkbox'] {
   white-space: nowrap;
 }
 .col-time {
-  width: 112px;
+  width: 132px;
 }
 .col-media {
   width: 170px;
@@ -443,7 +443,7 @@ input[type='checkbox'] {
   width: 118px;
 }
 .cell-input[type='time'] {
-  width: 100px;
+  width: 122px;
 }
 .weekday {
   color: var(--muted);

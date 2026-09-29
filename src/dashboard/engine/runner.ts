@@ -111,7 +111,7 @@ export class BulkRunner {
   }
 
   stop() {
-    if (!this.isBusy()) return;
+    if (this.state.status !== 'running' && this.state.status !== 'paused') return;
     this.stopRequested = true;
     this.set({ status: 'stopping' });
     this.deps.log('warn', 'Stop requested — no further posts will be started.');
@@ -308,6 +308,8 @@ export class BulkRunner {
       const lvl: LogLevel = found === checked ? 'success' : 'warn';
       log(lvl, `Verify in X: found ${found}/${checked} of this batch's scheduled posts in X's scheduled list (X lists ~${r.itemCount} scheduled posts in total).`);
       if (found < checked) log('warn', 'Posts marked "Not found" may be truncated or shown differently by X — check them manually in X before re-scheduling.');
+      const st = this.deps.getSettings();
+      if (st.closeAutomationWindow && !st.debug) await this.xtab.close();
     } catch (e) {
       log('error', `Verify in X failed: ${(e as Error).message}`);
     } finally {

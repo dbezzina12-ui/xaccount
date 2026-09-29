@@ -4,13 +4,13 @@ import { clockTime } from '../../utils/time';
 
 export function ActivityLog() {
   const { state, dispatch } = useStore();
-  const endRef = useRef<HTMLDivElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
+  // Follow new lines unless the user has scrolled up to read something.
+  const stick = useRef(true);
 
   useEffect(() => {
     const box = boxRef.current;
-    // Auto-scroll only if the user is already near the bottom.
-    if (box && box.scrollHeight - box.scrollTop - box.clientHeight < 80) endRef.current?.scrollIntoView({ block: 'end' });
+    if (box && stick.current) box.scrollTop = box.scrollHeight;
   }, [state.logs.length]);
 
   const copy = () => {
@@ -31,7 +31,14 @@ export function ActivityLog() {
           Clear
         </button>
       </div>
-      <div className="log" ref={boxRef}>
+      <div
+        className="log"
+        ref={boxRef}
+        onScroll={(e) => {
+          const b = e.currentTarget;
+          stick.current = b.scrollHeight - b.scrollTop - b.clientHeight < 40;
+        }}
+      >
         {!state.logs.length && <div className="muted small">Nothing yet.</div>}
         {state.logs.map((l) => (
           <div key={l.id} className={`log-line log-${l.level}`}>
@@ -39,7 +46,6 @@ export function ActivityLog() {
             <span className="log-msg">{l.message}</span>
           </div>
         ))}
-        <div ref={endRef} />
       </div>
     </section>
   );

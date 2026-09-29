@@ -136,7 +136,8 @@ export function labelOf(el: HTMLElement): string {
   }
   const wrapping = el.closest('label');
   if (wrapping) parts.push(wrapping.textContent ?? '');
-  return normalizeSpaces(parts.join(' '));
+  // The same label is often referenced twice (aria-labelledby + label[for]).
+  return Array.from(new Set(parts.map(normalizeSpaces).filter(Boolean))).join(' ');
 }
 
 /** Build a File from base64 chunks. */

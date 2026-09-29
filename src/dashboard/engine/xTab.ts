@@ -56,7 +56,17 @@ export class XTabController {
     this.tabId = tab.id;
     this.createdWindow = true;
     await this.waitForComplete(this.tabId, 45_000, true);
-    await this.waitForContent();
+    try {
+      await this.waitForContent(10_000);
+    } catch (e) {
+      if (e instanceof TabGoneError) throw e;
+      // First load of a fresh window occasionally fails (network hiccup, X
+      // interstitial). One reload is cheap and usually fixes it.
+      const done = this.waitForComplete(this.tabId, 45_000);
+      await chrome.tabs.reload(this.tabId);
+      await done;
+      await this.waitForContent();
+    }
   }
 
   async close(): Promise<void> {

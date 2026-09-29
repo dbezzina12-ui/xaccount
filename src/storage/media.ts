@@ -56,19 +56,24 @@ export function deleteMedia(id: string): Promise<undefined> {
   return tx('readwrite', (s) => s.delete(id) as IDBRequest<undefined>);
 }
 
-export function listMediaIds(): Promise<IDBValidKey[]> {
-  return tx('readonly', (s) => s.getAllKeys());
+export function listMedia(): Promise<StoredMedia[]> {
+  return tx('readonly', (s) => s.getAll() as IDBRequest<StoredMedia[]>);
 }
 
-/** Delete blobs no longer referenced by any post in any batch. */
-export async function collectGarbage(referenced: Set<string>): Promise<number> {
-  const ids = await listMediaIds();
+/**
+ * Delete blobs no longer referenced by any post in any batch. Files younger
+ * than `minAgeMs` are kept: they may belong to an editor that hasn't been
+ * saved yet.
+ */
+export async function collectGarbage(referenced: Set<string>, minAgeMs = 10 * 60_000): Promise<number> {
+  const all = await listMedia();
+  const cutoff = Date.now() - minAgeMs;
   let removed = 0;
-  for (const id of ids) {
-    if (!referenced.has(String(id))) {
-      await deleteMedia(String(id));
-      removed++;
-    }
+  for (const m of all) {
+    if (referenced.has(m.id)) continue;
+    if (new Date(m.createdAt).getTime() > cutoff) continue;
+    await deleteMedia(m.id);
+    removed++;
   }
   return removed;
 }
