@@ -1,0 +1,29 @@
+{
+  "name": "x-bulk-scheduler",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Chrome MV3 extension that bulk-schedules posts through X's native scheduling UI.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run typecheck && vite build && vite build -c vite.content.config.ts",
+    "build:fast": "vite build && vite build -c vite.content.config.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "npm run build:fast && node tests/e2e/run-e2e.mjs"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.3.4",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.7.0",
+    "playwright-core": "~1.56.0",
+    "typescript": "^5.9.3",
+    "vite": "^5.4.21",
+    "vitest": "^2.1.9"
+  }
+}
