@@ -18,18 +18,16 @@ Chrome or shut down the computer, and X publishes each post at its time.
 
 ## Install
 
-Requirements: Node.js 18+ and Chrome 116+.
-
-```bash
-npm install
-npm run build          # type-checks, then builds into dist/
-```
+A ready-to-load build is included in the **`dist/`** folder, so you don't need to
+build anything to use it. Requires Chrome 116+.
 
 ### Load the unpacked extension
 
 1. Open `chrome://extensions`.
 2. Turn on **Developer mode** (top-right).
-3. Click **Load unpacked** and select the **`dist/`** folder.
+3. Click **Load unpacked** and select the **`dist/`** folder, the one that directly
+   contains `manifest.json`. Don't select the repository's top-level folder: Chrome
+   will say "Manifest file is missing".
 4. Pin the extension. Clicking its icon opens the dashboard in its own tab.
    (It also opens automatically the first time you install it.)
 
@@ -227,7 +225,11 @@ pause between posts, auto-close of the X window, dry run and debug.
 
 ## Development
 
+Requirements: Node.js 18+. After changing code, rebuild `dist/` and commit it:
+
 ```bash
+npm install
+npm run build       # type-checks, then builds into dist/
 npm run dev         # dashboard UI preview in a normal browser (no X automation)
 npm run typecheck
 npm test            # unit tests: auto-scheduler, importers, timezones, char count, safety-gate text matching
