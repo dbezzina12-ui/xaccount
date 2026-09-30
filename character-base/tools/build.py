@@ -416,6 +416,7 @@ def cmd_texture(args):
     if C.sha256_file(os.path.join(sdir, src["files"]["blend"])) != src["freezeRecord"]["blendSha256"]:
         raise SystemExit("source .blend changed since it was frozen; refusing to texture it")
     bpy.ops.wm.open_mainfile(filepath=os.path.join(sdir, src["files"]["blend"]))
+    bpy.context.preferences.filepaths.save_version = 0
     # verify geometry + UVs are bit-identical to the frozen record
     for prt in src["geometry"]["parts"]:
         me = bpy.data.objects[prt["name"]].data
@@ -441,8 +442,12 @@ def cmd_texture(args):
     glb = os.path.join(ddir, f"{args.new_id}.glb")
     BB.export_glb(glb, objs, animations=True)
     shutil.copyfile(os.path.join(sdir, src["files"]["testProps"]), os.path.join(ddir, "test_props.glb"))
-    img.filepath = "//textures/" + tex_name
+    # save under the new name first, THEN point the image at "//textures/..." (relative to the new .blend) and
+    # save again; setting it while the source .blend is still open would resolve it next to the source
+    img.filepath = os.path.abspath(tex_dst)
     bpy.ops.wm.save_as_mainfile(filepath=os.path.join(ddir, f"{args.new_id}.blend"), compress=True)
+    img.filepath = "//textures/" + tex_name
+    bpy.ops.wm.save_mainfile(compress=True)
     info = C.inspect_glb(glb)
     cfg = json.loads(json.dumps(src))
     cfg.update({"characterId": args.new_id, "displayName": args.name or args.new_id, "status": "textured",

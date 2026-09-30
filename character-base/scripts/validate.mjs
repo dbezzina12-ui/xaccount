@@ -88,7 +88,11 @@ async function screenshots(page, id, material) {
   return files;
 }
 
-const report = { generated: new Date().toISOString(), characters: {} };
+// validating a subset (ids on the command line) updates those entries in the existing report
+const reportPath = path.join(OUT, 'report.json');
+const report = process.argv.slice(2).length && fs.existsSync(reportPath)
+  ? Object.assign({ generated: new Date().toISOString(), characters: {} }, JSON.parse(fs.readFileSync(reportPath, 'utf8')))
+  : { generated: new Date().toISOString(), characters: {} };
 for (const id of ids) {
   const cfgPath = `/characters/${id}/${id}.character.json`;
   const q = `glb=${encodeURIComponent(`/characters/${id}/${id}.glb`)}&config=${encodeURIComponent(cfgPath)}&props=${encodeURIComponent(`/characters/${id}/test_props.glb`)}&hideui=1`;
@@ -123,6 +127,7 @@ for (const id of ids) {
   const failed = res.checks.filter((c) => !c.ok).map((c) => c.id);
   console.log(`${id}: ${res.checks.length - failed.length}/${res.checks.length} checks passed${failed.length ? ' FAILED: ' + failed.join(', ') : ''}; round-trip ${rt.ok ? 'ok' : 'FAILED ' + rt.checks.filter((c) => !c.ok).map((c) => c.id)}`);
 }
-fs.writeFileSync(path.join(OUT, 'report.json'), JSON.stringify(report, null, 2));
+report.generated = new Date().toISOString();
+fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
 await browser.close();
 server.close();

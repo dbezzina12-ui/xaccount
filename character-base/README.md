@@ -50,6 +50,7 @@ npm install                                 # three + playwright-core (Chromium 
 npm run viewer                              # http://localhost:8765/viewer/
 npm run refs                                # projection references for all characters
 npm run validate                            # fresh-instance validation + validation/REPORT.md
+node scripts/validate.mjs woman_blank       # re-validate one character (merged into validation/report.json)
 ```
 
 With a regular Blender install instead of the pip module:

@@ -1,6 +1,6 @@
 # Validation report
 
-Generated 2026-09-30T18:49:25.870Z by `scripts/validate.mjs` (each GLB opened in a fresh browser context with only the GLB + its JSON).
+Generated 2026-09-30T19:02:13.009Z by `scripts/validate.mjs` (each GLB opened in a fresh browser context with only the GLB + its JSON).
 
 ## master_blank — PASS (29/29 checks)
 

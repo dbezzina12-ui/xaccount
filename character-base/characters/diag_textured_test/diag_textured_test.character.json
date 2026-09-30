@@ -4,7 +4,7 @@
   "displayName": "Stocky variant + diagnostic texture",
   "status": "textured",
   "frozen": false,
-  "created": "2026-09-30T18:49:25+00:00",
+  "created": "2026-09-30T19:00:22+00:00",
   "template": {
     "id": "gamboligy.humanoid_base",
     "version": "1.0.0",
@@ -1605,20 +1605,6 @@
     {
       "date": "2026-09-30T17:23:07+00:00",
       "clipSetVersion": 4,
-      "clips": 22,
-      "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
-      "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"
-    },
-    {
-      "date": "2026-09-30T18:18:20+00:00",
-      "clipSetVersion": 5,
-      "clips": 22,
-      "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
-      "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"
-    },
-    {
-      "date": "2026-09-30T18:34:41+00:00",
-      "clipSetVersion": 5,
       "clips": 22,
       "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
       "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"
