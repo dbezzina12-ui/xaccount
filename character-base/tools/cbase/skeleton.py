@@ -254,7 +254,7 @@ def build_skeleton(p):
     L["thumb_tip_L"] = pos
 
     # ---- left leg ----
-    hip_x = 0.089 * (0.6 + 0.4 * tw)
+    hip_x = 0.089 * (0.6 + 0.4 * tw) * (1.0 + 0.7 * (p.get("hipWidth", 1.0) - 1.0))
     hip = np.array([hip_x, 0.000, hip_z])
     knee = np.array([hip_x + 0.006, -0.014, knee_z])
     ankle = np.array([hip_x + 0.014, 0.018, ankle_z])

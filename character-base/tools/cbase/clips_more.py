@@ -9,7 +9,8 @@ play the clip with no extra alignment.
 """
 import numpy as np
 
-from .clips import FPS, apply_grip, ease, fit_grip, hand_for_socket
+from .clips import (FPS, apply_grip, arm_pose, ease, fit_grip, hand_for_socket, lerp_keys, rest_arm, rest_pole,
+                    socket_matrix, thumb_rot)
 from .library import SIDES, hand_frame, raise_arm, rotate_world
 from .poses import (Pose, curl_fingers, matrix_from_quat, quat_from_matrix, rx, ry, rz, slerp,
                     swing_twist_y, two_bone_ik)
@@ -216,7 +217,7 @@ def clip_float(rig):
     for f in range(n + 1):
         t = 2 * np.pi * f / n
         p = Pose()
-        _float_body(rig, p, 0.26 * s + 0.028 * s * np.sin(t), t)
+        _float_body(rig, p, 0.30 * s + 0.028 * s * np.sin(t), t)
         p.rot["spine_02"] = rx(1.5 * np.sin(t)) @ rz(1.0 * np.sin(t + 1))
         p.rot["head"] = rx(-2 * np.sin(t + 0.5))
         for sd, sx in SIDES:
@@ -225,7 +226,7 @@ def clip_float(rig):
             p.rot[f"hand_{sd}"] = rx(-10 * np.sin(t + 1.6))
             curl_fingers(p, sd, 0.15 + 0.05 * np.sin(t + 2.0), thumb=0.15)
         frames.append(p)
-    return frames, {"loop": True, "inPlace": True, "pelvisLift_m": round(0.26 * s, 3)}
+    return frames, {"loop": True, "inPlace": True, "pelvisLift_m": round(0.30 * s, 3)}
 
 
 def _monk_targets(rig, p):
@@ -400,8 +401,10 @@ def torso_pose(rig, rots, stance=0.035):
     return p
 
 
-def _weapon_clip(rig, socks, weapon, keys, n, poles, stance=0.035, torso=None, fingers=None, meta=None):
-    """keys: [(frame, P 4x4)]; torso: f -> dict of extra bone rotations."""
+def _weapon_clip(rig, socks, weapon, keys, n, poles, stance=0.035, torso=None, fingers=None, meta=None, body=None):
+    """keys: [(frame, P 4x4)]; torso: f -> dict of extra bone rotations.
+    With `body` (collide.BodyProxy) the prop track is pushed out of the character's own skin."""
+    from .collide import resolve_track, weapon_samples
     p0, P0 = solve_weapon(rig, torso_pose(rig, torso(0) if torso else {}, stance), keys[0][1], weapon, socks,
                           poles, return_P=True)
     gR = fit_grip(rig, p0, "R", P0[:3, 3], P0[:3, 1], weapon["grip_radius"])
@@ -409,26 +412,42 @@ def _weapon_clip(rig, socks, weapon, keys, n, poles, stance=0.035, torso=None, f
     if weapon["support"]:
         M = P0 @ weapon["markers"]["grip_L"]
         gL = fit_grip(rig, p0, "L", M[:3, 3], M[:3, 1], weapon["grip_radius"])
-    frames = []
-    for f in range(n + 1):
+
+    def pose_at(f, P):
         p = torso_pose(rig, torso(f) if torso else {}, stance)
-        P = lerp_frames(keys, f)
-        solve_weapon(rig, p, P, weapon, socks, poles)
+        p, P = solve_weapon(rig, p, P, weapon, socks, poles, return_P=True)
         apply_grip(p, "R", gR)
         if gL:
             apply_grip(p, "L", gL)
         if fingers:
             fingers(p, f)
-        frames.append(p)
+        return p, P
+
+    track = [pose_at(f, lerp_frames(keys, f))[1] for f in range(n + 1)]
+    clearance = None
+    if body is not None:
+        held = ["Hand_R", "Forearm_R"] + (["Hand_L", "Forearm_L"] if weapon["support"] else [])
+        sides = ("R", "L") if weapon["support"] else ("R",)
+        pts, rad = weapon_samples(weapon)
+        for _ in range(2):      # arms follow the corrected prop, so re-pose the body and resolve again
+            bodies = [body.posed(pose_at(f, P)[0], held, held_sides=sides) for f, P in enumerate(track)]
+            track, worst, corr = resolve_track(track, bodies, pts, rad, loop=bool((meta or {}).get("loop")))
+            track = [pose_at(f, P)[1] for f, P in enumerate(track)]
+            if not np.abs(corr).max() > 0:
+                break
+        clearance = round(max(worst, 0.0), 4)
+    frames = [pose_at(f, P)[0] for f, P in enumerate(track)]
     m = {"loop": False, "prop": weapon["name"], "attach": "socket_hand_R_prop",
          "support": {"hand": "L", "marker": "grip_L"} if weapon["support"] else None,
          "grip": {"R": {k: (v if not isinstance(v, tuple) else list(v)) for k, v in gR.items()}}}
+    if clearance is not None:
+        m["propBodyPenetration_m"] = clearance     # deepest prop sample inside skin + collide.CLEARANCE (0 = clear)
     if meta:
         m.update(meta)
     return frames, m
 
 
-def weapon_clips(rig, socks, fixed_markers=None):
+def weapon_clips(rig, socks, fixed_markers=None, body=None):
     """fixed_markers: {prop: {marker: 4x4}} from props/weapons.json. When given, the support-hand
     markers are NOT refitted, so every character uses exactly the markers baked into weapons.glb."""
     sk = rig.sk
@@ -440,6 +459,9 @@ def weapon_clips(rig, socks, fixed_markers=None):
         if fixed_markers and k in fixed_markers:
             v["markers"] = {mk: np.asarray(M, float) for mk, M in fixed_markers[k].items()}
     fit = (lambda *a, **kw: None) if fixed_markers else fit_support_marker
+
+    def _weapon_clip_b(*a, **kw):
+        return _weapon_clip(*a, body=body, **kw)
     shR = L["shoulder_R"]
     hipz = L["hip_z"]
     fwd = np.array([0, -1.0, 0])
@@ -456,17 +478,20 @@ def weapon_clips(rig, socks, fixed_markers=None):
         return lambda f: {"spine_02": rx(amp * 1.2 * np.sin(2 * np.pi * f / 60)), "chest": rx(amp * np.sin(2 * np.pi * f / 60 + 0.5))}
     n = 60
     keys = [(0, guard), (30, mat(guard[:3, :3], guard[:3, 3] + np.array([0, 0, 0.012 * s]))), (60, guard)]
-    out["sword_2h_idle"] = _weapon_clip(rig, socks, sw, keys, n, poles2, torso=breathe(), meta={"loop": True})
-    wind = blade_frame(np.array([-0.16 * s, -0.12 * s, hipz + 0.52 * s]), [0.35, 0.55, 0.76], np.array([0.6, -1.0, 0.2]))
-    strike = blade_frame(np.array([0.10 * s, -0.40 * s, hipz + 0.06 * s]), [0.55, -0.60, -0.58], np.array([0.4, -0.2, 1.0]))
-    follow = blade_frame(np.array([0.16 * s, -0.30 * s, hipz + 0.00 * s]), [0.75, -0.25, -0.62], np.array([0.4, -0.2, 1.0]))
-    keys = [(0, guard), (12, wind), (18, wind), (24, strike), (30, follow), (44, follow), (60, guard)]
+    out["sword_2h_idle"] = _weapon_clip_b(rig, socks, sw, keys, n, poles2, torso=breathe(), meta={"loop": True})
+    # wind-up beside the right side of the head with the blade back over the right shoulder (never across
+    # the head), a fast diagonal cut from high right to low left in front of the body, follow-through
+    wind = blade_frame(np.array([-0.24 * s, -0.16 * s, hipz + 0.46 * s]), [-0.30, 0.50, 0.80], np.array([-0.6, -1.0, 0.1]))
+    swing = blade_frame(np.array([-0.14 * s, -0.40 * s, hipz + 0.40 * s]), [-0.35, -0.75, 0.55], np.array([-0.2, -0.3, -1.0]))
+    strike = blade_frame(np.array([0.08 * s, -0.42 * s, hipz + 0.08 * s]), [0.55, -0.62, -0.55], np.array([0.4, -0.2, 1.0]))
+    follow = blade_frame(np.array([0.16 * s, -0.32 * s, hipz + 0.00 * s]), [0.75, -0.25, -0.62], np.array([0.4, -0.2, 1.0]))
+    keys = [(0, guard), (12, wind), (18, wind), (21, swing), (24, strike), (30, follow), (44, follow), (60, guard)]
 
     def slash_torso(f):
         yaw = float(lerp_vals([(0, 0), (12, -28), (18, -30), (24, 22), (30, 30), (44, 26), (60, 0)], f))
         return {"spine_01": ry(0.3 * yaw), "spine_02": ry(0.35 * yaw) @ rx(4), "chest": ry(0.35 * yaw),
                 "head": ry(-0.5 * yaw)}
-    out["sword_2h_slash"] = _weapon_clip(rig, socks, sw, keys, 60, poles2, torso=slash_torso,
+    out["sword_2h_slash"] = _weapon_clip_b(rig, socks, sw, keys, 60, poles2, torso=slash_torso,
                                          meta={"markers": {"windup": 12, "impact": 24, "recover": 44, "end": 60}})
 
     # ---------------- staff ----------------
@@ -474,7 +499,7 @@ def weapon_clips(rig, socks, fixed_markers=None):
     sguard = blade_frame(np.array([-0.12 * s, -0.28 * s, hipz + 0.10 * s]), [0.62, -0.40, 0.68], np.array([0.2, -1.0, 0.1]))
     fit(rig, st, sguard, socks, poles2, base=torso_pose(rig, {}))
     keys = [(0, sguard), (30, mat(sguard[:3, :3], sguard[:3, 3] + np.array([0, 0, 0.012 * s]))), (60, sguard)]
-    out["staff_idle"] = _weapon_clip(rig, socks, st, keys, 60, poles2, torso=breathe(), meta={"loop": True})
+    out["staff_idle"] = _weapon_clip_b(rig, socks, st, keys, 60, poles2, torso=breathe(), meta={"loop": True})
     back = blade_frame(np.array([-0.16 * s, -0.10 * s, hipz + 0.14 * s]), [0.55, -0.55, 0.62], np.array([0.2, -1.0, 0.1]))
     thrust = blade_frame(np.array([-0.08 * s, -0.30 * s, hipz + 0.24 * s]), [0.40, -0.72, 0.46], np.array([0.2, -1.0, 0.3]))
     keys = [(0, sguard), (10, back), (17, thrust), (26, thrust), (44, sguard)]
@@ -483,7 +508,7 @@ def weapon_clips(rig, socks, fixed_markers=None):
         yaw = float(lerp_vals([(0, 0), (10, -15), (17, 14), (26, 12), (44, 0)], f))
         lean = float(lerp_vals([(0, 0), (10, -2), (17, 7), (26, 6), (44, 0)], f))
         return {"spine_01": ry(0.35 * yaw) @ rx(lean * 0.5), "spine_02": ry(0.35 * yaw) @ rx(lean), "chest": ry(0.3 * yaw)}
-    out["staff_strike"] = _weapon_clip(rig, socks, st, keys, 44, poles2, torso=staff_torso,
+    out["staff_strike"] = _weapon_clip_b(rig, socks, st, keys, 44, poles2, torso=staff_torso,
                                        meta={"markers": {"windup": 10, "impact": 17, "end": 44}})
 
     # ---------------- pistol (one-handed aim) + recoil ----------------
@@ -509,29 +534,41 @@ def weapon_clips(rig, socks, fixed_markers=None):
         p.rot["forearm_L"] = rx(18)
         curl_fingers(p, "L", 0.25, thumb=0.2)
     keys = [(0, Paim), (30, mat(Paim[:3, :3], Paim[:3, 3] + np.array([0, 0, 0.004 * s]))), (60, Paim)]
-    out["pistol_aim"] = _weapon_clip(rig, socks, pi, keys, 60, poleR1, torso=pistol_idle_torso,
+    out["pistol_aim"] = _weapon_clip_b(rig, socks, pi, keys, 60, poleR1, torso=pistol_idle_torso,
                                      fingers=pistol_fingers(lambda f: 0.0), meta={"loop": True})
 
-    def recoil_keys(Pa, shots, kick_back, kick_deg, n):
-        """Impulse per shot: muzzle climbs and the gun kicks back, then recovers."""
+    def impulse(f, shots, decay):
+        """Recoil impulse: snaps to full within ~1 frame of each shot, then recovers exponentially."""
+        r = 0.0
+        for sf in shots:
+            if f >= sf:
+                t = f - sf
+                r += min(t / 1.2, 1.0) * np.exp(-max(t - 1.2, 0) / decay)
+        return float(r)
+
+    def recoil_keys(Pa, shots, kick_back, kick_deg, n, decay, rise=0.35):
+        """Per shot the gun kicks straight back along the barrel and the muzzle climbs about the grip."""
         b = Pa[:3, :3] @ np.asarray(pi["barrel"])
         lat = _n(np.cross(b, up))
         ks = []
         for f in range(n + 1):
-            r = 0.0
-            for sf in shots:
-                if f >= sf:
-                    t = (f - sf)
-                    r += (min(t / 1.5, 1.0)) * np.exp(-max(t - 1.5, 0) / 3.2)
-            M = mat(rot_axis(lat, np.radians(kick_deg * r)) @ Pa[:3, :3], Pa[:3, 3] - b * kick_back * r + up * 0.25 * kick_back * r)
+            r = impulse(f, shots, decay)
+            M = mat(rot_axis(lat, np.radians(kick_deg * r)) @ Pa[:3, :3],
+                    Pa[:3, 3] - b * kick_back * r + up * rise * kick_back * r)
             ks.append((f, M))
         return ks
     shots = [8]
-    rk = recoil_keys(Paim, shots, 0.035 * s, 11.0, 36)
+    rk = recoil_keys(Paim, shots, 0.075 * s, 30.0, 44, decay=4.5)
+
+    def pistol_fire_torso(f):
+        k = impulse(f, shots, 5.0)
+        return {**pistol_idle_torso(f), "spine_02": ry(-10) @ rx(-4.0 * k), "chest": ry(-8) @ rx(-7.0 * k),
+                "head": ry(10) @ rz(-4) @ rx(-6.0 * k)}
     trig = lambda f: 1.0 if any(sf - 2 <= f <= sf + 2 for sf in shots) else 0.0  # noqa: E731
-    out["pistol_fire"] = _weapon_clip(rig, socks, pi, rk, 36, poleR1, torso=lambda f: {**pistol_idle_torso(f), "chest": ry(-8) @ rx(-4 * float(np.exp(-abs(f - 9) / 4.0)))},
-                                      fingers=pistol_fingers(trig),
-                                      meta={"markers": {"shot": shots, "end": 36}, "muzzleMarker": "muzzle"})
+    out["pistol_fire"] = _weapon_clip_b(rig, socks, pi, rk, 44, poleR1, torso=pistol_fire_torso,
+                                        fingers=pistol_fingers(trig),
+                                        meta={"markers": {"shot": shots, "end": 44}, "muzzleMarker": "muzzle",
+                                              "recoil": {"muzzleClimb_deg": 30.0, "kickBack_m": round(0.075 * s, 3)}})
 
     # ---------------- rifle (shouldered) + burst ----------------
     rf = specs["Rifle"]
@@ -560,15 +597,20 @@ def weapon_clips(rig, socks, fixed_markers=None):
             p.rot["index_03_R"] = rx(20 + 15 * trigger(f))
         return fn
     keys = [(0, Paim_r), (30, mat(Paim_r[:3, :3], Paim_r[:3, 3] + np.array([0, 0, 0.003 * s]))), (60, Paim_r)]
-    out["rifle_aim"] = _weapon_clip(rig, socks, rf, keys, 60, poles_r, torso=rifle_torso,
+    out["rifle_aim"] = _weapon_clip_b(rig, socks, rf, keys, 60, poles_r, torso=rifle_torso,
                                     fingers=rifle_fingers(rifle_trigger), meta={"loop": True})
-    shots = [6, 12, 18]
-    rk = recoil_keys(Paim_r, shots, 0.018 * s, 3.5, 40)
+    shots = [6, 11, 16]
+    rk = recoil_keys(Paim_r, shots, 0.045 * s, 9.0, 44, decay=3.5, rise=0.2)
+
+    def rifle_fire_torso(f):
+        k = impulse(f, shots, 4.0)          # the shoulder rides the recoil: torso rocks back per shot
+        return {**rifle_torso(f), "spine_01": ry(-9) @ rx(-2.0 * k), "spine_02": ry(-13) @ rx(2 - 5.0 * k),
+                "chest": ry(-13) @ rx(-3.0 * k)}
     trig = lambda f: 1.0 if any(sf - 1 <= f <= sf + 1 for sf in shots) else 0.0  # noqa: E731
-    out["rifle_fire"] = _weapon_clip(rig, socks, rf, rk, 40, poles_r,
-                                     torso=lambda f: {**rifle_torso(f), "spine_02": ry(-6) @ rx(2 - 2.5 * float(sum(np.exp(-abs(f - sf - 1) / 3.0) for sf in shots)))},
-                                     fingers=rifle_fingers(trig),
-                                     meta={"markers": {"shots": shots, "end": 40}, "muzzleMarker": "muzzle"})
+    out["rifle_fire"] = _weapon_clip_b(rig, socks, rf, rk, 44, poles_r, torso=rifle_fire_torso,
+                                       fingers=rifle_fingers(trig),
+                                       meta={"markers": {"shots": shots, "end": 44}, "muzzleMarker": "muzzle",
+                                             "recoil": {"muzzleClimbPerShot_deg": 9.0, "kickBack_m": round(0.045 * s, 3)}})
     return out, specs
 
 
@@ -627,7 +669,128 @@ def clip_cheer(rig):
     return frames, {"loop": False, "markers": {"armsUp": 10, "end": n}}
 
 
-def more_clips(rig, socks, fixed_markers=None):
+# ============================================================ hand-held detonator ====
+def _thumb_tip_local(rig, pose, socks, side="R"):
+    """Thumb pad (distal tail + pad) in the hand's prop-socket frame."""
+    sk = rig.sk
+    u = sk[f"hand_{side}"].length / 0.098
+    W = rig.fk(pose)
+    B = W[f"thumb_03_{side}"]
+    tip = B[:3, 3] + B[:3, 1] * (sk[f"thumb_03_{side}"].length + 0.0045 * u)
+    S = W[f"hand_{side}"] @ rig.rest_inv[f"hand_{side}"] @ socket_matrix(socks[f"socket_hand_{side}_prop"])
+    return (np.linalg.inv(S) @ np.append(tip, 1.0))[:3]
+
+
+def fit_thumb(rig, base, socks, target, side="R"):
+    """Thumb (az, ax, curl) whose pad lands closest to `target` (prop-socket frame): coarse grid + refine."""
+    def cost(g):
+        p = base.copy()
+        for bn, R in thumb_rot(g).items():
+            p.rot[f"{bn}_{side}"] = R
+        return float(np.linalg.norm(_thumb_tip_local(rig, p, socks, side) - target))
+    best = min(((az, ax, c) for az in range(-30, 31, 10) for ax in range(-70, 21, 10) for c in np.linspace(0, 1, 6)),
+               key=cost)
+    step = np.array([5.0, 5.0, 0.1])
+    for _ in range(5):
+        cands = [tuple(np.array(best) + step * np.array(d)) for d in
+                 [(i, j, k) for i in (-1, 0, 1) for j in (-1, 0, 1) for k in (-1, 0, 1)]]
+        cands = [(a, b, float(np.clip(c, 0, 1.15))) for a, b, c in cands]
+        best = min(cands, key=cost)
+        step = step / 2
+    return tuple(float(x) for x in best), cost(best)
+
+
+def fit_thumb_skin(rig, base, socks, body, target_y, start, radius=0.0085, side="R"):
+    """Refine a thumb pose against the skinned hand: the lowest skin point over the button (within its radius,
+    prop-socket frame) should sit at `target_y`, centred on the button axis."""
+    def measure(g):
+        p = base.copy()
+        for bn, R in thumb_rot(g).items():
+            p.rot[f"{bn}_{side}"] = R
+        Pv, _ = body.posed(p, only=[f"Hand_{side}"])
+        W = rig.fk(p)
+        S = W[f"hand_{side}"] @ rig.rest_inv[f"hand_{side}"] @ socket_matrix(socks[f"socket_hand_{side}_prop"])
+        q = (Pv - S[:3, 3]) @ S[:3, :3]
+        rr = np.hypot(q[:, 0], q[:, 2])
+        sel = (q[:, 1] > target_y - 0.03) & (rr < 2.5 * radius)
+        if not sel.any():
+            return 1.0
+        k = np.argmin(np.where(rr[sel] < radius, q[sel, 1], np.inf)) if (rr[sel] < radius).any() else None
+        if k is None:
+            return 0.5 + float(rr[sel].min())
+        lo = q[sel][k]
+        near = q[sel][np.abs(q[sel, 1] - lo[1]) < 0.004]
+        return abs(lo[1] - target_y) + 0.5 * float(np.hypot(near[:, 0].mean(), near[:, 2].mean()))
+    best, bc = tuple(start), measure(start)
+    step = np.array([6.0, 6.0, 0.12])
+    for _ in range(6):
+        for d in [(i, j, k) for i in (-1, 0, 1) for j in (-1, 0, 1) for k in (-1, 0, 1)]:
+            g = tuple(np.array(best) + step * np.array(d))
+            g = (g[0], g[1], float(np.clip(g[2], 0, 1.3)))
+            c = measure(g)
+            if c < bc:
+                best, bc = g, c
+        step = step / 2
+    return tuple(float(x) for x in best), bc
+
+
+def clip_press_detonator(rig, socks, det, body=None):
+    """Raise a hand-held detonator in front of the chest, thumb onto the button, press, hold, release, lower."""
+    sk = rig.sk
+    s = sk.scale
+    L = sk.landmarks
+    top = np.asarray(det["markers"]["button"])[:3, 3]
+    travel = det["buttonTravel"]
+    # grip fitted once around the remote's body (hand-local, so any arm pose)
+    p_rest = Pose()
+    S0 = socket_matrix(socks["socket_hand_R_prop"])
+    g = fit_grip(rig, p_rest, "R", S0[:3, 3], S0[:3, 1], det["grip_radius"])
+    held = Pose()
+    apply_grip(held, "R", g)
+    th_hover, e_h = fit_thumb(rig, held, socks, top + np.array([0, 0.014, 0]))
+    th_contact, e_c = fit_thumb(rig, held, socks, top)
+    th_press, e_p = fit_thumb(rig, held, socks, top - np.array([0, travel, 0]))
+    if body is not None:      # the thumb's skin (not its bone tip) must meet the button
+        th_hover, e_h = fit_thumb_skin(rig, held, socks, body, top[1] + 0.012, th_hover)
+        th_contact, e_c = fit_thumb_skin(rig, held, socks, body, top[1], th_contact)
+        th_press, e_p = fit_thumb_skin(rig, held, socks, body, top[1] - travel, th_press)
+    th_grip = tuple(g["thumb"])
+    # hold frame: in front of the chest, remote upright and tilted back toward the face, palm facing left
+    shR = L["shoulder_R"]
+    Pd = blade_frame(shR + np.array([0.15, -0.30, -0.10]) * s, [0.10, 0.40, 1.0], np.array([1.0, 0.25, 0.0]))
+    Pd_up = mat(Pd[:3, :3], Pd[:3, 3] + np.array([0, 0, 0.012 * s]))
+    HR, HU = hand_for_socket(rig, "R", Pd, socks), hand_for_socket(rig, "R", Pd_up, socks)
+    w0, R0 = rest_arm(rig, "R")
+    pole0, pole1 = rest_pole(rig, "R"), _n(np.array([-1.0, 0.3, -0.7]))
+    keys = [(0, (w0, R0, pole0, 1)), (24, (HR[:3, 3], HR[:3, :3], pole1, 1)), (36, (HU[:3, 3], HU[:3, :3], pole1, 1)),
+            (44, (HR[:3, 3], HR[:3, :3], pole1, 1)), (64, (HR[:3, 3], HR[:3, :3], pole1, 1)), (90, (w0, R0, pole0, 1))]
+    tkeys = [(0, th_grip), (24, th_grip), (32, th_hover), (38, th_contact), (42, th_press), (54, th_press),
+             (58, th_contact), (62, th_hover), (70, th_grip), (90, th_grip)]
+    n = 90
+    frames = []
+    for f in range(n + 1):
+        wrist, Rh, pole, _ = lerp_keys(keys, f)
+        k = ease(min(1.0, f / 24.0)) * ease(min(1.0, (n - f) / 24.0))
+        p = Pose()
+        p.rot["chest"] = rx(3 * k) @ ry(-4 * k)
+        p.rot["neck"] = rx(6 * k)
+        p.rot["head"] = rx(10 * k) @ ry(-8 * k) @ rz(-3 * k)
+        p = arm_pose(rig, "R", wrist, Rh, pole, base=p)
+        apply_grip(p, "R", g)
+        for bn, R in thumb_rot(tuple(lerp_vals([(kf, np.array(v)) for kf, v in tkeys], f))).items():
+            p.rot[f"{bn}_R"] = R
+        raise_arm(rig, p, "L", -34 * k, clavicle_share=0.0)
+        curl_fingers(p, "L", 0.25 * k, thumb=0.2 * k)
+        frames.append(p)
+    meta = {"loop": False, "prop": "Detonator", "attach": "socket_hand_R_prop", "buttonMarker": "button",
+            "markers": {"raised": 24, "contact": 38, "pressed": 42, "released": 58, "end": n},
+            "thumb": {"hover": list(th_hover), "contact": list(th_contact), "pressed": list(th_press),
+                      "fitCost": [round(e_h, 4), round(e_c, 4), round(e_p, 4)]},
+            "grip": {"R": {k2: (v if not isinstance(v, tuple) else list(v)) for k2, v in g.items()}}}
+    return frames, meta
+
+
+def more_clips(rig, socks, fixed_markers=None, body=None):
     out = {
         "walk_in_place": clip_walk(rig),
         "run_in_place": clip_run(rig),
@@ -638,6 +801,7 @@ def more_clips(rig, socks, fixed_markers=None):
         "wave": clip_wave(rig),
         "cheer": clip_cheer(rig),
     }
-    wc, specs = weapon_clips(rig, socks, fixed_markers)
+    wc, specs = weapon_clips(rig, socks, fixed_markers, body)
     out.update(wc)
+    out["press_detonator"] = clip_press_detonator(rig, socks, specs["Detonator"], body)
     return out, specs

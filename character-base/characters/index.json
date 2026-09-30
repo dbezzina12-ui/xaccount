@@ -10,6 +10,24 @@
    "props": "test_props.glb"
   },
   {
+   "id": "woman_blank",
+   "displayName": "Woman base",
+   "status": "base",
+   "frozen": true,
+   "glb": "woman_blank.glb",
+   "config": "woman_blank.character.json",
+   "props": "test_props.glb"
+  },
+  {
+   "id": "dwarf_blank",
+   "displayName": "Dwarf base",
+   "status": "base",
+   "frozen": true,
+   "glb": "dwarf_blank.glb",
+   "config": "dwarf_blank.character.json",
+   "props": "test_props.glb"
+  },
+  {
    "id": "stocky_test",
    "displayName": "Stocky test variant",
    "status": "frozen",

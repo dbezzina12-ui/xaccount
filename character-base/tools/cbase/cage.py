@@ -136,6 +136,12 @@ def build_cage(sk, p):
     L = sk.landmarks
     s = sk.scale
     tw, td, bs, sw = p["torsoWidth"], p["torsoDepth"], p["bellySize"], p["shoulderWidth"]
+    hw, ww = p.get("hipWidth", 1.0), p.get("waistWidth", 1.0)
+    # pelvis rings widen with hipWidth (most at the hip-joint ring, buttocks a little fuller behind);
+    # the waist ring follows waistWidth. All factors are exactly 1.0 for the neutral template.
+    hx0, hx1, hx2 = tw * (1.0 + 0.9 * (hw - 1.0)), tw * (1.0 + 0.9 * (hw - 1.0)), tw * (1.0 + 0.45 * (hw - 1.0))
+    hb0, hb1 = td * (1.0 + 0.4 * (hw - 1.0)), td * (1.0 + 0.5 * (hw - 1.0))
+    wx = tw * ww
     g = girth(p)
     hipz, nbz = L["hip_z"], L["neckbase_z"]
 
@@ -147,18 +153,18 @@ def build_cage(sk, p):
     # ---------------- torso / pelvis rings (desired surface points) ----------------
     Z = lambda dz, base=hipz: base + dz * s  # noqa: E731
     ring_defs = {
-        "r0": [T(0, -0.075 - 0.004 * b1, Z(-0.050), tw, td), T(0.106, -0.070, Z(-0.046), tw, td),
-               T(0.160, 0.000, Z(-0.036), tw, td), T(0.100, 0.105, Z(-0.092), tw, td),
-               T(0, 0.088, Z(-0.078), tw, td)],
-        "r1": [T(0, -0.092 - 0.008 * b1, Z(0.018), tw, td), T(0.128, -0.082 - 0.004 * b1, Z(0.016), tw, td),
-               T(0.166, 0.006, Z(0.010), tw, td), T(0.126, 0.120, Z(-0.004), tw, td),
-               T(0, 0.104, Z(0.000), tw, td)],
-        "r2": [T(0, -0.097 - 0.022 * b1, Z(0.095), tw, td), T(0.120, -0.084 - 0.012 * b1, Z(0.097), tw, td),
-               T(0.150, 0.004, Z(0.100), tw, td), T(0.116, 0.092, Z(0.095), tw, td),
-               T(0, 0.078, Z(0.092), tw, td)],
-        "r3": [T(0, -0.102 - 0.036 * b1, Z(0.168), tw, td), T(0.105 + 0.008 * b1, -0.088 - 0.022 * b1, Z(0.168), tw, td),
-               T(0.132 + 0.006 * b1, 0.004, Z(0.168), tw, td), T(0.104, 0.084, Z(0.168), tw, td),
-               T(0, 0.068, Z(0.168), tw, td)],
+        "r0": [T(0, -0.075 - 0.004 * b1, Z(-0.050), hx0, td), T(0.106, -0.070, Z(-0.046), hx0, td),
+               T(0.160, 0.000, Z(-0.036), hx0, td), T(0.100, 0.105, Z(-0.092), hx0, hb0),
+               T(0, 0.088, Z(-0.078), hx0, hb0)],
+        "r1": [T(0, -0.092 - 0.008 * b1, Z(0.018), hx1, td), T(0.128, -0.082 - 0.004 * b1, Z(0.016), hx1, td),
+               T(0.166, 0.006, Z(0.010), hx1, td), T(0.126, 0.120, Z(-0.004), hx1, hb1),
+               T(0, 0.104, Z(0.000), hx1, hb1)],
+        "r2": [T(0, -0.097 - 0.022 * b1, Z(0.095), hx2, td), T(0.120, -0.084 - 0.012 * b1, Z(0.097), hx2, td),
+               T(0.150, 0.004, Z(0.100), hx2, td), T(0.116, 0.092, Z(0.095), hx2, td),
+               T(0, 0.078, Z(0.092), hx2, td)],
+        "r3": [T(0, -0.102 - 0.036 * b1, Z(0.168), wx, td), T(0.105 + 0.008 * b1, -0.088 - 0.022 * b1, Z(0.168), wx, td),
+               T(0.132 + 0.006 * b1, 0.004, Z(0.168), wx, td), T(0.104, 0.084, Z(0.168), wx, td),
+               T(0, 0.068, Z(0.168), wx, td)],
         "r4": [T(0, -0.112 - 0.018 * b1, Z(0.268), tw, td), T(0.120, -0.096 - 0.008 * b1, Z(0.268), tw, td),
                T(0.151, 0.004, Z(0.268), tw, td), T(0.124, 0.094, Z(0.268), tw, td),
                T(0, 0.086, Z(0.268), tw, td)],
@@ -567,11 +573,14 @@ def _build_left_leg(cg, sk, p, port, g, s):
     ]
     prev = port
     seam_line = [port[5]]
+    hw = p.get("hipWidth", 1.0)
+    thigh_fill = [1.0 + 0.9 * (hw - 1.0), 1.0 + 0.5 * (hw - 1.0), 1.0 + 0.2 * (hw - 1.0)]   # upper thighs follow the hips
     for k, (b, t, ro, ri, rf, rb, tw_) in enumerate(spec):
         c = b.head + (b.tail - b.head) * t
         a = _n(b.tail - b.head)
         phis = [ph + tw_ for ph in base_phi]
-        ring = [cg.v(q, f"leg{k}_L") for q in _leg_ring(c, a, ro * G, ri * G, rf * G, rb * G, phis)]
+        Gk = G * thigh_fill[k] if k < len(thigh_fill) else G
+        ring = [cg.v(q, f"leg{k}_L") for q in _leg_ring(c, a, ro * Gk, ri * Gk, rf * Gk, rb * Gk, phis)]
         cg.strip(prev, ring, "Thigh_L" if k <= 3 else "Shin_L", "leg_L")
         seam_line.append(ring[5])
         prev = ring

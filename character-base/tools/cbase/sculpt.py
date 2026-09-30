@@ -114,6 +114,20 @@ def sculpt(V, m, sk, p):
         * np.clip((hipz + 0.44 * s - Z) / (0.05 * s), 0, 1)
     dn += -0.0045 * s * sg                                             # spine groove
     V += N * (dn * spine)[:, None]
+    # breasts (bustSize > 0 only, so the neutral template is untouched): soft, slightly outward-pointing
+    # volumes on the front of the chest, fuller below the centre than above
+    bust = p.get("bustSize", 0.0)
+    if bust > 0:
+        tw = p["torsoWidth"]
+        front = np.clip((-Y - 0.015 * s) / (0.03 * s), 0, 1)
+        for sx in (-1, 1):
+            cx, cz = sx * 0.084 * s * tw, hipz + 0.300 * s
+            dz = Z - cz
+            rz = np.where(dz > 0, 0.080 * s, 0.050 * s)
+            rb = np.sqrt(((X - cx) / (0.064 * s * tw)) ** 2 + (dz / rz) ** 2)
+            amt = 0.042 * s * bust * _bump(rb) ** 0.85 * front * spine
+            d = np.array([sx * 0.22, -1.0, -0.12])
+            V += np.outer(amt, d / np.linalg.norm(d))
     # knee caps
     for sd in ("L", "R"):
         leg = np.array([f"leg_{sd}" in r for r in vreg])

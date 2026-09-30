@@ -20,10 +20,12 @@ so the base can be rebuilt, versioned and extended instead of repaired per game.
 | Deliverable | Path |
 |---|---|
 | Master blank (GLB / editable .blend / config) | `characters/master_blank/master_blank.{glb,blend,character.json}` |
+| **Woman base** (frozen; same topology, UVs, skeleton and clips) | `characters/woman_blank/woman_blank.{glb,blend,character.json}` |
+| **Dwarf base** (frozen; same topology, UVs, skeleton and clips) | `characters/dwarf_blank/dwarf_blank.{glb,blend,character.json}` |
 | Stockier proportion test variant | `characters/stocky_test/stocky_test.{glb,blend,character.json}` |
 | Diagnostic-textured test character (derived from the frozen stocky variant) | `characters/diag_textured_test/…` (+ `textures/basecolor.png`) |
-| Test props (handle + button) per character | `characters/<id>/test_props.glb` |
-| Shared weapon props (two-handed sword, staff, pistol, rifle) + grip markers | `props/weapons.{glb,json}` |
+| Test prop (handle) per character | `characters/<id>/test_props.glb` |
+| Shared hand-held props (two-handed sword, staff, pistol, rifle, detonator remote) + markers + collision samples | `props/weapons.{glb,json}` |
 | Reproducible build script | `tools/build.py` (+ `tools/cbase/*`) |
 | Frozen UV layout v1 (data + metadata) | `template/uv/humanoid_uv_v1.{bin,json}` |
 | UV layout image / UV checker / diagnostic texture / part-ID colours | `textures/uv_layout_v1_2048.png`, `uv_checker_2048.png`, `diagnostic_basecolor_2048.png`, `part_id_colors.json` |
@@ -107,8 +109,23 @@ Author props with their grip centred on the origin and the blade/handle along +Y
 ## Proportion variants
 
 Parameters (`tools/cbase/params.py`, ranges enforced): `height` (absolute metres) and relative multipliers
-`headSize, shoulderWidth, torsoWidth, torsoDepth, bellySize, armLength, legLength, handSize, footSize`.
-Limb girth is derived from torso width/depth (not a free parameter).
+`headSize, shoulderWidth, torsoWidth, torsoDepth, bellySize, armLength, legLength, handSize, footSize`, plus the
+body-type parameters `hipWidth` (pelvis/buttocks and hip-joint spread; the upper thighs follow), `waistWidth`,
+`bustSize` (0 = none … 1.6, sculpted on the same topology) and `limbGirth` (on top of the torso-derived limb girth).
+All new parameters are exact no-ops at their defaults, so frozen characters rebuild bit-identically.
+
+### Body-type bases
+
+| id | height | build | parameters |
+|---|---|---|---|
+| `master_blank` | 1.75 m | neutral adult | defaults |
+| `woman_blank` | 1.68 m | female: narrower shoulders, bust, waist, wider hips, lighter limbs | `template/presets/woman_blank.json` |
+| `dwarf_blank` | 1.35 m | dwarf: big head, broad deep torso and belly, short thick arms and legs, big hands/feet | `template/presets/dwarf_blank.json` |
+
+All three are frozen and share the template topology (31,424 triangles, same vertex order), the frozen UV
+layout, the skeleton names/hierarchy, sockets and every clip (re-solved on each body: IK reaches, grips,
+thumb-on-button and prop clearance are fitted per character). Clothing or armour modelled over one of them
+can be skinned with the same bone names; textures painted in the shared UV layout work on all of them.
 
 A proportion change is a **character-creation** operation: the build regenerates the rest skeleton (joint
 positions), the cage, the mesh, weights, socket placements and re-solves every clip (IK targets such as the test
@@ -123,7 +140,7 @@ JSON
 # inspect it: npm run viewer → select "my_char" (or ?char=my_char)
 .venv/bin/python tools/build.py freeze my_char     # locks geometry + UVs (hashes recorded in the JSON)
 ```
-The master and the stocky test variant are already frozen. `build` refuses to overwrite a frozen character —
+The master, woman, dwarf and the stocky test variant are already frozen. `build` refuses to overwrite a frozen character —
 make a new id instead.
 
 ### Freezing and UV stability
@@ -184,7 +201,7 @@ Base / validation clips:
 |---|---|
 | `idle` | 4 s loop: breathing, weight shift with planted feet, subtle head/arm motion |
 | `reach_grip_handle` | right hand reaches the test handle, closes a fitted power grip (fingers + thumb searched for contact without penetration), holds, releases, returns |
-| `press_button` | left index finger presses the test button (others curled), returns |
+| `press_detonator` | raises a hand-held detonator remote to chest height, thumb moves from the grip onto the red button, presses it (5 mm travel), holds, releases, lowers (markers `raised`, `contact`, `pressed`, `released`) |
 | `_qa_pose_cycle` | the 7 validation poses, each held 14 frames (markers in the JSON) |
 
 Game clip set (`animationSet.version` 2):
@@ -198,20 +215,29 @@ Game clip set (`animationSet.version` 2):
 | `float_monk` | | **floating monk**: from standing, small dip, rise, legs fold into a cross-legged seat while floating, hands settle on the knees in a mudra (markers `liftOff`, `seated`); follow with `float_monk_loop` |
 | `float_monk_loop` | ✓ | cross-legged meditation hover with slow bob and breathing |
 | `sword_2h_idle` | ✓ | two-handed sword guard (right hand under the guard, left hand below it on the grip), breathing |
-| `sword_2h_slash` | | wind-up over the right shoulder → diagonal cut → follow-through → back to guard (markers `windup`, `impact`, `recover`) |
+| `sword_2h_slash` | | wind-up beside the head with the blade back over the right shoulder → fast diagonal cut in front of the body → follow-through → guard (markers `windup`, `impact`, `recover`) |
 | `staff_idle` | ✓ | two-handed staff guard, hands 0.42 m apart |
 | `staff_strike` | | pull back → forward thrust/strike → recover (markers `windup`, `impact`) |
 | `pistol_aim` | ✓ | one-handed aim at shoulder height, index on the trigger, left arm relaxed |
-| `pistol_fire` | | single shot: trigger squeeze, **recoil** (muzzle climb 11°, kick back 3.5 cm, chest reacts), recovery (marker `shot`) |
+| `pistol_fire` | | single shot: trigger squeeze, **hard recoil** (muzzle climb 30°, kick back 7.5 cm, wrist/elbow give, chest and head snap back), recovery (marker `shot`) |
 | `rifle_aim` | ✓ | shouldered rifle: butt in the right shoulder pocket, left hand on the handguard, bladed stance, head down the sights |
-| `rifle_fire` | | 3-round burst with per-shot recoil impulses and torso reaction (markers `shots`) |
+| `rifle_fire` | | 3-round burst: per shot 9° muzzle climb that stacks over the burst, 4.5 cm kick into the shoulder, torso rocks back with each shot (markers `shots`) |
 | `wave` | | friendly wave |
 | `cheer` | | big-win celebration: fists up in a V, two pumps, small hop |
 
 Locomotion is **in place** (the pelvis never travels, `inPlace: true`); move the character in the game at the
 clip's `speed_mps`. Every clip's JSON entry carries its duration, loop flag and event markers.
 
-**Weapons.** `props/weapons.glb` holds `Sword2H`, `Staff`, `Pistol`, `Rifle`. Each prop's origin *is* the
+**Props never pass through the body.** Every hand-held prop clip is solved against the character's own skinned
+mesh: sample spheres along the blade / shaft / barrel / body of the prop (stored in `props/weapons.json`,
+excluding the stretches the hands hold and the rifle stock's shoulder contact) must stay ≥1 cm outside the
+skin. Where a keyed motion would cut into the body, the prop is pushed out along the skin normals with the
+smallest rigid correction (rotating about the grip rather than moving the hands), smoothed over neighbouring
+frames so the motion stays fluid, and the arms are re-solved onto it. This runs per character, so the woman's
+bust or the dwarf's belly get their own clearance.
+
+**Weapons.** `props/weapons.glb` holds `Sword2H`, `Staff`, `Pistol`, `Rifle` and the `Detonator` remote (button
+marker `button`, 5 mm travel). Each prop's origin *is* the
 right-hand grip in the same frame as `socket_hand_R_prop` (+Y grip axis toward the thumb, +Z out of the palm),
 so attaching is: parent the prop to `socket_hand_R_prop` with an identity transform. Two-handed props also carry
 a `grip_L` marker; the clips put `socket_hand_L_prop` exactly on it (validated to ≤0.002 mm), so the support
@@ -254,23 +280,28 @@ materials (as loaded, blank, UV checker, part colours, uploaded texture, project
 click-to-select, visibility and isolation · exploded view (shader-only offset; rest pose/binding untouched,
 *Reassemble* returns exactly) · clip playback, scrubbing, speed, jump to QA pose · hand IK gizmos, finger curl,
 head turn · test sword in either hand socket · sockets display · GLB/JSON export and reload in a fresh tab ·
-weapon clips attach their prop from `props/weapons.glb` automatically (the handle/button test props hide meanwhile).
+prop clips (weapons, detonator) attach their prop from `props/weapons.glb` automatically (the handle test prop hides meanwhile).
 
 ---
 
 ## Validation (see `validation/REPORT.md`)
 
 Each GLB is opened in a fresh browser context (viewer + only the GLB/JSON) and checked over every 2nd frame of
-every clip (~780 frames per character). Current result: **all checks pass for all three characters**, including
+every clip (~780 frames per character). Current result: **all checks pass for all five characters** (master,
+woman, dwarf, stocky test, textured test), including
 
 * 375 boundary vertices across 17 part pairs + all UV-seam duplicates: **max gap 0.0 m** in every frame; normals identical
 * bone lengths constant to 2.5 µm (forearms/shins never shorten); sockets rigid in their bones (≤1e-15)
 * helpers = half rotation within 0.035°
 * palms face the body/down and thumbs sit on the radial (front) side, both hands
 * grip: **0** hand vertices inside the handle, ~60 vertices within 4 mm (contact), socket exactly on the axis
-* press: fingertip within ~1.1 mm of the button top at the contact frame
+* detonator: the thumb's skin is on the button top at the contact frame (≤0.1 mm) and pressed by the 5 mm travel
+  (±0.1 mm), clear of it before the press
 * all 20 clips present; feet never go below the floor in any game clip; walk/run/jump stay in place
-  (pelvis drift ≤2.5 cm); `float_idle` feet ≥0.12 m and the monk float ≥0.59 m above the floor
+  (pelvis drift ≤2.5 cm); floating feet stay ≥0.1 m above the floor (dwarf `float_idle` 0.12 m, monk ≥0.4 m)
+* props vs body: every sample of every held prop, on every checked frame of every prop clip, stays outside the
+  skinned body (closest ≥6 mm outside, measured independently in the viewer on the exported GLB: median signed
+  distance over the 6 nearest skin points, the holding arms' elbow/forearm/hand region excluded)
 * weapons: support hand within 0.001 mm of the prop's `grip_L` marker on every frame; no hand vertex inside
   any grip; ≥45 hand vertices within 4 mm of each grip
 * viewer export (with texture) → reload in another fresh page passes the same structural/seam/bone checks
@@ -296,7 +327,11 @@ rotation + finger curl, torso twist, head turn and crouch, from two angles plus 
   corrective shapes); the raised-arm armpit and crouched knee pit show typical LBS creases.
 * 31k triangles is a hero-level master; no LODs yet (the cage can be subdivided once instead of twice for a
   ~7.9k-tri LOD, but that needs its own UV transfer).
-* The test button prop is static (the press clip travels 6 mm "into" it); props are for validation only.
+* The detonator button is static (the thumb travels 5 mm "into" it); animate the button in the game if needed.
+* Prop clearance is solved against the body, not arm-vs-body: on the dwarf the arms come close to the belly in the
+  sword strike, and with his short torso the staff's upper hand passes just in front of his face in the thrust.
+* Woman/dwarf are neutral bases (no hair, beard or face differences beyond proportions); they are meant to be
+  dressed/sculpted over, and the bust is modest by design so clothing fits without collision fixes.
 * Weapons are simple test props; clips are fitted to their grip sizes (a thicker grip needs `build.py props`
   plus `update-clips`). Recoil is animation only (no muzzle flash/VFX); there are no aim offsets, turn-in-place
   or blend spaces yet, and walk/run are single-speed cycles.

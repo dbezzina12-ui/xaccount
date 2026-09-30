@@ -66,7 +66,7 @@ export async function validate(opts = {}) {
   check('sockets.parented', Object.entries(sockParents).every(([s, p]) => ch.sockets[s] && ch.sockets[s].parent && ch.sockets[s].parent.name === p),
     Object.entries(sockParents).map(([s, p]) => `${s}->${ch.sockets[s] && ch.sockets[s].parent ? ch.sockets[s].parent.name : 'MISSING'}`).join(', '));
   const clipNames = ch.clips.map((c) => c.name);
-  check('clips.named', ['idle', 'reach_grip_handle', 'press_button'].every((n) => clipNames.includes(n)), clipNames.join(', '));
+  check('clips.named', ['idle', 'reach_grip_handle', 'press_detonator'].every((n) => clipNames.includes(n)), clipNames.join(', '));
   let uvOk = true, uvCount = 0;
   for (const m of Object.values(ch.parts)) {
     const uv = m.geometry.attributes.uv;
@@ -164,7 +164,7 @@ export async function validate(opts = {}) {
     check(`hand_${s}.thumbRadialSide`, thumbTip.z > idx.z && idx.z > pinky.z, `thumb ${hands[s].thumbForwardOfIndex} m in front of index knuckle; index ${hands[s].indexForwardOfPinky} m in front of pinky (A-pose, palms in)`);
   }
 
-  // ---------------- props: grip and button ----------------
+  // ---------------- test prop: handle grip ----------------
   if (cfg && cfg.testProps) {
     const h = cfg.testProps.handle;
     const c = bl2gl(h.center), ax = bl2gl(h.axis).normalize(), rad = h.radius, len = h.length;
@@ -188,25 +188,10 @@ export async function validate(opts = {}) {
     R.info.grip = { holdTime: holdT, verticesInsideHandle: inside, deepest_mm: +(deepest * 1000).toFixed(2), contactVertices: contactVerts, socketToAxis_mm: +(sockErr * 1000).toFixed(3) };
     check('grip.noPenetration', inside === 0 || deepest > -0.0025, `${inside} hand vertices >1 mm inside the handle (deepest ${(deepest * 1000).toFixed(2)} mm)`);
     check('grip.contact', contactVerts >= 30 && sockErr < 0.001, `${contactVerts} vertices within 4 mm of the handle surface; socket ${(sockErr * 1000).toFixed(3)} mm from the handle axis`);
-    const b = cfg.testProps.button, top = bl2gl(b.top);
-    const pm = cfg.animations.find((a) => a.name === 'press_button');
-    const tipMin = (t) => {
-      ch.poseAtClip('press_button', t);
-      let best = Infinity, bestP = null;
-      const m = ch.parts.Hand_L;
-      for (let i = 0; i < m.geometry.attributes.position.count; i++) {
-        ch.skinnedPosition('Hand_L', i, p);
-        if (Math.hypot(p.x - top.x, p.z - top.z) < b.radius && p.y < best) { best = p.y; bestP = p.clone(); }
-      }
-      return best - top.y;
-    };
-    const atContact = tipMin(pm.markers.contact / 30), atPress = tipMin(pm.markers.pressed / 30);
-    R.info.press = { fingertipAboveButtonAtContact_mm: +(atContact * 1000).toFixed(2), pressDepth_mm: +(-atPress * 1000).toFixed(2), travel_mm: b.travel * 1000 };
-    check('press.contact', Math.abs(atContact) < 0.004, `fingertip ${(atContact * 1000).toFixed(2)} mm from button top at contact frame; pressed ${(-atPress * 1000).toFixed(2)} mm (button travel ${(b.travel * 1000).toFixed(1)} mm)`);
   }
   // ---------------- extended clip set: locomotion, float, weapons ----------------
   const metaOf = (n) => (cfg && cfg.animations ? cfg.animations.find((a) => a.name === n) : null);
-  const EXTENDED = ['walk_in_place', 'run_in_place', 'jump_in_place', 'float_idle', 'float_monk', 'float_monk_loop',
+  const EXTENDED = ['press_detonator', 'walk_in_place', 'run_in_place', 'jump_in_place', 'float_idle', 'float_monk', 'float_monk_loop',
     'sword_2h_idle', 'sword_2h_slash', 'staff_idle', 'staff_strike', 'pistol_aim', 'pistol_fire', 'rifle_aim', 'rifle_fire', 'wave', 'cheer'];
   if (clipNames.includes('walk_in_place')) {
     check('clips.extendedSet', EXTENDED.every((n) => clipNames.includes(n)), EXTENDED.filter((n) => !clipNames.includes(n)).join(', ') || `${EXTENDED.length} clips present`);
@@ -296,6 +281,92 @@ export async function validate(opts = {}) {
       check('weapons.twoHandGrip', supWorst < 0.002, `support hand within ${(supWorst * 1000).toFixed(3)} mm of the prop's grip_L marker on every frame${supWhere ? ` (worst ${supWhere})` : ''}`);
       check('weapons.gripNoPenetration', penWorst < 0.0035, `deepest hand vertex ${(penWorst * 1000).toFixed(2)} mm inside a grip${penWhere ? ` (${penWhere})` : ''}`);
       check('weapons.gripContact', Object.values(contact).every((k) => k >= 20), `min ${Math.min(...Object.values(contact))} hand vertices within 4 mm of each grip`);
+
+      // props never pass through the body: prop sample spheres vs the skinned skin (hands/forearms holding it excluded)
+      const nrm = new THREE.Vector3(), q = new THREE.Vector3();
+      // a holding arm's elbow/forearm/hand/fingers touch the prop by design (same rule as tools/cbase/collide.py)
+      const HELD = /^(forearm|forearm_twist|elbow_helper|hand|thumb|index|middle|ring|pinky)(_\d+)?_([LR])$/;
+      const bodyAt = (exclude, sides) => {
+        const P = [], N = [];
+        for (const [name, mesh] of Object.entries(ch.parts)) {
+          if (exclude.includes(name)) continue;
+          const g = mesh.geometry, pa = g.attributes.position, na = g.attributes.normal;
+          const si = g.attributes.skinIndex, sw = g.attributes.skinWeight, bones = mesh.skeleton.bones;
+          const heldBone = bones.map((b) => { const m = HELD.exec(b.name); return !!m && sides.includes(m[3]); });
+          for (let i = 0; i < pa.count; i += 2) {
+            let hw = 0;
+            for (let c = 0; c < 4; c++) if (heldBone[si.getComponent(i, c)]) hw += sw.getComponent(i, c);
+            if (hw >= 0.25) continue;
+            const v = new THREE.Vector3().fromBufferAttribute(pa, i);
+            q.copy(v).addScaledVector(nrm.fromBufferAttribute(na, i), 0.01);
+            mesh.applyBoneTransform(i, v); mesh.applyBoneTransform(i, q);
+            v.applyMatrix4(mesh.matrixWorld); q.applyMatrix4(mesh.matrixWorld);
+            P.push(v); N.push(q.clone().sub(v).normalize());
+          }
+        }
+        return [P, N];
+      };
+      let deepest = -Infinity, deepWhere = null;
+      const clipDepth = {};
+      for (const clip of ch.clips) {
+        const meta = metaOf(clip.name);
+        if (!meta || !meta.prop || !weapons.props[meta.prop] || !weapons.props[meta.prop].collisionSamples) continue;
+        const S = weapons.props[meta.prop].collisionSamples;
+        const held = ['Hand_R', 'Forearm_R', ...(meta.support ? ['Hand_L', 'Forearm_L'] : [])];
+        let worst = -Infinity;
+        for (const t of frameTimes(clip, opts.step || 3)) {
+          ch.poseAtClip(clip.name, t);
+          const M = sockM(meta.attach || 'socket_hand_R_prop');
+          const [P, N] = bodyAt(held, meta.support ? ['R', 'L'] : ['R']);
+          for (const [x, y, z, r] of S) {
+            const w = new THREE.Vector3(x, y, z).applyMatrix4(M);
+            const K = 6, kd = [], kj = [];          // k nearest skin points; inside = median signed distance < 0
+            for (let j = 0; j < P.length; j++) {
+              const d = P[j].distanceToSquared(w);
+              if (kd.length < K || d < kd[kd.length - 1]) {
+                let i = kd.length < K ? kd.length : K - 1;
+                while (i > 0 && kd[i - 1] > d) { if (i < K) { kd[i] = kd[i - 1]; kj[i] = kj[i - 1]; } i--; }
+                kd[i] = d; kj[i] = j; if (kd.length > K) { kd.length = K; kj.length = K; }
+              }
+            }
+            if (Math.sqrt(kd[0]) > 0.09 + r) continue;
+            const sd = kj.map((j) => w.clone().sub(P[j]).dot(N[j])).sort((a, b) => a - b);
+            const med = sd.length % 2 ? sd[(sd.length - 1) / 2] : (sd[sd.length / 2 - 1] + sd[sd.length / 2]) / 2;
+            const depth = -(med - r);      // >0: sphere sinks into the skin
+            if (depth > worst) worst = depth;
+            if (depth > deepest) { deepest = depth; deepWhere = `${clip.name}@${t.toFixed(2)}s`; }
+          }
+        }
+        clipDepth[clip.name] = Number.isFinite(worst) ? +(worst * 1000).toFixed(1) : null;
+      }
+      R.info.weapons.propIntoBody_mm = clipDepth;
+      check('props.noBodyPenetration', !(deepest > 0.002), Number.isFinite(deepest)
+        ? `deepest prop point ${(deepest * 1000).toFixed(1)} mm ${deepest > 0 ? 'inside' : 'outside'} the skin${deepWhere ? ` (${deepWhere})` : ''}`
+        : 'props never come near the body');
+
+      // hand-held detonator: thumb pad reaches the button at contact and pushes it by its travel
+      const dm = metaOf('press_detonator'), dp = weapons.props.Detonator;
+      if (dm && dp) {
+        const thumbAlong = (t) => {
+          ch.poseAtClip('press_detonator', t);
+          const M = sockM('socket_hand_R_prop').multiply(mat4(dp.markers.button));
+          const top = new THREE.Vector3().setFromMatrixPosition(M), ax = new THREE.Vector3().setFromMatrixColumn(M, 1).normalize();
+          let lo = Infinity;
+          const n = ch.parts.Hand_R.geometry.attributes.position.count;
+          for (let i = 0; i < n; i++) {
+            ch.skinnedPosition('Hand_R', i, p);
+            const rel = p.clone().sub(top), along = rel.dot(ax);
+            if (along < -0.012 || rel.sub(ax.clone().multiplyScalar(along)).length() > 0.0085) continue;
+            lo = Math.min(lo, along);
+          }
+          return lo;
+        };
+        const atC = thumbAlong(dm.markers.contact / 30), atP = thumbAlong(dm.markers.pressed / 30), atRaise = thumbAlong(dm.markers.raised / 30);
+        R.info.press = { thumbAboveButtonAtContact_mm: +(atC * 1000).toFixed(2), pressDepth_mm: +(-atP * 1000).toFixed(2),
+          travel_mm: dp.buttonTravel * 1000, thumbAboveButtonWhenRaised_mm: Number.isFinite(atRaise) ? +(atRaise * 1000).toFixed(1) : null };
+        check('press.contact', Math.abs(atC) < 0.003 && Math.abs(-atP - dp.buttonTravel) < 0.003 && !(atRaise < 0.004),
+          `thumb pad ${(atC * 1000).toFixed(2)} mm from the button top at contact; pressed ${(-atP * 1000).toFixed(2)} mm (travel ${(dp.buttonTravel * 1000).toFixed(1)} mm); clear of the button before the press`);
+      }
     }
   }
   ch.resetPose();

@@ -209,9 +209,6 @@ def make_test_props(props):
     mat_h = bpy.data.materials.new("M_TestProp_Handle")
     mat_h.use_nodes = True
     mat_h.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.85, 0.55, 0.12, 1)
-    mat_b = bpy.data.materials.new("M_TestProp_Button")
-    mat_b.use_nodes = True
-    mat_b.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.8, 0.12, 0.12, 1)
     mat_p = bpy.data.materials.new("M_TestProp_Base")
     mat_p.use_nodes = True
     mat_p.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.3, 0.32, 0.36, 1)
@@ -237,16 +234,5 @@ def make_test_props(props):
         bmesh.ops.scale(bm, vec=(h["radius"] * 2.6, h["radius"] * 2.6, h["radius"] * 1.2), verts=bm.verts)
         c = h["center"] + h["axis"] * sgn * (h["length"] / 2 + h["radius"] * 0.6)
         o = obj(f"TestHandle_Mount{'Top' if sgn > 0 else 'Bottom'}", bm, mat_p, c)
-    b = props["button"]
-    top = b["top"]
-    bm = bmesh.new()
-    bmesh.ops.create_cone(bm, cap_ends=True, segments=32, radius1=b["radius"], radius2=b["radius"], depth=0.012)
-    btn = obj("TestButton", bm, mat_b, top - np.array([0, 0, 0.006]))
-    bm = bmesh.new()
-    bmesh.ops.create_cube(bm, size=1.0)
-    ped_h = top[2] - 0.012
-    bmesh.ops.scale(bm, vec=(0.12, 0.12, ped_h), verts=bm.verts)
-    obj("TestButton_Pedestal", bm, mat_p, np.array([top[0], top[1], ped_h / 2]))
     handle["grip_radius"] = float(h["radius"])
-    btn["travel"] = float(b["travel"])
     return col

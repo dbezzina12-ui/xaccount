@@ -9,7 +9,8 @@ import { fileURLToPath } from 'node:url';
 import { startServer, CHROME, CHROME_ARGS } from './serve.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const ids = process.argv.slice(2).length ? process.argv.slice(2) : ['master_blank', 'stocky_test', 'diag_textured_test'];
+const ids = process.argv.slice(2).length ? process.argv.slice(2)
+  : JSON.parse(fs.readFileSync(path.join(ROOT, 'characters/index.json'), 'utf8')).characters.map((c) => c.id);
 const server = await startServer(0);
 const base = `http://127.0.0.1:${server.address().port}`;
 const browser = await chromium.launch({ executablePath: CHROME, args: CHROME_ARGS });

@@ -29,11 +29,22 @@ from cbase import GEOMETRY_TOPOLOGY_VERSION, TEMPLATE_ID, TEMPLATE_VERSION  # no
 from cbase import config as C  # noqa: E402
 from cbase.params import DESCRIPTIONS, RANGES, resolve  # noqa: E402
 from cbase.skeleton import BEND_CONVENTION, DRIVERS, build_skeleton, socket_defs  # noqa: E402
+from cbase.collide import BodyProxy  # noqa: E402
 
 UV_VERSION = 1
-CLIP_SET_VERSION = 2          # bump when clip recipes change; frozen characters get `update-clips`
+CLIP_SET_VERSION = 3          # bump when clip recipes change; frozen characters get `update-clips`
 STOCKY = {"height": 1.68, "headSize": 1.03, "shoulderWidth": 1.08, "torsoWidth": 1.16, "torsoDepth": 1.14,
           "bellySize": 1.55, "armLength": 0.96, "legLength": 0.92, "handSize": 1.07, "footSize": 1.05}
+# body-type bases on the same template (topology, UVs, skeleton names, clips) for meshing clothing/armour later
+WOMAN = {"height": 1.68, "headSize": 0.97, "shoulderWidth": 0.87, "torsoWidth": 0.9, "torsoDepth": 0.92,
+         "bellySize": 0.75, "armLength": 0.97, "legLength": 1.04, "handSize": 0.88, "footSize": 0.88,
+         "hipWidth": 1.14, "waistWidth": 0.92, "bustSize": 1.1, "limbGirth": 0.92}
+DWARF = {"height": 1.35, "headSize": 1.22, "shoulderWidth": 1.25, "torsoWidth": 1.3, "torsoDepth": 1.3,
+         "bellySize": 1.7, "armLength": 0.9, "legLength": 0.8, "handSize": 1.25, "footSize": 1.2, "limbGirth": 1.2}
+BASES = (("master_blank", {}, "Master blank", "master"),
+         ("woman_blank", WOMAN, "Woman base", "base"),
+         ("dwarf_blank", DWARF, "Dwarf base", "base"),
+         ("stocky_test", STOCKY, "Stocky test variant", "draft"))
 
 
 def _geometry(params):
@@ -108,11 +119,12 @@ def load_prop_markers():
     return {k: v["markers"] for k, v in d["props"].items()}
 
 
-def all_character_clips(rig, props, socks):
+def all_character_clips(rig, props, socks, body=None):
+    """body: collide.BodyProxy of the character's own skinned mesh (keeps held props out of it)."""
     from cbase import clips as CL
     from cbase import clips_more as CM
     clips = CL.all_clips(rig, props, socks)
-    more, _ = CM.more_clips(rig, socks, load_prop_markers())
+    more, _ = CM.more_clips(rig, socks, load_prop_markers(), body)
     clips.update(more)
     return clips
 
@@ -164,7 +176,12 @@ def cmd_update_clips(args):
         raise SystemExit("skeleton rebuilt from the recorded proportions does not match the frozen rig; refusing")
     rig = Rig(sk)
     socks = socket_defs(sk)
-    clips = all_character_clips(rig, CL.prop_layout(sk), socks)
+    # the collision body is rebuilt from the recorded proportions and must be the frozen geometry
+    _, _, m, names, W = _geometry(cfg["proportions"])
+    if C.geometry_hash(m) != cfg["geometry"]["hash"]:
+        raise SystemExit("mesh rebuilt from the recorded proportions does not match the frozen geometry; refusing")
+    props = CL.prop_layout(sk)
+    clips = all_character_clips(rig, props, socks, BodyProxy(rig, m, names, W))
     arm = bpy.data.objects[BB.ARMATURE]
     if arm.animation_data:
         for tr in list(arm.animation_data.nla_tracks):
@@ -179,6 +196,15 @@ def cmd_update_clips(args):
            [bpy.data.objects[k] for k in cfg["attachments"]]
     glb = os.path.join(d, cfg["files"]["glb"])
     BB.export_glb(glb, objs, animations=True)
+    # test props follow the clip set (the pedestal button was replaced by the hand-held detonator)
+    old = bpy.data.collections.get("TestProps")
+    if old:
+        for o in list(old.objects):
+            bpy.data.objects.remove(o, do_unlink=True)
+        bpy.data.collections.remove(old)
+    prop_col = BB.make_test_props(props)
+    BB.export_glb(os.path.join(d, cfg["files"]["testProps"]), list(prop_col.objects), animations=False)
+    cfg["testProps"] = test_props_cfg(props)
     bpy.ops.wm.save_as_mainfile(filepath=blend, compress=True)
     info = C.inspect_glb(glb)
     cfg["animations"] = anim_meta(clips)
@@ -194,6 +220,13 @@ def cmd_update_clips(args):
     C.write_config(ROOT, cid, cfg)
     write_index()
     print(f"updated clips on {cid}: {len(clips)} clips -> {[a['name'] for a in info['animations']]}")
+
+
+def test_props_cfg(props):
+    return {"file": "test_props.glb",
+            "handle": {k: (v.tolist() if hasattr(v, "tolist") else v) for k, v in props["handle"].items()},
+            "note": "Placement in Blender world coords (Z up); the GLB is Y-up. Hand-held props (weapons, "
+                    "detonator) live in props/weapons.glb."}
 
 
 def build_character(cid, params, display=None, texture=None, force=False, derived=None, status="draft"):
@@ -215,7 +248,7 @@ def build_character(cid, params, display=None, texture=None, force=False, derive
     mat = BB.make_material(texture)
     parts = BB.make_parts(m, uv, names, W, arm, mat)
     sock_objs = BB.make_sockets(socks, arm)
-    clips = all_character_clips(rig, props, socks)
+    clips = all_character_clips(rig, props, socks, BodyProxy(rig, m, names, W))
     anim_info = []
     for name, (frames, meta) in clips.items():
         BB.bake_action(arm, rig, name, frames, meta)
@@ -277,10 +310,7 @@ def build_character(cid, params, display=None, texture=None, force=False, derive
                      "baseColorTexture": None},
         "animations": anim_info,
         "animationSet": anim_set,
-        "testProps": {"file": "test_props.glb",
-                      "handle": {k: (v.tolist() if hasattr(v, "tolist") else v) for k, v in props["handle"].items()},
-                      "button": {k: (v.tolist() if hasattr(v, "tolist") else v) for k, v in props["button"].items()},
-                      "note": "Placement in Blender world coords (Z up); the GLB is Y-up."},
+        "testProps": test_props_cfg(props),
         "files": {"glb": f"{cid}.glb", "blend": f"{cid}.blend", "testProps": "test_props.glb"},
         "exportCheck": info,
     }
@@ -302,7 +332,7 @@ def write_index():
             continue
         out.append({"id": cid, "displayName": cfg["displayName"], "status": cfg["status"], "frozen": cfg.get("frozen", False),
                     "glb": cfg["files"]["glb"], "config": f"{cid}.character.json", "props": cfg["files"].get("testProps")})
-    order = {"master_blank": 0, "stocky_test": 1, "diag_textured_test": 2}
+    order = {"master_blank": 0, "woman_blank": 1, "dwarf_blank": 2, "stocky_test": 3, "diag_textured_test": 4}
     out.sort(key=lambda e: (order.get(e["id"], 9), e["id"]))
     with open(os.path.join(base, "index.json"), "w") as fh:
         json.dump({"characters": out}, fh, indent=1)
@@ -409,9 +439,10 @@ def cmd_all(args):
     os.makedirs(os.path.join(ROOT, "template", "presets"), exist_ok=True)
     with open(os.path.join(ROOT, "template", "presets", "master_blank.json"), "w") as fh:
         json.dump({}, fh)
-    with open(os.path.join(ROOT, "template", "presets", "stocky_test.json"), "w") as fh:
-        json.dump(STOCKY, fh, indent=1)
-    for cid, params, name in (("master_blank", {}, "Master blank"), ("stocky_test", STOCKY, "Stocky test variant")):
+    for cid, params, _, _ in BASES[1:]:
+        with open(os.path.join(ROOT, "template", "presets", f"{cid}.json"), "w") as fh:
+            json.dump(params, fh, indent=1)
+    for cid, params, name, status in BASES:
         cfg = C.load_config(ROOT, cid)
         if cfg and cfg.get("frozen"):
             if (cfg.get("animationSet") or {}).get("version") != CLIP_SET_VERSION:
@@ -420,7 +451,7 @@ def cmd_all(args):
             else:
                 print(f"{cid} is frozen – kept as is")
             continue
-        build_character(cid, params, name, status="master" if cid == "master_blank" else "draft")
+        build_character(cid, params, name, status=status)
         cmd_freeze(argparse.Namespace(id=cid))
     if not (C.load_config(ROOT, "diag_textured_test") or {}).get("frozen"):
         cmd_texture(argparse.Namespace(source="stocky_test", new_id="diag_textured_test", force=True,

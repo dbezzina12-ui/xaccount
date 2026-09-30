@@ -18,6 +18,10 @@ DEFAULTS = {
     "legLength": 1.0,
     "handSize": 1.0,
     "footSize": 1.0,
+    "hipWidth": 1.0,
+    "waistWidth": 1.0,
+    "bustSize": 0.0,
+    "limbGirth": 1.0,
 }
 
 RANGES = {
@@ -31,6 +35,10 @@ RANGES = {
     "legLength": (0.8, 1.2),
     "handSize": (0.85, 1.3),
     "footSize": (0.85, 1.3),
+    "hipWidth": (0.85, 1.35),
+    "waistWidth": (0.75, 1.3),
+    "bustSize": (0.0, 1.6),
+    "limbGirth": (0.8, 1.4),
 }
 
 DESCRIPTIONS = {
@@ -44,6 +52,10 @@ DESCRIPTIONS = {
     "legLength": "Thigh + shin bone lengths.",
     "handSize": "Palm and finger dimensions (bones and mesh).",
     "footSize": "Foot length/width (bones and mesh).",
+    "hipWidth": "Pelvis/buttock width and hip-joint spread (1 = neutral; ~1.1-1.2 for a typical female build).",
+    "waistWidth": "Waist width between ribcage and pelvis (<1 = narrower, hourglass).",
+    "bustSize": "Breast volume on the chest (0 = none/flat, 1 = medium, 1.6 = large). Sculpted on the same topology.",
+    "limbGirth": "Arm, leg and neck thickness on top of the torso-derived girth.",
 }
 
 
@@ -62,4 +74,4 @@ def resolve(p=None):
 
 def girth(p):
     """Derived limb girth factor (not a free parameter): follows torso bulk mildly."""
-    return (p["torsoWidth"] * p["torsoDepth"]) ** 0.35
+    return (p["torsoWidth"] * p["torsoDepth"]) ** 0.35 * p.get("limbGirth", 1.0)

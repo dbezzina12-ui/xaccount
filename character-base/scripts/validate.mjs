@@ -11,7 +11,8 @@ import { fileURLToPath } from 'node:url';
 import { startServer, CHROME, CHROME_ARGS } from './serve.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const ids = process.argv.slice(2).length ? process.argv.slice(2) : ['master_blank', 'stocky_test', 'diag_textured_test'];
+const ids = process.argv.slice(2).length ? process.argv.slice(2)
+  : JSON.parse(fs.readFileSync(path.join(ROOT, 'characters/index.json'), 'utf8')).characters.map((c) => c.id);
 const OUT = path.join(ROOT, 'validation');
 fs.mkdirSync(OUT, { recursive: true });
 const server = await startServer(0);

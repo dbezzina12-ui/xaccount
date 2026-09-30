@@ -647,8 +647,8 @@
           0.03561355546116829
         ],
         "rotation": [
-          -1.3939459364564755e-08,
-          -1.4482091081902126e-08,
+          -1.3939459364564755e-8,
+          -1.4482091081902126e-8,
           0.5969306230545044,
           0.8022928833961487
         ]
@@ -665,8 +665,8 @@
           0.035613469779491425
         ],
         "rotation": [
-          -5.236937106189998e-09,
-          1.4743034348896344e-08,
+          -5.236937106189998e-9,
+          1.4743034348896344e-8,
           -0.5969306230545044,
           0.8022928237915039
         ]
@@ -683,8 +683,8 @@
           0
         ],
         "rotation": [
-          3.774895063202166e-08,
-          -5.960465188081798e-08,
+          3.774895063202166e-8,
+          -5.960465188081798e-8,
           9.786456042250313e-15,
           1
         ]
@@ -696,15 +696,15 @@
       "gltfNode": {
         "parentNode": "chest",
         "translation": [
-          4.002690179305546e-09,
+          4.002690179305546e-9,
           0.02096136473119259,
           -0.11310148984193802
         ],
         "rotation": [
-          4.36025295869058e-08,
+          4.36025295869058e-8,
           0.9999813437461853,
           0.006106138229370117,
-          1.7961715670367084e-08
+          1.7961715670367084e-8
         ]
       }
     }
@@ -727,7 +727,7 @@
       "name": "idle",
       "frames": 121,
       "fps": 30,
-      "duration": 4.0,
+      "duration": 4,
       "loop": true
     },
     {
@@ -743,9 +743,9 @@
         "ring": 0.675,
         "pinky": 0.588,
         "thumb": [
-          0.0,
-          40.0,
-          1.0
+          0,
+          40,
+          1
         ]
       },
       "markers": {
@@ -755,26 +755,6 @@
         "end": 126
       },
       "prop": "TestHandle"
-    },
-    {
-      "name": "press_button",
-      "frames": 101,
-      "fps": 30,
-      "duration": 3.3333,
-      "loop": false,
-      "side": "L",
-      "markers": {
-        "contact": 38,
-        "pressed": 46,
-        "released": 54,
-        "end": 100
-      },
-      "prop": "TestButton",
-      "fingertipLocal": [
-        -0.04094,
-        0.19419,
-        0.03299
-      ]
     },
     {
       "name": "_qa_pose_cycle",
@@ -839,10 +819,10 @@
       "name": "float_idle",
       "frames": 91,
       "fps": 30,
-      "duration": 3.0,
+      "duration": 3,
       "loop": true,
       "inPlace": true,
-      "pelvisLift_m": 0.255
+      "pelvisLift_m": 0.294
     },
     {
       "name": "float_monk",
@@ -861,7 +841,7 @@
       "name": "float_monk_loop",
       "frames": 121,
       "fps": 30,
-      "duration": 4.0,
+      "duration": 4,
       "loop": true,
       "inPlace": true
     },
@@ -869,7 +849,7 @@
       "name": "wave",
       "frames": 61,
       "fps": 30,
-      "duration": 2.0,
+      "duration": 2,
       "loop": false,
       "markers": {
         "end": 60
@@ -890,7 +870,7 @@
       "name": "sword_2h_idle",
       "frames": 61,
       "fps": 30,
-      "duration": 2.0,
+      "duration": 2,
       "loop": true,
       "prop": "Sword2H",
       "attach": "socket_hand_R_prop",
@@ -907,16 +887,17 @@
           "thumb": [
             0,
             50,
-            1.0
+            1
           ]
         }
-      }
+      },
+      "propBodyPenetration_m": 0
     },
     {
       "name": "sword_2h_slash",
       "frames": 61,
       "fps": 30,
-      "duration": 2.0,
+      "duration": 2,
       "loop": false,
       "prop": "Sword2H",
       "attach": "socket_hand_R_prop",
@@ -933,10 +914,11 @@
           "thumb": [
             0,
             50,
-            1.0
+            1
           ]
         }
       },
+      "propBodyPenetration_m": 0,
       "markers": {
         "windup": 12,
         "impact": 24,
@@ -948,7 +930,7 @@
       "name": "staff_idle",
       "frames": 61,
       "fps": 30,
-      "duration": 2.0,
+      "duration": 2,
       "loop": true,
       "prop": "Staff",
       "attach": "socket_hand_R_prop",
@@ -965,10 +947,11 @@
           "thumb": [
             0,
             50,
-            1.0
+            1
           ]
         }
-      }
+      },
+      "propBodyPenetration_m": 0
     },
     {
       "name": "staff_strike",
@@ -991,10 +974,11 @@
           "thumb": [
             0,
             50,
-            1.0
+            1
           ]
         }
       },
+      "propBodyPenetration_m": 0,
       "markers": {
         "windup": 10,
         "impact": 17,
@@ -1005,7 +989,7 @@
       "name": "pistol_aim",
       "frames": 61,
       "fps": 30,
-      "duration": 2.0,
+      "duration": 2,
       "loop": true,
       "prop": "Pistol",
       "attach": "socket_hand_R_prop",
@@ -1019,16 +1003,17 @@
           "thumb": [
             0,
             50,
-            1.0
+            1
           ]
         }
-      }
+      },
+      "propBodyPenetration_m": 0
     },
     {
       "name": "pistol_fire",
-      "frames": 37,
+      "frames": 45,
       "fps": 30,
-      "duration": 1.2,
+      "duration": 1.4667,
       "loop": false,
       "prop": "Pistol",
       "attach": "socket_hand_R_prop",
@@ -1042,23 +1027,28 @@
           "thumb": [
             0,
             50,
-            1.0
+            1
           ]
         }
       },
+      "propBodyPenetration_m": 0,
       "markers": {
         "shot": [
           8
         ],
-        "end": 36
+        "end": 44
       },
-      "muzzleMarker": "muzzle"
+      "muzzleMarker": "muzzle",
+      "recoil": {
+        "muzzleClimb_deg": 30,
+        "kickBack_m": 0.073
+      }
     },
     {
       "name": "rifle_aim",
       "frames": 61,
       "fps": 30,
-      "duration": 2.0,
+      "duration": 2,
       "loop": true,
       "prop": "Rifle",
       "attach": "socket_hand_R_prop",
@@ -1075,16 +1065,17 @@
           "thumb": [
             0,
             50,
-            1.0
+            1
           ]
         }
-      }
+      },
+      "propBodyPenetration_m": 0
     },
     {
       "name": "rifle_fire",
-      "frames": 41,
+      "frames": 45,
       "fps": 30,
-      "duration": 1.3333,
+      "duration": 1.4667,
       "loop": false,
       "prop": "Rifle",
       "attach": "socket_hand_R_prop",
@@ -1101,19 +1092,76 @@
           "thumb": [
             0,
             50,
-            1.0
+            1
           ]
         }
       },
+      "propBodyPenetration_m": 0,
       "markers": {
         "shots": [
           6,
-          12,
-          18
+          11,
+          16
         ],
-        "end": 40
+        "end": 44
       },
-      "muzzleMarker": "muzzle"
+      "muzzleMarker": "muzzle",
+      "recoil": {
+        "muzzleClimbPerShot_deg": 9,
+        "kickBack_m": 0.044
+      }
+    },
+    {
+      "name": "press_detonator",
+      "frames": 91,
+      "fps": 30,
+      "duration": 3,
+      "loop": false,
+      "prop": "Detonator",
+      "attach": "socket_hand_R_prop",
+      "buttonMarker": "button",
+      "markers": {
+        "raised": 24,
+        "contact": 38,
+        "pressed": 42,
+        "released": 58,
+        "end": 90
+      },
+      "thumb": {
+        "hover": [
+          -7.1875,
+          -32.75,
+          0.48874999999999996
+        ],
+        "contact": [
+          -5.4375,
+          -43.375,
+          0.9087500000000001
+        ],
+        "pressed": [
+          2.5,
+          -35.75,
+          0.7412499999999999
+        ],
+        "fitCost": [
+          0.0046,
+          0.0053,
+          0.0055
+        ]
+      },
+      "grip": {
+        "R": {
+          "index": 0.4,
+          "middle": 0.675,
+          "ring": 0.6625000000000001,
+          "pinky": 0.5625,
+          "thumb": [
+            0,
+            50,
+            1
+          ]
+        }
+      }
     }
   ],
   "testProps": {
@@ -1132,22 +1180,13 @@
       "radius": 0.01566287525638635,
       "length": 0.13705015849338056
     },
-    "button": {
-      "top": [
-        0.19578594070482938,
-        -0.3230468021629685,
-        0.8869103113928771
-      ],
-      "radius": 0.02153645347753123,
-      "travel": 0.005873578221144881
-    },
-    "note": "Placement in Blender world coords (Z up); the GLB is Y-up."
+    "note": "Placement in Blender world coords (Z up); the GLB is Y-up. Hand-held props (weapons, detonator) live in props/weapons.glb."
   },
   "files": {
     "glb": "stocky_test.glb",
     "blend": "stocky_test.blend",
     "testProps": "test_props.glb",
-    "glbSha256": "19f0c458be1bfa91f888ba15a152ae48e4314b35bd5136d2cbce18336236fea5"
+    "glbSha256": "fab6fa051249f7cf4029b3a988a51aedc437a14968ae0088b2424ca154dd8c19"
   },
   "exportCheck": {
     "nodes": 84,
@@ -1245,8 +1284,8 @@
           0
         ],
         "rotation": [
-          3.774895063202166e-08,
-          -5.960465188081798e-08,
+          3.774895063202166e-8,
+          -5.960465188081798e-8,
           9.786456042250313e-15,
           1
         ]
@@ -1259,8 +1298,8 @@
           0.03561355546116829
         ],
         "rotation": [
-          -1.3939459364564755e-08,
-          -1.4482091081902126e-08,
+          -1.3939459364564755e-8,
+          -1.4482091081902126e-8,
           0.5969306230545044,
           0.8022928833961487
         ]
@@ -1273,8 +1312,8 @@
           0.035613469779491425
         ],
         "rotation": [
-          -5.236937106189998e-09,
-          1.4743034348896344e-08,
+          -5.236937106189998e-9,
+          1.4743034348896344e-8,
           -0.5969306230545044,
           0.8022928237915039
         ]
@@ -1282,15 +1321,15 @@
       "socket_back_accessory": {
         "parentNode": "chest",
         "translation": [
-          4.002690179305546e-09,
+          4.002690179305546e-9,
           0.02096136473119259,
           -0.11310148984193802
         ],
         "rotation": [
-          4.36025295869058e-08,
+          4.36025295869058e-8,
           0.9999813437461853,
           0.006106138229370117,
-          1.7961715670367084e-08
+          1.7961715670367084e-8
         ]
       }
     },
@@ -1337,12 +1376,12 @@
       },
       {
         "name": "pistol_fire",
-        "duration": 1.2,
+        "duration": 1.4667,
         "channels": 189
       },
       {
-        "name": "press_button",
-        "duration": 3.3333,
+        "name": "press_detonator",
+        "duration": 3,
         "channels": 189
       },
       {
@@ -1357,7 +1396,7 @@
       },
       {
         "name": "rifle_fire",
-        "duration": 1.3333,
+        "duration": 1.4667,
         "channels": 189
       },
       {
@@ -1405,8 +1444,8 @@
   "freezeRecord": {
     "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
     "uvSha256": "a0d908c078b7ba6a77ede85c73e5cacd601b44a658d2ef0f8e5659b58593cd6f",
-    "glbSha256": "19f0c458be1bfa91f888ba15a152ae48e4314b35bd5136d2cbce18336236fea5",
-    "blendSha256": "021c8653bff6ab60b15b8c1a279079a8ca9e142bba4669b425ffef7d6d877814"
+    "glbSha256": "fab6fa051249f7cf4029b3a988a51aedc437a14968ae0088b2424ca154dd8c19",
+    "blendSha256": "ce24a7eb74b90d53178d04119804045e802c2f7fe486e045fa3669a58215cd17"
   },
   "projection": {
     "references": "references/stocky_test/cameras.json",
@@ -1425,11 +1464,10 @@
     }
   },
   "animationSet": {
-    "version": 2,
+    "version": 3,
     "clips": [
       "idle",
       "reach_grip_handle",
-      "press_button",
       "_qa_pose_cycle",
       "walk_in_place",
       "run_in_place",
@@ -1446,7 +1484,8 @@
       "pistol_aim",
       "pistol_fire",
       "rifle_aim",
-      "rifle_fire"
+      "rifle_fire",
+      "press_detonator"
     ],
     "weaponProps": "props/weapons.glb"
   },
@@ -1454,6 +1493,13 @@
     {
       "date": "2026-09-30T14:34:13+00:00",
       "clipSetVersion": 2,
+      "clips": 20,
+      "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
+      "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"
+    },
+    {
+      "date": "2026-09-30T16:01:14+00:00",
+      "clipSetVersion": 3,
       "clips": 20,
       "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
       "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"

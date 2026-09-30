@@ -2,7 +2,7 @@
   "schema": "gamboligy.projection-references/1.0",
   "characterId": "diag_textured_test",
   "glb": "characters/diag_textured_test/diag_textured_test.glb",
-  "glbSha256": "b5a5b5c612bb91607b6c9863bbe4b26bd632657ab4ee9d5777a17e38e862236e",
+  "glbSha256": "783b071295789cd1e00b878f74e7cfc86429d8b51ec7f6909f1175e465dfcb76",
   "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
   "uvLayout": "humanoid_uv v1",
   "pose": {

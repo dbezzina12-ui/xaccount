@@ -7,7 +7,7 @@ translation), exported as named glTF animations; nothing lives in a viewer loop.
 """
 import numpy as np
 
-from .library import SIDES, TEST_POSES, hand_frame, plant_legs, rotate_world, reach
+from .library import SIDES, TEST_POSES, plant_legs, rotate_world, reach
 from .poses import Pose, curl_fingers, matrix_from_quat, quat_from_matrix, rx, ry, rz, slerp, two_bone_ik
 from .skeleton import FINGERS, GRIP_RADIUS, _n, _perp, socket_defs
 
@@ -32,11 +32,9 @@ def prop_layout(sk):
     L = sk.landmarks
     shR = L["shoulder_R"]
     handle_c = shR + np.array([-0.07, -0.37, -0.36]) * s
-    btn_top = np.array([0.20, -0.33, L["hip_z"] + 0.07 * s]) * np.array([s, s, 1.0])
     return {
         "handle": {"center": handle_c, "axis": np.array([0, 0, 1.0]), "radius": GRIP_RADIUS * s,
                    "length": 0.14 * s},
-        "button": {"top": btn_top, "radius": 0.022 * s, "travel": 0.006 * s},
     }
 
 
@@ -236,60 +234,6 @@ def clip_reach_grip(rig, props, sockets, side="R"):
     return frames, meta
 
 
-def clip_press(rig, props, side="L"):
-    sk = rig.sk
-    s = sk.scale
-    sx = 1.0 if side == "L" else -1.0
-    b = props["button"]
-    top = b["top"]
-    u = sk[f"hand_{side}"].length / 0.098
-    Rp = hand_frame(side, rig, palm_dir=np.array([-sx * 0.15, -0.25, -1.0]),
-                    finger_dir=np.array([sx * 0.10, -0.62, -0.78]))
-    fingers = {"index": 0.03, "middle": 0.85, "ring": 0.9, "pinky": 0.9}
-
-    def finger_pose(p):
-        curl_fingers(p, side, fingers)
-        p.rot[f"thumb_01_{side}"] = rx(10)
-        p.rot[f"thumb_02_{side}"] = rx(30)
-        p.rot[f"thumb_03_{side}"] = rx(35)
-        return p
-    # fingertip offset in hand space (distal tail + rounded cap)
-    pr = finger_pose(Pose())
-    W = rig.fk(pr)
-    tip_bone = W[f"index_03_{side}"]
-    tip = tip_bone[:3, 3] + tip_bone[:3, 1] * (sk[f"index_03_{side}"].length + 0.0045 * u)
-    tip_local = np.linalg.inv(W[f"hand_{side}"]) @ np.append(tip, 1.0)
-
-    def wrist_for_tip(p_tip):
-        return p_tip - Rp @ tip_local[:3]
-    hover = wrist_for_tip(top + np.array([0, 0, 0.06 * s]))
-    contact = wrist_for_tip(top)
-    pressed = wrist_for_tip(top - np.array([0, 0, b["travel"]]))
-    w0, R0 = rest_arm(rig, side)
-    pole0 = rest_pole(rig, side)
-    pole1 = _n(np.array([sx * 1.0, 0.3, -0.6]))
-    keys = [(0, (w0, R0, pole0, 0)), (26, (hover, Rp, pole1, 1)), (38, (contact, Rp, pole1, 1)),
-            (46, (pressed, Rp, pole1, 1)), (54, (contact, Rp, pole1, 1)), (66, (hover, Rp, pole1, 1)),
-            (100, (w0, R0, pole0, 0))]
-    frames = []
-    n = 100
-    for f in range(n + 1):
-        wrist, Rh, pole, fb = lerp_keys(keys, f)
-        p = Pose()
-        k = ease(min(f, n - f) / 26.0)
-        p.rot["chest"] = rx(4 * k) @ ry(-3 * sx * k)
-        p.rot["head"] = rx(12 * k) @ ry(6 * sx * k)
-        p = arm_pose(rig, side, wrist, Rh, pole, base=p)
-        pf = finger_pose(Pose())
-        for bn, R in pf.rot.items():
-            q = slerp(np.array([1.0, 0, 0, 0]), quat_from_matrix(R), fb)
-            p.rot[bn] = matrix_from_quat(q)
-        frames.append(p)
-    meta = {"loop": False, "side": side, "markers": {"contact": 38, "pressed": 46, "released": 54, "end": n},
-            "prop": "TestButton", "fingertipLocal": [round(float(x), 5) for x in tip_local[:3]]}
-    return frames, meta
-
-
 def clip_qa_cycle(rig):
     rest = Pose()
     frames, markers = [], {}
@@ -311,6 +255,5 @@ def all_clips(rig, props, sockets):
     out = {}
     out["idle"] = clip_idle(rig)
     out["reach_grip_handle"] = clip_reach_grip(rig, props, sockets, "R")
-    out["press_button"] = clip_press(rig, props, "L")
     out["_qa_pose_cycle"] = clip_qa_cycle(rig)
     return out

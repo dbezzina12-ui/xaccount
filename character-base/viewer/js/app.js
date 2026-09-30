@@ -271,8 +271,9 @@ function clipMeta(name) { return state.cfg && state.cfg.animations ? state.cfg.a
 function attachClipProp(name) {
   if (state.clipProp) { state.clipProp.removeFromParent(); state.clipProp = null; }
   const meta = clipMeta(name);
-  // the handle/button test props belong to reach_grip_handle/press_button; keep them out of weapon clips
-  if (state.props) state.props.visible = $('chkProps').checked && !(meta && meta.prop);
+  // the handle test prop belongs to reach_grip_handle; hide it while a hand-held prop clip plays
+  const heldProp = meta && meta.prop && state.weapons ? state.weapons.getObjectByName(meta.prop) : null;
+  if (state.props) state.props.visible = $('chkProps').checked && !heldProp;
   if (!meta || !meta.prop || !state.weapons || !state.ch) return;
   const src = state.weapons.getObjectByName(meta.prop);
   const sock = state.ch.sockets[meta.attach || 'socket_hand_R_prop'];

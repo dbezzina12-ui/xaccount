@@ -47,6 +47,11 @@ def rot_x(deg):
     return np.array([[1, 0, 0], [0, c, -s], [0, s, c]])
 
 
+DETONATOR_BUTTON_Y = 0.066   # button top above the grip centre: within reach of the master rig's thumb tip on the
+                             # grip axis, clear of the closed fist (the index finger tops out at ~0.053)
+DETONATOR_TRAVEL = 0.005
+
+
 def weapon_specs(sk):
     """Geometry parts (glTF prop-local) and markers. grip_L orientations are refined by
     clips_more.fit_support_rolls() and stored in props/weapons.json."""
@@ -85,6 +90,17 @@ def weapon_specs(sk):
                         "butt": mat(t=up * 0.045 - b * 0.31)},
             "support": "L", "grip_radius": r, "barrel": b.tolist(),
             "support_axis": b.tolist(),       # support hand wraps the handguard (axis = barrel)
+            "contact_parts": [2],             # the stock rests in the shoulder pocket by design
+        },
+        "Detonator": {
+            # hand-held remote: power grip around the body, thumb on the red button on top
+            "parts": [("cyl", [0, -0.062, 0], [0, 0.052, 0], r * 1.1, "dark"),
+                      ("cyl", [0, 0.052, 0], [0, DETONATOR_BUTTON_Y - 0.006, 0], r * 1.3, "metal"),
+                      ("cyl", [0, DETONATOR_BUTTON_Y - 0.006, 0], [0, DETONATOR_BUTTON_Y, 0], 0.0085, "red"),
+                      ("cyl", [-0.012, 0.03, 0.008], [-0.012, 0.15, 0.008], 0.0025, "dark"),   # antenna, away from the thumb
+                      ("sphere", [-0.012, 0.152, 0.008], 0.005, "red")],
+            "markers": {"button": mat(t=[0, DETONATOR_BUTTON_Y, 0])},
+            "support": None, "grip_radius": r * 1.1, "buttonTravel": DETONATOR_TRAVEL,
         },
     }
 
@@ -98,11 +114,16 @@ def save_markers(root, specs, extra=None):
     out = {"schema": "gamboligy.props/1.0",
            "frame": "glTF prop-local: origin = right-hand grip centre, +Y = grip axis (thumb side), "
                     "+Z = out of the right palm. Attach with identity to socket_hand_R_prop.",
+           "collisionSamples": "[x, y, z, radius] spheres (prop-local) that must stay out of the skin; held "
+                               "stretches of grip and intended contact (rifle stock) are excluded",
            "props": {}}
+    from .collide import weapon_samples
     for name, sp in specs.items():
-        out["props"][name] = {"markers": {k: np.asarray(v).round(6).tolist() for k, v in sp["markers"].items()},
+        pts, rad = weapon_samples(sp)
+        out["props"][name] = {"collisionSamples": np.concatenate([pts, rad[:, None]], 1).round(5).tolist(),"markers": {k: np.asarray(v).round(6).tolist() for k, v in sp["markers"].items()},
                               "gripRadius": sp["grip_radius"], "supportHand": sp["support"],
-                              **({"barrel": sp["barrel"]} if "barrel" in sp else {})}
+                              **({"barrel": sp["barrel"]} if "barrel" in sp else {}),
+                              **({"buttonTravel": sp["buttonTravel"]} if "buttonTravel" in sp else {})}
     if extra:
         out.update(extra)
     with open(props_json_path(root), "w") as fh:
@@ -118,7 +139,8 @@ def build_blender_props(specs, path):
     from .blender_build import export_glb
     mats = {}
     colors = {"grip": (0.25, 0.16, 0.10, 1), "guard": (0.55, 0.45, 0.2, 1), "metal": (0.72, 0.74, 0.78, 1),
-              "blade": (0.82, 0.85, 0.9, 1), "wood": (0.45, 0.28, 0.12, 1), "dark": (0.12, 0.12, 0.13, 1)}
+              "blade": (0.82, 0.85, 0.9, 1), "wood": (0.45, 0.28, 0.12, 1), "dark": (0.12, 0.12, 0.13, 1),
+              "red": (0.85, 0.08, 0.06, 1)}
     for k, c in colors.items():
         m = bpy.data.materials.new(f"M_Prop_{k}")
         m.use_nodes = True
