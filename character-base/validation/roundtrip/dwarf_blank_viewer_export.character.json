@@ -4,7 +4,7 @@
   "displayName": "Dwarf base",
   "status": "textured",
   "frozen": false,
-  "created": "2026-09-30T17:26:20.302Z",
+  "created": "2026-09-30T18:52:25.950Z",
   "template": {
     "id": "gamboligy.humanoid_base",
     "version": "1.0.0",
@@ -1281,7 +1281,7 @@
     }
   ],
   "animationSet": {
-    "version": 4,
+    "version": 5,
     "clips": [
       "idle",
       "reach_grip_handle",
@@ -1595,8 +1595,8 @@
   "freezeRecord": {
     "geometryHash": "85549dab23be885abed3716681aac082d2bf61538304f191ba17b778bcc01a45",
     "uvSha256": "a0d908c078b7ba6a77ede85c73e5cacd601b44a658d2ef0f8e5659b58593cd6f",
-    "glbSha256": "5a02e7cd2710b4899e38ec2539bdf254609241e1d87a3df55b06ea5ffb363cb8",
-    "blendSha256": "ff917d7c19d5c935207535746bad70b0f92427f2d5ecdd2f99c5174412eca909"
+    "glbSha256": "e2de2b774605fab18668f3f59762c56346c46e55d4595daf7dbf3920b55b257d",
+    "blendSha256": "67e18d6f7c261319d3ee43fecd5793f4acca4d20f9d848c94ed29e8ffa67bf38"
   },
   "animationRevisions": [
     {
@@ -1607,15 +1607,29 @@
       "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"
     },
     {
-      "date": "2026-09-30T16:59:54+00:00",
+      "date": "2026-09-30T17:21:22+00:00",
       "clipSetVersion": 4,
       "clips": 22,
       "geometryHash": "85549dab23be885abed3716681aac082d2bf61538304f191ba17b778bcc01a45",
       "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"
     },
     {
-      "date": "2026-09-30T17:21:22+00:00",
-      "clipSetVersion": 4,
+      "date": "2026-09-30T18:16:30+00:00",
+      "clipSetVersion": 5,
+      "clips": 22,
+      "geometryHash": "85549dab23be885abed3716681aac082d2bf61538304f191ba17b778bcc01a45",
+      "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"
+    },
+    {
+      "date": "2026-09-30T18:32:45+00:00",
+      "clipSetVersion": 5,
+      "clips": 22,
+      "geometryHash": "85549dab23be885abed3716681aac082d2bf61538304f191ba17b778bcc01a45",
+      "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"
+    },
+    {
+      "date": "2026-09-30T18:47:11+00:00",
+      "clipSetVersion": 5,
       "clips": 22,
       "geometryHash": "85549dab23be885abed3716681aac082d2bf61538304f191ba17b778bcc01a45",
       "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"

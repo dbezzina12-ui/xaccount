@@ -1,6 +1,6 @@
 # Validation report
 
-Generated 2026-09-30T17:23:20.339Z by `scripts/validate.mjs` (each GLB opened in a fresh browser context with only the GLB + its JSON).
+Generated 2026-09-30T18:49:25.870Z by `scripts/validate.mjs` (each GLB opened in a fresh browser context with only the GLB + its JSON).
 
 ## master_blank — PASS (29/29 checks)
 
@@ -229,7 +229,7 @@ Coverage by the 5 reference views (UV texels): `{"none": 0.0377, "grazing": 0.07
 | `locomotion.inPlace` | ✅ | jump_in_place pelvis drift 0.025 m, run_in_place pelvis drift 0.012 m, walk_in_place pelvis drift 0.023 m |
 | `weapons.twoHandGrip` | ✅ | support hand within 0.001 mm of the prop's grip_L marker on every frame (worst pistol_fire_2h@0.40s) |
 | `weapons.gripNoPenetration` | ✅ | deepest hand vertex 2.07 mm inside a grip (pistol_aim_2h hand L) |
-| `weapons.gripContact` | ✅ | min 39 hand vertices within 4 mm of each grip |
+| `weapons.gripContact` | ✅ | min 46 hand vertices within 4 mm of each grip |
 | `props.noBodyPenetration` | ✅ | deepest prop point -9.9 mm outside the skin (sword_2h_slash@1.73s) |
 | `staff.planted` | ✅ | idle butt within 2.9 mm of the floor; stomp lifts 19.3 cm and lands 2.9 mm from the floor (never below 2.9 mm) |
 | `press.contact` | ✅ | thumb pad -0.03 mm from the button top at contact; pressed 5.06 mm (travel 5.0 mm); clear of the button before the press |
@@ -296,7 +296,7 @@ Coverage by the 5 reference views (UV texels): `{"none": 0.0314, "grazing": 0.06
 | `locomotion.inPlace` | ✅ | jump_in_place pelvis drift 0.025 m, run_in_place pelvis drift 0.012 m, walk_in_place pelvis drift 0.023 m |
 | `weapons.twoHandGrip` | ✅ | support hand within 0.001 mm of the prop's grip_L marker on every frame (worst pistol_fire_2h@0.40s) |
 | `weapons.gripNoPenetration` | ✅ | deepest hand vertex 2.07 mm inside a grip (pistol_aim_2h hand L) |
-| `weapons.gripContact` | ✅ | min 39 hand vertices within 4 mm of each grip |
+| `weapons.gripContact` | ✅ | min 46 hand vertices within 4 mm of each grip |
 | `props.noBodyPenetration` | ✅ | deepest prop point -9.9 mm outside the skin (sword_2h_slash@1.73s) |
 | `staff.planted` | ✅ | idle butt within 2.9 mm of the floor; stomp lifts 19.3 cm and lands 2.9 mm from the floor (never below 2.9 mm) |
 | `press.contact` | ✅ | thumb pad -0.03 mm from the button top at contact; pressed 5.06 mm (travel 5.0 mm); clear of the button before the press |

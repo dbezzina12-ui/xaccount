@@ -10,7 +10,7 @@ play the clip with no extra alignment.
 import numpy as np
 
 from .clips import (FPS, apply_grip, arm_pose, ease, fit_grip, hand_for_socket, lerp_keys, rest_arm, rest_pole,
-                    socket_matrix, thumb_rot)
+                    socket_matrix, thumb_rot, _clearance)
 from .library import SIDES, hand_frame, raise_arm, rotate_world
 from .poses import (Pose, curl_fingers, matrix_from_quat, quat_from_matrix, rx, ry, rz, slerp,
                     swing_twist_y, two_bone_ik)
@@ -556,13 +556,35 @@ def weapon_clips(rig, socks, fixed_markers=None, body=None):
         d = {"spine_02": ry(-10) @ rx(1.0 * np.sin(2 * np.pi * f / 60)), "chest": ry(-8), "head": ry(10) @ rz(-4)}
         return d
 
+    # gun hands: trigger finger pad on the trigger (pulled 7 mm back when firing), thumb laid forward along
+    # the left side of the frame (not wrapped round the grip like a handle); fitted per character, prop frame
+    bl, ul, zl = np.asarray(pi["barrel"]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
+
+    def gun_digits(trig, thumb_t, thumb_dir, left_thumb=None, grip_r=pi["grip_radius"] * 1.05):
+        grip = [(np.zeros(3), ul, grip_r)]
+        ix0 = np.array(fit_digit(rig, socks, "R", "index", trig, avoid=grip)[0])
+        ix1 = np.array(fit_digit(rig, socks, "R", "index", trig - bl * 0.007, avoid=grip)[0])
+        th = fit_digit(rig, socks, "R", "thumb", thumb_t, thumb_dir, avoid=grip)[0]
+        thL = None
+        if left_thumb:
+            t_, d_, M_, fist = left_thumb
+            thL = fit_digit(rig, socks, "L", "thumb", t_, d_, M_side=M_, avoid=grip + [fist])[0]
+
+        def make(trigger, extra=None):
+            def fn(p, f):
+                k = trigger(f)
+                set_digit(p, "R", "index", tuple((1 - k) * ix0 + k * ix1))
+                set_digit(p, "R", "thumb", th)
+                if thL is not None:
+                    set_digit(p, "L", "thumb", thL)
+                if extra:
+                    extra(rig, p)
+            return fn
+        return make
+    pistol_hand = gun_digits(ul * 0.028 + bl * 0.036, ul * 0.040 + bl * 0.040 + zl * 0.026, bl)
+
     def pistol_fingers(trigger):
-        def fn(p, f):
-            p.rot["index_01_R"] = rx(12)
-            p.rot["index_02_R"] = rx(35 + 25 * trigger(f))
-            p.rot["index_03_R"] = rx(20 + 15 * trigger(f))
-            arms_left_relaxed(rig, p)
-        return fn
+        return pistol_hand(trigger, arms_left_relaxed)
 
     def arms_left_relaxed(rig_, p):
         raise_arm(rig_, p, "L", -34, clavicle_share=0.0)
@@ -621,12 +643,13 @@ def weapon_clips(rig, socks, fixed_markers=None, body=None):
         return {"spine_01": rx(2), "spine_02": rx(3 + 0.8 * np.sin(2 * np.pi * f / 60) - 3.0 * k),
                 "chest": rx(2 - 4.0 * k), "neck": rx(4), "head": rx(6 - 4.0 * k)}
 
+    # two-handed: both thumbs forward on the left side, the support thumb under the firing thumb
+    pistol2_hand = gun_digits(ul * 0.028 + bl * 0.036, ul * 0.040 + bl * 0.040 + zl * 0.026, bl,
+                              left_thumb=(ul * 0.012 + bl * 0.048 + zl * 0.030, bl, pi2["markers"]["grip_L"],
+                                          (np.asarray(pi2["support_center"]), ul, pi2["support_radius"])))
+
     def pistol2_fingers(trigger):
-        def fn(p, f):
-            p.rot["index_01_R"] = rx(12)
-            p.rot["index_02_R"] = rx(35 + 25 * trigger(f))
-            p.rot["index_03_R"] = rx(20 + 15 * trigger(f))
-        return fn
+        return pistol2_hand(trigger)
     keys = [(0, Paim2), (30, mat(Paim2[:3, :3], Paim2[:3, 3] + np.array([0, 0, 0.003 * s]))), (60, Paim2)]
     out["pistol_aim_2h"] = _weapon_clip_b(rig, socks, pi2, keys, 60, poles_2h, torso=pistol2_torso,
                                           fingers=pistol2_fingers(lambda f: 0.0), meta={"loop": True})
@@ -659,12 +682,11 @@ def weapon_clips(rig, socks, fixed_markers=None, body=None):
 
     rifle_trigger = lambda f: 0.0  # noqa: E731
 
+    # rifle pistol grip: trigger under the receiver, thumb wrapped over the top of the grip to the left side
+    rifle_hand = gun_digits(ul * 0.020 + bl * 0.040, ul * 0.026 + bl * 0.012 + zl * 0.030, bl)
+
     def rifle_fingers(trigger):
-        def fn(p, f):
-            p.rot["index_01_R"] = rx(12)
-            p.rot["index_02_R"] = rx(35 + 25 * trigger(f))
-            p.rot["index_03_R"] = rx(20 + 15 * trigger(f))
-        return fn
+        return rifle_hand(trigger)
     keys = [(0, Paim_r), (30, mat(Paim_r[:3, :3], Paim_r[:3, 3] + np.array([0, 0, 0.003 * s]))), (60, Paim_r)]
     out["rifle_aim"] = _weapon_clip_b(rig, socks, rf, keys, 60, poles_r, torso=rifle_torso,
                                     fingers=rifle_fingers(rifle_trigger), meta={"loop": True})
@@ -739,6 +761,73 @@ def clip_cheer(rig):
 
 
 # ============================================================ hand-held detonator ====
+def digit_rot(digit, g):
+    """Local rotations for a thumb (az, ax, curl) or a finger (knuckle, middle, spread) configuration."""
+    if digit == "thumb":
+        return thumb_rot(g)
+    a1, a2, sp = g
+    return {f"{digit}_01": rx(a1) @ rz(sp), f"{digit}_02": rx(a2), f"{digit}_03": rx(0.65 * a2)}
+
+
+def _digit_in_prop(rig, pose, socks, side, digit, M_side=None):
+    """Pad point (distal tail + pad) and distal direction of a digit, in the PROP frame: M_side is the hand
+    socket's frame inside the prop (a support-hand marker), identity for the right hand."""
+    sk = rig.sk
+    u = sk[f"hand_{side}"].length / 0.098
+    W = rig.fk(pose)
+    B = W[f"{digit}_03_{side}"]
+    tip = B[:3, 3] + B[:3, 1] * (sk[f"{digit}_03_{side}"].length + 0.0045 * u)
+    S = W[f"hand_{side}"] @ rig.rest_inv[f"hand_{side}"] @ socket_matrix(socks[f"socket_hand_{side}_prop"])
+    Si = np.linalg.inv(S)
+    t, d = (Si @ np.append(tip, 1.0))[:3], Si[:3, :3] @ B[:3, 1]
+    if M_side is not None:
+        t, d = M_side[:3, :3] @ t + M_side[:3, 3], M_side[:3, :3] @ d
+    return t, d
+
+
+def fit_digit(rig, socks, side, digit, target, direction=None, M_side=None, w_dir=0.012, avoid=()):
+    """Configuration of one digit whose pad lands on `target` (prop frame), optionally pointing along
+    `direction` (e.g. a thumb laid forward along a pistol frame), with every phalanx kept outside the
+    `avoid` cylinders [(centre, axis, radius)] (prop frame) - so a thumb wraps AROUND a grip instead of
+    cutting through it. Coarse grid + local refinement."""
+    S = rig.fk(Pose())[f"hand_{side}"] @ rig.rest_inv[f"hand_{side}"] @ socket_matrix(socks[f"socket_hand_{side}_prop"])
+    T = S @ np.linalg.inv(M_side) if M_side is not None else S          # prop frame -> world (rest hand)
+    cyl = [(T[:3, :3] @ np.asarray(c) + T[:3, 3], _n(T[:3, :3] @ np.asarray(a)), r) for c, a, r in avoid]
+
+    def cost(g):
+        p = Pose()
+        for bn, R in digit_rot(digit, g).items():
+            p.rot[f"{bn}_{side}"] = R
+        t, d = _digit_in_prop(rig, p, socks, side, digit, M_side)
+        c = float(np.linalg.norm(t - target))
+        if direction is not None:
+            c += w_dir * (1.0 - float(np.dot(_n(d), _n(np.asarray(direction)))))
+        for cc, aa, rr in cyl:
+            c += 4.0 * max(0.0, 0.001 - _clearance(rig, p, side, digit, cc, aa, rr))
+        return c
+    if digit == "thumb":
+        grid = [(a, b, c) for a in range(-40, 61, 10) for b in range(-70, 61, 10) for c in np.linspace(0, 1, 6)]
+        step, lo, hi = np.array([5.0, 5.0, 0.1]), np.array([-60, -90, 0.0]), np.array([80, 80, 1.2])
+    else:
+        grid = [(a, b, c) for a in range(-10, 81, 10) for b in range(0, 101, 10) for c in range(-20, 21, 10)]
+        step, lo, hi = np.array([5.0, 5.0, 5.0]), np.array([-20, 0, -30.0]), np.array([90, 110, 30.0])
+    best = min(grid, key=cost)
+    bc = cost(best)
+    for _ in range(6):
+        for dd in [(i, j, k) for i in (-1, 0, 1) for j in (-1, 0, 1) for k in (-1, 0, 1)]:
+            g = tuple(np.clip(np.array(best, float) + step * np.array(dd), lo, hi))
+            c = cost(g)
+            if c < bc:
+                best, bc = g, c
+        step = step / 2
+    return tuple(float(x) for x in best), bc
+
+
+def set_digit(p, side, digit, g):
+    for bn, R in digit_rot(digit, g).items():
+        p.rot[f"{bn}_{side}"] = R
+
+
 def _thumb_tip_local(rig, pose, socks, side="R"):
     """Thumb pad (distal tail + pad) in the hand's prop-socket frame."""
     sk = rig.sk

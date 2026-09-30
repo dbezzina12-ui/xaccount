@@ -227,7 +227,7 @@ Game clip set (`animationSet.version` 2):
 | `sword_2h_slash` | | wind-up beside the head with the blade back over the right shoulder → fast diagonal cut in front of the body → follow-through → guard (markers `windup`, `impact`, `recover`) |
 | `staff_idle` | ✓ | wizard staff planted on the floor in front of the right shoulder, held in the right hand, breathing |
 | `staff_stomp` | | lift the staff ~18 cm, slam its butt onto the floor with a dip of the body while the free hand thrusts forward (spell cast), recover (markers `lift`, `impact`) |
-| `pistol_aim` | ✓ | one-handed aim at shoulder height, index on the trigger, left arm relaxed |
+| `pistol_aim` | ✓ | one-handed aim at shoulder height, index pad on the trigger, thumb laid forward along the left side of the frame, left arm relaxed |
 | `pistol_fire` | | single shot: trigger squeeze, **hard recoil** (muzzle climb 30°, kick back 7.5 cm, wrist/elbow give, chest and head snap back), recovery (marker `shot`) |
 | `pistol_aim_2h` | ✓ | two-handed (isosceles) stance: arms extended, gun on the centre line, left hand wrapped around the right fist |
 | `pistol_fire_2h` | | two-handed shot: 20° muzzle climb, 5 cm kick absorbed by both arms and the chest (marker `shot`) |
@@ -259,6 +259,11 @@ hand never slips, whatever the character's proportions. A weapon clip's JSON ent
 { "name": "rifle_fire", "prop": "Rifle", "attach": "socket_hand_R_prop",
   "support": { "hand": "L", "marker": "grip_L" }, "muzzleMarker": "muzzle", "markers": { "shots": [6, 12, 18] } }
 ```
+
+**Gun hands.** The trigger finger and thumb are not the handle-style power grip: per character, the index pad is
+fitted onto the trigger (and 7 mm back for the pull on each shot) and the thumb is laid forward along the left
+side of the frame (pistols; both thumbs forward in the two-handed stance) or wrapped over the top of the grip
+(rifle), with every phalanx kept outside the grip so the thumb goes around it rather than through it.
 
 The markers (`grip_L`, `muzzle`, `tip`, `butt`) are fitted once on the master rig (`build.py props`) and
 stored in `props/weapons.json`; every character's clips reuse those same markers. Hand poses (finger curl,

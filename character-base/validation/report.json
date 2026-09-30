@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-30T17:23:20.339Z",
+  "generated": "2026-09-30T18:49:25.870Z",
   "characters": {
     "master_blank": {
       "ok": true,
@@ -294,12 +294,12 @@
           "supportHandMaxError_mm": 0.001,
           "deepestGripPenetration_mm": 1.13,
           "contactVertices": {
-            "pistol_aim.R": 45,
-            "pistol_aim_2h.R": 45,
-            "pistol_aim_2h.L": 123,
-            "pistol_fire.R": 45,
-            "pistol_fire_2h.R": 45,
-            "pistol_fire_2h.L": 123,
+            "pistol_aim.R": 46,
+            "pistol_aim_2h.R": 46,
+            "pistol_aim_2h.L": 120,
+            "pistol_fire.R": 46,
+            "pistol_fire_2h.R": 46,
+            "pistol_fire_2h.L": 120,
             "press_detonator.R": 80,
             "rifle_aim.R": 45,
             "rifle_aim.L": 61,
@@ -868,12 +868,12 @@
           "supportHandMaxError_mm": 0.001,
           "deepestGripPenetration_mm": 2.28,
           "contactVertices": {
-            "pistol_aim.R": 140,
-            "pistol_aim_2h.R": 140,
-            "pistol_aim_2h.L": 165,
-            "pistol_fire.R": 140,
-            "pistol_fire_2h.R": 140,
-            "pistol_fire_2h.L": 165,
+            "pistol_aim.R": 141,
+            "pistol_aim_2h.R": 141,
+            "pistol_aim_2h.L": 157,
+            "pistol_fire.R": 141,
+            "pistol_fire_2h.R": 141,
+            "pistol_fire_2h.L": 157,
             "press_detonator.R": 205,
             "rifle_aim.R": 140,
             "rifle_aim.L": 149,
@@ -1442,12 +1442,12 @@
           "supportHandMaxError_mm": 0.001,
           "deepestGripPenetration_mm": 1.23,
           "contactVertices": {
-            "pistol_aim.R": 60,
-            "pistol_aim_2h.R": 60,
-            "pistol_aim_2h.L": 141,
-            "pistol_fire.R": 60,
-            "pistol_fire_2h.R": 60,
-            "pistol_fire_2h.L": 141,
+            "pistol_aim.R": 62,
+            "pistol_aim_2h.R": 62,
+            "pistol_aim_2h.L": 137,
+            "pistol_fire.R": 62,
+            "pistol_fire_2h.R": 62,
+            "pistol_fire_2h.L": 137,
             "press_detonator.R": 74,
             "rifle_aim.R": 60,
             "rifle_aim.L": 76,
@@ -1854,7 +1854,7 @@
         {
           "id": "weapons.gripContact",
           "ok": true,
-          "detail": "min 39 hand vertices within 4 mm of each grip"
+          "detail": "min 46 hand vertices within 4 mm of each grip"
         },
         {
           "id": "props.noBodyPenetration",
@@ -2016,16 +2016,16 @@
           "supportHandMaxError_mm": 0.001,
           "deepestGripPenetration_mm": 2.07,
           "contactVertices": {
-            "pistol_aim.R": 39,
-            "pistol_aim_2h.R": 39,
-            "pistol_aim_2h.L": 180,
-            "pistol_fire.R": 39,
-            "pistol_fire_2h.R": 39,
-            "pistol_fire_2h.L": 180,
+            "pistol_aim.R": 46,
+            "pistol_aim_2h.R": 46,
+            "pistol_aim_2h.L": 182,
+            "pistol_fire.R": 46,
+            "pistol_fire_2h.R": 46,
+            "pistol_fire_2h.L": 182,
             "press_detonator.R": 54,
-            "rifle_aim.R": 39,
+            "rifle_aim.R": 46,
             "rifle_aim.L": 54,
-            "rifle_fire.R": 39,
+            "rifle_fire.R": 46,
             "rifle_fire.L": 54,
             "staff_idle.R": 54,
             "staff_stomp.R": 54,
@@ -2268,7 +2268,7 @@
           {
             "id": "weapons.gripContact",
             "ok": true,
-            "detail": "min 39 hand vertices within 4 mm of each grip"
+            "detail": "min 46 hand vertices within 4 mm of each grip"
           },
           {
             "id": "props.noBodyPenetration",
@@ -2433,7 +2433,7 @@
         {
           "id": "weapons.gripContact",
           "ok": true,
-          "detail": "min 39 hand vertices within 4 mm of each grip"
+          "detail": "min 46 hand vertices within 4 mm of each grip"
         },
         {
           "id": "props.noBodyPenetration",
@@ -2598,16 +2598,16 @@
           "supportHandMaxError_mm": 0.001,
           "deepestGripPenetration_mm": 2.07,
           "contactVertices": {
-            "pistol_aim.R": 39,
-            "pistol_aim_2h.R": 39,
-            "pistol_aim_2h.L": 180,
-            "pistol_fire.R": 39,
-            "pistol_fire_2h.R": 39,
-            "pistol_fire_2h.L": 180,
+            "pistol_aim.R": 46,
+            "pistol_aim_2h.R": 46,
+            "pistol_aim_2h.L": 182,
+            "pistol_fire.R": 46,
+            "pistol_fire_2h.R": 46,
+            "pistol_fire_2h.L": 182,
             "press_detonator.R": 54,
-            "rifle_aim.R": 39,
+            "rifle_aim.R": 46,
             "rifle_aim.L": 54,
-            "rifle_fire.R": 39,
+            "rifle_fire.R": 46,
             "rifle_fire.L": 54,
             "staff_idle.R": 54,
             "staff_stomp.R": 54,
@@ -2850,7 +2850,7 @@
           {
             "id": "weapons.gripContact",
             "ok": true,
-            "detail": "min 39 hand vertices within 4 mm of each grip"
+            "detail": "min 46 hand vertices within 4 mm of each grip"
           },
           {
             "id": "props.noBodyPenetration",

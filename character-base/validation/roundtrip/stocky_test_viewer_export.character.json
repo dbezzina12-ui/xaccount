@@ -4,7 +4,7 @@
   "displayName": "Stocky test variant",
   "status": "textured",
   "frozen": false,
-  "created": "2026-09-30T17:27:24.208Z",
+  "created": "2026-09-30T18:53:33.242Z",
   "template": {
     "id": "gamboligy.humanoid_base",
     "version": "1.0.0",
@@ -1543,8 +1543,8 @@
   "freezeRecord": {
     "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
     "uvSha256": "a0d908c078b7ba6a77ede85c73e5cacd601b44a658d2ef0f8e5659b58593cd6f",
-    "glbSha256": "40aa79d2082b4feff9c53aed0c83068dbfc2010ef50ebf227d6a1805758630b7",
-    "blendSha256": "6e745f94b3736a4c185df1df282da8e33522463dafab684d8dd85e79dddf11bd"
+    "glbSha256": "f09c13d123d60a80007bbaf5655349a075cb688302822e4472f8c858fb40aa68",
+    "blendSha256": "2255981968a9217273dbdde0b51dc081221106a72bac641bb57b70a8d9ebee11"
   },
   "projection": {
     "references": "references/stocky_test/cameras.json",
@@ -1563,7 +1563,7 @@
     }
   },
   "animationSet": {
-    "version": 4,
+    "version": 5,
     "clips": [
       "idle",
       "reach_grip_handle",
@@ -1606,15 +1606,29 @@
       "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"
     },
     {
-      "date": "2026-09-30T17:01:46+00:00",
+      "date": "2026-09-30T17:23:07+00:00",
       "clipSetVersion": 4,
       "clips": 22,
       "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
       "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"
     },
     {
-      "date": "2026-09-30T17:23:07+00:00",
-      "clipSetVersion": 4,
+      "date": "2026-09-30T18:18:20+00:00",
+      "clipSetVersion": 5,
+      "clips": 22,
+      "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
+      "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"
+    },
+    {
+      "date": "2026-09-30T18:34:41+00:00",
+      "clipSetVersion": 5,
+      "clips": 22,
+      "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
+      "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"
+    },
+    {
+      "date": "2026-09-30T18:49:13+00:00",
+      "clipSetVersion": 5,
       "clips": 22,
       "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
       "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"

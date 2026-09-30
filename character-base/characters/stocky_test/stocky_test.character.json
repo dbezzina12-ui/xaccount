@@ -647,8 +647,8 @@
           0.03561355546116829
         ],
         "rotation": [
-          -1.3939459364564755e-8,
-          -1.4482091081902126e-8,
+          -1.3939459364564755e-08,
+          -1.4482091081902126e-08,
           0.5969306230545044,
           0.8022928833961487
         ]
@@ -665,8 +665,8 @@
           0.035613469779491425
         ],
         "rotation": [
-          -5.236937106189998e-9,
-          1.4743034348896344e-8,
+          -5.236937106189998e-09,
+          1.4743034348896344e-08,
           -0.5969306230545044,
           0.8022928237915039
         ]
@@ -683,8 +683,8 @@
           0
         ],
         "rotation": [
-          3.774895063202166e-8,
-          -5.960465188081798e-8,
+          3.774895063202166e-08,
+          -5.960465188081798e-08,
           9.786456042250313e-15,
           1
         ]
@@ -696,15 +696,15 @@
       "gltfNode": {
         "parentNode": "chest",
         "translation": [
-          4.002690179305546e-9,
+          4.002690179305546e-09,
           0.02096136473119259,
           -0.11310148984193802
         ],
         "rotation": [
-          4.36025295869058e-8,
+          4.36025295869058e-08,
           0.9999813437461853,
           0.006106138229370117,
-          1.7961715670367084e-8
+          1.7961715670367084e-08
         ]
       }
     }
@@ -727,7 +727,7 @@
       "name": "idle",
       "frames": 121,
       "fps": 30,
-      "duration": 4,
+      "duration": 4.0,
       "loop": true
     },
     {
@@ -743,9 +743,9 @@
         "ring": 0.675,
         "pinky": 0.588,
         "thumb": [
-          0,
-          40,
-          1
+          0.0,
+          40.0,
+          1.0
         ]
       },
       "markers": {
@@ -819,7 +819,7 @@
       "name": "float_idle",
       "frames": 91,
       "fps": 30,
-      "duration": 3,
+      "duration": 3.0,
       "loop": true,
       "inPlace": true,
       "pelvisLift_m": 0.294
@@ -841,7 +841,7 @@
       "name": "float_monk_loop",
       "frames": 121,
       "fps": 30,
-      "duration": 4,
+      "duration": 4.0,
       "loop": true,
       "inPlace": true
     },
@@ -849,7 +849,7 @@
       "name": "wave",
       "frames": 61,
       "fps": 30,
-      "duration": 2,
+      "duration": 2.0,
       "loop": false,
       "markers": {
         "end": 60
@@ -870,7 +870,7 @@
       "name": "sword_2h_idle",
       "frames": 61,
       "fps": 30,
-      "duration": 2,
+      "duration": 2.0,
       "loop": true,
       "prop": "Sword2H",
       "attach": "socket_hand_R_prop",
@@ -888,17 +888,17 @@
           "thumb": [
             0,
             50,
-            1
+            1.0
           ]
         }
       },
-      "propBodyPenetration_m": 0
+      "propBodyPenetration_m": 0.0
     },
     {
       "name": "sword_2h_slash",
       "frames": 61,
       "fps": 30,
-      "duration": 2,
+      "duration": 2.0,
       "loop": false,
       "prop": "Sword2H",
       "attach": "socket_hand_R_prop",
@@ -916,11 +916,11 @@
           "thumb": [
             0,
             50,
-            1
+            1.0
           ]
         }
       },
-      "propBodyPenetration_m": 0,
+      "propBodyPenetration_m": 0.0,
       "markers": {
         "windup": 12,
         "impact": 24,
@@ -932,7 +932,7 @@
       "name": "staff_idle",
       "frames": 61,
       "fps": 30,
-      "duration": 2,
+      "duration": 2.0,
       "loop": true,
       "prop": "Staff",
       "attach": "socket_hand_R_prop",
@@ -946,11 +946,11 @@
           "thumb": [
             0,
             50,
-            1
+            1.0
           ]
         }
       },
-      "propBodyPenetration_m": 0,
+      "propBodyPenetration_m": 0.0,
       "buttMarker": "butt",
       "note": "staff planted on the ground"
     },
@@ -972,11 +972,11 @@
           "thumb": [
             0,
             50,
-            1
+            1.0
           ]
         }
       },
-      "propBodyPenetration_m": 0,
+      "propBodyPenetration_m": 0.0,
       "markers": {
         "lift": 10,
         "impact": 18,
@@ -989,7 +989,7 @@
       "name": "pistol_aim",
       "frames": 61,
       "fps": 30,
-      "duration": 2,
+      "duration": 2.0,
       "loop": true,
       "prop": "Pistol",
       "attach": "socket_hand_R_prop",
@@ -1003,11 +1003,11 @@
           "thumb": [
             0,
             50,
-            1
+            1.0
           ]
         }
       },
-      "propBodyPenetration_m": 0
+      "propBodyPenetration_m": 0.0
     },
     {
       "name": "pistol_fire",
@@ -1027,11 +1027,11 @@
           "thumb": [
             0,
             50,
-            1
+            1.0
           ]
         }
       },
-      "propBodyPenetration_m": 0,
+      "propBodyPenetration_m": 0.0,
       "markers": {
         "shot": [
           8
@@ -1040,7 +1040,7 @@
       },
       "muzzleMarker": "muzzle",
       "recoil": {
-        "muzzleClimb_deg": 30,
+        "muzzleClimb_deg": 30.0,
         "kickBack_m": 0.073
       }
     },
@@ -1048,7 +1048,7 @@
       "name": "pistol_aim_2h",
       "frames": 61,
       "fps": 30,
-      "duration": 2,
+      "duration": 2.0,
       "loop": true,
       "prop": "Pistol",
       "attach": "socket_hand_R_prop",
@@ -1057,7 +1057,7 @@
         "marker": "grip_L_2h",
         "gripRadius": 0.0377,
         "gripCenter": [
-          0,
+          0.0,
           -0.006,
           0.004
         ]
@@ -1071,11 +1071,11 @@
           "thumb": [
             0,
             50,
-            1
+            1.0
           ]
         }
       },
-      "propBodyPenetration_m": 0
+      "propBodyPenetration_m": 0.0
     },
     {
       "name": "pistol_fire_2h",
@@ -1090,7 +1090,7 @@
         "marker": "grip_L_2h",
         "gripRadius": 0.0377,
         "gripCenter": [
-          0,
+          0.0,
           -0.006,
           0.004
         ]
@@ -1104,11 +1104,11 @@
           "thumb": [
             0,
             50,
-            1
+            1.0
           ]
         }
       },
-      "propBodyPenetration_m": 0,
+      "propBodyPenetration_m": 0.0,
       "markers": {
         "shot": [
           8
@@ -1117,7 +1117,7 @@
       },
       "muzzleMarker": "muzzle",
       "recoil": {
-        "muzzleClimb_deg": 20,
+        "muzzleClimb_deg": 20.0,
         "kickBack_m": 0.049
       }
     },
@@ -1125,7 +1125,7 @@
       "name": "rifle_aim",
       "frames": 61,
       "fps": 30,
-      "duration": 2,
+      "duration": 2.0,
       "loop": true,
       "prop": "Rifle",
       "attach": "socket_hand_R_prop",
@@ -1143,11 +1143,11 @@
           "thumb": [
             0,
             50,
-            1
+            1.0
           ]
         }
       },
-      "propBodyPenetration_m": 0
+      "propBodyPenetration_m": 0.0
     },
     {
       "name": "rifle_fire",
@@ -1171,11 +1171,11 @@
           "thumb": [
             0,
             50,
-            1
+            1.0
           ]
         }
       },
-      "propBodyPenetration_m": 0,
+      "propBodyPenetration_m": 0.0,
       "markers": {
         "shots": [
           6,
@@ -1186,7 +1186,7 @@
       },
       "muzzleMarker": "muzzle",
       "recoil": {
-        "muzzleClimbPerShot_deg": 9,
+        "muzzleClimbPerShot_deg": 9.0,
         "kickBack_m": 0.044
       }
     },
@@ -1194,7 +1194,7 @@
       "name": "press_detonator",
       "frames": 91,
       "fps": 30,
-      "duration": 3,
+      "duration": 3.0,
       "loop": false,
       "prop": "Detonator",
       "attach": "socket_hand_R_prop",
@@ -1237,7 +1237,7 @@
           "thumb": [
             0,
             50,
-            1
+            1.0
           ]
         }
       }
@@ -1252,9 +1252,9 @@
         0.9375797128472869
       ],
       "axis": [
-        0,
-        0,
-        1
+        0.0,
+        0.0,
+        1.0
       ],
       "radius": 0.01566287525638635,
       "length": 0.13705015849338056
@@ -1265,7 +1265,7 @@
     "glb": "stocky_test.glb",
     "blend": "stocky_test.blend",
     "testProps": "test_props.glb",
-    "glbSha256": "40aa79d2082b4feff9c53aed0c83068dbfc2010ef50ebf227d6a1805758630b7"
+    "glbSha256": "f09c13d123d60a80007bbaf5655349a075cb688302822e4472f8c858fb40aa68"
   },
   "exportCheck": {
     "nodes": 84,
@@ -1363,8 +1363,8 @@
           0
         ],
         "rotation": [
-          3.774895063202166e-8,
-          -5.960465188081798e-8,
+          3.774895063202166e-08,
+          -5.960465188081798e-08,
           9.786456042250313e-15,
           1
         ]
@@ -1377,8 +1377,8 @@
           0.03561355546116829
         ],
         "rotation": [
-          -1.3939459364564755e-8,
-          -1.4482091081902126e-8,
+          -1.3939459364564755e-08,
+          -1.4482091081902126e-08,
           0.5969306230545044,
           0.8022928833961487
         ]
@@ -1391,8 +1391,8 @@
           0.035613469779491425
         ],
         "rotation": [
-          -5.236937106189998e-9,
-          1.4743034348896344e-8,
+          -5.236937106189998e-09,
+          1.4743034348896344e-08,
           -0.5969306230545044,
           0.8022928237915039
         ]
@@ -1400,15 +1400,15 @@
       "socket_back_accessory": {
         "parentNode": "chest",
         "translation": [
-          4.002690179305546e-9,
+          4.002690179305546e-09,
           0.02096136473119259,
           -0.11310148984193802
         ],
         "rotation": [
-          4.36025295869058e-8,
+          4.36025295869058e-08,
           0.9999813437461853,
           0.006106138229370117,
-          1.7961715670367084e-8
+          1.7961715670367084e-08
         ]
       }
     },
@@ -1533,8 +1533,8 @@
   "freezeRecord": {
     "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
     "uvSha256": "a0d908c078b7ba6a77ede85c73e5cacd601b44a658d2ef0f8e5659b58593cd6f",
-    "glbSha256": "40aa79d2082b4feff9c53aed0c83068dbfc2010ef50ebf227d6a1805758630b7",
-    "blendSha256": "6e745f94b3736a4c185df1df282da8e33522463dafab684d8dd85e79dddf11bd"
+    "glbSha256": "f09c13d123d60a80007bbaf5655349a075cb688302822e4472f8c858fb40aa68",
+    "blendSha256": "2255981968a9217273dbdde0b51dc081221106a72bac641bb57b70a8d9ebee11"
   },
   "projection": {
     "references": "references/stocky_test/cameras.json",
@@ -1553,7 +1553,7 @@
     }
   },
   "animationSet": {
-    "version": 4,
+    "version": 5,
     "clips": [
       "idle",
       "reach_grip_handle",
@@ -1598,6 +1598,13 @@
     {
       "date": "2026-09-30T17:23:07+00:00",
       "clipSetVersion": 4,
+      "clips": 22,
+      "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
+      "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"
+    },
+    {
+      "date": "2026-09-30T18:49:13+00:00",
+      "clipSetVersion": 5,
       "clips": 22,
       "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
       "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"

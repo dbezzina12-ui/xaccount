@@ -32,7 +32,7 @@ from cbase.skeleton import BEND_CONVENTION, DRIVERS, build_skeleton, socket_defs
 from cbase.collide import BodyProxy  # noqa: E402
 
 UV_VERSION = 1
-CLIP_SET_VERSION = 4          # bump when clip recipes change; frozen characters get `update-clips`
+CLIP_SET_VERSION = 5          # bump when clip recipes change; frozen characters get `update-clips`
 SKIN_VERSION = 2              # bump when skin weights change; `update-clips` re-skins frozen characters (geometry/UVs untouched)
 STOCKY = {"height": 1.68, "headSize": 1.03, "shoulderWidth": 1.08, "torsoWidth": 1.16, "torsoDepth": 1.14,
           "bellySize": 1.55, "armLength": 0.96, "legLength": 0.92, "handSize": 1.07, "footSize": 1.05}
