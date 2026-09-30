@@ -8,7 +8,7 @@ import numpy as np  # noqa: E402
 from cbase.library import raise_arm, pose_arms_raised  # noqa: E402
 from cbase.mesh import build_mesh  # noqa: E402
 from cbase.params import resolve  # noqa: E402
-from cbase.poses import Pose, Rig, rx, two_bone_ik  # noqa: E402
+from cbase.poses import Pose, Rig, two_bone_ik  # noqa: E402
 from cbase.skeleton import build_skeleton  # noqa: E402
 from cbase.weights import compute_weights  # noqa: E402
 
