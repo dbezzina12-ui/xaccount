@@ -1,0 +1,1063 @@
+{
+  "generated": "2026-09-30T12:38:58.467Z",
+  "characters": {
+    "master_blank": {
+      "ok": true,
+      "checks": [
+        {
+          "id": "parts.present",
+          "ok": true,
+          "detail": "found 16: Foot_L, Foot_R, Forearm_L, Forearm_R, Hand_L, Hand_R, Head, Neck, Pelvis, Shin_L, Shin_R, Thigh_L, Thigh_R, Torso, UpperArm_L, UpperArm_R"
+        },
+        {
+          "id": "skeleton.single",
+          "ok": true,
+          "detail": "1 Skeleton objects, 1 distinct joint lists, 63 joints"
+        },
+        {
+          "id": "skeleton.matchesConfig",
+          "ok": true,
+          "detail": "63 bones in config"
+        },
+        {
+          "id": "sockets.parented",
+          "ok": true,
+          "detail": "socket_hand_L_prop->hand_L, socket_hand_R_prop->hand_R, socket_head_accessory->head, socket_back_accessory->chest"
+        },
+        {
+          "id": "clips.named",
+          "ok": true,
+          "detail": "_qa_pose_cycle, idle, press_button, reach_grip_handle"
+        },
+        {
+          "id": "uv.inRange",
+          "ok": true,
+          "detail": "17067 UVs in [0,1]"
+        },
+        {
+          "id": "weights.normalized",
+          "ok": true,
+          "detail": "max |1-sum| = 4.16e-8, max influences 4"
+        },
+        {
+          "id": "seams.boundaryLoops",
+          "ok": true,
+          "detail": "375 shared boundary vertices across 17 part pairs"
+        },
+        {
+          "id": "seams.normalsMatch",
+          "ok": true,
+          "detail": "min dot of boundary normals 1.000000"
+        },
+        {
+          "id": "seams.noCracksInClips",
+          "ok": true,
+          "detail": "max gap 0.00e+0 m over 296 frames (null)"
+        },
+        {
+          "id": "bones.lengthsConstant",
+          "ok": true,
+          "detail": "max length drift 2.48e-6 m (shin_L->foot_L _qa_pose_cycle@7.67) – forearms/shins never shorten"
+        },
+        {
+          "id": "sockets.followBones",
+          "ok": true,
+          "detail": "max change of socket-in-bone matrix 8.88e-16"
+        },
+        {
+          "id": "helpers.halfRotation",
+          "ok": true,
+          "detail": "max |helper - source/2| = 0.035 deg (hip_helper_L _qa_pose_cycle@0.00)"
+        },
+        {
+          "id": "hand_L.palmFacesBody",
+          "ok": true,
+          "detail": "palm normal -0.706,-0.708,0 (expected toward the body and down)"
+        },
+        {
+          "id": "hand_L.thumbRadialSide",
+          "ok": true,
+          "detail": "thumb 0.0241 m in front of index knuckle; index 0.0601 m in front of pinky (A-pose, palms in)"
+        },
+        {
+          "id": "hand_R.palmFacesBody",
+          "ok": true,
+          "detail": "palm normal 0.706,-0.708,0 (expected toward the body and down)"
+        },
+        {
+          "id": "hand_R.thumbRadialSide",
+          "ok": true,
+          "detail": "thumb 0.0241 m in front of index knuckle; index 0.0601 m in front of pinky (A-pose, palms in)"
+        },
+        {
+          "id": "grip.noPenetration",
+          "ok": true,
+          "detail": "0 hand vertices >1 mm inside the handle (deepest 0.00 mm)"
+        },
+        {
+          "id": "grip.contact",
+          "ok": true,
+          "detail": "60 vertices within 4 mm of the handle surface; socket 0.000 mm from the handle axis"
+        },
+        {
+          "id": "press.contact",
+          "ok": true,
+          "detail": "fingertip -1.05 mm from button top at contact frame; pressed 7.02 mm (button travel 6.0 mm)"
+        }
+      ],
+      "info": {
+        "material": {
+          "type": "MeshStandardMaterial",
+          "hasMap": false,
+          "mapSize": null
+        },
+        "coincidentGroups": 1301,
+        "crossPartGroups": 375,
+        "boundaries": {
+          "Foot_L+Shin_L": 24,
+          "Foot_R+Shin_R": 24,
+          "Forearm_L+UpperArm_L": 24,
+          "Forearm_L+Hand_L": 24,
+          "Forearm_R+UpperArm_R": 24,
+          "Forearm_R+Hand_R": 24,
+          "Head+Neck": 32,
+          "Neck+Torso": 32,
+          "Pelvis+Thigh_L+Thigh_R": 2,
+          "Pelvis+Thigh_L": 15,
+          "Pelvis+Thigh_R": 15,
+          "Pelvis+Torso": 32,
+          "Shin_L+Thigh_L": 24,
+          "Shin_R+Thigh_R": 24,
+          "Thigh_L+Thigh_R": 7,
+          "Torso+UpperArm_L": 24,
+          "Torso+UpperArm_R": 24
+        },
+        "framesChecked": 296,
+        "clipSeamGaps": {
+          "_qa_pose_cycle": {
+            "maxSeamGap": 0
+          },
+          "idle": {
+            "maxSeamGap": 0
+          },
+          "press_button": {
+            "maxSeamGap": 0
+          },
+          "reach_grip_handle": {
+            "maxSeamGap": 0
+          }
+        },
+        "grip": {
+          "holdTime": 2.2666666666666666,
+          "verticesInsideHandle": 0,
+          "deepest_mm": 0,
+          "contactVertices": 60,
+          "socketToAxis_mm": 0
+        },
+        "press": {
+          "fingertipAboveButtonAtContact_mm": -1.05,
+          "pressDepth_mm": 7.02,
+          "travel_mm": 5.96590909090909
+        }
+      },
+      "pageErrors": [],
+      "screenshots": [
+        "screens/master_blank/blank_arms_raised_az35.png",
+        "screens/master_blank/blank_arms_raised_az215.png",
+        "screens/master_blank/blank_elbows_bent_az35.png",
+        "screens/master_blank/blank_elbows_bent_az215.png",
+        "screens/master_blank/blank_hands_near_face_az35.png",
+        "screens/master_blank/blank_hands_near_face_az215.png",
+        "screens/master_blank/blank_wrist_rotation_finger_curl_az35.png",
+        "screens/master_blank/blank_wrist_rotation_finger_curl_az215.png",
+        "screens/master_blank/blank_torso_twist_az35.png",
+        "screens/master_blank/blank_torso_twist_az215.png",
+        "screens/master_blank/blank_head_turn_az35.png",
+        "screens/master_blank/blank_head_turn_az215.png",
+        "screens/master_blank/blank_crouch_az35.png",
+        "screens/master_blank/blank_crouch_az215.png",
+        "screens/master_blank/blank_closeup_arms_raised_clavicle_L_az20.png",
+        "screens/master_blank/blank_closeup_arms_raised_clavicle_L_az160.png",
+        "screens/master_blank/blank_closeup_arms_raised_clavicle_L_az300.png",
+        "screens/master_blank/blank_closeup_elbows_bent_forearm_R_az300.png",
+        "screens/master_blank/blank_closeup_elbows_bent_forearm_R_az200.png",
+        "screens/master_blank/blank_closeup_hands_near_face_head_az0.png",
+        "screens/master_blank/blank_closeup_hands_near_face_head_az40.png",
+        "screens/master_blank/blank_closeup_wrist_rotation_finger_curl_hand_L_az30.png",
+        "screens/master_blank/blank_closeup_wrist_rotation_finger_curl_hand_L_az120.png",
+        "screens/master_blank/blank_closeup_wrist_rotation_finger_curl_hand_L_az240.png",
+        "screens/master_blank/blank_closeup_wrist_rotation_finger_curl_hand_R_az330.png",
+        "screens/master_blank/blank_closeup_wrist_rotation_finger_curl_hand_R_az240.png",
+        "screens/master_blank/blank_closeup_torso_twist_spine_02_az0.png",
+        "screens/master_blank/blank_closeup_torso_twist_spine_02_az180.png",
+        "screens/master_blank/blank_closeup_head_turn_neck_az60.png",
+        "screens/master_blank/blank_closeup_head_turn_neck_az200.png",
+        "screens/master_blank/blank_closeup_crouch_thigh_L_az0.png",
+        "screens/master_blank/blank_closeup_crouch_thigh_L_az90.png",
+        "screens/master_blank/blank_closeup_crouch_thigh_L_az200.png",
+        "screens/master_blank/blank_closeup_crouch_thigh_L_az300.png",
+        "screens/master_blank/checker_arms_raised_az35.png",
+        "screens/master_blank/checker_arms_raised_az215.png",
+        "screens/master_blank/checker_elbows_bent_az35.png",
+        "screens/master_blank/checker_elbows_bent_az215.png",
+        "screens/master_blank/checker_hands_near_face_az35.png",
+        "screens/master_blank/checker_hands_near_face_az215.png",
+        "screens/master_blank/checker_wrist_rotation_finger_curl_az35.png",
+        "screens/master_blank/checker_wrist_rotation_finger_curl_az215.png",
+        "screens/master_blank/checker_torso_twist_az35.png",
+        "screens/master_blank/checker_torso_twist_az215.png",
+        "screens/master_blank/checker_head_turn_az35.png",
+        "screens/master_blank/checker_head_turn_az215.png",
+        "screens/master_blank/checker_crouch_az35.png",
+        "screens/master_blank/checker_crouch_az215.png",
+        "screens/master_blank/checker_closeup_arms_raised_clavicle_L_az20.png",
+        "screens/master_blank/checker_closeup_arms_raised_clavicle_L_az160.png",
+        "screens/master_blank/checker_closeup_arms_raised_clavicle_L_az300.png",
+        "screens/master_blank/checker_closeup_elbows_bent_forearm_R_az300.png",
+        "screens/master_blank/checker_closeup_elbows_bent_forearm_R_az200.png",
+        "screens/master_blank/checker_closeup_hands_near_face_head_az0.png",
+        "screens/master_blank/checker_closeup_hands_near_face_head_az40.png",
+        "screens/master_blank/checker_closeup_wrist_rotation_finger_curl_hand_L_az30.png",
+        "screens/master_blank/checker_closeup_wrist_rotation_finger_curl_hand_L_az120.png",
+        "screens/master_blank/checker_closeup_wrist_rotation_finger_curl_hand_L_az240.png",
+        "screens/master_blank/checker_closeup_wrist_rotation_finger_curl_hand_R_az330.png",
+        "screens/master_blank/checker_closeup_wrist_rotation_finger_curl_hand_R_az240.png",
+        "screens/master_blank/checker_closeup_torso_twist_spine_02_az0.png",
+        "screens/master_blank/checker_closeup_torso_twist_spine_02_az180.png",
+        "screens/master_blank/checker_closeup_head_turn_neck_az60.png",
+        "screens/master_blank/checker_closeup_head_turn_neck_az200.png",
+        "screens/master_blank/checker_closeup_crouch_thigh_L_az0.png",
+        "screens/master_blank/checker_closeup_crouch_thigh_L_az90.png",
+        "screens/master_blank/checker_closeup_crouch_thigh_L_az200.png",
+        "screens/master_blank/checker_closeup_crouch_thigh_L_az300.png"
+      ],
+      "viewerRoundTrip": {
+        "ok": true,
+        "checks": [
+          {
+            "id": "parts.present",
+            "ok": true,
+            "detail": "found 16: Foot_L, Foot_R, Forearm_L, Forearm_R, Hand_L, Hand_R, Head, Neck, Pelvis, Shin_L, Shin_R, Thigh_L, Thigh_R, Torso, UpperArm_L, UpperArm_R"
+          },
+          {
+            "id": "skeleton.single",
+            "ok": true,
+            "detail": "16 Skeleton objects, 1 distinct joint lists, 63 joints"
+          },
+          {
+            "id": "skeleton.matchesConfig",
+            "ok": true,
+            "detail": "63 bones in config"
+          },
+          {
+            "id": "sockets.parented",
+            "ok": true,
+            "detail": "socket_hand_L_prop->hand_L, socket_hand_R_prop->hand_R, socket_head_accessory->head, socket_back_accessory->chest"
+          },
+          {
+            "id": "clips.named",
+            "ok": true,
+            "detail": "_qa_pose_cycle, idle, press_button, reach_grip_handle"
+          },
+          {
+            "id": "uv.inRange",
+            "ok": true,
+            "detail": "17067 UVs in [0,1]"
+          },
+          {
+            "id": "weights.normalized",
+            "ok": true,
+            "detail": "max |1-sum| = 4.14e-8, max influences 4"
+          },
+          {
+            "id": "material.texture",
+            "ok": true,
+            "detail": "{\"type\":\"MeshStandardMaterial\",\"hasMap\":true,\"mapSize\":[2048,2048]}"
+          },
+          {
+            "id": "seams.boundaryLoops",
+            "ok": true,
+            "detail": "375 shared boundary vertices across 17 part pairs"
+          },
+          {
+            "id": "seams.normalsMatch",
+            "ok": true,
+            "detail": "min dot of boundary normals 1.000000"
+          },
+          {
+            "id": "seams.noCracksInClips",
+            "ok": true,
+            "detail": "max gap 0.00e+0 m over 100 frames (null)"
+          },
+          {
+            "id": "bones.lengthsConstant",
+            "ok": true,
+            "detail": "max length drift 2.35e-6 m (shin_R->foot_R _qa_pose_cycle@7.20) – forearms/shins never shorten"
+          },
+          {
+            "id": "sockets.followBones",
+            "ok": true,
+            "detail": "max change of socket-in-bone matrix 8.88e-16"
+          },
+          {
+            "id": "helpers.halfRotation",
+            "ok": true,
+            "detail": "max |helper - source/2| = 0.035 deg (hip_helper_L _qa_pose_cycle@0.00)"
+          },
+          {
+            "id": "hand_L.palmFacesBody",
+            "ok": true,
+            "detail": "palm normal -0.706,-0.708,0 (expected toward the body and down)"
+          },
+          {
+            "id": "hand_L.thumbRadialSide",
+            "ok": true,
+            "detail": "thumb 0.0241 m in front of index knuckle; index 0.0601 m in front of pinky (A-pose, palms in)"
+          },
+          {
+            "id": "hand_R.palmFacesBody",
+            "ok": true,
+            "detail": "palm normal 0.706,-0.708,0 (expected toward the body and down)"
+          },
+          {
+            "id": "hand_R.thumbRadialSide",
+            "ok": true,
+            "detail": "thumb 0.0241 m in front of index knuckle; index 0.0601 m in front of pinky (A-pose, palms in)"
+          },
+          {
+            "id": "grip.noPenetration",
+            "ok": true,
+            "detail": "0 hand vertices >1 mm inside the handle (deepest 0.00 mm)"
+          },
+          {
+            "id": "grip.contact",
+            "ok": true,
+            "detail": "60 vertices within 4 mm of the handle surface; socket 0.000 mm from the handle axis"
+          },
+          {
+            "id": "press.contact",
+            "ok": true,
+            "detail": "fingertip -1.05 mm from button top at contact frame; pressed 7.02 mm (button travel 6.0 mm)"
+          }
+        ],
+        "material": {
+          "type": "MeshStandardMaterial",
+          "hasMap": true,
+          "mapSize": [
+            2048,
+            2048
+          ]
+        },
+        "errors": []
+      }
+    },
+    "stocky_test": {
+      "ok": true,
+      "checks": [
+        {
+          "id": "parts.present",
+          "ok": true,
+          "detail": "found 16: Foot_L, Foot_R, Forearm_L, Forearm_R, Hand_L, Hand_R, Head, Neck, Pelvis, Shin_L, Shin_R, Thigh_L, Thigh_R, Torso, UpperArm_L, UpperArm_R"
+        },
+        {
+          "id": "skeleton.single",
+          "ok": true,
+          "detail": "1 Skeleton objects, 1 distinct joint lists, 63 joints"
+        },
+        {
+          "id": "skeleton.matchesConfig",
+          "ok": true,
+          "detail": "63 bones in config"
+        },
+        {
+          "id": "sockets.parented",
+          "ok": true,
+          "detail": "socket_hand_L_prop->hand_L, socket_hand_R_prop->hand_R, socket_head_accessory->head, socket_back_accessory->chest"
+        },
+        {
+          "id": "clips.named",
+          "ok": true,
+          "detail": "_qa_pose_cycle, idle, press_button, reach_grip_handle"
+        },
+        {
+          "id": "uv.inRange",
+          "ok": true,
+          "detail": "17067 UVs in [0,1]"
+        },
+        {
+          "id": "weights.normalized",
+          "ok": true,
+          "detail": "max |1-sum| = 4.47e-8, max influences 4"
+        },
+        {
+          "id": "seams.boundaryLoops",
+          "ok": true,
+          "detail": "375 shared boundary vertices across 17 part pairs"
+        },
+        {
+          "id": "seams.normalsMatch",
+          "ok": true,
+          "detail": "min dot of boundary normals 1.000000"
+        },
+        {
+          "id": "seams.noCracksInClips",
+          "ok": true,
+          "detail": "max gap 0.00e+0 m over 296 frames (null)"
+        },
+        {
+          "id": "bones.lengthsConstant",
+          "ok": true,
+          "detail": "max length drift 2.32e-6 m (shin_L->foot_L _qa_pose_cycle@7.67) – forearms/shins never shorten"
+        },
+        {
+          "id": "sockets.followBones",
+          "ok": true,
+          "detail": "max change of socket-in-bone matrix 6.66e-16"
+        },
+        {
+          "id": "helpers.halfRotation",
+          "ok": true,
+          "detail": "max |helper - source/2| = 0.023 deg (shoulder_helper_R idle@3.40)"
+        },
+        {
+          "id": "hand_L.palmFacesBody",
+          "ok": true,
+          "detail": "palm normal -0.706,-0.708,0 (expected toward the body and down)"
+        },
+        {
+          "id": "hand_L.thumbRadialSide",
+          "ok": true,
+          "detail": "thumb 0.0254 m in front of index knuckle; index 0.0633 m in front of pinky (A-pose, palms in)"
+        },
+        {
+          "id": "hand_R.palmFacesBody",
+          "ok": true,
+          "detail": "palm normal 0.706,-0.708,0 (expected toward the body and down)"
+        },
+        {
+          "id": "hand_R.thumbRadialSide",
+          "ok": true,
+          "detail": "thumb 0.0254 m in front of index knuckle; index 0.0633 m in front of pinky (A-pose, palms in)"
+        },
+        {
+          "id": "grip.noPenetration",
+          "ok": true,
+          "detail": "0 hand vertices >1 mm inside the handle (deepest 0.00 mm)"
+        },
+        {
+          "id": "grip.contact",
+          "ok": true,
+          "detail": "65 vertices within 4 mm of the handle surface; socket 0.000 mm from the handle axis"
+        },
+        {
+          "id": "press.contact",
+          "ok": true,
+          "detail": "fingertip -1.11 mm from button top at contact frame; pressed 6.98 mm (button travel 5.9 mm)"
+        }
+      ],
+      "info": {
+        "material": {
+          "type": "MeshStandardMaterial",
+          "hasMap": false,
+          "mapSize": null
+        },
+        "coincidentGroups": 1301,
+        "crossPartGroups": 375,
+        "boundaries": {
+          "Foot_L+Shin_L": 24,
+          "Foot_R+Shin_R": 24,
+          "Forearm_L+UpperArm_L": 24,
+          "Forearm_L+Hand_L": 24,
+          "Forearm_R+UpperArm_R": 24,
+          "Forearm_R+Hand_R": 24,
+          "Head+Neck": 32,
+          "Neck+Torso": 32,
+          "Pelvis+Thigh_L+Thigh_R": 2,
+          "Pelvis+Thigh_L": 15,
+          "Pelvis+Thigh_R": 15,
+          "Pelvis+Torso": 32,
+          "Shin_L+Thigh_L": 24,
+          "Shin_R+Thigh_R": 24,
+          "Thigh_L+Thigh_R": 7,
+          "Torso+UpperArm_L": 24,
+          "Torso+UpperArm_R": 24
+        },
+        "framesChecked": 296,
+        "clipSeamGaps": {
+          "_qa_pose_cycle": {
+            "maxSeamGap": 0
+          },
+          "idle": {
+            "maxSeamGap": 0
+          },
+          "press_button": {
+            "maxSeamGap": 0
+          },
+          "reach_grip_handle": {
+            "maxSeamGap": 0
+          }
+        },
+        "grip": {
+          "holdTime": 2.2666666666666666,
+          "verticesInsideHandle": 0,
+          "deepest_mm": 0,
+          "contactVertices": 65,
+          "socketToAxis_mm": 0
+        },
+        "press": {
+          "fingertipAboveButtonAtContact_mm": -1.11,
+          "pressDepth_mm": 6.98,
+          "travel_mm": 5.873578221144881
+        }
+      },
+      "pageErrors": [],
+      "screenshots": [
+        "screens/stocky_test/blank_arms_raised_az35.png",
+        "screens/stocky_test/blank_arms_raised_az215.png",
+        "screens/stocky_test/blank_elbows_bent_az35.png",
+        "screens/stocky_test/blank_elbows_bent_az215.png",
+        "screens/stocky_test/blank_hands_near_face_az35.png",
+        "screens/stocky_test/blank_hands_near_face_az215.png",
+        "screens/stocky_test/blank_wrist_rotation_finger_curl_az35.png",
+        "screens/stocky_test/blank_wrist_rotation_finger_curl_az215.png",
+        "screens/stocky_test/blank_torso_twist_az35.png",
+        "screens/stocky_test/blank_torso_twist_az215.png",
+        "screens/stocky_test/blank_head_turn_az35.png",
+        "screens/stocky_test/blank_head_turn_az215.png",
+        "screens/stocky_test/blank_crouch_az35.png",
+        "screens/stocky_test/blank_crouch_az215.png",
+        "screens/stocky_test/blank_closeup_arms_raised_clavicle_L_az20.png",
+        "screens/stocky_test/blank_closeup_arms_raised_clavicle_L_az160.png",
+        "screens/stocky_test/blank_closeup_arms_raised_clavicle_L_az300.png",
+        "screens/stocky_test/blank_closeup_elbows_bent_forearm_R_az300.png",
+        "screens/stocky_test/blank_closeup_elbows_bent_forearm_R_az200.png",
+        "screens/stocky_test/blank_closeup_hands_near_face_head_az0.png",
+        "screens/stocky_test/blank_closeup_hands_near_face_head_az40.png",
+        "screens/stocky_test/blank_closeup_wrist_rotation_finger_curl_hand_L_az30.png",
+        "screens/stocky_test/blank_closeup_wrist_rotation_finger_curl_hand_L_az120.png",
+        "screens/stocky_test/blank_closeup_wrist_rotation_finger_curl_hand_L_az240.png",
+        "screens/stocky_test/blank_closeup_wrist_rotation_finger_curl_hand_R_az330.png",
+        "screens/stocky_test/blank_closeup_wrist_rotation_finger_curl_hand_R_az240.png",
+        "screens/stocky_test/blank_closeup_torso_twist_spine_02_az0.png",
+        "screens/stocky_test/blank_closeup_torso_twist_spine_02_az180.png",
+        "screens/stocky_test/blank_closeup_head_turn_neck_az60.png",
+        "screens/stocky_test/blank_closeup_head_turn_neck_az200.png",
+        "screens/stocky_test/blank_closeup_crouch_thigh_L_az0.png",
+        "screens/stocky_test/blank_closeup_crouch_thigh_L_az90.png",
+        "screens/stocky_test/blank_closeup_crouch_thigh_L_az200.png",
+        "screens/stocky_test/blank_closeup_crouch_thigh_L_az300.png",
+        "screens/stocky_test/checker_arms_raised_az35.png",
+        "screens/stocky_test/checker_arms_raised_az215.png",
+        "screens/stocky_test/checker_elbows_bent_az35.png",
+        "screens/stocky_test/checker_elbows_bent_az215.png",
+        "screens/stocky_test/checker_hands_near_face_az35.png",
+        "screens/stocky_test/checker_hands_near_face_az215.png",
+        "screens/stocky_test/checker_wrist_rotation_finger_curl_az35.png",
+        "screens/stocky_test/checker_wrist_rotation_finger_curl_az215.png",
+        "screens/stocky_test/checker_torso_twist_az35.png",
+        "screens/stocky_test/checker_torso_twist_az215.png",
+        "screens/stocky_test/checker_head_turn_az35.png",
+        "screens/stocky_test/checker_head_turn_az215.png",
+        "screens/stocky_test/checker_crouch_az35.png",
+        "screens/stocky_test/checker_crouch_az215.png",
+        "screens/stocky_test/checker_closeup_arms_raised_clavicle_L_az20.png",
+        "screens/stocky_test/checker_closeup_arms_raised_clavicle_L_az160.png",
+        "screens/stocky_test/checker_closeup_arms_raised_clavicle_L_az300.png",
+        "screens/stocky_test/checker_closeup_elbows_bent_forearm_R_az300.png",
+        "screens/stocky_test/checker_closeup_elbows_bent_forearm_R_az200.png",
+        "screens/stocky_test/checker_closeup_hands_near_face_head_az0.png",
+        "screens/stocky_test/checker_closeup_hands_near_face_head_az40.png",
+        "screens/stocky_test/checker_closeup_wrist_rotation_finger_curl_hand_L_az30.png",
+        "screens/stocky_test/checker_closeup_wrist_rotation_finger_curl_hand_L_az120.png",
+        "screens/stocky_test/checker_closeup_wrist_rotation_finger_curl_hand_L_az240.png",
+        "screens/stocky_test/checker_closeup_wrist_rotation_finger_curl_hand_R_az330.png",
+        "screens/stocky_test/checker_closeup_wrist_rotation_finger_curl_hand_R_az240.png",
+        "screens/stocky_test/checker_closeup_torso_twist_spine_02_az0.png",
+        "screens/stocky_test/checker_closeup_torso_twist_spine_02_az180.png",
+        "screens/stocky_test/checker_closeup_head_turn_neck_az60.png",
+        "screens/stocky_test/checker_closeup_head_turn_neck_az200.png",
+        "screens/stocky_test/checker_closeup_crouch_thigh_L_az0.png",
+        "screens/stocky_test/checker_closeup_crouch_thigh_L_az90.png",
+        "screens/stocky_test/checker_closeup_crouch_thigh_L_az200.png",
+        "screens/stocky_test/checker_closeup_crouch_thigh_L_az300.png"
+      ],
+      "viewerRoundTrip": {
+        "ok": true,
+        "checks": [
+          {
+            "id": "parts.present",
+            "ok": true,
+            "detail": "found 16: Foot_L, Foot_R, Forearm_L, Forearm_R, Hand_L, Hand_R, Head, Neck, Pelvis, Shin_L, Shin_R, Thigh_L, Thigh_R, Torso, UpperArm_L, UpperArm_R"
+          },
+          {
+            "id": "skeleton.single",
+            "ok": true,
+            "detail": "16 Skeleton objects, 1 distinct joint lists, 63 joints"
+          },
+          {
+            "id": "skeleton.matchesConfig",
+            "ok": true,
+            "detail": "63 bones in config"
+          },
+          {
+            "id": "sockets.parented",
+            "ok": true,
+            "detail": "socket_hand_L_prop->hand_L, socket_hand_R_prop->hand_R, socket_head_accessory->head, socket_back_accessory->chest"
+          },
+          {
+            "id": "clips.named",
+            "ok": true,
+            "detail": "_qa_pose_cycle, idle, press_button, reach_grip_handle"
+          },
+          {
+            "id": "uv.inRange",
+            "ok": true,
+            "detail": "17067 UVs in [0,1]"
+          },
+          {
+            "id": "weights.normalized",
+            "ok": true,
+            "detail": "max |1-sum| = 4.47e-8, max influences 4"
+          },
+          {
+            "id": "material.texture",
+            "ok": true,
+            "detail": "{\"type\":\"MeshStandardMaterial\",\"hasMap\":true,\"mapSize\":[2048,2048]}"
+          },
+          {
+            "id": "seams.boundaryLoops",
+            "ok": true,
+            "detail": "375 shared boundary vertices across 17 part pairs"
+          },
+          {
+            "id": "seams.normalsMatch",
+            "ok": true,
+            "detail": "min dot of boundary normals 1.000000"
+          },
+          {
+            "id": "seams.noCracksInClips",
+            "ok": true,
+            "detail": "max gap 0.00e+0 m over 100 frames (null)"
+          },
+          {
+            "id": "bones.lengthsConstant",
+            "ok": true,
+            "detail": "max length drift 2.17e-6 m (shin_L->foot_L _qa_pose_cycle@7.60) – forearms/shins never shorten"
+          },
+          {
+            "id": "sockets.followBones",
+            "ok": true,
+            "detail": "max change of socket-in-bone matrix 6.66e-16"
+          },
+          {
+            "id": "helpers.halfRotation",
+            "ok": true,
+            "detail": "max |helper - source/2| = 0.023 deg (shoulder_helper_R idle@3.40)"
+          },
+          {
+            "id": "hand_L.palmFacesBody",
+            "ok": true,
+            "detail": "palm normal -0.706,-0.708,0 (expected toward the body and down)"
+          },
+          {
+            "id": "hand_L.thumbRadialSide",
+            "ok": true,
+            "detail": "thumb 0.0254 m in front of index knuckle; index 0.0633 m in front of pinky (A-pose, palms in)"
+          },
+          {
+            "id": "hand_R.palmFacesBody",
+            "ok": true,
+            "detail": "palm normal 0.706,-0.708,0 (expected toward the body and down)"
+          },
+          {
+            "id": "hand_R.thumbRadialSide",
+            "ok": true,
+            "detail": "thumb 0.0254 m in front of index knuckle; index 0.0633 m in front of pinky (A-pose, palms in)"
+          },
+          {
+            "id": "grip.noPenetration",
+            "ok": true,
+            "detail": "0 hand vertices >1 mm inside the handle (deepest 0.00 mm)"
+          },
+          {
+            "id": "grip.contact",
+            "ok": true,
+            "detail": "65 vertices within 4 mm of the handle surface; socket 0.000 mm from the handle axis"
+          },
+          {
+            "id": "press.contact",
+            "ok": true,
+            "detail": "fingertip -1.11 mm from button top at contact frame; pressed 6.98 mm (button travel 5.9 mm)"
+          }
+        ],
+        "material": {
+          "type": "MeshStandardMaterial",
+          "hasMap": true,
+          "mapSize": [
+            2048,
+            2048
+          ]
+        },
+        "errors": []
+      }
+    },
+    "diag_textured_test": {
+      "ok": true,
+      "checks": [
+        {
+          "id": "parts.present",
+          "ok": true,
+          "detail": "found 16: Foot_L, Foot_R, Forearm_L, Forearm_R, Hand_L, Hand_R, Head, Neck, Pelvis, Shin_L, Shin_R, Thigh_L, Thigh_R, Torso, UpperArm_L, UpperArm_R"
+        },
+        {
+          "id": "skeleton.single",
+          "ok": true,
+          "detail": "1 Skeleton objects, 1 distinct joint lists, 63 joints"
+        },
+        {
+          "id": "skeleton.matchesConfig",
+          "ok": true,
+          "detail": "63 bones in config"
+        },
+        {
+          "id": "sockets.parented",
+          "ok": true,
+          "detail": "socket_hand_L_prop->hand_L, socket_hand_R_prop->hand_R, socket_head_accessory->head, socket_back_accessory->chest"
+        },
+        {
+          "id": "clips.named",
+          "ok": true,
+          "detail": "_qa_pose_cycle, idle, press_button, reach_grip_handle"
+        },
+        {
+          "id": "uv.inRange",
+          "ok": true,
+          "detail": "17067 UVs in [0,1]"
+        },
+        {
+          "id": "weights.normalized",
+          "ok": true,
+          "detail": "max |1-sum| = 4.47e-8, max influences 4"
+        },
+        {
+          "id": "material.texture",
+          "ok": true,
+          "detail": "{\"type\":\"MeshStandardMaterial\",\"hasMap\":true,\"mapSize\":[2048,2048]}"
+        },
+        {
+          "id": "seams.boundaryLoops",
+          "ok": true,
+          "detail": "375 shared boundary vertices across 17 part pairs"
+        },
+        {
+          "id": "seams.normalsMatch",
+          "ok": true,
+          "detail": "min dot of boundary normals 1.000000"
+        },
+        {
+          "id": "seams.noCracksInClips",
+          "ok": true,
+          "detail": "max gap 0.00e+0 m over 296 frames (null)"
+        },
+        {
+          "id": "bones.lengthsConstant",
+          "ok": true,
+          "detail": "max length drift 2.32e-6 m (shin_L->foot_L _qa_pose_cycle@7.67) – forearms/shins never shorten"
+        },
+        {
+          "id": "sockets.followBones",
+          "ok": true,
+          "detail": "max change of socket-in-bone matrix 6.66e-16"
+        },
+        {
+          "id": "helpers.halfRotation",
+          "ok": true,
+          "detail": "max |helper - source/2| = 0.023 deg (shoulder_helper_R idle@3.40)"
+        },
+        {
+          "id": "hand_L.palmFacesBody",
+          "ok": true,
+          "detail": "palm normal -0.706,-0.708,0 (expected toward the body and down)"
+        },
+        {
+          "id": "hand_L.thumbRadialSide",
+          "ok": true,
+          "detail": "thumb 0.0254 m in front of index knuckle; index 0.0633 m in front of pinky (A-pose, palms in)"
+        },
+        {
+          "id": "hand_R.palmFacesBody",
+          "ok": true,
+          "detail": "palm normal 0.706,-0.708,0 (expected toward the body and down)"
+        },
+        {
+          "id": "hand_R.thumbRadialSide",
+          "ok": true,
+          "detail": "thumb 0.0254 m in front of index knuckle; index 0.0633 m in front of pinky (A-pose, palms in)"
+        },
+        {
+          "id": "grip.noPenetration",
+          "ok": true,
+          "detail": "0 hand vertices >1 mm inside the handle (deepest 0.00 mm)"
+        },
+        {
+          "id": "grip.contact",
+          "ok": true,
+          "detail": "65 vertices within 4 mm of the handle surface; socket 0.000 mm from the handle axis"
+        },
+        {
+          "id": "press.contact",
+          "ok": true,
+          "detail": "fingertip -1.11 mm from button top at contact frame; pressed 6.98 mm (button travel 5.9 mm)"
+        }
+      ],
+      "info": {
+        "material": {
+          "type": "MeshStandardMaterial",
+          "hasMap": true,
+          "mapSize": [
+            2048,
+            2048
+          ]
+        },
+        "coincidentGroups": 1301,
+        "crossPartGroups": 375,
+        "boundaries": {
+          "Foot_L+Shin_L": 24,
+          "Foot_R+Shin_R": 24,
+          "Forearm_L+UpperArm_L": 24,
+          "Forearm_L+Hand_L": 24,
+          "Forearm_R+UpperArm_R": 24,
+          "Forearm_R+Hand_R": 24,
+          "Head+Neck": 32,
+          "Neck+Torso": 32,
+          "Pelvis+Thigh_L+Thigh_R": 2,
+          "Pelvis+Thigh_L": 15,
+          "Pelvis+Thigh_R": 15,
+          "Pelvis+Torso": 32,
+          "Shin_L+Thigh_L": 24,
+          "Shin_R+Thigh_R": 24,
+          "Thigh_L+Thigh_R": 7,
+          "Torso+UpperArm_L": 24,
+          "Torso+UpperArm_R": 24
+        },
+        "framesChecked": 296,
+        "clipSeamGaps": {
+          "_qa_pose_cycle": {
+            "maxSeamGap": 0
+          },
+          "idle": {
+            "maxSeamGap": 0
+          },
+          "press_button": {
+            "maxSeamGap": 0
+          },
+          "reach_grip_handle": {
+            "maxSeamGap": 0
+          }
+        },
+        "grip": {
+          "holdTime": 2.2666666666666666,
+          "verticesInsideHandle": 0,
+          "deepest_mm": 0,
+          "contactVertices": 65,
+          "socketToAxis_mm": 0
+        },
+        "press": {
+          "fingertipAboveButtonAtContact_mm": -1.11,
+          "pressDepth_mm": 6.98,
+          "travel_mm": 5.873578221144881
+        }
+      },
+      "pageErrors": [],
+      "screenshots": [
+        "screens/diag_textured_test/original_arms_raised_az35.png",
+        "screens/diag_textured_test/original_arms_raised_az215.png",
+        "screens/diag_textured_test/original_elbows_bent_az35.png",
+        "screens/diag_textured_test/original_elbows_bent_az215.png",
+        "screens/diag_textured_test/original_hands_near_face_az35.png",
+        "screens/diag_textured_test/original_hands_near_face_az215.png",
+        "screens/diag_textured_test/original_wrist_rotation_finger_curl_az35.png",
+        "screens/diag_textured_test/original_wrist_rotation_finger_curl_az215.png",
+        "screens/diag_textured_test/original_torso_twist_az35.png",
+        "screens/diag_textured_test/original_torso_twist_az215.png",
+        "screens/diag_textured_test/original_head_turn_az35.png",
+        "screens/diag_textured_test/original_head_turn_az215.png",
+        "screens/diag_textured_test/original_crouch_az35.png",
+        "screens/diag_textured_test/original_crouch_az215.png",
+        "screens/diag_textured_test/original_closeup_arms_raised_clavicle_L_az20.png",
+        "screens/diag_textured_test/original_closeup_arms_raised_clavicle_L_az160.png",
+        "screens/diag_textured_test/original_closeup_arms_raised_clavicle_L_az300.png",
+        "screens/diag_textured_test/original_closeup_elbows_bent_forearm_R_az300.png",
+        "screens/diag_textured_test/original_closeup_elbows_bent_forearm_R_az200.png",
+        "screens/diag_textured_test/original_closeup_hands_near_face_head_az0.png",
+        "screens/diag_textured_test/original_closeup_hands_near_face_head_az40.png",
+        "screens/diag_textured_test/original_closeup_wrist_rotation_finger_curl_hand_L_az30.png",
+        "screens/diag_textured_test/original_closeup_wrist_rotation_finger_curl_hand_L_az120.png",
+        "screens/diag_textured_test/original_closeup_wrist_rotation_finger_curl_hand_L_az240.png",
+        "screens/diag_textured_test/original_closeup_wrist_rotation_finger_curl_hand_R_az330.png",
+        "screens/diag_textured_test/original_closeup_wrist_rotation_finger_curl_hand_R_az240.png",
+        "screens/diag_textured_test/original_closeup_torso_twist_spine_02_az0.png",
+        "screens/diag_textured_test/original_closeup_torso_twist_spine_02_az180.png",
+        "screens/diag_textured_test/original_closeup_head_turn_neck_az60.png",
+        "screens/diag_textured_test/original_closeup_head_turn_neck_az200.png",
+        "screens/diag_textured_test/original_closeup_crouch_thigh_L_az0.png",
+        "screens/diag_textured_test/original_closeup_crouch_thigh_L_az90.png",
+        "screens/diag_textured_test/original_closeup_crouch_thigh_L_az200.png",
+        "screens/diag_textured_test/original_closeup_crouch_thigh_L_az300.png",
+        "screens/diag_textured_test/checker_arms_raised_az35.png",
+        "screens/diag_textured_test/checker_arms_raised_az215.png",
+        "screens/diag_textured_test/checker_elbows_bent_az35.png",
+        "screens/diag_textured_test/checker_elbows_bent_az215.png",
+        "screens/diag_textured_test/checker_hands_near_face_az35.png",
+        "screens/diag_textured_test/checker_hands_near_face_az215.png",
+        "screens/diag_textured_test/checker_wrist_rotation_finger_curl_az35.png",
+        "screens/diag_textured_test/checker_wrist_rotation_finger_curl_az215.png",
+        "screens/diag_textured_test/checker_torso_twist_az35.png",
+        "screens/diag_textured_test/checker_torso_twist_az215.png",
+        "screens/diag_textured_test/checker_head_turn_az35.png",
+        "screens/diag_textured_test/checker_head_turn_az215.png",
+        "screens/diag_textured_test/checker_crouch_az35.png",
+        "screens/diag_textured_test/checker_crouch_az215.png",
+        "screens/diag_textured_test/checker_closeup_arms_raised_clavicle_L_az20.png",
+        "screens/diag_textured_test/checker_closeup_arms_raised_clavicle_L_az160.png",
+        "screens/diag_textured_test/checker_closeup_arms_raised_clavicle_L_az300.png",
+        "screens/diag_textured_test/checker_closeup_elbows_bent_forearm_R_az300.png",
+        "screens/diag_textured_test/checker_closeup_elbows_bent_forearm_R_az200.png",
+        "screens/diag_textured_test/checker_closeup_hands_near_face_head_az0.png",
+        "screens/diag_textured_test/checker_closeup_hands_near_face_head_az40.png",
+        "screens/diag_textured_test/checker_closeup_wrist_rotation_finger_curl_hand_L_az30.png",
+        "screens/diag_textured_test/checker_closeup_wrist_rotation_finger_curl_hand_L_az120.png",
+        "screens/diag_textured_test/checker_closeup_wrist_rotation_finger_curl_hand_L_az240.png",
+        "screens/diag_textured_test/checker_closeup_wrist_rotation_finger_curl_hand_R_az330.png",
+        "screens/diag_textured_test/checker_closeup_wrist_rotation_finger_curl_hand_R_az240.png",
+        "screens/diag_textured_test/checker_closeup_torso_twist_spine_02_az0.png",
+        "screens/diag_textured_test/checker_closeup_torso_twist_spine_02_az180.png",
+        "screens/diag_textured_test/checker_closeup_head_turn_neck_az60.png",
+        "screens/diag_textured_test/checker_closeup_head_turn_neck_az200.png",
+        "screens/diag_textured_test/checker_closeup_crouch_thigh_L_az0.png",
+        "screens/diag_textured_test/checker_closeup_crouch_thigh_L_az90.png",
+        "screens/diag_textured_test/checker_closeup_crouch_thigh_L_az200.png",
+        "screens/diag_textured_test/checker_closeup_crouch_thigh_L_az300.png"
+      ],
+      "viewerRoundTrip": {
+        "ok": true,
+        "checks": [
+          {
+            "id": "parts.present",
+            "ok": true,
+            "detail": "found 16: Foot_L, Foot_R, Forearm_L, Forearm_R, Hand_L, Hand_R, Head, Neck, Pelvis, Shin_L, Shin_R, Thigh_L, Thigh_R, Torso, UpperArm_L, UpperArm_R"
+          },
+          {
+            "id": "skeleton.single",
+            "ok": true,
+            "detail": "16 Skeleton objects, 1 distinct joint lists, 63 joints"
+          },
+          {
+            "id": "skeleton.matchesConfig",
+            "ok": true,
+            "detail": "63 bones in config"
+          },
+          {
+            "id": "sockets.parented",
+            "ok": true,
+            "detail": "socket_hand_L_prop->hand_L, socket_hand_R_prop->hand_R, socket_head_accessory->head, socket_back_accessory->chest"
+          },
+          {
+            "id": "clips.named",
+            "ok": true,
+            "detail": "_qa_pose_cycle, idle, press_button, reach_grip_handle"
+          },
+          {
+            "id": "uv.inRange",
+            "ok": true,
+            "detail": "17067 UVs in [0,1]"
+          },
+          {
+            "id": "weights.normalized",
+            "ok": true,
+            "detail": "max |1-sum| = 4.47e-8, max influences 4"
+          },
+          {
+            "id": "material.texture",
+            "ok": true,
+            "detail": "{\"type\":\"MeshStandardMaterial\",\"hasMap\":true,\"mapSize\":[2048,2048]}"
+          },
+          {
+            "id": "seams.boundaryLoops",
+            "ok": true,
+            "detail": "375 shared boundary vertices across 17 part pairs"
+          },
+          {
+            "id": "seams.normalsMatch",
+            "ok": true,
+            "detail": "min dot of boundary normals 1.000000"
+          },
+          {
+            "id": "seams.noCracksInClips",
+            "ok": true,
+            "detail": "max gap 0.00e+0 m over 100 frames (null)"
+          },
+          {
+            "id": "bones.lengthsConstant",
+            "ok": true,
+            "detail": "max length drift 2.17e-6 m (shin_L->foot_L _qa_pose_cycle@7.60) – forearms/shins never shorten"
+          },
+          {
+            "id": "sockets.followBones",
+            "ok": true,
+            "detail": "max change of socket-in-bone matrix 6.66e-16"
+          },
+          {
+            "id": "helpers.halfRotation",
+            "ok": true,
+            "detail": "max |helper - source/2| = 0.023 deg (shoulder_helper_R idle@3.40)"
+          },
+          {
+            "id": "hand_L.palmFacesBody",
+            "ok": true,
+            "detail": "palm normal -0.706,-0.708,0 (expected toward the body and down)"
+          },
+          {
+            "id": "hand_L.thumbRadialSide",
+            "ok": true,
+            "detail": "thumb 0.0254 m in front of index knuckle; index 0.0633 m in front of pinky (A-pose, palms in)"
+          },
+          {
+            "id": "hand_R.palmFacesBody",
+            "ok": true,
+            "detail": "palm normal 0.706,-0.708,0 (expected toward the body and down)"
+          },
+          {
+            "id": "hand_R.thumbRadialSide",
+            "ok": true,
+            "detail": "thumb 0.0254 m in front of index knuckle; index 0.0633 m in front of pinky (A-pose, palms in)"
+          },
+          {
+            "id": "grip.noPenetration",
+            "ok": true,
+            "detail": "0 hand vertices >1 mm inside the handle (deepest 0.00 mm)"
+          },
+          {
+            "id": "grip.contact",
+            "ok": true,
+            "detail": "65 vertices within 4 mm of the handle surface; socket 0.000 mm from the handle axis"
+          },
+          {
+            "id": "press.contact",
+            "ok": true,
+            "detail": "fingertip -1.11 mm from button top at contact frame; pressed 6.98 mm (button travel 5.9 mm)"
+          }
+        ],
+        "material": {
+          "type": "MeshStandardMaterial",
+          "hasMap": true,
+          "mapSize": [
+            2048,
+            2048
+          ]
+        },
+        "errors": []
+      }
+    }
+  }
+}

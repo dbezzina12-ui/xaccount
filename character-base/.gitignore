@@ -1,0 +1,5 @@
+node_modules/
+*.blend1
+__pycache__/
+validation/screens/
+validation/roundtrip/*.glb
