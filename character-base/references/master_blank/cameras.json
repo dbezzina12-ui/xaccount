@@ -2,7 +2,7 @@
   "schema": "gamboligy.projection-references/1.0",
   "characterId": "master_blank",
   "glb": "characters/master_blank/master_blank.glb",
-  "glbSha256": "655fbf4a58afdaff7140252d00e78055c2916d4819b6d332ad38c2281b19f08e",
+  "glbSha256": "4e268ca8d856720d0c08090bb53ccde584cbeb14c4843621dd89fb59fd009c5d",
   "geometryHash": "a3aa27c360a1b1e3002342a606b7809f022b858b26a8635a201e0e7441f3eb9c",
   "uvLayout": "humanoid_uv v1",
   "pose": {

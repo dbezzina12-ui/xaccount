@@ -359,7 +359,10 @@ def solve_weapon(rig, p, P, weapon, socks, poles, reach=0.97, return_P=False):
 
 def fit_support_marker(rig, weapon, P_ref, socks, poles, axis_local=None, base=None):
     """Choose the support-hand marker orientation (roll about its grip axis and which way the
-    thumb points) that gives the most neutral left wrist in the reference hold."""
+    thumb points) that gives the most neutral left wrist in the reference hold. Props whose support
+    frame is fixed by design (support_fixed: rifle palm-up under the handguard) are left alone."""
+    if weapon.get("support_fixed"):
+        return weapon["markers"]["grip_L"]
     t = weapon["markers"]["grip_L"][:3, 3]
     a = np.array([0, 1.0, 0]) if axis_local is None else _n(axis_local)
     z0 = _perp(np.array([0, 0, 1.0]) if abs(a[2]) < 0.9 else np.array([1.0, 0, 0]), a)
@@ -391,7 +394,7 @@ def blade_frame(origin, axis, roll_ref):
 
 
 def torso_pose(rig, rots, stance=0.035):
-    """Weapon stance: pelvis dropped slightly, extra torso rotations, feet planted."""
+    """Weapon stance: pelvis dropped by `stance` (x scale; knees bend), extra torso rotations, feet planted."""
     from .library import plant_legs
     p = Pose()
     p.loc["pelvis"] = pelvis_world_offset(rig, [0, 0.01 * rig.sk.scale, -stance * rig.sk.scale])
@@ -405,16 +408,18 @@ def _weapon_clip(rig, socks, weapon, keys, n, poles, stance=0.035, torso=None, f
     """keys: [(frame, P 4x4)]; torso: f -> dict of extra bone rotations.
     With `body` (collide.BodyProxy) the prop track is pushed out of the character's own skin."""
     from .collide import resolve_track, weapon_samples
-    p0, P0 = solve_weapon(rig, torso_pose(rig, torso(0) if torso else {}, stance), keys[0][1], weapon, socks,
+    st_at = stance if callable(stance) else (lambda f: stance)
+    p0, P0 = solve_weapon(rig, torso_pose(rig, torso(0) if torso else {}, st_at(0)), keys[0][1], weapon, socks,
                           poles, return_P=True)
     gR = fit_grip(rig, p0, "R", P0[:3, 3], P0[:3, 1], weapon["grip_radius"])
     gL = None
     if weapon["support"]:
         M = P0 @ weapon["markers"]["grip_L"]
-        gL = fit_grip(rig, p0, "L", M[:3, 3], M[:3, 1], weapon["grip_radius"])
+        c = (P0 @ np.append(weapon["support_center"], 1.0))[:3] if weapon.get("support_center") is not None else M[:3, 3]
+        gL = fit_grip(rig, p0, "L", c, M[:3, 1], weapon.get("support_radius", weapon["grip_radius"]))
 
     def pose_at(f, P):
-        p = torso_pose(rig, torso(f) if torso else {}, stance)
+        p = torso_pose(rig, torso(f) if torso else {}, st_at(f))
         p, P = solve_weapon(rig, p, P, weapon, socks, poles, return_P=True)
         apply_grip(p, "R", gR)
         if gL:
@@ -438,7 +443,10 @@ def _weapon_clip(rig, socks, weapon, keys, n, poles, stance=0.035, torso=None, f
         clearance = round(max(worst, 0.0), 4)
     frames = [pose_at(f, P)[0] for f, P in enumerate(track)]
     m = {"loop": False, "prop": weapon["name"], "attach": "socket_hand_R_prop",
-         "support": {"hand": "L", "marker": "grip_L"} if weapon["support"] else None,
+         "support": {"hand": "L", "marker": weapon.get("support_marker", "grip_L"),
+                     "gripRadius": weapon.get("support_radius", weapon["grip_radius"]),
+                     **({"gripCenter": list(weapon["support_center"])} if weapon.get("support_center") is not None else {})}
+         if weapon["support"] else None,
          "grip": {"R": {k: (v if not isinstance(v, tuple) else list(v)) for k, v in gR.items()}}}
     if clearance is not None:
         m["propBodyPenetration_m"] = clearance     # deepest prop sample inside skin + collide.CLEARANCE (0 = clear)
@@ -494,22 +502,49 @@ def weapon_clips(rig, socks, fixed_markers=None, body=None):
     out["sword_2h_slash"] = _weapon_clip_b(rig, socks, sw, keys, 60, poles2, torso=slash_torso,
                                          meta={"markers": {"windup": 12, "impact": 24, "recover": 44, "end": 60}})
 
-    # ---------------- staff ----------------
+    # ---------------- staff: planted one-handed hold + stomp ----------------
     st = specs["Staff"]
-    sguard = blade_frame(np.array([-0.12 * s, -0.28 * s, hipz + 0.10 * s]), [0.62, -0.40, 0.68], np.array([0.2, -1.0, 0.1]))
-    fit(rig, st, sguard, socks, poles2, base=torso_pose(rig, {}))
-    keys = [(0, sguard), (30, mat(sguard[:3, :3], sguard[:3, 3] + np.array([0, 0, 0.012 * s]))), (60, sguard)]
-    out["staff_idle"] = _weapon_clip_b(rig, socks, st, keys, 60, poles2, torso=breathe(), meta={"loop": True})
-    back = blade_frame(np.array([-0.16 * s, -0.10 * s, hipz + 0.14 * s]), [0.55, -0.55, 0.62], np.array([0.2, -1.0, 0.1]))
-    thrust = blade_frame(np.array([-0.08 * s, -0.30 * s, hipz + 0.24 * s]), [0.40, -0.72, 0.46], np.array([0.2, -1.0, 0.3]))
-    keys = [(0, sguard), (10, back), (17, thrust), (26, thrust), (44, sguard)]
+    butt = np.asarray(st["markers"]["butt"])[:3, 3]           # prop-local, below the grip
+    ground = np.array([shR[0] + 0.03 * s, -0.30 * s, 0.0])     # in front of the right shoulder
+    s_axis = _n(np.array([0.0, -0.06, 1.0]))                   # top leans a little forward
 
-    def staff_torso(f):
-        yaw = float(lerp_vals([(0, 0), (10, -15), (17, 14), (26, 12), (44, 0)], f))
-        lean = float(lerp_vals([(0, 0), (10, -2), (17, 7), (26, 6), (44, 0)], f))
-        return {"spine_01": ry(0.35 * yaw) @ rx(lean * 0.5), "spine_02": ry(0.35 * yaw) @ rx(lean), "chest": ry(0.3 * yaw)}
-    out["staff_strike"] = _weapon_clip_b(rig, socks, st, keys, 44, poles2, torso=staff_torso,
-                                       meta={"markers": {"windup": 10, "impact": 17, "end": 44}})
+    def staff_at(lift=0.0, lean=0.0):
+        ax = _n(s_axis + np.array([0.0, -lean, 0.0]))
+        # palm faces the staff from the outside (+Z of the hand frame toward +X), thumb up the shaft
+        return blade_frame(ground + ax * (-butt[1]) + np.array([0, 0, lift]), ax, np.array([1.0, 0.25, 0.0]))
+    P_plant = staff_at()
+    poles_st = {"R": np.array([-1.0, 0.3, -0.6]), "L": poles2["L"]}
+
+    def staff_left(k_rel=1.0, cast=0.0):
+        def fn(p, f):
+            raise_arm(rig, p, "L", -30 + 75 * cast(f), fwd_deg=40 * cast(f), clavicle_share=0.15)
+            p.rot["forearm_L"] = rx(18 + 10 * cast(f))
+            p.rot["hand_L"] = rx(-25 * cast(f))
+            curl_fingers(p, "L", 0.3 * (1 - cast(f)) + 0.05, spread=8 * cast(f), thumb=0.2)
+        return fn
+    keys = [(0, P_plant), (60, P_plant)]
+    out["staff_idle"] = _weapon_clip_b(rig, socks, st, keys, 60, poles_st, torso=breathe(),
+                                       fingers=staff_left(cast=lambda f: 0.0),
+                                       meta={"loop": True, "buttMarker": "butt", "note": "staff planted on the ground"})
+    lift = 0.18
+    keys = [(0, P_plant), (10, staff_at(lift, 0.05)), (14, staff_at(lift + 0.01, 0.06)), (17, staff_at(0.03)),
+            (18, P_plant), (40, P_plant)]
+
+    stomp_up = lambda f: float(lerp_vals([(0, 0), (10, 1), (14, 1), (18, 0), (40, 0)], f))  # noqa: E731
+    stomp_hit = lambda f: float(lerp_vals([(0, 0), (17, 0), (19, 1), (24, 0.7), (40, 0)], f))  # noqa: E731
+
+    def stomp_torso(f):
+        up_, hit = stomp_up(f), stomp_hit(f)
+        return {"spine_01": rx(-3 * up_ + 5 * hit), "spine_02": rx(-4 * up_ + 7 * hit) @ ry(-4 * up_),
+                "chest": rx(-2 * up_ + 3 * hit), "neck": rx(-4 * up_ + 4 * hit), "head": rx(-6 * up_ + 8 * hit)}
+    cast = lambda f: float(lerp_vals([(0, 0), (12, 0.35), (17, 0.4), (19, 1.0), (26, 1.0), (40, 0)], f))  # noqa: E731
+    # knees straighten as the staff goes up (more reach, a real wind-up) and bend into the impact
+    out["staff_stomp"] = _weapon_clip_b(rig, socks, st, keys, 40, poles_st, torso=stomp_torso,
+                                        stance=lambda f: 0.042 - 0.036 * stomp_up(f) + 0.03 * stomp_hit(f),
+                                        fingers=staff_left(cast=cast),
+                                        meta={"markers": {"lift": 10, "impact": 18, "end": 40}, "buttMarker": "butt",
+                                              "note": "lift the staff and slam its butt on the ground; the free hand "
+                                                      "thrusts forward on impact (spell cast)"})
 
     # ---------------- pistol (one-handed aim) + recoil ----------------
     pi = specs["Pistol"]
@@ -569,6 +604,40 @@ def weapon_clips(rig, socks, fixed_markers=None, body=None):
                                         fingers=pistol_fingers(trig),
                                         meta={"markers": {"shot": shots, "end": 44}, "muzzleMarker": "muzzle",
                                               "recoil": {"muzzleClimb_deg": 30.0, "kickBack_m": round(0.075 * s, 3)}})
+
+    # ---------------- pistol, two-handed (isosceles) stance ----------------
+    pi2 = dict(pi)
+    pi2["markers"] = dict(pi["markers"])
+    pi2["markers"]["grip_L"] = pi["markers"]["grip_L_2h"]
+    # the right fist the left hand wraps scales with this character's hand size
+    pi2.update(support="L", support_marker="grip_L_2h",
+               support_radius=round(pi["support_radius_2h"] * sk["hand_R"].length / 0.098, 4),
+               support_center=pi["support_center_2h"])
+    aim2 = np.array([-0.012 * s, shR[1] - 0.57 * s, shR[2] + 0.05 * s])
+    Paim2 = gun_frame(pi2, aim2, fwd + np.array([0, 0, -0.02]))
+    poles_2h = {"R": np.array([-0.7, 0.0, -1.0]), "L": np.array([0.7, 0.0, -1.0])}
+
+    def pistol2_torso(f, k=0.0):
+        return {"spine_01": rx(2), "spine_02": rx(3 + 0.8 * np.sin(2 * np.pi * f / 60) - 3.0 * k),
+                "chest": rx(2 - 4.0 * k), "neck": rx(4), "head": rx(6 - 4.0 * k)}
+
+    def pistol2_fingers(trigger):
+        def fn(p, f):
+            p.rot["index_01_R"] = rx(12)
+            p.rot["index_02_R"] = rx(35 + 25 * trigger(f))
+            p.rot["index_03_R"] = rx(20 + 15 * trigger(f))
+        return fn
+    keys = [(0, Paim2), (30, mat(Paim2[:3, :3], Paim2[:3, 3] + np.array([0, 0, 0.003 * s]))), (60, Paim2)]
+    out["pistol_aim_2h"] = _weapon_clip_b(rig, socks, pi2, keys, 60, poles_2h, torso=pistol2_torso,
+                                          fingers=pistol2_fingers(lambda f: 0.0), meta={"loop": True})
+    shots2 = [8]
+    rk2 = recoil_keys(Paim2, shots2, 0.05 * s, 20.0, 40, decay=4.0, rise=0.3)
+    trig2 = lambda f: 1.0 if any(sf - 2 <= f <= sf + 2 for sf in shots2) else 0.0  # noqa: E731
+    out["pistol_fire_2h"] = _weapon_clip_b(rig, socks, pi2, rk2, 40, poles_2h,
+                                           torso=lambda f: pistol2_torso(f, impulse(f, shots2, 4.5)),
+                                           fingers=pistol2_fingers(trig2),
+                                           meta={"markers": {"shot": shots2, "end": 40}, "muzzleMarker": "muzzle",
+                                                 "recoil": {"muzzleClimb_deg": 20.0, "kickBack_m": round(0.05 * s, 3)}})
 
     # ---------------- rifle (shouldered) + burst ----------------
     rf = specs["Rifle"]

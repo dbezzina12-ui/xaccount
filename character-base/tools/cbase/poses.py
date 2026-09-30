@@ -168,6 +168,8 @@ class Pose:
         p = Pose()
         p.rot = {k: v.copy() for k, v in self.rot.items()}
         p.loc = {k: v.copy() for k, v in self.loc.items()}
+        if hasattr(self, "_rhythm"):
+            p._rhythm = {k: v.copy() for k, v in self._rhythm.items()}
         return p
 
     def basis(self, b):
@@ -200,7 +202,45 @@ def _frame_from(y, n):
     return np.stack([y, n, np.cross(y, n)], 1)
 
 
+SHOULDER_RHYTHM = True
+
+
+def shoulder_rhythm_angles(d, sx):
+    """Scapulohumeral rhythm: clavicle elevation / protraction (degrees) for an upper-arm world direction d.
+    Elevation starts once the arm is ~50 deg from hanging and reaches ~30 deg with the arm overhead;
+    reaching forward or across the chest protracts the shoulder, reaching back retracts it."""
+    hang = np.degrees(np.arccos(np.clip(-d[2], -1, 1)))          # 0 = hanging straight down
+    elev = min(30.0, 0.26 * max(0.0, hang - 50.0))
+    fwd, back, across = max(0.0, -d[1]), max(0.0, d[1]), max(0.0, -sx * d[0])
+    prot = min(18.0, 13.0 * fwd + 9.0 * across) - 8.0 * back
+    return elev, prot
+
+
 def two_bone_ik(rig, pose, upper, lower, target, pole_dir):
+    """Two-bone IK; for arms (`upperarm_*`) the clavicle then follows the upper arm with a natural
+    shoulder rhythm (see shoulder_rhythm_angles) and the chain is re-solved, so the wrist still lands
+    exactly on `target`. The rhythm is stored per pose and replaced (not accumulated) on re-solves.
+    """
+    if not (SHOULDER_RHYTHM and upper.startswith("upperarm_")):
+        return _two_bone_ik(rig, pose, upper, lower, target, pole_dir)
+    side = upper[-1]
+    sx = 1.0 if side == "L" else -1.0
+    clav = f"clavicle_{side}"
+    rh = pose.__dict__.setdefault("_rhythm", {})
+    if side in rh:                                  # remove the previous rhythm contribution
+        pose.rot[clav] = pose.rot.get(clav, np.eye(3)) @ rh.pop(side).T
+    _two_bone_ik(rig, pose, upper, lower, target, pole_dir)
+    d = rig.world(pose, upper)[:3, 1]
+    elev, prot = shoulder_rhythm_angles(d, sx)
+    R0 = pose.rot.get(clav, np.eye(3)).copy()
+    Wc = rig.world(pose, clav)[:3, :3]
+    Rw = rot_axis(np.array([0.0, 0.0, -sx]), np.radians(prot)) @ rot_axis(np.array([0.0, -sx, 0.0]), np.radians(elev))
+    rig.set_world_rotation(pose, clav, Rw @ Wc)
+    rh[side] = R0.T @ pose.rot[clav]
+    return _two_bone_ik(rig, pose, upper, lower, target, pole_dir)
+
+
+def _two_bone_ik(rig, pose, upper, lower, target, pole_dir):
     """Rotate `upper` and `lower` so the tail of `lower` reaches `target` (clamped to reach).
     The bend plane contains `pole_dir` (the elbow/knee points toward it). Each bone keeps its
     roll relative to the bend plane it had in the rest pose, so no hidden 180-degree twists.

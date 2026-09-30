@@ -1,4 +1,4 @@
-// close-up of the right hand socket during a clip at given frames
+// Dev: close-ups around a socket (or `bone:<name>`) during a clip at given frames, from several azimuths.
 import { chromium } from 'playwright-core';
 import { startServer, CHROME, CHROME_ARGS } from '../../scripts/serve.mjs';
 const [char, clip, framesArg, out, azs = '0,60,120', dist = '0.35', sock = 'socket_hand_R_prop'] = process.argv.slice(2);
@@ -16,7 +16,7 @@ for (const f of frames) for (const a of az) {
     const v = window.viewer, T = v.THREE, ch = v.character;
     v.playClip(clip, f / 30, false);
     if (v.state.props) v.state.props.visible = false;
-    const tgt = ch.sockets[sock].getWorldPosition(new T.Vector3());
+    const tgt = (sock.startsWith('bone:') ? ch.bones[sock.slice(5)] : ch.sockets[sock]).getWorldPosition(new T.Vector3());
     const r = T.MathUtils.degToRad(a);
     v.camera.position.set(tgt.x + Math.sin(r) * dist, tgt.y + 0.08, tgt.z + Math.cos(r) * dist);
     v.camera.fov = 35; v.camera.updateProjectionMatrix(); v.orbit.target.copy(tgt); v.orbit.update();

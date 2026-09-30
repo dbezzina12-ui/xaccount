@@ -25,7 +25,7 @@ so the base can be rebuilt, versioned and extended instead of repaired per game.
 | Stockier proportion test variant | `characters/stocky_test/stocky_test.{glb,blend,character.json}` |
 | Diagnostic-textured test character (derived from the frozen stocky variant) | `characters/diag_textured_test/…` (+ `textures/basecolor.png`) |
 | Test prop (handle) per character | `characters/<id>/test_props.glb` |
-| Shared hand-held props (two-handed sword, staff, pistol, rifle, detonator remote) + markers + collision samples | `props/weapons.{glb,json}` |
+| Shared hand-held props (two-handed sword, wizard staff, pistol, rifle, detonator remote) + markers + collision samples | `props/weapons.{glb,json}` |
 | Reproducible build script | `tools/build.py` (+ `tools/cbase/*`) |
 | Frozen UV layout v1 (data + metadata) | `template/uv/humanoid_uv_v1.{bin,json}` |
 | UV layout image / UV checker / diagnostic texture / part-ID colours | `textures/uv_layout_v1_2048.png`, `uv_checker_2048.png`, `diagnostic_basecolor_2048.png`, `part_id_colors.json` |
@@ -34,7 +34,7 @@ so the base can be rebuilt, versioned and extended instead of repaired per game.
 | Validation report + contact sheets | `validation/REPORT.md`, `validation/report.json`, `validation/sheets/` |
 
 Asset stats (all characters share the template topology): **31,424 triangles**, 16 separately named part
-meshes, **63 joints** (55 anatomical + 8 driven helpers), 4 attachment sockets, 20 baked clips, one 2048² atlas.
+meshes, **63 joints** (55 anatomical + 8 driven helpers), 4 attachment sockets, 22 baked clips, one 2048² atlas.
 
 ---
 
@@ -94,6 +94,15 @@ the helper, so deep bends keep volume. Rules (also in the JSON `skeleton.driverR
 
 They are **baked into every clip**, and the viewer applies them after any manual posing. A runtime that poses
 bones procedurally (its own IK) must apply the same two rules.
+
+**Shoulders** (skin v2). Around each shoulder the weights follow anatomy instead of distance: the deltoid cap and
+the arm itself follow the upper arm, the ribcage side under the armpit and the trapezius stay with the torso, and
+the crease between them runs through the half-rotation `shoulder_helper` (so raising an arm opens an armpit
+instead of stretching the chest up to the elbow). All arm IK also moves the clavicle with a scapulohumeral
+rhythm (`tools/cbase/poses.py: shoulder_rhythm_angles`): the shoulder lifts up to ~30° as the arm goes
+overhead, protracts when reaching forward/across and retracts when reaching back; the chain is then re-solved,
+so hands still land exactly on their targets. Frozen characters were re-skinned with `update-clips` (geometry and
+UVs verified byte-identical, see `skinRevisions` in their JSON).
 
 ### Attachment sockets (glTF nodes parented to bones)
 | node | parent | frame |
@@ -216,11 +225,13 @@ Game clip set (`animationSet.version` 2):
 | `float_monk_loop` | ✓ | cross-legged meditation hover with slow bob and breathing |
 | `sword_2h_idle` | ✓ | two-handed sword guard (right hand under the guard, left hand below it on the grip), breathing |
 | `sword_2h_slash` | | wind-up beside the head with the blade back over the right shoulder → fast diagonal cut in front of the body → follow-through → guard (markers `windup`, `impact`, `recover`) |
-| `staff_idle` | ✓ | two-handed staff guard, hands 0.42 m apart |
-| `staff_strike` | | pull back → forward thrust/strike → recover (markers `windup`, `impact`) |
+| `staff_idle` | ✓ | wizard staff planted on the floor in front of the right shoulder, held in the right hand, breathing |
+| `staff_stomp` | | lift the staff ~18 cm, slam its butt onto the floor with a dip of the body while the free hand thrusts forward (spell cast), recover (markers `lift`, `impact`) |
 | `pistol_aim` | ✓ | one-handed aim at shoulder height, index on the trigger, left arm relaxed |
 | `pistol_fire` | | single shot: trigger squeeze, **hard recoil** (muzzle climb 30°, kick back 7.5 cm, wrist/elbow give, chest and head snap back), recovery (marker `shot`) |
-| `rifle_aim` | ✓ | shouldered rifle: butt in the right shoulder pocket, left hand on the handguard, bladed stance, head down the sights |
+| `pistol_aim_2h` | ✓ | two-handed (isosceles) stance: arms extended, gun on the centre line, left hand wrapped around the right fist |
+| `pistol_fire_2h` | | two-handed shot: 20° muzzle climb, 5 cm kick absorbed by both arms and the chest (marker `shot`) |
+| `rifle_aim` | ✓ | shouldered rifle: butt in the right shoulder pocket, left hand **under** the handguard (palm up, thumb forward), bladed stance, head down the sights |
 | `rifle_fire` | | 3-round burst: per shot 9° muzzle climb that stacks over the burst, 4.5 cm kick into the shoulder, torso rocks back with each shot (markers `shots`) |
 | `wave` | | friendly wave |
 | `cheer` | | big-win celebration: fists up in a V, two pumps, small hop |
@@ -236,7 +247,8 @@ smallest rigid correction (rotating about the grip rather than moving the hands)
 frames so the motion stays fluid, and the arms are re-solved onto it. This runs per character, so the woman's
 bust or the dwarf's belly get their own clearance.
 
-**Weapons.** `props/weapons.glb` holds `Sword2H`, `Staff`, `Pistol`, `Rifle` and the `Detonator` remote (button
+**Weapons.** `props/weapons.glb` holds `Sword2H`, `Staff` (one-handed, `butt` marker on its floor end), `Pistol`
+(`grip_L_2h` marker for the two-handed stance), `Rifle` (fixed palm-up `grip_L`) and the `Detonator` remote (button
 marker `button`, 5 mm travel). Each prop's origin *is* the
 right-hand grip in the same frame as `socket_hand_R_prop` (+Y grip axis toward the thumb, +Z out of the palm),
 so attaching is: parent the prop to `socket_hand_R_prop` with an identity transform. Two-handed props also carry
@@ -263,8 +275,10 @@ their animations can be re-baked:
 
 `update-clips` checks the .blend against the freeze record, re-verifies the part geometry and skeleton hashes,
 replaces the actions, re-exports the GLB and appends an `animationRevisions` entry (the freeze record gets the
-new GLB/.blend hashes). `build.py all` does this automatically when a frozen character's
-`animationSet.version` is older than the current clip set; texture-derived characters are re-derived.
+new GLB/.blend hashes). When the character's `skin.version` is older than the current skin it also replaces the
+vertex weights (after re-checking every part's geometry+UV hash) and logs a `skinRevisions` entry. `build.py all`
+does this automatically when a frozen character's `animationSet.version` or `skin.version` is out of date;
+texture-derived characters are re-derived.
 
 Clips are authored as IK/FK recipes (`tools/cbase/clips.py`, `library.py`) and baked to rotation keys
 (translation only on `pelvis`), so they play in any glTF runtime and bone lengths can never change.
@@ -295,9 +309,12 @@ woman, dwarf, stocky test, textured test), including
 * helpers = half rotation within 0.035°
 * palms face the body/down and thumbs sit on the radial (front) side, both hands
 * grip: **0** hand vertices inside the handle, ~60 vertices within 4 mm (contact), socket exactly on the axis
+* staff: the butt stays within 12 mm of the floor in `staff_idle`, lifts >8 cm (~19 cm; the dwarf ~10 cm, limited by
+  his reach with a human-sized staff) and lands back on the floor at the
+  `staff_stomp` impact frame without going through it
 * detonator: the thumb's skin is on the button top at the contact frame (≤0.1 mm) and pressed by the 5 mm travel
   (±0.1 mm), clear of it before the press
-* all 20 clips present; feet never go below the floor in any game clip; walk/run/jump stay in place
+* all 22 clips present; feet never go below the floor in any game clip; walk/run/jump stay in place
   (pelvis drift ≤2.5 cm); floating feet stay ≥0.1 m above the floor (dwarf `float_idle` 0.12 m, monk ≥0.4 m)
 * props vs body: every sample of every held prop, on every checked frame of every prop clip, stays outside the
   skinned body (closest ≥6 mm outside, measured independently in the viewer on the exported GLB: median signed
@@ -329,7 +346,9 @@ rotation + finger curl, torso twist, head turn and crouch, from two angles plus 
   ~7.9k-tri LOD, but that needs its own UV transfer).
 * The detonator button is static (the thumb travels 5 mm "into" it); animate the button in the game if needed.
 * Prop clearance is solved against the body, not arm-vs-body: on the dwarf the arms come close to the belly in the
-  sword strike, and with his short torso the staff's upper hand passes just in front of his face in the thrust.
+  sword strike.
+* The staff is a fixed-size prop held ~1.16 m up with its butt on the floor: at chest height for the master and
+  woman, at shoulder height for the dwarf.
 * Woman/dwarf are neutral bases (no hair, beard or face differences beyond proportions); they are meant to be
   dressed/sculpted over, and the bust is modest by design so clothing fits without collision fixes.
 * Weapons are simple test props; clips are fitted to their grip sizes (a thicker grip needs `build.py props`

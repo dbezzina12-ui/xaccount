@@ -23,6 +23,7 @@ g.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 const mat = new THREE.MeshStandardMaterial({ color: 0xffffff, vertexColors: mode === 'parts', roughness: 0.85, metalness: 0 });
 const mesh = new THREE.Mesh(g, mat);
 const scene = new THREE.Scene(); scene.add(mesh);
+if (d.heat && q.get('color') === 'heat') { const cc = new Float32Array(d.V.length); for (let v = 0; v < d.V.length / 3; v++) { const h = d.heat[v % d.heat.length]; const c = new THREE.Color().setHSL(0.66 * (1 - h), 0.8, 0.5); cc[v*3]=c.r; cc[v*3+1]=c.g; cc[v*3+2]=c.b; } g.setAttribute('color', new THREE.BufferAttribute(cc, 3)); mat.vertexColors = true; }
 if (d.dom && q.get('color') === 'dom') { const cc = new Float32Array(d.V.length); for (let v = 0; v < d.dom.length; v++) { const c = new THREE.Color().setHSL((d.dom[v] * 0.618) % 1, 0.65, 0.6); cc[v*3]=c.r; cc[v*3+1]=c.g; cc[v*3+2]=c.b; } g.setAttribute('color', new THREE.BufferAttribute(cc, 3)); mat.vertexColors = true; }
 if (q.get('wire')) { const wm = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true, transparent: true, opacity: 0.15 })); scene.add(wm); }
 if (d.seams && q.get('seams')) { const sp = new Float32Array(d.seams.length); for (let i=0;i<d.seams.length;i+=3){sp[i]=d.seams[i];sp[i+1]=d.seams[i+2];sp[i+2]=-d.seams[i+1];}
@@ -49,7 +50,8 @@ let cols = 3, rows = 2;
 if (mode === 'poses') { views.length = 0; const n = d.n; cols = n; const vs = q.get('views') || 'front,34';
   const dirs = {front:[0,0,5], back:[0,0,-5], side:[5,0,0], '34':[3.5,0.6,3.5], '34b':[-3.5,0.6,-3.5], top:[0,5,0.01], low:[3,-2,3]};
   const vl = vs.split(','); rows = vl.length;
-  for (const vn of vl) for (let i = 0; i < n; i++) { const dd = dirs[vn]; views.push([1.1*i+dd[0], 0.85+dd[1], dd[2], 1.1*i, 0.85, 0, 1.95]); } }
+  const sp = Number(q.get('sp') || 1.1);
+  for (const vn of vl) for (let i = 0; i < n; i++) { const dd = dirs[vn]; views.push([sp*i+dd[0], 0.85+dd[1], dd[2], sp*i, 0.85, 0, 1.95]); } }
 if (q.get('focus')) { const f = q.get('focus').split(',').map(Number); views.forEach(v => { const cx = v[3], dx=v[0]-v[3], dy=v[1]-v[4], dz=v[2]-v[5]; v[3]=cx+f[0]; v[4]=f[1]; v[5]=f[2]; v[0]=v[3]+dx; v[1]=v[4]+dy; v[2]=v[5]+dz; v[6]=f[3]; }); }
 const vw = W / cols, vh = H / rows;
 views.forEach((v, i) => {

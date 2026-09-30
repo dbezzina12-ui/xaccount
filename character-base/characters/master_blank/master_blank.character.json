@@ -193,7 +193,7 @@
   },
   "skeleton": {
     "hash": "27243ed2037f9458650b478b76d79c1bb309d41010752d402d285709633c07d3",
-    "weightsHash": "851b269a240e1da62b2b6618e222b2b3e6eafd80344753070c3cad50429b65c8",
+    "weightsHash": "1fd7f97c907ac37dded0f5981c6ca278438cc125704a2dc2fc96f48ab89244eb",
     "maxInfluences": 4,
     "bones": [
       {
@@ -876,7 +876,8 @@
       "attach": "socket_hand_R_prop",
       "support": {
         "hand": "L",
-        "marker": "grip_L"
+        "marker": "grip_L",
+        "gripRadius": 0.016
       },
       "grip": {
         "R": {
@@ -903,7 +904,8 @@
       "attach": "socket_hand_R_prop",
       "support": {
         "hand": "L",
-        "marker": "grip_L"
+        "marker": "grip_L",
+        "gripRadius": 0.016
       },
       "grip": {
         "R": {
@@ -934,10 +936,7 @@
       "loop": true,
       "prop": "Staff",
       "attach": "socket_hand_R_prop",
-      "support": {
-        "hand": "L",
-        "marker": "grip_L"
-      },
+      "support": null,
       "grip": {
         "R": {
           "index": 0.42500000000000004,
@@ -951,20 +950,19 @@
           ]
         }
       },
-      "propBodyPenetration_m": 0
+      "propBodyPenetration_m": 0,
+      "buttMarker": "butt",
+      "note": "staff planted on the ground"
     },
     {
-      "name": "staff_strike",
-      "frames": 45,
+      "name": "staff_stomp",
+      "frames": 41,
       "fps": 30,
-      "duration": 1.4667,
+      "duration": 1.3333,
       "loop": false,
       "prop": "Staff",
       "attach": "socket_hand_R_prop",
-      "support": {
-        "hand": "L",
-        "marker": "grip_L"
-      },
+      "support": null,
       "grip": {
         "R": {
           "index": 0.42500000000000004,
@@ -980,10 +978,12 @@
       },
       "propBodyPenetration_m": 0,
       "markers": {
-        "windup": 10,
-        "impact": 17,
-        "end": 44
-      }
+        "lift": 10,
+        "impact": 18,
+        "end": 40
+      },
+      "buttMarker": "butt",
+      "note": "lift the staff and slam its butt on the ground; the free hand thrusts forward on impact (spell cast)"
     },
     {
       "name": "pistol_aim",
@@ -1045,6 +1045,83 @@
       }
     },
     {
+      "name": "pistol_aim_2h",
+      "frames": 61,
+      "fps": 30,
+      "duration": 2,
+      "loop": true,
+      "prop": "Pistol",
+      "attach": "socket_hand_R_prop",
+      "support": {
+        "hand": "L",
+        "marker": "grip_L_2h",
+        "gripRadius": 0.0358,
+        "gripCenter": [
+          0,
+          -0.006,
+          0.004
+        ]
+      },
+      "grip": {
+        "R": {
+          "index": 0.42500000000000004,
+          "middle": 0.675,
+          "ring": 0.6625000000000001,
+          "pinky": 0.5750000000000001,
+          "thumb": [
+            0,
+            50,
+            1
+          ]
+        }
+      },
+      "propBodyPenetration_m": 0
+    },
+    {
+      "name": "pistol_fire_2h",
+      "frames": 41,
+      "fps": 30,
+      "duration": 1.3333,
+      "loop": false,
+      "prop": "Pistol",
+      "attach": "socket_hand_R_prop",
+      "support": {
+        "hand": "L",
+        "marker": "grip_L_2h",
+        "gripRadius": 0.0358,
+        "gripCenter": [
+          0,
+          -0.006,
+          0.004
+        ]
+      },
+      "grip": {
+        "R": {
+          "index": 0.42500000000000004,
+          "middle": 0.675,
+          "ring": 0.6625000000000001,
+          "pinky": 0.5750000000000001,
+          "thumb": [
+            0,
+            50,
+            1
+          ]
+        }
+      },
+      "propBodyPenetration_m": 0,
+      "markers": {
+        "shot": [
+          8
+        ],
+        "end": 40
+      },
+      "muzzleMarker": "muzzle",
+      "recoil": {
+        "muzzleClimb_deg": 20,
+        "kickBack_m": 0.05
+      }
+    },
+    {
       "name": "rifle_aim",
       "frames": 61,
       "fps": 30,
@@ -1054,7 +1131,8 @@
       "attach": "socket_hand_R_prop",
       "support": {
         "hand": "L",
-        "marker": "grip_L"
+        "marker": "grip_L",
+        "gripRadius": 0.016
       },
       "grip": {
         "R": {
@@ -1081,7 +1159,8 @@
       "attach": "socket_hand_R_prop",
       "support": {
         "hand": "L",
-        "marker": "grip_L"
+        "marker": "grip_L",
+        "gripRadius": 0.016
       },
       "grip": {
         "R": {
@@ -1186,7 +1265,7 @@
     "glb": "master_blank.glb",
     "blend": "master_blank.blend",
     "testProps": "test_props.glb",
-    "glbSha256": "655fbf4a58afdaff7140252d00e78055c2916d4819b6d332ad38c2281b19f08e"
+    "glbSha256": "4e268ca8d856720d0c08090bb53ccde584cbeb14c4843621dd89fb59fd009c5d"
   },
   "exportCheck": {
     "nodes": 84,
@@ -1375,8 +1454,18 @@
         "channels": 189
       },
       {
+        "name": "pistol_aim_2h",
+        "duration": 2,
+        "channels": 189
+      },
+      {
         "name": "pistol_fire",
         "duration": 1.4667,
+        "channels": 189
+      },
+      {
+        "name": "pistol_fire_2h",
+        "duration": 1.3333,
         "channels": 189
       },
       {
@@ -1410,8 +1499,8 @@
         "channels": 189
       },
       {
-        "name": "staff_strike",
-        "duration": 1.4667,
+        "name": "staff_stomp",
+        "duration": 1.3333,
         "channels": 189
       },
       {
@@ -1444,8 +1533,8 @@
   "freezeRecord": {
     "geometryHash": "a3aa27c360a1b1e3002342a606b7809f022b858b26a8635a201e0e7441f3eb9c",
     "uvSha256": "a0d908c078b7ba6a77ede85c73e5cacd601b44a658d2ef0f8e5659b58593cd6f",
-    "glbSha256": "655fbf4a58afdaff7140252d00e78055c2916d4819b6d332ad38c2281b19f08e",
-    "blendSha256": "ac2794ff572e6b31816bbf5d73225dbadeb4bf9a9ef3a04e67bc3041e025bdb8"
+    "glbSha256": "4e268ca8d856720d0c08090bb53ccde584cbeb14c4843621dd89fb59fd009c5d",
+    "blendSha256": "79bc64017e9e78ffec31f82a6a809f198e70ff6f4c3bf0dd27a0a5a5966b6fff"
   },
   "projection": {
     "references": "references/master_blank/cameras.json",
@@ -1464,7 +1553,7 @@
     }
   },
   "animationSet": {
-    "version": 3,
+    "version": 4,
     "clips": [
       "idle",
       "reach_grip_handle",
@@ -1480,9 +1569,11 @@
       "sword_2h_idle",
       "sword_2h_slash",
       "staff_idle",
-      "staff_strike",
+      "staff_stomp",
       "pistol_aim",
       "pistol_fire",
+      "pistol_aim_2h",
+      "pistol_fire_2h",
       "rifle_aim",
       "rifle_fire",
       "press_detonator"
@@ -1503,6 +1594,25 @@
       "clips": 20,
       "geometryHash": "a3aa27c360a1b1e3002342a606b7809f022b858b26a8635a201e0e7441f3eb9c",
       "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"
+    },
+    {
+      "date": "2026-09-30T17:17:26+00:00",
+      "clipSetVersion": 4,
+      "clips": 22,
+      "geometryHash": "a3aa27c360a1b1e3002342a606b7809f022b858b26a8635a201e0e7441f3eb9c",
+      "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"
+    }
+  ],
+  "skin": {
+    "version": 2
+  },
+  "skinRevisions": [
+    {
+      "date": "2026-09-30T16:54:15+00:00",
+      "from": 1,
+      "to": 2,
+      "weightsHash": "1fd7f97c907ac37dded0f5981c6ca278438cc125704a2dc2fc96f48ab89244eb",
+      "note": "vertex weights replaced (shoulder/armpit field); geometry, UVs and skeleton verified unchanged"
     }
   ]
 }

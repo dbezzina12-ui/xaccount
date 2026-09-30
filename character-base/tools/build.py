@@ -32,7 +32,8 @@ from cbase.skeleton import BEND_CONVENTION, DRIVERS, build_skeleton, socket_defs
 from cbase.collide import BodyProxy  # noqa: E402
 
 UV_VERSION = 1
-CLIP_SET_VERSION = 3          # bump when clip recipes change; frozen characters get `update-clips`
+CLIP_SET_VERSION = 4          # bump when clip recipes change; frozen characters get `update-clips`
+SKIN_VERSION = 2              # bump when skin weights change; `update-clips` re-skins frozen characters (geometry/UVs untouched)
 STOCKY = {"height": 1.68, "headSize": 1.03, "shoulderWidth": 1.08, "torsoWidth": 1.16, "torsoDepth": 1.14,
           "bellySize": 1.55, "armLength": 0.96, "legLength": 0.92, "handSize": 1.07, "footSize": 1.05}
 # body-type bases on the same template (topology, UVs, skeleton names, clips) for meshing clothing/armour later
@@ -152,7 +153,9 @@ def anim_meta(clips):
 
 def cmd_update_clips(args):
     """Re-bake the clip library onto an existing (possibly frozen) character WITHOUT touching its
-    geometry, UVs, weights or skeleton: open its .blend, verify hashes, replace actions, re-export."""
+    geometry, UVs or skeleton: open its .blend, verify hashes, replace actions, re-export. When the
+    character's skin version is older than SKIN_VERSION its vertex weights are replaced too (the
+    part meshes and UVs are verified byte-identical before and after)."""
     import bpy
     from cbase import blender_build as BB
     from cbase import clips as CL
@@ -181,6 +184,18 @@ def cmd_update_clips(args):
     if C.geometry_hash(m) != cfg["geometry"]["hash"]:
         raise SystemExit("mesh rebuilt from the recorded proportions does not match the frozen geometry; refusing")
     props = CL.prop_layout(sk)
+    skin_old = (cfg.get("skin") or {}).get("version", 1)
+    if skin_old < SKIN_VERSION:
+        reskin_parts(m, names, W)
+        for prt in cfg["geometry"]["parts"]:
+            if part_hash(bpy.data.objects[prt["name"]].data) != prt["hash"]:
+                raise SystemExit(f"re-skin changed part {prt['name']} geometry/UVs; refusing")
+        cfg["skeleton"]["weightsHash"] = C.weights_hash(W)
+        cfg["skin"] = {"version": SKIN_VERSION}
+        cfg.setdefault("skinRevisions", []).append(
+            {"date": C.now(), "from": skin_old, "to": SKIN_VERSION, "weightsHash": cfg["skeleton"]["weightsHash"],
+             "note": "vertex weights replaced (shoulder/armpit field); geometry, UVs and skeleton verified unchanged"})
+        print(f"re-skinned {cid}: skin v{skin_old} -> v{SKIN_VERSION}")
     clips = all_character_clips(rig, props, socks, BodyProxy(rig, m, names, W))
     arm = bpy.data.objects[BB.ARMATURE]
     if arm.animation_data:
@@ -220,6 +235,27 @@ def cmd_update_clips(args):
     C.write_config(ROOT, cid, cfg)
     write_index()
     print(f"updated clips on {cid}: {len(clips)} clips -> {[a['name'] for a in info['animations']]}")
+
+
+def reskin_parts(m, names, W):
+    """Replace the vertex groups of the existing part objects (vertex i of a part = the i-th smallest
+    template vertex of that part, as created by blender_build.make_parts)."""
+    import bpy
+    from cbase.mesh import PART_ORDER
+    for part in PART_ORDER:
+        ob = bpy.data.objects[part]
+        verts = sorted({v for f, pt in zip(m.faces, m.face_part) if pt == part for v in f})
+        if len(verts) != len(ob.data.vertices):
+            raise SystemExit(f"part {part}: vertex count differs from the template; refusing")
+        ob.vertex_groups.clear()
+        Wp = W[verts]
+        for j, bn in enumerate(names):
+            nz = np.nonzero(Wp[:, j] > 0)[0]
+            if len(nz) == 0:
+                continue
+            vg = ob.vertex_groups.new(name=bn)
+            for vi in nz:
+                vg.add([int(vi)], float(Wp[vi, j]), "REPLACE")
 
 
 def test_props_cfg(props):
@@ -310,6 +346,7 @@ def build_character(cid, params, display=None, texture=None, force=False, derive
                      "baseColorTexture": None},
         "animations": anim_info,
         "animationSet": anim_set,
+        "skin": {"version": SKIN_VERSION},
         "testProps": test_props_cfg(props),
         "files": {"glb": f"{cid}.glb", "blend": f"{cid}.blend", "testProps": "test_props.glb"},
         "exportCheck": info,
@@ -445,8 +482,9 @@ def cmd_all(args):
     for cid, params, name, status in BASES:
         cfg = C.load_config(ROOT, cid)
         if cfg and cfg.get("frozen"):
-            if (cfg.get("animationSet") or {}).get("version") != CLIP_SET_VERSION:
-                print(f"{cid} is frozen – re-baking its clips only")
+            if (cfg.get("animationSet") or {}).get("version") != CLIP_SET_VERSION or \
+                    (cfg.get("skin") or {}).get("version", 1) != SKIN_VERSION:
+                print(f"{cid} is frozen – re-baking its clips (and re-skinning if needed) only")
                 cmd_update_clips(argparse.Namespace(id=cid))
             else:
                 print(f"{cid} is frozen – kept as is")

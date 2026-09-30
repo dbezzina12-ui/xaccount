@@ -147,6 +147,65 @@ def _twist_split(w, P, fa, sd):
     return w
 
 
+def shoulder_field(W, V, names, idx, sk, vreg, lap=None, iters=10):
+    """Explicit shoulder/armpit weights (replaces the chain/diffusion result near each shoulder joint).
+
+    How much a vertex follows the upper arm, f in [0, 1], comes from anatomy rather than distance:
+      * deltoid cap (around/above the joint, lateral of it) and the arm itself (close to the upper-arm
+        axis) follow the arm;
+      * the ribcage side under the armpit (far from the arm axis) and the trapezius/neck (medial of the
+        joint) stay with the torso, so raising an arm forms an armpit instead of stretching the chest.
+    f is realised through the half-rotation shoulder helper: f<=0.5 -> helper 2f + torso; f>0.5 ->
+    upper arm 2f-1 + helper 2-2f (so the arm-following share is exactly f and the crease is smooth).
+    """
+    s = sk.scale
+    L = sk.landmarks
+    B = sk.bones
+    for sd, sx in (("L", 1.0), ("R", -1.0)):
+        J = L[f"shoulder_{sd}"]
+        a = _n(B[f"upperarm_{sd}"].tail - B[f"upperarm_{sd}"].head)
+        rel = V - J
+        along = rel @ a
+        perp = np.linalg.norm(rel - along[:, None] * a[None, :], axis=1)
+        in_arm = np.array([f"arm_{sd}" in r for r in vreg])
+        ring = in_arm & (along > 0.06 * s) & (along < 0.10 * s)
+        R = float(np.median(perp[ring]))                       # upper-arm radius just below the joint
+        f_arm = _smoothstep(1.95 * R, 1.0 * R, perp) * _smoothstep(-0.045 * s, 0.03 * s, along)
+        lat = sx * rel[:, 0]
+        dist = np.linalg.norm(rel, axis=1)
+        f_cap = _smoothstep(0.090 * s, 0.040 * s, dist) * _smoothstep(-0.045 * s, 0.005 * s, lat) \
+            * _smoothstep(-0.02 * s, 0.02 * s, rel[:, 2] + 0.6 * lat)
+        f = np.maximum(f_arm, 0.9 * f_cap)
+        # only where the existing weights are shoulder-girdle weights, fading out down the upper arm
+        grp = [idx[b] for b in (f"upperarm_{sd}", f"shoulder_helper_{sd}", f"clavicle_{sd}", "chest", "spine_02", "neck")]
+        own = W[:, grp].sum(1)
+        lam = _smoothstep(0.14 * s, 0.09 * s, along) * _smoothstep(0.90, 0.99, own) * _smoothstep(0.26 * s, 0.20 * s, dist)
+        if not lam.any():
+            continue
+        iu, ih, ic, ich = idx[f"upperarm_{sd}"], idx[f"shoulder_helper_{sd}"], idx[f"clavicle_{sd}"], idx["chest"]
+        new = np.zeros_like(W)
+        new[:, iu] = np.clip(2 * f - 1, 0, 1)
+        new[:, ih] = 2 * np.minimum(f, 1 - f)
+        rest = np.clip(1 - 2 * f, 0, 1)
+        torso = W.copy()
+        torso[:, [iu, ih]] = 0.0
+        tsum = torso.sum(1)
+        fallback = np.zeros_like(W)
+        fallback[np.arange(len(W)), np.where(rel[:, 2] > 0, ic, ich)] = 1.0
+        torso = np.where(tsum[:, None] > 1e-6, torso / np.maximum(tsum, 1e-9)[:, None], fallback)
+        new += rest[:, None] * torso
+        W = (1 - lam)[:, None] * W + lam[:, None] * new
+        if lap is not None:            # relax the new field over the surface (no jagged transition)
+            rows, cols, deg = lap
+            zone = lam > 1e-3
+            for _ in range(iters):
+                acc = np.zeros_like(W)
+                np.add.at(acc, rows, W[cols])
+                avg = acc / deg[:, None]
+                W[zone] = 0.5 * W[zone] + 0.5 * avg[zone]
+    return W
+
+
 def compute_weights(m, sk, smooth_iters=6, smooth_rings=3):
     V = m.V
     n = len(V)
@@ -198,6 +257,7 @@ def compute_weights(m, sk, smooth_iters=6, smooth_rings=3):
         W[:, ia] -= m2
         W[:, ib] -= m2
         W[:, ih] += 2 * m2
+    W = shoulder_field(W, V, names, idx, sk, vreg, lap=(rows, cols, deg))
     # prune to MAX_INFLUENCES and renormalise
     order = np.argsort(-W, axis=1)
     keep = order[:, :MAX_INFLUENCES]

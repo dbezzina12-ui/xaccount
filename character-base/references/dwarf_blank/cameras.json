@@ -2,7 +2,7 @@
   "schema": "gamboligy.projection-references/1.0",
   "characterId": "dwarf_blank",
   "glb": "characters/dwarf_blank/dwarf_blank.glb",
-  "glbSha256": "c42ba84616f6be2272499a8e2fb7f4eb211d3a5b2d8110109c4d8d99975b3b40",
+  "glbSha256": "5a02e7cd2710b4899e38ec2539bdf254609241e1d87a3df55b06ea5ffb363cb8",
   "geometryHash": "85549dab23be885abed3716681aac082d2bf61538304f191ba17b778bcc01a45",
   "uvLayout": "humanoid_uv v1",
   "pose": {

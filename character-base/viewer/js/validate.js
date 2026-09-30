@@ -192,7 +192,8 @@ export async function validate(opts = {}) {
   // ---------------- extended clip set: locomotion, float, weapons ----------------
   const metaOf = (n) => (cfg && cfg.animations ? cfg.animations.find((a) => a.name === n) : null);
   const EXTENDED = ['press_detonator', 'walk_in_place', 'run_in_place', 'jump_in_place', 'float_idle', 'float_monk', 'float_monk_loop',
-    'sword_2h_idle', 'sword_2h_slash', 'staff_idle', 'staff_strike', 'pistol_aim', 'pistol_fire', 'rifle_aim', 'rifle_fire', 'wave', 'cheer'];
+    'sword_2h_idle', 'sword_2h_slash', 'staff_idle', 'staff_stomp', 'pistol_aim', 'pistol_fire', 'pistol_aim_2h', 'pistol_fire_2h',
+    'rifle_aim', 'rifle_fire', 'wave', 'cheer'];
   if (clipNames.includes('walk_in_place')) {
     check('clips.extendedSet', EXTENDED.every((n) => clipNames.includes(n)), EXTENDED.filter((n) => !clipNames.includes(n)).join(', ') || `${EXTENDED.length} clips present`);
     const p = new THREE.Vector3();
@@ -262,13 +263,18 @@ export async function validate(opts = {}) {
             const M = sockM(`socket_hand_${s}_prop`);
             const c = new THREE.Vector3().setFromMatrixPosition(M);
             const ax = new THREE.Vector3().setFromMatrixColumn(M, 1).normalize();
+            let rad = wp.gripRadius;
+            if (s === 'L' && meta.support) {          // support hand: its own grip (e.g. the right fist for a 2-hand pistol)
+              rad = meta.support.gripRadius || rad;
+              if (meta.support.gripCenter) c.copy(new THREE.Vector3(...meta.support.gripCenter).applyMatrix4(MR));
+            }
             let near = 0, deep = 0;
             const n = ch.parts[`Hand_${s}`].geometry.attributes.position.count;
             for (let i = 0; i < n; i++) {
               ch.skinnedPosition(`Hand_${s}`, i, p);
               const rel = p.clone().sub(c); const along = rel.dot(ax);
               if (Math.abs(along) > 0.045) continue;
-              const dist = rel.sub(ax.clone().multiplyScalar(along)).length() - wp.gripRadius;
+              const dist = rel.sub(ax.clone().multiplyScalar(along)).length() - rad;
               if (dist < 0.004) near++;
               deep = Math.min(deep, dist);
             }
@@ -343,6 +349,24 @@ export async function validate(opts = {}) {
       check('props.noBodyPenetration', !(deepest > 0.002), Number.isFinite(deepest)
         ? `deepest prop point ${(deepest * 1000).toFixed(1)} mm ${deepest > 0 ? 'inside' : 'outside'} the skin${deepWhere ? ` (${deepWhere})` : ''}`
         : 'props never come near the body');
+
+      // staff: planted on the floor in the idle; the stomp lifts it and lands the butt on the floor at impact
+      const sp = weapons.props.Staff;
+      if (sp && sp.markers.butt && metaOf('staff_stomp')) {
+        const buttY = (clip, t) => {
+          ch.poseAtClip(clip, t);
+          return new THREE.Vector3().setFromMatrixPosition(sockM('socket_hand_R_prop').multiply(mat4(sp.markers.butt))).y;
+        };
+        const st = metaOf('staff_stomp'), idle = ch.clip('staff_idle'), stomp = ch.clip('staff_stomp');
+        let idleWorst = 0, lowest = Infinity, highest = -Infinity;
+        for (const t of frameTimes(idle, 6)) idleWorst = Math.max(idleWorst, Math.abs(buttY('staff_idle', t) - ground));
+        for (const t of frameTimes(stomp, 1)) { const y = buttY('staff_stomp', t) - ground; lowest = Math.min(lowest, y); highest = Math.max(highest, y); }
+        const atImpact = buttY('staff_stomp', st.markers.impact / 30) - ground;
+        R.info.staff = { idleButtFromFloor_mm: +(idleWorst * 1000).toFixed(1), impactButtFromFloor_mm: +(atImpact * 1000).toFixed(1),
+          stompLift_m: +highest.toFixed(3), lowest_mm: +(lowest * 1000).toFixed(1) };
+        check('staff.planted', idleWorst < 0.012 && Math.abs(atImpact) < 0.012 && lowest > -0.012 && highest > 0.08,
+          `idle butt within ${(idleWorst * 1000).toFixed(1)} mm of the floor; stomp lifts ${(highest * 100).toFixed(1)} cm and lands ${(atImpact * 1000).toFixed(1)} mm from the floor (never below ${(lowest * 1000).toFixed(1)} mm)`);
+      }
 
       // hand-held detonator: thumb pad reaches the button at contact and pushes it by its travel
       const dm = metaOf('press_detonator'), dp = weapons.props.Detonator;

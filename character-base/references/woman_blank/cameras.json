@@ -2,7 +2,7 @@
   "schema": "gamboligy.projection-references/1.0",
   "characterId": "woman_blank",
   "glb": "characters/woman_blank/woman_blank.glb",
-  "glbSha256": "91bc7389c8d821f54f1d657a434279812049de9e2cc1731a91f42429b47a1f33",
+  "glbSha256": "05fbf44aa13c5c9c519e203b0ac70189208f5f9a977e3bf885b8d60345b60fc0",
   "geometryHash": "c19669c329a5e1b44909399c6facf926c7a182664f7075fd39e9334d6c7c0f8a",
   "uvLayout": "humanoid_uv v1",
   "pose": {

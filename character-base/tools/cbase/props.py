@@ -53,11 +53,18 @@ DETONATOR_TRAVEL = 0.005
 
 
 def weapon_specs(sk):
-    """Geometry parts (glTF prop-local) and markers. grip_L orientations are refined by
-    clips_more.fit_support_rolls() and stored in props/weapons.json."""
+    """Geometry parts (glTF prop-local) and markers. The sword's grip_L roll is refined by
+    clips_more.fit_support_marker(); the rifle and two-handed pistol support frames are fixed by
+    design (support_fixed). Markers are stored in props/weapons.json."""
     r = GRIP_RADIUS
     b = socket_barrel_dir(sk)                 # barrel / forward for guns (prop-local)
     up = np.array([0, 1.0, 0])
+    zp = np.array([0, 0, 1.0])                # out of the right palm = toward the gun's left panel
+    # rifle support hand UNDER the handguard: palm up (+Z of the hand frame = gun up), thumb forward (+Y = barrel)
+    rifle_L = np.stack([np.cross(b, up), b, up], 1)
+    # two-handed pistol: the left hand cups the right fist; same grip axis, left palm on the fist's left side
+    # (+Z of the left hand frame = -Z of the prop), fingers wrapped around the right fist
+    pistol_L = np.stack([np.cross(up, -zp), up, -zp], 1)
     return {
         "Sword2H": {
             "parts": [("cyl", [0, -0.19, 0], [0, 0.06, 0], r, "grip"),
@@ -68,17 +75,21 @@ def weapon_specs(sk):
             "support": "L", "grip_radius": r,
         },
         "Staff": {
-            "parts": [("cyl", [0, -1.00, 0], [0, 0.80, 0], r, "wood"),
-                      ("sphere", [0, 0.82, 0], 0.03, "metal"), ("sphere", [0, -1.02, 0], 0.024, "metal")],
-            "markers": {"grip_L": mat(t=[0, 0.42, 0]), "tip": mat(t=[0, 0.82, 0])},
-            "support": "L", "grip_radius": r,
+            # one-handed walking/wizard staff: held at ~1.16 m with the butt on the ground
+            "parts": [("cyl", [0, -1.14, 0], [0, 0.62, 0], r, "wood"),
+                      ("sphere", [0, 0.64, 0], 0.03, "metal"), ("sphere", [0, -1.14, 0], 0.024, "metal")],
+            "markers": {"tip": mat(t=[0, 0.64, 0]), "butt": mat(t=[0, -1.164, 0])},
+            "support": None, "grip_radius": r,
         },
         "Pistol": {
             "parts": [("cyl", [0, -0.055, 0], [0, 0.045, 0], r * 1.05, "grip"),
                       ("beam", list(up * 0.062 - b * 0.035), list(up * 0.062 + b * 0.165), [0.030, 0.034], "metal", b),
                       ("cyl", list(up * 0.066 + b * 0.16), list(up * 0.066 + b * 0.19), 0.007, "dark")],
-            "markers": {"muzzle": mat(t=up * 0.066 + b * 0.19)},
+            "markers": {"muzzle": mat(t=up * 0.066 + b * 0.19),
+                        "grip_L_2h": mat(pistol_L, zp * 0.021 - up * 0.006)},
             "support": None, "grip_radius": r, "barrel": b.tolist(),
+            # the left fingers wrap the right fist: a ~3.6 cm cylinder around the gun's grip axis
+            "support_radius_2h": 0.036, "support_center_2h": (zp * 0.004 - up * 0.006).tolist(),
         },
         "Rifle": {
             "parts": [("cyl", [0, -0.06, 0], [0, 0.04, 0], r * 1.05, "grip"),
@@ -86,10 +97,11 @@ def weapon_specs(sk):
                       ("beam", list(up * 0.045 - b * 0.31), list(up * 0.06 - b * 0.08), [0.04, 0.10], "wood", b),
                       ("beam", list(up * 0.06 + b * 0.10), list(up * 0.06 + b * 0.40), [0.034, 0.036], "wood", b),
                       ("cyl", list(up * 0.075 + b * 0.18), list(up * 0.075 + b * 0.62), 0.011, "dark")],
-            "markers": {"grip_L": mat(t=up * 0.06 + b * 0.20), "muzzle": mat(t=up * 0.075 + b * 0.62),
+            "markers": {"grip_L": mat(rifle_L, up * 0.06 + b * 0.20), "muzzle": mat(t=up * 0.075 + b * 0.62),
                         "butt": mat(t=up * 0.045 - b * 0.31)},
             "support": "L", "grip_radius": r, "barrel": b.tolist(),
             "support_axis": b.tolist(),       # support hand wraps the handguard (axis = barrel)
+            "support_fixed": True,
             "contact_parts": [2],             # the stock rests in the shoulder pocket by design
         },
         "Detonator": {

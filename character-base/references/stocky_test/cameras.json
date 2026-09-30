@@ -2,7 +2,7 @@
   "schema": "gamboligy.projection-references/1.0",
   "characterId": "stocky_test",
   "glb": "characters/stocky_test/stocky_test.glb",
-  "glbSha256": "fab6fa051249f7cf4029b3a988a51aedc437a14968ae0088b2424ca154dd8c19",
+  "glbSha256": "40aa79d2082b4feff9c53aed0c83068dbfc2010ef50ebf227d6a1805758630b7",
   "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
   "uvLayout": "humanoid_uv v1",
   "pose": {
