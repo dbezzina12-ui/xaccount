@@ -204,6 +204,100 @@ export async function validate(opts = {}) {
     R.info.press = { fingertipAboveButtonAtContact_mm: +(atContact * 1000).toFixed(2), pressDepth_mm: +(-atPress * 1000).toFixed(2), travel_mm: b.travel * 1000 };
     check('press.contact', Math.abs(atContact) < 0.004, `fingertip ${(atContact * 1000).toFixed(2)} mm from button top at contact frame; pressed ${(-atPress * 1000).toFixed(2)} mm (button travel ${(b.travel * 1000).toFixed(1)} mm)`);
   }
+  // ---------------- extended clip set: locomotion, float, weapons ----------------
+  const metaOf = (n) => (cfg && cfg.animations ? cfg.animations.find((a) => a.name === n) : null);
+  const EXTENDED = ['walk_in_place', 'run_in_place', 'jump_in_place', 'float_idle', 'float_monk', 'float_monk_loop',
+    'sword_2h_idle', 'sword_2h_slash', 'staff_idle', 'staff_strike', 'pistol_aim', 'pistol_fire', 'rifle_aim', 'rifle_fire', 'wave', 'cheer'];
+  if (clipNames.includes('walk_in_place')) {
+    check('clips.extendedSet', EXTENDED.every((n) => clipNames.includes(n)), EXTENDED.filter((n) => !clipNames.includes(n)).join(', ') || `${EXTENDED.length} clips present`);
+    const p = new THREE.Vector3();
+    const footMin = () => {
+      let m = Infinity;
+      for (const part of ['Foot_L', 'Foot_R']) {
+        const n = ch.parts[part].geometry.attributes.position.count;
+        for (let i = 0; i < n; i += 2) { ch.skinnedPosition(part, i, p); if (p.y < m) m = p.y; }
+      }
+      return m;
+    };
+    ch.resetPose();
+    const ground = footMin();
+    let sinkWorst = 0, sinkWhere = null;
+    const hover = {}, drift = {}, sink = {};
+    for (const clip of ch.clips) {
+      let lo = Infinity;
+      const pel = [];
+      for (const t of frameTimes(clip, opts.step || 3)) {
+        ch.poseAtClip(clip.name, t);
+        const m = footMin();
+        lo = Math.min(lo, m);
+        if (!clip.name.startsWith('_') && ground - m > sinkWorst) { sinkWorst = ground - m; sinkWhere = `${clip.name}@${t.toFixed(2)}s`; }
+        pel.push(ch.worldPos(ch.bones.pelvis));
+      }
+      sink[clip.name] = +Math.max(0, (ground - lo) * 1000).toFixed(1);
+      if (clip.name.startsWith('float')) hover[clip.name] = +(lo - ground).toFixed(3);
+      if (clip.name.endsWith('_in_place')) {
+        const span = (k) => Math.max(...pel.map((v) => v[k])) - Math.min(...pel.map((v) => v[k]));
+        drift[clip.name] = +Math.max(span('x'), span('z')).toFixed(3);
+      }
+    }
+    // float_monk starts standing and ends hovering: check its last frame
+    const fm = ch.clip('float_monk');
+    ch.poseAtClip('float_monk', fm.duration);
+    hover['float_monk(end)'] = +(footMin() - ground).toFixed(3);
+    delete hover.float_monk;
+    R.info.extended = { groundY: +ground.toFixed(4), feetBelowGround_mm: sink, feetHover_m: hover, inPlaceDrift_m: drift };
+    check('feet.aboveGround', sinkWorst < 0.005, `feet at most ${(sinkWorst * 1000).toFixed(1)} mm below the rest ground plane in game clips${sinkWhere ? ` (${sinkWhere})` : ''}; _qa_ stress poses excluded`);
+    check('float.hovers', Object.values(hover).every((h) => h > 0.1), Object.entries(hover).map(([k, h]) => `${k} ${h} m`).join(', '));
+    check('locomotion.inPlace', Object.values(drift).every((d) => d < 0.08), Object.entries(drift).map(([k, d]) => `${k} pelvis drift ${d} m`).join(', '));
+
+    // weapons: support hand stays on the prop's grip_L marker; hands wrap the grips without sinking in
+    let weapons = null;
+    try { const r = await fetch(`${window.__CB_BASE ?? '../'}props/weapons.json`); if (r.ok) weapons = await r.json(); } catch (e) { /* optional */ }
+    if (weapons) {
+      const sockM = (s) => { const o = ch.sockets[s]; o.updateWorldMatrix(true, false); return o.matrixWorld.clone(); };
+      const mat4 = (rows) => new THREE.Matrix4().set(...rows.flat());
+      let supWorst = 0, supWhere = null, penWorst = 0, penWhere = null;
+      const contact = {};
+      for (const clip of ch.clips) {
+        const meta = metaOf(clip.name);
+        if (!meta || !meta.prop || !weapons.props[meta.prop]) continue;
+        const wp = weapons.props[meta.prop];
+        const sides = meta.support ? ['R', 'L'] : ['R'];
+        const times = frameTimes(clip, opts.step || 3);
+        for (const t of times) {
+          ch.poseAtClip(clip.name, t);
+          const MR = sockM('socket_hand_R_prop');
+          if (meta.support) {
+            const want = new THREE.Vector3().setFromMatrixPosition(MR.clone().multiply(mat4(wp.markers[meta.support.marker])));
+            const d = want.distanceTo(new THREE.Vector3().setFromMatrixPosition(sockM('socket_hand_L_prop')));
+            if (d > supWorst) { supWorst = d; supWhere = `${clip.name}@${t.toFixed(2)}s`; }
+          }
+          if (t !== times[0]) continue;     // penetration/contact on the settled hold frame
+          for (const s of sides) {
+            const M = sockM(`socket_hand_${s}_prop`);
+            const c = new THREE.Vector3().setFromMatrixPosition(M);
+            const ax = new THREE.Vector3().setFromMatrixColumn(M, 1).normalize();
+            let near = 0, deep = 0;
+            const n = ch.parts[`Hand_${s}`].geometry.attributes.position.count;
+            for (let i = 0; i < n; i++) {
+              ch.skinnedPosition(`Hand_${s}`, i, p);
+              const rel = p.clone().sub(c); const along = rel.dot(ax);
+              if (Math.abs(along) > 0.045) continue;
+              const dist = rel.sub(ax.clone().multiplyScalar(along)).length() - wp.gripRadius;
+              if (dist < 0.004) near++;
+              deep = Math.min(deep, dist);
+            }
+            contact[`${clip.name}.${s}`] = near;
+            if (-deep > penWorst) { penWorst = -deep; penWhere = `${clip.name} hand ${s}`; }
+          }
+        }
+      }
+      R.info.weapons = { supportHandMaxError_mm: +(supWorst * 1000).toFixed(3), deepestGripPenetration_mm: +(penWorst * 1000).toFixed(2), contactVertices: contact };
+      check('weapons.twoHandGrip', supWorst < 0.002, `support hand within ${(supWorst * 1000).toFixed(3)} mm of the prop's grip_L marker on every frame${supWhere ? ` (worst ${supWhere})` : ''}`);
+      check('weapons.gripNoPenetration', penWorst < 0.0035, `deepest hand vertex ${(penWorst * 1000).toFixed(2)} mm inside a grip${penWhere ? ` (${penWhere})` : ''}`);
+      check('weapons.gripContact', Object.values(contact).every((k) => k >= 20), `min ${Math.min(...Object.values(contact))} hand vertices within 4 mm of each grip`);
+    }
+  }
   ch.resetPose();
   R.ok = R.checks.every((c) => c.ok);
   return R;

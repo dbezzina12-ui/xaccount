@@ -647,8 +647,8 @@
           0.033807143568992615
         ],
         "rotation": [
-          -1.1674722344423571e-7,
-          -5.135762926045118e-9,
+          -1.1674722344423571e-07,
+          -5.135762926045118e-09,
           0.5969306826591492,
           0.8022928237915039
         ]
@@ -665,8 +665,8 @@
           0.03380681574344635
         ],
         "rotation": [
-          -8.431400466690775e-9,
-          -4.044121837409875e-8,
+          -8.431400466690775e-09,
+          -4.044121837409875e-08,
           -0.5969306230545044,
           0.8022928833961487
         ]
@@ -683,7 +683,7 @@
           0
         ],
         "rotation": [
-          3.774895063202166e-8,
+          3.774895063202166e-08,
           -7.105426934084528e-15,
           2.6645352591003757e-15,
           1
@@ -696,15 +696,15 @@
       "gltfNode": {
         "parentNode": "chest",
         "translation": [
-          1.939623128777157e-9,
+          1.939623128777157e-09,
           0.021258043125271797,
           -0.104132741689682
         ],
         "rotation": [
-          4.364918027022213e-8,
+          4.364918027022213e-08,
           0.9999783635139465,
           0.006578495260328054,
-          9.600582551172465e-9
+          9.600582551172465e-09
         ]
       }
     }
@@ -727,7 +727,7 @@
       "name": "idle",
       "frames": 121,
       "fps": 30,
-      "duration": 4,
+      "duration": 4.0,
       "loop": true
     },
     {
@@ -743,9 +743,9 @@
         "ring": 0.663,
         "pinky": 0.575,
         "thumb": [
-          0,
-          50,
-          1
+          0.0,
+          50.0,
+          1.0
         ]
       },
       "markers": {
@@ -792,6 +792,328 @@
         "crouch": 214
       },
       "note": "test poses held for 14 frames each"
+    },
+    {
+      "name": "walk_in_place",
+      "frames": 35,
+      "fps": 30,
+      "duration": 1.1333,
+      "loop": true,
+      "inPlace": true,
+      "stride_m": 0.5767,
+      "cycle_s": 1.1333,
+      "speed_mps": 0.821,
+      "note": "treadmill cycle: planted feet slide backward at the locomotion speed; drive root motion in the game at speed_mps"
+    },
+    {
+      "name": "run_in_place",
+      "frames": 23,
+      "fps": 30,
+      "duration": 0.7333,
+      "loop": true,
+      "inPlace": true,
+      "stride_m": 1.044,
+      "cycle_s": 0.7333,
+      "speed_mps": 3.559,
+      "note": "treadmill cycle: planted feet slide backward at the locomotion speed; drive root motion in the game at speed_mps"
+    },
+    {
+      "name": "jump_in_place",
+      "frames": 43,
+      "fps": 30,
+      "duration": 1.4,
+      "loop": false,
+      "inPlace": true,
+      "markers": {
+        "takeoff": 13,
+        "apex": 19,
+        "land": 25,
+        "end": 42
+      },
+      "airborne_frames": [
+        14,
+        24
+      ]
+    },
+    {
+      "name": "float_idle",
+      "frames": 91,
+      "fps": 30,
+      "duration": 3.0,
+      "loop": true,
+      "inPlace": true,
+      "pelvisLift_m": 0.259
+    },
+    {
+      "name": "float_monk",
+      "frames": 85,
+      "fps": 30,
+      "duration": 2.8,
+      "loop": false,
+      "markers": {
+        "liftOff": 18,
+        "seated": 68,
+        "end": 84
+      },
+      "followWith": "float_monk_loop"
+    },
+    {
+      "name": "float_monk_loop",
+      "frames": 121,
+      "fps": 30,
+      "duration": 4.0,
+      "loop": true,
+      "inPlace": true
+    },
+    {
+      "name": "wave",
+      "frames": 61,
+      "fps": 30,
+      "duration": 2.0,
+      "loop": false,
+      "markers": {
+        "end": 60
+      }
+    },
+    {
+      "name": "cheer",
+      "frames": 67,
+      "fps": 30,
+      "duration": 2.2,
+      "loop": false,
+      "markers": {
+        "armsUp": 10,
+        "end": 66
+      }
+    },
+    {
+      "name": "sword_2h_idle",
+      "frames": 61,
+      "fps": 30,
+      "duration": 2.0,
+      "loop": true,
+      "prop": "Sword2H",
+      "attach": "socket_hand_R_prop",
+      "support": {
+        "hand": "L",
+        "marker": "grip_L"
+      },
+      "grip": {
+        "R": {
+          "index": 0.42500000000000004,
+          "middle": 0.675,
+          "ring": 0.6625000000000001,
+          "pinky": 0.5750000000000001,
+          "thumb": [
+            0,
+            50,
+            1.0
+          ]
+        }
+      }
+    },
+    {
+      "name": "sword_2h_slash",
+      "frames": 61,
+      "fps": 30,
+      "duration": 2.0,
+      "loop": false,
+      "prop": "Sword2H",
+      "attach": "socket_hand_R_prop",
+      "support": {
+        "hand": "L",
+        "marker": "grip_L"
+      },
+      "grip": {
+        "R": {
+          "index": 0.42500000000000004,
+          "middle": 0.675,
+          "ring": 0.6625000000000001,
+          "pinky": 0.5750000000000001,
+          "thumb": [
+            0,
+            50,
+            1.0
+          ]
+        }
+      },
+      "markers": {
+        "windup": 12,
+        "impact": 24,
+        "recover": 44,
+        "end": 60
+      }
+    },
+    {
+      "name": "staff_idle",
+      "frames": 61,
+      "fps": 30,
+      "duration": 2.0,
+      "loop": true,
+      "prop": "Staff",
+      "attach": "socket_hand_R_prop",
+      "support": {
+        "hand": "L",
+        "marker": "grip_L"
+      },
+      "grip": {
+        "R": {
+          "index": 0.42500000000000004,
+          "middle": 0.675,
+          "ring": 0.6625000000000001,
+          "pinky": 0.5750000000000001,
+          "thumb": [
+            0,
+            50,
+            1.0
+          ]
+        }
+      }
+    },
+    {
+      "name": "staff_strike",
+      "frames": 45,
+      "fps": 30,
+      "duration": 1.4667,
+      "loop": false,
+      "prop": "Staff",
+      "attach": "socket_hand_R_prop",
+      "support": {
+        "hand": "L",
+        "marker": "grip_L"
+      },
+      "grip": {
+        "R": {
+          "index": 0.42500000000000004,
+          "middle": 0.675,
+          "ring": 0.6625000000000001,
+          "pinky": 0.5750000000000001,
+          "thumb": [
+            0,
+            50,
+            1.0
+          ]
+        }
+      },
+      "markers": {
+        "windup": 10,
+        "impact": 17,
+        "end": 44
+      }
+    },
+    {
+      "name": "pistol_aim",
+      "frames": 61,
+      "fps": 30,
+      "duration": 2.0,
+      "loop": true,
+      "prop": "Pistol",
+      "attach": "socket_hand_R_prop",
+      "support": null,
+      "grip": {
+        "R": {
+          "index": 0.42500000000000004,
+          "middle": 0.675,
+          "ring": 0.6625000000000001,
+          "pinky": 0.5750000000000001,
+          "thumb": [
+            0,
+            50,
+            1.0
+          ]
+        }
+      }
+    },
+    {
+      "name": "pistol_fire",
+      "frames": 37,
+      "fps": 30,
+      "duration": 1.2,
+      "loop": false,
+      "prop": "Pistol",
+      "attach": "socket_hand_R_prop",
+      "support": null,
+      "grip": {
+        "R": {
+          "index": 0.42500000000000004,
+          "middle": 0.675,
+          "ring": 0.6625000000000001,
+          "pinky": 0.5750000000000001,
+          "thumb": [
+            0,
+            50,
+            1.0
+          ]
+        }
+      },
+      "markers": {
+        "shot": [
+          8
+        ],
+        "end": 36
+      },
+      "muzzleMarker": "muzzle"
+    },
+    {
+      "name": "rifle_aim",
+      "frames": 61,
+      "fps": 30,
+      "duration": 2.0,
+      "loop": true,
+      "prop": "Rifle",
+      "attach": "socket_hand_R_prop",
+      "support": {
+        "hand": "L",
+        "marker": "grip_L"
+      },
+      "grip": {
+        "R": {
+          "index": 0.42500000000000004,
+          "middle": 0.675,
+          "ring": 0.6625000000000001,
+          "pinky": 0.5750000000000001,
+          "thumb": [
+            0,
+            50,
+            1.0
+          ]
+        }
+      }
+    },
+    {
+      "name": "rifle_fire",
+      "frames": 41,
+      "fps": 30,
+      "duration": 1.3333,
+      "loop": false,
+      "prop": "Rifle",
+      "attach": "socket_hand_R_prop",
+      "support": {
+        "hand": "L",
+        "marker": "grip_L"
+      },
+      "grip": {
+        "R": {
+          "index": 0.42500000000000004,
+          "middle": 0.675,
+          "ring": 0.6625000000000001,
+          "pinky": 0.5750000000000001,
+          "thumb": [
+            0,
+            50,
+            1.0
+          ]
+        }
+      },
+      "markers": {
+        "shots": [
+          6,
+          12,
+          18
+        ],
+        "end": 40
+      },
+      "muzzleMarker": "muzzle"
     }
   ],
   "testProps": {
@@ -825,7 +1147,7 @@
     "glb": "master_blank.glb",
     "blend": "master_blank.blend",
     "testProps": "test_props.glb",
-    "glbSha256": "b11606d780a045c2e96d64e852390dfad2a60d008eec7d6f0ced3c540f47f594"
+    "glbSha256": "5600a68912793b4863a9177a0002086e9f835a65cc4f4b96b8ac8c4a460d9210"
   },
   "exportCheck": {
     "nodes": 84,
@@ -923,7 +1245,7 @@
           0
         ],
         "rotation": [
-          3.774895063202166e-8,
+          3.774895063202166e-08,
           -7.105426934084528e-15,
           2.6645352591003757e-15,
           1
@@ -937,8 +1259,8 @@
           0.033807143568992615
         ],
         "rotation": [
-          -1.1674722344423571e-7,
-          -5.135762926045118e-9,
+          -1.1674722344423571e-07,
+          -5.135762926045118e-09,
           0.5969306826591492,
           0.8022928237915039
         ]
@@ -951,8 +1273,8 @@
           0.03380681574344635
         ],
         "rotation": [
-          -8.431400466690775e-9,
-          -4.044121837409875e-8,
+          -8.431400466690775e-09,
+          -4.044121837409875e-08,
           -0.5969306230545044,
           0.8022928833961487
         ]
@@ -960,15 +1282,15 @@
       "socket_back_accessory": {
         "parentNode": "chest",
         "translation": [
-          1.939623128777157e-9,
+          1.939623128777157e-09,
           0.021258043125271797,
           -0.104132741689682
         ],
         "rotation": [
-          4.364918027022213e-8,
+          4.364918027022213e-08,
           0.9999783635139465,
           0.006578495260328054,
-          9.600582551172465e-9
+          9.600582551172465e-09
         ]
       }
     },
@@ -979,8 +1301,43 @@
         "channels": 189
       },
       {
+        "name": "cheer",
+        "duration": 2.2,
+        "channels": 189
+      },
+      {
+        "name": "float_idle",
+        "duration": 3,
+        "channels": 189
+      },
+      {
+        "name": "float_monk",
+        "duration": 2.8,
+        "channels": 189
+      },
+      {
+        "name": "float_monk_loop",
+        "duration": 4,
+        "channels": 189
+      },
+      {
         "name": "idle",
         "duration": 4,
+        "channels": 189
+      },
+      {
+        "name": "jump_in_place",
+        "duration": 1.4,
+        "channels": 189
+      },
+      {
+        "name": "pistol_aim",
+        "duration": 2,
+        "channels": 189
+      },
+      {
+        "name": "pistol_fire",
+        "duration": 1.2,
         "channels": 189
       },
       {
@@ -991,6 +1348,51 @@
       {
         "name": "reach_grip_handle",
         "duration": 4.2,
+        "channels": 189
+      },
+      {
+        "name": "rifle_aim",
+        "duration": 2,
+        "channels": 189
+      },
+      {
+        "name": "rifle_fire",
+        "duration": 1.3333,
+        "channels": 189
+      },
+      {
+        "name": "run_in_place",
+        "duration": 0.7333,
+        "channels": 189
+      },
+      {
+        "name": "staff_idle",
+        "duration": 2,
+        "channels": 189
+      },
+      {
+        "name": "staff_strike",
+        "duration": 1.4667,
+        "channels": 189
+      },
+      {
+        "name": "sword_2h_idle",
+        "duration": 2,
+        "channels": 189
+      },
+      {
+        "name": "sword_2h_slash",
+        "duration": 2,
+        "channels": 189
+      },
+      {
+        "name": "walk_in_place",
+        "duration": 1.1333,
+        "channels": 189
+      },
+      {
+        "name": "wave",
+        "duration": 2,
         "channels": 189
       }
     ],
@@ -1003,8 +1405,8 @@
   "freezeRecord": {
     "geometryHash": "a3aa27c360a1b1e3002342a606b7809f022b858b26a8635a201e0e7441f3eb9c",
     "uvSha256": "a0d908c078b7ba6a77ede85c73e5cacd601b44a658d2ef0f8e5659b58593cd6f",
-    "glbSha256": "b11606d780a045c2e96d64e852390dfad2a60d008eec7d6f0ced3c540f47f594",
-    "blendSha256": "1125c488e0e3278533f182be047ad30d7beea6a6cd9344ae93c3d50ec6900da9"
+    "glbSha256": "5600a68912793b4863a9177a0002086e9f835a65cc4f4b96b8ac8c4a460d9210",
+    "blendSha256": "772742caed51efb3d9ca2431d635f551f2a0e4a50d7d4223608e85b831bb3031"
   },
   "projection": {
     "references": "references/master_blank/cameras.json",
@@ -1021,5 +1423,40 @@
       "one": 0.3869,
       "multi": 0.519
     }
-  }
+  },
+  "animationSet": {
+    "version": 2,
+    "clips": [
+      "idle",
+      "reach_grip_handle",
+      "press_button",
+      "_qa_pose_cycle",
+      "walk_in_place",
+      "run_in_place",
+      "jump_in_place",
+      "float_idle",
+      "float_monk",
+      "float_monk_loop",
+      "wave",
+      "cheer",
+      "sword_2h_idle",
+      "sword_2h_slash",
+      "staff_idle",
+      "staff_strike",
+      "pistol_aim",
+      "pistol_fire",
+      "rifle_aim",
+      "rifle_fire"
+    ],
+    "weaponProps": "props/weapons.glb"
+  },
+  "animationRevisions": [
+    {
+      "date": "2026-09-30T14:33:36+00:00",
+      "clipSetVersion": 2,
+      "clips": 20,
+      "geometryHash": "a3aa27c360a1b1e3002342a606b7809f022b858b26a8635a201e0e7441f3eb9c",
+      "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"
+    }
+  ]
 }

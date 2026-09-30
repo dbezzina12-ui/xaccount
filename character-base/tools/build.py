@@ -5,6 +5,8 @@
   python tools/build.py build <id> [--params p.json] [--name "Display"] [--force]
   python tools/build.py freeze <id>
   python tools/build.py texture <source_id> <new_id> --image baked.png
+  python tools/build.py props                     # shared weapon props (props/weapons.glb/.json)
+  python tools/build.py update-clips <id>         # re-bake the clip library onto an existing/frozen character
   python tools/build.py images                    # UV layout / checker / diagnostic textures
 
 Inside a Blender install instead of the pip module:
@@ -29,6 +31,7 @@ from cbase.params import DESCRIPTIONS, RANGES, resolve  # noqa: E402
 from cbase.skeleton import BEND_CONVENTION, DRIVERS, build_skeleton, socket_defs  # noqa: E402
 
 UV_VERSION = 1
+CLIP_SET_VERSION = 2          # bump when clip recipes change; frozen characters get `update-clips`
 STOCKY = {"height": 1.68, "headSize": 1.03, "shoulderWidth": 1.08, "torsoWidth": 1.16, "torsoDepth": 1.14,
           "bellySize": 1.55, "armLength": 0.96, "legLength": 0.92, "handSize": 1.07, "footSize": 1.05}
 
@@ -95,6 +98,104 @@ def cmd_images(args):
     print("images written to", out)
 
 
+def load_prop_markers():
+    from cbase.props import props_json_path
+    p = props_json_path(ROOT)
+    if not os.path.exists(p):
+        return None
+    with open(p) as fh:
+        d = json.load(fh)
+    return {k: v["markers"] for k, v in d["props"].items()}
+
+
+def all_character_clips(rig, props, socks):
+    from cbase import clips as CL
+    from cbase import clips_more as CM
+    clips = CL.all_clips(rig, props, socks)
+    more, _ = CM.more_clips(rig, socks, load_prop_markers())
+    clips.update(more)
+    return clips
+
+
+def cmd_props(args):
+    """Shared weapon props: fit the support-hand grip markers once on the master rig, then export
+    props/weapons.glb + props/weapons.json (every character's clips reuse these markers)."""
+    from cbase import blender_build as BB
+    from cbase import clips_more as CM
+    from cbase.poses import Rig
+    from cbase.props import build_blender_props, save_markers
+    BB.reset_scene()
+    sk = build_skeleton(resolve({}))
+    _, specs = CM.weapon_clips(Rig(sk), socket_defs(sk))
+    save_markers(ROOT, specs, {"fittedOn": "master_blank rest skeleton", "created": C.now()})
+    build_blender_props(specs, os.path.join(ROOT, "props", "weapons.glb"))
+    print("props written:", ", ".join(specs))
+
+
+def anim_meta(clips):
+    from cbase.clips import FPS
+    return [{"name": n, "frames": len(f), "fps": FPS, "duration": round((len(f) - 1) / FPS, 4), **m}
+            for n, (f, m) in clips.items()]
+
+
+def cmd_update_clips(args):
+    """Re-bake the clip library onto an existing (possibly frozen) character WITHOUT touching its
+    geometry, UVs, weights or skeleton: open its .blend, verify hashes, replace actions, re-export."""
+    import bpy
+    from cbase import blender_build as BB
+    from cbase import clips as CL
+    from cbase.poses import Rig
+    cid = args.id
+    cfg = C.load_config(ROOT, cid)
+    if cfg is None:
+        raise SystemExit(f"unknown character {cid}")
+    d = C.char_dir(ROOT, cid)
+    blend = os.path.join(d, cfg["files"]["blend"])
+    if cfg.get("frozen") and C.sha256_file(blend) != cfg["freezeRecord"]["blendSha256"]:
+        raise SystemExit(".blend changed since the last recorded state; refusing")
+    bpy.ops.wm.open_mainfile(filepath=blend)
+    bpy.context.preferences.filepaths.save_version = 0
+    for prt in cfg["geometry"]["parts"]:
+        if part_hash(bpy.data.objects[prt["name"]].data) != prt["hash"]:
+            raise SystemExit(f"part {prt['name']} geometry/UV hash mismatch; refusing")
+    p = resolve(cfg["proportions"])
+    sk = build_skeleton(p)
+    if C.skeleton_hash(sk) != cfg["skeleton"]["hash"]:
+        raise SystemExit("skeleton rebuilt from the recorded proportions does not match the frozen rig; refusing")
+    rig = Rig(sk)
+    socks = socket_defs(sk)
+    clips = all_character_clips(rig, CL.prop_layout(sk), socks)
+    arm = bpy.data.objects[BB.ARMATURE]
+    if arm.animation_data:
+        for tr in list(arm.animation_data.nla_tracks):
+            arm.animation_data.nla_tracks.remove(tr)
+        arm.animation_data.action = None
+    for act in list(bpy.data.actions):
+        bpy.data.actions.remove(act)
+    for name, (frames, meta) in clips.items():
+        BB.bake_action(arm, rig, name, frames, meta)
+    bpy.context.scene.frame_end = max(len(f) for f, _ in clips.values()) - 1
+    objs = [arm] + [bpy.data.objects[q["name"]] for q in cfg["geometry"]["parts"]] + \
+           [bpy.data.objects[k] for k in cfg["attachments"]]
+    glb = os.path.join(d, cfg["files"]["glb"])
+    BB.export_glb(glb, objs, animations=True)
+    bpy.ops.wm.save_as_mainfile(filepath=blend, compress=True)
+    info = C.inspect_glb(glb)
+    cfg["animations"] = anim_meta(clips)
+    cfg["animationSet"] = {"version": CLIP_SET_VERSION, "clips": list(clips), "weaponProps": "props/weapons.glb"}
+    cfg["exportCheck"] = info
+    cfg["files"]["glbSha256"] = C.sha256_file(glb)
+    rev = {"date": C.now(), "clipSetVersion": CLIP_SET_VERSION, "clips": len(clips),
+           "geometryHash": cfg["geometry"]["hash"], "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"}
+    cfg.setdefault("animationRevisions", []).append(rev)
+    if cfg.get("frozen"):
+        cfg["freezeRecord"]["glbSha256"] = cfg["files"]["glbSha256"]
+        cfg["freezeRecord"]["blendSha256"] = C.sha256_file(blend)
+    C.write_config(ROOT, cid, cfg)
+    write_index()
+    print(f"updated clips on {cid}: {len(clips)} clips -> {[a['name'] for a in info['animations']]}")
+
+
 def build_character(cid, params, display=None, texture=None, force=False, derived=None, status="draft"):
     import bpy
     from mathutils import Matrix  # noqa: F401
@@ -114,12 +215,13 @@ def build_character(cid, params, display=None, texture=None, force=False, derive
     mat = BB.make_material(texture)
     parts = BB.make_parts(m, uv, names, W, arm, mat)
     sock_objs = BB.make_sockets(socks, arm)
-    clips = CL.all_clips(rig, props, socks)
+    clips = all_character_clips(rig, props, socks)
     anim_info = []
     for name, (frames, meta) in clips.items():
         BB.bake_action(arm, rig, name, frames, meta)
         anim_info.append({"name": name, "frames": len(frames), "fps": CL.FPS,
                           "duration": round((len(frames) - 1) / CL.FPS, 4), **meta})
+    anim_set = {"version": CLIP_SET_VERSION, "clips": list(clips), "weaponProps": "props/weapons.glb"}
     prop_col = BB.make_test_props(props)
     d = C.char_dir(ROOT, cid)
     os.makedirs(d, exist_ok=True)
@@ -174,6 +276,7 @@ def build_character(cid, params, display=None, texture=None, force=False, derive
                      "roughness": 0.85, "metallic": 0.0,
                      "baseColorTexture": None},
         "animations": anim_info,
+        "animationSet": anim_set,
         "testProps": {"file": "test_props.glb",
                       "handle": {k: (v.tolist() if hasattr(v, "tolist") else v) for k, v in props["handle"].items()},
                       "button": {k: (v.tolist() if hasattr(v, "tolist") else v) for k, v in props["button"].items()},
@@ -301,6 +404,8 @@ def cmd_all(args):
     if not os.path.exists(uvlayout.layout_paths(ROOT, UV_VERSION)[0]):
         cmd_layout(args)
     cmd_images(args)
+    if not os.path.exists(os.path.join(ROOT, "props", "weapons.json")):
+        cmd_props(args)
     os.makedirs(os.path.join(ROOT, "template", "presets"), exist_ok=True)
     with open(os.path.join(ROOT, "template", "presets", "master_blank.json"), "w") as fh:
         json.dump({}, fh)
@@ -309,7 +414,11 @@ def cmd_all(args):
     for cid, params, name in (("master_blank", {}, "Master blank"), ("stocky_test", STOCKY, "Stocky test variant")):
         cfg = C.load_config(ROOT, cid)
         if cfg and cfg.get("frozen"):
-            print(f"{cid} is frozen – kept as is")
+            if (cfg.get("animationSet") or {}).get("version") != CLIP_SET_VERSION:
+                print(f"{cid} is frozen – re-baking its clips only")
+                cmd_update_clips(argparse.Namespace(id=cid))
+            else:
+                print(f"{cid} is frozen – kept as is")
             continue
         build_character(cid, params, name, status="master" if cid == "master_blank" else "draft")
         cmd_freeze(argparse.Namespace(id=cid))
@@ -325,6 +434,9 @@ def main(argv):
     sub.add_parser("all")
     sub.add_parser("layout")
     sub.add_parser("images")
+    sub.add_parser("props")
+    u = sub.add_parser("update-clips")
+    u.add_argument("id")
     b = sub.add_parser("build")
     b.add_argument("id")
     b.add_argument("--params")
@@ -340,9 +452,13 @@ def main(argv):
     t.add_argument("--force", action="store_true")
     a = ap.parse_args(argv)
     {"all": cmd_all, "layout": cmd_layout, "images": cmd_images, "build": cmd_build,
-     "freeze": cmd_freeze, "texture": cmd_texture}[a.cmd](a)
+     "freeze": cmd_freeze, "texture": cmd_texture, "props": cmd_props, "update-clips": cmd_update_clips}[a.cmd](a)
 
 
 if __name__ == "__main__":
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else sys.argv[1:]
     main(argv)
+    # bpy-as-a-module can crash while tearing down after an export; all outputs are written by now
+    sys.stdout.flush()
+    sys.stderr.flush()
+    os._exit(0)

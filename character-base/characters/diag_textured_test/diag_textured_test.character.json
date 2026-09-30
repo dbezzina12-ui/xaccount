@@ -4,7 +4,7 @@
   "displayName": "Stocky variant + diagnostic texture",
   "status": "textured",
   "frozen": false,
-  "created": "2026-09-30T12:38:33+00:00",
+  "created": "2026-09-30T14:34:25+00:00",
   "template": {
     "id": "gamboligy.humanoid_base",
     "version": "1.0.0",
@@ -14,7 +14,7 @@
   "derivedFrom": {
     "characterId": "stocky_test",
     "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
-    "glbSha256": "1f9b57d20de5b285372034d96b2331fbfbdb0e1bcfd871b8c1eccd5dbf508fbe",
+    "glbSha256": "19f0c458be1bfa91f888ba15a152ae48e4314b35bd5136d2cbce18336236fea5",
     "operation": "baked base-colour texture applied; geometry/UV/skeleton/clips unchanged"
   },
   "proportions": {
@@ -652,8 +652,8 @@
           0.03561355546116829
         ],
         "rotation": [
-          -1.3939459364564755e-8,
-          -1.4482091081902126e-8,
+          -1.3939459364564755e-08,
+          -1.4482091081902126e-08,
           0.5969306230545044,
           0.8022928833961487
         ]
@@ -670,8 +670,8 @@
           0.035613469779491425
         ],
         "rotation": [
-          -5.236937106189998e-9,
-          1.4743034348896344e-8,
+          -5.236937106189998e-09,
+          1.4743034348896344e-08,
           -0.5969306230545044,
           0.8022928237915039
         ]
@@ -688,8 +688,8 @@
           0
         ],
         "rotation": [
-          3.774895063202166e-8,
-          -5.960465188081798e-8,
+          3.774895063202166e-08,
+          -5.960465188081798e-08,
           9.786456042250313e-15,
           1
         ]
@@ -701,15 +701,15 @@
       "gltfNode": {
         "parentNode": "chest",
         "translation": [
-          4.002690179305546e-9,
+          4.002690179305546e-09,
           0.02096136473119259,
           -0.11310148984193802
         ],
         "rotation": [
-          4.36025295869058e-8,
+          4.36025295869058e-08,
           0.9999813437461853,
           0.006106138229370117,
-          1.7961715670367084e-8
+          1.7961715670367084e-08
         ]
       }
     }
@@ -724,7 +724,7 @@
       1
     ],
     "roughness": 0.85,
-    "metallic": 0,
+    "metallic": 0.0,
     "baseColorTexture": {
       "uri": "textures/basecolor.png",
       "sha256": "45f4565906c20ba2608cd1d4a813d4f095e4129571067ff28d9c5933ebe89ba7",
@@ -739,7 +739,7 @@
       "name": "idle",
       "frames": 121,
       "fps": 30,
-      "duration": 4,
+      "duration": 4.0,
       "loop": true
     },
     {
@@ -755,9 +755,9 @@
         "ring": 0.675,
         "pinky": 0.588,
         "thumb": [
-          0,
-          40,
-          1
+          0.0,
+          40.0,
+          1.0
         ]
       },
       "markers": {
@@ -804,6 +804,328 @@
         "crouch": 214
       },
       "note": "test poses held for 14 frames each"
+    },
+    {
+      "name": "walk_in_place",
+      "frames": 35,
+      "fps": 30,
+      "duration": 1.1333,
+      "loop": true,
+      "inPlace": true,
+      "stride_m": 0.5678,
+      "cycle_s": 1.1333,
+      "speed_mps": 0.808,
+      "note": "treadmill cycle: planted feet slide backward at the locomotion speed; drive root motion in the game at speed_mps"
+    },
+    {
+      "name": "run_in_place",
+      "frames": 23,
+      "fps": 30,
+      "duration": 0.7333,
+      "loop": true,
+      "inPlace": true,
+      "stride_m": 1.0279,
+      "cycle_s": 0.7333,
+      "speed_mps": 3.504,
+      "note": "treadmill cycle: planted feet slide backward at the locomotion speed; drive root motion in the game at speed_mps"
+    },
+    {
+      "name": "jump_in_place",
+      "frames": 43,
+      "fps": 30,
+      "duration": 1.4,
+      "loop": false,
+      "inPlace": true,
+      "markers": {
+        "takeoff": 13,
+        "apex": 19,
+        "land": 25,
+        "end": 42
+      },
+      "airborne_frames": [
+        14,
+        24
+      ]
+    },
+    {
+      "name": "float_idle",
+      "frames": 91,
+      "fps": 30,
+      "duration": 3.0,
+      "loop": true,
+      "inPlace": true,
+      "pelvisLift_m": 0.255
+    },
+    {
+      "name": "float_monk",
+      "frames": 85,
+      "fps": 30,
+      "duration": 2.8,
+      "loop": false,
+      "markers": {
+        "liftOff": 18,
+        "seated": 68,
+        "end": 84
+      },
+      "followWith": "float_monk_loop"
+    },
+    {
+      "name": "float_monk_loop",
+      "frames": 121,
+      "fps": 30,
+      "duration": 4.0,
+      "loop": true,
+      "inPlace": true
+    },
+    {
+      "name": "wave",
+      "frames": 61,
+      "fps": 30,
+      "duration": 2.0,
+      "loop": false,
+      "markers": {
+        "end": 60
+      }
+    },
+    {
+      "name": "cheer",
+      "frames": 67,
+      "fps": 30,
+      "duration": 2.2,
+      "loop": false,
+      "markers": {
+        "armsUp": 10,
+        "end": 66
+      }
+    },
+    {
+      "name": "sword_2h_idle",
+      "frames": 61,
+      "fps": 30,
+      "duration": 2.0,
+      "loop": true,
+      "prop": "Sword2H",
+      "attach": "socket_hand_R_prop",
+      "support": {
+        "hand": "L",
+        "marker": "grip_L"
+      },
+      "grip": {
+        "R": {
+          "index": 0.4625,
+          "middle": 0.6875,
+          "ring": 0.675,
+          "pinky": 0.5875,
+          "thumb": [
+            0,
+            50,
+            1.0
+          ]
+        }
+      }
+    },
+    {
+      "name": "sword_2h_slash",
+      "frames": 61,
+      "fps": 30,
+      "duration": 2.0,
+      "loop": false,
+      "prop": "Sword2H",
+      "attach": "socket_hand_R_prop",
+      "support": {
+        "hand": "L",
+        "marker": "grip_L"
+      },
+      "grip": {
+        "R": {
+          "index": 0.4625,
+          "middle": 0.6875,
+          "ring": 0.675,
+          "pinky": 0.5875,
+          "thumb": [
+            0,
+            50,
+            1.0
+          ]
+        }
+      },
+      "markers": {
+        "windup": 12,
+        "impact": 24,
+        "recover": 44,
+        "end": 60
+      }
+    },
+    {
+      "name": "staff_idle",
+      "frames": 61,
+      "fps": 30,
+      "duration": 2.0,
+      "loop": true,
+      "prop": "Staff",
+      "attach": "socket_hand_R_prop",
+      "support": {
+        "hand": "L",
+        "marker": "grip_L"
+      },
+      "grip": {
+        "R": {
+          "index": 0.4625,
+          "middle": 0.6875,
+          "ring": 0.675,
+          "pinky": 0.5875,
+          "thumb": [
+            0,
+            50,
+            1.0
+          ]
+        }
+      }
+    },
+    {
+      "name": "staff_strike",
+      "frames": 45,
+      "fps": 30,
+      "duration": 1.4667,
+      "loop": false,
+      "prop": "Staff",
+      "attach": "socket_hand_R_prop",
+      "support": {
+        "hand": "L",
+        "marker": "grip_L"
+      },
+      "grip": {
+        "R": {
+          "index": 0.4625,
+          "middle": 0.6875,
+          "ring": 0.675,
+          "pinky": 0.5875,
+          "thumb": [
+            0,
+            50,
+            1.0
+          ]
+        }
+      },
+      "markers": {
+        "windup": 10,
+        "impact": 17,
+        "end": 44
+      }
+    },
+    {
+      "name": "pistol_aim",
+      "frames": 61,
+      "fps": 30,
+      "duration": 2.0,
+      "loop": true,
+      "prop": "Pistol",
+      "attach": "socket_hand_R_prop",
+      "support": null,
+      "grip": {
+        "R": {
+          "index": 0.4625,
+          "middle": 0.6875,
+          "ring": 0.675,
+          "pinky": 0.5875,
+          "thumb": [
+            0,
+            50,
+            1.0
+          ]
+        }
+      }
+    },
+    {
+      "name": "pistol_fire",
+      "frames": 37,
+      "fps": 30,
+      "duration": 1.2,
+      "loop": false,
+      "prop": "Pistol",
+      "attach": "socket_hand_R_prop",
+      "support": null,
+      "grip": {
+        "R": {
+          "index": 0.4625,
+          "middle": 0.6875,
+          "ring": 0.675,
+          "pinky": 0.5875,
+          "thumb": [
+            0,
+            50,
+            1.0
+          ]
+        }
+      },
+      "markers": {
+        "shot": [
+          8
+        ],
+        "end": 36
+      },
+      "muzzleMarker": "muzzle"
+    },
+    {
+      "name": "rifle_aim",
+      "frames": 61,
+      "fps": 30,
+      "duration": 2.0,
+      "loop": true,
+      "prop": "Rifle",
+      "attach": "socket_hand_R_prop",
+      "support": {
+        "hand": "L",
+        "marker": "grip_L"
+      },
+      "grip": {
+        "R": {
+          "index": 0.4625,
+          "middle": 0.6875,
+          "ring": 0.675,
+          "pinky": 0.5875,
+          "thumb": [
+            0,
+            50,
+            1.0
+          ]
+        }
+      }
+    },
+    {
+      "name": "rifle_fire",
+      "frames": 41,
+      "fps": 30,
+      "duration": 1.3333,
+      "loop": false,
+      "prop": "Rifle",
+      "attach": "socket_hand_R_prop",
+      "support": {
+        "hand": "L",
+        "marker": "grip_L"
+      },
+      "grip": {
+        "R": {
+          "index": 0.4625,
+          "middle": 0.6875,
+          "ring": 0.675,
+          "pinky": 0.5875,
+          "thumb": [
+            0,
+            50,
+            1.0
+          ]
+        }
+      },
+      "markers": {
+        "shots": [
+          6,
+          12,
+          18
+        ],
+        "end": 40
+      },
+      "muzzleMarker": "muzzle"
     }
   ],
   "testProps": {
@@ -837,7 +1159,7 @@
     "glb": "diag_textured_test.glb",
     "blend": "diag_textured_test.blend",
     "testProps": "test_props.glb",
-    "glbSha256": "b5a5b5c612bb91607b6c9863bbe4b26bd632657ab4ee9d5777a17e38e862236e"
+    "glbSha256": "ecd1904bbfc1ad8b2200dcc8e07502e7047b808cf4d82326dc8869d12907afeb"
   },
   "exportCheck": {
     "nodes": 84,
@@ -935,8 +1257,8 @@
           0
         ],
         "rotation": [
-          3.774895063202166e-8,
-          -5.960465188081798e-8,
+          3.774895063202166e-08,
+          -5.960465188081798e-08,
           9.786456042250313e-15,
           1
         ]
@@ -949,8 +1271,8 @@
           0.03561355546116829
         ],
         "rotation": [
-          -1.3939459364564755e-8,
-          -1.4482091081902126e-8,
+          -1.3939459364564755e-08,
+          -1.4482091081902126e-08,
           0.5969306230545044,
           0.8022928833961487
         ]
@@ -963,8 +1285,8 @@
           0.035613469779491425
         ],
         "rotation": [
-          -5.236937106189998e-9,
-          1.4743034348896344e-8,
+          -5.236937106189998e-09,
+          1.4743034348896344e-08,
           -0.5969306230545044,
           0.8022928237915039
         ]
@@ -972,15 +1294,15 @@
       "socket_back_accessory": {
         "parentNode": "chest",
         "translation": [
-          4.002690179305546e-9,
+          4.002690179305546e-09,
           0.02096136473119259,
           -0.11310148984193802
         ],
         "rotation": [
-          4.36025295869058e-8,
+          4.36025295869058e-08,
           0.9999813437461853,
           0.006106138229370117,
-          1.7961715670367084e-8
+          1.7961715670367084e-08
         ]
       }
     },
@@ -991,8 +1313,43 @@
         "channels": 189
       },
       {
+        "name": "cheer",
+        "duration": 2.2,
+        "channels": 189
+      },
+      {
+        "name": "float_idle",
+        "duration": 3,
+        "channels": 189
+      },
+      {
+        "name": "float_monk",
+        "duration": 2.8,
+        "channels": 189
+      },
+      {
+        "name": "float_monk_loop",
+        "duration": 4,
+        "channels": 189
+      },
+      {
         "name": "idle",
         "duration": 4,
+        "channels": 189
+      },
+      {
+        "name": "jump_in_place",
+        "duration": 1.4,
+        "channels": 189
+      },
+      {
+        "name": "pistol_aim",
+        "duration": 2,
+        "channels": 189
+      },
+      {
+        "name": "pistol_fire",
+        "duration": 1.2,
         "channels": 189
       },
       {
@@ -1004,6 +1361,51 @@
         "name": "reach_grip_handle",
         "duration": 4.2,
         "channels": 189
+      },
+      {
+        "name": "rifle_aim",
+        "duration": 2,
+        "channels": 189
+      },
+      {
+        "name": "rifle_fire",
+        "duration": 1.3333,
+        "channels": 189
+      },
+      {
+        "name": "run_in_place",
+        "duration": 0.7333,
+        "channels": 189
+      },
+      {
+        "name": "staff_idle",
+        "duration": 2,
+        "channels": 189
+      },
+      {
+        "name": "staff_strike",
+        "duration": 1.4667,
+        "channels": 189
+      },
+      {
+        "name": "sword_2h_idle",
+        "duration": 2,
+        "channels": 189
+      },
+      {
+        "name": "sword_2h_slash",
+        "duration": 2,
+        "channels": 189
+      },
+      {
+        "name": "walk_in_place",
+        "duration": 1.1333,
+        "channels": 189
+      },
+      {
+        "name": "wave",
+        "duration": 2,
+        "channels": 189
       }
     ],
     "materials": [
@@ -1014,7 +1416,7 @@
     ]
   },
   "projection": {
-    "references": "references/diag_textured_test/cameras.json",
+    "references": "references/stocky_test/cameras.json",
     "views": [
       "front",
       "back",
@@ -1028,5 +1430,61 @@
       "one": 0.3873,
       "multi": 0.5133
     }
-  }
+  },
+  "animationSet": {
+    "version": 2,
+    "clips": [
+      "idle",
+      "reach_grip_handle",
+      "press_button",
+      "_qa_pose_cycle",
+      "walk_in_place",
+      "run_in_place",
+      "jump_in_place",
+      "float_idle",
+      "float_monk",
+      "float_monk_loop",
+      "wave",
+      "cheer",
+      "sword_2h_idle",
+      "sword_2h_slash",
+      "staff_idle",
+      "staff_strike",
+      "pistol_aim",
+      "pistol_fire",
+      "rifle_aim",
+      "rifle_fire"
+    ],
+    "weaponProps": "props/weapons.glb"
+  },
+  "animationRevisions": [
+    {
+      "date": "2026-09-30T14:15:54+00:00",
+      "clipSetVersion": 2,
+      "clips": 20,
+      "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
+      "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"
+    },
+    {
+      "date": "2026-09-30T14:22:42+00:00",
+      "clipSetVersion": 2,
+      "clips": 20,
+      "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
+      "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"
+    },
+    {
+      "date": "2026-09-30T14:28:38+00:00",
+      "clipSetVersion": 2,
+      "clips": 20,
+      "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
+      "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"
+    },
+    {
+      "date": "2026-09-30T14:34:13+00:00",
+      "clipSetVersion": 2,
+      "clips": 20,
+      "geometryHash": "80ce3805d766e6a0301b6d1633a85a1f8638f25b5b1f0e0671fb6f508ed12309",
+      "note": "animations re-baked; geometry/UV/skin/skeleton verified unchanged"
+    }
+  ]
 }

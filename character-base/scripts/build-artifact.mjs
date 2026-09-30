@@ -62,5 +62,9 @@ for (const c of idx.characters) {
     files.push(rel);
   }
 }
+// shared weapon props (auto-attached by the weapon clips)
+files.push(copy('props/weapons.json'));
+fs.writeFileSync(path.join(OUT, 'props/weapons.glb.b64.txt'), fs.readFileSync(path.join(ROOT, 'props/weapons.glb')).toString('base64'));
+files.push('props/weapons.glb.b64.txt');
 fs.writeFileSync(path.join(OUT, 'files.json'), JSON.stringify(files, null, 1));
 console.log('built', OUT, files.length + 1, 'files');

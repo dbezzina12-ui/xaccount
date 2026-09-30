@@ -23,6 +23,7 @@ so the base can be rebuilt, versioned and extended instead of repaired per game.
 | Stockier proportion test variant | `characters/stocky_test/stocky_test.{glb,blend,character.json}` |
 | Diagnostic-textured test character (derived from the frozen stocky variant) | `characters/diag_textured_test/…` (+ `textures/basecolor.png`) |
 | Test props (handle + button) per character | `characters/<id>/test_props.glb` |
+| Shared weapon props (two-handed sword, staff, pistol, rifle) + grip markers | `props/weapons.{glb,json}` |
 | Reproducible build script | `tools/build.py` (+ `tools/cbase/*`) |
 | Frozen UV layout v1 (data + metadata) | `template/uv/humanoid_uv_v1.{bin,json}` |
 | UV layout image / UV checker / diagnostic texture / part-ID colours | `textures/uv_layout_v1_2048.png`, `uv_checker_2048.png`, `diagnostic_basecolor_2048.png`, `part_id_colors.json` |
@@ -31,7 +32,7 @@ so the base can be rebuilt, versioned and extended instead of repaired per game.
 | Validation report + contact sheets | `validation/REPORT.md`, `validation/report.json`, `validation/sheets/` |
 
 Asset stats (all characters share the template topology): **31,424 triangles**, 16 separately named part
-meshes, **63 joints** (55 anatomical + 8 driven helpers), 4 attachment sockets, 4 baked clips, one 2048² atlas.
+meshes, **63 joints** (55 anatomical + 8 driven helpers), 4 attachment sockets, 20 baked clips, one 2048² atlas.
 
 ---
 
@@ -177,12 +178,67 @@ asset: bake it to the UV atlas first, then use `build.py texture`.
 
 ## Animation clips (baked, named glTF animations, 30 fps)
 
+Base / validation clips:
+
 | clip | content |
 |---|---|
 | `idle` | 4 s loop: breathing, weight shift with planted feet, subtle head/arm motion |
 | `reach_grip_handle` | right hand reaches the test handle, closes a fitted power grip (fingers + thumb searched for contact without penetration), holds, releases, returns |
 | `press_button` | left index finger presses the test button (others curled), returns |
 | `_qa_pose_cycle` | the 7 validation poses, each held 14 frames (markers in the JSON) |
+
+Game clip set (`animationSet.version` 2):
+
+| clip | loop | content |
+|---|---|---|
+| `walk_in_place` | ✓ | treadmill walk: heel strike → flat → toe-off → swing, pelvis bob/sway/yaw, counter-rotating chest and arms. Stride 0.58 m, cycle 1.13 s → drive the root at **0.82 m/s** (`speed_mps` in the JSON) |
+| `run_in_place` | ✓ | treadmill run with flight phase, heel kick-up, bent pumping arms. Stride 1.04 m, cycle 0.73 s → **3.56 m/s** |
+| `jump_in_place` | | crouch, take-off, tuck, land, recover (markers `takeoff`, `apex`, `land`) |
+| `float_idle` | ✓ | levitating hover: pelvis 0.26 m up, legs hang with pointed toes, slow bob/sway, soft arms |
+| `float_monk` | | **floating monk**: from standing, small dip, rise, legs fold into a cross-legged seat while floating, hands settle on the knees in a mudra (markers `liftOff`, `seated`); follow with `float_monk_loop` |
+| `float_monk_loop` | ✓ | cross-legged meditation hover with slow bob and breathing |
+| `sword_2h_idle` | ✓ | two-handed sword guard (right hand under the guard, left hand below it on the grip), breathing |
+| `sword_2h_slash` | | wind-up over the right shoulder → diagonal cut → follow-through → back to guard (markers `windup`, `impact`, `recover`) |
+| `staff_idle` | ✓ | two-handed staff guard, hands 0.42 m apart |
+| `staff_strike` | | pull back → forward thrust/strike → recover (markers `windup`, `impact`) |
+| `pistol_aim` | ✓ | one-handed aim at shoulder height, index on the trigger, left arm relaxed |
+| `pistol_fire` | | single shot: trigger squeeze, **recoil** (muzzle climb 11°, kick back 3.5 cm, chest reacts), recovery (marker `shot`) |
+| `rifle_aim` | ✓ | shouldered rifle: butt in the right shoulder pocket, left hand on the handguard, bladed stance, head down the sights |
+| `rifle_fire` | | 3-round burst with per-shot recoil impulses and torso reaction (markers `shots`) |
+| `wave` | | friendly wave |
+| `cheer` | | big-win celebration: fists up in a V, two pumps, small hop |
+
+Locomotion is **in place** (the pelvis never travels, `inPlace: true`); move the character in the game at the
+clip's `speed_mps`. Every clip's JSON entry carries its duration, loop flag and event markers.
+
+**Weapons.** `props/weapons.glb` holds `Sword2H`, `Staff`, `Pistol`, `Rifle`. Each prop's origin *is* the
+right-hand grip in the same frame as `socket_hand_R_prop` (+Y grip axis toward the thumb, +Z out of the palm),
+so attaching is: parent the prop to `socket_hand_R_prop` with an identity transform. Two-handed props also carry
+a `grip_L` marker; the clips put `socket_hand_L_prop` exactly on it (validated to ≤0.002 mm), so the support
+hand never slips, whatever the character's proportions. A weapon clip's JSON entry names the prop and socket:
+
+```json
+{ "name": "rifle_fire", "prop": "Rifle", "attach": "socket_hand_R_prop",
+  "support": { "hand": "L", "marker": "grip_L" }, "muzzleMarker": "muzzle", "markers": { "shots": [6, 12, 18] } }
+```
+
+The markers (`grip_L`, `muzzle`, `tip`, `butt`) are fitted once on the master rig (`build.py props`) and
+stored in `props/weapons.json`; every character's clips reuse those same markers. Hand poses (finger curl,
+thumb opposition) are fitted per character against the grip radius, as in `reach_grip_handle`. If both hands
+cannot reach, the solver slides the weapon toward the body rather than letting a hand come off it.
+
+**Adding clips to a frozen character.** Frozen characters keep their geometry, UVs, weights and skeleton; only
+their animations can be re-baked:
+
+```bash
+.venv/bin/python tools/build.py props                  # (re)build props/weapons.{glb,json} if missing/changed
+.venv/bin/python tools/build.py update-clips master_blank
+```
+
+`update-clips` checks the .blend against the freeze record, re-verifies the part geometry and skeleton hashes,
+replaces the actions, re-exports the GLB and appends an `animationRevisions` entry (the freeze record gets the
+new GLB/.blend hashes). `build.py all` does this automatically when a frozen character's
+`animationSet.version` is older than the current clip set; texture-derived characters are re-derived.
 
 Clips are authored as IK/FK recipes (`tools/cbase/clips.py`, `library.py`) and baked to rotation keys
 (translation only on `pelvis`), so they play in any glTF runtime and bone lengths can never change.
@@ -197,14 +253,15 @@ Orbit/zoom · Front/Back/Left/Right/¾ (the reference cameras) · reset to A-pos
 materials (as loaded, blank, UV checker, part colours, uploaded texture, projection coverage) · part list with
 click-to-select, visibility and isolation · exploded view (shader-only offset; rest pose/binding untouched,
 *Reassemble* returns exactly) · clip playback, scrubbing, speed, jump to QA pose · hand IK gizmos, finger curl,
-head turn · test sword in either hand socket · sockets display · GLB/JSON export and reload in a fresh tab.
+head turn · test sword in either hand socket · sockets display · GLB/JSON export and reload in a fresh tab ·
+weapon clips attach their prop from `props/weapons.glb` automatically (the handle/button test props hide meanwhile).
 
 ---
 
 ## Validation (see `validation/REPORT.md`)
 
 Each GLB is opened in a fresh browser context (viewer + only the GLB/JSON) and checked over every 2nd frame of
-every clip (296 frames per character). Current result: **all checks pass for all three characters**, including
+every clip (~780 frames per character). Current result: **all checks pass for all three characters**, including
 
 * 375 boundary vertices across 17 part pairs + all UV-seam duplicates: **max gap 0.0 m** in every frame; normals identical
 * bone lengths constant to 2.5 µm (forearms/shins never shorten); sockets rigid in their bones (≤1e-15)
@@ -212,6 +269,10 @@ every clip (296 frames per character). Current result: **all checks pass for all
 * palms face the body/down and thumbs sit on the radial (front) side, both hands
 * grip: **0** hand vertices inside the handle, ~60 vertices within 4 mm (contact), socket exactly on the axis
 * press: fingertip within ~1.1 mm of the button top at the contact frame
+* all 20 clips present; feet never go below the floor in any game clip; walk/run/jump stay in place
+  (pelvis drift ≤2.5 cm); `float_idle` feet ≥0.12 m and the monk float ≥0.59 m above the floor
+* weapons: support hand within 0.001 mm of the prop's `grip_L` marker on every frame; no hand vertex inside
+  any grip; ≥45 hand vertices within 4 mm of each grip
 * viewer export (with texture) → reload in another fresh page passes the same structural/seam/bone checks
 
 Screenshots: blank / checker / diagnostic texture in arms raised, deep elbow bend, hands near face, wrist
@@ -236,5 +297,8 @@ rotation + finger curl, torso twist, head turn and crouch, from two angles plus 
 * 31k triangles is a hero-level master; no LODs yet (the cage can be subdivided once instead of twice for a
   ~7.9k-tri LOD, but that needs its own UV transfer).
 * The test button prop is static (the press clip travels 6 mm "into" it); props are for validation only.
+* Weapons are simple test props; clips are fitted to their grip sizes (a thicker grip needs `build.py props`
+  plus `update-clips`). Recoil is animation only (no muzzle flash/VFX); there are no aim offsets, turn-in-place
+  or blend spaces yet, and walk/run are single-speed cycles.
 * The neck/sternal-notch junction and nape have visible soft creases under harsh lighting.
 * Reference-view coverage is measured per texel with a 1.2 cm depth tolerance; it is a diagnostic, not a bake.

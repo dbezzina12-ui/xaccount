@@ -225,7 +225,7 @@ function applySockets() {
 $('chkSkel').onchange = applySkeleton;
 $('chkWire').onchange = applyMaterial;
 $('chkSockets').onchange = applySockets;
-$('chkProps').onchange = (e) => { if (state.props) state.props.visible = e.target.checked; };
+$('chkProps').onchange = (e) => { if (state.props) state.props.visible = e.target.checked && !state.clipProp; };
 $('matSel').onchange = (e) => { state.matMode = e.target.value; applyMaterial(); };
 $('texFile').onchange = (e) => {
   const f = e.target.files[0];
@@ -257,7 +257,35 @@ function buildClipUI() {
   const meta = state.cfg && state.cfg.animations ? state.cfg.animations.find((a) => a.name === '_qa_pose_cycle') : null;
   if (meta && meta.markers) for (const [n, f] of Object.entries(meta.markers)) { const o = document.createElement('option'); o.value = (f + 7) / 30; o.textContent = n; qa.appendChild(o); }
 }
+// ---- weapon props: clips that need one name it in the character JSON (animations[].prop / .attach)
+async function loadWeapons() {
+  if (state.weapons !== undefined) return state.weapons;
+  state.weapons = null;
+  try {
+    const url = `${ASSET_BASE}props/weapons.glb`;
+    state.weapons = (await loadGLB(window.__CB_HOSTED ? await fetchB64(url) : url)).scene;
+  } catch (e) { /* weapons are optional */ }
+  return state.weapons;
+}
+function clipMeta(name) { return state.cfg && state.cfg.animations ? state.cfg.animations.find((a) => a.name === name) : null; }
+function attachClipProp(name) {
+  if (state.clipProp) { state.clipProp.removeFromParent(); state.clipProp = null; }
+  const meta = clipMeta(name);
+  // the handle/button test props belong to reach_grip_handle/press_button; keep them out of weapon clips
+  if (state.props) state.props.visible = $('chkProps').checked && !(meta && meta.prop);
+  if (!meta || !meta.prop || !state.weapons || !state.ch) return;
+  const src = state.weapons.getObjectByName(meta.prop);
+  const sock = state.ch.sockets[meta.attach || 'socket_hand_R_prop'];
+  if (!src || !sock) return;
+  const w = src.clone(true);
+  w.position.set(0, 0, 0); w.quaternion.identity(); w.scale.set(1, 1, 1);
+  w.userData.viewerOnly = true;
+  sock.add(w);
+  state.clipProp = w;
+}
+
 function playClip(name, time = 0, play = true) {
+  attachClipProp(name);
   const ch = state.ch;
   ch.mixer.stopAllAction();
   const clip = ch.clip(name);
@@ -274,7 +302,12 @@ function playClip(name, time = 0, play = true) {
   state.playing = play;
   $('scrub').max = clip.duration;
 }
-function stopAnim() { if (state.ch) state.ch.mixer.stopAllAction(); state.clipAction = null; state.playing = false; }
+function stopAnim() {
+  if (state.ch) state.ch.mixer.stopAllAction();
+  state.clipAction = null; state.playing = false;
+  if (state.clipProp) { state.clipProp.removeFromParent(); state.clipProp = null; }
+  if (state.props) state.props.visible = $('chkProps').checked;
+}
 $('btnPlay').onclick = () => { if (state.clipAction && state.clipAction.getClip().name === $('clipSel').value) { state.clipAction.paused = false; state.playing = true; } else playClip($('clipSel').value); };
 $('btnPause').onclick = () => { if (state.clipAction) { state.clipAction.paused = true; state.playing = false; } };
 $('scrub').oninput = (e) => {
@@ -469,6 +502,10 @@ async function boot() {
     const id = params.get('char') || 'master_blank';
     $('charSel').value = id;
     await loadFromIndex(id);
+  }
+  await loadWeapons();
+  if (params.get('clip')) {
+    playClip(params.get('clip'), Number(params.get('t') || 0), !params.get('t'));
   }
   if (params.get('mode')) window.viewer.setMaterialMode(params.get('mode'));
   if (params.get('view')) setView(params.get('view'));
