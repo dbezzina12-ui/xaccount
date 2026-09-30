@@ -53,6 +53,8 @@ With a regular Blender install instead of the pip module:
 `blender --background --python tools/build.py -- all` (same sub-commands after `--`).
 
 The viewer only needs a static file server (`viewer/vendor/` contains the pinned three.js 0.180 files).
+`node scripts/build-artifact.mjs <outDir>` produces a single-page hosted copy (three.js from jsDelivr, GLBs shipped
+as base64 text); in that version Export keeps the GLB in memory and *Reload* rebuilds the character from those bytes.
 
 ---
 

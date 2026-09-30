@@ -7,6 +7,7 @@ import { CoverageProbe } from './coverage.js';
 import { REF_VIEWS, makeRefCamera } from './refcams.js';
 
 const $ = (id) => document.getElementById(id);
+const ASSET_BASE = window.__CB_BASE ?? '../';   // '../' locally; '' in the hosted build
 const params = new URLSearchParams(location.search);
 if (params.get('hideui')) document.body.classList.add('hideui');
 
@@ -59,6 +60,16 @@ addEventListener('resize', resize);
 // ---------------------------------------------------------------- loading --------
 async function fetchJSON(url) { const r = await fetch(url); if (!r.ok) throw new Error(url + ' ' + r.status); return r.json(); }
 
+// hosted build: GLBs are published as base64 text (<file>.glb.b64.txt) because the host only serves web types
+async function fetchB64(url) {
+  const r = await fetch(url + '.b64.txt');
+  if (!r.ok) throw new Error(url + ' ' + r.status);
+  const bin = atob((await r.text()).trim());
+  const u8 = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+  return u8.buffer;
+}
+
 async function loadCharacter(glbSrc, cfg = null, propsUrl = null) {
   if (state.ch) {
     state.ch.mixer.stopAllAction();
@@ -67,6 +78,7 @@ async function loadCharacter(glbSrc, cfg = null, propsUrl = null) {
     if (state.skel) { scene.remove(state.skel); state.skel = null; }
     gizmo.detach();
   }
+  if (window.__CB_HOSTED && typeof glbSrc === 'string') glbSrc = await fetchB64(glbSrc);
   const gltf = await loadGLB(glbSrc);
   const ch = new Character(gltf, cfg);
   state.ch = ch; state.cfg = cfg; state.selected = null; state.hidden.clear(); state.handProps = {};
@@ -74,7 +86,7 @@ async function loadCharacter(glbSrc, cfg = null, propsUrl = null) {
   scene.add(ch.root);
   state.props = null;
   if (propsUrl) {
-    try { state.props = (await loadGLB(propsUrl)).scene; state.props.visible = $('chkProps').checked; scene.add(state.props); } catch (e) { /* optional */ }
+    try { state.props = (await loadGLB(window.__CB_HOSTED ? await fetchB64(propsUrl) : propsUrl)).scene; state.props.visible = $('chkProps').checked; scene.add(state.props); } catch (e) { /* optional */ }
   }
   buildPartsUI();
   buildClipUI();
@@ -93,9 +105,9 @@ async function loadCharacter(glbSrc, cfg = null, propsUrl = null) {
 }
 
 async function loadFromIndex(id) {
-  const idx = await fetchJSON('../characters/index.json');
+  const idx = await fetchJSON(`${ASSET_BASE}characters/index.json`);
   const e = idx.characters.find((c) => c.id === id) || idx.characters[0];
-  state.charDir = `../characters/${e.id}/`;
+  state.charDir = `${ASSET_BASE}characters/${e.id}/`;
   const cfg = await fetchJSON(state.charDir + e.config).catch(() => null);
   return loadCharacter(state.charDir + e.glb, cfg, state.charDir + (e.props || 'test_props.glb'));
 }
@@ -103,7 +115,7 @@ async function loadFromIndex(id) {
 // ---------------------------------------------------------------- materials ------
 function checkerTex() {
   if (!state.checker) {
-    state.checker = new THREE.TextureLoader().load('../textures/uv_checker_2048.png');
+    state.checker = new THREE.TextureLoader().load(`${ASSET_BASE}textures/uv_checker_2048.png`);
     state.checker.flipY = false;
     state.checker.colorSpace = THREE.SRGBColorSpace;
     state.checker.anisotropy = 8;
@@ -391,17 +403,31 @@ function exportConfig() {
   base.files = { glb: `${id}.glb` };
   return base;
 }
+// HOSTED: the published web version cannot start downloads or open tabs, so it keeps the
+// export in memory and reloads it in place (a brand-new Character built only from the bytes).
+const HOSTED = !!window.__CB_HOSTED;
 $('btnExportGLB').onclick = async () => {
   const buf = await exportGLB();
   const cfg = exportConfig();
-  const blob = new Blob([buf], { type: 'model/gltf-binary' });
-  state.exportUrl = download(blob, cfg.files.glb);
+  state.exportBuf = buf;
+  state.exportCfg = cfg;
+  if (HOSTED) { status(`exported ${cfg.files.glb} (${(buf.byteLength / 1e6).toFixed(2)} MB) in memory – use Reload`); return; }
+  state.exportUrl = download(new Blob([buf], { type: 'model/gltf-binary' }), cfg.files.glb);
   state.exportCfgUrl = URL.createObjectURL(new Blob([JSON.stringify(cfg, null, 2)], { type: 'application/json' }));
   status(`exported ${cfg.files.glb} (${(buf.byteLength / 1e6).toFixed(2)} MB)`);
 };
-$('btnExportCfg').onclick = () => { const cfg = exportConfig(); download(new Blob([JSON.stringify(cfg, null, 2)], { type: 'application/json' }), `${cfg.characterId}.character.json`); };
-$('btnReload').onclick = () => {
-  if (!state.exportUrl) { status('Export a GLB first'); return; }
+$('btnExportCfg').onclick = () => {
+  const cfg = exportConfig();
+  if (HOSTED) { status('JSON downloads are available in the local viewer (npm run viewer)'); return; }
+  download(new Blob([JSON.stringify(cfg, null, 2)], { type: 'application/json' }), `${cfg.characterId}.character.json`);
+};
+$('btnReload').onclick = async () => {
+  if (!state.exportBuf) { status('Export a GLB first'); return; }
+  if (HOSTED) {
+    await loadCharacter(state.exportBuf.slice(0), state.exportCfg, null);
+    status(`reloaded ${state.exportCfg.files.glb} from the exported bytes only`);
+    return;
+  }
   window.open(`index.html?glb=${encodeURIComponent(state.exportUrl)}&config=${encodeURIComponent(state.exportCfgUrl)}`, '_blank');
 };
 
@@ -433,7 +459,7 @@ async function boot() {
   resize();
   tick();
   try {
-    const idx = await fetchJSON('../characters/index.json');
+    const idx = await fetchJSON(`${ASSET_BASE}characters/index.json`);
     for (const c of idx.characters) { const o = document.createElement('option'); o.value = c.id; o.textContent = `${c.displayName} (${c.id})`; $('charSel').appendChild(o); }
   } catch (e) { /* standalone use */ }
   if (params.get('glb')) {

@@ -3,3 +3,4 @@ node_modules/
 __pycache__/
 validation/screens/
 validation/roundtrip/*.glb
+dist-web/
