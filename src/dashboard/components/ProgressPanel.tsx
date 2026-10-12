@@ -1,5 +1,17 @@
+import { useEffect, useState } from 'react';
 import { useStore } from '../store';
 import { stepLabel, type BulkRunner } from '../engine/runner';
+import { estimateRunMs, formatCountdown, formatDuration } from '../../utils/pacing';
+
+/** Re-render every second while `active` (for countdowns). */
+function useTick(active: boolean) {
+  const [, setN] = useState(0);
+  useEffect(() => {
+    if (!active) return;
+    const t = setInterval(() => setN((n) => n + 1), 1000);
+    return () => clearInterval(t);
+  }, [active]);
+}
 
 interface Props {
   runner: BulkRunner;
@@ -15,6 +27,10 @@ export function ProgressPanel({ runner, onRetryFailed, onVerify, failedCount, sc
   const active = ['running', 'paused', 'stopping'].includes(r.status);
   const pct = r.total ? Math.round((r.processed / r.total) * 100) : 0;
   const remaining = Math.max(0, r.total - r.processed);
+  useTick(active);
+  const waitLeft = r.nextPostAt ? Math.max(0, r.nextPostAt - Date.now()) : 0;
+  // Remaining = current wait + the posts still to do (incl. their waits/breaks).
+  const etaMs = active && remaining > 0 ? waitLeft + estimateRunMs(remaining, state.settings, r.dryRun, r.avgPostMs ?? undefined) : 0;
 
   if (r.status === 'idle' && !failedCount && !scheduledCount) return null;
 
@@ -39,13 +55,20 @@ export function ProgressPanel({ runner, onRetryFailed, onVerify, failedCount, sc
             <dt>Current</dt>
             <dd>{r.currentNumber ? `Post ${r.currentNumber}` : '—'}</dd>
             <dt>Step</dt>
-            <dd>{stepLabel(r.currentStep) || '—'}</dd>
+            <dd>
+              {r.nextPostAt
+                ? `${r.waitReason === 'break' ? 'Break' : 'Waiting'} — next post in ${formatCountdown(waitLeft)}${r.status === 'paused' ? ' (paused)' : ''}`
+                : stepLabel(r.currentStep) || '—'}
+            </dd>
             <dt>{r.dryRun ? 'Passed' : 'Scheduled'}</dt>
             <dd className="ok">{r.succeeded}</dd>
             <dt>Failed</dt>
             <dd className={r.failed ? 'err' : ''}>{r.failed}</dd>
             <dt>Remaining</dt>
-            <dd>{remaining}</dd>
+            <dd>
+              {remaining}
+              {etaMs > 0 && <span className="muted"> · about {formatDuration(etaMs)} left</span>}
+            </dd>
           </dl>
           <div className="row gap">
             {r.status === 'paused' ? (
@@ -61,7 +84,7 @@ export function ProgressPanel({ runner, onRetryFailed, onVerify, failedCount, sc
               Stop
             </button>
           </div>
-          <div className="muted small">Keep this dashboard open until the run finishes. Pause/Stop take effect after the current post.</div>
+          <div className="muted small">Keep this dashboard open until the run finishes. Pause/Stop take effect after the current post, or straight away while waiting between posts.</div>
         </>
       )}
       {r.status === 'finished' && r.summary && (

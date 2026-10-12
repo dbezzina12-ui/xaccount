@@ -1,9 +1,13 @@
 /**
  * Bulk scheduling engine. Processes posts strictly one at a time:
- * load composer → run job in the X tab → record result → short pause → next.
+ * load composer → run job in the X tab → record result → paced wait → next.
+ *
+ * Pacing (utils/pacing.ts): a random wait between posts plus a longer break
+ * every N posts, so posts aren't pushed into X back-to-back.
  *
  * Pause / Stop take effect at the safe point between posts - a post that is
- * mid-flight always finishes (or fails) cleanly first.
+ * mid-flight always finishes (or fails) cleanly first. Both also work during
+ * the wait between posts.
  */
 import type { Batch, LogLevel, Post, ScheduleJob, Settings } from '../../types';
 import { X_URLS } from '../../content/xSelectors';
@@ -11,6 +15,7 @@ import { validatePost } from '../../utils/validation';
 import { browserTimezone, formatLocal, toBrowserLocal, tzLongName } from '../../utils/time';
 import { alnumKey } from '../../utils/text';
 import { nowIso } from '../../utils/id';
+import { DRY_RUN_DELAY_MS, formatDuration, isBreakDue, pickBreakMs, pickDelayMs } from '../../utils/pacing';
 import { TabGoneError, XTabController } from './xTab';
 
 export type RunStatus = 'idle' | 'preparing' | 'running' | 'paused' | 'stopping' | 'finished';
@@ -28,6 +33,11 @@ export interface RunState {
   summary: string | null;
   /** True when every post in the run succeeded (and it wasn't a dry run). */
   allScheduled: boolean;
+  /** When waiting between posts: when the next post starts (ms epoch). */
+  nextPostAt: number | null;
+  waitReason: 'delay' | 'break' | null;
+  /** Average time X took per post in this run (for the time estimate). */
+  avgPostMs: number | null;
 }
 
 export const IDLE_STATE: RunState = {
@@ -42,6 +52,9 @@ export const IDLE_STATE: RunState = {
   currentStep: null,
   summary: null,
   allScheduled: false,
+  nextPostAt: null,
+  waitReason: null,
+  avgPostMs: null,
 };
 
 export interface RunnerDeps {
@@ -100,7 +113,38 @@ export class BulkRunner {
   pause() {
     if (this.state.status !== 'running') return;
     this.pauseRequested = true;
-    this.deps.log('warn', 'Pause requested — will pause after the current post.');
+    this.deps.log('warn', this.state.nextPostAt ? 'Paused.' : 'Pause requested — will pause after the current post.');
+  }
+
+  /** Block until Resume (or Stop). Returns false if the run was stopped. */
+  private async waitForResume(): Promise<boolean> {
+    this.set({ status: 'paused', currentStep: null });
+    if (!this.state.nextPostAt) this.deps.log('warn', 'Paused. Press Resume to continue.');
+    await new Promise<void>((r) => this.resumeWaiters.push(r));
+    if (this.stopRequested) return false;
+    this.set({ status: 'running' });
+    this.deps.log('info', 'Resumed.');
+    return true;
+  }
+
+  /**
+   * Wait `ms` before the next post. Pause freezes the countdown (the full
+   * remaining wait still applies after Resume); Stop ends it immediately.
+   */
+  private async pacedWait(ms: number, reason: 'delay' | 'break'): Promise<void> {
+    let until = Date.now() + ms;
+    this.set({ nextPostAt: until, waitReason: reason });
+    while (Date.now() < until && !this.stopRequested) {
+      if (this.pauseRequested) {
+        const left = until - Date.now();
+        if (!(await this.waitForResume())) break;
+        until = Date.now() + left;
+        this.set({ nextPostAt: until });
+        continue;
+      }
+      await sleep(200);
+    }
+    this.set({ nextPostAt: null, waitReason: null });
   }
 
   resume() {
@@ -146,22 +190,16 @@ export class BulkRunner {
 
     let consecutiveFailures = 0;
     let stoppedEarly = false;
+    const postDurations: number[] = [];
 
     for (let i = 0; i < postIds.length; i++) {
       if (this.stopRequested) {
         stoppedEarly = true;
         break;
       }
-      if (this.pauseRequested) {
-        this.set({ status: 'paused', currentStep: null });
-        log('warn', 'Paused. Press Resume to continue.');
-        await new Promise<void>((r) => this.resumeWaiters.push(r));
-        if (this.stopRequested) {
-          stoppedEarly = true;
-          break;
-        }
-        this.set({ status: 'running' });
-        log('info', 'Resumed.');
+      if (this.pauseRequested && !(await this.waitForResume())) {
+        stoppedEarly = true;
+        break;
       }
 
       const batch = this.deps.getBatch(batchId);
@@ -170,7 +208,10 @@ export class BulkRunner {
       const number = batch.posts.indexOf(post) + 1;
       this.set({ currentPostId: post.id, currentNumber: number, currentStep: null });
 
+      const postStart = Date.now();
       const ok = await this.processOne(batch, post, number, dry, settings, tzName);
+      postDurations.push(Date.now() - postStart);
+      this.set({ avgPostMs: postDurations.reduce((a, b) => a + b, 0) / postDurations.length });
       if (ok === 'tab-gone') {
         this.set({ processed: this.state.processed + 1, failed: this.state.failed + 1 });
         log('error', 'The X window was closed — run stopped. Remaining posts were not touched.');
@@ -192,9 +233,19 @@ export class BulkRunner {
         break;
       }
       if (remaining > 0 && !this.stopRequested) {
-        const base = Math.max(0.5, settings.delayBetweenPostsSec) * 1000;
-        const until = Date.now() + base * (0.75 + Math.random() * 0.5);
-        while (Date.now() < until && !this.stopRequested) await sleep(200);
+        // Re-read settings so pacing changes apply to a run in progress.
+        const pacing = this.deps.getSettings();
+        if (dry) {
+          await this.pacedWait(DRY_RUN_DELAY_MS, 'delay');
+        } else if (isBreakDue(i + 1, pacing)) {
+          const ms = pickBreakMs(pacing);
+          log('info', `Taking a ${formatDuration(ms)} break after ${i + 1} posts.`);
+          await this.pacedWait(ms, 'break');
+        } else {
+          const ms = pickDelayMs(pacing);
+          log('debug', `Waiting ${Math.round(ms / 1000)}s before the next post.`);
+          await this.pacedWait(ms, 'delay');
+        }
       }
     }
 

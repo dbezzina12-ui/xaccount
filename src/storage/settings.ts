@@ -1,5 +1,6 @@
 import type { Settings } from '../types';
 import { browserTimezone, isValidTimezone } from '../utils/time';
+import { normalizePacing } from '../utils/pacing';
 import { kvGet, kvSet } from './kv';
 
 const KEY = 'xbs.settings';
@@ -12,7 +13,10 @@ export function defaultSettings(): Settings {
     defaultTimezone: browserTimezone(),
     defaultPostsPerDay: 5,
     characterLimit: 280,
-    delayBetweenPostsSec: 3,
+    delayMinSec: 20,
+    delayMaxSec: 60,
+    breakEveryPosts: 10,
+    breakMinutes: 4,
     dryRun: false,
     debug: false,
     closeAutomationWindow: true,
@@ -20,8 +24,10 @@ export function defaultSettings(): Settings {
 }
 
 export async function loadSettings(): Promise<Settings> {
-  const stored = (await kvGet<Partial<Settings>>(KEY)) ?? {};
+  const stored = (await kvGet<Partial<Settings> & { delayBetweenPostsSec?: unknown }>(KEY)) ?? {};
+  delete stored.delayBetweenPostsSec; // replaced by delayMinSec/delayMaxSec
   const s = { ...defaultSettings(), ...stored };
+  Object.assign(s, normalizePacing(s));
   if (!isValidTimezone(s.defaultTimezone)) s.defaultTimezone = browserTimezone();
   return s;
 }

@@ -52,6 +52,13 @@ const dash = await ctx.newPage();
 dash.on('pageerror', (e) => console.error('dashboard error:', e.message));
 await dash.goto(`chrome-extension://${extId}/dashboard.html`);
 await dash.getByText('X Bulk Scheduler').first().waitFor();
+// Short pacing so the test runs quickly: 3s between posts, ~6s break after every 2 posts.
+await dash.evaluate(async () => {
+  const s = (await chrome.storage.local.get('xbs.settings'))['xbs.settings'] ?? {};
+  await chrome.storage.local.set({ 'xbs.settings': { ...s, delayMinSec: 3, delayMaxSec: 3, breakEveryPosts: 2, breakMinutes: 0.1 } });
+});
+await dash.reload();
+await dash.getByText('X Bulk Scheduler').first().waitFor();
 
 async function mock(fn, arg) {
   const p = await ctx.newPage();
@@ -119,6 +126,8 @@ try {
     await dash.getByLabel('Dry run').uncheck();
     await dash.getByRole('button', { name: 'Schedule All' }).click();
     await confirmBtn(/Schedule 3 post/).click();
+    await dash.getByText(/Waiting — next post in \d:\d\d/).first().waitFor({ timeout: 60_000 });
+    await dash.screenshot({ path: join(OUT, 'progress-waiting.png') });
     await waitText('3/3 posts successfully scheduled.');
     const scheduled = await readMock('mock.scheduled');
     const published = await readMock('mock.published');
@@ -136,6 +145,13 @@ try {
     assert.deepEqual(scheduled[0].media, ['photo.png']);
     assert.deepEqual(scheduled[1].media, ['clip.mp4']);
     assert.equal(b.accountHandle, 'mockuser', 'batch auto-linked to detected account');
+    // Pacing: >= 3s wait after post 1, and a ~6s (±20%) break after post 2.
+    const gap1 = scheduled[1].at - scheduled[0].at;
+    const gap2 = scheduled[2].at - scheduled[1].at;
+    log(`gaps between posts: ${(gap1 / 1000).toFixed(1)}s, ${(gap2 / 1000).toFixed(1)}s`);
+    assert.ok(gap1 >= 3000, `gap after post 1 was ${gap1}ms`);
+    assert.ok(gap2 >= 4800, `gap after post 2 (break) was ${gap2}ms`);
+    await dash.getByText(/Taking a \d+s break after 2 posts/).first().waitFor({ timeout: 1000 });
   });
 
   await step('verify in X finds all 3', async () => {

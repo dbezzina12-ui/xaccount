@@ -7,6 +7,7 @@ import { collectGarbage } from '../storage/media';
 import { validatePost } from '../utils/validation';
 import { browserTimezone, formatDateShort, formatTime12, postInstant, tzOffsetLabel } from '../utils/time';
 import { uid } from '../utils/id';
+import { describePacing, estimateRunMs, formatDuration } from '../utils/pacing';
 import { PostTable } from './components/PostTable';
 import { PostEditor } from './components/PostEditor';
 import { ImportDialog } from './components/ImportDialog';
@@ -412,6 +413,13 @@ export function App() {
                 <dt>Timezone</dt>
                 <dd>
                   {batch.timezone} ({tzOffsetLabel(batch.timezone)})
+                </dd>
+                <dt>Pacing</dt>
+                <dd>{state.settings.dryRun ? '2s between posts (dry run)' : describePacing(state.settings)}</dd>
+                <dt>Takes about</dt>
+                <dd>
+                  {formatDuration(estimateRunMs(dialog.ids.length, state.settings, state.settings.dryRun))}
+                  <span className="muted small"> — keep this dashboard open until it finishes</span>
                 </dd>
               </dl>
               {dialog.uncertain.length > 0 && (

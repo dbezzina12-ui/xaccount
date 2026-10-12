@@ -162,8 +162,17 @@ What happens:
    remaining counts, and the current step. The activity log shows each event.
 5. When the run finishes you'll see **"30/30 posts successfully scheduled."**
 
+**Pacing.** Posts are never pushed into X back-to-back. After each post the extension
+waits a random **20–60 seconds**, and after every **10 posts** it takes a longer break of
+about **4 minutes** (±20%). The progress panel shows "Waiting — next post in 0:42" and an
+estimate of the time left, and the confirm dialog shows how long the whole batch will take
+(roughly 35–40 minutes for 30 posts with the defaults). You can change all of these in
+**Settings → Automation**, even while a run is going. Dry runs use a 2-second pause, since
+they don't schedule anything.
+
 **Pause** and **Stop** take effect after the current post finishes. A post is never
-cut off halfway.
+cut off halfway. They also work during the wait between posts: Pause freezes the
+countdown, and Stop ends the run straight away.
 
 If a post fails, its row turns **Failed** and shows the step and the reason, for
 example *"Could not locate Schedule button."* Use **Retry** on the row, or **Retry N
@@ -219,7 +228,8 @@ passwords are never read or logged.
 
 Settings are: default earliest and latest times, default minimum gap, default posts
 per day, default timezone, character limit (280 standard, 25,000 Premium, or custom),
-pause between posts, auto-close of the X window, dry run and debug.
+pacing (minimum and maximum wait between posts, a longer break every N posts and its
+length), auto-close of the X window, dry run and debug.
 
 ---
 

@@ -70,8 +70,13 @@ export interface Settings {
   defaultPostsPerDay: number; // 0 = no limit
   /** Weighted character limit used for pre-flight validation (X free = 280). */
   characterLimit: number;
-  /** Seconds to wait between posts during a bulk run. */
-  delayBetweenPostsSec: number;
+  /** Random wait between posts during a bulk run: min/max seconds. */
+  delayMinSec: number;
+  delayMaxSec: number;
+  /** Take a longer break after every N posts (0 = never). */
+  breakEveryPosts: number;
+  /** Length of that break in minutes (varied by ±20%). */
+  breakMinutes: number;
   dryRun: boolean;
   debug: boolean;
   /** Close the automation window when a run finishes. */

@@ -3,6 +3,7 @@ import type { Settings } from '../../types';
 import { useStore } from '../store';
 import { browserTimezone, listTimezones, tzLongName, tzOffsetLabel } from '../../utils/time';
 import { defaultSettings } from '../../storage/settings';
+import { describePacing, estimateRunMs, formatDuration, normalizePacing } from '../../utils/pacing';
 
 export function SettingsView({ onBack }: { onBack: () => void }) {
   const { state, dispatch, log } = useStore();
@@ -12,7 +13,9 @@ export function SettingsView({ onBack }: { onBack: () => void }) {
   const dirty = JSON.stringify(s) !== JSON.stringify(state.settings);
 
   const save = () => {
-    dispatch({ type: 'setSettings', settings: s });
+    const fixed = { ...s, ...normalizePacing(s) };
+    setS(fixed);
+    dispatch({ type: 'setSettings', settings: fixed });
     log('info', 'Settings saved.');
   };
 
@@ -100,10 +103,26 @@ export function SettingsView({ onBack }: { onBack: () => void }) {
         <h3>Automation</h3>
         <div className="form-grid">
           <label>
-            Pause between posts (seconds)
-            <input type="number" min={1} max={60} value={s.delayBetweenPostsSec} onChange={(e) => set('delayBetweenPostsSec', Math.max(1, Number(e.target.value) || 3))} />
+            Wait between posts — minimum (seconds)
+            <input type="number" min={1} max={3600} value={s.delayMinSec} onChange={(e) => set('delayMinSec', Math.max(1, Number(e.target.value) || 1))} />
           </label>
-          <div />
+          <label>
+            Wait between posts — maximum (seconds)
+            <input type="number" min={1} max={3600} value={s.delayMaxSec} onChange={(e) => set('delayMaxSec', Math.max(1, Number(e.target.value) || 1))} />
+          </label>
+          <label>
+            Longer break every … posts (0 = never)
+            <input type="number" min={0} max={500} value={s.breakEveryPosts} onChange={(e) => set('breakEveryPosts', Math.max(0, Number(e.target.value) || 0))} />
+          </label>
+          <label>
+            Break length (minutes)
+            <input type="number" min={0} max={120} step={0.5} value={s.breakMinutes} onChange={(e) => set('breakMinutes', Math.max(0, Number(e.target.value) || 0))} />
+          </label>
+          <p className="muted small span2">
+            Posts are entered into X one at a time with a random wait in this range, plus a longer break (±20%) every N posts, so X never sees a burst of
+            scheduling. Currently: {describePacing(s)}. A batch of 30 posts takes about {formatDuration(estimateRunMs(30, s))}. Dry runs use a short 2-second pause
+            instead, since nothing is scheduled.
+          </p>
           <label className="check span2">
             <input type="checkbox" checked={s.closeAutomationWindow} onChange={(e) => set('closeAutomationWindow', e.target.checked)} />
             Close the X automation window when a run finishes without failures
