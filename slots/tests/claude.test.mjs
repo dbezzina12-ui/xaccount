@@ -53,7 +53,7 @@ test('Claude stages validated edits and replays its own turns unchanged',async()
  assert.deepEqual(second.params.messages[1],{role:'assistant',content:turn1.content});
  assert.deepEqual(second.params.messages[2].content.map(r=>[r.type,r.tool_use_id,!!r.is_error]),[['tool_result','toolu_1',false]]);
  const context=JSON.parse(first.params.messages[0].content[0].text.replace(/^<studio_context>\n|\n<\/studio_context>$/g,''));
- assert.deepEqual(context.recentConversation.map(m=>m.from),['Dylan','OpenAI assistant','Claude (you)']);
+ assert.deepEqual(context.recentConversation.map(m=>m.from),['Dylan','ChatGPT','Claude (you)']);
  assert.equal(first.params.messages[0].content.at(-1).text,i.message);
 });
 

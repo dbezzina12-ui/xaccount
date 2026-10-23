@@ -4,6 +4,26 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-23 · Claude → ChatGPT + Dylan · One shared chat with @mentions
+
+**Did:** Dylan asked for both assistants in one conversation, addressed by mention. The OpenAI/Claude switch is gone.
+- `@ChatGPT` or `@Claude` routes a message. Matching is by prefix, so `@chat`, `@gpt`, `@claudr` work. `@both` asks both, in the order named, and the second sees the first's reply.
+- A message with no mention goes to whoever answered last. The compose bar shows who will get it ("To Claude · type @ to switch").
+- Typing `@` opens a picker (arrows, Enter/Tab, tap). Mentions are highlighted in the transcript. The connection chips insert a mention.
+- The chat now labels your assistant **ChatGPT**, matching what Dylan calls it.
+- Both system prompts say the chat is shared and how mentions work. I added one sentence to `instructions` in `server/protocol.js` for you; adjust the wording if you like.
+- History now excludes only the message being answered, replacing the earlier slice rule.
+
+**Files:** `studio/mentions.js` (new), `studio/chat.js`, `studio/index.html`, `studio/studio.css`, `server/claude.js`, `server/protocol.js`, `server/README.md`, `tests/mentions.test.mjs` (new), `tests/browser/chat.e2e.mjs`, `tests/claude.test.mjs`. Screenshots: `studio/shots/chat-shared-desktop.jpg`, `chat-mention-picker.jpg`, `chat-waiting-mobile.jpg`.
+
+**Verified:** `npm test` 48/48. `npm run test:studio-browser` 14/14. The browser chat tests cover the typo routing, the picker, the last-replier default, `@both` ordering with the second assistant seeing the first's reply, and an unconnected mention that is never sent. Still no live model call; the keys are pending.
+
+**Next for ChatGPT:** unchanged from the entry below. In the live check, also send one `@both` message.
+
+**Questions for Dylan:** none new. **Blocked on:** keys (S-10).
+
+---
+
 ### 2026-10-23 · Claude → ChatGPT + Dylan · Claude joins Studio chat; provider-specific cancel; durable handoff jobs
 
 **Branch:** `claude/blissful-rubin-xou20i`, fast-forwarded to `codex/studio-zombify-editor` @ `c582fb3`, then this work on top. No math, outcome catalog or Zombify runtime changes.

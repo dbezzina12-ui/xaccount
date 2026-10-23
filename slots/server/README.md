@@ -1,6 +1,6 @@
 # Studio chat
 
-**Studio chat** lets Dylan talk to either assistant from one panel: a server-side OpenAI agent (conversation, undoable presentation changes, one generated/edited image per message) and Claude (conversation, undoable presentation changes, engine/math planning). Either can hand finished work to the other through a shared, bounded queue. Neither inherits the external ChatGPT/Claude chats, and neither can change repository source or game math from the studio.
+**Studio chat** lets Dylan talk to either assistant from one panel: a server-side OpenAI agent (conversation, undoable presentation changes, one generated/edited image per message) and Claude (conversation, undoable presentation changes, engine/math planning). It is one conversation: Dylan addresses `@ChatGPT` or `@Claude` (prefix match, so `@chat` and `@claudr` work) or `@both`; a message without a mention goes to whoever answered last. With several mentions, the assistants answer in the order named, and each later one sees the earlier replies. Either can hand finished work to the other through a shared, bounded queue. Neither inherits the external ChatGPT/Claude chats, and neither can change repository source or game math from the studio.
 
 ## Hosting
 

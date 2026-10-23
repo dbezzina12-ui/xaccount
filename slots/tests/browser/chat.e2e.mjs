@@ -1,4 +1,4 @@
-// Studio chat in Chromium against the real server code: /api/studio/* is routed
+// Studio chat (one conversation, @ChatGPT / @Claude routing) in Chromium against the real server code: /api/studio/* is routed
 // into server/service.js in this process (SQLite D1, in-memory R2), with stub
 // providers in place of the OpenAI and Anthropic APIs.
 //
@@ -53,10 +53,17 @@ async function openChat(env, viewport = { width: 1440, height: 900 }) {
 const transcript = (page) => page.$$eval('#chat-messages .chat-message', (els) => els.map((e) => [e.querySelector('b').textContent, e.querySelector('p').textContent]));
 const spoken = async (page) => (await transcript(page)).filter((l) => l[0] !== 'Studio');
 const background = (page) => page.evaluate(async () => (await window.__tools.read_slot_studio.execute({})).project.scenes.desktop.background);
+const recipient = (page) => page.textContent('#chat-recipient');
+// Waits until `count` assistant replies have text and nothing is running.
+async function replies(page, count) {
+  await page.waitForFunction((n) => !document.getElementById('chat-send').disabled && [...document.querySelectorAll('#chat-messages .chat-message.assistant p')].filter((p) => p.textContent).length >= n, count, { timeout: 10000 });
+}
+const replyCount = (page) => page.$$eval('#chat-messages .chat-message.assistant', (els) => els.length);
 async function send(page, text) {
+  const before = await replyCount(page);
   await page.fill('#chat-input', text);
   await page.click('#chat-send');
-  await page.waitForFunction(() => !document.getElementById('chat-send').disabled && !document.querySelector('#chat-messages .chat-message.assistant:last-child p')?.textContent.match(/^$/));
+  return before;
 }
 async function shot(page, name) {
   if (!process.env.STUDIO_SHOTS) return;
@@ -64,73 +71,109 @@ async function shot(page, name) {
   await page.screenshot({ path: join(ROOT, `studio/shots/${name}.jpg`), quality: 82 });
 }
 
-test('Dylan picks Claude or OpenAI, and an OpenAI handoff starts Claude automatically', async (t) => {
+test('one chat: @mentions pick the assistant, typos included; @both answers in order; handoffs continue', async (t) => {
   const saved = { openai: { ...providers.openai }, claude: { ...providers.claude } };
   t.after(() => { Object.assign(providers.openai, saved.openai); Object.assign(providers.claude, saved.claude); });
   const seen = [];
+  let gpt = 0, claude = 0;
   providers.openai.run = async (env, input) => {
-    seen.push(['openai', input.history]);
-    return { text: 'Brightened the desktop background. Claude should check the reel lock next.', operations: [{ type: 'background', scene: 'desktop', values: { brightness: 125 } }], handoff: { to: 'claude', summary: 'Brightened desktop.', nextTask: 'Check the spin lock with the brighter scene.' } };
+    seen.push(['openai', input.history, input.message]);
+    return gpt++ === 0
+      ? { text: 'Brightened the desktop background. Claude should check the reel lock next.', operations: [{ type: 'background', scene: 'desktop', values: { brightness: 125 } }], handoff: { to: 'claude', summary: 'Brightened desktop.', nextTask: 'Check the spin lock with the brighter scene.' } }
+      : { text: 'I would enlarge the logo.', operations: [], handoff: null };
   };
+  const said = ['Raised desktop contrast to 115.', 'Checked the lock: it holds through the bonus.', 'Nothing else for now.', 'Agree with ChatGPT on the logo; I would also centre the reels.'];
   providers.claude.run = async (env, input, { progress }) => {
     seen.push(['claude', input.history, input.message]);
-    progress({ type: 'text', text: 'Raising contrast…' });
-    return { text: seen.length === 1 ? 'Raised desktop contrast to 115.' : 'Checked the lock: it holds through the bonus. Contrast stays at 115.', operations: [{ type: 'background', scene: 'desktop', values: { contrast: 115 } }], handoff: null };
+    progress({ type: 'text', text: 'Thinking…' });
+    return { text: said[claude++], operations: claude === 1 ? [{ type: 'background', scene: 'desktop', values: { contrast: 115 } }] : [], handoff: null };
   };
   const env = environment({ ANTHROPIC_API_KEY: 'test-only' });
   const page = await openChat(env);
+  assert.equal(await recipient(page), 'To ChatGPT · type @ to switch');
 
-  // Choosing Claude labels the reply as Claude and applies its edit as one Undo step.
-  await page.click('#chat-claude');
-  assert.equal(await page.getAttribute('#chat-claude', 'aria-checked'), 'true');
-  assert.equal(await page.textContent('#chat-handoff-prompt'), 'Hand off to OpenAI');
-  await send(page, 'Bump the desktop contrast a little.');
-  await page.waitForFunction(() => document.querySelector('#chat-messages .chat-message.claude'));
-  assert.deepEqual((await transcript(page)).slice(-3), [['You', 'Bump the desktop contrast a little.'], ['Claude', 'Raised desktop contrast to 115.'], ['Studio', 'Scene updated · Undo is available.']]);
+  // A typo still reaches Claude; the mention is highlighted in the transcript.
+  await page.fill('#chat-input', '@claudr bump the desktop contrast a little.');
+  assert.equal(await recipient(page), 'To Claude');
+  await page.click('#chat-send');
+  await replies(page, 1);
+  assert.deepEqual((await transcript(page)).slice(-3), [['You', '@claudr bump the desktop contrast a little.'], ['Claude', 'Raised desktop contrast to 115.'], ['Studio', 'Scene updated · Undo is available.']]);
+  assert.deepEqual(await page.$$eval('#chat-messages .chat-message.user .mention', (m) => m.map((x) => x.textContent)), ['@claudr']);
   assert.equal((await background(page)).contrast, 115);
-  await shot(page, 'chat-claude-desktop');
 
-  // OpenAI replies, hands off, and Claude continues without another click.
-  await page.click('#chat-connection');
-  await send(page, 'Make the desktop background brighter.');
-  await page.waitForFunction(() => document.querySelectorAll('#chat-messages .chat-message.claude').length === 2, null, { timeout: 10000 });
-  assert.deepEqual((await spoken(page)).slice(-3).map((l) => l[0]), ['You', 'OpenAI', 'Claude']);
+  // @chat reaches ChatGPT, which hands off; Claude continues without another click.
+  await send(page, 'Make the desktop background brighter @chat');
+  await replies(page, 3);
+  assert.deepEqual((await spoken(page)).slice(-3).map((l) => l[0]), ['You', 'ChatGPT', 'Claude']);
   assert.equal((await background(page)).brightness, 125);
   await page.click('.chat-handoff-panel summary');
   await page.waitForFunction(() => document.getElementById('chat-handoffs').textContent.includes('To Claude · completed'));
+  await page.click('.chat-handoff-panel summary');
+  // Each model gets the other's replies labelled as the other's, never as its own.
+  const gptHistory = seen.find((s) => s[0] === 'openai')[1];
+  assert.deepEqual(gptHistory.filter((m) => m.role === 'assistant').map((m) => m.speaker), ['claude']);
+  const [, handoffHistory, handoffTask] = seen.at(-1);
+  assert.deepEqual(handoffHistory.filter((m) => m.role === 'assistant').map((m) => m.speaker), ['claude', 'openai']);
+  assert.match(handoffTask, /^Completed handoff from the OpenAI assistant:\nBrightened desktop\.\nNext task:\nCheck the spin lock/);
 
-  // Each model receives the other's replies labelled as the other's, never as its own.
-  const [, openaiHistory] = seen.find((s) => s[0] === 'openai');
-  assert.deepEqual(openaiHistory.filter((m) => m.role === 'assistant').map((m) => m.speaker), ['claude']);
-  const [, claudeHistory, claudeTask] = seen.at(-1);
-  assert.deepEqual(claudeHistory.filter((m) => m.role === 'assistant').map((m) => m.speaker), ['claude', 'openai']);
-  assert.match(claudeTask, /^Completed handoff from the OpenAI assistant:\nBrightened desktop\.\nNext task:\nCheck the spin lock/);
-  await shot(page, 'chat-handoff-desktop');
+  // No mention: whoever answered last (Claude) replies.
+  assert.equal(await recipient(page), 'To Claude · type @ to switch');
+  await send(page, 'Anything else?');
+  await replies(page, 4);
+  assert.equal((await spoken(page)).at(-1)[1], 'Nothing else for now.');
 
-  // The choice survives a reload; the transcript keeps who said what.
+  // The @ picker: filter by typing, Enter or Tab inserts and never sends.
+  await page.fill('#chat-input', '');
+  await page.focus('#chat-input');
+  await page.keyboard.type('@');
+  assert.deepEqual(await page.$$eval('#chat-mentions button', (b) => b.map((x) => x.dataset.mention)), ['claude', 'openai']);
+  await page.keyboard.type('ch');
+  assert.deepEqual(await page.$$eval('#chat-mentions button', (b) => b.map((x) => x.dataset.mention)), ['openai']);
+  await shot(page, 'chat-mention-picker');
+  await page.keyboard.press('Enter');
+  assert.equal(await page.inputValue('#chat-input'), '@ChatGPT ');
+  assert.equal(await page.isHidden('#chat-mentions'), true);
+  await page.keyboard.type('and @cl');
+  await page.keyboard.press('Tab');
+  await page.keyboard.type('what would you change first?');
+  assert.equal(await recipient(page), 'To ChatGPT, then Claude');
+  assert.equal(await replyCount(page), 4, 'choosing a mention sent nothing');
+  await page.keyboard.press('Enter');
+  await replies(page, 6);
+  assert.deepEqual((await spoken(page)).slice(-3), [['You', '@ChatGPT and @Claude what would you change first?'], ['ChatGPT', 'I would enlarge the logo.'], ['Claude', 'Agree with ChatGPT on the logo; I would also centre the reels.']]);
+  // The second assistant saw the first one's answer to the same message.
+  const [who, history, message] = seen.at(-1);
+  assert.equal(who, 'claude');
+  assert.equal(message, '@ChatGPT and @Claude what would you change first?');
+  assert.deepEqual(history.at(-1), { role: 'assistant', text: 'I would enlarge the logo.', speaker: 'openai' });
+  assert.ok(!history.some((m) => m.text === message), 'the message itself is not repeated in the history');
+  await shot(page, 'chat-shared-desktop');
+
+  // After a reload the transcript keeps who said what, and the default is still the last to answer.
   await page.reload();
   await page.click('#chat-open');
   await page.waitForFunction(() => !document.getElementById('chat-claude').textContent.includes('checking'));
-  assert.equal(await page.getAttribute('#chat-connection', 'aria-checked'), 'true');
-  assert.equal((await spoken(page)).at(-1)[0], 'Claude');
+  assert.equal(await recipient(page), 'To Claude · type @ to switch');
+  assert.deepEqual((await spoken(page)).slice(-2).map((l) => l[0]), ['ChatGPT', 'Claude']);
   assert.deepEqual(page.errors, []);
   await page.ctx.close();
 });
 
-test('an unconnected assistant is selectable but never sent to, and its queue item waits', async (t) => {
+test('mentioning an unconnected assistant never sends to it; its handoff waits', async (t) => {
   const saved = { openai: { ...providers.openai } };
   t.after(() => Object.assign(providers.openai, saved.openai));
   providers.openai.run = async () => ({ text: 'Done. Handing the engine check to Claude.', operations: [], handoff: { to: 'claude', summary: 'Reviewed layout.', nextTask: 'Check the spin lock.' } });
   const env = environment();
   const page = await openChat(env, { width: 390, height: 844 });
   assert.match(await page.textContent('#chat-claude'), /Claude · setup needed/);
-  await page.click('#chat-claude');
-  await page.fill('#chat-input', 'Hello Claude');
+  await page.fill('#chat-input', '@claude hello');
   await page.click('#chat-send');
   assert.match(await page.textContent('#chat-status'), /Claude is not connected yet/);
-  assert.equal(await page.inputValue('#chat-input'), 'Hello Claude', 'the message stays in the box');
-  await page.click('#chat-connection');
-  await send(page, 'Review the layout.');
+  assert.equal(await page.inputValue('#chat-input'), '@claude hello', 'the message stays in the box');
+  await send(page, '@both review the layout');
+  await replies(page, 1);
+  assert.deepEqual((await transcript(page)).slice(-3).map((l) => l[0]), ['You', 'Studio', 'ChatGPT']);
+  assert.match((await transcript(page)).at(-2)[1], /Claude is not connected yet, so only ChatGPT will answer/);
   await page.waitForFunction(() => document.getElementById('chat-status').textContent.includes('Waiting for Claude to connect'));
   await page.click('.chat-handoff-panel summary');
   await page.waitForFunction(() => document.getElementById('chat-handoffs').textContent.includes('waiting connection'));
