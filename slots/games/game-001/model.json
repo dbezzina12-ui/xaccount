@@ -1,0 +1,84 @@
+{
+  "id": "game-001",
+  "title": "Game 001",
+  "version": 1,
+  "grid": {"reels":5,"rows":3},
+  "symbols": {
+    "H1": {"kind":"high"},
+    "H2": {"kind":"high"},
+    "H3": {"kind":"high"},
+    "H4": {"kind":"high"},
+    "L1": {"kind":"low"},
+    "L2": {"kind":"low"},
+    "L3": {"kind":"low"},
+    "L4": {"kind":"low"},
+    "L5": {"kind":"low"},
+    "W": {"kind":"wild","reels":[2,3,4]},
+    "S": {"kind":"scatter"}
+  },
+  "pays": {
+    "H1": {"3":100,"4":400,"5":2000},
+    "H2": {"3":60,"4":250,"5":1000},
+    "H3": {"3":50,"4":150,"5":500},
+    "H4": {"3":40,"4":100,"5":300},
+    "L1": {"3":25,"4":60,"5":200},
+    "L2": {"3":20,"4":50,"5":150},
+    "L3": {"3":15,"4":40,"5":120},
+    "L4": {"3":12,"4":30,"5":100},
+    "L5": {"3":10,"4":25,"5":80}
+  },
+  "paylines": [
+    [1,1,1,1,1],
+    [0,0,0,0,0],
+    [2,2,2,2,2],
+    [0,1,2,1,0],
+    [2,1,0,1,2],
+    [0,0,1,0,0],
+    [2,2,1,2,2],
+    [1,2,2,2,1],
+    [1,0,0,0,1],
+    [1,0,1,0,1],
+    [1,2,1,2,1],
+    [0,1,0,1,0],
+    [2,1,2,1,2],
+    [1,1,0,1,1],
+    [1,1,2,1,1],
+    [0,1,1,1,0],
+    [2,1,1,1,2],
+    [0,2,0,2,0],
+    [2,0,2,0,2],
+    [0,2,2,2,0]
+  ],
+  "scatter": {
+    "symbol": "S",
+    "pays": {"3":2,"4":10,"5":50},
+    "awards": {"3":10,"4":15,"5":20}
+  },
+  "freeSpins": {
+    "retrigger": {"3":5,"4":10,"5":15},
+    "wildMultipliers": {"values":[2,3,5],"weights":[55,30,15]}
+  },
+  "bonusBuy": {"priceX":100,"spins":10},
+  "maxWinX": 10000,
+  "bet": {
+    "levels": [0.2,0.4,0.6,1,2,4,6,10,20,50,100],
+    "default": 1,
+    "startBalance": 1000
+  },
+  "reels": {
+    "base": [
+      "H2 L5 L3 L2 L5 H3 L3 L4 L1 H1 L4 H4 L3 S H4 L5 H2 H4 L3 H4 L4 L5 L2 L3 L1 L2 H4 L2 L4 L1 H3 L2 H3 L3 L5 L4 L5 H1 L1 L2 L5 H3 L1 L2 L1 H4 L5 L2 L5 L3 S L5 L1 H2 L1 H3 L1 H1 L4 H2 H4 H3 L4 H4 L5 L4 H3 H4 H2 L3 L2 L3 L5 L4 L5",
+      "H3 L4 L2 L1 H2 L2 L5 H3 L3 H1 L1 L5 L4 L3 H3 L5 W L4 H3 L2 H2 L3 L4 L5 H4 H2 L1 L2 L4 L1 H3 H4 H1 L2 H4 L5 H4 S H4 H2 L3 L5 L1 L3 L5 L1 H2 L2 H4 L1 L4 H4 H3 H1 L2 H3 H2 H4 L5 W L3 H2 L5 L3 L5 L4 L2 L4 H4 L1 L2 H1 L4 L3 H2 H3 H1 L3 L5 S L3 L4 L1 H1",
+      "L5 H2 H3 H1 L4 W L5 L3 S L1 L4 L2 H2 L4 L3 L5 L2 L5 H3 H2 H4 H1 L5 H1 L4 L2 H3 L4 H1 H3 L3 H4 W H2 L1 L4 H4 L2 H3 L3 H3 L5 H1 L5 H4 L4 H4 L1 L5 H4 S L1 L5 L1 L3 L2 H2 H4 L3 H4 H2 L4 L2 L3 H2 L1 H2 L5 H3 H1 H3 L3 L1 L3 L2 L1 H4 L2 L4 L3 L4 L5 L2 L1",
+      "L2 L5 L1 L3 W L5 L4 H1 L3 L1 L3 L2 L1 L5 H1 H3 L5 L4 H4 L1 L4 W H1 L4 L5 L4 L5 L4 H1 L5 L3 L2 S L4 H4 L3 H4 H3 H2 L3 L1 H1 L4 H4 H3 L4 H2 H3 L5 L4 H3 L1 H1 H3 H2 L2 L3 L2 H4 L1 L2 H2 L2 L5 H3 H2 H4 L2 L3 H4 H2 L3 L5 L1 S L2 H2 H4 H2 H3 H4 L3 L5 L1",
+      "H1 L2 L5 H3 H4 L5 H3 L1 L5 H4 L1 L5 H3 L1 L5 L1 L5 L1 L2 H4 H2 L2 L4 L3 H4 H3 L5 L1 L5 L2 L4 H1 H2 S L5 L1 L3 L2 L4 L2 L5 H2 H3 L2 L3 L2 H2 L4 L3 L5 L4 H4 L1 H4 H2 L5 L4 L2 L3 H4 L3 L1 L4 H4 L3 L4 L5 H1 L3 H4 S H3 L3 L4 H3"
+    ],
+    "free": [
+      "H1 S H1 H2 L2 H4 H1 L5 H4 L5 L3 H4 H2 L5 H2 L4 L5 L2 L3 L5 L3 L4 H3 L2 L4 H3 H2 L2 L1 H4 L1 H4 L4 L5 L4 L2 L1 H3 L1 H2 L3 L4 L3 H3 L1 H3 L3 L5 L1 L2",
+      "L4 L5 H1 L2 L3 H1 H4 L4 W L2 L1 S H3 H4 W L1 L5 H4 L5 H1 L4 H3 H2 L1 W H2 L2 L5 S H2 H3 H1 L4 L1 L3 H3 H4 H2 H3 L4 L2 L3 W L2 H2 S L1 L3 H4 L5 L3 W",
+      "H2 L5 L1 H2 H3 H2 L1 H1 S L4 H4 L2 L4 L5 W L2 L4 L2 H3 W H3 H1 L3 L1 H4 S L3 L4 H1 L1 H3 L4 H2 H3 H2 L5 L3 W H4 L1 L5 L3 S L3 L2 H1 H4 W H4 W L5 L2",
+      "H4 L2 L1 L5 L1 W L3 L1 L3 H1 L5 L2 H3 L3 H4 L4 S H2 H3 L2 W H1 L4 W L4 L3 H3 L4 H4 H2 W L2 L4 S L2 L5 L1 H4 H1 H3 L5 H2 H3 L3 L5 H4 L1 H1 W H2 S H2",
+      "L4 L5 L4 L1 L5 H3 L3 H1 H4 L2 L3 H4 H2 L1 H2 L2 L3 L2 L1 H3 H2 L5 L1 L4 H1 H4 L5 H2 L2 L5 L4 H3 L2 H4 L2 S L4 H1 L3 H2 L4 H4 L3 L1 H3 L5 H3 L3 L1 L5"
+    ]
+  }
+}

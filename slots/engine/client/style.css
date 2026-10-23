@@ -1,0 +1,188 @@
+/* Theme colors arrive as CSS variables from theme.json (see main.js). */
+/* One deliberate dark look in every viewer theme. */
+:root {
+  color-scheme: dark;
+  --bg: #0d0820;
+  --accent: #ffd84a;
+  --accent2: #ff4fa3;
+  --text: #ffffff;
+  --muted: #c9c1ec;
+  --bar: rgba(10, 6, 26, 0.86);
+  --display: system-ui, sans-serif;
+  --ui: system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--ui);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+canvas.stage { position: fixed; inset: 0; display: block; }
+
+.loading {
+  position: fixed; inset: 0; display: grid; place-items: center;
+  font: 600 18px var(--ui); color: var(--muted);
+}
+
+/* ---------- HUD ---------- */
+.hud {
+  position: fixed; left: 50%; bottom: max(10px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  width: min(1100px, calc(100vw - 32px));
+  display: grid;
+  grid-template-columns: auto 1fr 1.25fr 1fr auto auto auto;
+  grid-template-areas: "left bal bet win buy right spin";
+  align-items: center; gap: 10px;
+  padding: 10px 12px 10px 14px;
+  background: var(--bar);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 22px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 5;
+}
+.grp { display: flex; gap: 8px; }
+.grp.left { grid-area: left; }
+.grp.right { grid-area: right; }
+.meter.balance { grid-area: bal; }
+.meter.bet { grid-area: bet; }
+.meter.win { grid-area: win; }
+.buy-wrap { grid-area: buy; }
+.spin-wrap { grid-area: spin; }
+
+.meter { display: flex; flex-direction: column; align-items: center; min-width: 0; }
+.meter label {
+  font: 700 10px var(--ui); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+}
+.meter output {
+  font: 400 clamp(16px, 2.1vw, 22px) var(--display); color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+  font-variant-numeric: tabular-nums; min-height: 1.25em;
+}
+.meter.win output { color: var(--accent); text-shadow: 0 0 14px color-mix(in srgb, var(--accent) 60%, transparent); }
+.bet-ctl { display: flex; align-items: center; gap: 8px; }
+.step {
+  width: 30px; height: 30px; border-radius: 50%; border: 0; cursor: pointer;
+  background: rgba(255, 255, 255, 0.12); color: var(--text); font: 700 18px var(--ui); line-height: 1;
+}
+.step:disabled { opacity: 0.35; cursor: default; }
+
+button { font-family: inherit; }
+.round {
+  width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.07); color: var(--muted); cursor: pointer;
+  display: grid; place-items: center; font: 800 11px var(--ui); letter-spacing: 0.04em;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+.round svg { width: 20px; height: 20px; }
+.round.on { color: #1a0d00; background: var(--accent); box-shadow: 0 0 16px var(--accent); }
+
+.spin {
+  width: 78px; height: 78px; margin: -26px 0 -16px; border-radius: 50%; cursor: pointer;
+  border: 3px solid rgba(255, 255, 255, 0.85);
+  background: radial-gradient(circle at 35% 30%, #fff7c2 0%, var(--accent) 38%, #d26b00 100%);
+  color: #2a1300; display: grid; place-items: center;
+  box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.35), 0 8px 26px rgba(0, 0, 0, 0.55), 0 0 30px color-mix(in srgb, var(--accent) 55%, transparent);
+  transition: transform 0.12s;
+}
+.spin svg { width: 36px; height: 36px; }
+.spin:active { transform: scale(0.94); }
+.spin.busy svg { width: 24px; height: 24px; }
+.spin:not(.busy) svg { animation: spin-idle 4s ease-in-out infinite; }
+@keyframes spin-idle { 0%, 80% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
+
+.buy {
+  height: 50px; padding: 0 14px; border-radius: 14px; cursor: pointer;
+  border: 2px solid color-mix(in srgb, var(--accent2) 80%, white);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent2) 85%, white), color-mix(in srgb, var(--accent2) 70%, black));
+  color: #fff; font: 400 13px/1.05 var(--display); letter-spacing: 0.03em; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--accent2) 50%, transparent);
+}
+.buy:disabled, .round:disabled { opacity: 0.4; cursor: default; }
+
+.demo-tag {
+  position: absolute; top: -26px; left: 14px; font: 700 10px var(--ui); letter-spacing: 0.12em;
+  color: #111; background: #7cf2c5; padding: 3px 8px; border-radius: 6px;
+}
+
+/* Phones (portrait): two rows, spin button centered. */
+@media (max-aspect-ratio: 85/100) {
+  .hud {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas:
+      "bal bet win"
+      "left spin right";
+    row-gap: 8px; padding: 10px 12px 12px;
+  }
+  .grp.left { justify-content: flex-start; }
+  .grp.right { justify-content: flex-end; }
+  .spin-wrap { justify-self: center; }
+  .spin { margin: 0; width: 74px; height: 74px; }
+  .buy-wrap { position: absolute; right: 10px; top: -62px; }
+  .buy { height: 46px; }
+  .meter output { font-size: 17px; }
+}
+
+/* ---------- toast + modals ---------- */
+.toast {
+  position: fixed; left: 50%; top: 18px; transform: translate(-50%, -80px);
+  background: rgba(10, 6, 26, 0.94); border: 1px solid var(--accent); color: var(--text);
+  padding: 10px 16px; border-radius: 12px; font: 600 14px var(--ui); z-index: 20;
+  transition: transform 0.25s;
+}
+.toast.show { transform: translate(-50%, 0); }
+
+.modal-back {
+  position: fixed; inset: 0; z-index: 30; background: rgba(0, 0, 0, 0.66);
+  display: grid; place-items: center; padding: 16px;
+}
+.modal {
+  position: relative; width: min(760px, 100%); max-height: calc(100vh - 32px); overflow: auto;
+  background: linear-gradient(180deg, #1b1236, #0f0a22); border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px; padding: 22px 20px 20px; color: var(--text); user-select: text; -webkit-user-select: text;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+.modal h2 { font: 400 26px var(--display); margin: 0 0 6px; color: var(--accent); }
+.modal h3 { font: 400 18px var(--display); margin: 20px 0 8px; color: var(--accent); }
+.modal p, .modal li { color: var(--muted); font-size: 14px; line-height: 1.5; }
+.modal .close {
+  position: sticky; float: right; top: 0; width: 34px; height: 34px; border-radius: 50%; border: 0;
+  background: rgba(255, 255, 255, 0.12); color: var(--text); font-size: 22px; cursor: pointer;
+}
+.pays { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.pay { display: flex; gap: 10px; align-items: center; background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 8px; }
+.pay img { width: 64px; height: 64px; flex: none; }
+.pay table { border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+.pay td { padding: 1px 6px; }
+.pay td:first-child { color: var(--muted); }
+.pay td:last-child { color: var(--text); font-weight: 700; text-align: right; }
+.facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.fact { background: rgba(255, 255, 255, 0.05); border-radius: 10px; padding: 8px 10px; }
+.fact b { display: block; font: 400 18px var(--display); color: var(--text); }
+.fact span { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lines { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 8px; }
+.lines svg { width: 100%; height: auto; background: rgba(255, 255, 255, 0.05); border-radius: 6px; }
+.lines div { text-align: center; font-size: 11px; color: var(--muted); }
+.row-btns { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; flex-wrap: wrap; }
+.btn {
+  height: 44px; padding: 0 18px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08); color: var(--text); font: 700 14px var(--ui); cursor: pointer;
+}
+.btn.primary { background: var(--accent); color: #1a0d00; border-color: transparent; }
+.art-report { font: 12px ui-monospace, monospace; color: var(--muted); }
+.art-report .ok { color: #7cf2c5; }
+.art-report .missing { color: #8b84a8; }
+.art-report .no-transparency { color: #ff8a8a; }
+
+@media (prefers-reduced-motion: reduce) {
+  .spin:not(.busy) svg { animation: none; }
+}

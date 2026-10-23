@@ -1,0 +1,17 @@
+{
+  "_about": "Symbol counts per reel strip. Strip order is generated from these counts by tools/math/build-reels.mjs (seeded shuffle, scatters evenly spaced, no accidental repeats). Counts set the math; order only shapes how wins cluster. Tuned by Claude: see ../MATH.md.",
+  "base": [
+    { "seed": 101, "counts": { "S": 2, "H1": 3, "H2": 5, "H3": 7, "H4": 9, "L1": 9, "L2": 9, "L3": 9, "L4": 9, "L5": 13 } },
+    { "seed": 102, "counts": { "W": 2, "S": 2, "H1": 6, "H2": 8, "H3": 8, "H4": 9, "L1": 9, "L2": 9, "L3": 10, "L4": 10, "L5": 11 } },
+    { "seed": 103, "counts": { "W": 2, "S": 2, "H1": 6, "H2": 8, "H3": 8, "H4": 9, "L1": 9, "L2": 9, "L3": 10, "L4": 10, "L5": 11 } },
+    { "seed": 104, "counts": { "W": 2, "S": 2, "H1": 6, "H2": 8, "H3": 8, "H4": 9, "L1": 9, "L2": 9, "L3": 10, "L4": 10, "L5": 11 } },
+    { "seed": 105, "counts": { "S": 2, "H1": 3, "H2": 5, "H3": 7, "H4": 9, "L1": 9, "L2": 9, "L3": 9, "L4": 9, "L5": 13 } }
+  ],
+  "free": [
+    { "seed": 201, "counts": { "S": 1, "H1": 3, "H2": 5, "H3": 5, "H4": 5, "L1": 6, "L2": 6, "L3": 6, "L4": 6, "L5": 7 } },
+    { "seed": 202, "counts": { "W": 5, "S": 3, "H1": 4, "H2": 5, "H3": 5, "H4": 5, "L1": 5, "L2": 5, "L3": 5, "L4": 5, "L5": 5 } },
+    { "seed": 203, "counts": { "W": 5, "S": 3, "H1": 4, "H2": 5, "H3": 5, "H4": 5, "L1": 5, "L2": 5, "L3": 5, "L4": 5, "L5": 5 } },
+    { "seed": 204, "counts": { "W": 5, "S": 3, "H1": 4, "H2": 5, "H3": 5, "H4": 5, "L1": 5, "L2": 5, "L3": 5, "L4": 5, "L5": 5 } },
+    { "seed": 205, "counts": { "S": 1, "H1": 3, "H2": 5, "H3": 5, "H4": 5, "L1": 6, "L2": 6, "L3": 6, "L4": 6, "L5": 7 } }
+  ]
+}

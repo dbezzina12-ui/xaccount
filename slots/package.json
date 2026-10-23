@@ -1,0 +1,13 @@
+{
+  "name": "slots",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "math": "node tools/math/report.mjs",
+    "sim": "node tools/math/sim.mjs",
+    "serve": "npx --yes http-server -c-1 -p 8080 .",
+    "shots": "node tools/shots.mjs",
+    "art": "python3 tools/art/prep.py"
+  }
+}

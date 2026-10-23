@@ -1,0 +1,10 @@
+<title>Slots Studio</title>
+<meta name="theme-color" content="#0d0820">
+<!-- Entry page for the published claude.ai artifact. The artifact host wraps
+     this file in its own <html>/<head>/<body>, so it has none; index.html is
+     the entry for local play. -->
+<link rel="stylesheet" href="engine/client/style.css">
+<script type="module">
+  import { boot } from './engine/client/main.js';
+  boot({ game: 'game-001' });
+</script>

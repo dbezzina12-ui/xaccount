@@ -1,0 +1,41 @@
+{
+  "_owner": "ChatGPT owns this file (art direction). Anything left out falls back to engine defaults. Colors are CSS colors; fonts must be Google Fonts names listed in googleFonts.",
+  "title": "GAME 001",
+  "currency": "$",
+  "palette": {
+    "bg": "#0d0820",
+    "bg2": "#2a1460",
+    "panel": "rgba(8,6,24,0.78)",
+    "frame": "#ffd36b",
+    "accent": "#ffd84a",
+    "accent2": "#ff4fa3",
+    "text": "#ffffff",
+    "muted": "#c9c1ec"
+  },
+  "fonts": {
+    "display": "'Lilita One', system-ui, sans-serif",
+    "ui": "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+  },
+  "googleFonts": ["Lilita One"],
+  "symbolNames": {
+    "H1": "Ruby", "H2": "Amethyst", "H3": "Emerald", "H4": "Sapphire",
+    "L1": "Ace", "L2": "King", "L3": "Queen", "L4": "Jack", "L5": "Ten",
+    "W": "Wild", "S": "Bonus"
+  },
+  "symbolScale": {},
+  "winTiers": [
+    { "id": "big", "label": "BIG WIN", "minX": 15, "art": "bannerBig" },
+    { "id": "mega", "label": "MEGA WIN", "minX": 40, "art": "bannerMega" },
+    { "id": "epic", "label": "EPIC WIN", "minX": 100, "art": "bannerEpic" }
+  ],
+  "strings": {
+    "plaque": "WILDS MULTIPLY IN FREE SPINS · WIN UP TO 10,000x",
+    "freeSpins": "FREE SPINS",
+    "featureLine1": "Every WILD carries x2, x3 or x5",
+    "featureLine2": "Multipliers on the same line multiply",
+    "featureWin": "FEATURE WIN",
+    "scatterName": "BONUS",
+    "wild": "WILD",
+    "scatter": "BONUS"
+  }
+}
