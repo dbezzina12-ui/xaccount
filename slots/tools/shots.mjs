@@ -69,7 +69,11 @@ const scenes = {
     await p.waitForTimeout(900);
     await shot(p, 'feature-intro');
     await p.evaluate(() => __slot.ctrl.tap());
-    await until(p, () => __slot.stage.mode === 'free' && !__slot.stage.ov && __slot.stage.badges.some((c) => c.some(Boolean)) && __slot.stage.reels.every((r) => !r.spinning), 120000);
+    // a landed free spin that shows something: a win, or multiplier badges
+    await until(p, () => {
+      const st = __slot.stage;
+      return st.mode === 'free' && !st.ov && st.reels.every((r) => !r.spinning) && (st.lines.length > 0 || st.badges.some((c) => c.some(Boolean)));
+    }, 120000);
     await p.waitForTimeout(450);
     await shot(p, 'free-spins');
     await p.close();

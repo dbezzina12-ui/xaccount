@@ -40,7 +40,7 @@ const result = await page.evaluate(
       if (c.balance < 200) c.balance = 1000;
       const before = c.balance;
       const bet = c.bet;
-      const buy = r % 40 === 39 && c.balance >= bet * c.json.bonusBuy.priceX;
+      const buy = !!c.json.bonusBuy && r % 40 === 39 && c.balance >= bet * c.json.bonusBuy.priceX;
       if (buy) {
         c.round({ buy: true });
         buys++;

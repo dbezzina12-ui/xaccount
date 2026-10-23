@@ -5,7 +5,7 @@
 //
 //   node tools/math/report.mjs games/game-001
 
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { compileModel } from '../../engine/core/model.js';
 import { exactStats, reelMarginals } from './exact.js';
@@ -23,6 +23,11 @@ const x = (v, d = 2) => `${Number(v).toFixed(d)}x`;
 const oneIn = (v) => (Number.isFinite(v) ? `1 in ${Math.round(v).toLocaleString('en-US')}` : 'not observed');
 const vol = (sd) => (sd < 5 ? 'Low' : sd < 10 ? 'Medium' : sd < 15 ? 'High' : 'Very high');
 const nL = m.nLines;
+// Smallest run that pays anything; paytable columns start here.
+const minK = Math.min(...Object.values(json.pays).flatMap((t) => Object.keys(t).filter((k) => t[k] > 0).map(Number)));
+const counts = Array.from({ length: m.reels - minK + 1 }, (_, i) => minK + i);
+const hasMult = m.multValues.some((v) => v > 1);
+const hasRetrigger = m.retrigger.some((v) => v > 0);
 
 const L = [];
 L.push(`# ${json.title ?? json.id}: math sheet`);
@@ -44,7 +49,7 @@ L.push(`| Scatter pays | ${pct(ex.rtpScatter)} | exact |`);
 L.push(`| Free spins feature | ${pct(ex.rtpFeature)} | exact |`);
 L.push(`| Hit rate (any win, base spin) | ${ex.baseHitRate === null ? 'n/a' : pct(ex.baseHitRate)} | exact |`);
 L.push(`| Free spins trigger | ${oneIn(ex.triggerOneIn)} spins | exact |`);
-L.push(`| Average feature win (10 spins) | ${x(ex.awards[3]?.avgWinX ?? 0)} | exact |`);
+for (const a of Object.values(ex.awards)) L.push(`| Average feature win (${a.spins} spins) | ${x(a.avgWinX)} | exact |`);
 if (ex.bonusBuy) {
   const capped = simBuy?.capCost !== undefined ? ex.bonusBuy.rtp - simBuy.capCost : null;
   L.push(`| Bonus buy (${ex.bonusBuy.priceX}x for ${ex.bonusBuy.spins} spins) RTP | **${pct(capped ?? ex.bonusBuy.rtp, 3)}**${capped !== null ? ` (uncapped ${pct(ex.bonusBuy.rtp, 3)}; raw sim ${pct(simBuy.rtp, 3)} ± ${pct(simBuy.rtpCI95, 3)})` : ''} | exact${simBuy ? ' + sim' : ''} |`);
@@ -60,29 +65,29 @@ L.push('');
 L.push('## Rules the math assumes');
 L.push('');
 L.push(`- ${m.reels} reels × ${m.rows} rows, ${nL} fixed paylines, pays left to right from reel 1. Total bet = ${nL} × line bet.`);
-L.push(`- **${m.symbols[m.WILD]}** (wild) lands on reels ${[...m.wildReels].map((r) => r + 1).join(', ')} only and substitutes for every symbol except the scatter. It has no pay of its own.`);
+if (m.WILD >= 0) L.push(`- **${m.symbols[m.WILD]}** (wild) lands on reels ${[...m.wildReels].map((r) => r + 1).join(', ')} only and substitutes for every symbol except the scatter. It has no pay of its own.`);
 L.push(`- **${m.symbols[m.SCATTER]}** (scatter) pays anywhere and awards free spins: ${Object.entries(json.scatter.awards).map(([k, v]) => `${k} → ${v} spins`).join(', ')}. At most one per reel.`);
-L.push(`- Free spins use their own reel set. Every wild carries a multiplier (${m.multValues.map((v, i) => `x${v} ${pct(m.multWeights[i] / m.multTotal, 0)}`).join(', ')}; average x${ex.expectedMultiplier.toFixed(2)}). Multipliers of wilds in the same winning line **multiply** (x5 · x5 · x5 = x125).`);
-L.push(`- Retriggers: ${Object.entries(json.freeSpins.retrigger).map(([k, v]) => `${k} scatters → +${v}`).join(', ')}.`);
+L.push(`- Free spins use their own reel set.${hasMult ? ` Every wild carries a multiplier (${m.multValues.map((v, i) => `x${v} ${pct(m.multWeights[i] / m.multTotal, 0)}`).join(', ')}; average x${ex.expectedMultiplier.toFixed(2)}). Multipliers of wilds in the same winning line **multiply**.` : ' No multipliers.'}`);
+L.push(`- ${hasRetrigger ? `Retriggers: ${Object.entries(json.freeSpins.retrigger).map(([k, v]) => `${k} scatters → +${v}`).join(', ')}.` : 'No retriggers.'}`);
 L.push(`- The whole round (base spin + its free spins) is capped at ${json.maxWinX.toLocaleString('en-US')}x bet; reaching it ends the round.`);
 L.push('');
 
 L.push('## Paytable (x total bet)');
 L.push('');
-L.push(`| Symbol | ${Array.from({ length: m.reels - 2 }, (_, i) => `${i + 3} of a kind`).join(' | ')} |`);
-L.push(`|---|${'---|'.repeat(m.reels - 2)}`);
+L.push(`| Symbol | ${counts.map((n) => `${n} of a kind`).join(' | ')} |`);
+L.push(`|---|${'---|'.repeat(counts.length)}`);
 for (const s of Object.keys(json.pays)) {
-  L.push(`| ${s} | ${Array.from({ length: m.reels - 2 }, (_, i) => x((json.pays[s][i + 3] ?? 0) / nL, 2)).join(' | ')} |`);
+  L.push(`| ${s} | ${counts.map((n) => x((json.pays[s][n] ?? 0) / nL, 2)).join(' | ')} |`);
 }
-L.push(`| ${m.symbols[m.SCATTER]} (anywhere) | ${Array.from({ length: m.reels - 2 }, (_, i) => x(json.scatter.pays[i + 3] ?? 0, 0)).join(' | ')} |`);
+L.push(`| ${m.symbols[m.SCATTER]} (anywhere) | ${counts.map((n) => x(json.scatter.pays?.[n] ?? 0, 0)).join(' | ')} |`);
 L.push('');
 
 L.push('## Where the base-game return comes from');
 L.push('');
-L.push(`| Symbol | ${Array.from({ length: m.reels - 2 }, (_, i) => `${i + 3}oak`).join(' | ')} | Total |`);
-L.push(`|---|${'---|'.repeat(m.reels - 1)}`);
+L.push(`| Symbol | ${counts.map((n) => `${n}oak`).join(' | ')} | Total |`);
+L.push(`|---|${'---|'.repeat(counts.length + 1)}`);
 for (const [s, arr] of Object.entries(ex.baseBySymbol)) {
-  const cells = arr.slice(3).map((v) => pct(v));
+  const cells = arr.slice(minK).map((v) => pct(v));
   L.push(`| ${s} | ${cells.join(' | ')} | ${pct(arr.reduce((a, b) => a + b, 0))} |`);
 }
 L.push('');
@@ -91,7 +96,7 @@ L.push('## Scatter odds');
 L.push('');
 L.push('| Scatters | Base game | During free spins |');
 L.push('|---|---|---|');
-for (let k = 3; k <= m.reels; k++) L.push(`| ${k} | ${oneIn(1 / ex.scatterDist.base[k])} | ${oneIn(1 / ex.scatterDist.free[k])} |`);
+for (let k = 1; k <= m.reels; k++) if (m.scatterAward[k] > 0 || m.scatterPayX[k] > 0) L.push(`| ${k} | ${oneIn(1 / ex.scatterDist.base[k])} | ${oneIn(1 / ex.scatterDist.free[k])} |`);
 L.push('');
 L.push(`Free spins: average win per spin ${x(ex.freeSpin.avgWinX)}, retrigger chance per spin ${pct(ex.freeSpin.retriggerProb, 3)}, expected extra spins per spin ${ex.freeSpin.retriggerSpinsPerSpin.toFixed(4)}.`);
 L.push('');
@@ -166,5 +171,6 @@ const summary = {
   maxWinX: json.maxWinX,
   maxWinOneIn: simBase?.capOneIn ?? null,
 };
+mkdirSync(join(dir, 'math'), { recursive: true });
 writeFileSync(join(dir, 'math/summary.json'), JSON.stringify(summary, null, 2) + '\n');
 console.log(`wrote ${join(dir, 'MATH.md')}  (exact RTP ${pct(ex.rtp, 3)})`);

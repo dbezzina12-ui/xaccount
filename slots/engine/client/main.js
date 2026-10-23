@@ -33,7 +33,7 @@ const DEMOS = {
   feature: (r) => r.triggered,
   bigwin: (r) => !r.triggered && r.totalWinX >= 15,
   epic: (r) => r.triggered && r.totalWinX >= 100,
-  retrigger: (r) => r.triggered && r.freeSpinsPlayed > 10,
+  retrigger: (r) => r.triggered && r.freeSpinsAwarded > r.freeSpinsInitial,
 };
 
 // Finds a seed whose FIRST round is a genuine outcome of the requested kind.

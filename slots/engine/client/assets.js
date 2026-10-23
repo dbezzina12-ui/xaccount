@@ -246,12 +246,20 @@ function drawBadge(ctx, S, label, colors, font, star) {
   ctx.fillText(label, c, y);
 }
 
-export function placeholderSymbol(id, kind, S, theme) {
+// `order` is the symbol's position among symbols of its kind, so any game's
+// symbols get distinct placeholders (gems for highs, letters for lows).
+export function placeholderSymbol(id, kind, S, theme, order = 0) {
   const cv = canvas(S, S);
   const ctx = cv.getContext('2d');
   const font = theme.fonts?.display ?? 'system-ui';
+  const gems = Object.values(GEMS);
+  const hues = [28, 330, 180, 95, 205, 260, 55];
   if (GEMS[id]) drawGem(ctx, S, GEMS[id]);
   else if (RANKS[id]) drawRank(ctx, S, RANKS[id], font);
+  else if (kind === 'high') {
+    const g = gems[order % gems.length];
+    drawGem(ctx, S, { ...g, hue: (g.hue + 47 * Math.floor(order / gems.length)) % 360 });
+  } else if (kind === 'low') drawRank(ctx, S, [id.length <= 2 ? id : id[0], hues[order % hues.length]], font);
   else if (kind === 'wild') drawBadge(ctx, S, theme.strings?.wild ?? 'WILD', ['#ffe680', '#e08a00', 'rgba(255,200,40,0.35)'], font, false);
   else if (kind === 'scatter') drawBadge(ctx, S, theme.strings?.scatter ?? 'BONUS', ['#ff7ad9', '#7a1cff', 'rgba(200,90,255,0.35)'], font, true);
   else {
@@ -322,10 +330,12 @@ export class SpriteCache {
     if (px === this.px) return;
     this.px = px;
     const accent = this.theme.palette?.accent ?? '#ffd84a';
+    const seen = {};
     for (let i = 0; i < this.model.symbols.length; i++) {
       const id = this.model.symbols[i];
       const kind = this.model.kind[i];
-      const src = this.art.symbols[id] ?? placeholderSymbol(id, kind, px * 2, this.theme);
+      const order = (seen[kind] = (seen[kind] ?? -1) + 1);
+      const src = this.art.symbols[id] ?? placeholderSymbol(id, kind, px * 2, this.theme, order);
       const scale = this.theme.symbolScale?.[id] ?? 0.9;
       const base = canvas(px, px);
       const { w, h } = fit(src, px, px, scale);

@@ -16,6 +16,8 @@
 | Hit rate (any win, base spin) | 28.32% | exact |
 | Free spins trigger | 1 in 268 spins | exact |
 | Average feature win (10 spins) | 96.45x | exact |
+| Average feature win (15 spins) | 144.67x | exact |
+| Average feature win (20 spins) | 192.90x | exact |
 | Bonus buy (100x for 10 spins) RTP | **96.432%** (uncapped 96.449%; raw sim 96.432% ± 0.035%) | exact + sim |
 | Bonus buy reaches max win | 1 in 185,185 buys | sim |
 | Volatility (SD per spin) | 12.87x → **High** | sim |
@@ -27,7 +29,7 @@
 - 5 reels × 3 rows, 20 fixed paylines, pays left to right from reel 1. Total bet = 20 × line bet.
 - **W** (wild) lands on reels 2, 3, 4 only and substitutes for every symbol except the scatter. It has no pay of its own.
 - **S** (scatter) pays anywhere and awards free spins: 3 → 10 spins, 4 → 15 spins, 5 → 20 spins. At most one per reel.
-- Free spins use their own reel set. Every wild carries a multiplier (x2 55%, x3 30%, x5 15%; average x2.75). Multipliers of wilds in the same winning line **multiply** (x5 · x5 · x5 = x125).
+- Free spins use their own reel set. Every wild carries a multiplier (x2 55%, x3 30%, x5 15%; average x2.75). Multipliers of wilds in the same winning line **multiply**.
 - Retriggers: 3 scatters → +5, 4 scatters → +10, 5 scatters → +15.
 - The whole round (base spin + its free spins) is capped at 10,000x bet; reaching it ends the round.
 

@@ -157,6 +157,7 @@ const roundScratch = {
   totalWinX: 0,
   triggered: false,
   freeSpinsAwarded: 0,
+  freeSpinsInitial: 0,
   freeSpinsPlayed: 0,
   capped: false,
 };
@@ -192,6 +193,7 @@ export function playRound(m, rng, { buy = false, detail = false, capLB = m.maxWi
     }
   }
 
+  const initial = awarded;
   while (spinsLeft > 0) {
     spinsLeft--;
     played++;
@@ -216,6 +218,7 @@ export function playRound(m, rng, { buy = false, detail = false, capLB = m.maxWi
   out.totalWinX = total / m.nLines;
   out.triggered = awarded > 0;
   out.freeSpinsAwarded = awarded;
+  out.freeSpinsInitial = initial;
   out.freeSpinsPlayed = played;
   out.capped = capped;
   if (detail) {

@@ -27,6 +27,10 @@ export class Controller {
     this.capX = this.json.maxWinX;
     this.wildId = model.WILD >= 0 ? model.symbols[model.WILD] : null;
     this.scatterId = model.symbols[model.SCATTER];
+    // Which optional features this game has; copy and UI follow these.
+    this.hasMult = model.multValues.some((v) => v > 1);
+    this.hasRetrigger = model.retrigger.some((v) => v > 0);
+    this.minScatter = model.scatterAward.findIndex((v) => v > 0);
     this.strips = {
       base: this.json.reels.base.map((s) => s.trim().split(/\s+/)),
       free: this.json.reels.free.map((s) => s.trim().split(/\s+/)),
@@ -66,6 +70,7 @@ export class Controller {
       },
     };
     hud.setToggle('sound', sfx.enabled);
+    if (!this.json.bonusBuy) hud.buy.parentElement.style.display = 'none';
     stage.onTap = () => this.tap();
     stage.onFrame = (t) => this.frame(t);
     stage.onTier = (i) => sfx.bigWin(i);
@@ -84,7 +89,25 @@ export class Controller {
   }
 
   basePlaque() {
-    return { left: this.str('plaque', `WILDS MULTIPLY IN FREE SPINS · WIN UP TO ${this.capX.toLocaleString('en-US')}x`) };
+    const max = `WIN UP TO ${this.capX.toLocaleString('en-US')}x`;
+    const hook = this.hasMult
+      ? 'WILDS MULTIPLY IN FREE SPINS'
+      : this.minScatter > 0
+        ? `${this.minScatter}+ ${this.str('scatterName', this.scatterId)} = FREE SPINS`
+        : null;
+    return { left: this.str('plaque', hook ? `${hook} · ${max}` : max) };
+  }
+
+  featureLines() {
+    const sc = this.str('scatterName', this.scatterId);
+    const wm = this.m.multValues.filter((v) => v > 1);
+    const lines = [];
+    if (this.hasMult) {
+      lines.push(this.str('featureLine1', `Every ${this.str('wild', 'WILD')} carries ${wm.map((v) => `x${v}`).join(', ').replace(/, ([^,]*)$/, ' or $1')}`));
+      lines.push(this.str('featureLine2', 'Multipliers on the same line multiply'));
+    } else if (this.strings.featureLine1) lines.push(this.strings.featureLine1);
+    if (this.hasRetrigger && !this.hasMult) lines.push(this.str('featureLine2', `${this.m.retrigger.findIndex((v) => v > 0)}+ ${sc} add more spins`));
+    return lines;
   }
 
   save() {
@@ -404,7 +427,7 @@ export class Controller {
     await this.waitTap(trigger ? 1500 : 300);
     st.overlay('feature-intro', {
       spins: initial,
-      lines: [this.str('featureLine1', 'Every WILD carries x2, x3 or x5'), this.str('featureLine2', 'Multipliers on the same line multiply')],
+      lines: this.featureLines(),
     });
     await this.skipper.sleep(320);
     st.clearWins();
@@ -465,14 +488,24 @@ export class Controller {
       })
       .join('');
     const sc = this.json.scatter;
-    const fsR = this.json.freeSpins.retrigger;
-    const wm = this.json.freeSpins.wildMultipliers;
+    const fsR = this.json.freeSpins?.retrigger ?? {};
+    const wildName = names[this.wildId] ?? 'Wild';
+    const scName = names[this.scatterId] ?? 'the scatter';
     const wildReels = (this.json.symbols[this.wildId]?.reels ?? []).join(', ');
+    const wildText = this.wildId
+      ? `<h3>${wildName}</h3><div class="pay"><img alt="" src="${img(this.wildId)}"><p>${wildReels ? `Lands on reels ${wildReels} and substitutes` : 'Substitutes'} for every symbol except ${scName}.${this.hasMult ? ` In free spins every wild carries ${m.multValues.map((v) => `x${v}`).join(', ')}; multipliers on the same line multiply together.` : ''}</p></div>`
+      : '';
+    const scatterText = Object.keys(sc.awards ?? {})
+      .map((k) => `${k} anywhere pays ${this.fmt((sc.pays?.[k] ?? 0) * bet)}${sc.awards[k] ? ` + ${sc.awards[k]} free spins` : ''}`)
+      .join('<br>');
+    const retrigText = this.hasRetrigger ? `<br>Retrigger in free spins: ${Object.entries(fsR).map(([k, v]) => `${k} → +${v}`).join(', ')}.` : '';
+    const gw = m.reels * 12;
+    const gh = m.rows * 12;
     const lines = m.lines
       .map((l, i) => {
         const pts = Array.from(l, (row, reel) => `${reel * 12 + 6},${row * 12 + 6}`).join(' ');
-        const cells = Array.from(l, (row, reel) => `<rect x="${reel * 12 + 1}" y="${row * 12 + 1}" width="10" height="10" rx="2" fill="${'currentColor'}" opacity="0.9"/>`).join('');
-        return `<div><svg viewBox="0 0 60 36" style="color:${this.stage.lineColors[i]}">${cells}<polyline points="${pts}" fill="none" stroke="#fff" stroke-width="1.5"/></svg>${i + 1}</div>`;
+        const cells = Array.from(l, (row, reel) => `<rect x="${reel * 12 + 1}" y="${row * 12 + 1}" width="10" height="10" rx="2" fill="currentColor" opacity="0.9"/>`).join('');
+        return `<div><svg viewBox="0 0 ${gw} ${gh}" style="color:${this.stage.lineColors[i]}">${cells}<polyline points="${pts}" fill="none" stroke="#fff" stroke-width="1.5"/></svg>${i + 1}</div>`;
       })
       .join('');
     const s = this.summary;
@@ -493,10 +526,9 @@ export class Controller {
       <div class="facts">${facts}</div>
       <h3>Paytable <small>(at bet ${this.fmt(bet)})</small></h3>
       <div class="pays">${pays}</div>
-      <h3>${names[this.wildId] ?? 'Wild'}</h3>
-      <div class="pay"><img alt="" src="${img(this.wildId)}"><p>Lands on reels ${wildReels} and substitutes for every symbol except ${names[this.scatterId] ?? 'the scatter'}. In free spins every wild carries ${wm.values.map((v) => `x${v}`).join(', ')}; multipliers on the same line multiply together.</p></div>
+      ${wildText}
       <h3>${names[this.scatterId] ?? 'Scatter'}</h3>
-      <div class="pay"><img alt="" src="${img(this.scatterId)}"><p>${Object.keys(sc.awards).map((k) => `${k} anywhere pays ${this.fmt(sc.pays[k] * bet)} + ${sc.awards[k]} free spins`).join('<br>')}<br>Retrigger in free spins: ${Object.entries(fsR).map(([k, v]) => `${k} → +${v}`).join(', ')}.</p></div>
+      <div class="pay"><img alt="" src="${img(this.scatterId)}"><p>${scatterText}${retrigText}</p></div>
       <h3>${nL} paylines</h3>
       <p>Wins pay left to right on consecutive reels starting from reel 1. Only the highest win per line is paid; wins on different lines add up. The whole round, including free spins, is capped at ${this.capX.toLocaleString('en-US')}x bet.</p>
       <div class="lines">${lines}</div>

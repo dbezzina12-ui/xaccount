@@ -182,3 +182,28 @@ test('game-001 headline math stays on target', () => {
   assert.ok(ex.bonusBuy.rtp > 0.962 && ex.bonusBuy.rtp < 0.966, `bonus buy RTP ${ex.bonusBuy.rtp}`);
   assert.ok(ex.triggerOneIn > 200 && ex.triggerOneIn < 350, `trigger 1 in ${ex.triggerOneIn}`);
 });
+
+// A deliberately different game (5x4, 25 lines, other symbol names, no
+// multipliers, no bonus buy) keeps the engine from growing game-001-only
+// assumptions.
+test('engine stays generic: a different game passes exact-vs-sim', () => {
+  const probe = JSON.parse(readFileSync(new URL('./fixtures/probe-5x4/model.json', import.meta.url), 'utf8'));
+  const m = compileModel(probe);
+  assert.equal(m.rows, 4);
+  assert.equal(m.bonusBuy, null);
+  const ex = exactStats(m);
+  const rng = new SeededRng(11);
+  const N = 400000;
+  let sum = 0;
+  let sum2 = 0;
+  for (let i = 0; i < N; i++) {
+    const r = playRound(m, rng);
+    sum += r.totalWinX;
+    sum2 += r.totalWinX * r.totalWinX;
+  }
+  const mean = sum / N;
+  const se = Math.sqrt((sum2 / N - mean * mean) / N);
+  assert.ok(Math.abs(mean - ex.rtp) < 4 * se, `probe RTP sim ${mean} vs exact ${ex.rtp} (se ${se})`);
+  const d = playRound(m, new SeededRng(3), { detail: true });
+  assert.equal(d.base.grid[0].length, 4);
+});

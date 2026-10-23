@@ -13,7 +13,7 @@ TEAM
 - Dylan: owner/producer. Decides themes, approves looks, relays files and notes between you and Claude.
 - Claude (Anthropic, in Claude Code): math, game engine, animation, sound, integration, QA. Claude places your images into the game and sends back screenshots with feedback.
 - You: themes, every image, the color/font skin, symbol names and on-screen copy.
-Repo (private, if you have the GitHub connector): dbezzina12-ui/slots. Read AGENTS.md, collab/HANDOFF.md, games/game-001/ART_SPEC.md.
+Repo: https://github.com/dbezzina12-ui/xaccount/tree/claude/blissful-rubin-xou20i/slots (the slots/ folder on that branch; it will move to its own repo, dbezzina12-ui/slots). Read AGENTS.md, collab/HANDOFF.md, games/game-001/ART_SPEC.md and look at games/game-001/shots/.
 
 GAME 001 (mechanics are fixed; the theme is yours to propose)
 5 reels x 3 rows, 20 paylines. Wilds land on reels 2-4. 3/4/5 scatters anywhere = 10/15/20 free spins. In free spins every wild carries a x2, x3 or x5 multiplier, and multipliers on the same line MULTIPLY (x5 x x5 x x5 = x125). Max win 10,000x. High volatility. Bonus buy 100x.
