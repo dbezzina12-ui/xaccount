@@ -4,6 +4,72 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-23 · Claude → ChatGPT + Dylan · Studio review: 11 bugs fixed, browser tests added
+
+**Branch:** `claude/blissful-rubin-xou20i`, based on `codex/studio-zombify-editor` @ `be5ba19` (merged, no rebase). Zombify's math, outcome catalogs, paylines and `play()` are untouched.
+
+**Did:** Fixed the bugs below. Each has a regression test that fails on `be5ba19` and passes now.
+1. **Edits unlocked mid-round.** The editor trusted a 900 ms state poll. A reply sent before a spin, or during Zombify's pre-round audio decode, unlocked editing while the round started. Now the bridge marks the round before any async work, reports `started`/`finished` by request id, and pushes state on every change, including rounds started from the game's own controls, autoplay and Outbreak waits.
+2. **An edit refused mid-round unlocked the editor and desynced it from the game.** Edits that arrive during a round are now held and applied when it ends.
+3. **A preview that stops answering locked the editor forever.** A heartbeat now shows a banner with Reload.
+4. **A checkout without assets showed an endless loader**, and spins failed with a JS error. It now shows "Zombify isn't installed… run `npm run studio:prepare`". Art-load failures offer Retry; Test spin waits for art and shows progress.
+5. **A layout-test spin broke 6×5.** It left `display:flex !important` on Zombify's `#board`. Layout tests now draw into their own preview board, and `#board` is never touched.
+6. **Preview reels recreated every `<img>` on every frame** and ignored the reel's landing splice, so symbols jumped on landing. Tiles are now reused, follow the splice, and get light motion blur.
+7. **Image layers always sat above the reels.** Send backward/Bring forward now really reorder them.
+8. **Uploads made editing crawl.** With a 5 MB upload in use, a 40-move drag took ~280 ms per move (editor 45 + iframe 90 long tasks). It now takes ~35 ms with 0 long tasks. The fixes: blob: URLs to the iframe and thumbnails, history snapshots that share frozen asset objects, change detection that skips image bytes, and one apply per frame.
+9. **Edits made in the last 450 ms before closing the tab were lost.** A synchronous journal now restores them on the next open.
+10. **The Continue bonus button stayed visible after the bonus ended.**
+11. **Validation didn't type-check names, visible/locked/texture/supports flags, asset kinds or layer order.**
+
+Also changed:
+- Clearer messages for non-JSON imports and for `studio:prepare` failures.
+- Export links stay valid for large files.
+- Test spin becomes **Skip** during a round.
+- On phone-width screens the editor opens on the Mobile scene.
+
+**Files:**
+- `studio/bridge.js`: protocol documented in its header.
+- `studio/editor.js`, `studio/project.js`, `studio/storage.js`, `studio/index.html`, `studio/studio.css`, `studio/README.md`.
+- `games/zombify/runtime/app.js`: facade only; adds `status`, `loading`, `retryLoading` and `skip`.
+- `tools/studio/prepare.mjs`.
+- New: `tests/browser/` and `npm run test:studio-browser`; `tools/studio/shots.mjs`, writing to `studio/shots/`.
+
+**Test results here:**
+
+| Suite | Result | Notes |
+|---|---|---|
+| `npm test` | 22/22 | |
+| `npm run test:studio-browser` | 12/12 | Real editor and bridge in Chromium, with a runtime stand-in that implements the facade contract |
+| `npm run test:studio` | 25/28 | The 3 failures (`game`, `feature-spin`, `hidden`) need the outcome catalogs |
+
+`npm run studio:prepare` could not run here: this environment's network policy returns 403 for `zombify.djames1.chatgpt.site`. So **real Zombify rounds were not run in my session.** Screenshots of the running editor (real checkout, without game assets) are in `studio/shots/`.
+
+**Remaining issues (not fixed):**
+- Two browser tabs on the same project overwrite each other's saves; the last save wins.
+- Uploads up to 8192×8192 are accepted as-is. Consider downscaling to about 2048 px on import.
+- Asset recovery depends on the live site plus the Sites source archive; neither is in git.
+- Import is hidden on phone widths (existing CSS choice).
+- The WebMCP agent tools are only exercised through a test polyfill; no WebMCP browser was available.
+- Quick edit runs local commands only. It is not connected to Claude or OpenAI.
+
+**Next for ChatGPT (S-06): verify the review fixes with the real runtime.** On a machine where `npm run studio:prepare` works, run `npm run test:studio` and `npm run test:studio-browser`, then `npm run serve` → `/studio/`, and check:
+1. **Base spin.** Undo/redo, the inspector and dragging stay locked from the click until the reels settle, including the first spin of the session (audio decode).
+2. **Outbreak.** The editor stays locked while the bonus waits; **Continue bonus** resumes it; the button disappears when the bonus ends.
+3. **Second Life and Super/Hidden Outbreak previews** finish and unlock.
+4. **Skip** during a long round fast-forwards it.
+5. **Play mode.** Spin from the game's own button, then start autoplay. The editor locks within a moment and unlocks when they stop.
+6. **Layout switching.** Choose 7×7, Test spin, choose 6×5. Zombify's board is intact, then a base spin works.
+7. **Uploads.** Upload a large PNG, assign it to WILD and the background, then drag the reels: smooth.
+8. **Close and reopen.** Close the tab right after an edit, reopen: "Restored your latest edits."
+
+Record pass/fail per item, with screenshots, in a HANDOFF note. If a facade call misbehaves, fix it in the facade at the end of `app.js`, not in `play()` or the math.
+
+**Questions for Dylan:** Can you allow `zombify.djames1.chatgpt.site` in this Claude environment's network settings (S-07)? Then I can run the real rounds and measure Zombify's math as it is (S-04).
+
+**Blocked on:** the Zombify assets, for real-runtime testing and S-04.
+
+---
+
 ### 2026-10-23 · ChatGPT → Claude + Dylan · Zombify studio implementation ready for review
 
 **Did:** Recovered the interrupted session and completed the visual editor on `codex/studio-zombify-editor`. It includes independent desktop/mobile scenes, drag/resize, image and symbol replacement, background grading, undo/redo, browser-local save/reload, JSON import/export, local quick-edit commands and WebMCP editing tools. The 6×5 preview runs the imported Zombify v125 game; other grids use the reusable reel renderer for presentation tests only.

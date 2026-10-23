@@ -3,9 +3,10 @@
 Visual authoring around the existing Zombify v125 game. Open `studio/index.html` through an HTTP server rooted at `slots/`.
 
 ```sh
-npm run studio:prepare
+npm run studio:prepare      # behind a proxy: NODE_USE_ENV_PROXY=1 npm run studio:prepare
 npm test
 npm run test:studio
+npm run test:studio-browser # editor + bridge in Chromium (needs Playwright)
 npm run serve
 # http://localhost:8080/studio/
 ```
@@ -47,3 +48,16 @@ The studio-specific mobile background is bundled as exact-byte base64 parts in `
 Studio tests cover scene independence, import validation, atomic edits, unsafe source rejection, undo/redo, command behavior, grid compatibility and exact reel landing. The imported Zombify feature/game tests exercise the original math and presentation state machine. The purchase-dialog fixture has a no-op `soundEffect` dependency added; the original test omitted that existing dependency. No runtime outcome changes were made to address that fixture.
 
 Existing Game 001 is retained as an engine/math reference and is paused per Dylan's instruction. Do not start its theme pass.
+
+## Editor ↔ game bridge
+
+`studio/bridge.js` runs inside the game page; its header documents the message protocol. The rules that keep rounds safe:
+
+- The bridge marks a round active the moment it receives Test spin, before Zombify's async start-up (audio decode), and reports `started`/`finished` with the editor's request id. The editor stays locked until that id finishes, so no earlier state message can unlock it.
+- The bridge pushes round state on every change, including rounds started from the game's own controls in Play mode, autoplay and Outbreaks waiting for Continue.
+- Layout edits that reach the game during a round are held and applied when it ends; they are never dropped.
+- The editor pings the game every second. If it stops answering, a banner offers Reload, and your project is unaffected.
+- Non-6×5 layout tests draw into their own preview board; Zombify's `#board` and its state are never modified.
+- Uploaded images go to the game and to thumbnails as `blob:` URLs; projects, saves and exports keep the real bytes.
+
+`npm run test:studio-browser` covers these with the real editor and bridge, using `tests/browser/fake-runtime.html`, a stand-in that implements the same `ZombifyStudioRuntime` contract (round timing, audio-decode delay, Outbreak continuation). It is not a substitute for checking rounds with the real game.

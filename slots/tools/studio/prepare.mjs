@@ -29,7 +29,7 @@ let index=0,downloaded=0,verified=0;
 await Promise.all(Array.from({length:6},async()=>{
  while(index<manifest.files.length){const item=manifest.files[index++],path=resolve(root,item.path);if(!path.startsWith(root.endsWith(sep)?root:root+sep))throw Error('Invalid import path.');
  try{if(hash(await readFile(path))===item.sha256){verified++;continue;}}catch{}
- const response=await fetch(new URL(item.path,manifest.source),{signal:AbortSignal.timeout(60000)});if(!response.ok)throw Error(`Import failed (${response.status}): ${item.path}`);
+ const url=new URL(item.path,manifest.source);let response;try{response=await fetch(url,{signal:AbortSignal.timeout(60000)});}catch(error){throw Error(`Could not reach ${url.host} for ${item.path} (${error.cause?.code||error.message}). Behind a proxy, run NODE_USE_ENV_PROXY=1 npm run studio:prepare (Node 22.21+); a 403 from the proxy means that host isn't allowed on this network.`);}if(!response.ok)throw Error(`Import failed (${response.status}): ${item.path}`);
  const bytes=Buffer.from(await response.arrayBuffer());if(bytes.length!==item.bytes||hash(bytes)!==item.sha256)throw Error(`Source changed: ${item.path}. Restore the v125 asset from the Studio source archive; do not accept unverified math data.`);
  await mkdir(dirname(path),{recursive:true});await writeFile(path+'.part',bytes);await rename(path+'.part',path);downloaded++;
  }

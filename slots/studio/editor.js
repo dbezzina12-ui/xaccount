@@ -1,7 +1,7 @@
 import {createProject,validateProject,applyOperation,applyBatch,History,compatible,PRESETS,SYMBOLS,parseCommand,clone,uniqueId} from './project.js';
 import {readSaved,saveProject,downloadProject,imageAsset,writeJournal,readJournal,clearJournal} from './storage.js';
 const $=id=>document.getElementById(id),baseURL=new URL('../',import.meta.url),esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let history=new History(createProject()),scene='desktop',selection='reels',mode='edit',scale=1,ready=false,busy=false,attachment=null,uploadPurpose='asset',selectedAsset=null,saveTimer=null,revision=0,drag=null,draft=null,toastTimer;
+let history=new History(createProject()),scene=matchMedia('(max-width: 560px)').matches?'mobile':'desktop',selection='reels',mode='edit',scale=1,ready=false,busy=false,attachment=null,uploadPurpose='asset',selectedAsset=null,saveTimer=null,revision=0,drag=null,draft=null,toastTimer;
 // Round lock: `round` is the Test spin this editor asked for (held from click until the
 // runtime reports it finished); `runtime` mirrors state the bridge pushes, which also
 // covers rounds started from the game's own controls. Editing is allowed only when both are idle.
@@ -102,7 +102,7 @@ $('spin').onclick=guarded(()=>{
  round={id:++roundSeq,acked:false,at:performance.now()};syncBusy();
  send('spin',{id:round.id,mode:playable?$('preview-mode').value:'base'});
 });
-$('problem-reload').onclick=reloadRuntime;$('problem-retry').onclick=()=>{setProblem(null);send('retry');};
+$('problem-reload').onclick=reloadRuntime;$('problem-hide').onclick=()=>{$('runtime-problem').hidden=true;};$('problem-retry').onclick=()=>{setProblem(null);send('retry');};
 $('continue').onclick=()=>{$('continue').hidden=true;send('continue');};$('speed').onchange=e=>send('speed',{value:e.target.value});
 $('command-form').onsubmit=guarded(e=>{e.preventDefault();checkEditable();const text=$('command').value.trim();if(!text)return;const ops=parseCommand(text,history.current,scene,attachment);commit(applyBatch(history.current,ops),'Quick edit: '+text.slice(0,45));$('command-result').textContent=`Applied ${ops.length===1?'edit':ops.length+' edits'} · Undo available`;$('command').value='';attachment=null;$('attachment-name').textContent='Attach an image to change the background.';});
 $('command').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('command-form').requestSubmit();}};

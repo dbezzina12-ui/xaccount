@@ -1,32 +1,21 @@
-# Current priority: Zombify Studio
-
-Dylan paused new Game 001 development on 2026-10-23. The earlier theme tasks below are retained as history.
-
-| Task | Owner | Status |
-| --- | --- | --- |
-| Import existing Zombify v125 without changing its outcomes | ChatGPT | Implemented |
-| Visual scene editor, independent mobile/desktop layouts | ChatGPT | Implemented |
-| Drag/resize, grid presets, background grades, uploads, undo, save/export | ChatGPT | Implemented |
-| Preserve 6×5 gameplay; use Claude reel component for other-grid layout tests | ChatGPT | Implemented |
-| Review studio adapter and subsequent mechanics extensions | Claude | Ready for review |
-| Connect a real hosted AI provider to the command box | Unassigned | Needs provider connection; local commands and browser agent tools are present |
-| New Game 001 theme concepts | ChatGPT | Paused by Dylan |
-
----
-
 # Board
 
 Status: `todo` · `doing` · `review` (waiting on Dylan) · `done` · `blocked` · `paused`. Whoever changes a task's status updates its row.
 
-## Studio engine around Zombify (current focus, D-004)
+## Zombify Studio (current focus, D-004)
+
+Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below are kept as history.
 
 | ID | Task | Owner | Status | Notes |
 |---|---|---|---|---|
-| S-01 | Visual studio editor: separate desktop/mobile scenes, layers and backgrounds, reel grid and size, color grading, drag/resize, undo/save/export | ChatGPT (Codex) | doing | Branch `codex/studio-zombify-editor` |
-| S-02 | Load Zombify v125 into the studio with its walking, infection and Second Life mechanics intact | ChatGPT (Codex) | doing | Same branch |
-| S-03 | Review the mechanics adapter boundary and reel animation integration | Claude | blocked | Waiting for S-01/S-02 to land on the branch |
-| S-04 | Measure Zombify's math as it is (simulate through the adapter, no changes) | Claude | blocked | Needs the Zombify source in the repo |
-| S-05 | Say where the Zombify source lives, or have it committed to the editor branch | Dylan | todo | Not reachable from Claude's session |
+| S-01 | Visual studio editor: desktop/mobile scenes, layers, backgrounds and grades, reel grid and size, drag/resize, uploads, undo, save/import/export | ChatGPT (Codex) | done | `be5ba19`; review fixes on `claude/blissful-rubin-xou20i` |
+| S-02 | Import Zombify v125 with its walking, infection, Outbreak and Second Life mechanics and outcomes unchanged | ChatGPT (Codex) | done | Large assets and catalogs are hash-pinned and fetched by `npm run studio:prepare` |
+| S-03 | Review the adapter boundary, round locking, reel animation, persistence; fix what's broken | Claude | done | See HANDOFF 2026-10-23 “Studio review” |
+| S-04 | Measure Zombify's math as it is (simulate through the adapter, no changes) | Claude | blocked | Needs the outcome catalogs; `studio:prepare` can't reach the asset host from Claude's environment (proxy 403) |
+| S-05 | Say where the Zombify source lives | Dylan | done | `games/zombify/runtime/` plus `studio:prepare` |
+| S-06 | Verify the review fixes with the real Zombify runtime (checklist in HANDOFF) | ChatGPT | todo | Next task |
+| S-07 | Give Claude's environment the Zombify assets: allow `zombify.djames1.chatgpt.site` in the environment's network settings, or provide the asset archive another way | Dylan | todo | Unblocks S-04 and real-runtime tests by Claude |
+| S-08 | Connect a hosted AI provider to Quick edit | Unassigned | todo | Today it runs local commands only; not connected to Claude or OpenAI |
 
 ## Game 001 (paused by D-004)
 
