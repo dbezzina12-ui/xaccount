@@ -4,6 +4,38 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-23 · Claude → ChatGPT + Dylan · Claude joins Studio chat; provider-specific cancel; durable handoff jobs
+
+**Branch:** `claude/blissful-rubin-xou20i`, fast-forwarded to `codex/studio-zombify-editor` @ `c582fb3`, then this work on top. No math, outcome catalog or Zombify runtime changes.
+
+**Did:**
+1. **Claude adapter** (`server/claude.js`), registered in `providers`. Official `@anthropic-ai/sdk`, model `claude-opus-5-5` (override `ANTHROPIC_MODEL`), adaptive thinking at `medium` effort (`ANTHROPIC_EFFORT`), streamed replies, prompt caching, server-side refusal fallback. Two tools: `stage_scene_edits` and `complete_handoff` (to OpenAI). It uses the same contract `{text, operations, handoff}` and the same `stageEdits`/`checkHandoff` validation and Undo path. Limits: 12 tool calls, 50 edits, 120k output tokens per turn, five minutes. Refusals, truncated tool calls and unparseable streamed input stage nothing. No image generation: Claude hands art to OpenAI. No code execution of any kind.
+2. **Provider-specific cancellation.** Runs record `provider`. OpenAI cancels its Agents session. Claude's Messages API has no remote session: the invocation streaming the run renews a lease every 15 s, and that same heartbeat aborts the request as soon as the run stops being `running`. A provider that can't confirm the stop keeps the lock.
+3. **Durable handoff jobs.** Leases mark abandoned runs. A stale holder is stopped at its provider and its lock reclaimed. A late result from a cancelled or reclaimed run is rejected, so it never reaches the browser. A lost handoff can be resumed once (`r2-next-…`); a second loss marks it failed. Stop works on queue items and on running work; discarding a result stops everything derived from it. Handoff failures no longer leave the job stuck at `running`.
+4. **Background chains (opt-in).** These need `STUDIO_DISPATCH_SECRET`, and until it's set the option stays hidden. The acknowledgment stores the applied snapshot. Each hop runs from its snapshot, stages its result for review, and queues the next hop. A signed `POST /api/studio/hooks/dispatch` runs one hop per event; events use HMAC + timestamp and each event ID is accepted once. The chain holds the project lock until Dylan reviews the results in order.
+5. **Chat panel:** OpenAI/Claude selector (remembered), replies labelled by who wrote them, and history sent with `speaker`, so neither model mistakes the other's words for its own. Queue cards gain Start now / Resume / Stop and show attempts and errors. An unconnected assistant is never sent to.
+6. **Fixed two existing chat bugs found by the new browser test:** an assistant receiving a handoff never saw the other assistant's last reply (the history slice dropped it), and "Handoff saved. Waiting for Claude to connect." was immediately overwritten by "Ready.".
+
+**Files:** `server/claude.js` (new), `server/service.js`, `server/openai.js` (`cancelOpenAI`), `server/protocol.js`, `server/schema.ts` → `hosting/db/schema.ts`, migration `hosting/drizzle/0001_claude_provider_jobs.sql`, `hosting/package.json` + `pnpm-lock.yaml`, `package.json` + `package-lock.json`, `studio/chat.js`, `studio/index.html`, `studio/studio.css`, `server/README.md`, tests: `tests/claude.test.mjs`, `tests/dispatch.test.mjs`, `tests/browser/chat.e2e.mjs`, `tests/lib/studio-env.mjs` (shared; `tests/chat.test.mjs` now uses it and the real migrations). Screenshots: `studio/shots/chat-claude-desktop.jpg`, `chat-handoff-desktop.jpg`, `chat-waiting-mobile.jpg`.
+
+**Setup change:** `slots/` now has a dependency. Run `npm ci` in `slots/` once before `npm test`. The SDK is pinned to `0.135.0` because the hosting wrapper's pnpm policy refuses packages younger than 7 days.
+
+**Verified:**
+- `npm test` 46/46. That includes 6 Claude adapter tests (stand-in SDK client: append-only history with thinking blocks, invalid input, limits, refusal, abort, safe error messages) and 10 dispatcher tests (provider-specific cancel, unstoppable provider keeps lock, late completion rejected, concurrent writers, lost-connection retry and limit, background snapshots + handoff limit, discard cascade, signed trigger incl. replay/duplicate).
+- `npm run test:studio-browser` 14/14, with 2 new chat tests that drive the panel in Chromium against the real server code.
+- `npm run test:studio` 25/28. The 3 failures are the known missing Zombify catalogs (`outcomes.js`, S-07), the same as on `c582fb3`.
+- The hosting wrapper installs and builds (`pnpm install --frozen-lockfile`, `pnpm run build`). Both migrations apply to local D1.
+- In local `workerd`, a Claude chat ran end to end through the built Worker and the real SDK against a **local mock** Anthropic endpoint (dummy key): a streamed tool input split across two fragments was validated and staged, and the run completed in D1/R2.
+- **No live Anthropic or OpenAI call has run.** No key is configured, and I did not use this session's own credentials.
+
+**Next for ChatGPT:** 1. Pull this branch and run `npm ci && npm test && npm run test:studio` with the real catalogs. 2. With Dylan, provision `ANTHROPIC_API_KEY` as a Site secret next to `OPENAI_API_KEY`, then sync (`npm run studio:hosting`) and publish. 3. Run the bounded live check: one Claude message that stages an edit; one OpenAI→Claude handoff with Continue automatically; one Stop mid-reply on each provider. Report what ran. 4. Finish the S-06 items you listed (Super/Hidden, autoplay, large-upload drag, close/reopen).
+
+**Questions for Dylan:** 1. Create an Anthropic API key (console.anthropic.com → API keys) and give it to the Sites secret setup as `ANTHROPIC_API_KEY`, never in chat or Git. 2. Background hops while the studio is closed need a caller. The Site has no scheduler binding. Do you want one, for example an hourly signed call? If so, also confirm the private Site lets that signed POST through.
+
+**Blocked on:** Live verification waits on the keys. Unattended background runs wait on a trigger (question 2). S-04 and real-runtime tests by Claude still wait on S-07.
+
+---
+
 ### 2026-10-23 · ChatGPT → Claude + Dylan · Embedded chat and shared handoff foundation
 
 **Based on:** Claude's `517f97a` review, including all 11 fixes. No math/outcome changes.

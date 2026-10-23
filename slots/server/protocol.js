@@ -1,6 +1,8 @@
 import {validateProject,applyBatch,clone} from '../studio/project.js';
 export const MAX_STEPS=12;
 export const MAX_HANDOFFS=2;
+// A lost connection may reclaim a handoff job once; a second loss stops the chain.
+export const MAX_ATTEMPTS=2;
 export function checkRequest(input){
  if(!input||typeof input!=='object')throw Error('A chat request is required.');
  if(typeof input.id!=='string'||!/^[-a-zA-Z0-9_]{8,80}$/.test(input.id))throw Error('Invalid request ID.');
@@ -9,7 +11,7 @@ export function checkRequest(input){
  validateProject(input.project);
  if(!['openai','claude'].includes(input.provider||'openai'))throw Error('Unknown assistant.');
  if(input.attachment&&!input.project.assets.some(a=>a.id===input.attachment))throw Error('Attachment is missing from this project.');
- return {...input,provider:input.provider||'openai',history:(Array.isArray(input.history)?input.history:[]).slice(-20).filter(m=>['user','assistant'].includes(m.role)&&typeof m.text==='string').map(m=>({role:m.role,text:m.text.slice(0,12000)}))};
+ return {...input,provider:input.provider||'openai',history:(Array.isArray(input.history)?input.history:[]).slice(-20).filter(m=>['user','assistant'].includes(m.role)&&typeof m.text==='string').map(m=>({role:m.role,text:m.text.slice(0,12000),...(['user','openai','claude'].includes(m.speaker)?{speaker:m.speaker}:{})}))};
 }
 export function contextFor(project){const p=clone(project);p.assets=p.assets.map(a=>({...a,src:a.src.startsWith('data:')?'[uploaded image; use asset ID]':a.src}));return p;}
 export function stageEdits(project,operations){

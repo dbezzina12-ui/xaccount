@@ -91,3 +91,8 @@ export async function runOpenAI(env,input,{progress=()=>{},sessionCreated=()=>{}
   if(sessionId&&completed)try{await api(env,'/agents/sessions/'+encodeURIComponent(sessionId),null,{method:'DELETE'});}catch{}
  }
 }
+// An Agents session keeps running at OpenAI until it is told to stop, so cancellation targets the recorded session.
+export async function cancelOpenAI(env,run){
+ if(run.session_id)await api(env,'/agents/sessions/'+encodeURIComponent(run.session_id)+'/events',{events:[{type:'agent.session.input.cancel'}]});
+ return true;
+}

@@ -1,20 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {DatabaseSync} from 'node:sqlite';
 import {createProject} from '../studio/project.js';
 import {checkRequest,stageEdits,checkHandoff} from '../server/protocol.js';
 import {handleStudio,providers} from '../server/service.js';
+import {environment,input,req,call,collect} from './lib/studio-env.mjs';
 import {runOpenAI,events} from '../server/openai.js';
-function environment(){
- const db=new DatabaseSync(':memory:');db.exec(`CREATE TABLE studio_runs(id TEXT,owner TEXT,project_key TEXT,request_hash TEXT,status TEXT,hops INTEGER,created_at INTEGER,session_id TEXT,result_key TEXT,error TEXT,PRIMARY KEY(id,owner));CREATE TABLE studio_locks(project_key TEXT PRIMARY KEY,owner TEXT,run_id TEXT);CREATE TABLE studio_handoffs(id TEXT,owner TEXT,source_run TEXT,target TEXT,summary TEXT,next_task TEXT,status TEXT,hops INTEGER,created_at INTEGER,PRIMARY KEY(id,owner),UNIQUE(owner,source_run));`);
- const wrap=(sql,args=[])=>({sql,args,bind(...args){return wrap(sql,args)},async first(){return db.prepare(sql).get(...args)||null},async all(){return {results:db.prepare(sql).all(...args)}},async run(){return {meta:{changes:db.prepare(sql).run(...args).changes}}}});
- const objects=new Map();return {OPENAI_API_KEY:'test-only',DB:{prepare:sql=>wrap(sql),async batch(items){db.exec('BEGIN');try{const out=[];for(const item of items)out.push(await item.run());db.exec('COMMIT');return out;}catch(e){db.exec('ROLLBACK');throw e;}}},BUCKET:{async put(k,v){objects.set(k,v)},async get(k){return objects.has(k)?{json:async()=>JSON.parse(objects.get(k))}:null}}};
-}
-const input=(id='message-123')=>({id,message:'Make the background brighter.',scene:'mobile',project:createProject(),history:[],provider:'openai'});
-const req=(path,body,owner='owner')=>new Request('https://studio.test/api/studio/'+path,{method:body?'POST':'GET',headers:{...(owner?{'oai-authenticated-user-id':owner}:{}),...(body?{'Content-Type':'application/json',Origin:'https://studio.test'}:{})},body:body?JSON.stringify(body):undefined});
-const call=(env,path,body,owner)=>handleStudio(req(path,body,owner),env);
 const result=()=>({text:'Ready.',operations:[],handoff:{to:'claude',summary:'Reviewed layout',nextTask:'Check the spin lock.'}});
-async function collect(res){return (await res.text()).trim().split('\n').map(JSON.parse);}
 test('chat validates project, messages and attachment IDs before spending',()=>{
  assert.throws(()=>checkRequest({...input(),attachment:'missing'}));assert.throws(()=>checkRequest({...input(),message:''}));assert.throws(()=>checkRequest({...input(),scene:'both'}));assert.throws(()=>stageEdits(createProject(),[{type:'asset',asset:{id:'evil',src:'https://example.test'}}]));assert.throws(()=>checkHandoff({to:'openai',summary:'s',nextTask:'n'}));
 });

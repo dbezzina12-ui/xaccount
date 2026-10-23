@@ -15,7 +15,10 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 | S-05 | Say where the Zombify source lives | Dylan | done | `games/zombify/runtime/` plus `studio:prepare` |
 | S-06 | Verify the review fixes with the real Zombify runtime (checklist in HANDOFF) | ChatGPT | todo | Next task |
 | S-07 | Give Claude's environment the Zombify assets: allow `zombify.djames1.chatgpt.site` in the environment's network settings, or provide the asset archive another way | Dylan | todo | Unblocks S-04 and real-runtime tests by Claude |
-| S-08 | Connect a hosted AI provider to Quick edit | Unassigned | todo | Today it runs local commands only; not connected to Claude or OpenAI |
+| S-08 | Connect a hosted AI provider to Quick edit | Unassigned | todo | Quick edit still runs local commands only. Studio chat (separate panel) now has OpenAI and Claude |
+| S-09 | Claude in Studio chat: adapter, selector, provider-specific cancel, durable handoff jobs | Claude | review | HANDOFF 2026-10-23 “Claude joins Studio chat”. Needs `ANTHROPIC_API_KEY` for a live check |
+| S-10 | Provision `ANTHROPIC_API_KEY` (and `OPENAI_API_KEY`) as Site secrets; publish; bounded live check | Dylan + ChatGPT | todo | Keys never in chat, Git or the frontend |
+| S-11 | Decide on a caller for background handoffs (signed `hooks/dispatch`) | Dylan | todo | Optional. Without one, handoffs continue only while the studio is open |
 
 ## Game 001 (paused by D-004)
 
@@ -47,6 +50,7 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 - [x] ChatGPT: integrate Claude's `517f97a` review and run the complete real-asset studio tests.
 - [x] ChatGPT: implement OpenAI chat UI, validated scene/art tools, saved request recovery and bounded handoff queue.
 - [ ] ChatGPT + Dylan: securely provision the approved OpenAI key, verify model access, then deploy/verify live chat.
-- [ ] Claude: implement its provider adapter and chat selector using `CLAUDE_CHAT_KICKOFF.md`.
-- [ ] Claude: durable background dispatcher + signed completion events; external markdown/chat completion is not yet a trigger.
+- [x] Claude: implement its provider adapter and chat selector using `CLAUDE_CHAT_KICKOFF.md`.
+- [x] Claude: provider-specific cancellation, leases, durable handoff jobs, signed dispatch trigger (tested with simulated providers).
+- [ ] Dylan: choose a caller for the signed dispatch trigger if background handoffs should run while the studio is closed (S-11). Markdown commits and external chats are still not triggers.
 - [ ] Joint: configure a repository sandbox before claiming autonomous source-code editing.
