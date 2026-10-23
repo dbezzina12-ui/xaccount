@@ -1,0 +1,44 @@
+/* Fixed town art anchors the pavement; separate layers supply the movement. */
+.city-backdrop{--scene-x:0px;--scene-y:0px;--mist-rgb:93,157,138;pointer-events:none}
+.town-light-plane{position:absolute;inset:0 auto auto 0;transform-origin:0 0;pointer-events:none}
+.scene-character-sprites{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none}
+.scene-character-eyelid{position:absolute;pointer-events:none;mask-image:radial-gradient(ellipse at center,#000 72%,#000e 85%,transparent 100%)}
+.town-moon-glow{position:absolute;border-radius:50%;background:radial-gradient(circle,#dced7724,transparent 69%);mix-blend-mode:screen;animation:town-moon-breathe 12s ease-in-out infinite alternate}
+.town-window-light{position:absolute;border-radius:35%;background:radial-gradient(ellipse,#dbf85755,transparent 69%);mix-blend-mode:screen;animation:town-window-breathe 11s ease-in-out var(--light-delay) infinite}
+.town-sky{position:absolute;inset:0 0 48%;overflow:hidden;translate:calc(var(--scene-x)*.25) calc(var(--scene-y)*.25);transition:translate 900ms ease-out;z-index:1}
+.town-cloud{position:absolute;width:75%;min-width:460px;left:-14%;height:clamp(75px,19dvh,195px);animation:town-cloud-pass 48s ease-in-out infinite alternate}
+.town-cloud svg{width:100%;height:100%;fill:#346074}
+.town-cloud-far{top:4%;opacity:.21;animation-duration:64s;animation-delay:-19s}
+.town-cloud-near{left:36%;top:31%;opacity:.26;animation-duration:43s;animation-direction:alternate-reverse;animation-delay:-11s}
+.town-street-mist{position:absolute;inset:52% 0 0;overflow:hidden;z-index:2;translate:calc(var(--scene-x)*.5) 0;transition:translate 900ms ease-out}
+.town-mist{position:absolute;pointer-events:none;left:-30%;width:155%;height:47%;background:radial-gradient(ellipse at 17% 64%,rgba(var(--mist-rgb),.24),transparent 43%),radial-gradient(ellipse at 65% 49%,rgba(var(--mist-rgb),.19),transparent 39%),radial-gradient(ellipse at 92% 69%,rgba(var(--mist-rgb),.21),transparent 42%);animation:town-mist-pass 23s ease-in-out infinite alternate}
+.town-mist-far{top:8%;opacity:.52;animation-duration:31s;animation-delay:-14s}
+.town-mist-middle{bottom:4%;height:54%;opacity:.72;animation-duration:19s;animation-direction:alternate-reverse;animation-delay:-8s}
+.town-foreground{position:absolute;inset:0;overflow:hidden;z-index:4;translate:var(--scene-x) var(--scene-y);transition:translate 700ms ease-out}
+.town-mist-front{bottom:-2%;height:24%;opacity:.62;animation-duration:16s;animation-delay:-6s}
+.town-grass{position:absolute;bottom:-12px;width:clamp(150px,23vw,380px);height:clamp(100px,21dvh,225px);color:#051b23;transform-origin:12% 100%;animation:town-grass-sway 8s ease-in-out infinite alternate}
+.town-grass svg{width:100%;height:100%;fill:currentColor;filter:drop-shadow(0 -1px 0 #32544b66)}
+.town-grass-left{left:-25px}
+.town-grass-right{right:-30px;scale:-1 1;animation-delay:-3s;animation-duration:10s}
+.town-drifter{position:absolute;left:calc(6% + var(--drifter)*14%);bottom:8%;width:3px;height:3px;background:#b7d869;border-radius:50%;box-shadow:0 0 7px #b5ee7640;opacity:0;animation:town-drifter-rise 13s linear var(--drifter-delay) infinite}
+#game[data-free-spins] .city-backdrop{--mist-rgb:116,173,100}
+#game[data-bonus-tier=hidden] .city-backdrop{--mist-rgb:129,128,170}
+@keyframes town-cloud-pass{from{transform:translateX(-9%) translateY(-3%)}to{transform:translateX(15%) translateY(5%)}}
+@keyframes town-mist-pass{from{transform:translateX(-7%) scaleY(.92)}to{transform:translateX(13%) scaleY(1.1)}}
+@keyframes town-moon-breathe{from{opacity:.42;transform:scale(.94)}to{opacity:1;transform:scale(1.04)}}
+@keyframes town-window-breathe{0%,100%{opacity:.18}35%{opacity:.72}43%{opacity:.34}67%{opacity:.64}82%{opacity:.26}}
+@keyframes town-grass-sway{from{transform:rotate(-1.2deg)}to{transform:rotate(1.5deg)}}
+@keyframes town-drifter-rise{0%{opacity:0;transform:translate(0,0)}12%,73%{opacity:.48}100%{opacity:0;transform:translate(48px,-140px)}}
+@media(max-width:1100px){
+ .town-cloud{min-width:300px;width:95%;height:105px}
+ .town-cloud-far{left:-32%;top:8%}.town-cloud-near{left:15%;top:33%}
+ .town-grass{width:135px;height:100px;opacity:.8}
+ .town-grass-left{left:-37px}.town-grass-right{right:-42px}
+ .town-mist-front{height:23%;opacity:.65}
+ .town-drifter{display:none}.town-drifter:nth-last-child(3n + 1){display:block}
+}
+html[data-background-paused=true] .city-backdrop *,html[data-background-paused=true] .city-backdrop *:before,html[data-background-paused=true] .city-backdrop *:after{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){
+ .city-backdrop *,.city-backdrop *:before,.city-backdrop *:after{animation:none!important;transition:none!important;translate:none!important}
+ .town-drifter{display:none}.town-window-light{opacity:.3}.town-moon-glow{opacity:.55}
+}

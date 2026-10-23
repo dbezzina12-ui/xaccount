@@ -1,0 +1,107 @@
+/* The approved diagonal GG ident, followed by the illustrated game guide. */
+html[data-entry=studio] #welcome{padding:0;background:#000}
+#studio-page{width:100%;height:100%;max-height:none;overflow:hidden;animation:none;isolation:isolate}
+.studio-identity{height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:0 20px 7dvh}
+.studio-monogram{position:relative;flex:none;width:min(75vw,565px,53dvh);aspect-ratio:1;margin:-5dvh auto -4dvh;isolation:isolate}
+.studio-monogram img{position:absolute;width:1px;height:1px;opacity:0}
+.gg-piece{position:absolute;inset:0;background:#f0eee7;mask:url('assets/studio-gg-diagonal.png') center/contain no-repeat;mask-mode:luminance;opacity:0}
+.gg-first{clip-path:polygon(0 0,100% 0,100% 34%,57% 34%,32.8% 64%,0 100%)}
+.gg-second{clip-path:polygon(100% 34%,57% 34%,32.8% 64%,0 100%,100% 100%)}
+.ident-ready .gg-first{animation:gg-first 1.4s .15s cubic-bezier(.16,1,.3,1) both}
+.ident-ready .gg-second{animation:gg-second 1.4s .15s cubic-bezier(.16,1,.3,1) both}
+.studio-wordmark{font-family:Arial,Helvetica,sans-serif;font-size:clamp(32px,8vw,74px);font-weight:800;line-height:1.08;letter-spacing:-.055em;color:#f0eee7;position:relative;z-index:1}
+.studio-main{opacity:0}.studio-main b{font-weight:inherit}
+.studio-sub{display:flex;align-items:baseline;gap:0;margin:0}
+.studio-gam,.studio-es{display:inline-block;opacity:0}
+.ident-ready .studio-main{animation:studio-type .85s 1.35s both}
+.ident-ready .studio-gam{animation:studio-gam 1s 1.85s cubic-bezier(.2,.8,.2,1) both}
+.ident-ready .studio-es{animation:studio-es .7s 2.65s ease-out both}
+#studio-walker{position:absolute;z-index:2;left:0;bottom:8%;width:clamp(145px,28dvh,275px);height:clamp(145px,28dvh,275px);opacity:0;pointer-events:none;filter:drop-shadow(0 10px 7px #000b)}
+.ident-ready #studio-walker{opacity:1}
+#welcome #studio-skip{position:absolute;bottom:max(22px,env(safe-area-inset-bottom));right:max(22px,env(safe-area-inset-right));z-index:3;font-size:12px;letter-spacing:1.8px;color:#c8c9c2;min-height:44px}
+#studio-skip span{margin-left:10px}
+@keyframes gg-first{from{opacity:0;transform:translate(-12%,-8%)}70%{opacity:1}to{opacity:1;transform:none}}
+@keyframes gg-second{from{opacity:0;transform:translate(12%,8%)}70%{opacity:1}to{opacity:1;transform:none}}
+@keyframes studio-type{from{opacity:1;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0)}}
+@keyframes studio-gam{from{opacity:0;transform:translateY(-1.08em)}15%{opacity:1}to{opacity:1;transform:none}}
+@keyframes studio-es{from{opacity:0;transform:translateX(-.12em)}to{opacity:1;transform:none}}
+
+/* Reel close-ups over stone plaques. One full panel per mobile page. */
+html[data-entry=guide] #welcome{padding:clamp(12px,2.3dvh,26px) max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));overflow-y:auto;background:linear-gradient(#06131680,#071515d9 65%,#050f11f5),var(--town-art) center/cover}
+#welcome #guide-page{width:min(1180px,100%);height:auto;max-height:none;display:grid;grid-template-rows:auto auto auto auto auto;gap:clamp(12px,2dvh,20px);margin:auto;align-content:center}
+#guide-page[hidden],#guide-page .guide-card[hidden]{display:none!important}
+#guide-page .guide-heading>img{display:block;width:clamp(165px,26dvh,235px);height:auto;margin:0 auto 8px}
+#welcome #guide-title{font-size:clamp(22px,2.5vw,32px);letter-spacing:1px;line-height:1.1}
+#guide-page .guide-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:auto;gap:20px;align-items:stretch}
+#guide-page .guide-card{position:relative;display:grid;grid-template-columns:1fr;grid-template-rows:auto 1fr;align-items:stretch;justify-items:stretch;gap:0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;overflow:visible;text-align:center}
+#guide-page .guide-step{position:absolute;top:10px;left:12px;z-index:5;display:grid;place-items:center;width:35px;height:35px;border:1px solid #b6c89480;border-radius:50%;background:#0b1b17f0;color:#e5f4b8;font-size:16px;font-weight:800;box-shadow:0 2px 7px #0008}
+#guide-page .guide-demo{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:9px;margin:0;padding:8px 8px 12px;min-width:0;min-height:0;grid-column:1;grid-row:1}
+#guide-page .guide-gameplay{position:relative;width:min(100%,31dvh,310px);aspect-ratio:1;flex:none;border:8px solid #72563e;border-image:url('assets/reel-timber.webp') 94 fill / 8px / 0 stretch;background:#0b1c1d;isolation:isolate;overflow:hidden;box-shadow:0 8px 22px #0009}
+.guide-demo-board,.guide-demo-stacks{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:2px;padding:2px}
+.guide-demo-board{z-index:1}.guide-demo-stacks{z-index:2;pointer-events:none}
+.guide-demo-board>.tile{aspect-ratio:auto;min-width:0;min-height:0;border-radius:1px;border:1px solid #819d7552;background:linear-gradient(#23382c,#111f1c);overflow:hidden}
+.guide-demo-board .tile[data-kind=wild]:after{display:none}
+.guide-demo-stack{border:1px solid #99c76c;border-radius:1px;overflow:hidden;background:linear-gradient(#152610b0,#0b1b19d9),url('assets/style5/multiplier-stone.png') center/cover}
+.guide-demo-stack .stack-art{background:transparent}
+.guide-demo-stack .stack-multi{font-size:clamp(23px,3vw,34px);bottom:4px;padding:1px 5px}
+.guide-demo-effects{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+#guide-page .guide-demo figcaption{min-height:18px;max-width:100%;color:#dcf0a6;font-size:13px;font-weight:800;line-height:1.3;letter-spacing:.5px;text-align:center}
+.guide-poster .symbol{--portrait-zombie:var(--portrait-zombie-still)!important}
+.guide-poster .guide-poster-art{position:absolute;inset:0;overflow:hidden}
+.guide-poster .guide-poster-art>img{position:absolute;left:50%;top:0;width:auto;height:100%;max-width:none;transform:translateX(-50%);object-fit:contain}
+.guide-poster .horizontal-zombie .guide-poster-art>img{left:0;width:100%;max-width:100%;transform:none}
+.guide-winning-poster:after{content:'';position:absolute;left:8px;right:8px;top:50%;height:3px;background:#e8fa8c;box-shadow:0 0 9px #b5f44b;z-index:4;pointer-events:none}
+#guide-page .guide-copy{grid-column:1;grid-row:2;width:100%;min-height:142px;padding:20px 18px 18px;background:linear-gradient(#16221dd9,#091512ed),url('assets/style5/multiplier-stone.png') center/cover;border:1px solid #9eaa7166;border-top:3px solid #a4c76c;box-shadow:inset 0 0 0 4px #06120c55,0 8px 18px #0006;clip-path:polygon(0 0,100% 0,100% 92%,97% 100%,3% 100%,0 92%)}
+#welcome #guide-page .guide-card h3{font-size:clamp(21px,2.05vw,28px)!important;line-height:1.08;letter-spacing:.2px;margin:0 0 10px;color:#eef3d2;text-shadow:0 2px #22300e}
+#welcome #guide-page .guide-card p{font-size:16px;line-height:1.38;max-width:310px;margin:0 auto;color:#c7d7c9}
+#guide-page .guide-demo-toggle{position:absolute;right:9px;top:8px;z-index:5;display:block;margin:0;min-width:64px;min-height:36px;padding:7px 10px;border:1px solid #a9c17780;border-radius:3px;background:#10241ce8;font-size:12px;font-weight:800;color:#e1edbc;letter-spacing:.6px}
+#guide-page .guide-demo-toggle:hover{background:#29452b}
+#guide-page .guide-navigation{display:none;align-items:center;justify-content:center;gap:26px}
+#guide-page .guide-navigation>button{display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid #a9c17770;background:#172a20;border-radius:50%;color:#e8f6bb;font-size:34px;line-height:1}
+#guide-page .guide-navigation>button:disabled{opacity:.3;cursor:default}
+#guide-page .guide-dots{display:flex;gap:2px}
+#guide-page .guide-dots>button{display:grid;place-items:center;width:34px;height:44px;border:0;background:none;padding:0}
+#guide-page .guide-dots>button:before{content:'';width:9px;height:9px;border:1px solid #b8c693;border-radius:50%;background:#173127}
+#guide-page .guide-dots>[aria-current=step]:before{background:#d6f193;box-shadow:0 0 8px #c6ed7055}
+#guide-page button:focus-visible{outline:2px solid #e4f6b1;outline-offset:3px}
+#guide-page .guide-bonuses{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;text-align:center}
+#guide-page .guide-bonuses>div{padding:10px 4px 0;display:flex;flex-direction:column;gap:5px;border-top:1px solid #a8c56d80}
+#guide-page .guide-bonuses .super{border-color:#c09c60}.guide-bonuses .hidden{border-color:#b788d0}
+#guide-page .guide-bonuses strong{font-size:14px;line-height:1.2;letter-spacing:.4px}
+#guide-page .guide-bonuses span{font-size:14px;line-height:1.25}
+#guide-page .guide-actions{display:flex;flex-direction:column;gap:8px;justify-content:center;align-items:center}
+#guide-page .guide-spins-note{font-size:12px;letter-spacing:1px;color:#b7c8a7}
+#welcome #guide-page .primary{width:min(100%,300px);min-height:50px;font-size:18px;letter-spacing:1.2px}
+@media(max-width:759px){
+ #welcome #guide-page{width:min(460px,100%);gap:10px}
+ #guide-page .guide-heading>img{width:165px;margin-bottom:5px}#welcome #guide-title{font-size:22px}
+ #guide-page .guide-cards{display:block}
+ #guide-page .guide-card{max-width:420px;margin:auto;grid-template-rows:auto auto}
+ #guide-page .guide-demo{padding:3px 0 9px;gap:7px}
+ #guide-page .guide-gameplay{width:min(75vw,30dvh,295px);border-width:7px;border-image-width:7px}
+ #guide-page .guide-copy{min-height:0;padding:16px 18px}
+ #welcome #guide-page .guide-card h3{font-size:26px!important;margin-bottom:8px}
+ #welcome #guide-page .guide-card p{font-size:16px;line-height:1.3;max-width:345px}
+ #guide-page .guide-navigation{display:flex}
+ #guide-page .guide-bonuses{gap:7px}
+ #guide-page .guide-bonuses>div{padding:8px 0 0;gap:4px}
+ #guide-page .guide-bonuses strong{font-size:13px;letter-spacing:0}
+ #guide-page .guide-bonuses span{font-size:13px}
+ #guide-page .guide-spins-note{font-size:12px}
+ #welcome #guide-page .primary{min-height:46px}
+}
+@media(max-height:650px){
+ #welcome #guide-page{gap:8px}#guide-page .guide-heading>img{width:135px;margin-bottom:4px}
+ #welcome #guide-title{font-size:20px}#guide-page .guide-gameplay{width:min(100%,27dvh,260px)}
+ #guide-page .guide-copy{min-height:0;padding:13px 14px}#welcome #guide-page .guide-card h3{font-size:22px!important;margin-bottom:6px}
+ #guide-page .guide-demo{padding-bottom:7px;gap:5px}#guide-page .guide-bonuses>div{padding-top:6px}
+}
+
+@media(prefers-reduced-motion:reduce){
+ .ident-ready .gg-piece,.ident-ready .studio-main,.ident-ready .studio-gam,.ident-ready .studio-es{animation:none;opacity:1;transform:none;clip-path:unset}
+ .ident-ready .gg-first{clip-path:polygon(0 0,100% 0,100% 34%,57% 34%,32.8% 64%,0 100%)}
+ .ident-ready .gg-second{clip-path:polygon(100% 34%,57% 34%,32.8% 64%,0 100%,100% 100%)}
+ #studio-walker{display:none}
+}
+
+.guide-actions{flex-wrap:wrap}.loading-status{flex-basis:100%;text-align:center;font:600 12px/1.4 sans-serif;color:#c4dfb3}.guide-actions button:disabled{opacity:.55;cursor:wait}

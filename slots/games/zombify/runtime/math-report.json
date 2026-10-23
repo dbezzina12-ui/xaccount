@@ -1,0 +1,185 @@
+{
+  "version": "zombify-96-v1",
+  "sourceHash": "39d3e5488768c7ceb71bbe5f53e5b66df7c75122221d73ededbd3b1e83ab1113",
+  "basis": "Theoretical integer-weighted, board-driven free-play model. Not independently certified.",
+  "maxWinX": 25000,
+  "bonusTierMix": {
+    "regular": 0.9,
+    "super": 0.09,
+    "hidden": 0.01
+  },
+  "pools": {
+    "entry_regular": {
+      "outcomes": 1000,
+      "meanWinX": 0.15843,
+      "anyPayout": 0.187,
+      "maxWinProbability": 0,
+      "maxWinOneIn": null,
+      "medianX": 0,
+      "p90X": 0.2,
+      "p99X": 1.56,
+      "p999X": 9.7,
+      "premiumFractionEarly": 0.4742402460633212,
+      "premiumFractionLate": null,
+      "mostLikelyOutcome": 0.001,
+      "effectiveOutcomes": 1000,
+      "zombieStart": 0.083
+    },
+    "regular": {
+      "outcomes": 32000,
+      "meanWinX": 95.99999999904999,
+      "anyPayout": 0.9952,
+      "maxWinProbability": 0.000001,
+      "maxWinOneIn": 1000000,
+      "medianX": 65.39,
+      "p90X": 218.25,
+      "p99X": 500.03,
+      "p999X": 1318.98,
+      "premiumFractionEarly": 0.5272763680070095,
+      "premiumFractionLate": 0.528046096166836,
+      "mostLikelyOutcome": 0.000294298,
+      "effectiveOutcomes": 8046.645986030008,
+      "zombieStart": 0.756651077
+    },
+    "entry_super": {
+      "outcomes": 1000,
+      "meanWinX": 0.08401,
+      "anyPayout": 0.175,
+      "maxWinProbability": 0,
+      "maxWinOneIn": null,
+      "medianX": 0,
+      "p90X": 0.2,
+      "p99X": 1.58,
+      "p999X": 9.2,
+      "premiumFractionEarly": 0.45662130988599514,
+      "premiumFractionLate": null,
+      "mostLikelyOutcome": 0.001,
+      "effectiveOutcomes": 1000,
+      "zombieStart": 0.083
+    },
+    "super": {
+      "outcomes": 30000,
+      "meanWinX": 240,
+      "anyPayout": 0.993728057,
+      "maxWinProbability": 0.0001,
+      "maxWinOneIn": 10000,
+      "medianX": 143.86,
+      "p90X": 518.8,
+      "p99X": 1459.79,
+      "p999X": 3204.59,
+      "premiumFractionEarly": 0.6503885645285526,
+      "premiumFractionLate": 0.6489092524697281,
+      "mostLikelyOutcome": 0.000114115,
+      "effectiveOutcomes": 12354.880094224236,
+      "zombieStart": 0.340942068
+    },
+    "entry_hidden": {
+      "outcomes": 1000,
+      "meanWinX": 0.07605,
+      "anyPayout": 0.155,
+      "maxWinProbability": 0,
+      "maxWinOneIn": null,
+      "medianX": 0,
+      "p90X": 0.12,
+      "p99X": 1.4,
+      "p999X": 9.2,
+      "premiumFractionEarly": 0.4383337233793588,
+      "premiumFractionLate": null,
+      "mostLikelyOutcome": 0.001,
+      "effectiveOutcomes": 1000,
+      "zombieStart": 0.083
+    },
+    "hidden": {
+      "outcomes": 40000,
+      "meanWinX": 816.0000000005899,
+      "anyPayout": 0.992777989,
+      "maxWinProbability": 0.002676667,
+      "maxWinOneIn": 373.5989572105906,
+      "medianX": 461.66,
+      "p90X": 1655.3,
+      "p99X": 5042.85,
+      "p999X": 25000,
+      "premiumFractionEarly": 0.649573537243738,
+      "premiumFractionLate": 0.6488127410627567,
+      "mostLikelyOutcome": 0.000100344,
+      "effectiveOutcomes": 14189.508520267884,
+      "zombieStart": 0.318597653
+    },
+    "base": {
+      "outcomes": 24000,
+      "meanWinX": 0.53901129393,
+      "anyPayout": 0.272368755,
+      "maxWinProbability": 0,
+      "maxWinOneIn": null,
+      "medianX": 0,
+      "p90X": 1,
+      "p99X": 9.6,
+      "p999X": 42.35,
+      "premiumFractionEarly": 0.5195799666386727,
+      "premiumFractionLate": null,
+      "mostLikelyOutcome": 0.000205825,
+      "effectiveOutcomes": 18659.69427150168,
+      "zombieStart": 0.126125649
+    },
+    "enhanced": {
+      "outcomes": 24000,
+      "meanWinX": 0.56508356197,
+      "anyPayout": 0.270490589,
+      "maxWinProbability": 0,
+      "maxWinOneIn": null,
+      "medianX": 0,
+      "p90X": 1,
+      "p99X": 10,
+      "p999X": 46.5,
+      "premiumFractionEarly": 0.5196471734411878,
+      "premiumFractionLate": null,
+      "mostLikelyOutcome": 0.000213409,
+      "effectiveOutcomes": 18501.142096825573,
+      "zombieStart": 0.127328903
+    }
+  },
+  "modes": {
+    "base": {
+      "costX": 1,
+      "rtp": 0.9600000000008286,
+      "bonusOneIn": 275,
+      "anyPayout": 0.27499999997169117,
+      "maxWinOneIn": 7499993.206653664,
+      "maxWinProbability": 1.3333345410404426e-7
+    },
+    "enhanced": {
+      "costX": 3,
+      "rtp": 0.9599999999995861,
+      "bonusOneIn": 50,
+      "anyPayout": 0.28499999966430145,
+      "maxWinOneIn": 1363635.1284824843,
+      "maxWinProbability": 7.333339975722434e-7
+    },
+    "buy_outbreak": {
+      "costX": 100,
+      "rtp": 0.9599999999904999,
+      "anyPayout": 0.9952,
+      "maxWinProbability": 0.000001,
+      "maxWinOneIn": 1000000
+    },
+    "buy_super": {
+      "costX": 250,
+      "rtp": 0.96,
+      "anyPayout": 0.993728057,
+      "maxWinProbability": 0.0001,
+      "maxWinOneIn": 10000
+    },
+    "buy_mystery": {
+      "costX": 250,
+      "rtp": 0.959999999998716,
+      "anyPayout": 0.9942218274,
+      "maxWinProbability": 0.0003180667,
+      "maxWinOneIn": 3143.9946401179373,
+      "tierMix": {
+        "regular": 0.4,
+        "super": 0.5,
+        "hidden": 0.1
+      }
+    }
+  }
+}

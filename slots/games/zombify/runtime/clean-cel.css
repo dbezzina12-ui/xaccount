@@ -1,0 +1,55 @@
+/* Approved clean-cel symbols and casing in the illustrated purple alley. */
+:root{--town-art:url('assets/moonlit-v118/street.png')}
+#game{--frame-width:clamp(24px,3vw,34px);--frame-top:var(--frame-width);--frame-bottom:var(--frame-width);--title-height:clamp(78px,14dvh,130px);background:#181529}
+#game .city-scene{background-image:var(--town-art);background-size:cover;background-position:center;transform:none;animation:none}
+#game .city-backdrop{background:#181529}
+#game .city-backdrop:after{background:linear-gradient(0deg,#15112630,transparent 25%)}
+#game .brand{height:var(--title-height);justify-content:center}
+#game .brand h1.peek-title{width:85%;height:95%;aspect-ratio:auto;overflow:visible;transform:none;filter:drop-shadow(0 3px 1px #080612)}
+#game .peek-title img{position:static;width:100%;height:100%;object-fit:contain}
+#game .title-o-backing{display:none}
+#game .board-wrap{border-width:var(--frame-width);border-image-source:url('assets/clean-cel-v117/frame.png');border-image-slice:115 130 115 130;border-image-width:1;filter:drop-shadow(0 6px 3px #08061388)}
+#game .board-wrap:after{border-color:#23748588;box-shadow:none}
+#game .board-wrap:before{background:linear-gradient(90deg,transparent calc(100% - 1px),#73c5d044 0) left top / calc((100% + 1px)/6) 100% repeat-x}
+#game .machine-head{display:none}
+#game .machine-foot{background:none;border:0;height:17px;color:#ece5c7}
+#game .machine:before,#game .machine:after{display:none}
+#game .board .tile{border-bottom:1px solid #73c5d026}
+.symbol:is(.art-builder,.art-scientist){mask-image:none!important}
+.art-skater{--portrait-human:url('assets/clean-cel-v117/skater-human.png');--portrait-zombie-still:url('assets/clean-cel-v117/skater-zombie.png');--portrait-zombie-motion:url('assets/clean-cel-v117/skater-zombie.png')}
+.art-nurse{--portrait-human:url('assets/clean-cel-v117/nurse-human.png');--portrait-zombie-still:url('assets/clean-cel-v117/nurse-zombie.png');--portrait-zombie-motion:url('assets/clean-cel-v117/nurse-zombie.png')}
+.art-builder{--portrait-human:url('assets/clean-cel-v117/builder-human.png');--portrait-zombie-still:url('assets/clean-cel-v117/builder-zombie.png');--portrait-zombie-motion:url('assets/clean-cel-v117/builder-zombie.png')}
+.art-cop{--portrait-human:url('assets/clean-cel-v117/cop-human.png');--portrait-zombie-still:url('assets/clean-cel-v117/cop-zombie.png');--portrait-zombie-motion:url('assets/clean-cel-v117/cop-zombie.png')}
+.art-scientist{--portrait-human:url('assets/clean-cel-v117/scientist-human.png');--portrait-zombie-still:url('assets/clean-cel-v117/scientist-zombie.png');--portrait-zombie-motion:url('assets/clean-cel-v117/scientist-zombie.png')}
+.symbol.art-j,.symbol.art-j.zombie-walk-sprite{background:url('assets/clean-cel-v117/j.png') center/contain no-repeat!important;filter:none}
+.symbol.art-q,.symbol.art-q.zombie-walk-sprite{background:url('assets/clean-cel-v117/q.png') center/contain no-repeat!important;filter:none}
+.symbol.art-k,.symbol.art-k.zombie-walk-sprite{background:url('assets/clean-cel-v117/k.png') center/contain no-repeat!important;filter:none}
+.symbol.art-a,.symbol.art-a.zombie-walk-sprite{background:url('assets/clean-cel-v117/a.png') center/contain no-repeat!important;filter:none}
+.symbol.art-wild,.symbol.art-wild.zombie-walk-sprite{background:url('assets/clean-cel-v117/w.png') center/contain no-repeat!important;filter:none}
+.symbol.art-vial,.symbol.art-vial.zombie-walk-sprite{background:url('assets/clean-cel-v117/fs.png') center/contain no-repeat!important;filter:none}
+.symbol.art-zombie,.symbol.art-zombie.zombie-walk-sprite{background:url('assets/clean-cel-v117/zombie.png') center/contain no-repeat!important;filter:none}
+
+#game .tile>.symbol{transform:scale(.94)}
+#game .tile>.symbol.art-zombie{transform:scale(.94)}
+.clean-cel-mascot{position:absolute;right:3%;bottom:105px;width:clamp(170px,20vw,310px);height:clamp(190px,32dvh,340px);object-fit:contain;object-position:bottom;z-index:2;pointer-events:none;filter:drop-shadow(0 7px 3px #070610a0)}
+#game[data-free-spins] .clean-cel-mascot{opacity:.32}
+@media(max-aspect-ratio:1/1){
+ #game{--frame-width:clamp(20px,5.6vw,26px);--title-height:clamp(90px,15dvh,135px)}
+ #game .play-area{padding-top:26px;padding-bottom:clamp(80px,15dvh,145px);align-content:start}
+ #game .brand h1.peek-title{width:90%}
+ .clean-cel-mascot{right:0;bottom:calc(var(--mobile-controller-height,151px) - 60px);width:35vw;height:23dvh;max-height:230px}
+}
+@media(max-height:540px) and (orientation:landscape){#game{--title-height:55px;--frame-width:12px}.clean-cel-mascot{height:40dvh;bottom:85px;width:18vw}}
+
+@media(min-aspect-ratio:1/1){:root{--town-art:url("assets/moonlit-v118/street.png")}}
+
+/* Plain green multiplier text; no badge, stone tile, or backing panel. */
+.stack-multi,.full-reel .stack-multi,.hidden-zombie .stack-multi,
+#guide-page .guide-demo-stack .stack-multi,
+.tile>.carrier-value,.multiplier-digits,.life-held-multi{
+ background:none!important;box-shadow:none!important;border:0!important;
+ border-radius:0;color:#a7ed42!important;-webkit-text-fill-color:#a7ed42;
+ text-shadow:0 2px 2px #102316;filter:none;-webkit-text-stroke:0;
+}
+.stack-multi{padding:0!important}
+.clean-cel-mascot{display:none!important}

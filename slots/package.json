@@ -8,6 +8,8 @@
     "sim": "node tools/math/sim.mjs",
     "serve": "npx --yes http-server -c-1 -p 8080 .",
     "shots": "node tools/shots.mjs",
-    "art": "python3 tools/art/prep.py"
+    "art": "python3 tools/art/prep.py",
+    "test:studio": "node --test tests/studio.test.mjs games/zombify/tests/*.test.mjs",
+    "studio:prepare": "node tools/studio/prepare.mjs"
   }
 }

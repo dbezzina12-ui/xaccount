@@ -1,0 +1,17 @@
+/* One painted sign replaces the separate flat plaque and floating lettering.
+   The original generated PNG is retained intact; crop only its clear margin. */
+#game{--title-height:clamp(82px,13.5dvh,142px)}
+#game .brand{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;isolation:isolate;height:var(--title-height);padding:0;width:min(100%,var(--cabinet-width,760px))}
+#game .brand:before,#game .brand:after{display:none}
+#game .brand h1.peek-title{position:relative;flex:none;width:min(91%,calc(var(--title-height)*4.64318));max-width:none;aspect-ratio:2043/440;line-height:0;overflow:hidden;transform:translateY(calc(var(--frame-top)*.48));filter:drop-shadow(0 5px 2px #020d16b0);margin:0}
+#game .peek-title img{display:block;position:absolute;inset:auto;left:0;top:-38.181818%;width:100%;height:auto;max-width:none;object-fit:fill;pointer-events:none;user-select:none}
+#game .peek-title img{z-index:1}
+/* Reveal only the repaired inner O from the generated edit. The original sign,
+   lettering and rim stay pixel-for-pixel intact. Both images share coordinates. */
+#game .peek-title img.title-o-backing{z-index:2;mask-image:radial-gradient(ellipse 3.867% 8.961% at 28.096% 51.948%,#000 94%,transparent 100%);-webkit-mask-image:radial-gradient(ellipse 3.867% 8.961% at 28.096% 51.948%,#000 94%,transparent 100%)}
+#game .brand .preview-notice{position:absolute;top:0;left:0;right:0;margin:0;font-size:9px;line-height:11px;text-shadow:0 1px 3px #000}
+@media(max-width:1100px){
+ #game{--title-height:clamp(72px,10.5dvh,105px)}
+ #game .brand h1.peek-title{width:min(94%,calc(var(--title-height)*4.64318))}
+}
+@media(max-height:540px) and (orientation:landscape){#game{--title-height:50px}}

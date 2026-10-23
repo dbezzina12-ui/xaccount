@@ -1,0 +1,94 @@
+/* The cabinet is a heavy street fixture, with a quiet lit metal interior. */
+#game{--frame-width:clamp(42px,4.6vw,62px);--frame-top:var(--frame-width);--frame-bottom:var(--frame-width)}
+#game .board-wrap{border-width:var(--frame-width);filter:drop-shadow(0 4px 2px #01091299);box-shadow:none}
+#game .board{box-shadow:inset 0 9px 16px #020b14b3,inset 0 -6px 14px #030b1499}
+#game .machine{position:relative;isolation:isolate}
+#game .machine:before{content:'';display:block;position:absolute;inset:auto 0 -7px;width:auto;height:20px;background:radial-gradient(ellipse at 12% 50%,#01080ed9,transparent 21%),radial-gradient(ellipse at 88% 50%,#01080ed9,transparent 21%);box-shadow:none;z-index:-1;pointer-events:none}
+#game .machine:after{display:none}
+#game .brand:before,#game .brand:after{display:none}
+#game .tile>.carrier-value{font-size:clamp(23px,49cqw,58px);z-index:2}
+#game .horizontal-zombie .stack-multi{font-size:clamp(28px,3.4vw,48px);bottom:5px}
+#game .stack-multi{font-size:clamp(30px,4.1vw,54px)}
+#game .life-held-multi{font-size:clamp(21px,32cqw,36px)}
+.expander-landing-pop:before{display:none}
+@media(min-width:1100px) and (min-aspect-ratio:4/3){
+ #game{--side-title:1}
+ #game .play-area{position:relative;max-width:1600px;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);column-gap:0;padding:34px 18px 30px;align-content:end}
+ #game .brand{position:absolute;top:34px;left:18px;width:20%;max-width:290px;height:auto;padding:36px 0 0;text-align:left}
+ #game .brand h1.peek-title{width:100%;max-width:none;height:auto;margin:0;transform:rotate(-5deg)}
+ #game .peek-title img{height:auto;width:100%;object-fit:contain}
+ #game .machine{grid-area:1/1;align-self:end;justify-self:center}
+ #game .preview-notice{font-size:9px;max-width:100%;padding-top:10px}
+}
+@media(max-aspect-ratio:1/1){
+ #game{--frame-width:clamp(27px,7.5vw,36px);--title-height:clamp(80px,12dvh,105px)}
+ #game .brand{justify-self:start;text-align:left;padding-left:10px}
+ #game .brand h1.peek-title{width:78%;margin-left:0}
+ #game .play-area{padding-top:8px;padding-bottom:0;align-content:start}
+ #game .machine:before{bottom:-4px;height:12px}
+ #game .stack-multi{font-size:30px}
+ #game .horizontal-zombie .stack-multi{font-size:28px}
+}
+@media(max-height:540px) and (orientation:landscape){#game{--frame-width:26px}}
+
+#game{--reel-texture:url('assets/street-v119/reel-enamel.svg')}
+
+:root{--town-art:url('assets/street-v119/scene.png')}
+/* Preserve the teal metal cabinet. Concrete belongs only beneath its base.
+   Include the supports in normal layout so the mobile fit measures the feet. */
+#game .board-wrap{border-image-source:url('assets/street-v119/frame.png');border-image-slice:150 160 190 160;border-image-width:1;border-image-repeat:stretch}
+.cabinet-supports{position:relative;display:flex;justify-content:space-between;height:calc(var(--cabinet-width,500px)*.085);margin:calc(var(--cabinet-width,500px)*-.014) 2.5% 0;z-index:1;pointer-events:none}
+.cabinet-supports i{position:relative;display:block;width:23%;height:100%;background:url('assets/street-v119/blocks.png') center / 109% 115% no-repeat;filter:brightness(.88) saturate(.82) drop-shadow(0 3px 1px #010911cc)}
+.cabinet-supports:before{content:'';position:absolute;left:-2%;right:-2%;bottom:-7px;height:18px;z-index:-1;background:radial-gradient(ellipse at 12% 50%,#01060cee 0,transparent 24%),radial-gradient(ellipse at 88% 50%,#01060cee 0,transparent 24%);pointer-events:none}
+.cabinet-supports i:after{content:'';position:absolute;left:3%;right:3%;top:0;height:22%;background:linear-gradient(#020d17d9,#020d1766 48%,transparent);pointer-events:none}
+@media(min-width:1100px) and (min-aspect-ratio:4/3){#game .play-area{padding-bottom:36px}}
+@media(max-aspect-ratio:1/1){
+ :root{--town-art:url('assets/street-v122/scene-mobile.png')}
+ /* The bonus panel occupies the street to the mascot's right. */
+ #game[data-free-spins] .infection-tracker{left:25%;right:0;width:75%}
+}
+@media(max-aspect-ratio:1/1) and (max-height:720px){#game{--title-height:56px}}
+
+/* The portrait scene includes its physical cabinet and cinderblock supports.
+   Register the playable grid to the painted opening. */
+@media(max-aspect-ratio:1/1){
+ :root{--town-art:url('assets/mobile-v125/scene-plate.png')}
+ #game{--frame-width:0px;--frame-top:0px;--frame-bottom:0px}
+ #game .city-backdrop{background:linear-gradient(#082048 0%,#173052 49%,#405a7f 70%,#172d46 100%)}
+ #game .city-scene{inset:0 auto auto 50%;width:100%;height:100%;background-size:var(--mobile-scene-width,100%) var(--mobile-scene-image-height,100%);background-position:center top;background-repeat:no-repeat;transform:translateX(-50%);mask-image:none}
+ #game .city-scene:after{content:'';position:absolute;left:0;right:0;top:var(--mobile-ground-seam,82%);bottom:0;background:var(--town-art) center bottom / var(--mobile-scene-width,100%) var(--mobile-footer-image-height,100%) no-repeat}
+ #game .city-backdrop:after{background:linear-gradient(transparent 86%,#0a1b30 100%)}
+ #game .play-area{position:absolute;inset:0;display:block;width:100%;max-width:none;height:100%;margin:0;padding:0}
+ #game .brand{position:absolute;left:var(--mobile-title-left,5%);top:var(--mobile-title-top,28px);width:var(--mobile-title-width,65%);height:var(--mobile-title-height,85px);padding:0;align-items:flex-start;justify-content:center}
+ #game .brand h1.peek-title{width:100%;height:100%;margin:0;transform:none;filter:drop-shadow(0 3px 1px #020913)}
+ #game .peek-title img{object-fit:contain;object-position:left center}
+ #game .machine{position:absolute;top:var(--mobile-cabinet-top,160px);left:var(--mobile-board-left,10%);transform:none;margin:0;max-width:none;align-self:auto;justify-self:auto;filter:none;box-shadow:none}
+ #game .board-wrap{height:var(--mobile-board-height,320px);border:0;border-image:none;filter:none;background:#0b1a22 var(--reel-texture) center / 100% 100% no-repeat;box-shadow:none;overflow:hidden}
+ #game .board-wrap:after{border:0;box-shadow:none}
+ /* Opaque, fixed glass hides the resolved symbols beneath the moving strip. */
+ #game .spinning-reel{background-color:#0b1a22;background-image:var(--reel-texture);background-size:var(--reel-texture-width) var(--reel-texture-height);background-position:var(--reel-texture-x) var(--reel-texture-y);background-repeat:no-repeat}
+ #game .city-scene{transform-origin:50% var(--mobile-scene-origin);transition:transform .42s cubic-bezier(.22,.7,.3,1)}
+ #game:has(.tease-camera-in) .city-scene{transform:translateX(-50%) scale(1.04);transition-duration:4.2s;transition-timing-function:cubic-bezier(.16,.4,.4,1)}
+ #game .reel-stage.tease-camera-in{transform:scale(1.04)}
+ #game:has(.tease-camera-snap) .city-scene{transition:none}
+ #game .board{height:100%;grid-template-rows:repeat(5,minmax(0,1fr));padding:0;gap:1px;background:transparent;box-shadow:none}
+ #game .board>.tile{aspect-ratio:auto;min-height:0;min-width:0}
+ #game .stack-layer{padding:0;gap:1px}
+ #game .board .tile>.symbol,#game .reel-strip .tile>.symbol{transform:scale(1.08)}
+ #game .clean-cel-mascot,#game .mobile-zombie-mascot{display:none!important}
+ #game .cabinet-supports,#game .machine:before,#game .machine:after{display:none}
+ #game .brand .preview-notice{top:auto;bottom:-7px;font-size:8px;text-align:left}
+ #game[data-free-spins] .infection-tracker{left:auto;right:-5%;top:calc(100% + var(--mobile-foot-gap) + 5px);width:47%;margin:0;padding:3px}
+ #game[data-free-spins] .infection-people{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px}
+ #game[data-free-spins] .infection-tube{height:auto;width:100%;aspect-ratio:977/1610}
+ #game[data-free-spins] .tube-name{display:none}
+ #game[data-free-spins] .tube-count{font-size:7px}
+ #game[data-free-spins] .tube-value{font-size:8px}
+ #game[data-free-spins] .infection-heading{font-size:8px;line-height:10px;letter-spacing:0}
+ #game .free-spins-counter{right:-4%;--counter-size:clamp(85px,27vw,120px)}
+}
+
+@media(max-aspect-ratio:1/1) and (prefers-reduced-motion:reduce){
+ #game .city-scene,#game:has(.tease-camera-in) .city-scene{transform:translateX(-50%);transition:none}
+ #game .reel-stage.tease-camera-in{transform:none}
+}

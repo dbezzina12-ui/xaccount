@@ -1,0 +1,102 @@
+/* Flat, inked scenery leaves open space around the reel cabinet. */
+:root{--town-art:url('assets/town-v88/desktop.png')}
+@media(max-aspect-ratio:1/1){:root{--town-art:url('assets/town-v88/portrait.png')}}
+#game{--timber-slice:20% 16%;--frame-width:clamp(26px,2.6vw,38px);grid-template-rows:28px minmax(0,1fr) 100px;row-gap:2px;background:#15292c}
+#game .topbar{height:28px;border:0}.brand{padding:2px 0 4px}.brand h1{font-size:62px;color:#d4e879;text-shadow:2px 4px 0 #33441e,0 3px 10px #030806}.brand-overline,.brand-tag{display:none}
+#game .city-scene{inset:0;background-image:var(--town-art);background-position:center bottom;animation:none;will-change:auto}
+.city-backdrop{background:#092c46}.city-backdrop:after{background:linear-gradient(180deg,transparent 78%,#040b0c40)}
+.city-light{display:none}
+.play-area{grid-template-columns:150px minmax(0,1fr) 126px;column-gap:20px;max-width:1260px}
+#game .machine{background:transparent;border:0;border-radius:0;box-shadow:none;overflow:visible}
+.machine:before,.machine:after{display:none}
+.machine-head{margin:0 var(--frame-width);min-height:25px;padding:4px 8px;background:#0a191ab8;border:0;color:#e6e7c5;text-shadow:0 2px 3px #000;letter-spacing:.8px}
+.machine-head>span:first-child{color:#e5e8c5}.machine-head>span:last-child{color:#b7cbc6}
+.board-wrap{border:var(--frame-width) solid transparent;border-image-source:url('assets/cabinet-v83/containment-frame.png');border-image-slice:var(--timber-slice);border-image-width:1;border-image-repeat:stretch;border-radius:0;background:#171a17;box-shadow:0 12px 20px #02080980,0 2px 3px #000;overflow:hidden}
+#game .board{padding:3px;gap:2px;background:#101816}
+#game .stack-layer{padding:3px;gap:2px}
+#game .tile{border-radius:0;border:1px solid #73878654;background:linear-gradient(180deg,#304b4b,#15272a);box-shadow:inset 0 1px 0 #a6b6a645,inset 0 0 18px #0007}
+#game .tile:is([data-kind=skater],[data-kind=nurse],[data-kind=builder],[data-kind=cop],[data-kind=scientist]){background:linear-gradient(180deg,#4c3426,#241e19);border-color:#8e746257}
+#game .tile[data-kind=zombie]{background:linear-gradient(#324533,#19291e);border-color:#b2c88394}
+#game .tile[data-kind=wild]{background:#223121;border-color:#617e54}
+#game .tile[data-kind=vial]{background:linear-gradient(#51412c,#231d18);border-color:#bba27566}
+#game .tile.hit{border-color:#f5d77d;box-shadow:inset 0 0 20px #ffd86b45}
+#game .tile.target{border-color:#d6efae;box-shadow:inset 0 0 24px #b5d87880}
+.tile>.symbol{transform:scale(1)}.expanded-zombie{border-radius:0;box-shadow:0 0 8px #c4e08235}
+.machine-foot{height:25px;padding:0 8px;margin:0 var(--frame-width);border:0;background:#101b17c9;color:#e3dfc7;font-size:11px;letter-spacing:.5px}.status-light{display:none}
+.infection-tracker{margin:0 var(--frame-width);border:1px solid #829b8266;border-bottom:0;background:linear-gradient(#263e35,#142823);padding:5px 7px}.infection-heading{color:#d1dcca}.infection-heading strong{color:#e3e6a2}
+.left-rail{display:flex;flex-direction:column;gap:22px}.horde-panel{width:100%;border-color:#b4c5a54d;text-shadow:0 2px 5px #000;background:#102a2560;padding:12px 8px}.horde-panel .multiplier{color:#e4e9a8;font-size:72px}.horde-panel p{font-size:13px;color:#c3d0bb}.panel-eyebrow{color:#d2d8bf}.round-readout{background:#0d242660;padding:12px 9px;border:1px solid #a5b6a53b}.round-readout .panel-eyebrow{font-size:11px;letter-spacing:1px}.round-readout strong{color:#f0e5bd}.round-readout span{color:#b7c9c4;font-size:10px}
+
+/* Birds' compact control bar, using Zombify's lime accent. */
+#game .console{--control-accent:#c4ed79;grid-row:3;display:grid;height:100px;width:min(100%,1040px);grid-template-columns:68px 44px minmax(115px,1fr) minmax(80px,1fr) minmax(80px,.72fr) 42px 90px 42px 44px;grid-template-rows:1fr;gap:12px;align-items:center;margin:0 auto;padding:3px 16px;background:linear-gradient(110deg,#0a1122f5,#0b1524e8);border:1px solid #849bab26;border-radius:3px;box-shadow:0 8px 24px #02061066;color:#eef5ff}
+#game .console>*{grid-area:auto;align-self:center;justify-self:stretch;transform:none}
+#game .console .money{display:flex;flex-direction:column;gap:4px;align-items:flex-start;min-width:0;text-align:left;align-self:center}
+#game .console .money>span{font-size:12px;line-height:1.1;font-weight:600;letter-spacing:1.2px;color:#91a0af}
+#game .console .money>strong{font-size:24px;font-weight:800;line-height:1.1;letter-spacing:-.4px;color:#edf4ff;white-space:nowrap;font-variant-numeric:tabular-nums;text-shadow:none}
+#game .console .win-box>strong{color:var(--control-accent)}
+#game .console .bet-box{border-left:1px solid #a5bbd125;padding-left:14px}
+#game .console .buy-button{position:relative;display:block;width:64px;height:64px;margin:0;padding:0;border:2px solid #d7efb6;border-radius:50%;background:radial-gradient(ellipse at 50% 20%,#648b42,#273f2a 55%,#122221);box-shadow:0 0 0 3px #182b2c,inset 0 0 0 2px #789573;overflow:hidden}
+#game .console .buy-button>.symbol{display:block;position:absolute;inset:0 24% 31%;width:52%;height:69%;opacity:.95}
+#game .console .buy-button b{position:absolute;left:0;right:0;bottom:7px;font-size:12px;line-height:.94;color:#f5ffe7;text-shadow:0 1px 3px #0a160b}
+#game .console .round-button{display:grid;place-items:center;width:44px;height:44px;padding:9px;border:1px solid #8296a53b;border-radius:50%;background:#14202bcc;color:#e7f0f6;box-shadow:none}
+#game .console .bet-step{display:grid;place-items:center;width:42px;height:44px;padding:0;border:0;border-radius:3px;background:#162333d9;color:#edf4ff;font-size:34px;font-weight:800;line-height:1}
+#game .console .spin-button{display:grid;place-items:center;width:88px;height:88px;padding:0;border:3px solid #7c91a5;border-radius:50%;background:#0b1628;color:#eaffed;box-shadow:0 0 0 4px #07101f,0 0 0 7px var(--control-accent);transform:none;align-self:center}
+#game .console .spin-button svg{width:86%;height:86%;fill:currentColor}
+#game .console .auto-button{position:relative;justify-self:end;align-self:center}
+#game .console .auto-button small{position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);padding:1px 5px;border-radius:4px;background:#24362d;color:#eaffd5;font-size:12px;line-height:1.2;font-weight:800}
+#game .console .auto-button[aria-pressed=true]{border-color:var(--control-accent);color:var(--control-accent)}
+#game .topbar .utilities{display:flex;align-items:center;gap:6px;margin-left:8px}
+#game .topbar .utilities button{width:25px;height:25px;padding:0;border:0;background:transparent;color:#cad8df;font-size:18px}
+#game .topbar .utilities #rules-open{font-family:Georgia,serif;font-style:italic;font-size:16px}
+#game .topbar .utilities #sound.on{color:#d7eea6}
+@media(hover:hover){#game .console .spin-button:enabled:hover{background:#1b3042;border-color:#eaffed}#game .console button:enabled:hover{filter:brightness(1.13)}}
+
+@media(max-width:900px){
+ #game .city-scene{background-position:center bottom}
+ #game{--frame-width:22px;grid-template-rows:26px minmax(0,1fr) 154px}.topbar{height:26px}.brand h1{font-size:53px}.brand{padding:3px 0}.play-area{grid-template-columns:minmax(0,1fr);grid-template-rows:30px minmax(0,1fr);row-gap:3px}.left-rail{display:block}.right-rail{display:none}.horde-panel{background:none;padding:0 5px}.horde-panel .multiplier{font-size:31px}
+ .machine-head{margin:0 8px}.machine-foot{margin:0 8px;font-size:10px}.infection-tracker{margin:0 8px}.board-wrap{box-shadow:0 8px 16px #0006}
+ #game .console{height:154px;width:min(100%,560px);grid-template-columns:minmax(0,1fr) 44px 96px 44px minmax(0,1fr);grid-template-rows:108px 38px;gap:3px 7px;padding:2px 4px 3px;background:linear-gradient(180deg,transparent,#07112133 50%,#050d1c99);border:0;border-top:1px solid #849bab18;border-radius:0;box-shadow:none}
+ #game .console .buy-button{grid-area:1/1;align-self:start;justify-self:start;width:54px;height:54px;margin-top:4px;box-shadow:0 0 0 2px #233c35,inset 0 0 0 2px #789573}
+ #game .console .buy-button b{font-size:12px;bottom:6px}.buy-button>.symbol{opacity:.9}
+ #game .console .menu-button{grid-area:1/1;align-self:end;justify-self:start;width:36px;height:36px;padding:7px;margin-left:0;background:#101b28a6}
+ #game .console .balance-box{grid-area:2/1/3/3}.console .balance-box{justify-self:start}
+ #game .console .bet-box{grid-area:2/3;border:0;padding:0;align-items:center;text-align:center}
+ #game .console .win-box{grid-area:2/4/3/6;align-items:flex-end;text-align:right}
+ #game .console .money{gap:2px;align-self:end}#game .console .money>span{font-size:12px;letter-spacing:.9px}#game .console .money>strong{font-size:20px}
+ #game .console #minus{grid-area:1/2}#game .console #spin{grid-area:1/3}#game .console #plus{grid-area:1/4}#game .console #auto{grid-area:1/5}
+ #game .console .spin-button{width:94px;height:94px;justify-self:center;transform:translateY(-6px);border:3px solid #53617c;background:#0b1326;box-shadow:0 0 0 4px #080f20}
+ #game .console .bet-step{width:44px;height:44px;font-size:34px;transform:translateY(-6px);background:#111e2ac9}#game .console .auto-button{width:40px;height:40px;padding:7px;justify-self:end;align-self:end;margin-bottom:1px;background:#101b28a6}
+ #game .console .auto-button small{top:-5px;right:-5px;bottom:auto;left:auto;transform:none}
+}
+@media(max-width:900px) and (max-height:640px){
+ #game{--frame-width:17px;grid-template-rows:24px minmax(0,1fr) 142px}.topbar{height:24px}.brand h1{font-size:40px}.play-area{grid-template-rows:26px minmax(0,1fr)}.horde-panel .multiplier{font-size:28px}
+ #game .console{height:142px;grid-template-rows:96px 38px;grid-template-columns:minmax(0,1fr) 40px 86px 40px minmax(0,1fr);gap:3px 6px}#game .console .spin-button{width:84px;height:84px}#game .console .bet-step{width:40px;height:42px;font-size:32px}#game .console .buy-button{width:50px;height:50px}#game .console .menu-button{width:34px;height:34px;margin-left:0;padding:7px}#game .console .money>strong{font-size:20px}
+}
+@media(max-width:350px) and (min-height:521px){#game .console{grid-template-columns:minmax(0,1fr) 36px 86px 36px minmax(0,1fr);column-gap:5px}#game .console .spin-button{width:84px;height:84px}#game .console .bet-step{width:36px;height:42px}#game .console .buy-button{width:48px;height:48px}#game .console .auto-button{width:36px;height:36px}#game .console .money>strong{font-size:18px}}
+@media(min-aspect-ratio:4/3) and (max-height:520px){
+ #game{--frame-width:19px;grid-template-rows:24px minmax(0,1fr) 78px}.brand{display:none}.topbar{height:24px}.play-area{grid-template-columns:104px minmax(0,1fr);grid-template-rows:minmax(0,1fr);gap:12px}.left-rail{gap:7px}.horde-panel{padding:4px}.horde-panel .multiplier{font-size:43px}.right-rail{display:none}
+ #game .console{grid-row:3;height:78px;width:min(100%,960px);grid-template-rows:1fr;grid-template-columns:48px 30px minmax(75px,1fr) minmax(56px,.8fr) minmax(48px,.6fr) 32px 64px 32px 34px;gap:8px;padding:3px 9px}
+ #game .console .buy-button{grid-area:1/1;width:44px;height:44px;align-self:center;margin-top:0}#game .console .menu-button{grid-area:1/2;width:28px;height:28px;padding:6px;margin:0;align-self:center}
+ #game .console .balance-box{grid-area:1/3}#game .console .win-box{grid-area:1/4}#game .console .bet-box{grid-area:1/5}
+ #game .console .money{align-self:center;align-items:flex-start;text-align:left;gap:3px}#game .console .money>span{font-size:11px;letter-spacing:.4px}#game .console .money>strong{font-size:18px}#game .console .bet-box{border-left:1px solid #a5bbd125;padding-left:7px}
+ #game .console #minus{grid-area:1/6}#game .console #spin{grid-area:1/7}#game .console #plus{grid-area:1/8}#game .console #auto{grid-area:1/9}
+ #game .console .spin-button{width:60px;height:60px;justify-self:center;transform:none;box-shadow:0 0 0 3px #07101f,0 0 0 5px var(--control-accent)}#game .console .bet-step{width:32px;height:36px;font-size:27px;transform:none}#game .console .auto-button{width:32px;height:32px;padding:6px;align-self:center;margin-bottom:0}
+}
+@media(prefers-reduced-motion:reduce){.city-light{animation:none}}
+@media(min-aspect-ratio:4/3) and (max-height:520px) and (max-width:620px){
+ #game .console{grid-template-columns:40px 26px minmax(60px,1fr) minmax(44px,.8fr) minmax(40px,.6fr) 26px 54px 26px 28px;gap:5px;padding:3px 7px}
+ #game .console .buy-button{width:38px;height:38px}#game .console .menu-button{width:26px;height:26px}#game .console .spin-button{width:50px;height:50px}#game .console .bet-step{width:26px;height:32px;font-size:24px}#game .console .auto-button{width:28px;height:28px;padding:5px}#game .console .money>strong{font-size:16px}#game .console .bet-box{padding-left:4px}
+}
+
+/* Keep the title attached to the cabinet instead of above an empty HUD row. */
+#game .play-area{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto;gap:4px;align-content:center;align-items:start;max-width:1040px}
+#game .left-rail,#game .right-rail{display:none}
+#game .brand{display:block;grid-area:1/1;align-self:end;justify-self:center;width:100%;min-width:0;padding:0 8px 5px;text-align:center}
+#game .brand h1{font-size:72px;line-height:.9;letter-spacing:-3px;margin:0;white-space:nowrap}
+#game .machine{grid-area:2/1;align-self:start}
+@media(max-width:900px){
+ #game .play-area{max-width:700px;row-gap:3px}
+ #game .brand{padding:0 8px 6px}
+ #game .brand h1{font-size:clamp(64px,25vw,118px);letter-spacing:-.055em}
+}
+@media(max-width:900px) and (max-height:640px){#game .brand h1{font-size:clamp(56px,22vw,96px)}#game .brand{padding-bottom:3px}}
+@media(min-aspect-ratio:4/3) and (max-height:520px){#game .brand h1{font-size:42px;letter-spacing:-2px}#game .brand{padding-bottom:2px}#game .play-area{row-gap:2px}}

@@ -1,0 +1,27 @@
+.symbol.art-heart{background:url('assets/second-life-v103/heart.png') center/94% auto no-repeat}
+#game .tile[data-kind=heart]{background:radial-gradient(ellipse,#7c304d77,#241c2e 72%);border-color:#ff7b9977}
+.heart-pickup{position:fixed;z-index:70;pointer-events:none;transform-origin:center;will-change:transform,opacity}
+.heart-pickup>.symbol{width:100%;height:100%}
+.life-held-multi{position:absolute;bottom:1px;left:50%;transform:translateX(-50%);z-index:2;color:#fff1b3;font-size:clamp(17px,2.4vw,28px);line-height:1;font-weight:800;text-shadow:1px 2px #152214,-1px -1px #152214;pointer-events:none}
+.heart-award{position:absolute;z-index:25;left:50%;top:25%;transform:translate(-50%,-50%);padding:6px 13px;border:2px solid #ffbdcf;border-radius:7px;background:#421a2deb;color:#fff0f4;box-shadow:0 3px 0 #160b15,0 0 18px #fd418666;white-space:nowrap;font-family:'Lilita One',Barlow,sans-serif;font-size:clamp(18px,3.5vw,34px);text-shadow:0 2px #51112c;pointer-events:none}
+#game[data-feature-spin] #win-banner{background:radial-gradient(ellipse,#291524ee 10%,#151024c9 50%,transparent 82%)}
+#game[data-feature-spin] #win-caption{color:#ffc3d7}
+#game.second-life-spins #bet-label{color:#ffafc9;font-size:11px;letter-spacing:.3px}
+#game.second-life-spins #bet{color:#ffdce8}
+.second-life-setting small{display:block;font-size:12px;color:#e7adbf;margin-top:4px}
+.second-life-setting input{accent-color:#ff86ae}
+#shop .bonus-card[data-mode=life]{--card:#ff86ae;background:radial-gradient(ellipse at 50% 0,#65304577,transparent 62%),linear-gradient(145deg,#2c2330,#141e24);border-color:#ad5b7977;border-top-color:var(--card)}
+#shop .life-emblem>.symbol{width:128px;height:128px}
+#shop .life-emblem>.bonus-character{position:absolute;left:calc(50% - 85px)}
+#shop .life-emblem>.bonus-character:nth-child(2){left:calc(50% + 20px);transform:rotate(6deg)}
+#shop .life-emblem>.symbol{position:relative;z-index:2;width:100px;height:100px;align-self:flex-end}
+#shop .bonus-card[data-mode=life]:has([aria-pressed=true]){border-color:#ffafc9;box-shadow:0 0 0 2px #ff86ae55,0 8px 20px #0005}
+/* Five choices keep readable card widths rather than squeezing another column. */
+#shop.shop .bonus-cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:1000px){#shop.shop .bonus-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){
+ #shop.shop .bonus-cards{grid-template-columns:minmax(0,1fr)}
+ #shop .life-emblem>.bonus-character{width:43px;height:110px;left:calc(50% - 42px)}
+ #shop .life-emblem>.bonus-character:nth-child(2){left:calc(50% + 1px)}
+ #shop .life-emblem>.symbol{width:68px;height:68px}
+}
