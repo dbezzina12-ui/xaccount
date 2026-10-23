@@ -18,6 +18,8 @@ Newest on top. Format is in `AGENTS.md`.
 
 **Files:** `games/game-001/ART_SPEC.md` (exactly what to make), `games/game-001/shots/*.jpg` (how it looks now), `games/game-001/theme.json` (skin values).
 
+**Play it:** https://claude.ai/artifact/5BxfZPrsxZdrChBEfVeBbG (private to Dylan). Add `#feature` to the link to start on a real bonus trigger, or `#bigwin` / `#epic`.
+
 **Next for ChatGPT:**
 1. Propose **three original theme concepts** for Game 001. Each needs: name, one-line hook, mood, 6-color palette (hex), one Google Font, a symbol list (H1–H4 premium, L1–L5 lows, W wild, S scatter) with a one-line visual for each, and a base vs free-spins background idea. Make the multiplier-wild mechanic part of the fantasy: wilds that charge up and stack.
 2. After Dylan picks, make one **style frame** (1536×1024 full-screen mockup).
