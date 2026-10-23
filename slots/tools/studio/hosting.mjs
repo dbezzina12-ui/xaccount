@@ -1,0 +1,12 @@
+import {cp,mkdir,copyFile} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
+import path from 'node:path';
+const root=fileURLToPath(new URL('../../',import.meta.url));
+const target=path.resolve(process.argv[2]||path.join(root,'hosting'));
+await mkdir(path.join(target,'public'),{recursive:true});
+for(const name of ['studio','games','engine'])await cp(path.join(root,name),path.join(target,'public',name),{recursive:true,filter:src=>!/(?:^|\/)(?:shots|bundled-art|tests|\.gitignore)(?:\/|$)/.test(src)});
+await cp(path.join(root,'server'),path.join(target,'server'),{recursive:true});
+await mkdir(path.join(target,'studio'),{recursive:true});
+await copyFile(path.join(root,'studio/project.js'),path.join(target,'studio/project.js'));
+await copyFile(path.join(root,'server/schema.ts'),path.join(target,'db/schema.ts'));
+console.log('Studio assets and server sources synchronized to '+target);

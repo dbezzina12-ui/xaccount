@@ -61,3 +61,7 @@ Existing Game 001 is retained as an engine/math reference and is paused per Dyla
 - Uploaded images go to the game and to thumbnails as `blob:` URLs; projects, saves and exports keep the real bytes.
 
 `npm run test:studio-browser` covers these with the real editor and bridge, using `tests/browser/fake-runtime.html`, a stand-in that implements the same `ZombifyStudioRuntime` contract (round timing, audio-decode delay, Outbreak continuation). It is not a substitute for checking rounds with the real game.
+
+## Studio chat
+
+Open **Studio chat** for conversation, image generation, undoable edits and shared handoffs. Offline Quick edit remains available. The hosted chat needs a securely configured OpenAI key; its badge reports setup status. Claude stays unconnected until its adapter and credential are added. See [`../server/README.md`](../server/README.md) for routes, recovery and the remaining unattended-work boundary.

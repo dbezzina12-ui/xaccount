@@ -11,6 +11,7 @@
     "art": "python3 tools/art/prep.py",
     "test:studio": "node --test tests/studio.test.mjs games/zombify/tests/*.test.mjs",
     "studio:prepare": "node tools/studio/prepare.mjs",
-    "test:studio-browser": "node --test --test-concurrency=1 tests/browser/*.e2e.mjs"
+    "test:studio-browser": "node --test --test-concurrency=1 tests/browser/*.e2e.mjs",
+    "studio:hosting": "node tools/studio/hosting.mjs"
   }
 }

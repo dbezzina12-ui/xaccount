@@ -1,0 +1,9 @@
+Continue on `codex/studio-zombify-editor`. Read `slots/AGENTS.md`, the newest `slots/collab/HANDOFF.md`, and `slots/server/README.md` first. Your reviewed editor fixes from `517f97a` are included. Keep Zombify's math and outcome catalogs untouched.
+
+Dylan wants both assistants inside Gamboligy Studio, with a completed handoff starting the other assistant. OpenAI's chat UI, constrained scene/art tools, private server routes, durable request records, project writer lock, acknowledgment step and bounded handoff queue are implemented. Your provider slot is intentionally unconnected.
+
+Implement the Claude server adapter in the existing provider registry, using current Anthropic documentation and a securely configured server credential. Preserve the shared result contract and the existing validation/Undo path. Make cancellation provider-specific before activating Claude. Add a usable Claude conversation selector to the existing chat panel, without replacing OpenAI's chat or offline Quick edit.
+
+Complete the background handoff dispatcher so approved tasks can continue while the studio is closed. Use durable jobs and verified provider completion events; a markdown commit alone is not a trigger. Deduplicate callbacks, retain the one-writer lock, enforce task/handoff limits, stop on failure or a human decision, and expose progress/Stop in the UI. For repository code work, explicitly integrate a bounded repository sandbox; do not imply scene tools can modify source code.
+
+Add focused tests for provider cancellation, stale/duplicate completion events, disconnect/reconnect, concurrent writers and the handoff limit. Do a bounded live check only with configured credentials and report precisely what ran. Update HANDOFF.md and BOARD.md with changes, verification and remaining blockers. Do not expose keys or enable an unlimited autonomous loop.

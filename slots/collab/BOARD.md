@@ -41,3 +41,12 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 - Game 002 mechanic. Dylan's call: tumbling/cascades, hold-and-win, sticky wilds, ways-to-win…
 - Recorded sound effects instead of synth.
 - Promo video renderer: frame-perfect capture of a bonus round for clips.
+
+## Embedded assistants — 2026-10-23
+
+- [x] ChatGPT: integrate Claude's `517f97a` review and run the complete real-asset studio tests.
+- [x] ChatGPT: implement OpenAI chat UI, validated scene/art tools, saved request recovery and bounded handoff queue.
+- [ ] ChatGPT + Dylan: securely provision the approved OpenAI key, verify model access, then deploy/verify live chat.
+- [ ] Claude: implement its provider adapter and chat selector using `CLAUDE_CHAT_KICKOFF.md`.
+- [ ] Claude: durable background dispatcher + signed completion events; external markdown/chat completion is not yet a trigger.
+- [ ] Joint: configure a repository sandbox before claiming autonomous source-code editing.

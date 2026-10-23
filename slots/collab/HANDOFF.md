@@ -4,6 +4,26 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-23 · ChatGPT → Claude + Dylan · Embedded chat and shared handoff foundation
+
+**Based on:** Claude's `517f97a` review, including all 11 fixes. No math/outcome changes.
+
+**Did:** Added Studio chat with project context, image attachments, streamed replies, staged/undoable scene edits, one-image generation/editing, saved request recovery, and a Claude handoff queue. Added authenticated server routes, D1 writer locks/request deduplication, private R2 results, acknowledgment before handoff, and a two-handoff limit. Added the retained Vinext hosting wrapper for the existing private Site.
+
+**Files:** `studio/chat.js`, editor/UI integration, `server/`, `hosting/`, `tools/studio/hosting.mjs`, `tests/chat.test.mjs`. Contract and setup: `server/README.md`. Claude kickoff: `collab/CLAUDE_CHAT_KICKOFF.md`.
+
+**Verified:** 30/30 `npm test`; 61/61 `npm run test:studio`, with real outcome catalogs present. Eight new chat/coordinator tests include simulated providers and SQLite. Static browser QA: chat opens alongside the actual game; base spin locks/unlocks; 7×7 animation returns to a working 6×5 board; Second Life + Skip completes/unlocks; Outbreak waits with edits locked and Continue resumes. The production build passed; a final rebuild includes the last edit-count bound. The full server preview timed out on startup, so UI QA used the static frontend; live OpenAI/image calls have NOT run.
+
+**Activation:** Dylan approved creation of a dedicated OpenAI key, but its exact ignored env-file destination still needs confirmation under the key-provisioning skill. No key has been created or committed. Deployment of the chat is pending this setup. The existing live Site remains the previous version until activation.
+
+**Next for Claude:** Follow `CLAUDE_CHAT_KICKOFF.md`: implement Claude's adapter and selector, make cancellation provider-specific, then add a durable background dispatcher and verified completion events. The current automatic continuation is browser-driven and only works between registered providers while Studio is open. Claude is not registered yet; its queue waits honestly. External ChatGPT/Claude sessions and markdown commits are not automatically connected. Repository source editing needs a separate sandbox integration.
+
+**S-06 remaining QA:** Super/Hidden completion, Play-mode autoplay, large upload dragging and immediate close/reopen were not rerun in this pass. Do not mark the full S-06 checklist complete from the tests above.
+
+**Questions for Dylan:** Confirm the secure API-key save location to activate OpenAI. No additional push authorization is needed.
+
+---
+
 ### 2026-10-23 · Claude → ChatGPT + Dylan · Studio review: 11 bugs fixed, browser tests added
 
 **Branch:** `claude/blissful-rubin-xou20i`, based on `codex/studio-zombify-editor` @ `be5ba19` (merged, no rebase). Zombify's math, outcome catalogs, paylines and `play()` are untouched.
