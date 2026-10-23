@@ -1,25 +1,35 @@
 # Board
 
-Status: `todo` · `doing` · `review` (waiting on Dylan) · `done` · `blocked`. Whoever changes a task's status updates its row.
+Status: `todo` · `doing` · `review` (waiting on Dylan) · `done` · `blocked` · `paused`. Whoever changes a task's status updates its row.
 
-## Game 001
+## Studio engine around Zombify (current focus, D-004)
 
 | ID | Task | Owner | Status | Notes |
 |---|---|---|---|---|
-| G1-01 | Math model: 5×3, 20 lines, multiplying wild multipliers in free spins, bonus buy | Claude | review | 96.28% RTP, high volatility, 10,000x max. Dylan to approve: D-002 |
+| S-01 | Visual studio editor: separate desktop/mobile scenes, layers and backgrounds, reel grid and size, color grading, drag/resize, undo/save/export | ChatGPT (Codex) | doing | Branch `codex/studio-zombify-editor` |
+| S-02 | Load Zombify v125 into the studio with its walking, infection and Second Life mechanics intact | ChatGPT (Codex) | doing | Same branch |
+| S-03 | Review the mechanics adapter boundary and reel animation integration | Claude | blocked | Waiting for S-01/S-02 to land on the branch |
+| S-04 | Measure Zombify's math as it is (simulate through the adapter, no changes) | Claude | blocked | Needs the Zombify source in the repo |
+| S-05 | Say where the Zombify source lives, or have it committed to the editor branch | Dylan | todo | Not reachable from Claude's session |
+
+## Game 001 (paused by D-004)
+
+| ID | Task | Owner | Status | Notes |
+|---|---|---|---|---|
+| G1-01 | Math model: 5×3, 20 lines, multiplying wild multipliers in free spins, bonus buy | Claude | paused | 96.28% RTP, high volatility, 10,000x max. Dylan to approve: D-002 |
 | G1-02 | Engine: reels, anticipation, wins, big wins, free spins, HUD, sound, phone layout | Claude | done | Playable with placeholder art |
-| G1-03 | Three theme concepts that fit the mechanic | ChatGPT | todo | Brief in `collab/CHATGPT_KICKOFF.md` |
-| G1-04 | Pick the theme | Dylan | todo | Record in `DECISIONS.md` as D-003 |
-| G1-05 | Style frame (full-screen mockup in the chosen theme) | ChatGPT | todo | After G1-04 |
-| G1-06 | Approve the style frame | Dylan | todo | |
-| G1-07 | 11 symbols | ChatGPT | todo | `games/game-001/ART_SPEC.md` |
-| G1-08 | 4 backgrounds | ChatGPT | todo | |
-| G1-09 | Logo, 5 banners, coin, `theme.json` values | ChatGPT | todo | |
-| G1-10 | Integrate art, screenshots, per-asset feedback | Claude | todo | Each time art lands in `art/inbox/` |
-| G1-11 | Theme-specific animation pass (wild/scatter specials, glow colors, idle motion) | Claude | todo | After the symbols land |
-| G1-12 | Sound pass for the theme | Claude | todo | Synth placeholders now |
-| G1-13 | Playtest (feel of base game, bonus frequency, big win pacing) | Dylan | todo | Any time: `?demo=feature` jumps straight to a bonus |
-| G1-14 | Ship v1: publish playable link, tag release | Claude | todo | |
+| G1-03 | Three theme concepts that fit the mechanic | ChatGPT | paused | Brief in `collab/CHATGPT_KICKOFF.md` |
+| G1-04 | Pick the theme | Dylan | paused | Record in `DECISIONS.md` as D-003 |
+| G1-05 | Style frame (full-screen mockup in the chosen theme) | ChatGPT | paused | After G1-04 |
+| G1-06 | Approve the style frame | Dylan | paused | |
+| G1-07 | 11 symbols | ChatGPT | paused | `games/game-001/ART_SPEC.md` |
+| G1-08 | 4 backgrounds | ChatGPT | paused | |
+| G1-09 | Logo, 5 banners, coin, `theme.json` values | ChatGPT | paused | |
+| G1-10 | Integrate art, screenshots, per-asset feedback | Claude | paused | Each time art lands in `art/inbox/` |
+| G1-11 | Theme-specific animation pass (wild/scatter specials, glow colors, idle motion) | Claude | paused | After the symbols land |
+| G1-12 | Sound pass for the theme | Claude | paused | Synth placeholders now |
+| G1-13 | Playtest (feel of base game, bonus frequency, big win pacing) | Dylan | paused | Any time: `?demo=feature` jumps straight to a bonus |
+| G1-14 | Ship v1: publish playable link, tag release | Claude | paused | |
 
 ## Backlog (ideas, not scheduled)
 

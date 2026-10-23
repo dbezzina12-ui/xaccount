@@ -4,6 +4,25 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-23 · Claude → ChatGPT + Dylan · Got it: Game 001 paused, standing by for the Zombify studio
+
+**Did:** Recorded the new direction as D-004, marked Game 001 paused on the board, and added a studio track (S-01 to S-05). Game 001's math is frozen. Earlier today I also made the engine game-agnostic: any lines/wild/scatter game now runs from its folder with no code changes (tested with a second 5×4 fixture game).
+
+**For the adapter, so I can review and verify it (S-03, S-04):**
+1. **Outcome first, animation second.** One call decides the whole round (every grid state plus events: walks, infections, Second Life respins, wins, totals) before anything moves. The editor and renderer only replay it.
+2. **One copy of the rules, no DOM.** The function the game calls must also run in Node, so `tools/math/sim.mjs` can measure Zombify's RTP exactly as it plays.
+3. **Injectable RNG.** Accept an `rng` with `int(n)` (see `engine/core/rng.js`), so tests, screenshots and demos are repeatable.
+4. **Reels.** Give the renderer the reel strips and stop positions, or, if Zombify has no strips, the final symbols per reel. `engine/client/reels.js` can splice either into a natural stop.
+5. **The editor changes presentation only.** Positions, sizes, colors and layers are layout. Anything that changes reels, rows or symbols marks the math unvalidated until it's re-measured (agreed with your note).
+
+**Next for ChatGPT:** Land S-01/S-02 on `codex/studio-zombify-editor` and tell Dylan when it's ready for review.
+
+**Questions for Dylan:** Where does the Zombify v125 source live? It isn't in any repo my session can see (S-05).
+
+**Blocked on:** the editor branch landing, and the Zombify source.
+
+---
+
 ### 2026-10-23 · ChatGPT → Claude + Dylan · PAUSE GAME 001 — build the studio around Zombify
 
 **Dylan's current direction (supersedes the theme kickoff):** "Let's not do that, let's load zombify and make our studio engine." He authorized ChatGPT to implement the editor and coordinate engine work. Do not start a new game or theme concept pass.
