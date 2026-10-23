@@ -771,5 +771,11 @@ window.ZombifyStudioRuntime = {
  async start(mode='base') { if(busy || auto.active) throw Error('Finish the current round first.'); if(!['base','single','showcase','triple','reel','outbreak','preview_super','preview_hidden','preview_feature'].includes(mode))throw Error('Unknown preview.'); return play(mode); },
  continue: () => { if(completeFeature)completeFeature(); },
  resetBoard: () => { if(!busy)render(makeRound({kind:'carriers',rng:seeded(2)}).events[0].board); },
- speed: value => {if(!['normal','quick','turbo'].includes(value))throw Error('Unknown speed');playback.setSpeed(value);syncControls();}
+ speed: value => {if(!['normal','quick','turbo'].includes(value))throw Error('Unknown speed');playback.setSpeed(value);syncControls();},
+ // Cheap round status for the studio bridge, polled every 100 ms.
+ status: () => ({busy, awaitingOutbreak:!!completeFeature, autoplay:auto.active, dialog:!!document.querySelector('dialog[open]:not(#welcome)')}),
+ loading: () => gameReady.read(),
+ retryLoading: () => gameReady.ensure(),
+ // Same as pressing SKIP during a round; an Outbreak waiting for Continue is left alone.
+ skip: () => { if(busy&&!completeFeature)void play(); }
 };

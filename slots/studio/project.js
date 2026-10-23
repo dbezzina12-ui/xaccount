@@ -16,23 +16,34 @@ export function createProject(){
 const finite=(v,min,max,name)=>{if(typeof v!=='number'||!Number.isFinite(v)||v<min||v>max)throw Error(`${name} must be between ${min} and ${max}.`);};
 const color=v=>typeof v==='string'&&/^#[0-9a-f]{6}$/i.test(v);
 export function safeSource(src){return typeof src==='string'&&src.length<16000000&&(/^(games\/zombify\/runtime\/assets\/|data:image\/(png|jpeg|webp|gif);base64,)/.test(src)||/^https:\/\//.test(src));}
-export function validateProject(p){
+// The editor hands the preview iframe same-origin blob: URLs for uploaded
+// images so multi-MB data URLs never cross postMessage; saved and imported
+// projects must still carry the real bytes.
+const previewSource=src=>typeof src==='string'&&/^blob:https?:\/\/[^/\s]+\/[0-9a-f-]{36}$/i.test(src);
+const label=(v,what)=>{if(typeof v!=='string'||v.length>80)throw Error(`${what} must be text of up to 80 characters.`);};
+const flag=(v,what)=>{if(typeof v!=='boolean')throw Error(`${what} must be true or false.`);};
+export function validateProject(p,{preview=false}={}){
  if(!p||p.schemaVersion!==VERSION||p.adapter!=='zombify-v125')throw Error('This is not a supported Studio project.');
  if(typeof p.name!=='string'||!p.name.trim()||p.name.length>80)throw Error('Use a project name of 1–80 characters.');
  if(!Array.isArray(p.assets)||p.assets.length>200)throw Error('A project supports up to 200 assets.');
- const ids=new Set();for(const a of p.assets){if(typeof a.id!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(a.id)||ids.has(a.id)||!safeSource(a.src))throw Error('Invalid or duplicate asset.');ids.add(a.id);}
+ const ids=new Set();for(const a of p.assets){if(!a||typeof a.id!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(a.id)||ids.has(a.id)||!(safeSource(a.src)||preview&&previewSource(a.src))||!['image','symbol'].includes(a.kind))throw Error('Invalid or duplicate asset.');label(a.name,'Asset name');ids.add(a.id);}
  const g=p.grid;finite(g.columns,3,10,'Reel count');finite(g.rows,3,10,'Row count');if(!Number.isInteger(g.columns)||!Number.isInteger(g.rows))throw Error('Reels and rows must be whole numbers.');
- finite(g.symbolScale,.5,1.5,'Symbol scale');finite(g.divider,0,1,'Dividers');finite(g.frameWidth,0,60,'Frame width');if(!color(g.fill)||!ids.has(g.frameAsset))throw Error('Invalid reel appearance.');
+ finite(g.symbolScale,.5,1.5,'Symbol scale');finite(g.divider,0,1,'Dividers');finite(g.frameWidth,0,60,'Frame width');if(!color(g.fill)||!ids.has(g.frameAsset))throw Error('Invalid reel appearance.');flag(g.texture,'Reel texture');flag(g.supports,'Cabinet supports');
  for(const id of SYMBOLS)if(!ids.has(p.symbols[id]))throw Error('Missing symbol asset: '+id);
  for(const key of ['desktop','mobile']){const s=p.scenes?.[key];if(!s)throw Error('Both desktop and mobile scenes are required.');finite(s.width,240,3840,'Canvas width');finite(s.height,240,3840,'Canvas height');
  const b=s.background;if(!ids.has(b.assetId))throw Error('Missing background asset.');for(const [k,min,max] of [['brightness',25,200],['contrast',25,200],['saturation',0,200],['hue',-180,180],['blur',0,20],['zoom',100,200],['positionX',0,100],['positionY',0,100],['tintOpacity',0,1]])finite(b[k],min,max,k);if(!color(b.tint))throw Error('Invalid tint.');
- if(!Array.isArray(s.layers)||s.layers.length>30)throw Error('A scene supports up to 30 layers.');const layerIds=new Set();for(const l of s.layers){if(!/^[a-zA-Z0-9_-]{1,80}$/.test(l.id)||layerIds.has(l.id)||!['image','reels','controls'].includes(l.kind))throw Error('Invalid or duplicate layer.');layerIds.add(l.id);finite(l.x,-s.width,s.width,'X');finite(l.y,-s.height,s.height,'Y');finite(l.w,32,s.width*2,'Width');finite(l.h,32,s.height*2,'Height');finite(l.opacity,0,1,'Opacity');if(l.kind==='image'&&!ids.has(l.assetId))throw Error('Missing layer asset.');}
+ if(!Array.isArray(s.layers)||s.layers.length>30)throw Error('A scene supports up to 30 layers.');const layerIds=new Set();for(const l of s.layers){if(!l||typeof l!=='object'||!/^[a-zA-Z0-9_-]{1,80}$/.test(l.id)||layerIds.has(l.id)||!['image','reels','controls'].includes(l.kind))throw Error('Invalid or duplicate layer.');layerIds.add(l.id);finite(l.x,-s.width,s.width,'X');finite(l.y,-s.height,s.height,'Y');finite(l.w,32,s.width*2,'Width');finite(l.h,32,s.height*2,'Height');finite(l.opacity,0,1,'Opacity');label(l.name,'Layer name');flag(l.visible,'Visible');flag(l.locked,'Locked');if(l.kind==='image'&&!ids.has(l.assetId))throw Error('Missing layer asset.');}
  for(const id of ['reels','title','controls'])if(!layerIds.has(id))throw Error('Missing required layer: '+id);
  }
  return p;
 }
 export const compatible=p=>p.grid.columns===6&&p.grid.rows===5;
-export const clone=p=>structuredClone(p);
+// Assets are immutable once added, so copies share them (frozen): undo
+// snapshots and drafts never duplicate uploaded image bytes.
+const share=a=>Object.isFrozen(a)?a:Object.freeze({...a});
+export const clone=p=>Object.fromEntries(Object.entries(p).map(([k,v])=>[k,k==='assets'?v.map(share):structuredClone(v)]));
+// Cheap equality for history: long image sources compare by length and tail.
+const fingerprint=p=>JSON.stringify(p,(k,v)=>k==='src'&&typeof v==='string'&&v.length>512?`${v.length}:${v.slice(-48)}`:v);
 export function applyOperation(project,op){
  if(!op||typeof op!=='object')throw Error('Invalid edit.');
  if(op.scene!==undefined&&!['desktop','mobile'].includes(op.scene))throw Error('Unknown scene.');
@@ -42,11 +53,11 @@ export function applyOperation(project,op){
  if(op.type==='grid')Object.assign(p.grid,op.values);
  else if(op.type==='background'){if(!scene)throw Error('Unknown scene.');Object.assign(scene.background,op.values);}
  else if(op.type==='layer'){const l=scene?.layers.find(l=>l.id===op.id);if(!l)throw Error('Unknown layer.');Object.assign(l,op.values);}
- else if(op.type==='asset'){if(p.assets.some(a=>a.id===op.asset.id))throw Error('Asset already exists.');p.assets.push(op.asset);}
+ else if(op.type==='asset'){if(!op.asset||typeof op.asset!=='object')throw Error('Invalid asset.');if(p.assets.some(a=>a.id===op.asset.id))throw Error('Asset already exists.');p.assets.push(share(op.asset));}
  else if(op.type==='symbol'){if(!SYMBOLS.includes(op.id))throw Error('Unknown symbol.');p.symbols[op.id]=op.assetId;}
- else if(op.type==='addLayer'){if(!scene)throw Error('Unknown scene.');scene.layers.push(op.layer);}
+ else if(op.type==='addLayer'){if(!scene)throw Error('Unknown scene.');if(!op.layer||typeof op.layer!=='object')throw Error('Invalid layer.');scene.layers.push({...op.layer});}
  else if(op.type==='removeLayer'){if(['reels','title','controls'].includes(op.id))throw Error('Core layers can be hidden, not deleted.');scene.layers=scene.layers.filter(l=>l.id!==op.id);}
- else if(op.type==='reorder'){const index=scene.layers.findIndex(l=>l.id===op.id);if(index<0)throw Error('Unknown layer.');const [l]=scene.layers.splice(index,1);scene.layers.splice(Math.max(0,Math.min(scene.layers.length,op.index)),0,l);}
+ else if(op.type==='reorder'){if(!Number.isInteger(op.index))throw Error('Layer position must be a whole number.');const index=scene.layers.findIndex(l=>l.id===op.id);if(index<0)throw Error('Unknown layer.');const [l]=scene.layers.splice(index,1);scene.layers.splice(Math.max(0,Math.min(scene.layers.length,op.index)),0,l);}
  else if(op.type==='rename')p.name=op.name;
  else if(op.type==='canvas'){scene.width=op.width;scene.height=op.height;}
  else throw Error('Unknown edit: '+op.type);
@@ -55,7 +66,7 @@ export function applyOperation(project,op){
 export function applyBatch(project,ops){if(!Array.isArray(ops)||!ops.length||ops.length>50)throw Error('Provide 1–50 edits.');return ops.reduce(applyOperation,project);}
 export class History{
  constructor(project){this.current=validateProject(clone(project));this.past=[];this.future=[];this.labels=[];}
- commit(project,label='Edit'){validateProject(project);if(JSON.stringify(project)===JSON.stringify(this.current))return false;this.past.push(this.current);this.labels.push(label);if(this.past.length>60){this.past.shift();this.labels.shift();}this.current=clone(project);this.future=[];return true;}
+ commit(project,label='Edit'){validateProject(project);if(fingerprint(project)===fingerprint(this.current))return false;this.past.push(this.current);this.labels.push(label);if(this.past.length>60){this.past.shift();this.labels.shift();}this.current=clone(project);this.future=[];return true;}
  undo(){if(!this.past.length)return false;this.future.push(this.current);this.current=this.past.pop();this.labels.pop();return true;}
  redo(){if(!this.future.length)return false;this.past.push(this.current);this.current=this.future.pop();this.labels.push('Redo');return true;}
 }

@@ -1,16 +1,46 @@
 import {createProject,validateProject,applyOperation,applyBatch,History,compatible,PRESETS,SYMBOLS,parseCommand,clone,uniqueId} from './project.js';
-import {readSaved,saveProject,downloadProject,imageAsset} from './storage.js';
+import {readSaved,saveProject,downloadProject,imageAsset,writeJournal,readJournal,clearJournal} from './storage.js';
 const $=id=>document.getElementById(id),baseURL=new URL('../',import.meta.url),esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let history=new History(createProject()),scene='desktop',selection='reels',mode='edit',scale=1,ready=false,busy=false,attachment=null,uploadPurpose='asset',selectedAsset=null,saveTimer,revision=0,drag=null,draft=null,toastTimer;
-const frame=$('runtime'),getProject=()=>draft||history.current,getScene=()=>getProject().scenes[scene],findLayer=()=>getScene().layers.find(l=>l.id===selection),assetURL=a=>new URL(a.src,baseURL).href;
+let history=new History(createProject()),scene='desktop',selection='reels',mode='edit',scale=1,ready=false,busy=false,attachment=null,uploadPurpose='asset',selectedAsset=null,saveTimer=null,revision=0,drag=null,draft=null,toastTimer;
+// Round lock: `round` is the Test spin this editor asked for (held from click until the
+// runtime reports it finished); `runtime` mirrors state the bridge pushes, which also
+// covers rounds started from the game's own controls. Editing is allowed only when both are idle.
+let round=null,roundSeq=0,runtime={busy:false,awaitingOutbreak:false},game={status:'starting'},problem=null,lastHeard=0,applyFrame=0,applyRev=0,assetsKey='';
+const frame=$('runtime'),getProject=()=>draft||history.current,getScene=()=>getProject().scenes[scene],findLayer=()=>getScene().layers.find(l=>l.id===selection);
+// Uploaded images become blob: URLs for display and for the preview iframe, so
+// multi-MB data URLs never go through innerHTML, CSS or postMessage.
+const blobs=new Map(),previews=new WeakMap();
+function blobURL(a){const key=`${a.id}:${a.src.length}:${a.src.slice(-32)}`;let url=blobs.get(key);if(!url){const comma=a.src.indexOf(','),bin=atob(a.src.slice(comma+1)),bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);url=URL.createObjectURL(new Blob([bytes],{type:a.src.slice(5,a.src.indexOf(';'))}));blobs.set(key,url);}return url;}
+const assetURL=a=>a.src.startsWith('data:')?blobURL(a):new URL(a.src,baseURL).href;
+function previewProject(p){let out=previews.get(p);if(!out){out={...p,assets:p.assets.map(a=>a.src.startsWith('data:')?{...a,src:blobURL(a)}:a)};previews.set(p,out);}return out;}
 function toast(text){$('toast').textContent=text;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,4500);}
 function send(type,extra={}){frame.contentWindow?.postMessage({source:'slot-studio',type,...extra},location.origin);}
-function updateRuntime(){if(ready)send('apply',{project:getProject(),scene});}
+// At most one apply per frame; drags and sliders call this on every input event.
+function updateRuntime(){if(!ready||applyFrame)return;applyFrame=requestAnimationFrame(()=>{applyFrame=0;if(ready)send('apply',{project:previewProject(getProject()),scene,rev:++applyRev});});}
 function updateHistory(){ $('undo').disabled=!history.past.length||busy;$('redo').disabled=!history.future.length||busy; }
-function checkEditable(){if(busy)throw Error('Finish the current round before editing the scene.');}
-function commit(project,label){checkEditable();draft=null;if(!history.commit(project,label))return;revision++;$('save-status').textContent='Saving…';render();clearTimeout(saveTimer);saveTimer=setTimeout(()=>persist(),450);}
+const percent=g=>Math.round(100*(g.loaded||0)/Math.max(1,g.total||1));
+function updateControls(){
+ const playable=compatible(getProject()),loaded=!playable||game.status==='ready',spin=$('spin');
+ if(busy){spin.textContent='⏭ Skip';spin.title='Skip the rest of this round’s animation';spin.disabled=runtime.awaitingOutbreak||!ready;}
+ else{spin.textContent=loaded?'▶ Test spin':game.status==='loading'&&game.total>1?`Loading art ${percent(game)}%`:game.status==='loading'||game.status==='starting'?'Loading…':'Game unavailable';spin.title='';spin.disabled=!ready||!loaded;}
+ $('continue').hidden=!runtime.awaitingOutbreak;
+ $('preview-mode').disabled=!playable||busy;$('speed').disabled=!playable||busy;
+ updateHistory();
+}
+function syncBusy(){busy=!!round||!!runtime.busy||!!runtime.awaitingOutbreak;document.body.classList.toggle('busy',busy);updateControls();}
+function checkEditable(){if(busy){if(draft){draft=null;render();}throw Error('Finish the current round before editing the scene.');}}
+function setProblem(kind,text=''){
+ problem=kind;const box=$('runtime-problem');box.hidden=!kind;if(!kind)return;
+ $('problem-title').textContent={missing:'Zombify isn’t installed in this checkout',error:'Some Zombify files failed to load',unresponsive:'The game preview stopped responding'}[kind];
+ $('problem-text').textContent=text||(kind==='unresponsive'?'Your project is safe. Reload the preview to keep testing.':'');
+ $('problem-retry').hidden=kind!=='error';
+}
+function reloadRuntime(){ready=false;round=null;runtime={busy:false,awaitingOutbreak:false};game={status:'starting'};setProblem(null);syncBusy();$('canvas-loading').hidden=false;lastHeard=performance.now();frame.src=new URL('../games/zombify/runtime/index.html',import.meta.url).href;}
+function commit(project,label){checkEditable();draft=null;if(!history.commit(project,label))return;revision++;$('save-status').textContent='Saving…';render();clearTimeout(saveTimer);saveTimer=setTimeout(()=>{saveTimer=null;persist();},450);}
+// A pending autosave is written right away when the tab is hidden or closed.
+function flushSave(){if(saveTimer){clearTimeout(saveTimer);saveTimer=null;writeJournal(history.current);persist();}}
 function edit(op,label='Edit'){commit(applyOperation(history.current,{scene,...op}),label);}
-async function persist(){const rev=revision;try{await saveProject(history.current);if(rev===revision)$('save-status').textContent='Saved in this browser';}catch(error){$('save-status').textContent='Save failed — export a copy';toast('Could not save this project in the browser. Export it to keep your changes.');}}
+async function persist(){const rev=revision;try{await saveProject(history.current);if(rev===revision){$('save-status').textContent='Saved in this browser';clearJournal();}}catch(error){$('save-status').textContent='Save failed — export a copy';toast('Could not save this project in the browser. Export it to keep your changes.');}}
 function guarded(fn){return (...args)=>{try{const r=fn(...args);if(r?.catch)r.catch(e=>toast(e.message));}catch(e){toast(e.message);}};}
 function fit(){const s=getScene(),area=$('canvas-area'),availableW=area.clientWidth-44,availableH=area.clientHeight-74;scale=Math.min(availableW/s.width,availableH/s.height,1.5);$('canvas').style.cssText=`width:${s.width}px;height:${s.height}px;transform:scale(${scale});`;$('canvas-fit').style.width=s.width*scale+'px';$('canvas-fit').style.height=s.height*scale+'px';$('zoom-label').textContent=`Fit ${Math.round(scale*100)}%`;$('canvas-dimensions').textContent=`${s.width} × ${s.height}`;}
 function renderSelection(){const overlay=$('selection-overlay');overlay.replaceChildren();const l=findLayer();if(!l||!l.visible)return;const box=document.createElement('div');box.className='selection-box';box.style.cssText=`left:${l.x}px;top:${l.y}px;width:${l.w}px;height:${l.h}px`;const label=document.createElement('span');label.className='selection-tag';label.textContent=l.name+(l.locked?' · locked':'');label.style.fontSize=Math.max(11,10/scale)+'px';box.append(label);if(!l.locked){const h=document.createElement('div');h.className='resize-handle';h.dataset.resize='true';box.append(h);}overlay.append(box);}
@@ -28,8 +58,8 @@ function renderInspector(){const p=getProject(),g=p.grid,l=findLayer(),b=getScen
  }
  $('inspector').innerHTML=html;
 }
-function renderAssets(){const p=getProject();$('assets').innerHTML=p.assets.map(a=>`<button class="asset-card ${selectedAsset===a.id?'selected':''}" draggable="true" data-asset="${a.id}" title="Use ${esc(a.name)}"><img src="${esc(assetURL(a))}" loading="lazy" alt=""><span>${esc(a.name)}</span></button>`).join('');}
-function render(){const p=getProject();$('project-name').value=p.name;$('scene-label').textContent=scene.toUpperCase();$('canvas-name').textContent=scene.toUpperCase()+' SCENE';$('inspector-scene').textContent=scene==='desktop'?'Desktop':'Mobile';$('desktop').classList.toggle('active',scene==='desktop');$('mobile').classList.toggle('active',scene==='mobile');$('adapter-status').textContent=compatible(p)?'6 × 5 · playable':`${p.grid.columns} × ${p.grid.rows} · layout test`;$('preview-label').textContent=compatible(p)?'LIVE GAME PREVIEW':'LAYOUT TEST · NO PAYOUTS';$('preview-mode').disabled=!compatible(p)||busy;$('speed').disabled=!compatible(p)||busy;renderLayers();renderInspector();renderAssets();fit();renderSelection();updateRuntime();updateHistory();}
+function renderAssets(){const p=getProject(),key=p.assets.map(a=>a.id).join()+'|'+selectedAsset;if(key===assetsKey)return;assetsKey=key;$('assets').innerHTML=p.assets.map(a=>`<button class="asset-card ${selectedAsset===a.id?'selected':''}" draggable="true" data-asset="${a.id}" title="Use ${esc(a.name)}"><img src="${esc(assetURL(a))}" loading="lazy" alt=""><span>${esc(a.name)}</span></button>`).join('');}
+function render(){const p=getProject();$('project-name').value=p.name;$('scene-label').textContent=scene.toUpperCase();$('canvas-name').textContent=scene.toUpperCase()+' SCENE';$('inspector-scene').textContent=scene==='desktop'?'Desktop':'Mobile';$('desktop').classList.toggle('active',scene==='desktop');$('mobile').classList.toggle('active',scene==='mobile');$('adapter-status').textContent=compatible(p)?'6 × 5 · playable':`${p.grid.columns} × ${p.grid.rows} · layout test`;$('preview-label').textContent=compatible(p)?'LIVE GAME PREVIEW':'LAYOUT TEST · NO PAYOUTS';renderLayers();renderInspector();renderAssets();fit();renderSelection();updateRuntime();updateControls();}
 function select(id){selection=id;renderLayers();renderInspector();renderSelection();}
 function setScene(next){checkEditable();scene=next;render();}
 function setMode(next){mode=next;document.body.dataset.mode=mode;$('edit').classList.toggle('active',mode==='edit');$('play').classList.toggle('active',mode==='play');$('mode-caption').textContent=mode==='edit'?'Drag to move · corner to resize':'Interact with the game';}
@@ -61,28 +91,54 @@ function undo(){checkEditable();draft=null;if(history.undo()){revision++;render(
 function redo(){checkEditable();draft=null;if(history.redo()){revision++;render();persist();}}
 $('undo').onclick=guarded(undo);$('redo').onclick=guarded(redo);$('save').onclick=guarded(async()=>{await persist();});
 $('export').onclick=()=>{downloadProject(history.current);toast('Project exported with uploaded images included.');};
-$('import').onclick=()=>{$('import-input').value='';$('import-input').click();};$('import-input').onchange=guarded(async e=>{checkEditable();const file=e.target.files[0];if(!file)return;if(file.size>80*1024*1024)throw Error('Project file is too large (maximum 80 MB).');const p=validateProject(JSON.parse(await file.text()));selection='reels';commit(p,'Import project');toast('Project imported. Previous project is available with Undo.');});
+$('import').onclick=()=>{$('import-input').value='';$('import-input').click();};$('import-input').onchange=guarded(async e=>{checkEditable();const file=e.target.files[0];if(!file)return;if(file.size>80*1024*1024)throw Error('Project file is too large (maximum 80 MB).');let data;try{data=JSON.parse(await file.text());}catch{throw Error('This file isn’t a Studio project (it isn’t valid JSON).');}const p=validateProject(data);selection='reels';commit(p,'Import project');toast('Project imported. Previous project is available with Undo.');});
 $('project-name').onchange=guarded(e=>edit({type:'rename',name:e.target.value.trim()},'Rename project'));
 $('center-reels').onclick=guarded(()=>{const s=getScene(),l=s.layers.find(l=>l.id==='reels');edit({type:'layer',id:'reels',values:{x:Math.round((s.width-l.w)/2)}},'Center reels');});
-$('spin').onclick=guarded(()=>{if(!ready)throw Error('Zombify is still loading.');if(busy)throw Error('A round is already running.');busy=true;document.body.classList.add('busy');$('spin').disabled=true;updateHistory();send('spin',{mode:$('preview-mode').value});});
-$('continue').onclick=()=>send('continue');$('speed').onchange=e=>send('speed',{value:e.target.value});
+$('spin').onclick=guarded(()=>{
+ if(busy){send('skip');return;}
+ if(!ready)throw Error('Zombify is still loading.');
+ const playable=compatible(getProject());
+ if(playable&&game.status!=='ready')throw Error(game.message||`Zombify artwork is still loading (${percent(game)}%).`);
+ round={id:++roundSeq,acked:false,at:performance.now()};syncBusy();
+ send('spin',{id:round.id,mode:playable?$('preview-mode').value:'base'});
+});
+$('problem-reload').onclick=reloadRuntime;$('problem-retry').onclick=()=>{setProblem(null);send('retry');};
+$('continue').onclick=()=>{$('continue').hidden=true;send('continue');};$('speed').onchange=e=>send('speed',{value:e.target.value});
 $('command-form').onsubmit=guarded(e=>{e.preventDefault();checkEditable();const text=$('command').value.trim();if(!text)return;const ops=parseCommand(text,history.current,scene,attachment);commit(applyBatch(history.current,ops),'Quick edit: '+text.slice(0,45));$('command-result').textContent=`Applied ${ops.length===1?'edit':ops.length+' edits'} · Undo available`;$('command').value='';attachment=null;$('attachment-name').textContent='Attach an image to change the background.';});
 $('command').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('command-form').requestSubmit();}};
 $('examples').onclick=()=>{$('command').value='Make reels bigger';$('command').focus();toast('Examples: grid 7×7 · symbols 115% · saturation 120 · blur 3 · center reels');};
 $('help').onclick=()=>$('help-dialog').showModal();$('close-help').onclick=()=>$('help-dialog').close();
 window.addEventListener('keydown',guarded(e=>{const typing=/INPUT|TEXTAREA|SELECT/.test(e.target.tagName);if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();persist();return;}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!typing){e.preventDefault();e.shiftKey?redo():undo();return;}if(!typing&&mode==='edit'&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){e.preventDefault();const l=findLayer();if(!l||l.locked)return;const delta=e.shiftKey?10:1;edit({type:'layer',id:l.id,values:{x:l.x+(e.key==='ArrowRight'?delta:e.key==='ArrowLeft'?-delta:0),y:l.y+(e.key==='ArrowDown'?delta:e.key==='ArrowUp'?-delta:0)}},'Nudge layer');}}));
-window.addEventListener('message',e=>{if(e.source!==frame.contentWindow||e.origin!==location.origin||e.data?.source!=='slot-runtime')return;const d=e.data;if(d.type==='ready'){ready=true;updateRuntime();$('canvas-loading').hidden=true;}
- if(d.type==='error'){toast(d.message);busy=false;document.body.classList.remove('busy');$('spin').disabled=false;updateHistory();}
- if(d.type==='spin-complete'){busy=false;document.body.classList.remove('busy');$('spin').disabled=false;updateHistory();}
- if(d.type==='state'&&d.state){const next=!!d.state.busy;if(compatible(getProject())&&busy!==next){busy=next;document.body.classList.toggle('busy',busy);$('spin').disabled=busy;updateHistory();}$('continue').hidden=!d.state.awaitingOutbreak;}
+window.addEventListener('message',e=>{if(e.source!==frame.contentWindow||e.origin!==location.origin||e.data?.source!=='slot-runtime')return;const d=e.data;
+ lastHeard=performance.now();if(problem==='unresponsive')setProblem(null);
+ if(d.type==='ready'){
+  // First load, or the preview reloaded: any round it was running is gone.
+  const reloaded=ready;ready=true;round=null;runtime={busy:false,awaitingOutbreak:false};syncBusy();updateRuntime();$('canvas-loading').hidden=true;if(reloaded)toast('Game preview reloaded.');
+ }else if(d.type==='game'){
+  game=d;
+  if(d.status==='missing'||d.status==='error')setProblem(d.status,d.message);else if(problem==='missing'||problem==='error')setProblem(null);
+  updateControls();
+ }else if(d.type==='round'&&round&&d.id===round.id){
+  if(d.phase==='started')round.acked=true;
+  else{if(d.message)toast(d.message);round=null;syncBusy();}
+ }else if(d.type==='state'&&'busy' in d){runtime={busy:d.busy,awaitingOutbreak:d.awaitingOutbreak};syncBusy();}
+ else if(d.type==='error')toast(d.message);
 });
 new ResizeObserver(()=>{fit();renderSelection();}).observe($('canvas-area'));
-setInterval(()=>{if(ready)send('read');},900);
+// Liveness: the bridge answers pings and pushes state; silence means the preview died.
+setInterval(()=>{
+ if(!ready||document.hidden)return;
+ send('ping',{id:Date.now()});
+ if(performance.now()-lastHeard>6000&&problem!=='unresponsive'){round=null;runtime={busy:false,awaitingOutbreak:false};syncBusy();setProblem('unresponsive');}
+ else if(round&&!round.acked&&performance.now()-round.at>5000){round=null;syncBusy();toast('The game preview didn’t start the round. Spin again, or reload the preview.');}
+},1000);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)flushSave();else lastHeard=performance.now();});
+window.addEventListener('pagehide',flushSave);
 setMode('edit');render();
-try{const saved=await readSaved();if(saved?.project){history=new History(validateProject(saved.project));render();$('save-status').textContent='Saved in this browser';}else $('save-status').textContent='New local project';}catch(error){toast('Saved project could not be opened. The original Zombify project is loaded.');$('save-status').textContent='Original project';}
+try{const saved=await readSaved(),journaled=readJournal(saved);let restored=null;try{restored=journaled&&validateProject(journaled);}catch{}if(restored){history=new History(restored);render();persist();toast('Restored your latest edits.');}else if(saved?.project){history=new History(validateProject(saved.project));render();$('save-status').textContent='Saved in this browser';}else $('save-status').textContent='New local project';}catch(error){toast('Saved project could not be opened. The original Zombify project is loaded.');$('save-status').textContent='Original project';}
 const lifecycle=new AbortController();
 if(document.modelContext?.registerTool){
- const specs=[{name:'read_slot_studio',description:'Read the current slot studio project, active scene, selection and game adapter compatibility. Uploaded image data is omitted; use its existing asset ID.',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:true,untrustedContentHint:true},execute(input){if(!input||Object.keys(input).length)throw Error('Use an empty object.');const p=clone(history.current);p.assets=p.assets.map(a=>({...a,src:a.src.startsWith('data:')?'[embedded image; retain asset ID]':a.src}));return{project:p,scene,selection,busy,playable:compatible(p),undoAvailable:history.past.length>0};}},
+ const specs=[{name:'read_slot_studio',description:'Read the current slot studio project, active scene, selection and game adapter compatibility. Uploaded image data is omitted; use its existing asset ID.',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:true,untrustedContentHint:true},execute(input){if(!input||Object.keys(input).length)throw Error('Use an empty object.');const p=clone(history.current);p.assets=p.assets.map(a=>({...a,src:a.src.startsWith('data:')?'[embedded image; retain asset ID]':a.src}));return{project:p,scene,selection,busy,playable:compatible(p),game:game.status,undoAvailable:history.past.length>0};}},
  {name:'edit_slot_studio',description:'Apply validated, undoable edits to the open studio. Types: grid (values), background (scene, values), layer (scene,id,values), symbol (id,assetId), asset (asset: id,name,src,kind), addLayer (scene,layer), reorder (scene,id,index), rename (name). Presentation only; cannot alter game outcomes.',inputSchema:{type:'object',properties:{label:{type:'string'},operations:{type:'array',minItems:1,maxItems:50,items:{type:'object'}}},required:['operations'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:true},execute(input){checkEditable();if(!input||Object.keys(input).some(k=>!['operations','label'].includes(k)))throw Error('Invalid edit request.');commit(applyBatch(history.current,input.operations),String(input.label||'Agent edit').slice(0,80));return{applied:input.operations.length,scene,grid:history.current.grid,undoAvailable:true};}}];
  for(const spec of specs)try{await document.modelContext.registerTool(spec,{signal:lifecycle.signal});}catch(error){console.warn('Studio agent tools unavailable',error);}
  window.addEventListener('pagehide',()=>lifecycle.abort(),{once:true});

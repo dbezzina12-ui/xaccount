@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Zombify runtime stand-in (tests only)</title>
+<!--
+  Test double for games/zombify/runtime/index.html. It has the DOM the studio
+  bridge styles and the same window.ZombifyStudioRuntime contract as the
+  facade at the end of runtime/app.js, with timings a test can control:
+    __fake.prepareMs  delay before the round marks itself busy (audio decode)
+    __fake.roundMs    how long a round animates
+    __fake.awaitBonus the round pauses until continue() (Outbreak "tap to continue")
+    __fake.loading    {status, loaded, total} reported by loading()
+    __fake.refuse     start() resolves false without playing (as play() does)
+  Every call is logged in __fake.log so tests can assert what reached the game.
+-->
+<style>
+  #game { position: relative; width: 100%; height: 100%; background: #0b1520; }
+  .board { display: grid; }
+  .tile { outline: 1px solid #234; }
+</style>
+</head>
+<body>
+<main id="game">
+  <div class="play-area">
+    <div class="brand"><h1 class="peek-title"><img id="zombify-title" alt=""></h1></div>
+    <div class="machine">
+      <div class="reel-stage">
+        <div class="board-wrap">
+          <div id="board" class="board" role="img" aria-label="Game board"></div>
+          <div id="stack-layer" class="stack-layer"></div>
+        </div>
+      </div>
+    </div>
+    <div class="console"><button id="spin">SPIN</button></div>
+    <footer id="mobile-controller"></footer>
+  </div>
+  <dialog id="welcome"></dialog>
+</main>
+<script>
+  const fake = (window.__fake = {
+    prepareMs: 0, roundMs: 400, awaitBonus: false, refuse: false,
+    loading: { status: 'ready', loaded: 10, total: 10 },
+    busy: false, completeFeature: null, log: [], speed: 'normal',
+  });
+  Object.assign(fake, window.__fakeInit);
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  const board = document.getElementById('board');
+  function render(kind) {
+    board.replaceChildren(...Array.from({ length: 30 }, (_, i) => Object.assign(document.createElement('div'), { className: 'tile', textContent: kind + i })));
+  }
+  render('start');
+  async function play(mode) {
+    if (fake.busy) { fake.log.push('skip'); fake.skipped = true; return; }
+    if (fake.loading.status !== 'ready' || fake.refuse) { fake.log.push('refused:' + mode); return false; }
+    await wait(fake.prepareMs);
+    if (fake.busy) return false;
+    fake.busy = true; fake.skipped = false; fake.log.push('start:' + mode);
+    try {
+      const t0 = performance.now();
+      while (performance.now() - t0 < fake.roundMs && !fake.skipped) await wait(20);
+      if (fake.awaitBonus) {
+        await new Promise((resolve) => (fake.completeFeature = () => { fake.completeFeature = null; resolve(); }));
+        fake.log.push('continued');
+        const t1 = performance.now();
+        while (performance.now() - t1 < fake.roundMs && !fake.skipped) await wait(20);
+      }
+      render(mode);
+      fake.log.push('end:' + mode);
+      return true;
+    } finally {
+      fake.busy = false;
+    }
+  }
+  window.ZombifyStudioRuntime = {
+    read: () => ({ busy: fake.busy, awaitingOutbreak: !!fake.completeFeature, autoplay: { active: false, remaining: 0 }, credits: 1000000 }),
+    async start(mode = 'base') { if (fake.busy) throw Error('Finish the current round first.'); return play(mode); },
+    continue: () => { if (fake.completeFeature) fake.completeFeature(); },
+    resetBoard: () => { if (!fake.busy) render('reset'); },
+    speed: (v) => { fake.speed = v; },
+    loading: () => ({ ...fake.loading }),
+    retryLoading: () => { fake.log.push('retry'); fake.loading = { status: 'ready', loaded: 10, total: 10 }; return Promise.resolve(); },
+    skip: () => { if (fake.busy) play(); },
+  };
+</script>
+<script type="module" src="../../../studio/bridge.js"></script>
+</body>
+</html>
