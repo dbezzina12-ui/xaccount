@@ -1,0 +1,49 @@
+/* Keep the cabinet/counter above the title's image and animated canvas.
+   Within the cabinet, the forearm remains behind the reel frame. */
+#game .brand{z-index:0}
+#game .machine{z-index:1;--counter-size:192px;--counter-rise:calc(var(--counter-size) * .68);--counter-sink:calc(var(--counter-size) * .32)}
+.machine-crown{display:flex;flex-direction:column;justify-content:flex-end}
+.reel-stage{position:relative;isolation:isolate}
+.reel-stage>.board-wrap{position:relative;z-index:2}
+.free-spins-counter{position:absolute;z-index:1;right:0;bottom:calc(100% - var(--counter-sink));width:var(--counter-size);height:var(--counter-size);pointer-events:none;user-select:none}
+.counter-lift{position:relative;width:100%;height:100%;transform-origin:83% 94%;filter:drop-shadow(0 5px 4px #020a0899)}
+.counter-art{display:block;width:100%;height:100%;object-fit:contain}
+.counter-copy{position:absolute;left:13%;right:22%;top:20%;height:28%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;text-align:center;color:#ecf5cc;text-shadow:0 2px 2px #030c09,0 0 7px #152c17;font-weight:800}
+.counter-copy>span{font-size:12px;line-height:1.1;letter-spacing:1.3px;white-space:nowrap;color:#c5d8a1}
+.counter-copy>strong{display:block;font-size:45px;line-height:.94;letter-spacing:-1px;font-variant-numeric:tabular-nums;color:#efffc8;transform-origin:center}
+.free-spins-counter[data-tier=super] .counter-copy>strong{color:#ffdaa1}
+.free-spins-counter[data-tier=hidden] .counter-copy>strong{color:#e9c5ff}
+.counter-complete .counter-copy>span{color:#d0d8c4}.counter-complete .counter-copy>strong{color:#d3dcc8}
+#game[data-free-spins] .machine-crown{min-height:var(--counter-rise)}
+#game[data-free-spins] .machine-head,#game[data-free-spins] .infection-tracker{margin-right:calc(var(--counter-size) + 5px)}
+#game[data-free-spins] .machine-head{background:linear-gradient(90deg,#0a191ac2,#0a191a88);padding-left:8px;min-width:0;position:relative;z-index:2}
+#game[data-free-spins] #phase{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#game[data-free-spins] #spin-state{display:none}
+#game[data-free-spins] .infection-tracker{position:relative;z-index:2}
+#game[data-free-spins] .infection-portrait{height:auto;aspect-ratio:1}
+#game[data-free-spins] .infection-people{gap:4px}
+#game[data-free-spins] .infection-value{white-space:normal;line-height:1.1}
+@media(max-width:900px){
+ #game .machine{--counter-size:140px}
+ .counter-copy>span{font-size:10px;letter-spacing:.7px}.counter-copy>strong{font-size:32px}
+ #game[data-free-spins] .machine-head{font-size:10px;padding-left:5px}
+ #game[data-free-spins] .infection-tracker{padding:5px 4px}
+ #game[data-free-spins] .infection-heading{font-size:8px;letter-spacing:0;gap:3px}
+ #game[data-free-spins] .infection-heading strong{display:none}
+ #game[data-free-spins] .infection-name{font-size:9px}
+ #game[data-free-spins] .infection-value{font-size:9px;letter-spacing:0}
+ #game[data-free-spins] .infection-people{gap:3px}
+}
+@media(max-width:380px){
+ #game .machine{--counter-size:124px}
+ .counter-copy>span{font-size:9px;letter-spacing:.5px}.counter-copy>strong{font-size:29px}
+ #game[data-free-spins] .infection-tracker{margin-left:calc(var(--frame-width) - 4px);margin-right:calc(var(--counter-size) + 2px)}
+ #game[data-free-spins] .infection-name,#game[data-free-spins] .infection-value{font-size:8px}
+}
+@media(min-aspect-ratio:4/3) and (max-height:520px){
+ #game .machine{--counter-size:112px}
+ .counter-copy>span{font-size:8px;letter-spacing:.5px}.counter-copy>strong{font-size:26px}
+ #game[data-free-spins] .infection-tracker{padding:3px}
+ #game[data-free-spins] .infection-portrait{width:25px}
+ #game[data-free-spins] .infection-name,#game[data-free-spins] .infection-value{font-size:8px}
+}

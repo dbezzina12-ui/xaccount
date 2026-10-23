@@ -1,0 +1,5 @@
+.audio-setting{gap:14px}
+.audio-setting span{white-space:nowrap}
+.audio-setting input[type=range]{width:min(145px,35vw);min-height:38px;accent-color:#c2f84c;cursor:pointer}
+.audio-setting output{min-width:3ch;color:#c2f84c;font-variant-numeric:tabular-nums;text-align:right;font-size:13px}
+.audio-setting .audio-slider{display:flex;align-items:center;gap:9px}

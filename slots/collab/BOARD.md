@@ -1,3 +1,19 @@
+# Current priority: Zombify Studio
+
+Dylan paused new Game 001 development on 2026-10-23. The earlier theme tasks below are retained as history.
+
+| Task | Owner | Status |
+| --- | --- | --- |
+| Import existing Zombify v125 without changing its outcomes | ChatGPT | Implemented |
+| Visual scene editor, independent mobile/desktop layouts | ChatGPT | Implemented |
+| Drag/resize, grid presets, background grades, uploads, undo, save/export | ChatGPT | Implemented |
+| Preserve 6×5 gameplay; use Claude reel component for other-grid layout tests | ChatGPT | Implemented |
+| Review studio adapter and subsequent mechanics extensions | Claude | Ready for review |
+| Connect a real hosted AI provider to the command box | Unassigned | Needs provider connection; local commands and browser agent tools are present |
+| New Game 001 theme concepts | ChatGPT | Paused by Dylan |
+
+---
+
 # Board
 
 Status: `todo` · `doing` · `review` (waiting on Dylan) · `done` · `blocked`. Whoever changes a task's status updates its row.

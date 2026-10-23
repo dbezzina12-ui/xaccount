@@ -1,0 +1,52 @@
+/* Approved GG controller: flat divided bar, branded green Bonus, white spin. */
+:host{--controller-accent:#81da89;--controller-ink:#fff;display:block;width:100%;padding:4px 0;box-sizing:border-box;position:relative;z-index:10;isolation:isolate;font:inherit;font-family:Arial,Helvetica,sans-serif;line-height:1.05;color:var(--controller-ink)}
+*{box-sizing:border-box}[hidden]{display:none!important}
+button{font:inherit;color:inherit;cursor:pointer;display:grid;place-items:center;padding:0;border:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;transition:background .15s,color .15s,filter .15s}
+button:disabled{cursor:default;opacity:.38}button:focus-visible{outline:2px solid #d7ffb9;outline-offset:3px}button:enabled:active{translate:0 1px}
+svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:square;stroke-linejoin:round;pointer-events:none}
+.controller{position:relative;container:game-controller / inline-size}
+.deck{position:relative;display:grid;grid-template-areas:"buy settings accounts betControls play auto";grid-template-columns:94px 62px minmax(230px,1fr) 174px 104px 62px;grid-template-rows:minmax(0,1fr);align-items:center;gap:0;height:96px;padding:0;border:4px solid #75938b61;border-top-color:#c5d8cf70;border-bottom-color:#132923ab;border-radius:6px;background:linear-gradient(180deg,#121715c7,#050806d9);box-shadow:inset 0 0 0 1px #d7f2df16,0 4px 0 #040d0a7a,0 8px 22px #0004;isolation:isolate}
+/* The fixed row must not inherit the taller spin button's intrinsic height. */
+.deck>*{min-height:0}
+.utility-left,.utility-right,.money-row,.play-controls,.bet-steps{display:contents}
+.account-readouts{grid-area:accounts;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);align-items:center;gap:20px;height:100%;padding:0 22px;border-left:1px solid #ffffff20;min-width:0}
+.money{min-width:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:5px;padding:0;height:100%;container-type:inline-size;text-align:left}
+.money>span{font-size:13px;font-weight:500;letter-spacing:.02em;color:#d5dad9;line-height:1.1}
+.money strong{font-size:clamp(12px,calc(175cqw / var(--digits,8)),29px);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.025em;line-height:1.08;color:#fff}
+.win{align-items:center;text-align:center}.win strong{color:#fff;font-size:clamp(12px,calc(175cqw / var(--digits,8)),25px)}
+.bet-group{grid-area:betControls;display:grid;grid-template-areas:"bet plus" "bet minus";grid-template-columns:minmax(0,1fr) 38px;grid-template-rows:1fr 1fr;align-items:center;gap:0;height:100%;border-left:1px solid #ffffff20;background:#ffffff05;min-width:0}
+.bet{grid-area:bet;width:100%;height:100%;align-items:flex-start;text-align:left;gap:4px;padding:0 13px;background:transparent;border-radius:0;position:relative}.bet strong{font-size:clamp(11px,calc(172cqw / var(--digits,8)),29px)}
+.bet:after{content:'';position:absolute;bottom:8px;left:13px;width:calc(100% - 26px);height:2px;background:#fff}
+.bet:enabled:hover{background:#ffffff0a}
+.bet-step{width:100%;height:100%;background:#ffffff05;border-left:1px solid #ffffff18;color:#fff}.bet-step svg{width:21px;height:21px;stroke-width:3.2}.bet-step:enabled:hover{background:#ffffff16}.bet-step.plus{grid-area:plus}.bet-step.minus{grid-area:minus}
+.utility{height:100%;width:100%;align-content:center;gap:0;background:none;color:#fff;border-left:1px solid #ffffff20}.utility svg{width:29px;height:29px}.control-label{display:none}
+.utility:enabled:hover{background:#ffffff0c}.utility[aria-pressed=true]{color:var(--controller-accent);background:#81da8910}
+.settings{grid-area:settings;border-left:1px solid #ffffff20}.settings svg{width:32px;height:32px;stroke-width:3.3}
+.turbo,.sound{display:none}.sound-slash{display:none}.sound[data-muted=true] .sound-slash{display:block}
+.auto{grid-area:auto;position:relative;border-left:0;gap:5px}.auto svg{width:29px;height:29px;stroke-width:1.9;stroke-linecap:round}.auto .control-label{display:block;font-size:9px;line-height:1;letter-spacing:.08em;font-weight:700;color:#dce7df}.auto .stop-icon{display:none;fill:currentColor;stroke:none}.auto[aria-pressed=true] .auto-icon,.auto[aria-pressed=true] .control-label{display:none}.auto[aria-pressed=true] .stop-icon{display:block}
+.auto #remaining{position:absolute;right:50%;bottom:8px;transform:translateX(50%);background:#bbebc5;border:1px solid #14231c;border-radius:4px;min-width:27px;padding:3px 5px;font-size:10px;line-height:1;font-weight:800;font-variant-numeric:tabular-nums;color:#13301e}
+.play-button{grid-area:play;position:relative;justify-self:center;align-content:center;width:100px;height:100px;border:3px solid #080b0c;border-radius:50%;background:#222626;box-shadow:0 2px 4px #0008;color:#fff;z-index:2}
+.play-button svg{width:79px;height:79px;fill:currentColor;stroke:none}.play-button .play-icon path:first-child{stroke-width:2.7;stroke-linecap:butt}
+.play-button:enabled:hover{background:#303735}.play-button .stop-icon,.play-button .continue-icon{display:none}
+[data-phase=busy] .play-button .play-icon,[data-phase=continue] .play-button .play-icon{display:none}
+[data-phase=busy] .play-button .stop-icon,[data-phase=continue] .play-button .continue-icon{display:block}
+.play-button .stop-icon{width:56px;height:56px}.play-button .continue-icon{width:59px;height:59px}
+.buy-button{grid-area:buy;position:relative;isolation:isolate;overflow:hidden;justify-self:stretch;align-content:center;min-width:0;width:calc(100% - 12px);height:calc(100% - 12px);margin:6px;padding:5px;border:1px solid #7ddc6170;border-radius:4px;background:linear-gradient(145deg,#229a3d,#10742e 62%,#075626);box-shadow:inset 0 1px #c2ffc52b;color:#fff;font-size:21px;line-height:1;font-weight:800;letter-spacing:-.035em;text-align:center}
+.buy-brand{position:absolute;pointer-events:none;inset:-17%;width:134%;height:134%;object-fit:contain;mix-blend-mode:screen;opacity:.22;z-index:-1}
+#buyLabel{position:relative;pointer-events:none;text-shadow:0 1px 2px #04341599}.buy-button{font-family:Barlow,'Arial Narrow',Arial,sans-serif;font-size:22px}.buy-button b{font-size:inherit;font-weight:inherit}.buy-button:enabled:hover{filter:brightness(1.13)}
+.buy-button[data-active=true]{background:linear-gradient(145deg,#243b32,#10251e);border-color:var(--feature-color);color:var(--feature-color);font-size:13px}.buy-button[data-active=true] .buy-brand{opacity:.11}
+.controller[data-feature-active=true] .play-button{border-color:var(--feature-color);background:linear-gradient(145deg,color-mix(in srgb,var(--feature-color) 78%,white),var(--feature-color));color:#10211d;box-shadow:inset 0 1px 3px #ffffff6b,0 2px 4px #0008}
+.controller[data-feature-active=true] .play-button:enabled:hover{filter:brightness(1.1)}
+.controller[data-feature-active=true] .bet strong,.controller[data-feature-active=true] .bet>span,.controller[data-feature-active=true] .win strong{color:var(--feature-color)}
+.controller[data-feature-active=true] .bet:after{background:var(--feature-color)}
+.buy-button[data-active=true] #buyLabel{font-size:14px;letter-spacing:-.035em;white-space:nowrap;text-shadow:0 1px 2px #0008}
+.feature-banner{position:absolute;bottom:calc(100% + 14px);left:12%;right:12%;padding:6px 10px;border:1px solid #708976;border-radius:4px;background:#11282bea;color:#e4f0d9;text-align:center;font-size:11px;line-height:1.2;box-shadow:0 3px 10px #03101680}
+.controller[data-buy-anchored=true] .buy-button{position:absolute;left:var(--buy-x);top:var(--buy-y);transform:translateX(-50%);width:var(--buy-size,78px);height:var(--buy-size,78px);margin:0}
+/* Measure the whole bar; money cells are themselves font-size containers. */
+@container game-controller (max-width:900px){
+ .deck{grid-template-columns:80px 50px minmax(180px,1fr) 144px 90px 50px;height:88px}
+ .account-readouts{padding-inline:14px;gap:10px}.money>span{font-size:11px}.money strong{font-size:clamp(11px,calc(174cqw / var(--digits,8)),25px)}
+ .bet-group{grid-template-columns:minmax(0,1fr) 32px}.bet{padding-inline:10px}.bet:after{left:10px;bottom:7px}.bet strong{font-size:clamp(11px,calc(171cqw / var(--digits,8)),25px)}
+ .play-button{width:88px;height:88px}.play-button svg{width:68px;height:68px}.play-button .stop-icon{width:48px;height:48px}.play-button .continue-icon{width:52px;height:52px}.buy-button{font-size:18px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

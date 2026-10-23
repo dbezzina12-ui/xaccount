@@ -1,0 +1,19 @@
+{
+  "path": "assets/studio/mobile-street.png",
+  "bytes": 2057602,
+  "sha256": "2e91e4c28a7f156080b0e411e49cabdcacfffdbadfaacbebd27df2015a480742",
+  "parts": [
+    "mobile-street-00.b64",
+    "mobile-street-01.b64",
+    "mobile-street-02.b64",
+    "mobile-street-03.b64",
+    "mobile-street-04.b64",
+    "mobile-street-05.b64",
+    "mobile-street-06.b64",
+    "mobile-street-07.b64",
+    "mobile-street-08.b64",
+    "mobile-street-09.b64",
+    "mobile-street-10.b64",
+    "mobile-street-11.b64"
+  ]
+}

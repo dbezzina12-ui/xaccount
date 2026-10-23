@@ -62,3 +62,8 @@ games/<id>/shots/          in-game screenshots for review
 collab/                    BOARD, HANDOFF, DECISIONS, ChatGPT kickoff prompt
 tools/math/  tools/art/    simulator, exact calculator, art checks
 ```
+
+
+## Current task override — 2026-10-23
+
+Dylan directly authorized ChatGPT to implement the Zombify studio editor and adapter on `codex/studio-zombify-editor`. This is a scoped exception to the original art-only split. Game 001 theme creation is paused. Claude should review the editor/adapter and work from the newest handoff; do not independently start a replacement game. Math rules above remain in force.

@@ -1,0 +1,21 @@
+/* One lit reel at a time; the stopped FS stay bright against the quiet board. */
+.tease-stage{position:absolute;inset:0;z-index:9;pointer-events:none;--tease-color:#c3ff83}
+.tease-stage[hidden],.tease-focus[hidden]{display:none}
+.tease-focus{position:absolute;border-radius:11px;border:1px solid color-mix(in srgb,var(--tease-color) 65%,transparent);background:linear-gradient(90deg,color-mix(in srgb,var(--tease-color) 13%,transparent),transparent 22% 78%,color-mix(in srgb,var(--tease-color) 13%,transparent));box-shadow:0 0 0 2px #091a1480,0 0 18px color-mix(in srgb,var(--tease-color) 30%,transparent),inset 0 0 16px color-mix(in srgb,var(--tease-color) 18%,transparent);transition:left .2s cubic-bezier(.2,.7,.3,1),box-shadow .25s}
+.tease-focus svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.tease-focus rect{fill:none;stroke:var(--tease-color);stroke-width:2.6;stroke-dasharray:15 35;stroke-linecap:round;filter:drop-shadow(0 0 3px var(--tease-color));animation:tease-circuit 1.5s linear infinite}
+.tease-sweep{position:absolute;left:2px;right:2px;top:0;height:22%;opacity:.45;background:linear-gradient(transparent,color-mix(in srgb,var(--tease-color) 12%,transparent) 88%,var(--tease-color) 98%,transparent);animation:tease-scan 1.7s ease-in-out infinite;will-change:transform}
+.tease-footlight{position:absolute;left:-16%;right:-16%;bottom:-10px;height:25px;background:radial-gradient(ellipse,var(--tease-color),transparent 68%);opacity:.65;transform:scaleY(.5)}
+#board .tease-muted{filter:brightness(.56) saturate(.6);transition:filter .25s}
+#board .fs-locked{filter:drop-shadow(0 0 7px #d4ff97);background:radial-gradient(ellipse,#beed7025,transparent 68%)}
+.spinning-reel.tease-waiting{filter:brightness(.75);transition:filter .2s}
+@keyframes tease-circuit{to{stroke-dashoffset:-100}}
+@keyframes tease-scan{from{transform:translateY(0);opacity:0}15%,80%{opacity:.45}to{transform:translateY(340%);opacity:0}}
+@media(prefers-reduced-motion:reduce){.tease-focus,#board .tease-muted,.spinning-reel.tease-waiting{transition:none}.tease-focus rect,.tease-sweep{animation:none}.tease-sweep{display:none}}
+
+/* Ease toward the reels only; the controls remain stationary and reachable. */
+.reel-stage{transform:scale(1);transform-origin:50% 50%;transition:transform .42s cubic-bezier(.22,.7,.3,1)}
+.reel-stage.tease-camera-in{transform:scale(1.065);transition:transform 4.2s cubic-bezier(.16,.4,.4,1);will-change:transform}
+.reel-stage.tease-camera-snap{transition:none}
+@media(max-width:759px){.reel-stage.tease-camera-in{transform:scale(1.04)}}
+@media(prefers-reduced-motion:reduce){.reel-stage,.reel-stage.tease-camera-in{transform:none;transition:none;will-change:auto}}

@@ -1,0 +1,156 @@
+/* The approved Gamboligy mobile controller, isolated in its own Shadow DOM. */
+#game #mobile-controller{display:none;--controller-accent:#c4ed79;--controller-ink:#fff6df}
+@media(max-width:760px),(pointer:coarse) and (hover:none){
+ #game{grid-template-rows:26px minmax(0,1fr) var(--mobile-controller-height,208px)}
+ #game>.console{visibility:hidden;pointer-events:none}
+ #game #mobile-controller{display:block;position:absolute;inset:auto 0 0;width:100%;max-width:none;margin:0;z-index:10}
+ #game .topbar .utilities #sound{display:none}
+}
+
+/* Shared feature shop: one card per option, with the artwork, cost and action together. */
+#shop{width:min(1240px,calc(100vw - 24px));height:auto;max-height:calc(100dvh - 24px);margin:auto;padding:48px 26px 20px;border:1px solid #758b8166;border-radius:7px;background:linear-gradient(#0b191bf7,#071214fc),var(--town-art) center/cover;box-shadow:0 20px 90px #000a}
+#shop[open]{display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:20px;align-content:start}
+#shop .shop-toolbar,#shop .shop-options{width:100%;max-width:none}
+#shop .shop-title-group>span{font-size:12px;letter-spacing:.16em;color:#a8bdb3;margin-bottom:7px}
+#shop h2{font-size:clamp(23px,3vw,34px);line-height:1.1;color:#edf4df}
+#shop .shop-bet{min-height:60px;width:206px;background:#142523;border:1px solid #586a5e}
+#shop .shop-options{padding:2px 3px 10px;max-height:calc(100dvh - 210px)}
+#shop .bonus-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;height:auto;max-height:none;align-items:stretch}
+#shop .bonus-card{--card:#c4ed79;display:flex;flex-direction:column;min-width:0;overflow:hidden;border:1px solid #52655b;border-top:3px solid var(--card);border-radius:5px;background:linear-gradient(160deg,#20302a,#0f1c1c);box-shadow:0 6px 18px #0005}
+#shop .bonus-card[data-mode=enhanced]{--card:#edd897;background:linear-gradient(160deg,#343328,#161f1e)}
+#shop .bonus-card[data-mode=super]{--card:#ffbf7c;background:linear-gradient(160deg,#40332a,#182021)}
+#shop .bonus-card[data-mode=mystery]{--card:#d8aeff;background:linear-gradient(160deg,#352b41,#151c25)}
+#shop .card-content{display:flex;flex:1;flex-direction:column;align-items:center;padding:18px 16px 17px;text-align:center}
+#shop .purchase-eyebrow{font-size:12px;letter-spacing:.09em;color:var(--card);font-weight:800;line-height:1.3}
+#shop .card-emblem{position:relative;isolation:isolate;width:100%;height:155px;margin:10px 0 15px;flex:none;display:flex;align-items:center;justify-content:center}
+#shop .card-emblem:before{content:'';position:absolute;inset:8%;z-index:-1;background:radial-gradient(ellipse,color-mix(in srgb,var(--card) 17%,transparent),transparent 72%)}
+#shop .card-emblem>.symbol{width:116px;height:116px;filter:drop-shadow(0 7px 5px #0009)}
+#shop .card-emblem .bonus-character{width:78px;height:150px;object-fit:contain;transform:rotate(-6deg);margin-right:-28px;filter:drop-shadow(0 6px 5px #0008);position:relative;z-index:1}
+#shop .super-emblem .bonus-character{transform:rotate(5deg)}
+.feature-tag{position:absolute;right:0;bottom:7px;background:#121d18;border:2px solid var(--card);color:var(--card);font-size:24px;font-weight:800;padding:5px 8px;line-height:1;transform:rotate(-5deg);box-shadow:0 4px 6px #0009}
+#shop .mystery-emblem>b{position:absolute;right:14%;bottom:3%;font-size:68px;font-weight:800;line-height:1;color:#ebd1ff;text-shadow:0 4px #422553,0 7px #080d11;transform:rotate(9deg)}
+#shop .bonus-card h3{font-size:clamp(23px,2.2vw,29px);line-height:1.06;letter-spacing:-.3px;margin:0 0 12px;min-height:2.12em;display:flex;align-items:center;justify-content:center;color:#f4f2df}
+#shop .bonus-card p{font-size:16px;line-height:1.35;margin:0 0 16px;color:#c5d1c8;min-height:4.05em}
+#shop .card-content>small{font-size:12px;line-height:1.3;color:var(--card);font-weight:700;letter-spacing:.035em;min-height:32px;margin-top:auto}
+#shop .card-price{display:flex;flex-direction:column;gap:6px;padding-top:14px;width:100%;margin-top:auto}
+#shop .card-price>strong{font-size:30px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;color:#fbf6df;line-height:1.1}
+#shop .card-price>span{font-size:12px;color:#a9b8b0;letter-spacing:.025em}
+#shop .card-action{width:100%;flex:none;height:auto;min-height:48px;margin:0;padding:12px 8px;font-size:18px;line-height:1.15;border:0;border-radius:0;background:var(--card);color:#132017}
+#shop .card-action:disabled{background:#2c3931;color:#93a398}
+#shop .card-action[aria-pressed=true]{background:#192b21;color:var(--card);box-shadow:inset 0 0 0 2px var(--card)}
+#shop .mystery-odds{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;width:100%;margin-top:auto;font-size:10px;color:#c7b6d1;line-height:1.1;letter-spacing:.025em}
+#shop .mystery-odds>span{display:flex;flex-direction:column;gap:4px}
+#shop .mystery-odds b{font-size:17px;color:var(--card)}
+.shop-previews{padding-top:20px;text-align:center}
+.shop-previews>span{display:block;color:#90a49a;font-size:12px;letter-spacing:.1em;margin-bottom:10px}
+.shop-previews>div{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.shop-previews button{min-height:40px;min-width:90px;padding:8px 18px;border:1px solid #536a5e;border-radius:4px;background:#142321;color:#dce9d1;font-size:15px}
+#shop-note{font-size:13px;line-height:1.4;text-align:center;color:#a8b7ae;max-width:100%;margin:0}
+#shop>.close,#confirm>.close,#settings>.close,#bet-picker>.close{width:36px;height:36px;top:10px;right:12px;padding:0;display:grid;place-items:center;border-radius:50%;border:1px solid #6d83745c;background:#122420;color:#eaf3dc;font-size:27px;line-height:1}
+
+/* Purchase confirmation uses the same frame and readable pricing as the award. */
+#confirm{--card:#c4ed79;width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:40px 28px 24px;border:1px solid var(--card);border-radius:6px;background:radial-gradient(ellipse at top,#293b29,#0c1a1c 78%);overflow:auto}
+#confirm[data-mode=super]{--card:#ffbf7c;background:radial-gradient(ellipse at top,#493728,#111b1d 78%)}
+#confirm[data-mode=mystery]{--card:#d8aeff;background:radial-gradient(ellipse at top,#443251,#101921 78%)}
+#confirm .purchase-content{display:flex;align-items:center;flex-direction:column;text-align:center;padding:0;gap:12px}
+#confirm .purchase-eyebrow{font-size:12px;line-height:1.45;color:var(--card);letter-spacing:.08em}
+#confirm h2{font-size:36px;line-height:1.1;color:#f1f2dc;margin:0}
+#confirm .scatter-symbols{height:110px;max-width:100%;margin:8px 0}
+#confirm .scatter-symbols>.symbol{width:clamp(48px,15vw,78px);height:90px}
+#confirm #confirm-description{font-size:16px;line-height:1.45;margin:0;color:#c7d2c7}
+#confirm #confirm-price{font-size:44px;line-height:1.1;color:var(--card);font-variant-numeric:tabular-nums}
+#confirm #confirm-balance{font-size:14px;line-height:1.3;margin:0 0 6px;color:#a8b8ad}
+#confirm .primary{background:var(--card);border:0;color:#142017;font-size:18px;min-height:50px;border-radius:3px;width:100%;margin:0}
+#confirm .text-button{font-size:14px;min-height:40px;margin:0;padding:8px;color:#bdccbc}
+
+/* Award panel: approved timber frame, live type and the existing character/FS art. */
+#feature.zombify-feature-panel{--award:#c4ed79;width:min(620px,calc(100vw - 16px));max-height:calc(100dvh - 16px);padding:22px 30px 26px;border:24px solid transparent;border-image:url('assets/reel-timber.webp') 20% 16% / 24px stretch;border-radius:0;box-shadow:0 16px 80px #000b;background:radial-gradient(ellipse at 50% 32%,#354433,#0b1b1a 70%);overflow:auto;text-align:center;animation:feature-panel-arrive .38s cubic-bezier(.15,.7,.3,1) both}
+#feature.zombify-feature-panel[data-tier=super]{--award:#ffbf7c;background:radial-gradient(ellipse at 50% 32%,#4e3b29,#171e1b 72%)}
+#feature.zombify-feature-panel[data-tier=hidden]{--award:#d8aeff;background:radial-gradient(ellipse at 50% 32%,#44314c,#131920 72%)}
+#feature::backdrop{background:#041013c9;backdrop-filter:blur(6px)}
+.feature-panel-content{display:flex;flex-direction:column;align-items:center;gap:10px}
+#feature .feature-brand{width:160px;height:auto;display:block;margin:0 auto 3px}
+#feature .feature-kicker{font-size:12px;line-height:1.4;letter-spacing:.12em;color:var(--award)}
+#feature #feature-heading{font-size:clamp(29px,5vw,45px);font-weight:800;font-style:normal;letter-spacing:-.02em;line-height:1.05;margin:0;transform:none;color:#f4f0d0;text-shadow:0 3px #101d10}
+.feature-award{display:grid;grid-template-columns:minmax(0,1fr) 1.2fr minmax(0,1fr);align-items:center;width:100%;height:166px;position:relative;margin:3px 0}
+#feature .feature-count{display:flex;flex-direction:column;align-items:center;gap:6px}
+#feature #feature-amount{font-size:118px;line-height:.95;font-weight:800;color:var(--award);text-shadow:0 4px #29371a,0 7px #07100b;animation:feature-count-arrive .48s .12s both}
+#feature .feature-count>span{font-size:18px;font-weight:800;letter-spacing:.04em;color:#f5f0d3;white-space:nowrap}
+#feature #feature-scatters{display:grid;grid-template-columns:repeat(2,1fr);align-content:center;justify-content:center;gap:0;width:100%;height:auto;max-height:156px;margin:0;transform:rotate(-8deg)}
+#feature #feature-scatters>.symbol{width:100%;height:auto;aspect-ratio:1;max-height:68px;margin:0;filter:drop-shadow(0 5px 5px #0007)}
+#feature #feature-scatters>.symbol:last-child:nth-child(odd){grid-column:1/3;justify-self:center;width:50%;margin-top:-8px}
+#feature .feature-zombie{width:100%;height:176px;object-fit:contain;object-position:center;filter:drop-shadow(0 5px 6px #0008);transform:rotate(7deg)}
+#feature #feature-description{font-size:16px;line-height:1.4;color:#d2dbc9;margin:6px 0 4px;max-width:440px}
+#feature .feature-rules{display:grid;grid-template-columns:repeat(3,1fr);width:100%;border-top:1px solid #b7c59940;border-bottom:1px solid #b7c59940;margin:4px 0 10px}
+#feature .feature-rules>div{padding:12px 9px;border-right:1px solid #b7c59925;display:flex;flex-direction:column;gap:6px;background:#05120e38}
+#feature .feature-rules>div:last-child{border-right:0}
+#feature .feature-rules span{font-size:11px;line-height:1.2;font-weight:700;letter-spacing:.075em;color:#aebf9f}
+#feature .feature-rules strong{font-size:14px;line-height:1.25;color:#f0eed1}
+#feature #feature-continue{width:100%;min-height:50px;padding:12px;background:linear-gradient(color-mix(in srgb,var(--award) 85%,white),var(--award));border:1px solid #e5f8bb;border-radius:3px;font-size:19px;font-weight:800;letter-spacing:.04em;color:#182317;box-shadow:0 4px #080f0d}
+#settings,#bet-picker{background:linear-gradient(150deg,#1b2d29,#091a1b);border:1px solid #6c837167;border-radius:6px;color:#e8efdc}
+#settings h2,#bet-picker h2{color:#d7eda8;font-size:31px}
+#settings .setting{font-size:17px;min-height:54px}
+#settings .menu-link{font-size:16px;min-height:44px}
+#bet-picker{width:min(380px,calc(100vw - 24px));padding:30px 20px 20px;max-height:80dvh;overflow:hidden}
+#bet-picker h2{margin:8px 36px 12px 0}
+#bet-picker-note{font-size:15px;line-height:1.4;color:#bfcdb9;margin:0 0 15px}
+#bet-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;max-height:48dvh;overflow-y:auto;overscroll-behavior:contain;padding:3px}
+.stake-option{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-height:58px;padding:9px 4px;border:1px solid #65765b;border-radius:5px;background:#182c26;color:#f1f2d6;cursor:pointer}
+.stake-option strong{font-size:20px;font-variant-numeric:tabular-nums}.stake-option small{font-size:10px;white-space:nowrap;color:#c3d5ab}
+.stake-option[aria-pressed=true]{background:#3f5629;border-color:#d8f7a1;box-shadow:inset 0 0 0 1px #b0cf70}
+
+@media(max-width:980px){
+ #shop .bonus-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #shop .card-content{padding:16px}#shop .card-emblem{height:130px}#shop .card-emblem .bonus-character{height:130px}
+ #shop .bonus-card h3{min-height:0;font-size:26px}#shop .bonus-card p{min-height:2.7em}
+}
+@media(max-width:540px){
+ #shop{width:calc(100vw - 12px);max-height:calc(100dvh - 12px);padding:46px 14px 14px}
+ #shop[open]{gap:14px}#shop .shop-toolbar{flex-wrap:wrap;gap:14px}#shop .shop-title-group{width:100%;text-align:center}
+ #shop h2{font-size:25px}#shop .shop-bet{width:100%;min-height:53px}
+ #shop .shop-options{max-height:calc(100dvh - 255px);padding-inline:2px}
+ #shop .bonus-cards{grid-template-columns:minmax(0,1fr);gap:14px}
+ #shop .card-content{display:grid;grid-template-columns:88px minmax(0,1fr);gap:6px 13px;text-align:left;padding:15px 13px;align-items:center}
+ #shop .purchase-eyebrow{grid-column:2;font-size:11px}
+ #shop .card-emblem{grid-column:1;grid-row:1/6;align-self:center;width:100%;height:112px;margin:0}
+ #shop .card-emblem>.symbol{width:78px;height:88px}#shop .card-emblem .bonus-character{width:43px;height:110px;margin-right:-30px}
+ #shop .card-emblem .feature-tag{font-size:18px;right:-2px;bottom:2px;padding:4px}
+ #shop .mystery-emblem>b{font-size:53px;right:0;bottom:4px}
+ #shop .bonus-card h3{grid-column:2;display:block;font-size:23px;min-height:0;line-height:1.1;margin:0}
+ #shop .bonus-card p{grid-column:2;font-size:15px;line-height:1.3;min-height:0;margin:0}
+ #shop .card-content>small{grid-column:2;font-size:11px;min-height:0;margin:0}
+ #shop .card-price{grid-column:2;gap:3px;margin:0;padding-top:5px}#shop .card-price>strong{font-size:27px}#shop .card-price>span{font-size:11px}
+ #shop .mystery-odds{grid-column:2;font-size:9px;gap:5px;margin:3px 0}#shop .mystery-odds b{font-size:15px}
+ #shop .card-action{min-height:46px;font-size:18px}
+ #shop-note{font-size:12px;line-height:1.35}
+ #feature.zombify-feature-panel{border-width:18px;border-image-width:18px;padding:18px 13px 22px}
+ #feature .feature-brand{width:135px}#feature #feature-heading{font-size:31px}
+ .feature-panel-content{gap:8px}.feature-award{height:149px}#feature #feature-amount{font-size:103px}#feature .feature-zombie{height:148px}
+ #feature .feature-count>span{font-size:16px}#feature .feature-kicker{font-size:11px}
+ #feature #feature-description{font-size:15px;margin:2px 0 5px}
+ #feature .feature-rules{grid-template-columns:1fr;margin:2px 0 10px}
+ #feature .feature-rules>div{flex-direction:row;align-items:center;justify-content:space-between;border-right:0;border-bottom:1px solid #b7c59920;padding:9px 10px;gap:12px}
+ #feature .feature-rules>div:last-child{border-bottom:0}#feature .feature-rules strong{font-size:13px;text-align:right}
+ #feature #feature-continue{font-size:18px;min-height:47px}
+}
+@media(max-height:680px){
+ #feature.zombify-feature-panel{padding-top:12px;padding-bottom:16px}
+ #feature .feature-brand{display:none}.feature-award{height:120px}#feature .feature-zombie{height:122px}
+ #feature #feature-amount{font-size:84px}#feature #feature-heading{font-size:28px}
+ #feature .feature-rules>div{padding:7px 9px}#feature #feature-description{font-size:14px}
+ #feature #feature-scatters>.symbol{max-height:49px}
+}
+@media(max-height:500px) and (orientation:landscape){
+ #shop{width:calc(100vw - 12px);padding:40px 20px 12px}#shop .shop-toolbar{flex-wrap:nowrap}#shop .shop-title-group{width:auto;text-align:left}#shop .shop-bet{width:185px}
+ #shop .shop-options{max-height:calc(100dvh - 145px)}#shop[open]{gap:10px}
+ #feature.zombify-feature-panel{width:min(620px,calc(100vw - 24px));padding:10px 20px;border-width:16px;border-image-width:16px}
+ .feature-panel-content{display:grid;grid-template-columns:150px minmax(0,1fr);gap:7px 15px}
+ #feature .feature-kicker,#feature #feature-heading,#feature #feature-description,#feature .feature-rules,#feature #feature-continue{grid-column:2;margin:0}
+ #feature .feature-award{grid-column:1;grid-row:1/6;grid-template-columns:1fr;height:100%;align-content:center}
+ #feature #feature-scatters,#feature .feature-zombie{display:none}#feature #feature-amount{font-size:100px}
+ #feature .feature-rules{grid-template-columns:1fr}#feature .feature-rules>div{flex-direction:row;justify-content:space-between;padding:5px;border-right:0}
+ #feature #feature-heading{font-size:27px}#feature #feature-continue{min-height:42px;padding:8px}
+}
+@keyframes feature-panel-arrive{from{opacity:0;transform:translateY(14px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes feature-count-arrive{from{opacity:0;transform:scale(1.3)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){#feature.zombify-feature-panel,#feature #feature-amount{animation:none}}

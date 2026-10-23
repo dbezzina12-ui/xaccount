@@ -1,0 +1,27 @@
+dialog#settings.overlay.settings{position:fixed;inset:auto auto var(--menu-bottom,110px) var(--menu-left,20px);margin:0;width:250px;max-width:calc(100vw - 20px);max-height:calc(100svh - var(--menu-bottom,110px) - 12px);padding:14px 0 8px;background:#101112;border:1px solid #484b4e66;border-radius:3px;box-shadow:0 8px 28px #0008;overflow-y:auto}
+dialog#settings.overlay.settings::backdrop{background:#0002;backdrop-filter:none}
+.settings #settings-title{font-size:11px;letter-spacing:.12em;margin:0 20px 8px;color:#949a9f;line-height:24px}
+.settings .close{right:9px;top:7px;width:30px;height:30px;background:none;border:0;padding:5px}.settings .close svg{width:20px;height:20px}
+.settings .settings-grid{display:flex;flex-direction:column;gap:0;margin:0}
+.settings .settings-grid button{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:17px;min-height:52px;padding:12px 22px;border:0;border-radius:0;background:none;color:#fff;text-align:left;font-size:16px;font-weight:700;letter-spacing:0;box-shadow:none}
+.settings .settings-grid button svg{width:23px;height:23px;flex:none;fill:none;stroke:currentColor;stroke-width:1.9}
+.settings .settings-grid button[aria-pressed=false]{color:#a1a4a7}.settings .settings-grid button[aria-pressed=true]{color:#fff}.settings .settings-grid button[aria-pressed=true]::after{content:'';margin-left:auto;width:6px;height:6px;flex:none;border-radius:50%;background:#f5bc51}
+.settings .settings-grid button:hover{background:#ffffff0b}.settings .settings-grid #effects-button,.settings .settings-grid #music-button{min-height:52px}
+.settings .menu-extra{border-top:1px solid #ffffff14;margin-top:8px;padding:0 18px}.settings .menu-extra summary{cursor:pointer;padding:14px 0;font-size:11px;color:#a6a9ad;letter-spacing:.025em}.settings .audio-mixer{margin:0;padding:10px 0 14px;background:none;border:0;gap:12px}.settings .audio-mixer label,.settings .audio-mixer output{font-size:12px}.settings #reset-button{font-size:11px;padding:10px 7px;margin-bottom:5px;width:100%;background:#ffffff09;border:1px solid #ffffff20;color:#c4c8cc}.settings #audio-note:empty{display:none}.settings #audio-note{margin:8px 18px;font-size:12px}
+
+
+/* Existing Zombify controls remain available inside the secondary drawer. */
+#settings .close{color:#ddd;font-size:26px;line-height:20px;border-radius:0}
+#settings .settings-grid button[aria-pressed=true]::after{background:#c4f657}
+#settings .setting{font-size:13px;gap:8px;padding:10px 0;text-align:left}
+#settings .audio-slider{max-width:65%;gap:5px}#settings .audio-slider input{min-width:0;width:100%}
+#settings .audio-slider output{font-size:11px;min-width:30px}
+#settings .menu-link{font-size:12px;padding:10px;margin-top:7px;background:#ffffff09;border:1px solid #ffffff20;color:#ddd;border-radius:3px;width:100%}
+#settings select{max-width:60%;font-size:12px;background:#202326;color:#eee;border:1px solid #555;padding:6px}
+#settings .demo-tools,#settings .menu-advanced{margin-top:10px;border-top:1px solid #ffffff14}
+#settings .demo-tools p{font-size:12px}#settings summary{font-size:11px;color:#a6a9ad;cursor:pointer}
+#settings .win-preview-buttons{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+#settings .win-preview-buttons button{font-size:11px;min-height:38px;background:#202326;color:#ddd;border:1px solid #555;border-radius:3px}
+#history{width:min(480px,calc(100% - 28px));background:#101112;border:1px solid #484b4e66;border-radius:4px}
+#history p{font-size:13px}#history h2{font-size:24px;color:#eee}
+.history-row{display:grid;grid-template-columns:1fr auto auto;gap:14px;padding:12px 0;border-top:1px solid #ffffff18;font-size:13px}.history-row small{display:block;color:#999}

@@ -1,0 +1,74 @@
+.approved-rig-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.approved-rig-motion{position:absolute;inset:0;pointer-events:none;z-index:20}
+.approved-stack-art{background:transparent!important}
+.stack-art>.approved-rig-fallback{position:absolute;inset:0;width:100%;height:100%;max-width:100%;object-fit:contain;transform:none}
+.approved-rig-ready>.approved-rig-fallback{visibility:hidden}
+.approved-stack-art>.approved-rig-canvas{z-index:1}
+.approved-stack-art>.stack-multi{z-index:2}
+.horizontal-zombie .stack-multi{left:8px;right:auto;top:6px;bottom:auto;background:transparent;transform:rotate(-4deg)}
+.horizontal-zombie[data-direction=left] .stack-multi{left:auto;right:8px}
+.symbol.art-zombie{background-image:url('assets/approved-rig/front/idle.png')}
+.approved-intro-walker.approved-rig-ready{background-image:none!important}
+/* Darker stone and green mist keep the formed zombie readable. */
+.zombie-backdrop{background:linear-gradient(#06120df0,#0b1711ed),url('assets/style5/multiplier-stone.png') center/cover no-repeat}
+.zombie-backdrop:before{animation:resolved-haze 4.4s ease-in-out var(--haze-delay,0s) infinite alternate}
+.zombie-backdrop:after{animation:resolved-specks 3.8s linear var(--haze-delay,0s) infinite}
+.resolved-energy{position:absolute;inset:-25%;background:radial-gradient(ellipse at 8% 65%,#64d95788,transparent 42%),radial-gradient(ellipse at 95% 20%,#28ae9566,transparent 45%);animation:resolved-energy 5.8s ease-in-out var(--haze-delay,0s) infinite alternate;pointer-events:none}
+.resolved-mote{position:absolute;left:var(--mote-x);top:0;width:3px;height:100%;opacity:0;animation:resolved-mote var(--mote-speed) linear var(--mote-delay) infinite;pointer-events:none}
+.resolved-mote:after{content:'';position:absolute;left:0;bottom:0;width:3px;height:3px;border-radius:50%;background:#b5f477;box-shadow:0 0 7px 2px #71d04077}
+.settled-zombie{animation:resolved-edge 3.8s ease-in-out infinite alternate}
+.settled-zombie.stack-hit{animation:none}
+@keyframes resolved-haze{from{transform:translate(-8%,12%) scale(1);opacity:.25}to{transform:translate(9%,-12%) scale(1.2);opacity:.52}}
+@keyframes resolved-specks{0%{transform:translateY(30%);opacity:0}20%,65%{opacity:.65}100%{transform:translateY(-30%);opacity:0}}
+@keyframes resolved-energy{from{transform:translate(-9%,10%) rotate(-12deg);opacity:.45}to{transform:translate(9%,-10%) rotate(12deg);opacity:.85}}
+@keyframes resolved-mote{0%{transform:translate(0,10%);opacity:0}15%{opacity:.7}78%{opacity:.6}100%{transform:translate(var(--mote-drift),-110%);opacity:0}}
+@keyframes resolved-edge{from{box-shadow:inset 0 0 8px #59932625,0 0 6px #a6d93a25}to{box-shadow:inset 0 0 17px #78bb3245,0 0 11px #a6d93a50}}
+html[data-background-paused=true] .resolved-energy,html[data-background-paused=true] .resolved-mote,html[data-background-paused=true] .settled-zombie{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.zombie-backdrop:before,.zombie-backdrop:after,.resolved-energy,.resolved-mote,.settled-zombie{animation:none}.resolved-mote{display:none}.resolved-energy{opacity:.35}}
+/* Articulated inhabitants are composited in the town's own coordinates. */
+.articulated-window{background:#14211d80}
+.window-performer{position:absolute;inset:0;filter:brightness(.7) saturate(.7)}
+.articulated-window:after{z-index:2;box-shadow:inset 0 0 8px #0a111bdd}
+.street-patrol{position:absolute;animation:town-patrol var(--patrol-duration) linear var(--patrol-delay) infinite;opacity:0}
+.street-patrol:after{content:'';position:absolute;bottom:1%;left:14%;width:72%;height:7%;border-radius:50%;background:#03121dad;filter:blur(2px)}
+.street-zombie{position:absolute;inset:0;z-index:1;filter:brightness(.47) saturate(.48) drop-shadow(2px 2px 1px #092531)}
+.street-patrol:nth-last-of-type(5) .street-zombie{filter:brightness(.56) saturate(.45) hue-rotate(22deg)}
+.town-bat{position:absolute;width:45px;height:20px;opacity:0;animation:town-flight var(--bat-duration) linear var(--bat-delay) infinite}
+.town-bat svg{width:100%;height:100%;fill:#071c2b}
+.bat-wing{transform-box:view-box;transform-origin:50% 58%;animation:bat-flap .28s ease-in-out infinite alternate}
+.bat-wing-right{animation-delay:-.035s}
+@keyframes town-patrol{0%{transform:translateX(0);opacity:0}8%,89%{opacity:.94}100%{transform:translateX(var(--patrol-distance));opacity:0}}
+@keyframes town-flight{0%{transform:translate(0,0) scale(.7);opacity:0}6%,88%{opacity:.9}50%{transform:translate(350px,-38px) scale(.9)}100%{transform:translate(720px,38px) scale(.7);opacity:0}}
+@keyframes bat-flap{from{transform:scaleY(.3) rotate(-4deg)}to{transform:scaleY(1) rotate(4deg)}}
+html[data-background-paused=true] :is(.street-patrol,.town-bat,.bat-wing){animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.street-patrol,.town-bat,.bat-wing{animation:none}.street-patrol{opacity:.6}.town-bat{display:none}}
+/* Phone activity sits in visible sky/pavement, independent of the town crop. */
+.mobile-town-activity{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.mobile-town-activity [hidden]{display:none!important}
+.mobile-town-activity .street-zombie{filter:brightness(.9) saturate(.78) drop-shadow(1px 2px 1px #092531)}
+.mobile-town-activity .street-patrol:nth-child(even) .street-zombie{filter:brightness(.8) saturate(.75) hue-rotate(18deg)}
+.mobile-town-activity .town-bat{animation-name:phone-bat-flight;opacity:.9}
+.mobile-town-activity .town-bat svg{fill:#021722;filter:drop-shadow(0 1px 0 #608b8759)}
+@keyframes phone-bat-flight{0%{transform:translateX(0);opacity:0}6%,94%{opacity:.95}100%{transform:translateX(var(--bat-distance));opacity:0}}
+@media(max-width:900px) and (orientation:portrait){.window-performer{filter:brightness(.86) saturate(.8)}}
+@media(prefers-reduced-motion:reduce){.mobile-town-activity .town-bat{display:none}.mobile-town-activity .street-patrol{animation:none;transform:translateX(calc(var(--patrol-distance)*.35));opacity:.7}}
+/* Dedicated crawling artwork, scaled uniformly for each awarded span. */
+.stack-art.horizontal-stack-art>.resolved-reclining-zombie,
+.reclining-resolve-motion>.resolved-reclining-zombie{position:absolute;inset:1.5% 1%;display:block;transform:none;z-index:1;pointer-events:none}
+.resolved-reclining-zombie>img.reclining-whole{display:block;width:100%;height:100%;max-width:100%;object-fit:contain;object-position:center bottom;transform:none}
+.stack-art.horizontal-stack-art>.resolved-reclining-zombie[data-face=left],
+.reclining-resolve-motion>.resolved-reclining-zombie[data-face=left]{transform:scaleX(-1)}
+.reclining-resolve-motion{position:absolute;pointer-events:none;z-index:20;transform-origin:center bottom}
+.infection-field{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;color:#a5ef59;pointer-events:none}
+.full-reel .infection-field{color:#f0ce76}
+.super-zombie .infection-field{color:#c4a5ff}
+.infection-vein,.infection-pulse,.infection-ripple{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+.infection-vein{stroke-width:1.3;opacity:.2}
+.infection-pulse{stroke-width:2;stroke-dasharray:7 93;animation:infection-flow 3.8s linear var(--pulse-delay) infinite;opacity:.65}
+.infection-ripple{stroke-width:1;transform-box:fill-box;transform-origin:center;animation:infection-arrival .85s ease-out both}
+@keyframes infection-flow{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
+@keyframes infection-arrival{from{transform:scale(.2);opacity:.85}to{transform:scale(1.7);opacity:0}}
+html[data-background-paused=true] .infection-field *{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.infection-field *{animation:none}.infection-pulse,.infection-ripple{display:none}}
+
+.resolved-reclining-zombie>svg{display:block;width:100%;height:100%;overflow:hidden}

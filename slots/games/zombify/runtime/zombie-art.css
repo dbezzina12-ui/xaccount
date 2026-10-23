@@ -1,0 +1,48 @@
+/* Higgsfield character assets: matching still, walk cycle and tall expansion. */
+.symbol.art-zombie {
+  background-image: url('assets/zombie-idle.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.normal-bite-burst { --carrier-color: var(--lime); }
+.walking-zombie {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  filter: drop-shadow(0 2px 2px #07110880);
+}
+.symbol.art-zombie.zombie-walk-sprite {
+  background-image: url('assets/zombie-walk-atlas.webp');
+  background-size: 600% 400%;
+  background-position: 0 0;
+}
+.stack-multi:empty { display: none; }
+.stack-art > img {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+  object-fit: contain;
+}
+.expanded-zombie.entering {
+  z-index: 6;
+  overflow: hidden;
+  contain: paint;
+}
+.entering .stack-art { overflow: hidden; }
+.zombie-landing {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  object-position: 50% 0;
+  pointer-events: none;
+}
+.entering .stack-multi { z-index: 1; }

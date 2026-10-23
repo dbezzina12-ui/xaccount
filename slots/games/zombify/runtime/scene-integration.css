@@ -1,0 +1,43 @@
+/* One controller owns the visible UI on desktop and mobile. The original IDs
+   remain hidden adapters for game state, keyboard controls and diagnostics. */
+#game{--reel-cell-aspect:1.2;grid-template-rows:26px minmax(0,1fr) var(--mobile-controller-height,122px)}
+#game .board>.tile{aspect-ratio:var(--reel-cell-aspect)}
+/* Wider reel cells retain contained artwork; spin strips use the measured
+   cell dimensions, so stops and expanding wilds stay on the same grid. */
+@media(max-aspect-ratio:1/1){#game{--reel-cell-aspect:1}}
+@media(max-width:760px) and (orientation:portrait){
+ #game{padding-left:max(2px,env(safe-area-inset-left));padding-right:max(2px,env(safe-area-inset-right))}
+ #game .board-wrap{border-left-width:calc(var(--frame-width)*.8);border-right-width:calc(var(--frame-width)*.8)}
+}
+#game>.console{display:none;visibility:hidden;pointer-events:none}
+#game #mobile-controller{display:block;position:absolute;inset:auto auto max(6px,env(safe-area-inset-bottom)) 50%;transform:translateX(-50%);width:min(calc(100% - 32px),1080px);max-width:none;height:auto;margin:0;z-index:10;--controller-accent:#c4ed79;--controller-ink:#f5f7f3}
+#game #mobile-controller[data-layout=mobile]{left:0;right:0;transform:none;width:100%}
+#game .topbar{opacity:.66;text-shadow:0 1px 3px #020b0b}
+#game .topbar .utilities{display:none}
+/* Fine grain and soft weathering stay fixed behind both stopped and moving symbols. */
+#game{--reel-texture:url('assets/reels-v114/worn-glass.svg')}
+#game .board-wrap{background:#0b1a22 var(--reel-texture) center / 100% 100% no-repeat;background-origin:padding-box;background-clip:padding-box;filter:drop-shadow(0 8px 5px #010c12a6)}
+#game .board{position:relative;background:transparent;box-shadow:inset 0 14px 22px #020e1533,inset 0 -8px 16px #06110d22}
+/* Keep the five hairlines on the stationary cabinet, independently of reel
+   rendering. Lift them above opaque spinning windows until the last stop,
+   then return them behind expanded wilds. The extra pixel avoids a sixth line. */
+#game .board-wrap:before{content:'';position:absolute;inset:2px;z-index:4;pointer-events:none;background:linear-gradient(90deg,transparent calc(100% - 1px),#acc9bc55 0) left top / calc((100% + 1px)/6) 100% repeat-x;mask-image:linear-gradient(180deg,transparent,#000 6% 94%,transparent)}
+#game .board-wrap:has(.spinning-reel):before{z-index:8}
+#game .board .tile,#game .reel-strip .tile{background:transparent;border-color:transparent;box-shadow:none;border-radius:0}
+#game .board .tile[data-kind=wild]{background:radial-gradient(ellipse,#a2d56819,transparent 72%)}
+#game .board .tile[data-kind=vial]{background:radial-gradient(ellipse,#d3d27b16,transparent 70%)}
+#game .board .tile.hit{border-color:#e9efa574;background:radial-gradient(ellipse,#dcf39325,transparent 76%);box-shadow:inset 0 0 18px #d9ed6833}
+#game .board .tile.target{border-color:#d6efae;background:radial-gradient(ellipse,#b5d87844,transparent 78%);box-shadow:inset 0 0 24px #b5d87866}
+#game .board .tile.fs-locked{background:radial-gradient(ellipse,#beed7030,transparent 70%)}
+#game .spinning-reel{background-color:#0b1a22;background-image:var(--reel-texture);background-size:var(--reel-texture-width) var(--reel-texture-height);background-position:var(--reel-texture-x) var(--reel-texture-y);background-repeat:no-repeat;border-radius:0}
+.city-backdrop:after{background:radial-gradient(ellipse at 50% 45%,transparent 48%,#02131a38 100%),linear-gradient(180deg,transparent 77%,#04131426)}
+.town-cloud svg{fill:#57867f}.town-cloud-far{opacity:.12}.town-cloud-near{opacity:.15}
+.town-mist-middle{opacity:.48}.town-mist-front{opacity:.46}
+@media(max-width:760px),(pointer:coarse) and (hover:none){
+ #game{grid-template-rows:26px minmax(0,1fr) var(--mobile-controller-height,151px)}
+ #game #mobile-controller{width:min(calc(100% - 16px),620px);bottom:0}
+}
+@media(max-height:540px) and (orientation:landscape){
+ #game{grid-template-rows:24px minmax(0,1fr) var(--mobile-controller-height,78px)}
+ #game #mobile-controller{bottom:0;width:min(calc(100% - 20px),960px)}
+}

@@ -1,0 +1,28 @@
+#game .brand h1.peek-title {
+  position: relative;
+  display: block;
+  width: min(570px, 100%);
+  margin: 0 auto;
+  line-height: 0;
+  font-size: 0;
+  transform: none;
+  text-shadow: none;
+}
+.peek-title img, .peek-title canvas {
+  display: block;
+  width: 100%;
+  height: clamp(100px, 18.5svh, 160px);
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
+}
+.peek-title img { position: relative; z-index: 2; }
+.peek-title canvas { position: absolute; inset: 0; z-index: 1; visibility: hidden; }
+.peek-title.peeking canvas { visibility: visible; }
+@media(max-width:900px) {
+  #game .brand { padding: 0 0 2px; }
+  .peek-title img, .peek-title canvas { height: clamp(94px, 17.5svh, 150px); }
+}
+@media(min-aspect-ratio:4/3) and (max-height:520px) {
+  .peek-title img, .peek-title canvas { height: 62px; }
+}

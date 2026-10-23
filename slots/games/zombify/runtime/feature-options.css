@@ -1,0 +1,66 @@
+/* A bonus-only tracker must never fall back to the old crown layout. */
+#game .infection-tracker[hidden],#game:not([data-free-spins]) .infection-tracker{display:none!important}
+
+#shop .shop-toolbar,#shop .shop-options{width:min(100%,1120px)}
+#shop .shop-options{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:3px 6px 16px;scrollbar-color:#688564 #10201d}
+#shop .bonus-cards{grid-template-columns:repeat(3,minmax(0,1fr));width:100%;max-width:none;max-height:none;height:auto;align-items:stretch;gap:16px}
+#shop .bonus-card{grid-template-rows:140px 1fr auto;overflow:hidden;min-width:0}
+#shop .bonus-info{padding:14px 20px 22px}
+#shop .bonus-card h3{font-size:28px;line-height:1.08}
+#shop .bonus-purchase{flex-wrap:wrap;gap:14px;padding:16px}
+#shop .card-action{flex:1;min-width:125px}
+#shop .bonus-cost{flex:1}
+#shop .bonus-card[data-mode=mystery]{--card:#d5a5fa;background:radial-gradient(ellipse at 50% 0,#5b39766b,transparent 62%),linear-gradient(145deg,#30263c,#171e27);border-color:#9c73b567;border-top-color:var(--card)}
+.mystery-symbols{position:relative;isolation:isolate;min-width:100px}
+#shop .mystery-symbols>.symbol{width:104px;height:104px;filter:drop-shadow(0 0 18px #af71df80)}
+.mystery-symbols:after{content:'?';display:grid;place-items:center;position:absolute;left:calc(50% + 18px);bottom:-2px;width:44px;height:44px;border:3px solid #dab0ee;border-radius:50%;background:linear-gradient(#735288,#33233e);font-size:35px;font-weight:900;color:#fff2ca;text-shadow:0 2px #311d3e;box-shadow:0 4px 6px #0008;z-index:1}
+.mystery-odds{display:flex;flex-wrap:wrap;justify-content:center;gap:5px 9px;font-size:12px}
+#confirm[data-mode=mystery]{border-color:#ce9dee;background:radial-gradient(ellipse at top,#443052,#101c20 80%)}
+#confirm[data-mode=mystery] h2{color:#e1bbff}
+#confirm[data-mode=mystery] .primary{background:#d5a5fa;color:#24192c}
+#confirm .mystery-symbols{width:140px;margin:14px auto}
+.enhanced-option{display:grid;grid-template-columns:64px minmax(0,1fr) auto 64px;align-items:center;gap:18px;padding:16px 20px;margin:0 0 20px;border:1px solid #70884c;border-radius:6px;background:radial-gradient(ellipse at left,#718b3638,transparent 65%),linear-gradient(120deg,#23382b,#142525);cursor:pointer}
+.enhanced-icon{width:64px;height:64px;filter:drop-shadow(0 2px 7px #a2dd4240)}
+.enhanced-copy,.enhanced-cost{display:flex;flex-direction:column;gap:5px}
+.enhanced-copy>strong{font-size:25px;line-height:1;color:#e6edbd;letter-spacing:.6px}
+.enhanced-copy>span{font-size:15px;line-height:1.3;color:#bed0bc}
+.enhanced-cost{text-align:right}
+.enhanced-cost>strong{font-size:30px;line-height:1;font-variant-numeric:tabular-nums;color:#f2f5da}
+.enhanced-cost>span{font-size:11px;color:#bbc9af;white-space:nowrap}
+.enhanced-switch{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:12px;font-weight:800;color:#b6c8a4}
+.enhanced-switch input{width:29px;height:29px;margin:0;accent-color:#b5e77e;cursor:pointer}
+.enhanced-option:has(input:checked){border-color:#b8e776;box-shadow:inset 0 0 22px #a7ce3020}
+.enhanced-option:has(input:focus-visible){outline:2px solid #e7ffc2;outline-offset:3px}
+.enhanced-option:has(input:disabled){opacity:.6;cursor:default}
+.enhanced-setting small{display:block;font-size:12px;color:#b9c7a9;margin-top:4px}
+.enhanced-setting input{accent-color:#b5e77e}
+#game.enhanced-spins #bet-label{color:#c6ee89;font-size:11px;letter-spacing:.5px}
+#game.enhanced-spins #bet{color:#e3f9bb}
+@media(max-width:900px){
+ #shop .bonus-cards{grid-template-columns:1fr;gap:14px}
+ #shop .bonus-card{grid-template-columns:112px minmax(0,1fr);grid-template-rows:auto auto}
+ #shop .bonus-visual{grid-area:1/1;padding:12px 4px;gap:8px}
+ #shop .bonus-info{grid-area:1/2;padding:18px 14px;text-align:left}
+ #shop .bonus-purchase{grid-area:2/1/3/3;padding:12px 16px}
+ #shop .bonus-visual>span{font-size:10px;text-align:center;letter-spacing:.4px}
+ #shop .bonus-visual .scatter-symbols{display:grid;grid-template-columns:repeat(2,42px);place-items:center}
+ #shop .bonus-visual .scatter-symbols>.symbol{width:45px;height:45px;margin:0}
+ #shop .bonus-visual .scatter-symbols[data-count="3"]>.symbol:last-child{grid-column:1/3;margin-top:-12px}
+ #shop .bonus-visual .mystery-symbols{display:flex}
+ #shop .bonus-visual .mystery-symbols>.symbol{width:76px;height:76px}
+ .mystery-symbols:after{width:34px;height:34px;font-size:28px;left:calc(50% + 12px)}
+ #shop .mystery-odds{justify-content:flex-start;display:flex}
+ .enhanced-option{grid-template-columns:48px minmax(0,1fr) 45px;gap:10px;padding:14px;margin-bottom:14px}
+ .enhanced-icon{width:48px;height:48px;grid-row:1/3}
+ .enhanced-copy>strong{font-size:21px}
+ .enhanced-copy>span{font-size:14px}
+ .enhanced-cost{grid-column:2;grid-row:2;text-align:left;flex-direction:row;align-items:baseline;flex-wrap:wrap;gap:4px 8px}
+ .enhanced-cost>strong{font-size:23px}
+ .enhanced-switch{grid-column:3;grid-row:1/3}
+}
+@media(max-width:400px){
+ #shop h2{font-size:23px}#shop .shop-toolbar{flex-wrap:wrap}#shop .shop-bet{width:100%}
+ #shop .bonus-card{grid-template-columns:90px minmax(0,1fr)}
+ #shop .bonus-card h3{font-size:23px}#shop .bonus-card p{font-size:14px}
+ .enhanced-option{padding:12px 8px;gap:8px}
+}

@@ -1,0 +1,98 @@
+/* Cosmic Clash's open feature showcase, using Zombify's own painted metalwork. */
+html[data-entry=guide] #welcome{padding:20px max(22px,5vw) max(18px,env(safe-area-inset-bottom));overflow:auto;isolation:isolate;background:linear-gradient(#04100d70,#04100d8a),var(--town-art) center bottom / cover no-repeat}
+#welcome #guide-page{position:static;width:min(1080px,100%);height:auto;max-height:none;display:flex;flex-direction:column;align-items:center;gap:clamp(10px,1.8svh,20px);margin:auto;isolation:isolate}
+#welcome #guide-page .guide-heading{flex:none;width:min(560px,55vw,75svh);margin:0 0 2px}
+#welcome #guide-page .guide-heading>img{display:block;width:100%;height:auto;margin:0;filter:drop-shadow(0 8px 12px #000a)}
+#welcome #guide-page .guide-cards{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(22px,3vw,42px);align-items:stretch}
+#welcome #guide-page .guide-card{--accent:#c4ed79;--wash:#81b62c32;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;position:relative;min-width:0;isolation:isolate;text-align:center;padding:0;gap:0;background:none;border:0;border-radius:0;box-shadow:none;overflow:visible}
+#welcome #guide-page .guide-hidden{--accent:#d8aeff;--wash:#9756cb36}
+#welcome #guide-page .guide-hearts{--accent:#ff86ae;--wash:#c7427136}
+#guide-page .guide-visual{position:relative;width:100%;height:clamp(180px,32svh,320px);display:flex;justify-content:center;align-items:flex-end;isolation:isolate}
+#guide-page .guide-visual:before{content:'';position:absolute;inset:6% -8% -5%;z-index:-1;background:radial-gradient(ellipse at center bottom,var(--wash),transparent 70%);pointer-events:none}
+#welcome #guide-page .guide-gameplay{position:relative;width:calc(100% - 22px);height:100%;aspect-ratio:auto;flex:none;border:0;border-image:none;border-radius:0;background:none;box-shadow:none;overflow:hidden;mask-image:linear-gradient(transparent,#000 8%,#000 99%)}
+#guide-page .guide-demo-board,#guide-page .guide-demo-stacks{gap:3px;padding:0}
+#guide-page .guide-demo-board{background:linear-gradient(#07181544,#051518bb),url('assets/reels-v107/infected-glass.svg') center/cover}
+#guide-page .guide-demo-board>.tile{background:#08202555;border:0;border-bottom:1px solid #a9d1c21a;border-radius:0}
+#guide-page .guide-demo-board .symbol{width:100%;height:100%}
+#guide-page .guide-head-multi{position:absolute;bottom:2px;left:0;right:0;text-align:center;color:#edffba;font-size:clamp(22px,2.5vw,32px);text-shadow:2px 3px #091b0e,-1px -1px #091b0e;z-index:2;line-height:1}
+#guide-page .guide-demo-stack .stack-multi{font-size:clamp(26px,3vw,38px);bottom:4px;color:#e8ffb6}
+#guide-page .guide-demo-toggle{top:3px;left:12px;right:auto;min-width:0;min-height:32px;padding:5px 8px;font-size:10px;letter-spacing:.06em;color:#d8e4d7;border:1px solid #a4c0b238;border-radius:2px;background:#071b1cb8;box-shadow:none}
+#guide-page .guide-demo-toggle:hover{background:#183434}
+#welcome #guide-page .guide-copy{position:relative;flex:1;align-self:stretch;width:100%;min-height:205px;display:flex;flex-direction:column;align-items:center;padding:13px 12px 6px;margin:0;border-style:solid;border-width:0 10px 12px;border-image:url('assets/cabinet-v83/containment-frame.png') 206 174 178 174 / 0 10px 12px stretch;border-radius:0;clip-path:none;background:linear-gradient(var(--wash),#132528 48%,#0c191fee);background-clip:padding-box;box-shadow:0 10px 15px #0006}
+#guide-page .guide-copy:before{content:'';position:absolute;top:0;left:-10px;right:-10px;height:5px;background:linear-gradient(#a2c1c3,#375461 45%,#172b34 70%,var(--accent));box-shadow:0 -1px #d5e9e566}
+#guide-page .guide-kicker{font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--accent);margin:0 0 6px;line-height:1.2}
+#welcome #guide-page .guide-card h3{font-size:clamp(26px,2.6vw,35px)!important;font-weight:800;line-height:1;color:var(--accent);text-shadow:2px 3px #030c0b;letter-spacing:-.02em;margin:0 0 14px}
+#welcome #guide-page .guide-card p{font-size:clamp(17px,1.5vw,21px);font-weight:600;line-height:1.23;color:#e0e6dc;max-width:310px;margin:0;text-shadow:0 1px 1px #000}
+#guide-page .guide-demo-caption{display:flex;align-items:center;justify-content:center;min-height:32px;width:100%;margin-top:auto;padding-top:8px;color:var(--accent);opacity:.9;font-size:11px;font-weight:800;letter-spacing:.035em;line-height:1.2}
+#guide-page .guide-stamp{position:absolute;right:0;top:12%;width:76px;height:91px;transform:rotate(8deg);display:flex;flex-direction:column;align-items:center;justify-content:center;background:#d8aeff;border:3px solid #31233e;outline:2px solid #f0ddff;box-shadow:4px 5px #020b0b99;color:#20152e;line-height:1;pointer-events:none}
+#guide-page .guide-stamp strong{font-size:57px;line-height:.9}#guide-page .guide-stamp span{font-size:13px;font-weight:800;letter-spacing:.03em;margin-top:5px}
+#guide-page .guide-heart-stamp{position:absolute;right:-12px;top:1%;width:96px;height:106px;transform:rotate(9deg);pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;filter:drop-shadow(3px 5px 2px #020b0b88)}
+#guide-page .guide-heart-stamp img{position:absolute;inset:0;width:100%;height:92%;object-fit:contain;z-index:-1}
+#guide-page .guide-heart-stamp strong{font-size:39px;color:#fff2f4;line-height:1;text-shadow:2px 3px #661932;margin-top:9px}
+#guide-page .guide-heart-stamp span{font-size:15px;font-weight:800;background:#431729;border:1px solid #ff9fbb;padding:3px 7px;color:#ffe1eb;line-height:1.1}
+#welcome #guide-page .guide-actions{display:flex;flex-direction:column;align-items:center;gap:4px;flex:none;width:100%;margin:0}
+#welcome #guide-page .primary{width:min(100%,550px);min-height:46px;padding:4px 12px;font-size:clamp(24px,2.5vw,34px);font-weight:800;line-height:1.1;letter-spacing:.025em;border:0;border-radius:0;background:none;box-shadow:none;color:#fff;text-shadow:0 3px #000,0 0 14px #000}
+#welcome #guide-page .primary:hover{background:none;color:#e8ffc4;filter:none}
+#guide-page .guide-spins-note,#guide-page .guide-pay-note{font-size:11px;letter-spacing:.04em;line-height:1.4;color:#a0b8ac;text-align:center}
+#guide-page .guide-spins-note i{font-style:normal;color:#d2e8ac;margin-inline:7px}
+#guide-page .guide-pay-note{font-size:10px;color:#91a89d}
+#guide-page .continue-mobile{display:none}
+#guide-page .guide-navigation{display:none;flex:none;height:38px;gap:18px}
+#guide-page .guide-navigation>button{width:38px;height:38px;font-size:30px;border:0;background:#061b1a88}
+#guide-page .guide-dots{gap:5px}
+#guide-page .guide-dots>button{width:32px;height:32px}
+#guide-page .guide-dots>button:before{width:8px;height:8px;border:0;background:#5c7a70}
+#guide-page .guide-dots>[aria-current=step]:before{width:22px;border-radius:4px;background:#c4ed79;box-shadow:none}
+@media(max-width:759px){
+ html[data-entry=guide] #welcome{padding:14px 20px max(14px,env(safe-area-inset-bottom))}
+ #welcome #guide-page{width:min(440px,100%);gap:8px}
+ #welcome #guide-page .guide-heading{width:min(100%,400px);margin:0 0 4px}
+ #welcome #guide-page .guide-cards{display:block;width:min(100%,360px)}
+ #guide-page .guide-visual{height:clamp(170px,30svh,280px)}
+ #welcome #guide-page .guide-gameplay{width:calc(100% - 30px)}
+ #welcome #guide-page .guide-copy{min-height:184px;padding:11px 12px 5px}
+ #guide-page .guide-kicker{font-size:11px}
+ #welcome #guide-page .guide-card h3{font-size:29px!important;margin-bottom:11px}
+ #welcome #guide-page .guide-card p{font-size:18px;line-height:1.23}
+ #guide-page .guide-demo-caption{font-size:10px;min-height:29px}
+ #guide-page .guide-stamp{right:4%;width:65px;height:79px}#guide-page .guide-stamp strong{font-size:47px}#guide-page .guide-stamp span{font-size:11px}
+ #guide-page .guide-heart-stamp{right:0;width:86px;height:96px}#guide-page .guide-heart-stamp strong{font-size:35px}
+ #guide-page .guide-navigation{display:flex}
+ #welcome #guide-page .primary{font-size:27px;min-height:42px}
+ #guide-page .guide-spins-note{font-size:9px;letter-spacing:0}#guide-page .guide-spins-note i{margin-inline:4px}#guide-page .guide-pay-note{font-size:8px}
+ #guide-page .continue-desktop{display:none}#guide-page .continue-mobile{display:inline}
+}
+@media(max-height:650px) and (min-width:760px){
+ html[data-entry=guide] #welcome{padding:10px 5vw}
+ #welcome #guide-page{gap:9px}#welcome #guide-page .guide-heading{width:min(440px,59svh)}
+ #guide-page .guide-visual{height:27svh;min-height:120px}
+ #welcome #guide-page .guide-copy{min-height:181px;padding-top:10px}
+ #welcome #guide-page .guide-card h3{font-size:26px!important;margin-bottom:10px}
+ #welcome #guide-page .guide-card p{font-size:17px}
+ #guide-page .guide-demo-caption{font-size:10px;min-height:28px}
+ #guide-page .guide-stamp{width:60px;height:74px}#guide-page .guide-stamp strong{font-size:44px}#guide-page .guide-stamp span{font-size:10px}
+ #guide-page .guide-heart-stamp{width:74px;height:84px}#guide-page .guide-heart-stamp strong{font-size:30px}#guide-page .guide-heart-stamp span{font-size:12px}
+ #welcome #guide-page .primary{font-size:26px;min-height:36px}
+}
+@media(max-height:440px) and (min-width:760px){
+ #welcome #guide-page .guide-heading{width:205px}#welcome #guide-page .guide-cards{max-width:850px;gap:24px}
+ #guide-page .guide-visual{height:25svh;min-height:90px}
+ #welcome #guide-page .guide-copy{min-height:151px;padding:8px 7px 3px}
+ #guide-page .guide-kicker{font-size:9px}#welcome #guide-page .guide-card h3{font-size:22px!important;margin-bottom:8px}#welcome #guide-page .guide-card p{font-size:14px}
+ #guide-page .guide-demo-caption{font-size:9px;min-height:23px}
+ #guide-page .guide-stamp{width:43px;height:55px}#guide-page .guide-stamp strong{font-size:33px}#guide-page .guide-stamp span{font-size:7px}
+ #guide-page .guide-heart-stamp{width:61px;height:70px}#guide-page .guide-heart-stamp strong{font-size:25px}#guide-page .guide-heart-stamp span{font-size:10px}
+ #welcome #guide-page .primary{font-size:22px;min-height:30px!important}#guide-page .guide-pay-note{display:none}
+}
+@media(max-width:759px) and (orientation:landscape){
+ html[data-entry=guide] #welcome{padding:9px 20px}#welcome #guide-page{width:min(580px,100%);gap:5px}
+ #welcome #guide-page .guide-heading{width:200px}#welcome #guide-page .guide-cards{width:100%}
+ #welcome #guide-page .guide-card{display:grid;grid-template-columns:180px minmax(0,1fr);align-items:center;max-width:none}
+ #guide-page .guide-visual{height:175px}#welcome #guide-page .guide-copy{min-height:175px}
+ #welcome #guide-page .guide-card h3{font-size:24px!important}#welcome #guide-page .guide-card p{font-size:16px}
+ #guide-page .guide-stamp{right:1%;width:45px;height:59px}#guide-page .guide-stamp strong{font-size:35px}#guide-page .guide-stamp span{font-size:8px}
+ #guide-page .guide-heart-stamp{width:62px;height:72px;right:0}#guide-page .guide-heart-stamp strong{font-size:26px}#guide-page .guide-heart-stamp span{font-size:10px}
+ #guide-page .guide-navigation,#guide-page .guide-navigation>button{height:30px}
+ #welcome #guide-page .primary{font-size:23px;min-height:30px!important}#guide-page .guide-pay-note{display:none}
+}
+@media(prefers-reduced-motion:reduce){#welcome #guide-page{animation:none}}

@@ -1,0 +1,225 @@
+/* Two portrait states: human / fully zombified with approved facial loops. */
+.symbol:is(.art-skater,.art-nurse,.art-builder,.art-cop,.art-scientist),
+.tile.carrier>.symbol:is(.art-skater,.art-nurse,.art-builder,.art-cop,.art-scientist){--portrait-zombie:var(--portrait-zombie-motion);background-image:var(--portrait-human);background-size:contain;background-position:center;background-repeat:no-repeat}
+.art-skater{--portrait-human:url('assets/style5/skater-human.png');--portrait-zombie-still:url('assets/style5/skater-zombie.png');--portrait-zombie-motion:url('assets/style5/animated/skater.webp')}
+.art-nurse{--portrait-human:url('assets/style5/nurse-human.png');--portrait-zombie-still:url('assets/style5/nurse-zombie.png');--portrait-zombie-motion:url('assets/style5/animated/nurse.webp')}
+.art-builder{--portrait-human:url('assets/style5/builder-human.png');--portrait-zombie-still:url('assets/style5/builder-zombie.png');--portrait-zombie-motion:url('assets/style5/animated/builder.webp')}
+.art-cop{--portrait-human:url('assets/style5/cop-human.png');--portrait-zombie-still:url('assets/style5/cop-zombie.png');--portrait-zombie-motion:url('assets/style5/animated/cop.webp')}
+.art-scientist{--portrait-human:url('assets/style5/scientist-human.png');--portrait-zombie-still:url('assets/style5/scientist-zombie.png');--portrait-zombie-motion:url('assets/style5/animated/scientist.webp')}
+/* Two source-sheet crops include the edge of the neighboring portrait. Mask
+   only those human poses, using the same square contain sizing as the artwork.
+   Animated and reduced-motion zombie poses have their own clean silhouettes. */
+.symbol.art-scientist{--portrait-cutout:url('assets/symbol-masks-v115/scientist-human.svg')}
+.symbol.art-builder{--portrait-cutout:url('assets/symbol-masks-v115/builder-human.svg')}
+.symbol:is(.art-scientist,.art-builder){mask-image:var(--portrait-cutout);mask-size:contain;mask-position:center;mask-repeat:no-repeat}
+.tile[data-infection='2']>.symbol,.symbol[data-infection='2'],.tile:is(.carrier-3,.carrier-5):not([data-infection])>.symbol{mask-image:none}
+.tile[data-infection='2']>.symbol,.symbol[data-infection='2'],.tile:is(.carrier-3,.carrier-5):not([data-infection])>.symbol{background-image:var(--portrait-zombie)!important}
+@media(prefers-reduced-motion:reduce){
+ .symbol:is(.art-skater,.art-nurse,.art-builder,.art-cop,.art-scientist),
+ .tile.carrier>.symbol:is(.art-skater,.art-nurse,.art-builder,.art-cop,.art-scientist){--portrait-zombie:var(--portrait-zombie-still)}
+}
+.symbol.art-vial{background:url('assets/rework/fs-approved.png') center/contain no-repeat;filter:drop-shadow(0 0 5px #ffb92b55)}
+.tile[data-kind=vial]:after{content:none}
+.symbol.art-wild,.trail-mark{background:url('assets/style5/wild.png') center/contain no-repeat;width:100%;height:100%;border:0;color:transparent;font-size:0;transform:none}
+.symbol.art-zombie,.symbol.art-zombie.zombie-walk-sprite{background:url('assets/rework/zombie-slim.png') center/contain no-repeat!important}
+.stack-art>img{width:100%;height:100%;object-fit:contain;max-width:100%;filter:drop-shadow(0 3px 4px #091109)}
+.jumping-zombie{position:absolute;object-fit:contain;transform-origin:50% 100%;z-index:9;filter:drop-shadow(0 5px 4px #0006);pointer-events:none}
+.knocked-symbol{position:absolute;z-index:8;pointer-events:none}
+.knocked-symbol>.symbol{width:100%;height:100%}
+
+.carrier-value{position:absolute;bottom:3px;right:4px;color:#f5ffbb;background:#132607e8;padding:1px 4px;border-radius:4px;font-size:clamp(11px,1.3vw,17px);font-weight:800;line-height:1.15;text-shadow:0 1px #000;z-index:3}
+
+/* Approved concept 1: narrow full-height reel pose and a mobile stage mascot. */
+.stack-art>img{width:auto;height:100%;max-width:none;object-fit:contain;transform:translateX(var(--zombie-offset,-50%))}
+.mobile-zombie-mascot{display:none;pointer-events:none;user-select:none}
+/* The reclining mascot overlays the lower stage, reserving no reel space. */
+@media(max-width:900px){
+ #game .play-area{padding-bottom:0}
+ .mobile-zombie-mascot{display:block;position:absolute;width:calc(100% - 24px);height:auto;object-fit:contain;object-position:center bottom;left:12px;bottom:calc(119px + env(safe-area-inset-bottom));z-index:3}
+}
+@media(max-width:900px) and (orientation:landscape){.mobile-zombie-mascot{width:42vw;height:auto;bottom:calc(80px + env(safe-area-inset-bottom))}}
+.tile[data-kind=wild]:after{content:none}
+.tile>.carrier-value{inset:0;display:grid;place-items:center;background:none;border:0;padding:0;border-radius:0;font-size:clamp(12px,36cqw,38px);line-height:1;font-weight:900;color:#eaff7c;text-shadow:0 3px 0 #294b12,0 0 14px #76ee33;z-index:0;visibility:hidden}
+.tile>.symbol{position:relative;z-index:1}
+.tile.multiplier-revealed>.carrier-value{visibility:visible}
+.swatted-symbol{position:fixed;z-index:70;pointer-events:none;transform-origin:center;will-change:transform}.swatted-symbol>.symbol{width:100%;height:100%}.swatting-zombie>.symbol{transform-origin:50% 85%}
+
+/* Give the reclining character a real stage, reclaiming the empty top space. */
+@media(max-width:900px) and (orientation:portrait){
+ #game .play-area{align-content:start}
+ #game .peek-title img,#game .peek-title canvas{height:clamp(62px,10dvh,90px)}
+ .mobile-zombie-mascot{object-position:center bottom}
+}
+
+.zombie-reaching-arm{position:absolute;transform-origin:50% 100%;z-index:4;pointer-events:none;transform:scaleY(.2)}
+.zombie-reaching-arm>img{position:absolute;width:100%;height:85%;object-fit:fill;bottom:0;transform:rotate(180deg)}
+.zombie-reaching-arm>.reaching-hand{width:170%;height:26%;left:-35%;bottom:78%;object-fit:contain;transform:rotate(180deg)}
+.flying-tile{overflow:hidden;box-sizing:border-box}.flying-tile>.symbol{position:relative;z-index:1}
+
+/* Approved style 5 card ranks. */
+.symbol.art-j{background:url('assets/style5/j.png') center/contain no-repeat}
+.symbol.art-q{background:url('assets/style5/q.png') center/contain no-repeat}
+.symbol.art-k{background:url('assets/style5/k.png') center/contain no-repeat}
+.symbol.art-a{background:url('assets/style5/a.png') center/contain no-repeat}
+
+.tile>.symbol:is(.art-j,.art-q,.art-k,.art-a){transform:scale(.98)}
+
+.tile{container-type:inline-size}
+/* Bonus decorations never participate in cabinet height. */
+#game[data-free-spins] .machine-crown{min-height:0;position:relative}
+#game[data-free-spins] .infection-tracker{position:absolute;bottom:100%;left:0;right:0;margin:0 108px 3px 8px;max-height:80px}
+#game[data-free-spins] .machine-head{margin-right:8px;height:25px}
+#game .machine{--counter-size:104px}
+#game .counter-copy>span{font-size:8px;letter-spacing:0}
+#game .counter-copy>strong{font-size:26px}
+#game[data-free-spins] .infection-portrait{height:24px;width:24px}
+#game[data-free-spins] .infection-name{font-size:8px}
+#game[data-free-spins] .infection-heading{display:none}
+#game[data-free-spins] .infection-value{font-size:8px}
+.window-crowd{position:absolute;width:1672px;height:941px;transform-origin:0 0;pointer-events:none}
+.haunted-window{position:absolute;overflow:hidden;clip-path:polygon(2% 6%,96% 0,100% 95%,0 100%);background:#acbd3810}
+.haunted-window img{position:absolute;width:135%;max-width:none;left:-18%;bottom:-4%;filter:brightness(.48) sepia(.4);animation:window-peek 13s ease-in-out infinite;animation-delay:var(--delay);transform-origin:center bottom}
+.haunted-window:after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 44%,#162921 44% 55%,transparent 55%),linear-gradient(transparent 47%,#162921 47% 54%,transparent 54%);opacity:.8}
+@keyframes window-peek{0%,16%,100%{transform:translateY(95%)}28%,43%{transform:translateY(5%) rotate(-7deg)}56%,72%{transform:translateY(0) rotate(7deg)}85%{transform:translateY(95%)}}
+@media(prefers-reduced-motion:reduce){.haunted-window img{animation:none;transform:translateY(20%)}}
+html[data-background-paused=true] .haunted-window img{animation-play-state:paused}
+/* Revealed beneath the swatted tile: worn stone, grime and green fissures. */
+.tile>.carrier-value{
+ background:radial-gradient(ellipse at center,#07110830 0 32%,transparent 70%),url('assets/style5/multiplier-stone.png') center/cover no-repeat;
+ box-shadow:inset 0 0 10px #020702b3,inset 0 0 0 1px #b7db5940;
+ color:#edff9a;text-shadow:0 2px 0 #17240b,1px 0 2px #071005,-1px 0 2px #071005,0 0 7px #84c83a66;
+}
+.tile.multiplier-revealed>.carrier-value{animation:multi-stone-impact .28s ease-out both}
+@keyframes multi-stone-impact{from{filter:brightness(1.7)}to{filter:brightness(1)}}
+@media(prefers-reduced-motion:reduce){.tile.multiplier-revealed>.carrier-value{animation:none}}
+
+/* Chipped limestone numerals with an olive bevel, separate from the recess. */
+.tile>.carrier-value{text-shadow:none}
+.multiplier-digits{
+ display:block;max-width:90%;font-family:Barlow,'Arial Black',sans-serif;font-weight:800;
+ font-size:1em;line-height:1.08;letter-spacing:-.025em;transform:rotate(-4deg);
+ color:#e8e5bb;
+ background:linear-gradient(163deg,transparent 0 37%,#65764a 37% 39%,transparent 39% 69%,#8a9262 69% 71%,transparent 71%),linear-gradient(#fff5d3 0%,#dedeb2 48%,#b5c180 50%,#e2e8b7 76%,#9dab68 100%);
+ -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+ -webkit-text-stroke:.65px #26371a;paint-order:stroke fill;
+ filter:drop-shadow(0 2px 0 #526236) drop-shadow(0 3px 0 #0b1309) drop-shadow(0 0 2px #000);
+}
+/* Ten percent breathing room for the standard reel icons. */
+.tile>.symbol:is(.art-skater,.art-nurse,.art-builder,.art-cop,.art-scientist,.art-wild,.art-vial),
+.flying-tile>.symbol:is(.art-skater,.art-nurse,.art-builder,.art-cop,.art-scientist){transform:scale(.9)}
+.tile>.symbol:is(.art-j,.art-q,.art-k,.art-a){transform:scale(.882)}
+/* Large side-mounted counter, outside the reel layout. */
+#game .machine{--counter-size:180px}
+.free-spins-counter{right:calc(-1 * var(--counter-size) + 20px);top:25%;bottom:auto}
+#game .counter-copy>span{font-size:11px;letter-spacing:.7px}
+#game .counter-copy>strong{font-size:42px}
+#game[data-free-spins] .infection-tracker{margin-right:8px}
+@media(max-width:900px){
+ #game .machine{--counter-size:156px}
+ .free-spins-counter{right:-4px;top:calc(100% - 20px);bottom:auto;transform:rotate(-6deg)}
+ #game .counter-copy>span{font-size:10px}
+ #game .counter-copy>strong{font-size:36px}
+ #game[data-free-spins] .mobile-zombie-mascot{visibility:hidden}
+}
+@media(max-width:900px) and (orientation:landscape){
+ #game .machine{--counter-size:140px}
+ .free-spins-counter{right:calc(-1 * var(--counter-size) + 18px);top:15%;transform:none}
+}
+/* Regular Outbreak: five independent three-eat meters. */
+#game[data-free-spins] .machine-crown{position:static}
+#game[data-free-spins] .infection-tracker{position:absolute;left:auto;right:calc(100% + 12px);top:25px;bottom:auto;width:112px;max-height:none;margin:0;padding:8px;border:1px solid #71804f;background:linear-gradient(100deg,#172322f5,#0a1311f5);border-radius:8px;box-shadow:0 4px 14px #0008;animation:infection-panel-in .35s ease-out}
+#game[data-free-spins] .infection-people{display:grid;grid-template-columns:1fr;gap:7px}
+#game[data-free-spins] .infection-person{padding:3px;border-radius:6px}
+#game[data-free-spins] .infection-portrait{width:56px;height:56px;margin:auto;filter:none;opacity:1}
+#game[data-free-spins] .infection-name{font-size:10px}
+#game[data-free-spins] .infection-value{font-size:11px;color:#9cad81;line-height:1.2}
+#game[data-free-spins] .bite-marks{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;height:7px;margin:4px 0}
+#game[data-free-spins] .bite-marks i{background:#09100d;border:1px solid #526245;border-radius:2px}
+#game[data-free-spins] .bite-marks i.filled{background:#95e84e;box-shadow:0 0 5px #8fdf4c80}
+#game[data-free-spins] .infection-person.stage-2{box-shadow:none;background:transparent}
+#game[data-free-spins] .infection-person.stage-3{box-shadow:inset 0 0 14px #8fea3626;background:#73a32a12}
+#game[data-free-spins] .stage-3 .infection-portrait{filter:drop-shadow(0 0 5px #a1ee45)}
+#game[data-free-spins] .stage-3 .infection-value{color:#ccff84}
+@keyframes infection-panel-in{from{opacity:0;translate:14px 0}to{opacity:1;translate:0 0}}
+@media(max-width:1100px){
+ #game[data-free-spins] .infection-tracker{left:0;right:0;top:calc(100% + 5px);width:100%;padding:5px}
+ #game[data-free-spins] .infection-people{grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}
+ #game[data-free-spins] .infection-portrait{width:40px;height:40px}
+ #game[data-free-spins] .infection-name{font-size:8px}
+ #game[data-free-spins] .infection-value{font-size:9px}
+ #game[data-bonus-tier=regular] .free-spins-counter{top:-114px;right:-4px}
+}
+@media(prefers-reduced-motion:reduce){#game[data-free-spins] .infection-tracker{animation:none}}
+
+#game[data-free-spins] .bite-marks i{width:100%;height:7px}
+#game[data-free-spins] .infection-portrait{mask-image:none}
+/* Individual iron portholes with three infection arcs. */
+#game[data-free-spins] .infection-tracker{padding:0;border:0;background:none;box-shadow:none;width:100px}
+#game[data-free-spins] .infection-person{--arc1:#263329;--arc2:#263329;--arc3:#263329;padding:3px 0;background:none;box-shadow:none}
+#game[data-free-spins] .infection-person.stage-1{--arc1:#9de34a}
+#game[data-free-spins] .infection-person.stage-2{--arc1:#9de34a;--arc2:#9de34a}
+#game[data-free-spins] .infection-person.stage-3{--arc1:#baff63;--arc2:#baff63;--arc3:#baff63;background:none;box-shadow:none}
+#game[data-free-spins] .infection-portrait{width:74px;height:74px;border-radius:50%;overflow:hidden;border:5px solid #434e3b;background:radial-gradient(circle at 40% 30%,#40513a,#101b16 72%);box-shadow:0 0 0 2px #080e0b,0 0 0 4px #78806a,inset 0 3px 6px #000c,0 5px 7px #0009;filter:none}
+#game[data-free-spins] .infection-portrait>.symbol{inset:7%;width:86%;height:86%;border-radius:50%}
+#game[data-free-spins] .infection-portrait:after{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 4deg,var(--arc1) 0deg 112deg,transparent 112deg 120deg,var(--arc2) 120deg 232deg,transparent 232deg 240deg,var(--arc3) 240deg 352deg,transparent 352deg);mask:radial-gradient(circle,transparent 57%,#000 60%);pointer-events:none}
+#game[data-free-spins] .stage-3 .infection-portrait{box-shadow:0 0 0 2px #17230c,0 0 0 4px #85945a,0 0 13px #9ef14288}
+#game[data-free-spins] .infection-name{margin-top:5px;color:#d9dec7;text-shadow:0 2px 2px #000}
+#game[data-free-spins] .bite-marks{display:none}
+#game[data-free-spins] .infection-value{margin-top:2px;padding:2px 4px;border-radius:9px;background:#101b14d9;font-weight:800;text-shadow:0 1px #000}
+@media(max-width:1100px){
+ #game[data-free-spins] .infection-tracker{width:100%;padding:4px 2px}
+ #game[data-free-spins] .infection-portrait{width:clamp(38px,11vw,58px);height:clamp(38px,11vw,58px);border-width:3px}
+ #game[data-free-spins] .infection-value{font-size:9px;letter-spacing:0}
+}
+/* The flipped forearm disappears behind the actual cabinet edge. */
+#game .free-spins-counter,#game[data-bonus-tier=regular] .free-spins-counter{top:calc(var(--counter-size) * -.64);right:calc(var(--counter-size) * -.16);bottom:auto;transform:none;z-index:1}
+.counter-art{transform:scaleX(-1)}
+.counter-copy{left:22%;right:13%}
+.counter-lift{transform-origin:17% 94%}
+@media(max-width:1100px){
+ #game .free-spins-counter,#game[data-bonus-tier=regular] .free-spins-counter{right:0;top:calc(var(--counter-size) * -.62)}
+}
+/* One articulated side pose spans the row. The head keeps the collected total. */
+.horizontal-rig-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.horizontal-swat-art{position:relative;width:100%;height:100%;overflow:visible;transform-origin:50% 85%}
+.horizontal-jump{overflow:visible}
+.horizontal-jump .horizontal-rig-canvas{height:250%;top:-150%}
+.horizontal-zombie .stack-art{background:radial-gradient(ellipse at 65% 55%,#52753688,#12251de8);overflow:hidden}
+.settled-zombie>.stack-art{z-index:1;background:transparent}
+.settled-zombie>.stack-art>.horizontal-rig-canvas{z-index:1}
+.zombie-backdrop{position:absolute;inset:0;overflow:hidden;pointer-events:none;background:linear-gradient(#0b1c13c4,#15241da8),url('assets/style5/multiplier-stone.png') center/cover no-repeat}
+.zombie-backdrop:before,.zombie-backdrop:after{content:'';position:absolute;inset:-20%;pointer-events:none}
+.zombie-backdrop:before{background:radial-gradient(ellipse at 20% 80%,#a1e74185,transparent 47%),radial-gradient(ellipse at 80% 25%,#3be4a361,transparent 50%),radial-gradient(ellipse at 45% 50%,#77983455,transparent 55%);animation:zombie-haze 6s ease-in-out var(--haze-delay,0s) infinite alternate}
+.zombie-backdrop:after{background:radial-gradient(circle at 23% 72%,#d2ff98b8 0 1px,transparent 2.5px),radial-gradient(circle at 76% 38%,#b9f5749c 0 1.5px,transparent 3px),radial-gradient(circle at 47% 88%,#d2ff9870 0 1px,transparent 2px),radial-gradient(circle at 86% 78%,#b3e8609c 0 1px,transparent 2.5px);animation:zombie-specks 4.8s ease-in-out var(--haze-delay,0s) infinite}
+@keyframes zombie-haze{from{transform:translate(-4%,8%) scale(1);opacity:.55}to{transform:translate(5%,-8%) scale(1.13);opacity:1}}
+@keyframes zombie-specks{0%{transform:translateY(14%);opacity:0}20%,70%{opacity:.8}100%{transform:translateY(-24%);opacity:0}}
+html[data-background-paused=true] .zombie-backdrop:before,html[data-background-paused=true] .zombie-backdrop:after{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.zombie-backdrop:before,.zombie-backdrop:after{animation:none;transform:none;opacity:.65}}
+.horizontal-zombie .stack-multi{left:auto;right:4px;bottom:3px;transform:rotate(-5deg);font-size:clamp(18px,3vw,32px);padding:1px 6px;z-index:2}
+.horizontal-zombie[data-direction=left] .stack-multi{left:4px;right:auto}
+/* Illustrated iron infection sockets; one chamber lights for each eat. */
+#game[data-free-spins] .infection-tracker{width:112px;right:calc(100% + 10px)}
+#game[data-free-spins] .infection-people{gap:3px}
+#game[data-free-spins] .infection-portrait{position:relative;width:100px;height:100px;overflow:visible;border:0;background:none;box-shadow:none;border-radius:0;isolation:isolate}
+#game[data-free-spins] .infection-portrait:before{content:'';position:absolute;inset:0;background:url('assets/style5/infection-frame.png') center/contain no-repeat;z-index:2;pointer-events:none}
+#game[data-free-spins] .infection-portrait>.symbol{inset:18% 20% 26%;width:60%;height:56%;border-radius:50%;background-color:#132825;z-index:0}
+#game[data-free-spins] .infection-portrait:after{inset:0;border-radius:0;background:url('assets/style5/infection-frame.png') center/contain no-repeat;filter:hue-rotate(240deg) saturate(1.5) brightness(1.55);mask:conic-gradient(from 15deg at 50% 44%,#000 0deg var(--infection-angle,0deg),transparent var(--infection-angle,0deg) 360deg);z-index:3}
+#game[data-free-spins] .stage-1{--infection-angle:105deg}
+#game[data-free-spins] .stage-2{--infection-angle:235deg}
+#game[data-free-spins] .stage-3{--infection-angle:360deg}
+#game[data-free-spins] .stage-3 .infection-portrait{box-shadow:none;filter:drop-shadow(0 0 5px #94d83d88)}
+#game[data-free-spins] .infection-person{position:relative;padding:0 0 15px}
+#game[data-free-spins] .infection-value{position:absolute;bottom:16px;left:25%;width:50%;margin:0;padding:0;border-radius:0;background:none;font-size:12px;line-height:16px;color:#e4efd5;z-index:4;white-space:nowrap}
+#game[data-free-spins] .infection-name{margin-top:0;font-size:10px;line-height:12px;color:#bfd0c7}
+@media(max-width:1100px){
+ #game[data-free-spins] .infection-tracker{left:0;right:0;width:100%;padding:0;top:calc(100% + 4px)}
+ #game[data-free-spins] .infection-portrait{width:clamp(50px,14vw,75px);height:clamp(50px,14vw,75px)}
+ #game[data-free-spins] .infection-person{padding-bottom:10px}
+ #game[data-free-spins] .infection-value{bottom:12px;line-height:11px;font-size:10px}
+ #game[data-free-spins] .infection-name{font-size:9px;line-height:10px}
+}
+#game[data-free-spins] .infection-value{bottom:3%;left:27%;width:46%;font-size:12px;line-height:12px}
+@media(max-width:1100px){#game[data-free-spins] .infection-value{bottom:3%;font-size:9px;line-height:9px}}
+#game[data-free-spins] .infection-portrait{max-width:none;width:clamp(62px,10dvh,96px);height:clamp(62px,10dvh,96px)}
+#game[data-free-spins] .infection-person{padding-bottom:3px}
+@media(max-width:1100px){#game[data-free-spins] .infection-portrait{width:clamp(50px,14vw,75px);height:clamp(50px,14vw,75px)}}

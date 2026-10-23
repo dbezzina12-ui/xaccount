@@ -1,0 +1,49 @@
+/* Option 2: painted containment bays behind upright expanded wilds.
+   This is an absolute nine-slice skin, not padding on the character or grid.
+   Keep the original cell/rig dimensions and all multiplier values intact. */
+.expanded-zombie:not(.horizontal-zombie):not([data-span="1"]){
+  --bay-edge:2px;
+  border-color:#10232b;
+  background:#071619;
+  box-shadow:none;
+  animation:none;
+}
+.expanded-zombie:not(.horizontal-zombie):not([data-span="1"]):before,
+.expanded-zombie:not(.horizontal-zombie):not([data-span="1"]):after{
+  content:'';
+  position:absolute;
+  /* Paint through the existing outline instead of leaving an inset gutter. */
+  inset:calc(0px - var(--bay-edge));
+  z-index:0;
+  pointer-events:none;
+  border:clamp(7px,1.2vw,13px) solid transparent;
+  border-image-source:url('assets/containment-v102/bay.png');
+  border-image-slice:8% 30% 8% 30% fill;
+  border-image-width:1;
+  border-image-repeat:stretch;
+}
+/* The rails sit in front of the silhouette, the empty chamber behind it.
+   A separate unfilled slice keeps big zombies from covering the bay lights. */
+.expanded-zombie:not(.horizontal-zombie):not([data-span="1"]):after{
+  z-index:2;
+  border-image-slice:8% 30% 8% 30%;
+}
+/* The new chamber supplies the recess and lights. Retire the old stone/mist
+   only for upright stacks; the horizontal character keeps its current art. */
+.expanded-zombie:not(.horizontal-zombie):not([data-span="1"])>.zombie-backdrop{display:none}
+.expanded-zombie:not(.horizontal-zombie):not([data-span="1"])>.stack-art{
+  z-index:auto;
+  background:transparent;
+}
+.expanded-zombie:not(.horizontal-zombie):not([data-span="1"]) .stack-multi{
+  z-index:3;
+  background:transparent;
+  padding-inline:2px;
+  text-shadow:1px 2px 0 #06110c,-1px -1px 0 #06110c,0 2px 5px #000;
+}
+.expanded-zombie:not(.horizontal-zombie):not([data-span="1"]).stack-hit{
+  border-color:#efffa6;
+  box-shadow:inset 0 0 12px #d4ff7655,0 0 9px #d4ff7666;
+}
+.guide-demo-stack.expanded-zombie{--bay-edge:1px}
+@media(max-width:900px){.expanded-zombie:not(.horizontal-zombie):not([data-span="1"]){--bay-edge:1px}}
