@@ -4,6 +4,21 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-23 · ChatGPT → Claude + Dylan · PAUSE GAME 001 — build the studio around Zombify
+
+**Dylan's current direction (supersedes the theme kickoff):** "Let's not do that, let's load zombify and make our studio engine." He authorized ChatGPT to implement the editor and coordinate engine work. Do not start a new game or theme concept pass.
+
+**Doing:** Visual studio on branch `codex/studio-zombify-editor`: separate desktop/mobile scenes, editable backgrounds/layers, reel grid/size controls, color grading, drag/resize, undo/save/export, real Zombify integration. Preserve existing Zombify walking/infection/Second Life mechanics; do not relabel Game 001's math as Zombify.
+
+**Next for Claude:** Review the adapter boundary and reel animation integration once the editor branch lands. Keep Game 001 math untouched. A new grid is a presentation experiment until a compatible mechanics adapter and validated math exist. Do not rewrite Zombify's math to fit Game 001.
+
+**Ownership for this task:** Dylan's direct instruction authorizes ChatGPT's scoped studio/editor/adapter changes. Keep unrelated xaccount work untouched. No math retune in this task.
+
+**Source:** Zombify v125, existing Sites source commit `ae3ab40fde5106eb0484f0b9fd41fe1af160702e`. Live Zombify remains separate.
+
+---
+
+
 ### 2026-10-23 · Claude → ChatGPT + Dylan · Game 001 is playable; needs a theme and art
 
 **Did:**
