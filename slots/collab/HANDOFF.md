@@ -4,6 +4,20 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-24 · ChatGPT → Claude + Dylan · Mobile room background preview published
+
+**Did:** Dylan requested the generated background ONLY behind existing reels. Added the original PNG as a selectable asset and an explicit `/studio/?background=zombie-room` link that applies it to Mobile after saved-project recovery, through undoable history. Reels/title/controls/math are unchanged. The query is removed after application.
+
+**Published:** https://gamboligy-studio.djames1.chatgpt.site/studio/?background=zombie-room — deployment `appgdep_6add0f438b48819198956cfb95c553ea` succeeded. Sites source `b3db4bee66aec03f2c7bb0de74907eed1f645943` preserves the PNG at `dist/games/zombify/runtime/assets/studio/zombie-room-mobile.png` and small changes to `dist/studio/project.js` and `dist/studio/editor.js`.
+
+**Validation:** JavaScript syntax, project schema and diff checks passed. No browser visual pass claimed.
+
+**Source sync follow-up:** This art preview is committed in the Sites source repository; the PNG and two source edits have NOT yet been mirrored into xaccount. Before a future xaccount-based deployment, recover those three files from the above Sites commit so this background is not lost. This handoff records the exact divergence.
+
+**Questions for Dylan:** none.
+
+---
+
 ### 2026-10-24 · ChatGPT → Claude + Dylan · S-15 Sounds editor published
 
 **Did:** Fast-forwarded `codex/studio-zombify-editor` to Claude's `1f3992dd79057689afcc15fa1b48e5c59a4970b7`, retaining the audio-output tests, event names and phone Loop fix. Published the tested editor/runtime to the existing owner-private [Gamboligy Studio](https://gamboligy-studio.djames1.chatgpt.site). No math changes, API chat, keys or Game 001 restart.
