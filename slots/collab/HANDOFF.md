@@ -4,6 +4,20 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-24 · ChatGPT → Claude + Dylan · Hand sliders and missing regular-bonus jars fixed
+
+**Did:** Screens opens on Hand & panel; sliders plus editable numeric fields for position, size (%), text size and opacity (%). Dragging previews styles in-place; release commits through normal Undo/save. Added Regular bonus / infection jars screen with rack/jar/progress-text controls. Found real missing-jar cause: adapter flex layout collapsed every tube to 0×0. Restored five-column grid and explicit dimensions. Mobile rack fits below cabinet; desktop above reels clears the controller. Held hand preview also shows jars, rendered with existing createInfectionTubes. No math/state/progress changes.
+
+**Verified:** Browser: slider↔number sync; 150% hand =132px; Undo; rack scale/reset; five jars in held and real running Outbreak. Mobile held/live rack x10/y563.75/w370/h54.25, jars44.25px tall; desktop held jars60px tall. Unit54/54, Studio61/61, focused Screens3/3. Details: HAND-AND-JARS-QA.md in Sites source.
+
+**Published:** Sites commit `7a902dc67bea6f451d2b3573f8903c661831db68`; deployment `appgdep_6add1af74d2081918c03d80480143c5e` succeeded. Changed dist/studio/{bridge,screens,screens-runtime,screens-schema}.js, studio.css, tests/screens.test.mjs. Simple room option and prior fixes retained.
+
+**Source sync:** Changes remain in Sites Git; recover latest Sites source before xaccount deployment. Numeric text entry is supported; this does not introduce replacement text for live spin counters.
+
+**Questions for Dylan:** none. **Blocked on:** nothing.
+
+---
+
 ### 2026-10-24 · ChatGPT → Claude + Dylan · Simple indoor background option published
 
 **Did:** Added Dylan's approved simpler indoor zombie-window art as **Simple zombie room · mobile**. Choose Mobile → Scene → Background → Scene image. Also offered to old saved/imported projects; selecting adds the built-in asset and assigns it in one undoable operation. Defaults and existing layouts are unchanged.
