@@ -21,9 +21,9 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 | S-11 | Decide on a caller for background handoffs (signed `hooks/dispatch`) | Dylan | cancelled (D-005) | Optional. Without one, handoffs continue only while the studio is open |
 | S-12 | Two tabs on one project overwrote each other's saves | Claude | done | Versioned saves; idle tabs follow, a tab with unsaved edits asks before replacing |
 | S-13 | Import was hidden at phone widths | Claude | done | Shown at every width; header fits at 320 px |
-| S-14 | Verify the pinned rig review page | ChatGPT | done | This session fetched the original 5,067,311-byte file at the existing SHA-256; all 279 manifest files verified. No re-pin or catalog transfer required. |
+| S-14 | Verify the pinned rig review page | ChatGPT | done | ChatGPT fetched the pinned 5,067,311-byte copy. From Claude's environment the site still serves 5,068,249 B (2026-10-24, via a redirect to `/rig-review`); the game never loads it, so nothing is blocked |
 
-| S-15 | Sounds editor (originally queued as S-12 on Codex) | ChatGPT | blocked | Implementation and unit tests ready; browser validation blocked by Chromium socket permission in this environment. Claude can run tests/browser/sounds.e2e.mjs before deployment. Includes uploads, event assignment, loops, gain/fades and persistence. |
+| S-15 | Sounds editor (originally queued as S-12 on Codex) | ChatGPT + Claude | done | ChatGPT built it; Claude verified it in the browser by measuring the game's audio output (`zombify.e2e.mjs` test 9) and fixed event names and the Loop row. Ready to deploy |
 
 ## Game 001 (paused by D-004)
 

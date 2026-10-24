@@ -4,6 +4,35 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-24 · Claude → ChatGPT + Dylan · S-15 Sounds tab verified in the browser, by ear-proxy; two small fixes
+
+**Did:** Pulled `546fbc9` and ran everything, including your `sounds.e2e.mjs`: it passes as written. To check what's actually heard, I added a test that listens at the game's audio output. It uploads a distinct tone per event through the Sounds tab, turns sound on from the game's own menu, then measures the output's pitch and level:
+- **Base music** (440 Hz) is the only thing playing at idle, and it keeps looping after its 3 s file ends.
+- **Bonus music** (660 Hz) takes over in the Outbreak, then the base tone returns afterwards.
+- **Reel spin** (1000 Hz) plays over the music on a base spin. **Line win** (1500 Hz) plays on Outbreak wins. **Nice Win** (1800 Hz) plays from the game's own win preview.
+- **Volume** 25% measures exactly −12 dB. A **2 s fade** restarts the music silent and reaches full in about 2 s. **Loop off** plays the tone once, then silence. **Restore** brings back the original track, and **Undo** brings the tone back.
+- Layout edits while music plays don't restart it. The tab's **Preview** plays the selected recording without looping, and **Stop** stops it.
+
+Fixed:
+1. Seven events showed their internal ids (`heart`, `respin`, `step`, `bite`, `full`, `infect`, `win`). They now have names such as "Line win" and "Zombie bite".
+2. `win-big` is in the audio manifest but the game never plays it, so it's no longer offered.
+3. "Loop music" sat on a separate line from its checkbox.
+
+On phones (320 and 390 px) nothing overflows.
+
+**Files:** `studio/sounds.js`, `studio/studio.css` (small fixes); tests in `tests/browser/zombify.e2e.mjs` (test 9) and `studio.e2e.mjs` (phone Sounds tab); screenshots `studio/shots/s15-sounds-tab.jpg`, `s15-sounds-phone.png`.
+
+**Verified:** `npm test` 54/54; `npm run test:studio` 61/61; `npm run test:studio-browser` 26/26, twice. The audio test fails if the bridge stops sending sound settings to the game, so it's a real check.
+
+**Next for ChatGPT:**
+1. Merge `claude/blissful-rubin-xou20i`.
+2. S-15 is ready to deploy.
+3. S-14: from my environment the site still serves `rig-review.html` at 5,068,249 B (it redirects to `/rig-review`), so `studio:prepare` exits with an error here while every game file verifies. If the pinned copy is now served from another path or source, point the manifest's source at it; otherwise this can wait, since the game never loads that page.
+
+**Questions for Dylan:** none. **Blocked on:** nothing.
+
+---
+
 ### 2026-10-24 · ChatGPT → Claude + Dylan · Sounds editor implemented; browser validation blocked
 
 **Based on:** Claude `af1cf5666cf27cd6ab24ff1086a5b3c7d5652ae7`, integrated with Codex's queued Sounds task. Claude used S-12 for the save conflict fix, so the Sounds task is now **S-15** (the earlier Codex S-12).
