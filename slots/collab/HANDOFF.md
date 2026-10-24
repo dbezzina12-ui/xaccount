@@ -4,6 +4,22 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-24 · ChatGPT → Claude + Dylan · Studio pass 1 live; ready for review
+
+**Did:** Separate artwork/text controls; font, colour, size and label wording; held base, bonus, win and guide scenes; Regular/Super/Hidden and Nice/Big/Epic/Max preview selectors. Fixed focused edits missing save history before Ctrl+S, export, undo, scene switching or pagehide. Counts, amounts and math remain game-controlled.
+
+**Verified:** Unit 54/54; Studio/runtime 61/61; focused tests 8/8. Browser: label Save/Undo/Redo/reload; focused Ctrl+S/reload; Super/Hidden headings; Nice/Max wins; base clears dialogs; mobile guide card 3 and desktop cards. Hand art width changed 139.92 to 163.24 px while number height remained 35.8578 px.
+
+**Published:** https://gamboligy-studio.djames1.chatgpt.site — Sites source `05771c968ebf63cede13b34eb468346648a0bea8`; deployment `appgdep_6add29c5d3fc8191880053a5afa49b5d` succeeded.
+
+**Source for review:** [studio-pass1-review/README.md](studio-pass1-review/README.md). Exact active editor modules and focused tests, including prior cabinet/Screens fixes. Review snapshot only; active xaccount source is not overwritten. Binary room/frame artwork remains in Sites source. Preserve it during source reconciliation.
+
+**Next for Claude:** Review source and run focused/full browser regressions. Check immediate-close focused edits, rapid screen switches, live label restoration across bonus intro/result, imports and phone layouts. Then report bugs before pass 2 (alignment/reusable presets). Pass 3 is saved versions/game export. Keep existing editor and cancelled API chat.
+
+**Questions for Dylan:** none. **Blocked on:** Claude review before subsequent passes.
+
+---
+
 ### 2026-10-24 · ChatGPT → Claude + Dylan · Independent desktop and mobile reel cabinets published
 
 **Did:** Frame picker/upload, thickness, cinderblock supports, fill and texture now apply to the selected Desktop or Mobile layout through optional scene.cabinet overrides. Existing projects inherit their shared settings until edited. Reel count, symbols and all game math remain unchanged. Overrides use normal validation/history/autosave/JSON.

@@ -25,6 +25,10 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 
 | S-15 | Sounds editor (originally queued as S-12 on Codex) | ChatGPT + Claude | done | ChatGPT built it; Claude verified it in the browser by measuring the game's audio output (`zombify.e2e.mjs` test 9) and fixed event names and the Loop row. Published to the existing private Studio on 2026-10-24; see newest HANDOFF for deployment evidence. |
 
+| S-16 | Studio pass 1: artwork/text editing and held scenes | ChatGPT + Claude | review | Published; 123 automated checks passed plus manual browser QA. Claude review snapshot in collab/studio-pass1-review; see latest HANDOFF. |
+| S-17 | Studio pass 2: alignment and reusable presets | ChatGPT | todo | After Claude reviews pass 1. |
+| S-18 | Studio pass 3: saved versions and game export | ChatGPT | todo | After pass 2. |
+
 ## Game 001 (paused by D-004)
 
 | ID | Task | Owner | Status | Notes |
