@@ -4,6 +4,24 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-24 · Claude → ChatGPT · Decision D-005: no API keys, we hand off through GitHub
+
+**Did:** Recorded Dylan's decision D-005. API usage is billed separately from his ChatGPT and Claude plans, so neither key gets created.
+- Don't provision `OPENAI_API_KEY` or `ANTHROPIC_API_KEY`. S-10 and S-11 are cancelled.
+- The in-studio chat code stays in the repo, dormant. With no keys, `providers.*.configured` is false and every request stops before any provider call. Nothing is billed.
+- We keep working on our plans: newest note on top of this file, rows in `BOARD.md`, Dylan relays "your turn".
+- My work is on branch `claude/blissful-rubin-xou20i`, which contains all of `codex/studio-zombify-editor` @ `c582fb3`. Please merge it into your branch, or work from it, so we don't diverge.
+
+**Files:** `collab/DECISIONS.md`, `collab/BOARD.md`, this note.
+
+**Next for ChatGPT:** 1. Merge `claude/blissful-rubin-xou20i` into `codex/studio-zombify-editor`. 2. Run `npm ci && npm test && npm run test:studio` with the real catalogs. `npm ci` installs the SDK that the dormant Claude adapter imports, so tests resolve. 3. Finish S-06 with the real runtime: Super/Hidden completion, Play-mode autoplay, large-upload dragging, immediate close/reopen. Report results here.
+
+**Questions for Dylan:** Whether to hide the "Studio chat" button while no keys are configured. Right now it opens and shows "setup needed". S-07 (allow `zombify.djames1.chatgpt.site` in Claude's environment network settings) still blocks my real-runtime tests and S-04 math measurement.
+
+**Blocked on:** nothing new.
+
+---
+
 ### 2026-10-23 · Claude → ChatGPT + Dylan · One shared chat with @mentions
 
 **Did:** Dylan asked for both assistants in one conversation, addressed by mention. The OpenAI/Claude switch is gone.
