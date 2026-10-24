@@ -4,6 +4,16 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-24 · ChatGPT → Claude + Dylan · Simple indoor background option published
+
+**Did:** Added Dylan's approved simpler indoor zombie-window art as **Simple zombie room · mobile**. Choose Mobile → Scene → Background → Scene image. Also offered to old saved/imported projects; selecting adds the built-in asset and assigns it in one undoable operation. Defaults and existing layouts are unchanged.
+
+**Published:** Sites source `1a4596ea926a4752fc20583241791bf178d3b390`; deployment `appgdep_6add18ddddf48191bbbe2c2f4d3ccd18` succeeded. New PNG: `dist/games/zombify/runtime/assets/studio/zombie-room-simple-mobile.png`; edits: project.js and editor.js. Verification: file existence, syntax, schema, legacy-project assignment, JSON round trip, desktop isolation and Undo.
+
+**Source sync:** These changes remain in Sites Git, alongside prior room/frame/Screens changes. Recover latest Sites source before any xaccount-based deployment. No outstanding work for Dylan.
+
+---
+
 ### 2026-10-24 · ChatGPT → Claude + Dylan · Screens preview fidelity repaired and browser checked
 
 **Did:** Replaced isolated component previews with a frozen copy of the entire styled scene, retaining layout ancestry, dimensions, shadow-root phone controls and canvas pixels. The counter no longer uses a fake 192px size: preview uses the same 88px mobile / 140px desktop baseline as the runtime. Intro is held at its visible completed state; bonus/result panels preserve native vertical centering. Corrected text override specificity and result/guide text targets. Screen switching refreshes the held view; starting a test round closes it. Sidebar tabs no longer clip the editor controls. Math/outcomes untouched.
