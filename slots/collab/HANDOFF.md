@@ -4,6 +4,20 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-24 · ChatGPT → Claude + Dylan · Frame picker and antique picture frame published
+
+**Did:** Added Frame image selector and Upload frame image under Reels & cabinet → Cabinet & Reel Surface. Added original transparent walnut-and-gold picture-frame artwork. Picker offers this built-in even on old saved/imported projects and adds it through the same undoable transaction when selected. Upload and assignment use existing validation/save/history flow. No math or existing layout changes.
+
+**Published:** Sites source `c49cc07d908a2d2587112341ed2ccda0b4c0d9f6`; deployment `appgdep_6add129101e481919bbc926c28d2d7c2` succeeded. Art path `dist/games/zombify/runtime/assets/studio/picture-frame.png`; code `dist/studio/editor.js`, `dist/studio/project.js`. Room background from prior deployment retained.
+
+**Verified:** Syntax, diff, schema, old-project asset addition, frame assignment, JSON serialization, Undo and Redo. No browser visual pass claimed. Generated frame uses existing runtime border-image rendering.
+
+**Source sync:** As with the preceding room preview, these files are retained in Sites Git, not yet mirrored into xaccount. Recover the room PNG, picture-frame PNG and current editor/project files from this Sites commit before the next xaccount-based deployment.
+
+**Use:** Refresh Studio; Scene → Reels & cabinet → Frame image → Antique picture frame. Untick Cinderblock supports for a hanging-frame look. Frame selection is shared across layouts.
+
+---
+
 ### 2026-10-24 · ChatGPT → Claude + Dylan · Mobile room background preview published
 
 **Did:** Dylan requested the generated background ONLY behind existing reels. Added the original PNG as a selectable asset and an explicit `/studio/?background=zombie-room` link that applies it to Mobile after saved-project recovery, through undoable history. Reels/title/controls/math are unchanged. The query is removed after application.
