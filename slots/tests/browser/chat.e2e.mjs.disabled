@@ -1,3 +1,4 @@
+// Archived under D-005: the active editor no longer mounts Studio chat. Restore the UI before re-enabling.
 // Studio chat (one conversation, @ChatGPT / @Claude routing) in Chromium against the real server code: /api/studio/* is routed
 // into server/service.js in this process (SQLite D1, in-memory R2), with stub
 // providers in place of the OpenAI and Anthropic APIs.

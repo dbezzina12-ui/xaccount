@@ -62,6 +62,15 @@ Existing Game 001 is retained as an engine/math reference and is paused per Dyla
 
 `npm run test:studio-browser` covers these with the real editor and bridge, using `tests/browser/fake-runtime.html`, a stand-in that implements the same `ZombifyStudioRuntime` contract (round timing, audio-decode delay, Outbreak continuation). It is not a substitute for checking rounds with the real game.
 
-## Studio chat
+## Artwork without API chat
 
-Open **Studio chat** for conversation, image generation, undoable edits and shared handoffs. Offline Quick edit remains available. The hosted chat needs a securely configured OpenAI key; its badge reports setup status. Claude stays unconnected until its adapter and credential are added. See [`../server/README.md`](../server/README.md) for routes, recovery and the remaining unattended-work boundary.
+Create/refine artwork in the ChatGPT conversation, then ask for it to be integrated into Studio. ChatGPT can update the authorized source and publish reviewed defaults. A saved browser-local project keeps its own composition; export it when an assistant needs that exact state.
+
+To import manually:
+
+1. Select **Desktop** or **Mobile**.
+2. Open **Assets → Upload** and choose the image.
+3. Select the background, image layer or symbol and assign the uploaded asset in the inspector. Backgrounds can also use Quick edit **＋** → attach image → **change background** → **Apply**.
+4. Use Undo to compare, and Export project to move the composition elsewhere.
+
+The active editor is static and does not load `chat.js` or call model APIs. No provider keys are required. Per D-005, `server/`, `hosting/` and the unused chat modules are dormant source references. Do not provision keys, run the old hosting activation flow, or publish the saved API-chat version. Collaboration uses `collab/HANDOFF.md` and `collab/BOARD.md`; committing a handoff does not wake another external chat session.

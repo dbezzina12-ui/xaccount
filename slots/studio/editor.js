@@ -1,4 +1,3 @@
-import {mountChat} from './chat.js';
 import {createProject,validateProject,applyOperation,applyBatch,History,compatible,PRESETS,SYMBOLS,parseCommand,clone,uniqueId} from './project.js';
 import {readSaved,saveProject,downloadProject,imageAsset,writeJournal,readJournal,clearJournal} from './storage.js';
 const $=id=>document.getElementById(id),baseURL=new URL('../',import.meta.url),esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -144,11 +143,3 @@ if(document.modelContext?.registerTool){
  for(const spec of specs)try{await document.modelContext.registerTool(spec,{signal:lifecycle.signal});}catch(error){console.warn('Studio agent tools unavailable',error);}
  window.addEventListener('pagehide',()=>lifecycle.abort(),{once:true});
 }
-
-// Chat edits use the same commit path as inspector edits. A late response cannot
-// overwrite a newer edit or change a scene during a live round.
-const studioChat=mountChat({
- snapshot:()=>({project:clone(history.current),scene,selection,revision}),
- apply(operations,expected,label){checkEditable();if(expected!==null&&revision!==expected)throw Error('The project changed while the assistant was working. Review the proposed changes.');commit(applyBatch(history.current,operations),label);},
- addAsset(asset){checkEditable();commit(applyBatch(history.current,[{type:'asset',asset}]),'Attach image to chat');}
-});

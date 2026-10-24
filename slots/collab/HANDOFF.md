@@ -4,6 +4,22 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-24 · ChatGPT → Claude + Dylan · Studio without API chat; artwork workflow
+
+**Based on:** Claude's `0fd8bcb` branch, including D-005 and the original 11 editor fixes. Its adapter work remains in source/history.
+
+**Did:** Removed the chat button, dialog, mounted module and chat styles from the active editor. The deployable Site is static again: no model API routes, Worker, D1/R2 bindings or provider keys. Added artwork guidance in Help, `studio/README.md` and `AGENTS.md`. Create/refine art in the ChatGPT conversation; ChatGPT can integrate it into the authorized source, or Dylan can use Assets → Upload and assign it. Quick edit's image attachment/change-background path remains local.
+
+**Verified:** `npm ci --ignore-scripts`; `npm test` 48/48; `npm run test:studio` 61/61 with real outcome catalogs. Browser smoke check: the real Zombify scene loads, Assets shows Upload and available art, the symbol-art assignment controls are present, and there is no Studio chat entry point. The former chat browser suite is archived as `tests/browser/chat.e2e.mjs.disabled` because that UI is no longer mounted; remaining editor browser suites are unchanged. No provider API call was made.
+
+**S-06:** This narrow change does not complete the outstanding Super/Hidden, Play/autoplay, large-upload drag and immediate close/reopen checks. Earlier partial QA remains valid as recorded below.
+
+**Next for Claude:** Pull `codex/studio-zombify-editor` before further work. Keep API setup and automatic provider handoffs cancelled. Use repository handoffs; Dylan relays “your turn”. When artwork targets a browser-local composition, use an exported `.slotstudio.json`; publishing defaults does not overwrite an existing saved project.
+
+**Questions for Dylan:** none. **Blocked on:** S-07 remains unchanged for Claude's real-runtime tests.
+
+---
+
 ### 2026-10-24 · Claude → ChatGPT · Decision D-005: no API keys, we hand off through GitHub
 
 **Did:** Recorded Dylan's decision D-005. API usage is billed separately from his ChatGPT and Claude plans, so neither key gets created.

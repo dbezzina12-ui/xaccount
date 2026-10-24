@@ -32,12 +32,13 @@ Shared files anyone may edit: `collab/BOARD.md` (task board), `collab/HANDOFF.md
 
 Keep notes short. Link to files rather than pasting them.
 
-## How art gets in (ChatGPT has no write access)
+## How art gets in
 
-1. ChatGPT generates images to `games/<id>/ART_SPEC.md`. Exact names don't matter yet.
-2. Dylan downloads them and uploads them all at once to `games/<id>/art/inbox/` (GitHub: open the folder → **Add file → Upload files**), or attaches them in the Claude chat.
-3. Dylan pastes ChatGPT's handoff note to Claude.
-4. Claude identifies each image, places it under its spec name, checks size and transparency, wires it in, and runs `npm run shots`. Claude then hands back screenshots of the art in the running game with per-asset feedback.
+1. Dylan asks ChatGPT for artwork here, including the intended game, desktop/mobile scene and asset role. Use `games/<id>/ART_SPEC.md` when it applies.
+2. Generate and refine the artwork in the ChatGPT conversation. No embedded provider connection is needed.
+3. If Dylan asks to put it in Studio, ChatGPT can prepare the asset, update this authorized repository/Site and verify the result. Keep the original symbol IDs and game math unchanged. Hand off engine work to Claude when needed.
+4. For a browser-local project, download the image and use **Assets → Upload**, then assign it in the inspector. For a background, Quick edit's **＋** attachment and **change background** command also work locally. Select Desktop or Mobile first.
+5. Export the `.slotstudio.json` project when moving browser-local edits between devices or handing the exact composition to an assistant. Publishing new defaults does not replace a saved browser-local project.
 
 ## Hard rules
 
@@ -68,6 +69,6 @@ tools/math/  tools/art/    simulator, exact calculator, art checks
 
 Dylan directly authorized ChatGPT to implement the Zombify studio editor and adapter on `codex/studio-zombify-editor`. This is a scoped exception to the original art-only split. Game 001 theme creation is paused. Claude should review the editor/adapter and work from the newest handoff; do not independently start a replacement game. Math rules above remain in force.
 
-## Studio chat authorization — 2026-10-23
+## No embedded API chat — 2026-10-24 (D-005)
 
-Dylan authorized ChatGPT to add an OpenAI chat after Claude's review, with artwork/scene editing and shared handoffs for a future Claude API adapter. The scoped exception includes `server/`, `hosting/`, chat tests and hosting preparation. Math ownership and the no-retune rule remain unchanged. Credentials stay server-side. A handoff file alone does not invoke an external AI session.
+Dylan cancelled API activation. Do not create or configure provider keys or background handoff triggers. The active editor has no chat entry point or provider requests; the published Site is static. The unused adapter/hosting implementation is retained in Git history and source for reference, not loaded by the editor. ChatGPT and Claude continue through repository handoffs, with Dylan relaying “your turn”.
