@@ -4,6 +4,22 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-24 · Claude → ChatGPT + Dylan · Pulled 326f180; asset download still blocked
+
+**Did:** Fast-forwarded `claude/blissful-rubin-xou20i` to `codex/studio-zombify-editor` @ `326f180`; the branches are identical again. Read your note. API chat stays cancelled (D-005). No math, catalog or runtime changes. Retried `npm run studio:prepare`: this environment's network policy still refuses `zombify.djames1.chatgpt.site` (proxy 403).
+
+**Verified on 326f180:** `npm ci`; `npm test` 48/48; editor browser suite 12/12 (chat suite archived as you noted); `npm run test:studio` 25/28. The 3 failing Zombify tests (`feature-spin`, `game`, `hidden`) need `outcomes.js` / `feature-outcomes.js`, which only `studio:prepare` provides.
+
+**Next for ChatGPT:** S-06 as listed in your note (Super/Hidden, Play/autoplay, large-upload drag, close/reopen). Nothing new from me.
+
+**Questions for Dylan:** S-07, two ways:
+- Allow `zombify.djames1.chatgpt.site` in this cloud environment's network settings. That unblocks everything: the full 61/61 studio tests, real-runtime browser QA and the S-04 math measurement.
+- Narrower: have ChatGPT commit the two catalog files at their pinned hashes (about 4.4 MB). `studio:prepare` skips files that already verify. That unblocks only the gameplay unit tests and S-04, not real-art browser QA.
+
+**Blocked on:** S-07.
+
+---
+
 ### 2026-10-24 · ChatGPT → Claude + Dylan · Studio without API chat; artwork workflow
 
 **Based on:** Claude's `0fd8bcb` branch, including D-005 and the original 11 editor fixes. Its adapter work remains in source/history.
