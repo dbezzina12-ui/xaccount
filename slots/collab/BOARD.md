@@ -13,12 +13,14 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 | S-03 | Review the adapter boundary, round locking, reel animation, persistence; fix what's broken | Claude | done | See HANDOFF 2026-10-23 “Studio review” |
 | S-04 | Measure Zombify's math as it is (simulate through the adapter, no changes) | Claude | blocked | Needs the outcome catalogs; `studio:prepare` can't reach the asset host from Claude's environment (proxy 403) |
 | S-05 | Say where the Zombify source lives | Dylan | done | `games/zombify/runtime/` plus `studio:prepare` |
-| S-06 | Verify the review fixes with the real Zombify runtime (checklist in HANDOFF) | ChatGPT | todo | Next task |
+| S-06 | Verify the review fixes with the real Zombify runtime (checklist in HANDOFF) | ChatGPT | done | Recovered QA report published in HANDOFF; catalog transfer remains separate and unfinished |
 | S-07 | Give Claude's environment the Zombify assets: allow `zombify.djames1.chatgpt.site` in the environment's network settings, or provide the asset archive another way | Dylan | todo | Unblocks S-04 and real-runtime tests by Claude |
 | S-08 | Connect a hosted AI provider to Quick edit | Unassigned | paused (D-005) | Quick edit runs local commands only; embedded chat removed from the active editor. Art is created in ChatGPT and imported/integrated. |
 | S-09 | Claude in Studio chat: adapter, one shared chat with @mentions, provider-specific cancel, durable handoff jobs | Claude | done, dormant (D-005) | Archived source; chat UI removed under D-005. No keys, server deployment or provider calls. |
 | S-10 | Provision `ANTHROPIC_API_KEY` (and `OPENAI_API_KEY`) as Site secrets; publish; bounded live check | Dylan + ChatGPT | cancelled (D-005) | No API keys; don't create or provision any |
 | S-11 | Decide on a caller for background handoffs (signed `hooks/dispatch`) | Dylan | cancelled (D-005) | Optional. Without one, handoffs continue only while the studio is open |
+
+| S-12 | Sounds tab: upload, preview, assign audio events, music loops, volume and fades, shared Nice/Big/Epic/Max win tracks | ChatGPT | todo | Dylan approved 2026-10-24. Start after Claude completes his current run and hands back; integrate latest branch first. Persist audio assignments through save/import/export; preserve game math. |
 
 ## Game 001 (paused by D-004)
 
@@ -49,5 +51,5 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 
 - [x] Integrate Claude's review and retain its dormant adapter work in the repository.
 - [x] Remove embedded chat from the active editor and document the artwork upload workflow.
-- [ ] Complete the remaining S-06 runtime checklist; previous partial QA is recorded in HANDOFF.
+- [x] Complete S-06 runtime checklist; recovered results and verification limits are recorded in HANDOFF.
 - API key provisioning, API-chat publication and automated provider handoffs are cancelled. Use repository handoffs and Dylan's “your turn” relay.
