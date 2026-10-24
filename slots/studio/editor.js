@@ -1,7 +1,11 @@
 import {createProject,validateProject,applyOperation,applyBatch,History,compatible,PRESETS,SYMBOLS,parseCommand,clone,uniqueId} from './project.js';
-import {readSaved,saveProject,downloadProject,imageAsset,writeJournal,readJournal,clearJournal} from './storage.js';
+import {readSaved,saveProject,downloadProject,imageAsset,writeJournal,readJournal,clearJournal,versionOf,onSaved} from './storage.js';
 const $=id=>document.getElementById(id),baseURL=new URL('../',import.meta.url),esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let history=new History(createProject()),scene=matchMedia('(max-width: 560px)').matches?'mobile':'desktop',selection='reels',mode='edit',scale=1,ready=false,busy=false,attachment=null,uploadPurpose='asset',selectedAsset=null,saveTimer=null,revision=0,drag=null,draft=null,toastTimer;
+// Saves: `savedVersion` is the stored version this tab's project is based on and
+// `savedRevision` the local revision it holds. Saves run one at a time (`saveChain`).
+// `conflict` is set while another tab's save is in the way of this tab's edits.
+let savedVersion=null,savedRevision=0,saveChain=Promise.resolve(),conflict=false;
 // Round lock: `round` is the Test spin this editor asked for (held from click until the
 // runtime reports it finished); `runtime` mirrors state the bridge pushes, which also
 // covers rounds started from the game's own controls. Editing is allowed only when both are idle.
@@ -38,9 +42,15 @@ function setProblem(kind,text=''){
 function reloadRuntime(){ready=false;round=null;runtime={busy:false,awaitingOutbreak:false};game={status:'starting'};setProblem(null);syncBusy();$('canvas-loading').hidden=false;lastHeard=performance.now();frame.src=new URL('../games/zombify/runtime/index.html',import.meta.url).href;}
 function commit(project,label){checkEditable();draft=null;if(!history.commit(project,label))return;revision++;$('save-status').textContent='Saving…';render();clearTimeout(saveTimer);saveTimer=setTimeout(()=>{saveTimer=null;persist();},450);}
 // A pending autosave is written right away when the tab is hidden or closed.
-function flushSave(){if(saveTimer){clearTimeout(saveTimer);saveTimer=null;writeJournal(history.current);persist();}}
+function flushSave(){if(saveTimer){clearTimeout(saveTimer);saveTimer=null;writeJournal(history.current,savedVersion);persist();}}
 function edit(op,label='Edit'){commit(applyOperation(history.current,{scene,...op}),label);}
-async function persist(){const rev=revision;try{await saveProject(history.current);if(rev===revision){$('save-status').textContent='Saved in this browser';clearJournal();}}catch(error){$('save-status').textContent='Save failed — export a copy';toast('Could not save this project in the browser. Export it to keep your changes.');}}
+function persist(force=false){const run=saveChain.then(()=>save(force));saveChain=run.catch(()=>{});return run;}
+async function save(force){const rev=revision;try{const record=await saveProject(history.current,{base:savedVersion,force});savedVersion=record.version;savedRevision=rev;showConflict(false);if(rev===revision){$('save-status').textContent='Saved in this browser';clearJournal();}}catch(error){if(error.conflict){showConflict(true);return;}$('save-status').textContent='Save failed — export a copy';toast('Could not save this project in the browser. Export it to keep your changes.');}}
+function showConflict(on){conflict=on;$('save-conflict').hidden=!on;if(on)$('save-status').textContent='Not saved — changed in another tab';}
+function loadSaved(saved){draft=null;history=new History(validateProject(saved.project));savedVersion=versionOf(saved);savedRevision=++revision;showConflict(false);render();$('save-status').textContent='Saved in this browser';}
+// Another tab saved: follow it if nothing here is unsaved, otherwise ask.
+// Runs after this tab's own saves so it never mistakes one of them for another tab's.
+function syncFromStorage(){return saveChain=saveChain.then(async()=>{if(conflict)return;const saved=await readSaved();if(!saved?.project||versionOf(saved)===savedVersion)return;if(revision!==savedRevision||saveTimer||draft){showConflict(true);return;}loadSaved(saved);toast('Updated with changes saved in another tab.');}).catch(()=>{});}
 function guarded(fn){return (...args)=>{try{const r=fn(...args);if(r?.catch)r.catch(e=>toast(e.message));}catch(e){toast(e.message);}};}
 function fit(){const s=getScene(),area=$('canvas-area'),availableW=area.clientWidth-44,availableH=area.clientHeight-74;scale=Math.min(availableW/s.width,availableH/s.height,1.5);$('canvas').style.cssText=`width:${s.width}px;height:${s.height}px;transform:scale(${scale});`;$('canvas-fit').style.width=s.width*scale+'px';$('canvas-fit').style.height=s.height*scale+'px';$('zoom-label').textContent=`Fit ${Math.round(scale*100)}%`;$('canvas-dimensions').textContent=`${s.width} × ${s.height}`;}
 function renderSelection(){const overlay=$('selection-overlay');overlay.replaceChildren();const l=findLayer();if(!l||!l.visible)return;const box=document.createElement('div');box.className='selection-box';box.style.cssText=`left:${l.x}px;top:${l.y}px;width:${l.w}px;height:${l.h}px`;const label=document.createElement('span');label.className='selection-tag';label.textContent=l.name+(l.locked?' · locked':'');label.style.fontSize=Math.max(11,10/scale)+'px';box.append(label);if(!l.locked){const h=document.createElement('div');h.className='resize-handle';h.dataset.resize='true';box.append(h);}overlay.append(box);}
@@ -89,6 +99,9 @@ overlay.onpointermove=e=>{if(!drag)return;const r=$('canvas').getBoundingClientR
 overlay.onpointerup=guarded(e=>{if(!drag)return;const moved=draft,wasResize=drag.resize;drag=null;overlay.releasePointerCapture(e.pointerId);if(moved)commit(moved,wasResize?'Resize layer':'Move layer');});overlay.onpointercancel=()=>{drag=null;draft=null;render();};
 function undo(){checkEditable();draft=null;if(history.undo()){revision++;render();persist();}}
 function redo(){checkEditable();draft=null;if(history.redo()){revision++;render();persist();}}
+$('conflict-load').onclick=guarded(async()=>{const saved=await readSaved();if(saved?.project){clearTimeout(saveTimer);saveTimer=null;loadSaved(saved);clearJournal();toast('Loaded the version saved in another tab.');}else showConflict(false);});
+$('conflict-keep').onclick=guarded(()=>persist(true));
+onSaved(()=>void syncFromStorage());
 $('undo').onclick=guarded(undo);$('redo').onclick=guarded(redo);$('save').onclick=guarded(async()=>{await persist();});
 $('export').onclick=()=>{downloadProject(history.current);toast('Project exported with uploaded images included.');};
 $('import').onclick=()=>{$('import-input').value='';$('import-input').click();};$('import-input').onchange=guarded(async e=>{checkEditable();const file=e.target.files[0];if(!file)return;if(file.size>80*1024*1024)throw Error('Project file is too large (maximum 80 MB).');let data;try{data=JSON.parse(await file.text());}catch{throw Error('This file isn’t a Studio project (it isn’t valid JSON).');}const p=validateProject(data);selection='reels';commit(p,'Import project');toast('Project imported. Previous project is available with Undo.');});
@@ -132,10 +145,10 @@ setInterval(()=>{
  if(performance.now()-lastHeard>6000&&problem!=='unresponsive'){round=null;runtime={busy:false,awaitingOutbreak:false};syncBusy();setProblem('unresponsive');}
  else if(round&&!round.acked&&performance.now()-round.at>5000){round=null;syncBusy();toast('The game preview didn’t start the round. Spin again, or reload the preview.');}
 },1000);
-document.addEventListener('visibilitychange',()=>{if(document.hidden)flushSave();else lastHeard=performance.now();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)flushSave();else{lastHeard=performance.now();void syncFromStorage();}});
 window.addEventListener('pagehide',flushSave);
 setMode('edit');render();
-try{const saved=await readSaved(),journaled=readJournal(saved);let restored=null;try{restored=journaled&&validateProject(journaled);}catch{}if(restored){history=new History(restored);render();persist();toast('Restored your latest edits.');}else if(saved?.project){history=new History(validateProject(saved.project));render();$('save-status').textContent='Saved in this browser';}else $('save-status').textContent='New local project';}catch(error){toast('Saved project could not be opened. The original Zombify project is loaded.');$('save-status').textContent='Original project';}
+try{const saved=await readSaved(),journaled=readJournal(saved);savedVersion=versionOf(saved);let restored=null;try{restored=journaled&&validateProject(journaled);}catch{}if(restored){history=new History(restored);render();persist();toast('Restored your latest edits.');}else if(saved?.project){history=new History(validateProject(saved.project));render();$('save-status').textContent='Saved in this browser';}else $('save-status').textContent='New local project';}catch(error){toast('Saved project could not be opened. The original Zombify project is loaded.');$('save-status').textContent='Original project';}
 const lifecycle=new AbortController();
 if(document.modelContext?.registerTool){
  const specs=[{name:'read_slot_studio',description:'Read the current slot studio project, active scene, selection and game adapter compatibility. Uploaded image data is omitted; use its existing asset ID.',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:true,untrustedContentHint:true},execute(input){if(!input||Object.keys(input).length)throw Error('Use an empty object.');const p=clone(history.current);p.assets=p.assets.map(a=>({...a,src:a.src.startsWith('data:')?'[embedded image; retain asset ID]':a.src}));return{project:p,scene,selection,busy,playable:compatible(p),game:game.status,undoAvailable:history.past.length>0};}},

@@ -7,16 +7,25 @@ export async function readSaved(){const db=await database();return new Promise((
 // Uploaded image bytes are referenced (they're already in IndexedDB), so the
 // journal stays small.
 const JOURNAL='gamboligy-studio-journal';
-export function writeJournal(project){try{localStorage.setItem(JOURNAL,JSON.stringify({at:new Date().toISOString(),project:{...project,assets:project.assets.map(a=>a.src.startsWith('data:')?{...a,src:'@saved'}:a)}}));return true;}catch{return false;}}
+export function writeJournal(project,base){try{localStorage.setItem(JOURNAL,JSON.stringify({at:new Date().toISOString(),base,project:{...project,assets:project.assets.map(a=>a.src.startsWith('data:')?{...a,src:'@saved'}:a)}}));return true;}catch{return false;}}
 export function clearJournal(){try{localStorage.removeItem(JOURNAL);}catch{}}
-// The journaled project if it is newer than the saved one and every referenced image can be restored.
+// The journaled project if it is newer than the saved one, was edited from the
+// saved version (not one another tab has since replaced) and every referenced
+// image can be restored.
 export function readJournal(saved){
  let j;try{j=JSON.parse(localStorage.getItem(JOURNAL)||'null');}catch{return null;}
- if(!j?.project?.assets||(saved?.savedAt&&j.at<=saved.savedAt))return null;
+ if(!j?.project?.assets||(saved?.savedAt&&j.at<=saved.savedAt)||(j.base!==undefined&&j.base!==versionOf(saved)))return null;
  const bytes=new Map((saved?.project?.assets||[]).map(a=>[a.id,a.src]));
  if(j.project.assets.some(a=>a.src==='@saved'&&!bytes.has(a.id)))return null;
  return {...j.project,assets:j.project.assets.map(a=>a.src==='@saved'?{...a,src:bytes.get(a.id)}:a)};
 }
-export async function saveProject(project){const db=await database();return new Promise((resolve,reject)=>{const tx=db.transaction('projects','readwrite');tx.objectStore('projects').put({project,savedAt:new Date().toISOString()},'current');tx.oncomplete=()=>{db.close();resolve();};tx.onerror=()=>{db.close();reject(tx.error);};tx.onabort=()=>reject(tx.error);});}
+// Every save bumps `version`. A tab saves only over the version it last
+// loaded or saved (`base`), so two tabs never silently overwrite each other's
+// work: the later one gets an error with `conflict` set, and nothing is written
+// unless it saves again with `force`. Other tabs hear about each save.
+const channel=typeof BroadcastChannel==='function'?new BroadcastChannel('gamboligy-studio'):null;
+export const versionOf=saved=>saved?saved.version??0:null;
+export function onSaved(fn){channel?.addEventListener('message',e=>{if(e.data?.type==='saved')fn(e.data);});}
+export async function saveProject(project,{base,force=false}={}){const db=await database();return new Promise((resolve,reject)=>{const tx=db.transaction('projects','readwrite'),store=tx.objectStore('projects'),get=store.get('current');let record=null,conflict=false;get.onsuccess=()=>{const current=versionOf(get.result);if(!force&&base!==undefined&&current!==base){conflict=true;return;}record={project,savedAt:new Date().toISOString(),version:(current??0)+1};store.put(record,'current');};tx.oncomplete=()=>{db.close();if(conflict){const error=Error('This project was changed in another tab.');error.conflict=true;reject(error);return;}channel?.postMessage({type:'saved',version:record.version});resolve(record);};tx.onerror=()=>{db.close();reject(tx.error);};tx.onabort=()=>reject(tx.error);});}
 export function downloadProject(project){const url=URL.createObjectURL(new Blob([JSON.stringify(project,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=project.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')+'.slotstudio.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}
 export async function imageAsset(file){if(!/^image\/(png|jpeg|webp|gif)$/.test(file.type))throw Error('Use a PNG, JPG, WebP or GIF image.');if(file.size>10*1024*1024)throw Error('Use an image smaller than 10 MB.');const src=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(r.error);r.readAsDataURL(file);});await new Promise((resolve,reject)=>{const i=new Image();i.onload=()=>i.width<=8192&&i.height<=8192?resolve():reject(Error('Maximum image dimensions are 8192×8192.'));i.onerror=()=>reject(Error('This image could not be decoded.'));i.src=src;});return{id:'upload-'+uniqueId(),name:file.name.slice(0,80),src,kind:'image'};}

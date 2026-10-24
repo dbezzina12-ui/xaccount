@@ -29,12 +29,13 @@ after(async () => {
   srv?.close();
 });
 
-async function openStudio({ fake = {}, viewport = { width: 1440, height: 900 }, context, runtimeHTML } = {}) {
+async function openStudio({ fake = {}, viewport = { width: 1440, height: 900 }, context, runtimeHTML, init } = {}) {
   const ctx = context ?? (await browser.newContext({ viewport }));
   const page = await ctx.newPage();
   page.errors = [];
   page.on('pageerror', (e) => page.errors.push(e.message));
   await page.addInitScript(AGENT_TOOLS);
+  if (init) await page.addInitScript(init);
   // runtimeHTML: undefined → stand-in; null → the real checked-out runtime.
   if (runtimeHTML !== null) {
     const body = (runtimeHTML ?? FAKE).replace('<script>', `<script>window.__fakeInit=${JSON.stringify(fake)};</script><script>`);
@@ -156,6 +157,74 @@ test('an edit closed within the autosave delay is still saved', async () => {
   await ctx.close();
 });
 
+const reelsX = async (page) => (await project(page)).project.scenes.desktop.layers.find((l) => l.id === 'reels').x;
+const scaleOf = async (page) => (await project(page)).project.grid.symbolScale;
+const saved = (page) => page.waitForFunction(() => document.getElementById('save-status').textContent === 'Saved in this browser');
+// A tab that doesn't hear other tabs' saves (asleep, or no BroadcastChannel),
+// though its own saves are still announced.
+const DEAF = () => { const Real = BroadcastChannel; window.BroadcastChannel = class extends Real { addEventListener() {} }; };
+
+test('two tabs: each follows the other\'s saves while it has nothing unsaved', async () => {
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const a = await openStudio({ context: ctx });
+  await whenReady(a);
+  const b = await openStudio({ context: ctx });
+  await whenReady(b);
+  const x = (await reelsX(a)) + 70;
+  await agentEdit(a, [{ type: 'layer', scene: 'desktop', id: 'reels', values: { x } }]);
+  await saved(a);
+  await until(async () => (await reelsX(b)) === x);
+  assert.match(await b.textContent('#toast'), /Updated with changes saved in another tab/);
+  await agentEdit(b, [{ type: 'grid', values: { symbolScale: 1.2 } }]);
+  await saved(b);
+  await until(async () => (await scaleOf(a)) === 1.2);
+  assert.equal(await reelsX(a), x);
+  const fresh = await openStudio({ context: ctx });
+  await whenReady(fresh);
+  assert.deepEqual([await reelsX(fresh), await scaleOf(fresh)], [x, 1.2]);
+  assert.equal(await a.isHidden('#save-conflict'), true);
+  assert.equal(await b.isHidden('#save-conflict'), true);
+  await ctx.close();
+});
+
+test('a tab that missed another tab\'s save asks before replacing it', async () => {
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const a = await openStudio({ context: ctx });
+  await whenReady(a);
+  const b = await openStudio({ context: ctx, init: DEAF });
+  await whenReady(b);
+  const x0 = await reelsX(a);
+  await agentEdit(a, [{ type: 'layer', scene: 'desktop', id: 'reels', values: { x: x0 + 70 } }]);
+  await saved(a);
+  // b never heard about a's save and edits its stale copy.
+  await agentEdit(b, [{ type: 'grid', values: { symbolScale: 1.3 } }]);
+  await b.waitForSelector('#save-conflict:not([hidden])');
+  assert.equal(await b.textContent('#save-status'), 'Not saved — changed in another tab');
+  const check = await openStudio({ context: ctx });
+  await whenReady(check);
+  assert.deepEqual([await reelsX(check), await scaleOf(check)], [x0 + 70, 1.08], 'a\'s save survived');
+  await check.close();
+  // Keep mine: b's version replaces a's, and a follows.
+  await b.click('#conflict-keep');
+  await b.waitForSelector('#save-conflict', { state: 'hidden' });
+  await saved(b);
+  await until(async () => (await scaleOf(a)) === 1.3 && (await reelsX(a)) === x0);
+  // Again, but b loads the other version: its unsaved edit is dropped.
+  await agentEdit(a, [{ type: 'layer', scene: 'desktop', id: 'reels', values: { x: x0 + 90 } }]);
+  await saved(a);
+  await agentEdit(b, [{ type: 'grid', values: { symbolScale: 1.4 } }]);
+  await b.waitForSelector('#save-conflict:not([hidden])');
+  await b.click('#conflict-load');
+  await b.waitForSelector('#save-conflict', { state: 'hidden' });
+  assert.deepEqual([await reelsX(b), await scaleOf(b)], [x0 + 90, 1.3]);
+  await new Promise((r) => setTimeout(r, 700)); // past the autosave delay: b must not write its dropped edit
+  const last = await openStudio({ context: ctx });
+  await whenReady(last);
+  assert.deepEqual([await reelsX(last), await scaleOf(last)], [x0 + 90, 1.3]);
+  assert.deepEqual([...a.errors, ...b.errors], []);
+  await ctx.close();
+});
+
 test('upload, save, reload, export and import keep the uploaded image', async () => {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, acceptDownloads: true });
   let page = await openStudio({ context: ctx });
@@ -239,6 +308,24 @@ test('uploaded image bytes never cross into the game iframe', async () => {
   assert.ok(largest < 200000, `largest message into the game was ${largest} bytes`);
   const card = await page.getAttribute('.asset-card:has-text("big.png") img', 'src');
   assert.match(card, /^blob:/);
+  await page.ctx.close();
+});
+
+test('on a phone, Import is in the header and imports a project', async () => {
+  const page = await openStudio({ viewport: { width: 320, height: 720 } });
+  await whenReady(page);
+  const box = async (id) => page.locator(`#${id}`).boundingBox();
+  const [name, importer, exporter, save] = [await box('project-name'), await box('import'), await box('export'), await box('save')];
+  assert.ok(importer && importer.width > 0, 'Import is visible');
+  assert.ok(name.x + name.width <= importer.x && importer.x + importer.width <= exporter.x && exporter.x + exporter.width <= save.x, 'header controls overlap');
+  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'the page scrolls sideways');
+  const file = { ...(await project(page)).project, name: 'Phone import' };
+  file.grid = { ...file.grid, symbolScale: 1.2 };
+  const chooser = page.waitForEvent('filechooser');
+  await page.click('#import');
+  await (await chooser).setFiles({ name: 'phone.slotstudio.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(file)) });
+  await until(async () => (await project(page)).project.name === 'Phone import');
+  assert.equal(await scaleOf(page), 1.2);
   await page.ctx.close();
 });
 

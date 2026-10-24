@@ -19,7 +19,7 @@ npm run serve
 - 4×4, 5×4, 6×5, 7×7 presets and custom 3–10 column/row grids; shared symbol scale, frame thickness, dividers, reel color/texture and supports.
 - Upload transparent art/backgrounds; replace symbols without changing their game IDs.
 - Background brightness, contrast, saturation, hue, blur, zoom, position and tint.
-- 60-step undo/redo, IndexedDB autosave, JSON import/export including uploaded images.
+- 60-step undo/redo, IndexedDB autosave (tabs open on the same project follow each other’s saves and ask before replacing one), JSON import/export including uploaded images.
 - Local quick-edit commands use the same validated command operations as the controls.
 - Browser agent tools `read_slot_studio` and `edit_slot_studio` on a supported secure WebMCP browser.
 
