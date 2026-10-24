@@ -767,6 +767,7 @@ window.ZombifyAnimation={register:registerZombieAnimator,registerFS:registerFSAn
 
 // Studio adapter: presentation edits never modify math or the settled round.
 window.ZombifyStudioRuntime = {
+ configureAudio: (settings,assets) => {if(busy||auto.active)throw Error('Finish the round before changing audio.');audioDirector.configure(settings,assets);},
  read: () => ({...readState(), busy}),
  async start(mode='base') { if(busy || auto.active) throw Error('Finish the current round first.'); if(!['base','single','showcase','triple','reel','outbreak','preview_super','preview_hidden','preview_feature'].includes(mode))throw Error('Unknown preview.'); return play(mode); },
  continue: () => { if(completeFeature)completeFeature(); },

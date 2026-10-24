@@ -4,6 +4,8 @@ import {AUDIO_ASSETS,AUDIO_CUES} from './audio-manifest.js?v=116';
 // Recorded gameplay audio and approved shared win tracks. No outcome changes.
 export function createGameAudio({env=globalThis,doc=env.document,assets=AUDIO_ASSETS,cues=AUDIO_CUES,
   createContext=()=>new (env.AudioContext||env.webkitAudioContext)({latencyHint:'interactive'}),onError=()=>{}}={}) {
+  const originalAssets={...assets},originalCues=structuredClone(cues);assets={...assets};cues=structuredClone(cues);
+  let soundSettings={},configuration='';
   const clamp=(v,fallback)=>Number.isFinite(v)?Math.max(0,Math.min(1,v)):fallback;
   let levels={music:.38,effects:.75};
   try{const saved=JSON.parse(env.localStorage?.getItem('zombify-audio-levels')||'null');if(saved)levels={music:clamp(saved.music,.38),effects:clamp(saved.effects,.75)};}catch{}
@@ -30,14 +32,15 @@ export function createGameAudio({env=globalThis,doc=env.document,assets=AUDIO_AS
     if(disposed||!ctx||!assets[key])return null;
     if(buffers.has(key))return buffers.get(key);
     if(!loads.has(key)){
+      const url=assets[key];
       loads.set(key,(async()=>{
         try{
-          const bytes=(await loadBytes(assets[key],env)).slice(0);if(disposed)return null;
+          const bytes=(await loadBytes(url,env)).slice(0);if(disposed)return null;
           const buffer=await ctx.decodeAudioData(bytes);
-          if(!disposed)buffers.set(key,buffer);
-          return disposed?null:buffer;
+          if(!disposed&&assets[key]===url)buffers.set(key,buffer);
+          return disposed||assets[key]!==url?null:buffer;
         }catch{if(!disposed)report();return null;}
-        finally{loads.delete(key);}
+        finally{if(assets[key]===url)loads.delete(key);}
       })());
     }
     return loads.get(key);
@@ -63,13 +66,14 @@ export function createGameAudio({env=globalThis,doc=env.document,assets=AUDIO_AS
     const buffer=await load('music-'+wanted);
     if(ticket!==revision||!buffer||!audible()||!levels.music||scene!==wanted)return;
     try{
-      stopMusic(.9);
-      const source=ctx.createBufferSource(),gain=ctx.createGain();source.buffer=buffer;source.loop=true;
+      const settings=soundSettings['music-'+wanted]||{},fade=settings.fade??.9;
+      stopMusic(fade);
+      const source=ctx.createBufferSource(),gain=ctx.createGain();source.buffer=buffer;source.loop=settings.loop!==false;
       source.loopStart=0;source.loopEnd=buffer.duration;gain.gain.value=0;source.connect(gain);gain.connect(musicBus);
       const offset=(positions[wanted]||0)%buffer.duration;
       const voice={source,gain,scene:wanted,offset,started:ctx.currentTime,stopping:false};
       source.onended=()=>{musicVoices.delete(voice);source.disconnect();gain.disconnect();if(currentMusic===voice)currentMusic=null;};
-      musicVoices.add(voice);currentMusic=voice;source.start(ctx.currentTime,offset);ramp(gain.gain,1,.9);
+      musicVoices.add(voice);currentMusic=voice;source.start(ctx.currentTime,offset);ramp(gain.gain,settings.volume??1,fade);
       // Load the alternate arrangement after playback starts; no gameplay wait.
       void load('music-'+(wanted==='base'?'bonus':'base'));
     }catch{report();}
@@ -94,6 +98,8 @@ export function createGameAudio({env=globalThis,doc=env.document,assets=AUDIO_AS
       if(ctx.createStereoPanner){panner=ctx.createStereoPanner();panner.pan.value=Math.max(-.6,Math.min(.6,pan));gain.connect(panner);panner.connect(fxBus);}else gain.connect(fxBus);
       const voice={source,gain,panner,stopping:false};voices.add(voice);
       source.onended=()=>{voices.delete(voice);source.disconnect();gain.disconnect();panner?.disconnect();};
+      const fade=soundSettings[name]?.fade||0;
+      if(fade){const duration=buffer.duration/source.playbackRate.value,edge=Math.min(fade,duration/2),peak=gain.gain.value;gain.gain.setValueAtTime(0,now);gain.gain.linearRampToValueAtTime(peak,now+edge);gain.gain.setValueAtTime(peak,now+duration-edge);gain.gain.linearRampToValueAtTime(0,now+duration);}
       source.start();if(cue.duck)duck(cue.duck);return true;
     }catch{report();return false;}
   }
@@ -130,6 +136,19 @@ export function createGameAudio({env=globalThis,doc=env.document,assets=AUDIO_AS
     void ctx?.close().catch(()=>{});
   }
   doc?.addEventListener('visibilitychange',visibility);env.addEventListener?.('pagehide',pagehide);env.addEventListener?.('pageshow',pageshow);
-  return {play,setEnabled,setLevel,setScene,stopEffects,destroy,warmEffects,prepare,
+  function configure(settings={},uploads=[]){
+    const signature=JSON.stringify([settings,uploads.map(a=>[a.id,a.src])]);if(signature===configuration)return;
+    configuration=signature;const nextAssets={...originalAssets},nextCues=structuredClone(originalCues);
+    for(const [name,setting] of Object.entries(settings)){
+      const upload=uploads.find(a=>a.id===setting.assetId);
+      if(name==='music-base'||name==='music-bonus'){if(upload)nextAssets[name]=upload.src;}
+      else if(nextCues[name]){if(upload){const key='studio-'+name;nextAssets[key]=upload.src;nextCues[name].files=[key];}nextCues[name].gain*=setting.volume??1;}
+    }
+    ++revision;if(ctx){stopEffects();stopMusic(0);}
+    for(const key of new Set([...Object.keys(assets),...Object.keys(nextAssets)]))if(assets[key]!==nextAssets[key]){buffers.delete(key);loads.delete(key);}
+    assets=nextAssets;cues=nextCues;soundSettings=structuredClone(settings);positions.base=positions.bonus=0;
+    if(enabled){void prepare();void refreshMusic();}
+  }
+  return {configure,play,setEnabled,setLevel,setScene,stopEffects,destroy,warmEffects,prepare,
     read:()=>({enabled,scene,levels:{...levels},activeEffects:voices.size,activeMusic:[...musicVoices].filter(v=>!v.stopping).length,loaded:buffers.size})};
 }

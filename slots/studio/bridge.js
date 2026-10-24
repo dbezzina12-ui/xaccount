@@ -55,6 +55,7 @@ function flush(){
 function apply(project,key){
  validateProject(project,{preview:true});
  current=project;sceneKey=key;
+ runtime()?.configureAudio?.(project.sounds||{},project.assets.filter(a=>a.kind==='audio').map(a=>({...a,src:new URL(a.src,rootURL).href})));
  const s=project.scenes[key],g=project.grid,reels=s.layers.find(l=>l.id==='reels'),title=s.layers.find(l=>l.id==='title'),controls=s.layers.find(l=>l.id==='controls'),mobile=s.width<s.height;
  const b=s.background,fw=Math.min(g.frameWidth,Math.floor(Math.min(reels.w,reels.h)/7));
  background.style.cssText=`position:absolute;inset:0;z-index:0;background-image:${cssURL(src(b.assetId))};background-size:${b.zoom===100?'cover':b.zoom+'% auto'};background-position:${b.positionX}% ${b.positionY}%;filter:brightness(${b.brightness}%) contrast(${b.contrast}%) saturate(${b.saturation}%) hue-rotate(${b.hue}deg) blur(${b.blur}px);transform:scale(${1+b.blur*.004});`;

@@ -1,4 +1,5 @@
 // Serializable authoring state. No outcome or payout configuration lives here.
+import {validateSounds,SOUND_EVENTS} from './sound-schema.js';
 export const VERSION = 1;
 export const uniqueId=()=>Array.from(crypto.getRandomValues(new Uint8Array(16)),n=>n.toString(16).padStart(2,'0')).join('');
 export const PRESETS = [[4,4],[5,4],[6,5],[7,7]];
@@ -15,7 +16,7 @@ export function createProject(){
 }
 const finite=(v,min,max,name)=>{if(typeof v!=='number'||!Number.isFinite(v)||v<min||v>max)throw Error(`${name} must be between ${min} and ${max}.`);};
 const color=v=>typeof v==='string'&&/^#[0-9a-f]{6}$/i.test(v);
-export function safeSource(src){return typeof src==='string'&&src.length<16000000&&(/^(games\/zombify\/runtime\/assets\/|data:image\/(png|jpeg|webp|gif);base64,)/.test(src)||/^https:\/\//.test(src));}
+export function safeSource(src){return typeof src==='string'&&src.length<16000000&&(/^(games\/zombify\/runtime\/assets\/|data:(?:image\/(png|jpeg|webp|gif)|audio\/(mpeg|wav|ogg|mp4|webm));base64,)/.test(src)||/^https:\/\//.test(src));}
 // The editor hands the preview iframe same-origin blob: URLs for uploaded
 // images so multi-MB data URLs never cross postMessage; saved and imported
 // projects must still carry the real bytes.
@@ -26,13 +27,16 @@ export function validateProject(p,{preview=false}={}){
  if(!p||p.schemaVersion!==VERSION||p.adapter!=='zombify-v125')throw Error('This is not a supported Studio project.');
  if(typeof p.name!=='string'||!p.name.trim()||p.name.length>80)throw Error('Use a project name of 1–80 characters.');
  if(!Array.isArray(p.assets)||p.assets.length>200)throw Error('A project supports up to 200 assets.');
- const ids=new Set();for(const a of p.assets){if(!a||typeof a.id!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(a.id)||ids.has(a.id)||!(safeSource(a.src)||preview&&previewSource(a.src))||!['image','symbol'].includes(a.kind))throw Error('Invalid or duplicate asset.');label(a.name,'Asset name');ids.add(a.id);}
+ const ids=new Set();for(const a of p.assets){if(!a||typeof a.id!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(a.id)||ids.has(a.id)||!(safeSource(a.src)||preview&&previewSource(a.src))||!['image','symbol','audio'].includes(a.kind))throw Error('Invalid or duplicate asset.');label(a.name,'Asset name');if(a.kind==='audio'&&!(/^(data:audio\/(mpeg|wav|ogg|mp4|webm);base64,|games\/zombify\/runtime\/assets\/)/.test(a.src)||preview&&previewSource(a.src)))throw Error('Invalid audio source.');if(a.kind!=='audio'&&a.src.startsWith('data:audio/'))throw Error('Audio cannot be used as artwork.');ids.add(a.id);
+ }
+ validateSounds(p.sounds,p.assets);
+ const imageIds=new Set(p.assets.filter(a=>a.kind!=='audio').map(a=>a.id));
  const g=p.grid;finite(g.columns,3,10,'Reel count');finite(g.rows,3,10,'Row count');if(!Number.isInteger(g.columns)||!Number.isInteger(g.rows))throw Error('Reels and rows must be whole numbers.');
- finite(g.symbolScale,.5,1.5,'Symbol scale');finite(g.divider,0,1,'Dividers');finite(g.frameWidth,0,60,'Frame width');if(!color(g.fill)||!ids.has(g.frameAsset))throw Error('Invalid reel appearance.');flag(g.texture,'Reel texture');flag(g.supports,'Cabinet supports');
- for(const id of SYMBOLS)if(!ids.has(p.symbols[id]))throw Error('Missing symbol asset: '+id);
+ finite(g.symbolScale,.5,1.5,'Symbol scale');finite(g.divider,0,1,'Dividers');finite(g.frameWidth,0,60,'Frame width');if(!color(g.fill)||!imageIds.has(g.frameAsset))throw Error('Invalid reel appearance.');flag(g.texture,'Reel texture');flag(g.supports,'Cabinet supports');
+ for(const id of SYMBOLS)if(!imageIds.has(p.symbols[id]))throw Error('Missing symbol asset: '+id);
  for(const key of ['desktop','mobile']){const s=p.scenes?.[key];if(!s)throw Error('Both desktop and mobile scenes are required.');finite(s.width,240,3840,'Canvas width');finite(s.height,240,3840,'Canvas height');
- const b=s.background;if(!ids.has(b.assetId))throw Error('Missing background asset.');for(const [k,min,max] of [['brightness',25,200],['contrast',25,200],['saturation',0,200],['hue',-180,180],['blur',0,20],['zoom',100,200],['positionX',0,100],['positionY',0,100],['tintOpacity',0,1]])finite(b[k],min,max,k);if(!color(b.tint))throw Error('Invalid tint.');
- if(!Array.isArray(s.layers)||s.layers.length>30)throw Error('A scene supports up to 30 layers.');const layerIds=new Set();for(const l of s.layers){if(!l||typeof l!=='object'||!/^[a-zA-Z0-9_-]{1,80}$/.test(l.id)||layerIds.has(l.id)||!['image','reels','controls'].includes(l.kind))throw Error('Invalid or duplicate layer.');layerIds.add(l.id);finite(l.x,-s.width,s.width,'X');finite(l.y,-s.height,s.height,'Y');finite(l.w,32,s.width*2,'Width');finite(l.h,32,s.height*2,'Height');finite(l.opacity,0,1,'Opacity');label(l.name,'Layer name');flag(l.visible,'Visible');flag(l.locked,'Locked');if(l.kind==='image'&&!ids.has(l.assetId))throw Error('Missing layer asset.');}
+ const b=s.background;if(!imageIds.has(b.assetId))throw Error('Missing background asset.');for(const [k,min,max] of [['brightness',25,200],['contrast',25,200],['saturation',0,200],['hue',-180,180],['blur',0,20],['zoom',100,200],['positionX',0,100],['positionY',0,100],['tintOpacity',0,1]])finite(b[k],min,max,k);if(!color(b.tint))throw Error('Invalid tint.');
+ if(!Array.isArray(s.layers)||s.layers.length>30)throw Error('A scene supports up to 30 layers.');const layerIds=new Set();for(const l of s.layers){if(!l||typeof l!=='object'||!/^[a-zA-Z0-9_-]{1,80}$/.test(l.id)||layerIds.has(l.id)||!['image','reels','controls'].includes(l.kind))throw Error('Invalid or duplicate layer.');layerIds.add(l.id);finite(l.x,-s.width,s.width,'X');finite(l.y,-s.height,s.height,'Y');finite(l.w,32,s.width*2,'Width');finite(l.h,32,s.height*2,'Height');finite(l.opacity,0,1,'Opacity');label(l.name,'Layer name');flag(l.visible,'Visible');flag(l.locked,'Locked');if(l.kind==='image'&&!imageIds.has(l.assetId))throw Error('Missing layer asset.');}
  for(const id of ['reels','title','controls'])if(!layerIds.has(id))throw Error('Missing required layer: '+id);
  }
  return p;
@@ -54,6 +58,7 @@ export function applyOperation(project,op){
  else if(op.type==='background'){if(!scene)throw Error('Unknown scene.');Object.assign(scene.background,op.values);}
  else if(op.type==='layer'){const l=scene?.layers.find(l=>l.id===op.id);if(!l)throw Error('Unknown layer.');Object.assign(l,op.values);}
  else if(op.type==='asset'){if(!op.asset||typeof op.asset!=='object')throw Error('Invalid asset.');if(p.assets.some(a=>a.id===op.asset.id))throw Error('Asset already exists.');p.assets.push(share(op.asset));}
+ else if(op.type==='sound'){if(!SOUND_EVENTS.includes(op.id))throw Error('Unknown sound event.');p.sounds={...p.sounds};if(op.values===null)delete p.sounds[op.id];else p.sounds[op.id]={...(p.sounds[op.id]||{}),...op.values};}
  else if(op.type==='symbol'){if(!SYMBOLS.includes(op.id))throw Error('Unknown symbol.');p.symbols[op.id]=op.assetId;}
  else if(op.type==='addLayer'){if(!scene)throw Error('Unknown scene.');if(!op.layer||typeof op.layer!=='object')throw Error('Invalid layer.');scene.layers.push({...op.layer});}
  else if(op.type==='removeLayer'){if(['reels','title','controls'].includes(op.id))throw Error('Core layers can be hidden, not deleted.');scene.layers=scene.layers.filter(l=>l.id!==op.id);}

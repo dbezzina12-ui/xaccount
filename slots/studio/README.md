@@ -19,7 +19,7 @@ npm run serve
 - 4×4, 5×4, 6×5, 7×7 presets and custom 3–10 column/row grids; shared symbol scale, frame thickness, dividers, reel color/texture and supports.
 - Upload transparent art/backgrounds; replace symbols without changing their game IDs.
 - Background brightness, contrast, saturation, hue, blur, zoom, position and tint.
-- 60-step undo/redo, IndexedDB autosave, JSON import/export including uploaded images.
+- 60-step undo/redo, IndexedDB autosave (tabs open on the same project follow each other’s saves and ask before replacing one), JSON import/export including uploaded images.
 - Local quick-edit commands use the same validated command operations as the controls.
 - Browser agent tools `read_slot_studio` and `edit_slot_studio` on a supported secure WebMCP browser.
 
@@ -74,3 +74,9 @@ To import manually:
 4. Use Undo to compare, and Export project to move the composition elsewhere.
 
 The active editor is static and does not load `chat.js` or call model APIs. No provider keys are required. Per D-005, `server/`, `hosting/` and the unused chat modules are dormant source references. Do not provision keys, run the old hosting activation flow, or publish the saved API-chat version. Collaboration uses `collab/HANDOFF.md` and `collab/BOARD.md`; committing a handoff does not wake another external chat session.
+
+## Sounds
+
+Open **Sounds** beside Scene and Assets. Choose a game event, upload MP3/WAV/OGG/M4A/WebM (up to 10 MB), or retain its original recording. Preview/Stop audition the recording alone. Volume scales the existing mix; fades apply in gameplay; base and bonus music can loop. Nice/Big/Epic/Max initially use the existing approved shared tracks. Enable sound in the game's Play controls to hear assignments during rounds. Sounds are shared across layouts and included in autosave, undo/redo and project export/import. Audio cannot be assigned as symbol artwork. Existing projects retain original audio until edited.
+
+Validation: `node --test tests/sounds.test.mjs` and `node --test tests/browser/sounds.e2e.mjs`. Browser testing needs a working Chromium installation. Set `STUDIO_CHROMIUM_EXECUTABLE` to an existing compatible Chromium when the default Playwright binary is unavailable.
