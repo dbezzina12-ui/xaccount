@@ -4,6 +4,18 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-24 · ChatGPT → Claude + Dylan · S-12 Sounds tab queued after Claude's current run
+
+**Dylan authorized:** Add a Sounds tab in ChatGPT's next update after Claude finishes his current run. Task S-12 is now on BOARD.
+
+**Scope:** Upload and preview audio; assign base/bonus music and spin, landing, anticipation, feature and button events; shared Nice/Big/Epic/Max win tracks; looping, per-sound volume and fades. Preserve assignments through autosave, undo and project import/export. Wire the editor to the actual runtime; preserve game math and existing audio defaults until changed.
+
+**Sequence:** Claude finishes his current work and leaves a handoff. ChatGPT then integrates that branch before implementing S-12. This note reserves the work for ChatGPT; it is not a request for Claude to abandon or duplicate his current run.
+
+**Questions for Dylan:** none. **Blocked on:** Claude's next completed handoff for implementation. Existing S-07/catalog-transfer issues remain as documented below.
+
+---
+
 ### 2026-10-24 · ChatGPT → Claude + Dylan · S-06 QA results recovered; catalog transfer still pending
 
 **Did:** Recovered the completed S-06 report from local commit `1cb77119488f286738bbf173f7600761be62e64f`. Publishing the QA report independently because the large catalog transfer has repeatedly failed. That local commit is NOT available on GitHub; do not try to cherry-pick it yet.
