@@ -2,8 +2,8 @@
 // real studio/index.html, studio/editor.js and studio/bridge.js in Chromium.
 // The game iframe is served by tests/browser/fake-runtime.html, a stand-in
 // with the same ZombifyStudioRuntime contract as runtime/app.js (the real
-// runtime needs `npm run studio:prepare` assets). One test also loads the
-// real runtime page as checked out.
+// runtime needs `npm run studio:prepare` assets; zombify.e2e.mjs drives it).
+// One test also loads the real runtime page as checked out.
 //
 //   npm run test:studio-browser
 
@@ -12,6 +12,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { serve, chromium, ROOT } from '../../tools/lib/browser.mjs';
+import { AGENT_TOOLS, runtime, project, agentEdit, isBusy, whenReady, until } from './helpers.mjs';
 
 let srv;
 let browser;
@@ -28,14 +29,6 @@ after(async () => {
   srv?.close();
 });
 
-// Captures the studio's agent tools so tests can read/edit the project
-// through the same validated API an agent uses.
-const AGENT_TOOLS = () => {
-  const tools = {};
-  window.__tools = tools;
-  document.modelContext = { registerTool: (spec) => { tools[spec.name] = spec; } };
-};
-
 async function openStudio({ fake = {}, viewport = { width: 1440, height: 900 }, context, runtimeHTML } = {}) {
   const ctx = context ?? (await browser.newContext({ viewport }));
   const page = await ctx.newPage();
@@ -51,38 +44,28 @@ async function openStudio({ fake = {}, viewport = { width: 1440, height: 900 }, 
   page.ctx = ctx;
   return page;
 }
-const runtime = (page) => page.frames().find((f) => f.url().includes('/games/zombify/runtime/'));
-const project = (page) => page.evaluate(() => window.__tools.read_slot_studio.execute({}));
-const agentEdit = (page, operations) => page.evaluate((ops) => window.__tools.edit_slot_studio.execute({ operations: ops }), operations);
-const isBusy = (page) => page.evaluate(() => document.body.classList.contains('busy'));
 const fakeLog = async (page) => (await runtime(page).evaluate(() => window.__fake.log)).join(' ');
-async function whenReady(page) {
-  await page.waitForFunction(() => window.__tools?.read_slot_studio && document.getElementById('canvas-loading').hidden, null, { timeout: 15000 });
-  await page.waitForFunction(() => !document.getElementById('spin').disabled, null, { timeout: 15000 });
-}
-async function until(fn, timeout = 10000) {
-  const t0 = Date.now();
-  for (;;) {
-    if (await fn()) return;
-    if (Date.now() - t0 > timeout) throw Error('timed out');
-    await new Promise((r) => setTimeout(r, 40));
-  }
-}
 
 test('editing stays locked from Test spin until the round ends, even while the game decodes audio', async () => {
   const page = await openStudio({ fake: { prepareMs: 2200, roundMs: 900 } });
   await whenReady(page);
   await page.click('#spin');
-  let samples = 0;
-  while (!(await fakeLog(page)).includes('end:base')) {
-    assert.equal(await isBusy(page), true, `editor unlocked mid-round (${await fakeLog(page)})`);
-    await assert.rejects(agentEdit(page, [{ type: 'grid', values: { symbolScale: 1.2 } }]), /Finish the current round/);
+  let samples = 0, late = false;
+  for (;;) {
+    // Editor first, game last: the game ends before the editor unlocks, so an
+    // unlock seen while the round still runs is a real failure, not a race
+    // with the round's last frame.
+    const busy = await isBusy(page);
+    const accepted = await agentEdit(page, [{ type: 'grid', values: { symbolScale: 1.2 } }]).then(() => true, (e) => { assert.match(e.message, /Finish the current round/); return false; });
+    if ((await fakeLog(page)).includes('end:base')) { late = accepted; break; }
+    assert.equal(busy, true, `editor unlocked mid-round (${await fakeLog(page)})`);
+    assert.equal(accepted, false, 'an edit was accepted mid-round');
     samples++;
     await new Promise((r) => setTimeout(r, 60));
   }
   assert.ok(samples >= 5, `only ${samples} samples taken during the round`);
   await until(async () => !(await isBusy(page)));
-  assert.equal((await project(page)).project.grid.symbolScale, 1.08);
+  assert.equal((await project(page)).project.grid.symbolScale, late ? 1.2 : 1.08);
   await page.ctx.close();
 });
 
@@ -148,8 +131,15 @@ test('a layout-test spin, then 6×5 again, gives Zombify back an untouched grid 
 });
 
 test('the checked-out runtime without prepared assets explains what is missing', async () => {
-  const page = await openStudio({ runtimeHTML: null });
-  await page.waitForFunction(() => /studio:prepare/.test(document.getElementById('runtime-problem')?.textContent ?? ''), null, { timeout: 20000 });
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  // Answer the files `studio:prepare` provides with 404, as on a fresh checkout.
+  const prepared = new Set(JSON.parse(await readFile(join(ROOT, 'games/zombify/import-manifest.json'), 'utf8')).files.map((f) => f.path));
+  await ctx.route('**/games/zombify/runtime/**', (route) => {
+    const path = decodeURIComponent(new URL(route.request().url()).pathname).split('/games/zombify/runtime/')[1];
+    return prepared.has(path) ? route.fulfill({ status: 404, body: '' }) : route.continue();
+  });
+  const page = await openStudio({ runtimeHTML: null, context: ctx });
+  await page.waitForFunction(() => /game code didn.t load in this checkout.*studio:prepare/.test(document.getElementById('runtime-problem')?.textContent ?? ''), null, { timeout: 20000 });
   assert.equal(await page.isDisabled('#spin'), true);
   await page.ctx.close();
 });

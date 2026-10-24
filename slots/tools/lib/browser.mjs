@@ -9,7 +9,9 @@ import { fileURLToPath } from 'node:url';
 
 export const ROOT = resolve(fileURLToPath(import.meta.url), '../../..');
 
-const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.md': 'text/plain' };
+// Browsers refuse to decode an SVG served as octet-stream, so Zombify's art
+// needs its real types here.
+const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.mp3': 'audio/mpeg', '.woff': 'font/woff', '.woff2': 'font/woff2', '.ttf': 'font/ttf', '.md': 'text/plain', '.txt': 'text/plain' };
 
 export async function serve() {
   const server = createServer(async (req, res) => {
