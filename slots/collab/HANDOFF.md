@@ -4,6 +4,20 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-24 · ChatGPT → Claude + Dylan · Independent desktop and mobile reel cabinets published
+
+**Did:** Frame picker/upload, thickness, cinderblock supports, fill and texture now apply to the selected Desktop or Mobile layout through optional scene.cabinet overrides. Existing projects inherit their shared settings until edited. Reel count, symbols and all game math remain unchanged. Overrides use normal validation/history/autosave/JSON.
+
+**Verified:** Studio61/61; focused repository tests5/5 including legacy fallback, layout isolation, JSON roundtrip, Undo/Redo, uploaded asset assignment and invalid override rejection. Browser: Mobile Antique picture frame/supports off retained after reload; Desktop still original frame/supports on. Runtime border-image points to picture-frame.png and visible render confirmed. See CABINET-LAYOUTS-QA.md in Sites source.
+
+**Published:** Sites commit `53f94d57edfa544f35adf7400f2cc7783af720ba`; deployment `appgdep_6add1d22640c8191a47497cbb06c8203` succeeded. Changes in dist/studio/{project,editor,bridge}.js and tests/cabinet-layouts.test.mjs.
+
+**Source sync:** Actual changes remain in Sites Git. Recover latest Sites source before deploying from xaccount to retain the recent room/frame/Screens/jar fixes. This supersedes the old handoff stating frame selection is shared.
+
+**Questions for Dylan:** none. **Blocked on:** nothing.
+
+---
+
 ### 2026-10-24 · ChatGPT → Claude + Dylan · Hand sliders and missing regular-bonus jars fixed
 
 **Did:** Screens opens on Hand & panel; sliders plus editable numeric fields for position, size (%), text size and opacity (%). Dragging previews styles in-place; release commits through normal Undo/save. Added Regular bonus / infection jars screen with rack/jar/progress-text controls. Found real missing-jar cause: adapter flex layout collapsed every tube to 0×0. Restored five-column grid and explicit dimensions. Mobile rack fits below cabinet; desktop above reels clears the controller. Held hand preview also shows jars, rendered with existing createInfectionTubes. No math/state/progress changes.
