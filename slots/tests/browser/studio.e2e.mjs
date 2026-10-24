@@ -329,6 +329,21 @@ test('on a phone, Import is in the header and imports a project', async () => {
   await page.ctx.close();
 });
 
+test('on a phone, the Sounds tab fits, names every event and keeps Loop beside its checkbox', async () => {
+  const page = await openStudio({ viewport: { width: 320, height: 720 } });
+  await whenReady(page);
+  await page.click('[data-tab="sounds"]');
+  const events = await page.$$eval('#sound-event option', (o) => o.map((e) => [e.value, e.textContent]));
+  assert.ok(events.length >= 20);
+  assert.deepEqual(events.filter(([id, name]) => id === name), [], 'events shown by their internal id');
+  assert.ok(!events.some(([id]) => id === 'win-big'), 'win-big is never played by the game');
+  const [box, label] = [await page.locator('#sound-loop').boundingBox(), await page.locator('label.sound-check').boundingBox()];
+  assert.ok(box.y + box.height > label.y && box.y < label.y + label.height && label.height < box.height * 2.5, `Loop checkbox ${JSON.stringify(box)} vs label ${JSON.stringify(label)}`);
+  assert.deepEqual(await page.$$eval('.sound-panel *', (all) => all.filter((e) => e.getBoundingClientRect().right > innerWidth + 0.5).map((e) => e.id || e.tagName)), []);
+  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'the page scrolls sideways');
+  await page.ctx.close();
+});
+
 test('importing a file that is not a project explains the problem', async () => {
   const page = await openStudio();
   await whenReady(page);

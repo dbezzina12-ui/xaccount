@@ -1,5 +1,6 @@
 // The S-06 checklist against the real Zombify runtime: real art, outcome
-// catalogs and rounds, inside the real studio editor. Skips on a checkout
+// catalogs and rounds, inside the real studio editor; and (9) the Sounds tab,
+// measured at the game's audio output. Skips on a checkout
 // without the `npm run studio:prepare` assets. STUDIO_SHOTS=<dir> also saves
 // a screenshot per check.
 //
@@ -34,12 +35,13 @@ after(async () => {
   srv?.close();
 });
 
-async function openStudio(context) {
+async function openStudio(context, init) {
   const ctx = context ?? (await browser.newContext({ viewport: { width: 1440, height: 900 } }));
   const page = await ctx.newPage();
   page.errors = [];
   page.on('pageerror', (e) => page.errors.push(e.message));
   await page.addInitScript(AGENT_TOOLS);
+  if (init) await page.addInitScript(init);
   await page.goto(`${srv.url}studio/index.html`);
   await whenReady(page, 60000);
   page.ctx = ctx;
@@ -324,4 +326,161 @@ test('8. an edit made right before closing the tab is there on reopen', { skip }
   await until(async () => (await machineLeft(page)) === `${x}px`, 5000);
   assert.deepEqual(page.errors, []);
   await ctx.close();
+});
+
+// Taps the game's audio output: everything the game connects to its
+// AudioContext's destination goes through an analyser first. window.__record()
+// then samples it every 50 ms until stopped, by the game's music scene
+// (base/bonus): the loudest level at each test pitch, the most frequent peak
+// pitch, and the mean and lowest RMS.
+const AUDIO_TAP = () => {
+  if (!location.pathname.includes('/games/zombify/runtime/')) return;
+  const Real = window.AudioContext;
+  const taps = [];
+  window.AudioContext = class extends Real {
+    constructor(...args) {
+      super(...args);
+      const input = this.createGain(), analyser = this.createAnalyser();
+      analyser.fftSize = 8192;
+      analyser.smoothingTimeConstant = 0;
+      input.connect(analyser);
+      input.connect(super.destination);
+      Object.defineProperty(this, 'destination', { value: input });
+      taps.push({ ctx: this, analyser });
+    }
+  };
+  window.__record = (pitches) => {
+    const { ctx, analyser } = taps.at(-1);
+    const f = new Float32Array(analyser.frequencyBinCount), td = new Float32Array(analyser.fftSize), perBin = ctx.sampleRate / analyser.fftSize;
+    const buckets = {};
+    const sample = () => {
+      const scene = window.ZombifyStudioRuntime.read().audio.scene;
+      const b = (buckets[scene] ??= { max: Object.fromEntries(pitches.map((hz) => [hz, -Infinity])), peaks: {}, rms: 0, minRms: Infinity, n: 0 });
+      analyser.getFloatFrequencyData(f);
+      analyser.getFloatTimeDomainData(td);
+      for (const hz of pitches) for (let i = Math.round(hz / perBin) - 2; i <= Math.round(hz / perBin) + 2; i++) b.max[hz] = Math.max(b.max[hz], f[i]);
+      let top = 1;
+      for (let i = 2; i < f.length; i++) if (f[i] > f[top]) top = i;
+      const hz = Math.round((top * perBin) / 20) * 20;
+      b.peaks[hz] = (b.peaks[hz] ?? 0) + 1;
+      const rms = Math.sqrt(td.reduce((sum, v) => sum + v * v, 0) / td.length);
+      b.rms += rms; b.minRms = Math.min(b.minRms, rms); b.n++;
+    };
+    const timer = setInterval(sample, 50);
+    window.__stopRecording = () => {
+      clearInterval(timer);
+      return Object.fromEntries(Object.entries(buckets).map(([scene, b]) => [scene, { max: b.max, top: Number(Object.entries(b.peaks).sort((x, y) => y[1] - x[1])[0][0]), rms: b.rms / b.n, minRms: b.minRms }]));
+    };
+  };
+};
+// A mono 16-bit WAV of a pure tone, in whole cycles so a loop has no click.
+function tone(hz, seconds) {
+  const rate = 44100, n = Math.round(rate * seconds), wav = Buffer.alloc(44 + n * 2), f = Math.round(hz * seconds) / seconds;
+  wav.write('RIFF'); wav.writeUInt32LE(36 + n * 2, 4); wav.write('WAVEfmt ', 8); wav.writeUInt32LE(16, 16); wav.writeUInt16LE(1, 20); wav.writeUInt16LE(1, 22);
+  wav.writeUInt32LE(rate, 24); wav.writeUInt32LE(rate * 2, 28); wav.writeUInt16LE(2, 32); wav.writeUInt16LE(16, 34); wav.write('data', 36); wav.writeUInt32LE(n * 2, 40);
+  for (let i = 0; i < n; i++) wav.writeInt16LE(Math.round(0.5 * 32767 * Math.sin((2 * Math.PI * f * i) / rate)), 44 + i * 2);
+  return wav;
+}
+
+test('9. sounds from the Sounds tab are what the game plays: loops, cues, volume, fade, loop off, restore', { skip }, async () => {
+  const page = await openStudio(undefined, AUDIO_TAP);
+  const PITCH = { 'music-base': 440, 'music-bonus': 660, spin: 1000, win: 1500, 'celebrate-nice': 1800 };
+  const pitches = Object.values(PITCH);
+  const record = async (during) => {
+    await runtime(page).evaluate((p) => window.__record(p), pitches);
+    try { await during(); } finally { page.heard = await runtime(page).evaluate(() => window.__stopRecording()); }
+    return page.heard;
+  };
+  const listen = async (ms) => (await record(() => pause(ms))).base;
+  const loud = (h, hz) => assert.ok(h.max[hz] > -45, `${hz} Hz should play: ${JSON.stringify(h)}`);
+  const silent = (h, hz) => assert.ok(!(h.max[hz] > -90), `${hz} Hz should be silent: ${JSON.stringify(h)}`);
+  const setSound = async (event, id, value) => {
+    await page.selectOption('#sound-event', event);
+    await page.evaluate(([id, value]) => {
+      const el = document.getElementById(id);
+      if (el.type === 'checkbox') el.checked = value; else el.value = String(value);
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    }, [id, value]);
+  };
+
+  // Upload a distinct tone for each event through the tab.
+  await page.click('[data-tab="sounds"]');
+  for (const [event, hz] of Object.entries(PITCH)) {
+    await page.selectOption('#sound-event', event);
+    await page.setInputFiles('#sound-file', { name: `tone-${hz}.wav`, mimeType: 'audio/wav', buffer: tone(hz, event.startsWith('music-') ? 3 : 1.2) });
+    await page.waitForFunction((name) => document.querySelector('#sound-asset')?.selectedOptions[0]?.textContent === name, `tone-${hz}.wav`);
+  }
+  await shot(page, 's15-sounds-tab');
+  // Game sound on, from the game's own menu, as a player would.
+  await page.click('#play');
+  await runtime(page).click('#menu');
+  await runtime(page).click('#menu-music');
+  await runtime(page).click('#menu-effects');
+  await runtime(page).evaluate(() => document.getElementById('settings').close());
+  await page.click('#edit');
+  await pause(1500);
+
+  // Idle: only the base tone, and still after its 3 s file has run out.
+  let h = await listen(1000);
+  loud(h, 440);
+  for (const hz of [660, 1000, 1500, 1800]) silent(h, hz);
+  const full = h.max[440], level = h.rms;
+  await pause(2500);
+  loud(await listen(800), 440);
+  // Layout edits while it plays don't restart the music.
+  const edits = Promise.all([0, 1, 2, 3, 4, 5].map((i) => pause(100 + i * 150).then(() => agentEdit(page, [{ type: 'layer', scene: 'desktop', id: 'reels', values: { x: 330 + i * 4 } }]))));
+  h = await listen(1200);
+  await edits;
+  assert.ok(h.minRms > level * 0.9, `music dipped to ${h.minRms} (steady ${level}) during layout edits`);
+
+  // A base spin plays the spin cue over the base music.
+  h = (await record(() => testSpin(page, 'base'))).base;
+  loud(h, 1000);
+  assert.equal(h.top, 440);
+  // Outbreak: the bonus tone takes over, and line wins play the win cue.
+  h = await record(() => testSpin(page, 'outbreak', { speed: 'turbo' }));
+  assert.equal(h.bonus?.top, 660, `bonus music: ${JSON.stringify(h)}`);
+  loud(h.bonus, 1500);
+  // The shared Nice Win track, from the game's own win preview.
+  await page.click('#play');
+  await runtime(page).click('#menu');
+  await runtime(page).click('.menu-extra > summary');
+  await runtime(page).click('.demo-tools > summary');
+  h = (await record(async () => { await runtime(page).click('[data-win-preview="nice"]'); await settle(page, { timeout: 30000 }); })).base;
+  loud(h, 1800);
+  await page.click('#edit');
+  await pause(2500);
+
+  // Volume 25% is 12 dB down.
+  await setSound('music-base', 'sound-volume', 25);
+  await pause(1800);
+  h = await listen(800);
+  assert.ok(Math.abs(h.max[440] - (full - 12)) < 1.5, `25% volume: ${h.max[440]} dB vs ${full} dB at 100%`);
+  await setSound('music-base', 'sound-volume', 100);
+  await pause(1800);
+  // A 2 s fade: the music restarts silent and rises to full over 2 s.
+  await setSound('music-base', 'sound-fade', 2);
+  h = await listen(900);
+  assert.ok(h.minRms < level * 0.4, `fade-in started at ${h.minRms} (full ${level})`);
+  await pause(1500);
+  h = await listen(600);
+  assert.ok(h.minRms > level * 0.9, `faded in to ${h.minRms} (full ${level})`);
+  // Loop off: the 3 s tone plays once.
+  await setSound('music-base', 'sound-fade', 0);
+  await setSound('music-base', 'sound-loop', false);
+  await pause(4500);
+  silent(await listen(600), 440);
+  // Restore: the original base music plays again; Undo brings the tone back.
+  await page.click('#sound-reset');
+  await pause(2500);
+  h = await listen(1000);
+  // The original track has a little energy near 440 Hz of its own.
+  assert.ok(h.max[440] < full - 30 && h.top !== 440, `the tone is gone: ${JSON.stringify(h)}`);
+  assert.ok(h.rms > 0.005, `original base music plays (${h.rms})`);
+  await page.click('#undo');
+  await pause(1500);
+  loud(await listen(600), 440);
+  await shot(page, 's15-sounds-restored');
+  assert.deepEqual(page.errors, []);
+  await page.ctx.close();
 });
