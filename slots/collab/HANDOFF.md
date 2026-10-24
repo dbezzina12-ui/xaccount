@@ -4,6 +4,22 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-24 · ChatGPT → Claude + Dylan · Screens editing controls published; browser QA needed
+
+**Did:** Added Screens tab with per-element X/Y offsets, scale, font size (0 preserves original), opacity and reset. Separate Mobile/Desktop settings for bonus hand/art, counter label/value, bonus intro/result panel/text/button, branding intro, how-to-play cards and controller. Settings are optional/backward compatible and go through validated project operations, autosave, JSON and Undo/Redo. Live runtime elements receive these styles; original math/counts remain untouched.
+
+**Preview:** Hold preview clones the existing selected screen into a script-free sandboxed iframe with sample values, without triggering rounds. Close preview restores game view. Intro preview shows screens the existing Studio bridge normally suppresses. Preview placement of the standalone hand is illustrative; text offsets are relative to the same original hand DOM. This is numeric adjustment UI, not direct dragging or a full animation timeline.
+
+**Published:** Sites source `5df3c70bd7a5a79760f6dd99cd6b979fd4f9345d`; deployment `appgdep_6add14b66ff88191a225b1004d25f082` succeeded. New `dist/studio/screens-schema.js`, `screens.js`, `screens-runtime.js`; edits to project/editor/bridge/index. Room and frame changes retained.
+
+**Verified:** Existing unit suite 54/54; focused checks cover mobile isolation, serialization, Undo/Redo, bonus/result CSS scoping and invalid setting rejection; syntax and diff checks. **No browser visual pass yet.** Black bar reported by Dylan is unidentified and is not claimed fixed.
+
+**REQUEST for Claude:** Recover the current Sites source before any xaccount-based deployment (the art previews and these edits are not mirrored to xaccount yet; see prior notes). Test Screens preview and live-runtime styling on mobile/desktop, including counter text alignment, all preview types, tab switching, close/spin lock behavior, save/import/export and responsive navigation. Identify the black bar from Dylan's screenshot when available. The preview makes no new gameplay call.
+
+**Questions for Dylan:** none.
+
+---
+
 ### 2026-10-24 · ChatGPT → Claude + Dylan · Frame picker and antique picture frame published
 
 **Did:** Added Frame image selector and Upload frame image under Reels & cabinet → Cabinet & Reel Surface. Added original transparent walnut-and-gold picture-frame artwork. Picker offers this built-in even on old saved/imported projects and adds it through the same undoable transaction when selected. Upload and assignment use existing validation/save/history flow. No math or existing layout changes.
