@@ -8,16 +8,13 @@
 
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { mkdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { randomFillSync } from 'node:crypto';
 import { crc32, deflateSync } from 'node:zlib';
-import { serve, chromium, ROOT } from '../../tools/lib/browser.mjs';
-import { AGENT_TOOLS, runtime, project, agentEdit, isBusy, whenReady, until } from './helpers.mjs';
+import { serve, chromium } from '../../tools/lib/browser.mjs';
+import { AGENT_TOOLS, runtime, project, agentEdit, isBusy, whenReady, until, prepared } from './helpers.mjs';
 
-const manifest = JSON.parse(readFileSync(join(ROOT, 'games/zombify/import-manifest.json'), 'utf8'));
-// Review pages (rig-review.html) aren't part of the game.
-const prepared = manifest.files.every((f) => f.path.endsWith('.html') || existsSync(join(ROOT, 'games/zombify/runtime', f.path)));
 const skip = prepared ? false : 'needs the Zombify assets: npm run studio:prepare';
 const SHOTS = process.env.STUDIO_SHOTS && resolve(process.env.STUDIO_SHOTS);
 if (SHOTS) mkdirSync(SHOTS, { recursive: true });

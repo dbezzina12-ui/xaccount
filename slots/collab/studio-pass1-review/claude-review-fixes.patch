@@ -1,0 +1,39 @@
+diff --git a/slots/studio/bridge.js b/slots/studio/bridge.js
+index d2ab772..adfc62b 100644
+--- a/slots/studio/bridge.js
++++ b/slots/studio/bridge.js
+@@ -205,7 +205,7 @@ window.addEventListener('message',e=>{
+    notify('applied',{rev:d.rev,...apply(d.project,d.scene)});
+   }
+   else if(type==='screen-adjust'){if(locked())throw Error('Finish the current round before editing screens.');screens.adjust(d.settings);}
+-  else if(type==='screen-preview'){if(locked())throw Error('Finish the current round before previewing screens.');screens.show(d.screen,{tier:d.tier,winTier:d.winTier,guidePage:d.guidePage});}
++  else if(type==='screen-preview'){if(d.screen&&locked())throw Error('Finish the current round before previewing screens.');screens.show(d.screen,{tier:d.tier,winTier:d.winTier,guidePage:d.guidePage});}
+   else if(type==='spin')void spin(id,d.mode||'base');
+   else if(type==='continue')runtime()?.continue();
+   else if(type==='skip'){if(round&&!compatible(current))hurry=true;else runtime()?.skip?.();}
+diff --git a/slots/studio/editor.js b/slots/studio/editor.js
+index 3a434dd..ae63d60 100644
+--- a/slots/studio/editor.js
++++ b/slots/studio/editor.js
+@@ -77,7 +77,7 @@ function renderAssets(){const p=getProject(),key=p.assets.map(a=>a.id).join()+'|
+ function render(){const p=getProject();$('project-name').value=p.name;$('scene-label').textContent=scene.toUpperCase();$('canvas-name').textContent=scene.toUpperCase()+' SCENE';$('inspector-scene').textContent=scene==='desktop'?'Desktop':'Mobile';$('desktop').classList.toggle('active',scene==='desktop');$('mobile').classList.toggle('active',scene==='mobile');$('adapter-status').textContent=compatible(p)?'6 × 5 · playable':`${p.grid.columns} × ${p.grid.rows} · layout test`;$('preview-label').textContent=compatible(p)?'LIVE GAME PREVIEW':'LAYOUT TEST · NO PAYOUTS';renderLayers();renderInspector();renderAssets();soundsPanel.render();screensPanel.render();fit();renderSelection();updateRuntime();updateControls();}
+ function select(id){selection=id;renderLayers();renderInspector();renderSelection();}
+ function setScene(next){checkEditable();screensPanel.flush();scene=next;render();}
+-function setMode(next){mode=next;document.body.dataset.mode=mode;$('edit').classList.toggle('active',mode==='edit');$('play').classList.toggle('active',mode==='play');$('mode-caption').textContent=mode==='edit'?'Drag to move · corner to resize':'Interact with the game';}
++function setMode(next){if(next==='play')screensPanel.close();mode=next;document.body.dataset.mode=mode;$('edit').classList.toggle('active',mode==='edit');$('play').classList.toggle('active',mode==='play');$('mode-caption').textContent=mode==='edit'?'Drag to move · corner to resize':'Interact with the game';}
+ function showTab(name){document.body.dataset.editorTab=name;document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));$('layers-tab').hidden=name!=='layers';$('assets-tab').hidden=name!=='assets';$('screens-tab').hidden=name!=='screens';if(name!=='screens')screensPanel.close();else{try{screensPanel.open();}catch(error){toast(error.message);}}$('sounds-tab').hidden=name!=='sounds';soundsPanel.stop();}
+ function requestUpload(purpose){checkEditable();uploadPurpose=purpose;$('image-input').value='';$('image-input').click();}
+ function newImageLayer(assetId,point){const s=getScene(),size=scene==='mobile'?120:200;return{id:'image-'+uniqueId(),name:getProject().assets.find(a=>a.id===assetId)?.name||'Image',kind:'image',x:Math.round(point?.x??s.width*.7),y:Math.round(point?.y??s.height*.5),w:size,h:size,visible:true,locked:false,opacity:1,assetId};}
+diff --git a/slots/studio/screens.js b/slots/studio/screens.js
+index bd42454..08aed71 100644
+--- a/slots/studio/screens.js
++++ b/slots/studio/screens.js
+@@ -24,7 +24,7 @@ export function mountScreens({getProject,getScene,commit,applyBatch,checkEditabl
+  function settingsFor(values,reset=false){const settings=structuredClone(getProject().scenes[getScene()].screens||{});settings[screen]||={};if(reset)delete settings[screen][part];else settings[screen][part]={...settings[screen][part],...values};return settings;}
+  function change(values,reset=false){checkEditable();pending=null;commit(applyBatch(getProject(),[{type:'screens',scene:getScene(),values:settingsFor(values,reset)}]),'Adjust '+SCREEN_PARTS[screen].parts[part][0]);}
+  // A focused field may not emit change before Ctrl+S, export or pagehide.
+- function flush(){if(pending){const values=pending;change(values);}}
++ function flush(){if(pending){try{checkEditable();}catch{return;}const values=pending;change(values);}}
+  function inputValues(input){if(input.dataset.screenStyle){if(!input.checkValidity())throw Error('Use a six-digit hex colour, or leave it blank.');return {[input.dataset.screenStyle]:input.value};}if(input.value===''||!input.checkValidity())throw Error('Enter a number within the shown limits.');return {[input.dataset.screenKey]:Number(input.value)/(FIELDS[input.dataset.screenKey].factor||1)};}
+  host.oninput=e=>{const input=e.target;if(!input.dataset.screenKey&&!input.dataset.screenStyle)return;try{checkEditable();const values=inputValues(input);pending={...pending,...values};if(input.dataset.screenKey)for(const peer of host.querySelectorAll(`[data-screen-key="${input.dataset.screenKey}"]`))if(peer!==input)peer.value=input.value;if(!showing)open();send('screen-adjust',{settings:settingsFor(values)});}catch{pending=null; /* Incomplete input stays local until valid. */ }};
+  host.onchange=e=>{try{

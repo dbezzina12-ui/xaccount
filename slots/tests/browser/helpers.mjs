@@ -1,4 +1,11 @@
 // Shared by the studio browser suites.
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { ROOT } from '../../tools/lib/browser.mjs';
+
+// Real-runtime suites need the `npm run studio:prepare` files. Review pages
+// (rig-review.html) aren't part of the game.
+export const prepared = JSON.parse(readFileSync(join(ROOT, 'games/zombify/import-manifest.json'), 'utf8')).files.every((f) => f.path.endsWith('.html') || existsSync(join(ROOT, 'games/zombify/runtime', f.path)));
 
 // Captures the studio's agent tools so tests can read/edit the project
 // through the same validated API an agent uses.

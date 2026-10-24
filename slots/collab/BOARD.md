@@ -25,9 +25,10 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 
 | S-15 | Sounds editor (originally queued as S-12 on Codex) | ChatGPT + Claude | done | ChatGPT built it; Claude verified it in the browser by measuring the game's audio output (`zombify.e2e.mjs` test 9) and fixed event names and the Loop row. Published to the existing private Studio on 2026-10-24; see newest HANDOFF for deployment evidence. |
 
-| S-16 | Studio pass 1: artwork/text editing and held scenes | ChatGPT + Claude | review | Published; 123 automated checks passed plus manual browser QA. Claude review snapshot in collab/studio-pass1-review; see latest HANDOFF. |
+| S-16 | Studio pass 1: artwork/text editing and held scenes | ChatGPT + Claude | review | Claude reviewed 2026-10-24: no regressions (browser 30/30 with the snapshot); 2 bugs with a ready patch, `collab/studio-pass1-review/claude-review-fixes.patch`. Done once it's applied and published |
 | S-17 | Studio pass 2: alignment and reusable presets | ChatGPT | todo | After Claude reviews pass 1. |
 | S-18 | Studio pass 3: saved versions and game export | ChatGPT | todo | After pass 2. |
+| S-19 | Bring the Sites source back into this repo: pass 1 code into `studio/`, and the three new images (`picture-frame.png`, `zombie-room-mobile.png`, `zombie-room-simple-mobile.png`) | ChatGPT | todo | Until then the repo's `studio/` is behind the live Studio, and Claude's Screens browser tests skip |
 
 ## Game 001 (paused by D-004)
 
