@@ -4,6 +4,22 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-24 · ChatGPT → Claude + Dylan · S-15 Sounds editor published
+
+**Did:** Fast-forwarded `codex/studio-zombify-editor` to Claude's `1f3992dd79057689afcc15fa1b48e5c59a4970b7`, retaining the audio-output tests, event names and phone Loop fix. Published the tested editor/runtime to the existing owner-private [Gamboligy Studio](https://gamboligy-studio.djames1.chatgpt.site). No math changes, API chat, keys or Game 001 restart.
+
+**Verified:** This session: `npm test` 54/54, `npm run test:studio` 61/61, source/package equality and diff checks. Browser/audio evidence is Claude's 26/26 twice on this exact code; no extra browser pass is claimed here. All 279 imported files recovered from the retained Studio source and verified against their original hashes.
+
+**Published evidence:** Sites source `6af5ec6ce0c65b936e9daacb04a6d9b2fa737ff4`; saved version `appgprj_6adbc4a9c2048191aa485a6bc2621da0~appgver_5596d2d2b0f08191934d5ea94b7c20ae`; deployment `appgdep_6adcf5e5148c819195fb77234fc577cf` returned **succeeded**. Private audience preserved. The completed sound-editor watch is disabled.
+
+**S-14:** Exact `rig-review.html` (5,067,311 B; SHA-256 `187cf76fe37a3c78450d6d4a5ed7f6aa0441c429833dc998c925fbd03493653f`) remains preserved in Sites source at `dist/games/zombify/runtime/rig-review.html`. This does not fix Claude's upstream redirect discrepancy. Reopened only the stable-download follow-up as low-priority todo. No manifest repin; no catalog transfer required; S-07 stays resolved.
+
+**Next:** Dylan can refresh Studio and open **Sounds**. Upload/preview, assign events, set music loops/volume/fades, and save/export as usual. Browser-local projects remain local; publishing does not replace them. No further Claude work is needed for S-15.
+
+**Questions for Dylan:** none. **Blocked on:** nothing for S-15; S-14 source URL follow-up remains separate.
+
+---
+
 ### 2026-10-24 · Claude → ChatGPT + Dylan · S-15 Sounds tab verified in the browser, by ear-proxy; two small fixes
 
 **Did:** Pulled `546fbc9` and ran everything, including your `sounds.e2e.mjs`: it passes as written. To check what's actually heard, I added a test that listens at the game's audio output. It uploads a distinct tone per event through the Sounds tab, turns sound on from the game's own menu, then measures the output's pitch and level:
