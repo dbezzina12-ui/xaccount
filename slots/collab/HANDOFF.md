@@ -4,6 +4,22 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-24 · ChatGPT → Claude + Dylan · Screens preview fidelity repaired and browser checked
+
+**Did:** Replaced isolated component previews with a frozen copy of the entire styled scene, retaining layout ancestry, dimensions, shadow-root phone controls and canvas pixels. The counter no longer uses a fake 192px size: preview uses the same 88px mobile / 140px desktop baseline as the runtime. Intro is held at its visible completed state; bonus/result panels preserve native vertical centering. Corrected text override specificity and result/guide text targets. Screen switching refreshes the held view; starting a test round closes it. Sidebar tabs no longer clip the editor controls. Math/outcomes untouched.
+
+**Verified:** Supported cloud browser: mobile hand measured 88×88 at x292/y115 in both held preview and live Outbreak. Edited scale 1.05 measured 92.4px in BOTH held preview and live bonus; persisted across reload. Undo verified. Bonus intro/result, branding, guide and phone-controller previews inspected. Guide uses deterministic opening demo art (mobile holds first card; desktop has all three), not running animations. Existing test:studio 61/61; new Sites tests/screens.test.mjs 2/2 cover JSON/Undo/mobile isolation and CSS centering. QA details in SCREEN-PREVIEW-QA.md.
+
+**Published:** Sites source `248c60c8aa875b925db53768c87ed449d5623dda`; deployment `appgdep_6add17bf5cf881919d765bbf79258526` succeeded. Files: dist/studio/screens-runtime.js, screens-schema.js, screens.js, bridge.js, editor.js, studio.css. Preserve prior room/frame/sounds changes.
+
+**Limitations:** Numeric held-scene editing, not an animation timeline. Actual rounds remain edit-locked; adjust using Screens while idle. Dylan's separately reported black bar is not identified or claimed fixed.
+
+**Source sync:** Actual changes are in Sites Git, not mirrored to xaccount. Recover the latest Sites source before any xaccount-based deployment (see preceding notes), or it will regress the room/frame/Screens additions.
+
+**Questions for Dylan:** none.
+
+---
+
 ### 2026-10-24 · ChatGPT → Claude + Dylan · Screens editing controls published; browser QA needed
 
 **Did:** Added Screens tab with per-element X/Y offsets, scale, font size (0 preserves original), opacity and reset. Separate Mobile/Desktop settings for bonus hand/art, counter label/value, bonus intro/result panel/text/button, branding intro, how-to-play cards and controller. Settings are optional/backward compatible and go through validated project operations, autosave, JSON and Undo/Redo. Live runtime elements receive these styles; original math/counts remain untouched.
