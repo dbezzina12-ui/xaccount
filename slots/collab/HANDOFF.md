@@ -4,6 +4,56 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · Claude → ChatGPT + Dylan · S-20: regressions, phone performance, zombie weight, anticipation audio
+
+**Did:**
+1. **Regressions.** Every suite passes on your S-20 branch with my changes: `npm test` 82/82, `test:studio` 61/61, `test:studio-browser` 43/43.
+   - Your pass 2 snapping moved my drag test's reels 1 px. That test now holds Alt, your snap bypass.
+   - New [`tests/browser/anticipation.e2e.mjs`](../tests/browser/anticipation.e2e.mjs) makes the game pick real catalog outcomes by feeding chosen values to its ticket draw; no math changes. It covers:
+     - a two-scatter miss with five teasing reels
+     - natural 3, 4 and 5-scatter triggers: Signal → Outbreak → Super → Hidden, then the matching bonus
+     - Skip mid-tease, Turbo against Normal, reduced motion, a hidden tab mid-tease, and the next spin
+   - Every round also checks that the board on screen is the selected board and the payout matches the catalog.
+   - S-17 presets read correct, with no defects.
+2. **Phone performance**, emulated: a Pixel 5 with the CPU slowed 4×, using [`tools/perf/zombify-phone.mjs`](../tools/perf/zombify-phone.mjs). About 90% of zombie-animation time was script:
+   - **Readback:** every rig, every frame, copied the shared WebGL canvas into a 2D canvas (a GPU readback). It now hands frames over with zero-copy `transferToImageBitmap` into a `bitmaprenderer` canvas. The pixels are identical, and browsers without it keep the old path.
+   - **Canvas size:** zombie moves drew a board-sized canvas, about 0.45 MP per frame, for one zombie. The canvas is now sized to the move: about 60% fewer pixels, and never clipped (a test checks every frame of every move type).
+   - **Forced layout:** each rig read its host size every frame. A `ResizeObserver` caches it.
+
+   | Round | Frames dropped before | After |
+   |---|---|---|
+   | Walking zombie | 21–26% | 3–9% |
+   | Expanding zombie | 47–53% | 8–19% |
+   | Outbreak | about 35% | 11–18% |
+
+   Memory stays flat over repeated rounds, at about 23 MB heap. **Caveats:** no phone GPU and no iOS Safari here. So I added `?perf`, an on-device recorder ([`perf-probe.js`](../games/zombify/runtime/perf-probe.js)) that reports frame times per round against the phone's own refresh rate (S-21).
+3. **Zombie weight** (presentation only):
+   - **Feet:** in a horizontal swat the feet sank **10.3 px into the floor**; now 0.
+   - **Lunge:** a small lean into the block.
+   - **Bite:** a 55 ms hit-stop on contact, then the block pops and flashes and a bite nudges the board 1.5 px.
+   - **Jumps:** a downward knock and the expansion into a stack now hold through the crouch, follow a gravity arc that lands fast, and squash and settle about the feet. Before, the expansion slid during the crouch and eased to a stop.
+4. **Anticipation audio** that follows what has landed:
+   - **Swell:** plays under each reel still teasing, a semitone up per tier secured, and ends as that reel lands. Securing Outbreak, Super or Hidden plays a short ping. Both are original sounds, made by [`tools/audio/tease-sounds.mjs`](../tools/audio/tease-sounds.mjs).
+   - **Mixing:** the swell ducks under scatter landings and key cues, and the music dips 3.3 dB while it plays.
+   - **Stopping:** it stops on landing, Skip (silent within 0.21 s at the output), a hidden tab and a new spin.
+   - **Sounds tab:** both cues are there ("Anticipation swell", "Tier secured"), and an override was verified at the output.
+
+**Files:**
+- Runtime: `rig-gpu.js`, `approved-rig.js`, `win-zombie.js`, `rig-geometry.js`, `zombie-swat.js`, `game-audio.js`, `game-ready.js`, `audio-manifest.js` (import bumped to `?v=117`), `app.js` (hook only), `launch.js` (`?perf`); new `tease-audio.js`, `perf-probe.js`, `assets/audio/tease-swell-v1.mp3`, `tease-up-v1.mp3`.
+- Studio: `studio/sounds.js` (two labels).
+- Tools: `tools/perf/zombify-phone.mjs`, `tools/audio/tease-sounds.mjs`.
+- Tests: `anticipation`, `rig-render`, `perf-probe` browser suites; `zombie-motion`, `tease-audio`, `perf-probe` unit tests.
+
+**Next for ChatGPT:**
+1. Merge `claude/blissful-rubin-xou20i` and publish. The two new MP3s are in Git, not the asset manifest.
+2. On the published Site, check one round by eye and by ear on a phone: the bite pop, the landing squash, the anticipation swell.
+
+**Questions for Dylan:** S-21: once it's published, open `…/games/zombify/runtime/index.html?perf` on an Android phone (Chrome) and an iPhone (Safari). Play about 10 spins and a bonus, tap **Copy report** and paste both reports to me. Also tell me if the anticipation swell is too loud or too quiet.
+
+**Blocked on:** nothing. Real-phone numbers decide any further performance work.
+
+---
+
 ### 2026-10-24 · ChatGPT → Claude + Dylan · S-20 game presentation polish
 
 **Did:** Dylan asked for the cleanest, smoothest game presentation and a stronger tease. This pass adds speed-aware reel anticipation (Normal/Quick/Turbo), removes animated reel blur, reduces camera push/glow, and adds a landed-scatter tier indicator. The status confirms only the already-landed tier and is cleared on finish/skip. The focus frame moves with transforms and is placed directly on its first lane. Bonus/result panels have quieter borders, readable sentence-case descriptions, and a clear continue button. Controller feedback, win typography and dialogs are more consistent. Existing Studio screen overrides retain priority.

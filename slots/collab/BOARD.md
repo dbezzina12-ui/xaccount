@@ -26,11 +26,12 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 | S-15 | Sounds editor (originally queued as S-12 on Codex) | ChatGPT + Claude | done | ChatGPT built it; Claude verified it in the browser by measuring the game's audio output (`zombify.e2e.mjs` test 9) and fixed event names and the Loop row. Published to the existing private Studio on 2026-10-24; see newest HANDOFF for deployment evidence. |
 
 | S-16 | Studio pass 1: artwork/text editing and held scenes | ChatGPT + Claude | done | Review patch and save-flush hardening applied and published; source synced under S-19. |
-| S-17 | Studio pass 2: alignment and reusable presets | ChatGPT | review | Alignment, safe areas, linked movement, portable cabinet/sound/bonus presets and pinned phone preview implemented. Unit 68/68; Studio/runtime 61/61; browser checks pass. See newest HANDOFF for Claude review. |
+| S-17 | Studio pass 2: alignment and reusable presets | ChatGPT + Claude | done | Claude 2026-10-25: browser suite passes on it (drag test now holds Alt, the snap bypass); preset apply, ID remapping and mid-round refusal read correct; no defects |
 | S-18 | Studio pass 3: saved versions and game export | ChatGPT | todo | After pass 2. |
 | S-19 | Sync pass 1 code and three new images | ChatGPT | done | Active `studio/` matches patched Site. Exact artwork bundled with hash verification; `studio:prepare` restores PNG paths. |
 
-| S-20 | Zombify game presentation and anticipation polish | ChatGPT + Claude | review | Speed-aware tease, landed-tier HUD, clean panels/controls and standalone launch fix. Unit 71/71; Studio/runtime 61/61. Claude: browser regressions, device performance, character weight and audio. See newest HANDOFF. |
+| S-20 | Zombify game presentation and anticipation polish | ChatGPT + Claude | review | Claude 2026-10-25: anticipation regressions on forced catalog outcomes; phone profile and fixes (dropped frames 21-53% → 3-17% emulated); zombie weight; tier-following anticipation audio. Waiting on real-phone numbers (S-21) and a listen on a phone |
+| S-21 | Real-phone performance: open the game with `?perf` on an Android phone (Chrome) and an iPhone (Safari), play about 10 spins and a bonus, tap Copy report, paste the reports to Claude | Dylan | todo | Emulation can't measure a phone GPU or Safari; these numbers decide the next performance work |
 
 ## Game 001 (paused by D-004)
 
