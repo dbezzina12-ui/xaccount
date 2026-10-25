@@ -98,4 +98,7 @@ export function parseCommand(text,project,scene='desktop',attachment){
  applyBatch(project,ops);return ops;
 }
 
-export function createBrokenWallProject(){const p=createProject(),s=p.scenes.mobile;s.background.assetId='zombie-broken-wall-mobile';s.cabinet={frameAsset:'picture-frame',supports:false};Object.assign(s.layers.find(l=>l.id==='reels'),{x:10,y:260,w:370,h:345});Object.assign(s.layers.find(l=>l.id==='title'),{x:18,y:170,w:240,h:82});Object.assign(s.layers.find(l=>l.id==='controls'),{x:0,y:620,w:390,h:214});return p;}
+export function createBrokenWallProject(){const p=createProject(),s=p.scenes.mobile;s.background.assetId='zombie-broken-wall-mobile';s.cabinet={frameAsset:'picture-frame',supports:false};Object.assign(s.layers.find(l=>l.id==='reels'),{x:10,y:260,w:370,h:345});Object.assign(s.layers.find(l=>l.id==='title'),{x:20,y:6,w:350,h:80});Object.assign(s.layers.find(l=>l.id==='controls'),{x:0,y:650,w:390,h:214});return p;}
+
+// Upgrade only the untouched room preset; keep custom placements intact.
+export function upgradeRoomComposition(project){const p=clone(project),s=p.scenes.mobile;if(s.background.assetId!=='zombie-broken-wall-mobile')return p;const t=s.layers.find(l=>l.id==='title'),c=s.layers.find(l=>l.id==='controls');if(t.x===18&&t.y===170&&t.w===240&&t.h===82){Object.assign(t,{x:20,y:6,w:350,h:80});if(c.x===0&&c.w===390&&((c.y===620&&c.h===214)||(c.y===690&&c.h===144)))Object.assign(c,{y:650,h:214});}return p;}

@@ -1,7 +1,7 @@
 import {guideSettings,alignment,snapPosition,follows} from './layout.js';
 import {mountPresets} from './presets-panel.js';
 import {mountScreens} from './screens.js';
-import {sceneAppearance,createProject,createBrokenWallProject,validateProject,applyOperation,applyBatch,History,compatible,PRESETS,SYMBOLS,parseCommand,clone,uniqueId} from './project.js';
+import {sceneAppearance,upgradeRoomComposition,createProject,createBrokenWallProject,validateProject,applyOperation,applyBatch,History,compatible,PRESETS,SYMBOLS,parseCommand,clone,uniqueId} from './project.js';
 import {readSaved,saveProject,downloadProject,imageAsset,writeJournal,readJournal,clearJournal,versionOf,onSaved} from './storage.js';
 import {mountSounds} from './sounds.js';
 const $=id=>document.getElementById(id),baseURL=new URL('../',import.meta.url),esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -54,7 +54,7 @@ function edit(op,label='Edit'){commit(applyOperation(history.current,{scene,...o
 function persist(force=false){screensPanel.flush();const run=saveChain.then(()=>save(force));saveChain=run.catch(()=>{});return run;}
 async function save(force){const rev=revision;try{const record=await saveProject(history.current,{base:savedVersion,force});savedVersion=record.version;savedRevision=rev;showConflict(false);if(rev===revision){$('save-status').textContent='Saved in this browser';clearJournal();}}catch(error){if(error.conflict){showConflict(true);return;}$('save-status').textContent='Save failed — export a copy';toast('Could not save this project in the browser. Export it to keep your changes.');}}
 function showConflict(on){conflict=on;$('save-conflict').hidden=!on;if(on)$('save-status').textContent='Not saved — changed in another tab';}
-function loadSaved(saved){draft=null;history=new History(validateProject(saved.project));savedVersion=versionOf(saved);savedRevision=++revision;showConflict(false);render();$('save-status').textContent='Saved in this browser';}
+function loadSaved(saved){draft=null;history=new History(upgradeRoomComposition(validateProject(saved.project)));savedVersion=versionOf(saved);savedRevision=++revision;showConflict(false);render();$('save-status').textContent='Saved in this browser';}
 // Another tab saved: follow it if nothing here is unsaved, otherwise ask.
 // Runs after this tab's own saves so it never mistakes one of them for another tab's.
 function syncFromStorage(){return saveChain=saveChain.then(async()=>{if(conflict)return;const saved=await readSaved();if(!saved?.project||versionOf(saved)===savedVersion)return;if(revision!==savedRevision||saveTimer||draft){showConflict(true);return;}loadSaved(saved);toast('Updated with changes saved in another tab.');}).catch(()=>{});}
@@ -162,7 +162,7 @@ setInterval(()=>{
 document.addEventListener('visibilitychange',()=>{if(document.hidden)flushSave();else{lastHeard=performance.now();void syncFromStorage();}});
 window.addEventListener('pagehide',flushSave);
 setMode('edit');render();
-try{const saved=await readSaved(),journaled=readJournal(saved);savedVersion=versionOf(saved);let restored=null;try{restored=journaled&&validateProject(journaled);}catch{}if(restored){history=new History(restored);render();persist();toast('Restored your latest edits.');}else if(saved?.project){history=new History(validateProject(saved.project));render();$('save-status').textContent='Saved in this browser';}else $('save-status').textContent='New local project';}catch(error){toast('Saved project could not be opened. The original Zombify project is loaded.');$('save-status').textContent='Original project';}
+try{const saved=await readSaved(),journaled=readJournal(saved);savedVersion=versionOf(saved);let restored=null;try{restored=journaled&&validateProject(journaled);}catch{}if(restored){history=new History(upgradeRoomComposition(restored));render();persist();toast('Restored your latest edits.');}else if(saved?.project){history=new History(upgradeRoomComposition(validateProject(saved.project)));render();$('save-status').textContent='Saved in this browser';}else $('save-status').textContent='New local project';}catch(error){toast('Saved project could not be opened. The original Zombify project is loaded.');$('save-status').textContent='Original project';}
 // Explicit background-preview link: preserve saved composition and make the change undoable.
 const launchURL=new URL(location.href);
 if(launchURL.searchParams.get('background')==='zombie-room'){
