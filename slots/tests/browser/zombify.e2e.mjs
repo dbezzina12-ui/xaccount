@@ -284,6 +284,8 @@ test('7. a large upload on WILD and the background keeps dragging the reels smoo
   await page.evaluate(watch);
   await runtime(page).evaluate(watch);
   const at = await reelsOnScreen(page);
+  // Alt turns off snapping (pass 2), so the reels follow the pointer exactly.
+  await page.keyboard.down('Alt');
   await page.mouse.move(at.x, at.y);
   await page.mouse.down();
   const moves = [];
@@ -294,6 +296,7 @@ test('7. a large upload on WILD and the background keeps dragging the reels smoo
     moves.push(Date.now() - t);
   }
   await page.mouse.up();
+  await page.keyboard.up('Alt');
   const long = (await page.evaluate(() => window.__long)) + (await runtime(page).evaluate(() => window.__long));
   const mean = moves.reduce((a, b) => a + b, 0) / moves.length;
   console.log(`# drag with a ${(png.length / 1e6).toFixed(1)} MB upload: ${mean.toFixed(1)} ms per move, ${long} long tasks`);
