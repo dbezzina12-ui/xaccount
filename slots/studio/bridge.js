@@ -102,7 +102,7 @@ function apply(project,key){
  #game.studio-layout-test .console,#game.studio-layout-test #mobile-controller{pointer-events:none!important}
  #game .studio-preview-column{position:relative;overflow:hidden;height:100%;flex:1 1 0;min-width:0}.studio-preview-tile{position:absolute;left:0;width:100%;display:grid;place-items:center}.studio-preview-tile img{width:100%;height:100%;object-fit:contain;transform:scale(${g.symbolScale});pointer-events:none}
  #game .studio-preview-column.fast img{filter:blur(1.4px);transform:scale(${g.symbolScale}) scaleY(1.1)}
- #welcome{display:none!important}.studio-extra{position:absolute;pointer-events:none;object-fit:contain}.studio-extras{position:absolute;inset:0;pointer-events:none}
+ ${new URLSearchParams(location.search).get('entry')==='full'?'':'#welcome{display:none!important}'}.studio-extra{position:absolute;pointer-events:none;object-fit:contain}.studio-extras{position:absolute;inset:0;pointer-events:none}
  `;
  const titleImage=document.getElementById('zombify-title'),titleURL=src(title.assetId);if(titleImage.src!==titleURL)titleImage.src=titleURL;
  syncExtras(s);
