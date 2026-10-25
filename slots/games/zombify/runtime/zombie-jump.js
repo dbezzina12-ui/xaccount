@@ -1,3 +1,4 @@
+import {copySymbolPaint} from './symbol-paint.js';
 import {mountHorizontalRig} from './horizontal-rig.js';
 import {verticalZombieLayout} from './zombie-layout.js';
 // Presentation only. The round's supplied cells and board remain authoritative.
@@ -28,7 +29,7 @@ export async function playZombieJump({event,board,layer,animate,pause,rate=1,sho
       // Knock only the cells the math has already awarded to this expansion.
       if(!source||event.before[index].kind==='zombie'||event.before[index].kind==='wild')continue;
       const r=tile.getBoundingClientRect(),ghost=document.createElement('div');
-      ghost.className='knocked-symbol';const copy=source.cloneNode(true);copy.style.backgroundImage=getComputedStyle(source).backgroundImage;ghost.append(copy);
+      ghost.className='knocked-symbol';const copy=source.cloneNode(true);copySymbolPaint(source,copy);ghost.append(copy);
       Object.assign(ghost.style,{left:`${r.left-bounds.left}px`,top:`${r.top-bounds.top}px`,width:`${r.width}px`,height:`${r.height}px`});
       layer.append(ghost);debris.push(ghost);source.style.visibility='hidden';
       const direction=n%2?-1:1;

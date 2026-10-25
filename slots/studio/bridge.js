@@ -31,6 +31,9 @@ const MISSING="Zombify's game code didn't load in this checkout. From slots/, ru
 const STRIP=Int16Array.from({length:60},(_,i)=>(i*7+(i/12|0))%SYMBOLS.length);
 let current=null,sceneKey='desktop',round=null,pending=null,lastState='',lastGame='',spinToken=0,hurry=false,previewShape='',columns=[],landed=null,bootFailed=false;
 const extraImages=new Map();
+const labAssetURL=new URL('games/zombify/runtime/assets/studio/subway-lab.webp',rootURL).href;
+const labPreload=new Image();labPreload.src=labAssetURL;
+
 const cssURL=url=>`url(${JSON.stringify(url)})`;
 const src=id=>{const asset=current.assets.find(a=>a.id===id);return new URL(asset.src,rootURL).href;};
 const notify=(type,payload={})=>parent.postMessage({source:'slot-runtime',type,...payload},location.origin);
@@ -89,7 +92,6 @@ function apply(project,key){
  #game .tile>.symbol,#game .reel-strip .tile>.symbol{transform:scale(${g.symbolScale})!important}
  #game .symbol{background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important}
  ${artRules}
- #game .tile[data-infection="0"] .symbol{background-size:contain!important}
  #game .stack-layer{inset:0!important;padding:0!important;gap:0!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;grid-template-rows:repeat(5,minmax(0,1fr))!important}
  #game .spinning-reel{background-color:${g.fill}!important;background-image:${g.texture?cssURL(src('enamel')):'none'}!important}
  .studio-dividers{position:absolute;inset:0;z-index:18;pointer-events:none;opacity:${g.divider};background:linear-gradient(90deg,transparent calc(100% - 1px),#a9d7e7 0) 0 0 / ${100/g.columns}% 100%,linear-gradient(0deg,transparent calc(100% - 1px),#a9d7e7 0) 0 0 / 100% ${100/g.rows}%;box-shadow:inset 0 0 0 1px #a9d7e7}
@@ -108,7 +110,7 @@ function apply(project,key){
  #game.studio-layout-test .console,#game.studio-layout-test #mobile-controller{pointer-events:none!important}
  #game .studio-preview-column{position:relative;overflow:hidden;height:100%;flex:1 1 0;min-width:0}.studio-preview-tile{position:absolute;left:0;width:100%;display:grid;place-items:center}.studio-preview-tile img{width:100%;height:100%;object-fit:contain;transform:scale(${g.symbolScale});pointer-events:none}
  #game .studio-preview-column.fast img{filter:blur(1.4px);transform:scale(${g.symbolScale}) scaleY(1.1)}
- ${subway?subwayRules(project,title,g):''}
+ ${subway?subwayRules(project,title,g,s,reels):''}
  ${new URLSearchParams(location.search).get('entry')==='full'?'':'#welcome{display:none!important}'}.studio-extra{position:absolute;pointer-events:none;object-fit:contain}.studio-extras{position:absolute;inset:0;pointer-events:none}
  `;
  const titleImage=document.getElementById('zombify-title'),titleURL=src(title.assetId);if(titleImage.src!==titleURL)titleImage.src=titleURL;
@@ -231,12 +233,41 @@ setTimeout(()=>{if(!runtime()){bootFailed=true;pushGame();}},1500);
 setInterval(pushState,100);
 setInterval(pushGame,250);
 
-function subwayRules(project,title,g){
+function subwayRules(project,title,g,s,reels){
  const sheet=cssURL(src('subway-art'));
  const crops={j:[58,447,118,120],q:[305,447,118,120],k:[554,447,118,120],a:[554,704,118,120],skater:[182,576,118,120],nurse:[430,447,118,120],builder:[182,447,118,120],cop:[677,447,118,120],scientist:[554,576,118,120],zombie:[430,704,118,120],vial:[305,576,118,120]};
  const crop=([x,y,w,h])=>`background-image:${sheet}!important;background-size:${853/w*100}% ${1844/h*100}%!important;background-position:${x/(853-w)*100}% ${y/(1844-h)*100}%!important;background-repeat:no-repeat!important;`;
  let rules=`#game .board-wrap{border-image-slice:64!important;border-image-width:1!important}#game .tile{box-shadow:inset -1px -1px #73737336!important}`;
  if(title.assetId==='subway-art')rules+=`#game .brand{${crop([180,204,490,146])}}#game .brand h1{visibility:hidden!important}`;
- for(const [id,box] of Object.entries(crops))if(project.symbols[id]==='symbol-'+id)rules+=`#game .tile:not([data-infection="2"]):not(.carrier-3):not(.carrier-5)>.symbol.art-${id}{${crop(box)}mask-image:none!important;filter:none!important;transform:scale(1)!important}`;
+ for(const [id,box] of Object.entries(crops))if(project.symbols[id]==='symbol-'+id)rules+=`#game .symbol.art-${id}{${crop(box)}mask-image:none!important;filter:none!important;transform:scale(1)!important}`;
+
+ // All board states share the same portraits. Infection is a treatment of the
+ // new portrait, never a fallback to an unrelated old image.
+ rules+=`#game .tile[data-infection="2"]>.symbol,#game .tile:is(.carrier-3,.carrier-5)>.symbol{filter:sepia(.7) hue-rotate(42deg) saturate(1.3)!important}`;
+ for(const id of ['skater','nurse','builder','cop','scientist'])if(project.symbols[id]==='symbol-'+id){
+  rules+=`#game .infection-tube.art-${id} .tube-character{${crop(crops[id])}mask-image:none!important}#game .infection-tube.art-${id} .tube-zombie{filter:sepia(.7) hue-rotate(42deg) saturate(1.3)!important}`;
+ }
+ const lab=cssURL(labAssetURL);
+ rules+=`
+ #game[data-free-spins] .studio-background{background-image:${lab}!important}
+ #game[data-free-spins] .brand{visibility:hidden!important}
+ #game[data-free-spins] .free-spins-counter{left:${s.width*.135-reels.x}px!important;right:auto!important;top:${s.height*.17-reels.y}px!important;width:${s.width*.405}px!important;height:${s.height*.032}px!important;z-index:35!important}
+ #game[data-free-spins] .counter-art{display:none!important}
+ #game[data-free-spins] .counter-lift{transform:none!important;filter:none!important;animation:none!important}
+ #game[data-free-spins] .counter-copy{inset:0!important;width:100%!important;height:100%!important;display:flex!important;flex-direction:row!important;justify-content:space-between!important;padding:0 4px!important;gap:6px!important}
+ #game[data-free-spins] .counter-copy>span{font-size:12px!important;letter-spacing:0!important;color:#fff1d3!important}
+ #game[data-free-spins] .counter-copy>strong{font-size:25px!important;color:#c3f63d!important}
+ #game[data-free-spins] .infection-tracker{left:${s.width*.05-reels.x}px!important;top:${s.height*.632-reels.y}px!important;width:${s.width*.90}px!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;margin:0!important}
+ #game[data-free-spins] .infection-tracker:before,#game[data-free-spins] .infection-tracker:after,#game[data-free-spins] .infection-heading{display:none!important}
+ #game[data-free-spins] .infection-people{gap:8px!important;align-items:end!important}
+ #game[data-free-spins] .infection-tube{height:${s.height*.122}px!important;width:100%!important;max-height:none!important;filter:drop-shadow(0 2px 1px #0008)!important}
+ #game[data-free-spins] .tube-window{inset:13% 7% 21%!important;border:2px solid #a3d75e!important;border-radius:5px!important;background:#193023!important}
+ #game[data-free-spins] .tube-frame{inset:0!important;background:none!important;border-radius:7px!important;border-top:10px solid #455c75!important;border-bottom:18px solid #263a52!important;box-shadow:inset 2px 0 #78969f,inset -2px 0 #132439,0 0 0 2px #0a1522!important}
+ #game[data-free-spins] .tube-count{top:auto!important;bottom:3%!important;font-size:12px!important}
+ #game[data-free-spins] .tube-value{bottom:-13%!important;left:0!important;right:0!important;font-size:11px!important;color:#d7fca3!important}
+ #game[data-free-spins] .tube-markers{inset:18% 9% 26%!important}
+ #game[data-free-spins] .tube-character{inset:0!important}
+ #game[data-free-spins] .tube-name{display:none!important}
+ `;
  return rules;
 }

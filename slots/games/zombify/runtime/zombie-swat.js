@@ -1,3 +1,4 @@
+import {copySymbolPaint} from './symbol-paint.js';
 import {getZombieAnimator} from './zombie-jump.js';
 import {createApprovedAnimator,ZOMBIE_ACTION_SPEED} from './approved-rig.js';
 // Presentation only: outcomes, bite values and awarded cells come from math.js.
@@ -17,7 +18,7 @@ function flyingTile(target){
  const copy=target.cloneNode(true),style=getComputedStyle(target);
  copy.className='swatted-symbol flying-tile';copy.querySelectorAll('.carrier-value').forEach(n=>n.remove());
  Object.assign(copy.style,{background:style.background,border:style.border,borderRadius:style.borderRadius,boxShadow:style.boxShadow});
- copy.firstElementChild.style.backgroundImage=getComputedStyle(target.firstElementChild).backgroundImage;
+ copySymbolPaint(target.firstElementChild,copy.firstElementChild);
  copy.setAttribute('aria-hidden','true');
  target.style.background='transparent';target.style.borderColor='transparent';target.style.boxShadow='none';
  return copy;

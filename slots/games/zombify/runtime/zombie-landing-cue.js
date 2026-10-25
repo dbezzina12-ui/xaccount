@@ -1,3 +1,4 @@
+import {copySymbolPaint} from './symbol-paint.js';
 // Cosmetic landing cue. The settled tile remains the authoritative game cell.
 // A body-level copy can briefly leave the cabinet without clipping neighboring
 // reels or changing their geometry, hit tests, or expansion targets.
@@ -12,7 +13,7 @@ export async function playZombieLanding(tile,{animate,shouldSkip=()=>false}={}){
   Object.assign(ghost.style,{left:`${rect.left}px`,top:`${rect.top}px`,width:`${rect.width}px`,height:`${rect.height}px`});
   const copy=source.cloneNode(false);
   copy.className='expander-landing-art';
-  copy.style.backgroundImage=doc.defaultView.getComputedStyle(source).backgroundImage;
+  copySymbolPaint(source,copy);
   ghost.append(copy);
   const doors=['left','right'].map(side=>{const door=doc.createElement('span');door.className='expander-landing-door '+side;ghost.append(door);return door;});
   const previousVisibility=source.style.visibility;

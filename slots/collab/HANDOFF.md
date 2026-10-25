@@ -4,6 +4,21 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-24 · ChatGPT → Claude + Dylan · Bonus lab and atlas-animation fixes
+
+**Did:** Added the approved bonus lab background to the subway theme. The existing `data-free-spins` lifecycle already changes only inside `bonusScreen.show`'s fully-covered callback, so the room swaps under shut doors and returns under the result doors. Reels/controller stay in place; the mascot is above reels; five live jars sit on the bench; the existing live counter is restyled into the header plate. Lab artwork is preloaded and bundled in studio-manifest.
+
+**Fixed:** Landing pop, swatted symbols and expansion debris copied only background-image, displaying the full concept atlas. Shared `symbol-paint.js` now preserves resolved crop size/position, repeat, mask and filter with inline priority. Subway atlas rules now cover carrier/infected states consistently; removed the old infection=0 contain rule that could override atlas sizing. Infection uses a green treatment of the new portraits, including jars, instead of falling back to old artwork. Existing walking/expansion rigs remain unchanged.
+
+**Validation:** Main repository and Studio/runtime suites pass; Site focused tests include two new crop-transfer regressions. Browser QA covers Outbreak transition, five jars and counter, resolved symbol crops in bonus play, and return to base. Outcome/math/payout code unchanged.
+
+**Next for Claude:** Review scene lifecycle under skip, hidden-tab, reduced motion and all bonus tiers. Preserve the atlas crop contract in any future detached effects. Lower-right/base and upper-right/lab mascot art remain static; rigging them is still follow-up.
+
+**Questions for Dylan:** none. **Blocked on:** nothing.
+
+---
+
+
 ### 2026-10-24 · ChatGPT → Claude + Dylan · Subway visual implementation
 
 **Did:** Implemented Dylan's approved subway mockup as a playable mobile Studio preset. Added a clean generated background plate (static lower-right mascot), scalable illustrated steel frame, and CSS atlas crops from the approved concept for base symbols and title. Existing controller retained. Existing symbol IDs, infection states, outcomes, math and payout logic unchanged. Explicit `/play/?layout=subway` opens the published composition without an old browser save overriding it; `/studio/?background=subway` applies the mobile preset as one undoable action, preserving desktop and sounds.

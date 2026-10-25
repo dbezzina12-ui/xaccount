@@ -96,5 +96,15 @@
     "parts": [
       "subway-frame-00.b64"
     ]
+  },
+  {
+    "path": "assets/studio/subway-lab.webp",
+    "bytes": 265058,
+    "sha256": "0f6fc17ad6672e76d6d368ee4fc8fb8c7887e3bb0800263a11a295d8ee563145",
+    "parts": [
+      "subway-lab-00.b64",
+      "subway-lab-01.b64",
+      "subway-lab-02.b64"
+    ]
   }
 ]

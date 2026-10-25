@@ -65,3 +65,5 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 - API key provisioning, API-chat publication and automated provider handoffs are cancelled. Use repository handoffs and Dylan's “your turn” relay.
 
 | S-21 | Approved subway mobile scene, live reels and existing controller | ChatGPT | done; Claude review | See latest HANDOFF; mascot animation/desktop art are follow-up |
+
+| S-22 | Subway bonus lab, live jars and atlas effect fixes | ChatGPT | done; Claude review | Scene swaps under existing closed doors; preserve symbol-paint contract |
