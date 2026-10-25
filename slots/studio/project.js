@@ -98,4 +98,4 @@ export function parseCommand(text,project,scene='desktop',attachment){
  applyBatch(project,ops);return ops;
 }
 
-export function createBrokenWallProject(){const p=createProject(),s=p.scenes.mobile;s.background.assetId='zombie-broken-wall-mobile';s.cabinet={frameAsset:'picture-frame',supports:false};Object.assign(s.layers.find(l=>l.id==='reels'),{x:10,y:260,w:370,h:345});Object.assign(s.layers.find(l=>l.id==='title'),{x:18,y:170,w:240,h:82});Object.assign(s.layers.find(l=>l.id==='controls'),{x:0,y:690,w:390,h:144});return p;}
+export function createBrokenWallProject(){const p=createProject(),s=p.scenes.mobile;s.background.assetId='zombie-broken-wall-mobile';s.cabinet={frameAsset:'picture-frame',supports:false};Object.assign(s.layers.find(l=>l.id==='reels'),{x:10,y:260,w:370,h:345});Object.assign(s.layers.find(l=>l.id==='title'),{x:18,y:170,w:240,h:82});Object.assign(s.layers.find(l=>l.id==='controls'),{x:0,y:620,w:390,h:214});return p;}
