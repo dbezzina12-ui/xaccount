@@ -1,3 +1,4 @@
+import {stackPresentationMask,visibleStackCells,stackPortraitRegion} from './zombie-layout.js';
 import {playZombieLanding} from './zombie-landing-cue.js';
 import {createTeasePresentation,teaseStage} from './tease-presentation.js';
 import {createBonusScreen} from './bonus-screen.js';
@@ -149,15 +150,17 @@ function makeTile(cell,index=0) {
   }
   return tile;
 }
-function stackArt(multi,span=5,horizontal=false,direction='right',headless=false) {
+function stackArt(multi,span=5,horizontal=false,direction='right',headless=false,singleSymbol=false) {
   const art=document.createElement('div');art.className='stack-art';
   art.classList.add('approved-stack-art');
   if(horizontal)art.classList.add('horizontal-stack-art');
   if(span===1)art.classList.add('single-stack-art');
-  const image=horizontal?createRecliningArt(direction,span):document.createElement('img');
-  if(!horizontal){image.className='approved-rig-fallback';image.src='assets/approved-rig/front/idle.png';image.alt='';if(headless)image.hidden=true;}
+  const image=singleSymbol?document.createElement('span'):horizontal?createRecliningArt(direction,span):document.createElement('img');
+  if(singleSymbol){image.className='symbol art-zombie';image.setAttribute('aria-hidden','true');}
+  else if(!horizontal){image.className='approved-rig-fallback';image.src='assets/approved-rig/front/idle.png';image.alt='';if(headless)image.hidden=true;}
   const badge=document.createElement('strong');badge.className='stack-multi';badge.textContent=multi?`${multi}×`:'';
-  art.append(image,badge);art.rigReady=horizontal?recliningArtReady(image):mountApprovedRig(art,{span,direction,...(headless?{clip:'headless',staticPose:true}:{})});return art;
+  if(singleSymbol)Object.assign(badge.style,{left:'0',right:'0',top:'auto',bottom:'2px',fontSize:'clamp(14px,2vw,24px)',textAlign:'center',transform:'none'});
+  art.append(image,badge);art.rigReady=singleSymbol?Promise.resolve():horizontal?recliningArtReady(image):mountApprovedRig(art,{span,direction,...(headless?{clip:'headless',staticPose:true}:{})});return art;
 }
 function stackFrame(stack) {
   const frame=document.createElement('div');frame.className=`expanded-zombie${stack.fullReel?' full-reel':''}${stack.super?' super-zombie':''}${stack.hidden?' hidden-zombie':''}`;
@@ -170,14 +173,16 @@ function stackFrame(stack) {
 function renderStacks(board) {
   const previous=new Map([...$('stack-layer').children].map(frame=>[frame.dataset.headId,frame])),ready=[];
   for(const stack of expandedZombies(board)){
-    const signature=JSON.stringify([stack.cells,stack.multi,stack.direction,stack.fullReel,stack.super,stack.hidden]),existing=previous.get(stack.id);
+    const visible=visibleStackCells(stack,board),mask=stackPresentationMask(stack,board),portrait=stackPortraitRegion(stack,board);
+    if(!visible.length||!portrait)continue;
+    const signature=JSON.stringify([stack.cells,stack.multi,stack.direction,stack.fullReel,stack.super,stack.hidden,visible,portrait.cells]),existing=previous.get(stack.id);
     if(existing?.dataset.stackSignature===signature){
       previous.delete(stack.id);ready.push(existing.querySelector('.stack-art').rigReady);
-      for(const index of stack.cells)$('board').children[index].classList.add('stack-covered');
+      for(const index of visible)$('board').children[index].classList.add('stack-covered');
       continue;
     }
     const frame=stackFrame(stack),backdrop=document.createElement('span');
-    frame.dataset.stackSignature=signature;
+    frame.dataset.stackSignature=signature;frame.style.maskImage=mask;frame.style.webkitMaskImage=mask;frame.style.maskSize='100% 100%';frame.style.maskRepeat='no-repeat';
     frame.classList.add('settled-zombie');backdrop.className='zombie-backdrop';backdrop.setAttribute('aria-hidden','true');
     backdrop.style.setProperty('--haze-delay',`${-(stack.cells[0]%6)*.7}s`);
     const energy=document.createElement('span');energy.className='resolved-energy';backdrop.append(energy,createInfectionField(stack.horizontal));
@@ -189,9 +194,15 @@ function renderStacks(board) {
       mote.style.setProperty('--mote-delay',`${-n*.69-stack.cells[0]*.13}s`);
       backdrop.append(mote);
     }
-    const art=stackArt(stack.multi,stack.cells.length,stack.horizontal,stack.direction);ready.push(art.rigReady);
+    const reframed=portrait.cells.length!==stack.cells.length;
+    const art=stackArt(stack.multi,portrait.cells.length,stack.horizontal,stack.direction,false,reframed&&portrait.cells.length===1);
+    if(reframed){
+      frame.dataset.portraitCells=portrait.cells.join(',');
+      Object.assign(art.style,{position:'absolute',left:`${portrait.left*100}%`,top:`${portrait.top*100}%`,width:`${portrait.width*100}%`,height:`${portrait.height*100}%`});
+    }
+    ready.push(art.rigReady);
     frame.append(backdrop,art);$('stack-layer').append(frame);
-    for(const index of stack.cells)$('board').children[index].classList.add('stack-covered');
+    for(const index of visible)$('board').children[index].classList.add('stack-covered');
   }
   for(const frame of previous.values()){stopApprovedRigs(frame);frame.remove();}
   return Promise.all(ready);

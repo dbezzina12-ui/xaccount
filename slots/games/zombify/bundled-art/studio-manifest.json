@@ -106,5 +106,37 @@
       "subway-lab-01.b64",
       "subway-lab-02.b64"
     ]
+  },
+  {
+    "path": "assets/studio/subway-desktop.webp",
+    "bytes": 213580,
+    "sha256": "0931da206977ff7280a65bf781395f0d1d27364bb2f3a6da75b291d9eca77cb1",
+    "parts": [
+      "subway-desktop-00.b64",
+      "subway-desktop-01.b64",
+      "subway-desktop-02.b64"
+    ]
+  },
+  {
+    "path": "assets/studio/subway-lab-desktop.webp",
+    "bytes": 274300,
+    "sha256": "ae92fbdda78774beb3feacbc4674755e6096fd7b91d227c12dae12bcd1d423a5",
+    "parts": [
+      "subway-lab-desktop-00.b64",
+      "subway-lab-desktop-01.b64",
+      "subway-lab-desktop-02.b64"
+    ]
+  },
+  {
+    "path": "assets/studio/subway-infected.webp",
+    "bytes": 462828,
+    "sha256": "5eabb4327cb1a54e6811852a7b4978700109f89b87ac869c23c10a25c748352e",
+    "parts": [
+      "subway-infected-00.b64",
+      "subway-infected-01.b64",
+      "subway-infected-02.b64",
+      "subway-infected-03.b64",
+      "subway-infected-04.b64"
+    ]
   }
 ]

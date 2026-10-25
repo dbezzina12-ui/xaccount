@@ -3,7 +3,7 @@ import {clipDuration} from './approved-rig-renderer.js';
 import {fitRig,stepPlan,stepEvents,downwardJumpPose} from './rig-geometry.js';
 import {paintRig} from './rig-gpu.js';
 import {createRecliningArt,recliningArtReady} from './reclining-art.js';
-import {fullReelExitIds} from './zombie-layout.js';
+import {fullReelExitIds,maskZombieMotion} from './zombie-layout.js';
 
 const loads=new Map(),mounts=new WeakMap(),active=new Set();
 export const ZOMBIE_ACTION_SPEED=1.7;
@@ -84,21 +84,24 @@ export function runRigTimeline({duration,rate=1,shouldSkip=()=>false,events=[],p
   frame(start);
  });
 }
-function overlay(layer){
+function motionHost(layer,board,occludedCells){
  const host=document.createElement('div');host.className='approved-rig-motion';
+ layer.append(host);maskZombieMotion(host,board,occludedCells);return host;
+}
+function overlay(layer,board,occludedCells){
  // Overlay dimensions follow the existing board. They never participate in layout.
- layer.append(host);const drawSurface=surface(host);
+ const host=motionHost(layer,board,occludedCells),drawSurface=surface(host);
  return {host,draw:drawSurface.draw,remove(){host.remove();}};
 }
 export function createApprovedAnimator(){
  return {
-  async playStep({source,target,direction,layer,rate=1,shouldSkip,onEvent}){
+  async playStep({source,target,direction,layer,board,occludedCells,rate=1,shouldSkip,onEvent}){
    rate*=ZOMBIE_ACTION_SPEED;
    const view=direction==='up'?'rear':direction==='down'?'front':'side';
    const rig=await loadApprovedRig(view);if(shouldSkip())return;
    const turning=direction==='up'?await Promise.all(['front','side'].map(loadApprovedRig)):null;if(shouldSkip())return;
    const bounds=layer.getBoundingClientRect(),local=r=>({...r,x:r.x-bounds.left,y:r.y-bounds.top});
-   const plan=stepPlan({[view]:rig},local(source),local(target),direction),motion=overlay(layer);
+   const plan=stepPlan({[view]:rig},local(source),local(target),direction),motion=overlay(layer,board,occludedCells);
    const at=(p,clip,time)=>motion.draw(rig,clip,time,{scale:plan.scale,rotation:plan.rotation,...p});
    try{
     if(plan.action==='jump'){
@@ -119,20 +122,20 @@ export function createApprovedAnimator(){
     await runRigTimeline({duration:.46,rate,shouldSkip,paint:t=>{const p=ease(t/.46);at({x:mix(plan.strike.x,plan.end.x,p),y:mix(plan.strike.y,plan.end.y,p)},plan.move,t*(plan.action==='crawl'?1.2/.46:2));}});
    }finally{motion.remove();}
   },
-  async play({rig:kind,cells,target,layer,source,direction,rate=1,shouldSkip,onEvent}){
+  async play({rig:kind,cells,target,layer,source,direction,board,occludedCells,rate=1,shouldSkip,onEvent}){
    rate*=ZOMBIE_EXPAND_SPEED;
    if(kind==='horizontal'){
     // Crawl/swat remains skeletal. The awarded row resolves into the full artwork.
     const image=createRecliningArt(direction,cells.length);await recliningArtReady(image);if(shouldSkip())return;
     const host=document.createElement('div');host.className='reclining-resolve-motion';
     Object.assign(host.style,{left:`${target.x-target.width/2}px`,top:`${target.y-target.height}px`,width:`${target.width}px`,height:`${target.height}px`});
-    host.append(image);layer.append(host);
+    const motion=motionHost(layer,board,occludedCells);host.append(image);motion.append(host);
     try{
      await runRigTimeline({duration:.56,rate,shouldSkip,events:[{time:.3,name:'impact'},{time:.56,name:'settle'}],onEvent,paint:t=>{
       const p=ease(Math.min(1,t/.3)),bounce=t>.3?Math.sin((t-.3)/.26*Math.PI)*2:0;
       host.style.transform=`translateY(${-8*(1-p)-bounce}px) scale(${.88+.12*p})`;
      }});
-    }finally{host.remove();}
+    }finally{motion.remove();}
     return;
    }
    const rig=await loadApprovedRig('front');if(shouldSkip())return;
@@ -141,7 +144,7 @@ export function createApprovedAnimator(){
    const small=fitRig(rig.data,'idle',source.width,source.height,{padding:.035});
    const start={scale:small.scale,x:source.x+small.x,y:source.y+small.y};
    const duration=clipDuration(rig.data,clip),events=rig.data.animations[clip].events,hit=events.find(e=>e.name==='impact').time;
-   const motion=overlay(layer);
+   const motion=overlay(layer,board,occludedCells);
    try{
     await runRigTimeline({duration,rate,shouldSkip,events,onEvent,paint:t=>{
      const p=ease(Math.min(1,t/hit));

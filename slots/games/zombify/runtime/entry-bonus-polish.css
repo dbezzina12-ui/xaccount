@@ -91,7 +91,7 @@ html[data-entry=studio] #welcome,html[data-entry=guide] #welcome{
 /* One persistent veil, present before the dialog or JS is ready. */
 html[data-entry]::before{content:'';position:fixed;inset:0;z-index:100;background:linear-gradient(180deg,#07141655,#07141680 52%,#071416cf);pointer-events:none}
 #welcome::backdrop{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
-html[data-entry=studio] #welcome,html[data-entry=guide] #welcome{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
+html[data-entry=studio] #welcome,html[data-entry=guide] #welcome{background:var(--entry-scene,none) var(--entry-scene-position,center) / var(--entry-scene-size,cover) no-repeat;backdrop-filter:none;-webkit-backdrop-filter:none}
 html[data-entry] #game .city-backdrop{opacity:0;transition:opacity .65s ease}
 html[data-entry][data-town-ready] #game .city-backdrop{opacity:1}
 #studio-walker{transform:translateX(-110%)}

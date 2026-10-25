@@ -2,6 +2,7 @@ import {humanBiteValue,expandedZombies} from './math.js';
 import {createGuideScenes} from './guide-scenes.js';
 import {mountApprovedRig,stopApprovedRigs,createApprovedAnimator,ZOMBIE_ACTION_SPEED} from './approved-rig.js';
 import {swatTrajectory,debrisFrames} from './zombie-swat.js';
+import {copySymbolPaint} from './symbol-paint.js';
 
 function createPanel(card,scene){
  const board=card.querySelector('.guide-demo-board'),stacks=card.querySelector('.guide-demo-stacks');
@@ -48,6 +49,7 @@ function createPanel(card,scene){
   const contact=()=>{
    if(flight||!alive(token))return;
    debris=target.cloneNode(true);debris.className='swatted-symbol flying-tile';
+   copySymbolPaint(target.firstElementChild,debris.firstElementChild);
    Object.assign(debris.style,{position:'absolute',left:`${to.left-bounds.left}px`,top:`${to.top-bounds.top}px`,width:`${to.width}px`,height:`${to.height}px`});
    effects.append(debris);target.firstElementChild.style.visibility='hidden';
    const value=document.createElement('span');value.className='carrier-value';const digits=document.createElement('strong');digits.className='multiplier-digits';digits.textContent=heart?'+1':`+${event.gain}×`;value.append(digits);target.append(value);target.classList.add('multiplier-revealed');

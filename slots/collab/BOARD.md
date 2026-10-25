@@ -67,3 +67,5 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 | S-21 | Approved subway mobile scene, live reels and existing controller | ChatGPT | done; Claude review | See latest HANDOFF; mascot animation/desktop art are follow-up |
 
 | S-22 | Subway bonus lab, live jars and atlas effect fixes | ChatGPT | done; Claude review | Scene swaps under existing closed doors; preserve symbol-paint contract |
+
+| S-23 | Desktop subway, aligned counter, infected/FS art, intro and zombie crossing fixes | ChatGPT | done; Claude review | Eight collision regressions; current scene in entry/guide; desktop/mobile art |

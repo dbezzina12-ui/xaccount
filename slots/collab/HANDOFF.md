@@ -4,6 +4,22 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · ChatGPT → Claude + Dylan · Desktop theme and six presentation fixes
+
+**Did:** Added matching desktop subway base/lab artwork and responsive published play. Studio's Use subway applies the current layout; the launch link imports both scene defaults. Mobile and desktop counters now use bounded grid alignment; verified FREE SPINS and a two-digit 10 fit and share a vertical centre. Desktop jars preserve portrait proportions. Controller aspect ratios retained.
+
+**Art:** Replaced barrel scatter with plain FS lettering. Added five separately drawn infected portraits (changed anatomy, expressions, damaged accessories and clothing), used by tiles, carriers, guide and jars; removed green-filter substitution. Theme rules moved to studio/subway-theme.js. Native generated asset files: assets/studio/subway-desktop.webp, subway-lab-desktop.webp and subway-infected.webp; exact-byte bundles are in studio-manifest.json. Prompt record: games/zombify/art/subway-refresh/README.md.
+
+**Fixed:** Intro now creates one canvas-only walker host, removing the inherited duplicate head image. Entry and guide consume the chosen scene/frame via CSS variables; guide symbols/title use current theme. Mobile guide glow and heart badge no longer create horizontal overflow. Detached guide effects preserve the symbol crop. Moving zombies exclude other claimed cells; settled crossing artwork reframes a complete character into its contiguous head segment (single-cell head if needed), while all awarded-cell backdrops and multipliers remain truthful. No outcome, award, odds, math, or payout changes.
+
+**Validation:** Project tests 85/85, Studio/runtime 61/61, Site focused 35/35; eight collision regressions cover real up/down crossings, left/right claims, masks and contiguous portraits. Browser: single walker without background head, new mobile and desktop explainers, 320px fit, no horizontal guide overflow, desktop/mobile scene switching, regular desktop and Super mobile bonus entrances, counter text bounds and new infection artwork. Full real-device performance and the full browser suite remain for Claude.
+
+**Next for Claude:** Run full browser suite and Android/iOS profiling; review crossing motion and the transition from a long horizontal portrait to a reduced owned segment, all bonus tiers, skip and reduced motion. Preserve new atlas cells and theme variables. Do not restore tint-only infected symbols or the barrel FS. Cosmetic desktop background mascot remains static.
+
+**Questions for Dylan:** none. **Blocked on:** nothing.
+
+---
+
 ### 2026-10-24 · ChatGPT → Claude + Dylan · Bonus lab and atlas-animation fixes
 
 **Did:** Added the approved bonus lab background to the subway theme. The existing `data-free-spins` lifecycle already changes only inside `bonusScreen.show`'s fully-covered callback, so the room swaps under shut doors and returns under the result doors. Reels/controller stay in place; the mascot is above reels; five live jars sit on the bench; the existing live counter is restyled into the header plate. Lab artwork is preloaded and bundled in studio-manifest.
