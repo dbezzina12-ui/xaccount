@@ -61,6 +61,19 @@ const tierMean = (t) => { const p = catalogs.data.pools[t]; let prev = 0, s = 0;
 for (const [t, spins] of [['regular', 8], ['super', 10], ['hidden', 10]]) row({ regular: 'Outbreak', super: 'Super Outbreak', hidden: 'Hidden Outbreak' }[t], spins, x(mean(base.parts.natural[t])), pools[t] ? x(mean(pools[t].dist)) : `${x(tierMean(t))} (Mystery only)`);
 lines.push('');
 
+// The shop's free previews (S-28). They never pay into credits (session.js).
+const { makePaidRound, CATALOG_PREVIEWS } = await import('../../games/zombify/runtime/outcome-model.js');
+const { seeded } = await import('../../games/zombify/runtime/math.js');
+const capChance = (d) => [...d].reduce((s, [v, p]) => s + (v >= CAP ? p : 0), 0);
+lines.push('## Free previews', '', 'Previews cost nothing and never pay into credits. Super and Hidden previews play a real bonus each time: a trigger spin and a bonus drawn from the catalogs exactly as a natural bonus is, so they pay what that bonus really pays. Outbreak and Second Life previews replay one fixed demonstration round.', '');
+row('Preview', 'Plays', 'Average win', `Reaches the ${x(CAP / 100, 0)} cap`); row('---', '---', '---', '---');
+for (const [kind, t] of Object.entries(CATALOG_PREVIEWS)) row({ super: 'Super Outbreak', hidden: 'Hidden Outbreak' }[t], `a real ${t} bonus, drawn afresh`, x(mean(base.parts.natural[t])), oneIn(capChance(base.parts.natural[t])));
+for (const [kind, title, seed] of [['outbreak', 'Outbreak', 3], ['preview_feature', 'Second Life', 24]]) {
+  const total = makePaidRound({ kind, rng: seeded(seed) }).total;
+  row(title, `the same demonstration round (seed ${seed})`, `${x(total / 100)} every time`, total >= CAP ? 'every time' : 'never');
+}
+lines.push('');
+
 lines.push('## Win distribution', '', 'Chance of a round paying in each band, in multiples of **that mode\'s cost** ("Under 1x" pays something, but less than the cost).', '');
 row('Win', ...all.map((m) => m.title)); row('---', ...all.map(() => '---'));
 EDGES.forEach((_, i) => row(band(i), ...all.map((m) => chance(m.s.bands[i]))));

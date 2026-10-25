@@ -41,6 +41,17 @@ Costs, wins and the cap are in multiples of the base bet. "SD per cost" is the s
 | Super Outbreak | 10 | 240.08x | 240.00x |
 | Hidden Outbreak | 10 | 816.08x | 816.00x (Mystery only) |
 
+## Free previews
+
+Previews cost nothing and never pay into credits. Super and Hidden previews play a real bonus each time: a trigger spin and a bonus drawn from the catalogs exactly as a natural bonus is, so they pay what that bonus really pays. Outbreak and Second Life previews replay one fixed demonstration round.
+
+| Preview | Plays | Average win | Reaches the 25,000x cap |
+| --- | --- | --- | --- |
+| Super Outbreak | a real super bonus, drawn afresh | 240.08x | 1 in 10,000 |
+| Hidden Outbreak | a real hidden bonus, drawn afresh | 816.08x | 1 in 374 |
+| Outbreak | the same demonstration round (seed 3) | 59.87x every time | never |
+| Second Life | the same demonstration round (seed 24) | 14.82x every time | never |
+
 ## Win distribution
 
 Chance of a round paying in each band, in multiples of **that mode's cost** ("Under 1x" pays something, but less than the cost).

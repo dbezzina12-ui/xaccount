@@ -89,11 +89,17 @@ test('100 Hidden rounds conserve per-reel carry, unique line factors and capped 
 });
 
 test('Hidden preview carries visibly, leaves credits unchanged and never leaks into another round',()=>{
+  // The scripted demonstration (math.js) carries a multiplier into spin 2.
+  const demo=makeRound({kind:'preview_hidden',rng:seeded(2)}).events.filter(e=>e.type==='reveal');
+  assert.ok(demo[0].board.filter(c=>c.kind==='zombie').every(c=>c.multi===0));
+  assert.ok(demo[1].board.some(c=>c.kind==='zombie'&&c.multi>0));
+  // The game's free preview is a real Hidden bonus from the catalogs (S-28),
+  // and pays nothing into credits.
   const session=createSession(),balance=session.read().credits;
   const preview=session.begin('preview_hidden',seeded(2));
-  const spins=preview.result.events.filter(e=>e.type==='reveal');
-  assert.ok(spins[0].board.filter(c=>c.kind==='zombie').every(c=>c.multi===0));
-  assert.ok(spins[1].board.some(c=>c.kind==='zombie'&&c.multi>0));
+  assert.equal(preview.preview,true);
+  assert.equal(preview.result.events.find(e=>e.type==='bonusStart').tier,'hidden');
+  assert.ok(preview.result.total<=CAP);
   session.finish(preview);assert.equal(session.read().credits,balance);
   for(const kind of ['preview_hidden','preview_super','buy_super','base']){
     const next=makeRound({kind,rng:seeded(2)}).events.find(e=>e.type==='reveal');

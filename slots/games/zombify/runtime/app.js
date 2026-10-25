@@ -14,6 +14,7 @@ import {LABELS, SYMBOLS, PEOPLE, HUMAN_MULTIS, freshInfection, humanBiteValue, e
 import {createSession, BETS} from './session.js?v=bet500';
 import {createPlayback} from './playback.js';
 import {BONUS_BUYS,BONUS_FEATURES,FEATURE_SPIN,PREVIEW_MODES,roundCostMultiplier} from './config.js';
+import {CATALOG_PREVIEWS} from './outcome-model.js';
 import {createAutoSpins,AUTO_COUNTS} from './auto-spins.js';
 import {playFS,registerFSAnimator} from './fs-presentation.js';
 import {playSwatStep} from './zombie-swat.js';
@@ -459,7 +460,9 @@ async function play(kind=session.read().spinMode) {
   // Another input may have started a round during audio decoding.
   if(busy)return false;
   let round;
-  try { round=session.begin(kind,PREVIEW_MODES.includes(kind)?seeded(kind==='preview_feature'?24:kind==='outbreak'?3:2):undefined); }
+  // Super and Hidden previews draw a fresh real bonus each time (outcome-model.js);
+  // the other previews replay their fixed demonstration seeds.
+  try { round=session.begin(kind,PREVIEW_MODES.includes(kind)&&!Object.hasOwn(CATALOG_PREVIEWS,kind)?seeded(kind==='preview_feature'?24:kind==='outbreak'?3:2):undefined); }
   catch(error) {toast(error.message);return false;}
   busy=true;playback.endSpin();currentMode=kind;syncControls();
   if(round.result.featureSpin)$('game').dataset.featureSpin='true';else delete $('game').dataset.featureSpin;

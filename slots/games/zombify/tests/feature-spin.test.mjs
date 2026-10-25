@@ -5,7 +5,7 @@ import {createHash} from 'node:crypto';
 import vm from 'node:vm';
 import {walkZombies,makeRound,seeded,CAP,step} from '../runtime/math.js';
 import {makeFeatureRound,featureDirections} from '../runtime/feature-spin.js';
-import {makePaidRound} from '../runtime/outcome-model.js';
+import {makePaidRound,CATALOG_PREVIEWS} from '../runtime/outcome-model.js';
 import {FEATURE_SPIN,BONUS_BUYS,roundCostMultiplier} from '../runtime/config.js';
 import {createSession} from '../runtime/session.js';
 import {lineWins} from '../runtime/paylines.js';
@@ -143,7 +143,7 @@ test('actual play loop handles heart events and respins in normal, turbo, and sk
   const session=createSession(),playback=createPlayback(),before=session.read().credits,seen=[],notices=[],nodes=new Map();
   if(mode==='turbo')playback.setSpeed('turbo');
   const get=id=>{if(!nodes.has(id))nodes.set(id,{dataset:{},style:{},textContent:'',classList:{remove(){},add(){}},replaceChildren(){}});return nodes.get(id);};
-  const ctx=vm.createContext({session,playback,seeded,PREVIEW_MODES:['preview_feature'],BONUS_FEATURES:{},busy:false,currentMode:'base',currentBites:0,currentBoard:[],pending:null,runningAnimations:new Set(),roundHistory:[],console,
+  const ctx=vm.createContext({session,playback,seeded,PREVIEW_MODES:['preview_feature'],CATALOG_PREVIEWS,BONUS_FEATURES:{},busy:false,currentMode:'base',currentBites:0,currentBoard:[],pending:null,runningAnimations:new Set(),roundHistory:[],console,
    $:get,gameReady:{read:()=>({status:'ready'})},audioDirector:{prepare:async()=>{},stopEffects(){}},effects:{warm:async()=>{},clear(){}},winCelebration:{skip:()=>false,read:()=>({active:false}),cancel(){}},bonusScreen:{cancel(){}},freeSpins:{hide:async()=>{}},auto:{stop(){}},syncControls(){},displayWin(){},horde(){},clearLines(){},soundEffect(){},celebrationFor:()=>null,pause:async()=>{},money:n=>(n/100).toFixed(2),toast:m=>{throw Error(m);},render(board){ctx.currentBoard=board;},
    spinReels:async board=>{ctx.currentBoard=board;seen.push('reveal');if(mode==='skip')playback.skipSpin();},walking:async e=>seen.push(e.type),claimReel:async()=>{},expandZombie:async()=>{},showLine(){},banner:(...a)=>notices.push(a),LABELS:{j:'Jack',q:'Queen',k:'King',a:'Ace',skater:'Skater',nurse:'Medic',builder:'Builder',cop:'Officer',scientist:'Scientist',wild:'Wild'}
   });

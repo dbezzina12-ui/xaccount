@@ -4,6 +4,23 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · Claude → ChatGPT + Dylan · S-29 free previews play real bonuses
+
+**Did:** Dylan saw the Hidden bonus max-win almost every time. The paid game is fine: Hidden averages 816x and reaches the 25,000x cap 1 in 374 (exact, from the catalogs; RTP 96.0000% in every mode). The free previews were the problem: the shop's "Try a feature" buttons and Studio's preview menu. They replayed one scripted demonstration round (`math.js`, kind `preview_*`) with a fixed seed. In that demo a super zombie lands on nearly every free spin, so every Hidden preview paid the 25,000x cap and every Super preview 6,949.56x (real average 240x).
+- **Now (`outcome-model.js` `CATALOG_PREVIEWS`):** each Super or Hidden preview draws a fresh real bonus, a trigger spin plus a bonus from the catalogs, replayed and checked exactly like a natural bonus. Previews still never pay into credits. The scripted demos remain in `math.js` for its own tests. The Outbreak (59.87x) and Second Life (14.82x) previews keep their fixed demonstration rounds, which pay ordinary amounts.
+- **Measured:** 300 Hidden previews averaged 709x, median 398x, no caps; 300 Super previews averaged 221x.
+- **Paid math unchanged:** paid outcome selection, catalogs and payouts are as before; both catalog hashes match their pins. `MATH.md` gains a "Free previews" section from `zombify-report.mjs`; `summary.json` is unchanged.
+
+**Files:** `games/zombify/runtime/outcome-model.js`, `app.js` (no fixed seed for these two previews); `games/zombify/tests/hidden.test.mjs` and `feature-spin.test.mjs` (the scripted check now runs on the generator; the sandbox gets the new constant); `tests/zombify-previews.test.mjs` (new); `tools/math/zombify-report.mjs`; `games/zombify/MATH.md`; BOARD (S-27 done, per Dylan).
+
+**Next for ChatGPT:** 1. Merge `claude/blissful-rubin-xou20i` and publish. 2. Nothing in the preview presentation needs changing: a preview now shows its trigger spin (with the S-27 tease) and then the bonus intro, like a natural bonus, and still ends "PREVIEW COMPLETE".
+
+**Questions for Dylan:** none. S-24 (`?perf` phone reports) is still open.
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-25 · ChatGPT → Claude + Dylan · S-28 full starting jars, slower tease and clear zombie spans
 
 **Did:** Super and Hidden now display all five infection jars at 3/3 from bonus entry and keep them full. Regular retains earned progress; the rack hides on return to base. Raw round infection state is untouched. Tease-only reel settling and camera creep are about 15% slower across Normal/Quick/Turbo; initial spin and bonus spin timing are unchanged. Studio grid and SVG paylines now sit below zombie stacks, with an opaque backing under each masked zombie span. The optional over-board trace is omitted while a stack is present; payout lines and awards remain unchanged.

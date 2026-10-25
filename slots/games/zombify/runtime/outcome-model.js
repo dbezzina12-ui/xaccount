@@ -31,7 +31,24 @@ export function choosePaidTier(kind,rng){
  if(ticket(kind==='enhanced'?50:275,rng)!==0)return null;
  const n=ticket(100,rng);return n<90?'regular':n<99?'super':'hidden';
 }
+// The free Super and Hidden previews play a real bonus: a trigger spin and a
+// bonus drawn from the same catalogs, replayed and checked exactly as a
+// natural bonus is (S-28). The scripted demonstrations in math.js
+// (makeRound kind preview_*) land a super zombie in nearly every free spin;
+// the game replayed them with one fixed seed, so every Super preview paid
+// 6,949.56x and every Hidden preview the 25,000x cap, against real averages
+// of 240x and 816x. Previews still never touch credits (session.js).
+export const CATALOG_PREVIEWS=Object.freeze({preview_super:'super',preview_hidden:'hidden'});
+function catalogPreview(tier,rng){
+ if(data.version!==MODEL_VERSION)throw Error('Game update required. Please reload.');
+ const entry=pickEntry(data.pools[tier],rng),trigger=pickEntry(data.pools[`entry_${tier}`],rng);
+ const expected=Math.min(CAP,entry[2]+trigger[2]);
+ const result=makeRound({kind:'base',rng:seeded(trigger[0]),forcedScatters:BONUS_FEATURES[tier].scatters,bonusRng:seeded(entry[0]),clustered:!!entry[4]});
+ if(result.total!==expected)throw Error('Outcome validation failed.');
+ return result;
+}
 export function makePaidRound({kind='base',rng}={}){
+ if(Object.hasOwn(CATALOG_PREVIEWS,kind))return catalogPreview(CATALOG_PREVIEWS[kind],rng);
  if(kind==='preview_feature')return makeFeatureRound({...(rng?{rng}:{})});
  if(kind==='buy_feature'){
   if(featureData.version!=='second-life-v2')throw Error('Game update required. Please reload.');
