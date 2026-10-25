@@ -72,6 +72,7 @@ function apply(project,key){
  #game .city-backdrop,#game .clean-cel-mascot,#game .mobile-zombie-mascot,#game .topbar,#game .left-rail,#game .right-rail,#game .bottom-note,#game .brand-overline,#game .brand-tag,#game .preview-notice,#game .machine-foot,#game .machine-head,#game .title-o-backing{display:none!important}
  #game .play-area{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;padding:0!important;margin:0!important;display:block!important;z-index:2}
  #game .machine{${rect(reels)}z-index:${s.layers.indexOf(reels)+2}!important;filter:none!important;isolation:auto!important;box-shadow:none!important}
+ #game[data-free-spins] .machine{z-index:${s.layers.length+3}!important}
  #game .machine:before,#game .machine:after,#game .board-wrap:before,#game .board-wrap:after,#game .brand:before,#game .brand:after{display:none!important}
  #game .machine-crown{height:0!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;background:none!important}
  #game .reel-stage{width:100%!important;height:100%!important;position:relative!important;transform:none!important}

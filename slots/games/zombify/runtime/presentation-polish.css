@@ -60,3 +60,8 @@ button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 @media(max-height:540px){#feature .feature-panel-content{padding:18px 24px 16px}#feature #feature-heading{font-size:36px}#feature #feature-description{margin:14px 0;font-size:13px;line-height:1.45}#feature .feature-award{margin-top:12px}#feature .feature-result{margin-top:16px}#feature #feature-continue{min-height:44px;padding:10px 22px}}
 @media(prefers-reduced-motion:reduce){.reel-strip{will-change:auto}.tease-focus,.tease-ladder i,#feature #feature-continue{transition:none}.tease-focus rect,.tease-sweep{animation:none}.tease-sweep{display:none}#game .reel-stage.tease-camera-in{transform:none}#game:has(.tease-camera-in) .city-scene{transition:none}}
 html[data-background-paused=true] :is(.tease-focus rect,.tease-sweep,.win-rays,.win-spores i){animation-play-state:paused}
+
+/* Match text to the sign's painted interior and scale with the artwork itself. */
+#game .counter-copy{left:12%;right:20%;top:21%;height:26%;padding:0;gap:0;justify-content:center;align-items:center;line-height:1;text-align:center}
+#game .counter-copy>span{font-size:calc(var(--counter-size) * .062);line-height:1.15;letter-spacing:0;max-width:100%}
+#game .counter-copy>strong{font-size:calc(var(--counter-size) * .225);line-height:1;letter-spacing:0;margin:0}
