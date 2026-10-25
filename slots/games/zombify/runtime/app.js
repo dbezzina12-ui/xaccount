@@ -257,7 +257,7 @@ async function spinReels(board,bonus=false) {
   }
   await Promise.all(stripRigs);
   const stops=reelTeasePlan(board,bonus,playback.read().speed);let settledFS=0;
-  const tease=createTeasePresentation({host:document.querySelector('.board-wrap'),board:$('board'),shouldSkip:()=>reduced||playback.read().skipping});
+  const tease=createTeasePresentation({host:document.querySelector('.board-wrap'),board:$('board'),speed:playback.read().speed,shouldSkip:()=>reduced||playback.read().skipping});
   const teaseAudio=bonus?null:createTeaseAudio({play:soundEffect,stopCue:name=>audioDirector.stopCue(name),focus:on=>audioDirector.focus(on),shouldSkip:()=>reduced||playback.read().skipping});
   try{await Promise.all(reels.map(async(reelView,reel)=>{
     const {window,strip}=reelView;
@@ -284,8 +284,11 @@ async function spinReels(board,bonus=false) {
       ...landed.filter(i=>board[i].kind==='zombie').map(i=>playZombieLanding($('board').children[i],{animate,shouldSkip:()=>reduced||playback.read().skipping}))
     ]);
   }));}finally{
-    tease.clear();teaseAudio?.clear();surface.replaceChildren();
+    const camera=tease.clear();teaseAudio?.clear();surface.replaceChildren();
     for(const tile of $('board').children)tile.classList.remove('fs-locked');
+    // Zombie moves and wins measure the board: wait for the tease camera to
+    // be back at scale 1 (it starts letting go as the last reel lands).
+    await camera;
   }
 }
 async function expandZombie(event) {

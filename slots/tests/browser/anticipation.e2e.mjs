@@ -47,6 +47,20 @@ const INSTRUMENT = () => {
       if (active) seen.active = true;
       else if (seen.active && seen.end === null) seen.end = performance.now() - seen.start;
     };
+    // The tease camera (S-27): the most the scene was pushed in, and whether
+    // the status covered the title sign exactly.
+    const near = document.querySelector('#game > .play-area'), sign = document.querySelector('#game > .play-area .brand');
+    Object.assign(seen, { maxZoom: 1, signCovered: null });
+    clearInterval(window.__zoomTimer);
+    window.__zoomTimer = setInterval(() => {
+      seen.maxZoom = Math.max(seen.maxZoom, parseFloat(getComputedStyle(near).scale) || 1);
+      const status = document.querySelector('.tease-status:not([hidden])');
+      // Compared once its entrance pop has finished (it scales from 92%).
+      if (status && sign && seen.signCovered === null && !status.getAnimations().length) {
+        const a = status.getBoundingClientRect(), b = sign.getBoundingClientRect();
+        seen.signCovered = ['left', 'top', 'width', 'height'].every((k) => Math.abs(a[k] - b[k]) < 1.5);
+      }
+    }, 40);
     window.__observer?.disconnect();
     window.__observer = new MutationObserver(record);
     window.__observer.observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ['class', 'hidden'] });
@@ -83,6 +97,10 @@ const game = (page) => runtime(page).evaluate(() => {
   const s = window.ZombifyStudioRuntime.read();
   return { busy: s.busy, lastWin: s.lastWin, board: s.board, shown: [...document.querySelectorAll('#board > .tile')].map((t) => t.dataset.kind), heading: document.getElementById('feature-heading').textContent };
 });
+// After a round the camera is at rest: no zoom or lean, origins restored,
+// nothing still animating.
+const cameraAtRest = (page) => runtime(page).evaluate(() => [document.querySelector('#game > .play-area'), document.querySelector('#game > .studio-background')]
+  .every((el) => { const c = getComputedStyle(el); return ['none', '1'].includes(c.scale) && ['none', '0px', '0px 0px'].includes(c.translate) && !el.style.transformOrigin && el.getAnimations().length === 0; }));
 // Leftovers a finished tease must not leave behind.
 const leftovers = (page) => runtime(page).evaluate(() => ['.tease-stage', '.tease-status', '.tease-active', '.tease-waiting', '.tease-muted', '.fs-locked', '.tease-camera-in'].filter((s) => document.querySelector(s)));
 
@@ -140,6 +158,9 @@ test('two scatters then a miss: the rest of the reels tease, nothing is promised
   const round = await play(page, FIXTURES.miss);
   assert.deepEqual(round.titles, ['OUTBREAK SIGNAL']);
   assert.ok(round.maxWaiting >= 3, `${round.maxWaiting} reels waited`);
+  assert.ok(round.maxZoom > 1.01, `the camera pushed in to ${round.maxZoom}`);
+  assert.equal(round.signCovered, true, 'the status covers the title sign');
+  assert.ok(await cameraAtRest(page), 'the camera is back at rest');
   assertLanded(round, FIXTURES.miss);
   assert.deepEqual(await leftovers(page), []);
   assert.deepEqual(page.errors, []);
@@ -154,6 +175,8 @@ test('3, 4 and 5 scatters: the status climbs one tier per landed scatter, then t
     const round = await play(page, f, { speed, during: async () => { if (heading === null && (await page.isVisible('#continue'))) heading = (await game(page)).heading; } });
     assert.deepEqual(round.titles, f.ladder, `${tier} at ${speed}`);
     assert.equal(heading, f.heading, `${tier} bonus intro`);
+    assert.ok(round.maxZoom > 1.02, `${tier}: the camera pushed in to ${round.maxZoom}`);
+    assert.ok(await cameraAtRest(page), `${tier}: the camera is back at rest`);
     assertLanded(round, f);
     assert.deepEqual(await leftovers(page), [], tier);
   }
@@ -167,6 +190,7 @@ test('Skip during anticipation clears the tease at once and lands the same board
   const round = await play(page, FIXTURES.miss, { skipAt: (seen) => { if (seen.active && skippedAt === null) skippedAt = Date.now(); return seen.active; } });
   assert.ok(skippedAt, 'the tease started');
   assert.ok(Date.now() - skippedAt < 2500, `the round ended ${Date.now() - skippedAt} ms after Skip`);
+  assert.ok(await cameraAtRest(page), 'Skip leaves the camera at rest');
   assertLanded(round, FIXTURES.miss);
   assert.deepEqual(await leftovers(page), []);
   await page.ctx.close();
@@ -194,6 +218,7 @@ test('with reduced motion there is no tease animation, and the outcome is the sa
   const page = await openStudio({ reducedMotion: 'reduce' });
   const round = await play(page, FIXTURES.miss);
   assert.equal(round.active, false, 'no tease under reduced motion');
+  assert.equal(round.maxZoom, 1, 'no camera push under reduced motion');
   assertLanded(round, FIXTURES.miss);
   assert.deepEqual(await leftovers(page), []);
   await page.ctx.close();
@@ -213,6 +238,7 @@ test('hiding the tab mid-tease, then coming back, still lands the selected board
     },
   });
   assert.ok(hid, 'the tab was hidden during the tease');
+  assert.ok(await cameraAtRest(page), 'the camera is back at rest after the hidden tab');
   assertLanded(round, FIXTURES.miss);
   assert.deepEqual(await leftovers(page), []);
   assert.deepEqual(page.errors, []);

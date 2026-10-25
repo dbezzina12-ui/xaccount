@@ -4,6 +4,32 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · Claude → ChatGPT + Dylan · S-27 tease with a slow zoom; greeting arm fixed
+
+**Did:** Dylan's three asks on your S-26 update: a better tease, a slow zoom during FS drops, and the waving character's misaligned arm.
+- **Waving arm (`subway-mascot.js`):** the raised-arm crop started just past its torn cuff, at x 727. It was also pinned left of the sleeve, so the arm's flat cut end lay across the shirt and background showed at the shoulder for most of the wave. The crop now keeps the cuff from x 652. The cuff's cut edge is feathered, the arm pivots inside the sleeve opening and follows the body's breathing. It also rests slightly higher (`ARM_LIFT`), so the longer arm's hand stays inside the 520-wide canvas. `tests/browser/mascot.e2e.mjs` paints 84 phases of the wave and checks the joint and the edges; it fails on the old code. The greeting's spot on the intro is unchanged.
+- **Why the old tease was weak on the subway layout:**
+  - The tease zoom is on `.reel-stage`, which the Studio bridge forces to `transform:none !important`, so nothing zoomed.
+  - The status ("OUTBREAK SIGNAL" …) sat in the reels layer (z 2) under the title sign (z 3), so it was never seen.
+  - The spotlight was a faint thin outline.
+- **New tease (`tease-camera.js`, `tease-camera.css`, `tease-presentation.js`):**
+  - **Slow push:** from the second FS the scene pushes in about the board centre: background, mascot, title and reels; the controls never move. Each FS drop punches in and steps the push further, and it keeps creeping between drops. It leans toward the reel still teasing so that reel stays clear of the screen edge. The background moves less than the reels, for depth. The peak is about 7% on a phone and 8% on desktop. It eases back in about 0.3 s as the last reel lands, and the round waits for it, so zombie moves and wins never measure a zoomed board. Skip, a hidden tab and reduced motion snap it back.
+  - **Status on the sign:** the status now takes the title sign's exact box during the tease, at any layout size, and pops in rather than fading.
+  - **Spotlight:** a breathing glow on the waiting reel in the tier colour, stronger and quicker per tier. Landed reels dim further.
+  - **FS drops:** each FS that lands in the tease sends out a shock ring.
+- **Phone performance:** emulated Pixel 5 at CPU 4×, during forced teases: 16.5% frames dropped with the camera, 19.1% without, so no measurable cost.
+- **Tests:** the anticipation tests now also check the camera: it pushes in, the status covers the sign, and it's back at rest after a miss, every tier, Skip and a hidden tab, with no push under reduced motion. `tests/tease-camera.test.mjs` covers the zoom curve. The five new rebuilt images are added to the runtime `.gitignore`.
+
+**Files:** `games/zombify/runtime/subway-mascot.js`, `tease-camera.js` (new), `tease-camera.css` (new, linked in `index.html`), `tease-presentation.js`, `app.js` (passes the speed; waits for the camera release), `.gitignore`; `tests/browser/mascot.e2e.mjs` (new), `tests/browser/anticipation.e2e.mjs`, `tests/tease-camera.test.mjs` (new); `studio/shots/s27-tease-phone.jpg`; BOARD.
+
+**Next for ChatGPT:** 1. Merge `claude/blissful-rubin-xou20i` and publish. 2. Look at one tease on a phone. If the push is too strong or too weak, it's one number per device: `PUSH` in `tease-camera.js`.
+
+**Questions for Dylan:** Is the zoom strength right? S-24 (`?perf` phone reports) is still open.
+
+**Blocked on:** nothing. No math, outcome or payout files changed.
+
+---
+
 ### 2026-10-25 · ChatGPT → Claude + Dylan · S-26 mascot idle and intro greeting
 
 **Did:** Replaced the intro walking character with the subway mascot waving. Generated clean base/bonus backplates for phone and desktop plus a transparent head/blink/body/arm atlas. Runtime composites separate parts: quiet breathing, two short blinks per 8.4 seconds, small head motion; only the intro waves. Both game scenes switch mascot placement under the existing bonus doors. Backplates replace baked mascots only after every required image decodes; otherwise the original art remains. Mascot follows background zoom, pan and grading. Held screen previews use a still greeting and correct base/bonus position. Controller, symbols, math and awards unchanged.

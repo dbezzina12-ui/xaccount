@@ -1,0 +1,40 @@
+/* S-27 tease: a spotlight you can read, FS drops that land, and the status
+   in front of the title sign. Presentation only; transforms and opacity. */
+
+/* The status lives in the reel layer, which sat under the title sign: lift
+   the reels over it only while a tease is on, so the message covers the sign. */
+#game .machine:has(.tease-active){z-index:9!important}
+.tease-status{box-shadow:0 8px 22px #0007,0 0 18px color-mix(in srgb,var(--tease-color) 30%,transparent),inset 0 1px #d9efc71a;border-width:2px}
+
+/* The next reel: a glowing frame in the tier colour that breathes, brighter
+   and quicker as tiers are secured (--tease-level 1 = 2 FS … 4 = 5 FS). */
+.tease-stage .tease-focus{border:2px solid color-mix(in srgb,var(--tease-color) 85%,transparent);border-radius:10px;
+ background:linear-gradient(180deg,color-mix(in srgb,var(--tease-color) 16%,transparent),color-mix(in srgb,var(--tease-color) 4%,transparent) 45%,color-mix(in srgb,var(--tease-color) 18%,transparent));
+ box-shadow:0 0 10px color-mix(in srgb,var(--tease-color) 55%,transparent),inset 0 0 12px color-mix(in srgb,var(--tease-color) 30%,transparent)}
+.tease-stage .tease-focus:after{content:'';position:absolute;inset:-5px;border-radius:13px;pointer-events:none;
+ box-shadow:0 0 calc(12px + 5px*var(--tease-level,1)) calc(2px + 1px*var(--tease-level,1)) var(--tease-color),inset 0 0 18px var(--tease-color);
+ opacity:.22;animation:tease-breathe calc(1.1s - .14s*var(--tease-level,1)) ease-in-out infinite alternate}
+@keyframes tease-breathe{to{opacity:calc(.42 + .12*var(--tease-level,1))}}
+.tease-stage .tease-focus rect{stroke-width:2.4;filter:drop-shadow(0 0 3px var(--tease-color))}
+.tease-stage .tease-sweep{opacity:.4}
+.tease-stage .tease-footlight{opacity:.55}
+
+/* Landed reels step back so the FS and the waiting reel carry the moment. */
+#board .tease-muted{filter:brightness(.6) saturate(.72)}
+#board .fs-locked{filter:drop-shadow(0 0 6px #d4ff97) drop-shadow(0 0 2px #fff8)}
+
+/* The shock ring each FS drop sends out (tease-presentation.js burst()). */
+.tease-ring{position:absolute;pointer-events:none;border-radius:50%;border:3px solid var(--tease-color);
+ box-shadow:0 0 14px var(--tease-color),inset 0 0 10px var(--tease-color);will-change:transform,opacity}
+
+@media(prefers-reduced-motion:reduce){.tease-stage .tease-focus:after{animation:none;opacity:.4}.tease-ring{display:none}}
+html[data-background-paused=true] .tease-stage .tease-focus:after{animation-play-state:paused}
+
+/* Over the title sign the status is at least the sign's width (phone sign
+   226 px), so the sign's edges don't peek out beside a short message. */
+@media(max-width:759px){.tease-status{min-width:min(236px,calc(100vw - 32px))}}
+
+/* On the sign (coverSign()): the plate is the sign's box; centre the lines. */
+.tease-status.on-sign:not([hidden]){display:flex;flex-direction:column;justify-content:center;align-items:center;box-sizing:border-box;padding:4px 10px;overflow:hidden}
+.tease-status.on-sign strong{font-size:clamp(10px,4.6cqw,16px)}
+.tease-status.on-sign{container-type:inline-size}

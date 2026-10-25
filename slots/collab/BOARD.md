@@ -73,4 +73,6 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 
 | S-25 | Merge S-20, enlarge desktop subway reels, improve head-cell awards and test scene lifecycle | ChatGPT | done; Claude review | 800px cabinet / 880px controller; side jars; outlined head multiplier; six scene lifecycle regressions. Real-device visibility/perf stays S-24 |
 
-| S-26 | Mascot idle, waving intro, clean base/bonus plates | ChatGPT | done; Claude review | Separate animated puppet; 30fps cap, hidden/reduced-motion cleanup; both layouts |
+| S-26 | Mascot idle, waving intro, clean base/bonus plates | ChatGPT | done | Separate animated puppet; 30fps cap, hidden/reduced-motion cleanup; both layouts. Claude 2026-10-25: fixed the greeting's waving arm (detached at the shoulder for most of the wave) |
+
+| S-27 | Better tease: slow camera push during FS drops, readable spotlight, visible status, FS shock rings | Claude | review | Waiting on Dylan's look on a phone. Presentation only; anticipation tests now check the camera (zooms, rests after, Skip/hidden/reduced motion). `studio/shots/s27-tease-phone.jpg` |
