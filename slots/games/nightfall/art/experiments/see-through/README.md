@@ -1,9 +1,57 @@
-# See-through evaluation for Night Fall
+# Character layer-tool evaluation for Night Fall
 
 This is an isolated art experiment. It does not change game/runtime assets and
 does not certify any generated layers for animation.
 
-## Tools Claude should get
+## Latest result — read this first
+
+The authorized reaper test returned 15 See-through layers but lost the scythe blade,
+changed the skull and invented ears/neck. Reject this output for Night Fall. A local
+SAM 2.1 Tiny test preserved the original painted pixels in useful visible-part
+selections; it still needs mask cleanup and hidden-joint completion. Qwen Layered
+is the next generative comparison, but its private upload was blocked by automatic
+approval review for the separate destination.
+
+The complete PSD/PNG/comparison package was delivered privately to Dylan as
+`Reaper-Layer-Tool-Test.zip`. Ask him to relay it; private images, PSDs and
+input-specific masks/prompts are not published here. N-04/N-05 remain open.
+
+### Updated tools for Claude
+
+1. https://github.com/facebookresearch/sam2 — tested locally on CPU with SAM 2.1
+   Hiera Tiny, upstream `2b90b9f5ceec907a1c18123530e92e794ad901a4`. Prioritize
+   editable click/box masks and original-pixel extraction. Our refined trial
+   selected skull, both hands, blade and shaft. Outline cleanup and concealed
+   geometry are still required. Pixel-identical reconstruction with a remainder
+   is only an export check, not validation of cut quality.
+2. https://github.com/QwenLM/Qwen-Image-Layered — next generative decomposition
+   comparison; supports variable layer count and recursive splitting. Its prompt
+   describes the whole image rather than guaranteeing particular body parts on
+   particular layers. No private-character result yet; get explicit authorization
+   for the official Qwen demo before uploading this draft.
+3. https://github.com/rig-c/parts + https://github.com/rig-c/core — evaluate assembly
+   and motion checks once parts are valid. Not installed/tested in this experiment.
+
+See-through was selected for its character-specific features, not a verified
+best-rating claim. GitHub pages checked on 2026-10-25 showed approximately 20.1k
+stars for SAM 2, 4.8k for See-through and 2.1k for Qwen Image Layered. Popularity
+is not a comparable accuracy score for this task.
+
+### Local SAM setup
+
+Use a separate Python 3.12 environment. Clone Meta's repository into
+`sam2-upstream` (not `sam2`, which can shadow the Python package), check out the
+commit above, install CPU `torch==2.7.1` and `torchvision==0.22.1` from the official
+PyTorch CPU index, then install `requirements-sam2-cpu.txt`. Install upstream with
+`SAM2_BUILD_CUDA=0 python -m pip install --no-build-isolation -e sam2-upstream`.
+Use the official `sam2.1_hiera_tiny.pt` checkpoint linked by upstream. Its tested
+SHA-256 is `7402e0d864fa82708a20fbd15bc84245c2f26dff0eb43a4b5b93452deb34be69`.
+`run_sam2_test.py` accepts an RGBA composite, a prompt JSON and checkpoint path;
+`--help` lists options. The private bundle contains the tested prompts and full
+commands. Masks select visible original pixels only; this script performs no
+inpainting and makes no network requests. Do not import its remainder as a rig.
+
+## Initial tooling shortlist (superseded by the review)
 
 1. https://github.com/shitagaki-lab/see-through — decomposition and concealed-area
    reconstruction. Upstream checkout inspected: `df019de5129d6c4b406587a14c3501669441a783`.
@@ -18,8 +66,9 @@ does not certify any generated layers for animation.
 
 ChatGPT's workspace has no GPU. See-through's source was downloaded and inspected;
 the full CUDA inference environment was not installed here. The small client and
-PSD review environment is installed. A hosted test uses the project's own public
-`common/assets/test_image.png`, never private game artwork.
+PSD review environment is installed. The public upstream sample and subsequently
+the explicitly authorized private reaper draft were tested on the official hosted
+demo. SAM 2.1 Tiny was also installed and tested locally on CPU.
 
 ## Observed public-sample result — 2026-10-25
 
@@ -34,14 +83,14 @@ Recomposed foreground mean absolute RGB difference is 12.99/255; 14.04% of
 foreground pixels differ by more than 30/255 in at least one channel. These are
 diagnostics, not a pass score. The model redraws some visible content, and tiny
 facial layers are low resolution. See `sample-review.json` for the full measurements.
-The successful public sample proves the hosted processing/export route; Night
-Fall skeleton/weapon quality and local CUDA inference remain untested.
+The public sample proved the hosted processing/export route. The later reaper
+test is documented in Dylan's private results package; local CUDA inference remains untested.
 
-An attempted private reaper upload was stopped by automatic approval review before
-submission. Explicit approval is required before sending that image to the external
-Hugging Face demo. The local prepared input is the existing rig-v2 draft composite,
-not the approved reference. The reference guide includes UI occlusions and should
-not be treated as a clean character image.
+The initial private-upload block was resolved by Dylan's explicit approval for
+See-through, and the reaper test completed. The input is the existing rig-v2 draft
+composite, not the approved reference. The reference guide includes UI occlusions
+and should not be treated as a clean character image. Qwen's separate destination
+still needs explicit authorization after its own automatic approval rejection.
 
 ## Reproduce the hosted sample test
 

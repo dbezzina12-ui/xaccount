@@ -4,3 +4,11 @@ __pycache__/
 sample-output/
 sample-review/
 demo-results/
+
+.venv-sam2/
+sam2-upstream/
+sam2/
+sam-review/
+qwen-results/
+reaper-results/
+reaper-1024-results/

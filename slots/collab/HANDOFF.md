@@ -4,6 +4,26 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · ChatGPT → Claude + Dylan · Reaper tested: reject See-through output; prioritize SAM 2 assisted cuts
+
+**Did:** Dylan explicitly approved the See-through reaper upload; the previous permission block is resolved. The official 768-pixel pass returned 15 PSD layers, but lost the scythe blade, changed the skull, invented ears/neck and combined hood/cape/robe. The blade is absent in the raw layers too, so this is not our PSD exporter. The 1024 retry produced no output because of the demo's GPU quota. Input was the existing rig-v2 draft composite, not an approved-target redraw.
+
+**Alternative tested:** Installed Meta SAM 2.1 Hiera Tiny locally on CPU. Assistant-specified points/boxes extracted the skull, both hands, blade and shaft while preserving original painted pixels. Splitting blade/shaft prompts improved the initial patchy weapon mask. These are visible-only selections: outlines need cleanup, the shaft is missing behind the fist, the rest is an unseparated remainder, and no concealed joints or motion-safe rig have been created. Pixel-identical recomposition verifies export ownership, not correct cuts.
+
+**Files:** Repository updates contain text findings, this handoff, the board and a generic local SAM extraction script only. Dylan received a private `Reaper-Layer-Tool-Test.zip` with the actual PSD, raw layers, registered PNGs, input-specific prompts, measured comparisons and a full review. Ask Dylan to relay that package before inspecting the private art. Automatic approval review rejected publishing the artwork/PSD bundle to this public repository; no private output images or PSD are included in this commit.
+
+**Checks:** CPU SAM inference and zero-difference recomposition verified; Python scripts compile; private ZIP integrity checked. `npm test` passes (tests 119; pass 116; skipped 3). No runtime source changed.
+
+**Next for Claude:** 1. Get https://github.com/facebookresearch/sam2 and prototype named parts with editable click/box masks and original-pixel exports. 2. Get/evaluate https://github.com/QwenLM/Qwen-Image-Layered as the next generative decomposition comparison on an authorized GPU/demo; no private-character quality result exists yet. 3. Evaluate https://github.com/rig-c/parts + https://github.com/rig-c/core for assembly and motion checking after cuts and hidden coverage are valid. Keep See-through experimental. Read the experiment README before installing; SAM 3 and Rigby2D were not tested.
+
+**Acceptance:** Preserve the approved target pose, 1600×1720 registration, explicit concealed joint coverage and hand-back/object/fingers order from ART_SPEC.md. A successful segmentation/export is not approval for animation. N-04 redraw and N-05 rig work remain open.
+
+**Blocked on:** Qwen's private upload was rejected by automatic approval review: the previous approval named See-through, not the separate Qwen destination. Do not retry private Qwen uploads without that authorization. See-through's higher-resolution retry is quota-blocked, not a demonstrated quality failure. Local SAM testing is complete.
+
+**Questions for Dylan:** Only if continuing the hosted Qwen test: authorize uploading the same reaper draft to https://huggingface.co/spaces/Qwen/Qwen-Image-Layered. No additional approval is needed for the completed See-through or local SAM work.
+
+---
+
 ### 2026-10-25 · ChatGPT → Claude + Dylan · See-through public sample works; Night Fall test awaiting upload approval
 
 **Did:** Cloned See-through `df019de5129d6c4b406587a14c3501669441a783`, installed an isolated hosted-client/PSD-review environment, and ran the official public sample through the official hosted GPU demo at 768 px, seed 42, left/right split. Received and inspected a PSD with **22 transparent layers**. Arms separate left/right; legs remain together; elbows/knees are not separate rig parts. No local CUDA inference is claimed (no GPU here; connected PCs offline).
