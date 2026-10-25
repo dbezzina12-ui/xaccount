@@ -4,6 +4,22 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · ChatGPT → Claude + Dylan · See-through public sample works; Night Fall test awaiting upload approval
+
+**Did:** Cloned See-through `df019de5129d6c4b406587a14c3501669441a783`, installed an isolated hosted-client/PSD-review environment, and ran the official public sample through the official hosted GPU demo at 768 px, seed 42, left/right split. Received and inspected a PSD with **22 transparent layers**. Arms separate left/right; legs remain together; elbows/knees are not separate rig parts. No local CUDA inference is claimed (no GPU here; connected PCs offline).
+
+**Measured:** Input 928×1232, PSD 768×768. Foreground mean RGB absolute error 12.99/255; 14.04% of foreground pixels exceed 30/255 in one channel. The small facial parts lose detail; visible art is not preserved exactly. Metrics are diagnostic, not acceptance thresholds. The exporter preserves native layer positions, reconstructs, provides a difference/contact sheet and inverse-padded full-size layers. Verified its ordering/offset/alpha handling against an independent two-layer fixture.
+
+**Files:** `games/nightfall/art/experiments/see-through/` contains a reproducible client, PSD reviewer, pinned requirements, measured sample report and setup notes. `collab/BOARD.md` N-06. No game runtime or existing art changed.
+
+**Next for Claude:** Get See-through, then evaluate `rig-c/parts` + `rig-c/core` for assembly/checks; Rigby2D is optional. Exact URLs and limitations are in the experiment README and the previous handoff. Do not integrate semantic layers as finished rig pieces. Preserve the approved pose and explicitly fix grip layering and joint coverage.
+
+**Blocked on:** Automatic approval review rejected uploading the private reaper draft to the external Hugging Face demo because Dylan had not explicitly authorized disclosure to that destination. The private attempt stopped before submission. The public-sample test is the safer completed alternative. The prepared reaper input is the existing transparent rig-v2 draft, NOT an approved-target redraw. Ask Dylan for explicit upload approval, or run on an authorized GPU locally. Do not work around the upload block.
+
+**Questions for Dylan:** May the prepared reaper draft be uploaded to the official See-through Hugging Face demo for the character test?
+
+---
+
 ### 2026-10-25 · ChatGPT → Claude + Dylan · Character tooling: evaluate existing projects before building
 
 **Did:** Dylan asked ChatGPT to get See-through working and explicitly asked which tools Claude should get. ChatGPT cloned upstream See-through at `df019de5129d6c4b406587a14c3501669441a783` and is attempting the first Night Fall character test. This workspace has no GPU; the two Desktop Commander PCs are offline. The official hosted demo is being checked. No successful character decomposition is claimed yet.

@@ -88,3 +88,5 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 | N-03 | Unify the Night Fall editor with the Studio inspector | ChatGPT | todo | From ChatGPT's animation handoff |
 | N-04 | Redraw both characters to match the layout target, as registered rig layers (rig v2) | ChatGPT | todo | Dylan: match the target, no corners cut. Spec: `games/nightfall/ART_SPEC.md`; guides `games/nightfall/shots/rig-v2/guide-*.jpg`. Deliver to `games/nightfall/art/inbox/rig-v2/` |
 | N-05 | Rig v2: import the new layers, rebuild joints, re-key strike and shot, pixel checks | Claude | blocked | Waits on N-04 |
+
+| N-06 | Evaluate See-through and agent-operated character assembly | ChatGPT + Claude | blocked | Public hosted sample processed: 22 transparent layers; reproducible kit in `games/nightfall/art/experiments/see-through/`. Private reaper upload requires explicit approval after auto-review block, or a local authorized GPU. N-04/N-05 remain open. |

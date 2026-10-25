@@ -1,0 +1,6 @@
+gradio-client==2.7.2
+pillow==13.0.0
+psd-tools==1.26.0
+numpy==2.5.4
+requests==2.34.2
+socksio==1.0.0

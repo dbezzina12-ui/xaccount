@@ -1,0 +1,305 @@
+{
+  "status": "EXPERIMENT_ONLY_NOT_RUNTIME_APPROVED",
+  "source_size": [
+    928,
+    1232
+  ],
+  "inference_size": [
+    768,
+    768
+  ],
+  "layer_count": 22,
+  "layers": [
+    {
+      "name": "back hair",
+      "file": "00-back-hair.png",
+      "visible": true,
+      "bbox": [
+        331,
+        11,
+        444,
+        194
+      ],
+      "nontransparent_pixels": 16418,
+      "opaque_pixels": 14219
+    },
+    {
+      "name": "handwear-l",
+      "file": "01-handwear-l.png",
+      "visible": true,
+      "bbox": [
+        423,
+        143,
+        490,
+        422
+      ],
+      "nontransparent_pixels": 7334,
+      "opaque_pixels": 5927
+    },
+    {
+      "name": "handwear-r",
+      "file": "02-handwear-r.png",
+      "visible": true,
+      "bbox": [
+        309,
+        140,
+        361,
+        396
+      ],
+      "nontransparent_pixels": 6883,
+      "opaque_pixels": 5712
+    },
+    {
+      "name": "legwear",
+      "file": "03-legwear.png",
+      "visible": true,
+      "bbox": [
+        286,
+        378,
+        473,
+        722
+      ],
+      "nontransparent_pixels": 27839,
+      "opaque_pixels": 24662
+    },
+    {
+      "name": "footwear",
+      "file": "04-footwear.png",
+      "visible": true,
+      "bbox": [
+        266,
+        687,
+        493,
+        756
+      ],
+      "nontransparent_pixels": 6436,
+      "opaque_pixels": 4889
+    },
+    {
+      "name": "neck",
+      "file": "05-neck.png",
+      "visible": true,
+      "bbox": [
+        353,
+        97,
+        417,
+        165
+      ],
+      "nontransparent_pixels": 2803,
+      "opaque_pixels": 2127
+    },
+    {
+      "name": "bottomwear",
+      "file": "06-bottomwear.png",
+      "visible": true,
+      "bbox": [
+        328,
+        270,
+        478,
+        407
+      ],
+      "nontransparent_pixels": 17306,
+      "opaque_pixels": 15505
+    },
+    {
+      "name": "topwear",
+      "file": "07-topwear.png",
+      "visible": true,
+      "bbox": [
+        327,
+        129,
+        455,
+        292
+      ],
+      "nontransparent_pixels": 15353,
+      "opaque_pixels": 13770
+    },
+    {
+      "name": "ears-l",
+      "file": "08-ears-l.png",
+      "visible": true,
+      "bbox": [
+        411,
+        81,
+        429,
+        105
+      ],
+      "nontransparent_pixels": 307,
+      "opaque_pixels": 186
+    },
+    {
+      "name": "ears-r",
+      "file": "09-ears-r.png",
+      "visible": true,
+      "bbox": [
+        341,
+        77,
+        361,
+        103
+      ],
+      "nontransparent_pixels": 355,
+      "opaque_pixels": 222
+    },
+    {
+      "name": "eyebrow-l",
+      "file": "10-eyebrow-l.png",
+      "visible": true,
+      "bbox": [
+        396,
+        67,
+        416,
+        72
+      ],
+      "nontransparent_pixels": 62,
+      "opaque_pixels": 0
+    },
+    {
+      "name": "face",
+      "file": "11-face.png",
+      "visible": true,
+      "bbox": [
+        349,
+        38,
+        424,
+        122
+      ],
+      "nontransparent_pixels": 4837,
+      "opaque_pixels": 4348
+    },
+    {
+      "name": "eyebrow-r",
+      "file": "12-eyebrow-r.png",
+      "visible": true,
+      "bbox": [
+        360,
+        64,
+        381,
+        69
+      ],
+      "nontransparent_pixels": 62,
+      "opaque_pixels": 0
+    },
+    {
+      "name": "nose",
+      "file": "13-nose.png",
+      "visible": true,
+      "bbox": [
+        387,
+        93,
+        389,
+        96
+      ],
+      "nontransparent_pixels": 6,
+      "opaque_pixels": 0
+    },
+    {
+      "name": "eyewear",
+      "file": "14-eyewear.png",
+      "visible": true,
+      "bbox": [
+        347,
+        76,
+        425,
+        101
+      ],
+      "nontransparent_pixels": 454,
+      "opaque_pixels": 27
+    },
+    {
+      "name": "eyewhite-r",
+      "file": "15-eyewhite-r.png",
+      "visible": true,
+      "bbox": [
+        357,
+        77,
+        377,
+        90
+      ],
+      "nontransparent_pixels": 229,
+      "opaque_pixels": 120
+    },
+    {
+      "name": "eyewhite-l",
+      "file": "16-eyewhite-l.png",
+      "visible": true,
+      "bbox": [
+        396,
+        79,
+        418,
+        94
+      ],
+      "nontransparent_pixels": 270,
+      "opaque_pixels": 157
+    },
+    {
+      "name": "front hair",
+      "file": "17-front-hair.png",
+      "visible": true,
+      "bbox": [
+        336,
+        2,
+        435,
+        180
+      ],
+      "nontransparent_pixels": 10537,
+      "opaque_pixels": 6803
+    },
+    {
+      "name": "irides-r",
+      "file": "18-irides-r.png",
+      "visible": true,
+      "bbox": [
+        363,
+        78,
+        375,
+        89
+      ],
+      "nontransparent_pixels": 120,
+      "opaque_pixels": 55
+    },
+    {
+      "name": "irides-l",
+      "file": "19-irides-l.png",
+      "visible": true,
+      "bbox": [
+        397,
+        80,
+        410,
+        91
+      ],
+      "nontransparent_pixels": 126,
+      "opaque_pixels": 59
+    },
+    {
+      "name": "eyelash-r",
+      "file": "20-eyelash-r.png",
+      "visible": true,
+      "bbox": [
+        350,
+        72,
+        379,
+        85
+      ],
+      "nontransparent_pixels": 219,
+      "opaque_pixels": 60
+    },
+    {
+      "name": "eyelash-l",
+      "file": "21-eyelash-l.png",
+      "visible": true,
+      "bbox": [
+        393,
+        76,
+        423,
+        88
+      ],
+      "nontransparent_pixels": 210,
+      "opaque_pixels": 47
+    }
+  ],
+  "mean_rgb_absolute_error": 1.923674464225769,
+  "foreground_mean_rgb_absolute_error": 12.988313674926758,
+  "foreground_fraction_max_channel_error_over_30": 0.14035378169453536,
+  "registration": "Inverse square padding and resize only; original detail is not restored.",
+  "metrics_note": "Raster comparison uses PIL resampling, while upstream uses OpenCV; minor interpolation differences are included."
+}
