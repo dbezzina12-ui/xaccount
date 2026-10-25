@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {walkZombies,expandedZombies} from '../games/zombify/runtime/math.js';
-import {visibleStackCells,stackPresentationMask,otherZombieCells,motionOcclusionMask,stackPortraitCells,stackPortraitRegion} from '../games/zombify/runtime/zombie-layout.js';
+import {visibleStackCells,stackPresentationMask,otherZombieCells,occludingCells,motionOcclusionMask,stackPortraitCells,stackPortraitRegion} from '../games/zombify/runtime/zombie-layout.js';
+import {makePaidRound} from '../games/zombify/runtime/outcome-model.js';
 const empty=()=>Array.from({length:30},(_,i)=>({id:`card-${i}`,kind:'j'}));
 const svg=mask=>decodeURIComponent(mask.slice(mask.indexOf(',')+1,-2));
 for(const direction of ['up','down'])test(`a full vertical ${direction} award does not paint over the horizontal portrait`,()=>{
@@ -72,4 +73,33 @@ test('a vertical portrait remains in the contiguous owned segment around its hea
  board[13].stackId='other';
  assert.deepEqual(stackPortraitCells(stack,board),[19,25]);
  assert.deepEqual(stackPortraitRegion(stack,board),{cells:[19,25],left:0,top:.6,width:1,height:.4});
+});
+
+// The moving rig is masked out of other zombies' cells, but not out of a cell
+// the event itself awards to it: there the landing zombie lost its head at
+// the edge of the horizontal claim it crosses.
+test('a crossing expansion stays visible in the cell it takes from another claim',()=>{
+ const input=empty();input[0]={id:'across',kind:'zombie',direction:'right'};
+ for(const i of [1,2,3])input[i]={id:`human-${i}`,kind:'nurse'};
+ input[26]={id:'vertical',kind:'zombie',direction:'up'};
+ for(const i of [8,14,20])input[i]={id:`human-${i}`,kind:'cop'};
+ const result=walkZombies(input,()=>0),expansion=result.events.findLast(e=>e.type==='expand'&&e.headId==='vertical');
+ assert.deepEqual(occludingCells(expansion).sort((a,b)=>a-b),[0,1,3]);
+ for(const walk of result.events.filter(e=>e.type==='walk'&&e.headId==='vertical'))assert.deepEqual(occludingCells(walk).sort((a,b)=>a-b),[0,1,2,3]);
+});
+test('a real Outbreak crossing: every move is masked only out of cells another zombie keeps',()=>{
+ // Regular-Outbreak catalog entry at ticket 29248978: on free spin 7 a vertical
+ // award (cells 4-28) crosses a 5-cell horizontal one (cells 1-5).
+ const queue=[29248978],result=makePaidRound({kind:'buy_outbreak',rng:()=>(queue.shift()+.5)/1e9});
+ assert.equal(result.total,8643);
+ const moves=result.events.filter(e=>e.before&&e.board&&e.headId);
+ const crossing=moves.find(e=>e.type==='expand'&&e.cells.includes(4)&&e.cells.includes(28));
+ assert.ok(crossing,'the crossing expansion is in this outcome');
+ assert.deepEqual(otherZombieCells(crossing.before,crossing.headId).sort((a,b)=>a-b),[1,2,3,4,5]);
+ assert.deepEqual(occludingCells(crossing).sort((a,b)=>a-b),[1,2,3,5]);
+ for(const e of moves){
+  const own=new Set([...(e.cells||[]),e.target]),masked=occludingCells(e);
+  assert.ok(masked.every(i=>!own.has(i)),`${e.type} ${e.headId} is masked out of a cell it is awarded`);
+  assert.ok(masked.every(i=>otherZombieCells(e.board,e.headId).includes(i)));
+ }
 });

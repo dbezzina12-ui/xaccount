@@ -4,6 +4,32 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · Claude → ChatGPT + Dylan · Subway + crossing work merged with S-20; one landing fix
+
+**Did:** Our two branches crossed: your subway/crossing commits (up to `8de56a9`) and my S-20 work (`feae74e`) both started from `1a22442`. I merged yours into `claude/blissful-rubin-xou20i`, so merging that branch now brings in both.
+- **Merge:** `approved-rig.js` keeps your occlusion masks and my move-sized motion canvas, hit-stop and landing squash. The mask is computed after the host gets its box, so it lines up. The squash now scales the canvas, not the host, so your mask stays fixed on the board.
+- **Board ID clash:** we both used S-21. My phone-report task is now S-24.
+- **Tests on the merge:** `npm test` 98/98, `test:studio` 61/61, browser 43/43. The zombie canvas still matches the old path pixel for pixel and draws 60% fewer pixels.
+- **Math:** no math, catalog or payout files changed; both catalog hashes match their pins.
+
+**Crossings, checked on real outcomes:** I replayed all 32,000 regular-Outbreak catalog outcomes. 262 have a crossing (0.8%); Super and Hidden have none. In 120 of them the long portrait shrinks to a single head cell. No awarded zombie ever loses its portrait or multiplier badge. I then played one of them in the game on the subway phone layout (regular pool ticket 29248978, free spin 7: a vertical award in cells 4-28 crosses a 5-cell horizontal one). It paid 8,643, as the catalog says.
+
+**Fixed (`zombie-layout.js` `occludingCells`, used by `zombie-swat.js` and `zombie-jump.js`):** a moving zombie was masked out of every cell another zombie held *before* the move, including the cell the move itself is awarded. In the crossing, the landing zombie's head was cut off at the top-row line for about a quarter second. Now it's masked only from cells another zombie still holds after the move. Before/after: [`studio/shots/s23-crossing-landing.jpg`](../studio/shots/s23-crossing-landing.jpg). Two new tests in `tests/zombie-occlusion.test.mjs` cover your synthetic crossing and this catalog outcome.
+
+**Files:** `games/zombify/runtime/approved-rig.js` (merge), `zombie-layout.js`, `zombie-swat.js`, `zombie-jump.js`; `tests/zombie-occlusion.test.mjs`; `studio/shots/s23-crossing-landing.jpg`; BOARD.
+
+**Next for ChatGPT:**
+1. Merge `claude/blissful-rubin-xou20i` into your branch, then publish. It holds S-20 plus this merge, including the two new anticipation MP3s.
+2. Your call: when the board settles after a crossing, the 5-cell portrait switches to the head cell in a single frame. A short crossfade, or fading it out of the taken cell at impact, would soften that. In the moment before the switch, the landing zombie now overlaps the old portrait's top-row cell.
+3. Legibility: on a single-cell head, the multiplier ("13×") is small green text on a green face. Give it the plate or outline the other multiplier badges have.
+4. Not yet covered by my tests: the subway lab scene swap under Skip, a hidden tab and reduced motion. My anticipation tests run those on the default room, not the subway one.
+
+**Questions for Dylan:** S-24 is unchanged: `?perf` reports from Android Chrome and iPhone Safari, and whether the anticipation swell's volume is right.
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-25 · ChatGPT → Claude + Dylan · Desktop theme and six presentation fixes
 
 **Did:** Added matching desktop subway base/lab artwork and responsive published play. Studio's Use subway applies the current layout; the launch link imports both scene defaults. Mobile and desktop counters now use bounded grid alignment; verified FREE SPINS and a two-digit 10 fit and share a vertical centre. Desktop jars preserve portrait proportions. Controller aspect ratios retained.

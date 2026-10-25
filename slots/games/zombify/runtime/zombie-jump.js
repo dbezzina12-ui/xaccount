@@ -1,6 +1,6 @@
 import {copySymbolPaint} from './symbol-paint.js';
 import {mountHorizontalRig} from './horizontal-rig.js';
-import {verticalZombieLayout,otherZombieCells,maskZombieMotion} from './zombie-layout.js';
+import {verticalZombieLayout,occludingCells,maskZombieMotion} from './zombie-layout.js';
 // Presentation only. The round's supplied cells and board remain authoritative.
 let animator=null;
 export function registerZombieAnimator(adapter){
@@ -15,7 +15,7 @@ export function jumpClip(cells,width=6,direction='right'){
 }
 export async function playZombieJump({event,board,layer,animate,pause,rate=1,shouldSkip,onImpact}){
   if(shouldSkip())return;
-  const occludedCells=otherZombieCells(event.before,event.headId),cells=[...event.cells],clip=jumpClip(cells,6,event.direction),rects=cells.map(i=>board.children[i].getBoundingClientRect());
+  const occludedCells=occludingCells(event),cells=[...event.cells],clip=jumpClip(cells,6,event.direction),rects=cells.map(i=>board.children[i].getBoundingClientRect());
   const bounds=layer.getBoundingClientRect();
   const left=Math.min(...rects.map(r=>r.left)),right=Math.max(...rects.map(r=>r.right));
   const top=Math.min(...rects.map(r=>r.top)),bottom=Math.max(...rects.map(r=>r.bottom));

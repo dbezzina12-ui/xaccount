@@ -70,6 +70,16 @@ export function otherZombieCells(board,owner){
  }
  return [...claimed];
 }
+// The cells a moving rig is masked out of: those another zombie holds before
+// this event and still holds after it. A cell the event awards to the mover
+// (a crossing expansion takes one from a horizontal claim) stays visible, or
+// the landing zombie loses its head at that cell's edge.
+export function occludingCells(event){
+ const before=otherZombieCells(event.before,event.headId);
+ if(!event.board)return before;
+ const after=new Set(otherZombieCells(event.board,event.headId));
+ return before.filter(index=>after.has(index));
+}
 // A board-space mask stays still while the rig animates inside it. Using
 // normalized rectangles also handles a scaled Studio iframe without offsets.
 export function motionOcclusionMask(bounds,rects){
