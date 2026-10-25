@@ -280,3 +280,8 @@
 /vendor/pixi-effects.js
 
 /assets/studio/mobile-street.png
+
+# Rebuilt exactly from bundled-art/studio-manifest.json by studio:prepare.
+/assets/studio/picture-frame.png
+/assets/studio/zombie-room-mobile.png
+/assets/studio/zombie-room-simple-mobile.png

@@ -1,0 +1,63 @@
+[
+  {
+    "path": "assets/studio/picture-frame.png",
+    "bytes": 1609458,
+    "sha256": "754880d41adc85ab956f7e005ff9ea382bcfe948d2b67fb9a1b3f0af25887b03",
+    "parts": [
+      "picture-frame-00.b64",
+      "picture-frame-01.b64",
+      "picture-frame-02.b64",
+      "picture-frame-03.b64",
+      "picture-frame-04.b64",
+      "picture-frame-05.b64",
+      "picture-frame-06.b64",
+      "picture-frame-07.b64",
+      "picture-frame-08.b64",
+      "picture-frame-09.b64",
+      "picture-frame-10.b64"
+    ]
+  },
+  {
+    "path": "assets/studio/zombie-room-mobile.png",
+    "bytes": 2313072,
+    "sha256": "7e351f6ebadbc6064f25fb64c3dd9e503034346cca4949783fc0e309fcb6b53f",
+    "parts": [
+      "zombie-room-mobile-00.b64",
+      "zombie-room-mobile-01.b64",
+      "zombie-room-mobile-02.b64",
+      "zombie-room-mobile-03.b64",
+      "zombie-room-mobile-04.b64",
+      "zombie-room-mobile-05.b64",
+      "zombie-room-mobile-06.b64",
+      "zombie-room-mobile-07.b64",
+      "zombie-room-mobile-08.b64",
+      "zombie-room-mobile-09.b64",
+      "zombie-room-mobile-10.b64",
+      "zombie-room-mobile-11.b64",
+      "zombie-room-mobile-12.b64",
+      "zombie-room-mobile-13.b64",
+      "zombie-room-mobile-14.b64",
+      "zombie-room-mobile-15.b64"
+    ]
+  },
+  {
+    "path": "assets/studio/zombie-room-simple-mobile.png",
+    "bytes": 1890151,
+    "sha256": "660fa91f3870da456c9c17e329c5e46955dc73807191bf004aff6a17e64eebdc",
+    "parts": [
+      "zombie-room-simple-mobile-00.b64",
+      "zombie-room-simple-mobile-01.b64",
+      "zombie-room-simple-mobile-02.b64",
+      "zombie-room-simple-mobile-03.b64",
+      "zombie-room-simple-mobile-04.b64",
+      "zombie-room-simple-mobile-05.b64",
+      "zombie-room-simple-mobile-06.b64",
+      "zombie-room-simple-mobile-07.b64",
+      "zombie-room-simple-mobile-08.b64",
+      "zombie-room-simple-mobile-09.b64",
+      "zombie-room-simple-mobile-10.b64",
+      "zombie-room-simple-mobile-11.b64",
+      "zombie-room-simple-mobile-12.b64"
+    ]
+  }
+]

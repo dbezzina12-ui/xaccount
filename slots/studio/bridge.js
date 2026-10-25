@@ -1,3 +1,5 @@
+import {screenRuntime} from './screens-runtime.js';
+const screens=screenRuntime(status=>notify('screen-preview-status',{status}));
 // Runs inside the imported, real Zombify runtime. All coordinates come from
 // the same project displayed by the editor; original outcome logic is retained.
 //
@@ -9,7 +11,7 @@
 // Pushed unprompted: ready (bridge installed), game {status,loaded,total,message}
 // whenever loading changes, and state {busy,awaitingOutbreak,…} whenever a round
 // starts, pauses or ends — including rounds started from the game's own controls.
-import {validateProject,compatible,SYMBOLS} from './project.js';
+import {sceneAppearance,validateProject,compatible,SYMBOLS} from './project.js';
 import {Reel} from '../engine/client/reels.js';
 const rootURL=new URL('../',import.meta.url),game=document.getElementById('game'),runtime=()=>window.ZombifyStudioRuntime;
 const style=document.createElement('style');style.id='studio-presentation';document.head.append(style);
@@ -56,7 +58,10 @@ function apply(project,key){
  validateProject(project,{preview:true});
  current=project;sceneKey=key;
  runtime()?.configureAudio?.(project.sounds||{},project.assets.filter(a=>a.kind==='audio').map(a=>({...a,src:new URL(a.src,rootURL).href})));
- const s=project.scenes[key],g=project.grid,reels=s.layers.find(l=>l.id==='reels'),title=s.layers.find(l=>l.id==='title'),controls=s.layers.find(l=>l.id==='controls'),mobile=s.width<s.height;
+ const s=project.scenes[key],g=sceneAppearance(project,key),reels=s.layers.find(l=>l.id==='reels'),title=s.layers.find(l=>l.id==='title'),controls=s.layers.find(l=>l.id==='controls'),mobile=s.width<s.height;
+ const rackTop=mobile?reels.h+(g.supports?reels.w*.075:0)+6:Math.max(-reels.y,-100);
+ const rackWidth=mobile?reels.w:Math.max(120,reels.w-160);
+ const tubeHeight=mobile?Math.max(32,Math.min(65,controls.y-reels.y-rackTop-12)):60;
  const b=s.background,fw=Math.min(g.frameWidth,Math.floor(Math.min(reels.w,reels.h)/7));
  background.style.cssText=`position:absolute;inset:0;z-index:0;background-image:${cssURL(src(b.assetId))};background-size:${b.zoom===100?'cover':b.zoom+'% auto'};background-position:${b.positionX}% ${b.positionY}%;filter:brightness(${b.brightness}%) contrast(${b.contrast}%) saturate(${b.saturation}%) hue-rotate(${b.hue}deg) blur(${b.blur}px);transform:scale(${1+b.blur*.004});`;
  tint.style.cssText=`position:absolute;inset:0;background:${b.tint};opacity:${b.tintOpacity};`;
@@ -86,8 +91,8 @@ function apply(project,key){
  #game .brand img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important}
  #game .console{visibility:visible!important;pointer-events:auto;position:absolute!important;left:${controls.x}px!important;top:${controls.y}px!important;bottom:auto!important;width:880px!important;height:100px!important;max-width:none!important;min-height:0!important;margin:0!important;transform:scale(${controls.w/880},${controls.h/100})!important;transform-origin:0 0!important;display:${!mobile&&controls.visible?'flex':'none'}!important;align-items:center!important;justify-content:space-evenly!important;gap:14px!important;padding:8px 18px!important;border:0!important;background:#06121baa!important;border-radius:16px!important;z-index:10!important;opacity:${controls.opacity}!important}
  #game #mobile-controller{position:absolute!important;left:${controls.x}px!important;top:${controls.y}px!important;right:auto!important;bottom:auto!important;width:390px!important;height:214px!important;max-width:none!important;margin:0!important;transform:scale(${controls.w/390},${controls.h/214})!important;transform-origin:0 0!important;display:${mobile&&controls.visible?'block':'none'}!important;z-index:10!important;opacity:${controls.opacity}!important}
- #game .infection-tracker{position:absolute!important;top:${reels.h+reels.w*.08+8}px!important;left:0!important;right:auto!important;width:100%!important;max-width:none!important;z-index:20!important}
- #game .infection-people{display:flex!important;justify-content:center!important}.infection-tube{max-height:65px!important}.infection-heading{font-size:9px!important}.tube-name{display:none!important}
+ #game .infection-tracker{position:absolute!important;top:${rackTop}px!important;bottom:auto!important;left:0!important;right:auto!important;width:${rackWidth}px!important;max-width:none!important;margin:0!important;z-index:20!important}
+ #game .infection-people{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:4px!important}#game .infection-tube{height:${tubeHeight}px!important;width:${tubeHeight*977/1610}px!important;max-width:100%!important;max-height:none!important}.infection-heading{font-size:9px!important}.tube-name{display:none!important}
  #game .free-spins-counter{--counter-size:${mobile?88:140}px;right:0!important;top:-65px!important}
  #game .studio-preview-board{position:absolute;inset:0;z-index:1;display:none;overflow:hidden;background:${g.fill} ${g.texture?cssURL(src('enamel')):'none'} center / 100% 100% no-repeat;box-shadow:inset 0 6px 14px #0004}
  #game.studio-layout-test .studio-preview-board{display:flex}
@@ -103,6 +108,7 @@ function apply(project,key){
  game.classList.toggle('studio-layout-test',!valid);
  if(!valid)renderPreview();
  else{spinToken++;hurry=false;}
+ screens.update(project,key);
  return {grid:g,compatible:valid};
 }
 // One <img> per image layer, reused across edits so dragging doesn't reload art.
@@ -168,6 +174,7 @@ function previewSpin(){
 
 // ---- rounds ----
 async function spin(id,mode){
+ screens.close();
  const reject=message=>notify('round',{id,phase:'rejected',message});
  if(!current)return reject('The project is still loading.');
  if(locked())return reject('A round is already running.');
@@ -197,6 +204,8 @@ window.addEventListener('message',e=>{
    if(locked()){pending={project:d.project,scene:d.scene,rev:d.rev};notify('deferred',{rev:d.rev});return;}
    notify('applied',{rev:d.rev,...apply(d.project,d.scene)});
   }
+  else if(type==='screen-adjust'){if(locked())throw Error('Finish the current round before editing screens.');screens.adjust(d.settings);}
+  else if(type==='screen-preview'){if(d.screen&&locked())throw Error('Finish the current round before previewing screens.');screens.show(d.screen,{tier:d.tier,winTier:d.winTier,guidePage:d.guidePage});}
   else if(type==='spin')void spin(id,d.mode||'base');
   else if(type==='continue')runtime()?.continue();
   else if(type==='skip'){if(round&&!compatible(current))hurry=true;else runtime()?.skip?.();}

@@ -28,7 +28,7 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 | S-16 | Studio pass 1: artwork/text editing and held scenes | ChatGPT + Claude | review | Claude reviewed 2026-10-24: no regressions (browser 30/30 with the snapshot); 2 bugs with a ready patch, `collab/studio-pass1-review/claude-review-fixes.patch`. Done once it's applied and published |
 | S-17 | Studio pass 2: alignment and reusable presets | ChatGPT | todo | After Claude reviews pass 1. |
 | S-18 | Studio pass 3: saved versions and game export | ChatGPT | todo | After pass 2. |
-| S-19 | Bring the Sites source back into this repo: pass 1 code into `studio/`, and the three new images (`picture-frame.png`, `zombie-room-mobile.png`, `zombie-room-simple-mobile.png`) | ChatGPT | todo | Until then the repo's `studio/` is behind the live Studio, and Claude's Screens browser tests skip |
+| S-19 | Sync pass 1 code and three new images | ChatGPT | done | Active `studio/` matches patched Site. Exact artwork bundled with hash verification; `studio:prepare` restores PNG paths. |
 
 ## Game 001 (paused by D-004)
 

@@ -8,3 +8,12 @@
 @media(max-width:380px){.header-actions .wide-label{display:none}}
 
 .sound-panel{padding:16px;display:flex;flex-direction:column;gap:14px}.sound-panel label{display:flex;flex-direction:column;gap:7px}.sound-panel label.sound-check{flex-direction:row;align-items:center;gap:8px}.sound-panel select,.sound-panel input[type=number]{width:100%;box-sizing:border-box;min-width:0;background:#142333;color:#e6eff7;border:1px solid #365268;border-radius:6px;padding:8px}.sound-panel .muted{font-size:12px;line-height:1.5}.sound-buttons{display:flex;gap:8px}.sound-panel button{min-height:34px}.busy #sounds-tab input,.busy #sound-asset,.busy #sound-upload,.busy #sound-reset{pointer-events:none;opacity:.5}
+
+/* Keep screen authoring controls visible in the narrow sidebar. */
+#screens-tab{padding:16px;min-width:0;font-size:12px;line-height:1.45}#screens-tab label{display:block}#screens-tab select,#screens-tab input{box-sizing:border-box;width:100%;min-width:0;padding:7px;background:var(--input);color:var(--text);border:1px solid var(--line);border-radius:4px}#screens-tab h3{font-size:12px}body[data-editor-tab=screens] #selection-overlay{display:none}
+
+.panel-tabs{gap:4px;padding:0 8px;justify-content:space-between}.panel-tabs button{min-width:0;font-size:11px}.left-panel{min-width:0;overflow-x:hidden}
+
+.screen-adjustment{margin:12px 0;display:grid;grid-template-columns:minmax(0,1fr) 72px;gap:6px;align-items:center}.screen-adjustment label{font-size:11px}#screens-tab .screen-adjustment input[type=range]{grid-column:1/-1;padding:0;height:30px;border:0;accent-color:var(--accent);cursor:ew-resize}
+
+#screens-tab label{margin-top:10px}#screens-tab textarea{width:100%;resize:vertical;background:var(--input);color:var(--text);border:1px solid var(--line);border-radius:4px;padding:8px}#screens-tab .screen-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}#screen-status{color:var(--accent);font-size:11px}#screens-tab .screen-typography{border-top:1px solid var(--line);padding-top:5px;margin:14px 0}#screens-tab .muted{font-size:11px;line-height:1.5}

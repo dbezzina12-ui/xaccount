@@ -9,7 +9,8 @@ const root=fileURLToPath(new URL('../../games/zombify/runtime/',import.meta.url)
 const hash=b=>createHash('sha256').update(b).digest('hex');
 // Reassemble the studio artwork from exact-byte parts for reliable source uploads.
 const bundledRoot=new URL('../../games/zombify/bundled-art/',import.meta.url);
-const bundled=JSON.parse(await readFile(new URL('manifest.json',bundledRoot),'utf8'));
+const bundles=[JSON.parse(await readFile(new URL('manifest.json',bundledRoot),'utf8')), ...JSON.parse(await readFile(new URL('studio-manifest.json',bundledRoot),'utf8'))];
+for(const bundled of bundles){
 const bundledPath=resolve(root,bundled.path);
 if(!bundledPath.startsWith(root.endsWith(sep)?root:root+sep))throw Error('Invalid bundled asset path.');
 let bundledValid=false;
@@ -24,6 +25,7 @@ if(!bundledValid){
  if(bytes.length!==bundled.bytes||hash(bytes)!==bundled.sha256)throw Error('Bundled studio artwork failed verification.');
  await mkdir(dirname(bundledPath),{recursive:true});
  await writeFile(bundledPath+'.part',bytes);await rename(bundledPath+'.part',bundledPath);
+}
 }
 let index=0,downloaded=0,verified=0;
 await Promise.all(Array.from({length:6},async()=>{
