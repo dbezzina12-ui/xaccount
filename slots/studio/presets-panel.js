@@ -1,0 +1,26 @@
+import {PRESET_KINDS,capturePreset,applyPreset,validatePreset} from './presets.js';
+import {listPresets,readPreset,savePreset,deletePreset,portablePreset,downloadPreset} from './preset-store.js';
+const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+export function mountPresets({getProject,getScene,flush,commit,checkEditable,assetURL,toast}){
+ const host=document.getElementById('presets-tab');let records=[],selected='',kind='cabinet',name='',working=false;
+ function render(){
+  const picked=records.find(r=>r.id===selected),description={cabinet:'Frame artwork, finish, supports and reel placement. Placement fits the current canvas with proportions preserved; reel count and symbols stay as they are.',sounds:'All event overrides, volumes, fades and music loops. Applying replaces the current sound overrides.',bonus:'Hand, jars, win celebration, bonus introduction and result. Applying replaces those screen styles for the selected layout.'}[kind];
+  host.innerHTML=`<h3>REUSABLE PRESETS</h3><p class="muted">Save a setup once and reuse it in compatible Studio projects. Desktop and Mobile are captured separately; sounds are shared.</p><label>Preset type<select id="preset-kind" aria-label="Preset type">${Object.entries(PRESET_KINDS).map(([id,label])=>`<option value="${id}" ${id===kind?'selected':''}>${label}</option>`).join('')}</select></label><p class="muted">${description}</p><label>Preset name<input id="preset-name" maxlength="80" placeholder="e.g. Antique cabinet" value="${esc(name)}"></label><button id="preset-save" class="primary" ${working?'disabled':''}>${working?'Working…':'Save current setup'}</button><hr><label>Saved in this browser<select id="preset-list" aria-label="Saved presets" ${working?'disabled':''}><option value="">${records.length?'Choose a preset':'No saved presets yet'}</option>${records.map(r=>`<option value="${r.id}" ${r.id===selected?'selected':''}>${esc(r.name)} · ${PRESET_KINDS[r.kind]||'Preset'}</option>`).join('')}</select></label><p class="muted">${picked?esc(PRESET_KINDS[picked.kind]+' · '+(picked.kind==='sounds'?'applies to the whole project':'applies to '+getScene())):'Export a preset to keep a copy or use it in another browser.'}</p><div class="preset-actions"><button id="preset-apply" ${!picked||working?'disabled':''}>Apply preset</button><button id="preset-export" ${!picked||working?'disabled':''}>Export preset</button></div><div class="preset-actions"><button id="preset-import" ${working?'disabled':''}>Import preset</button><button id="preset-remove" class="quiet" ${!picked||working?'disabled':''}>Remove</button></div><input id="preset-file" type="file" accept=".json,.studiopreset.json,application/json" hidden><p class="muted">Applying is one Undo step. Presets include their assets and stay saved when you import another project.</p>`;
+ }
+ async function refresh(){records=await listPresets();if(!records.some(r=>r.id===selected))selected='';render();}
+ async function task(fn){if(working)return;working=true;render();try{await fn();}catch(e){toast(e.message);}finally{working=false;render();}}
+ host.oninput=e=>{if(e.target.id==='preset-name')name=e.target.value;};
+ host.onchange=e=>{
+  if(e.target.id==='preset-kind'){kind=e.target.value;render();}
+  else if(e.target.id==='preset-list'){selected=e.target.value;render();}
+  else if(e.target.id==='preset-file'){const file=e.target.files[0];if(!file)return;void task(async()=>{if(file.size>80*1024*1024)throw Error('Preset file is too large (maximum 80 MB).');let data;try{data=JSON.parse(await file.text());}catch{throw Error('This file is not a valid preset JSON file.');}const preset=await portablePreset(validatePreset(data),assetURL);selected=await savePreset(preset);await refresh();toast('Preset imported. Choose Apply preset to use it.');});}
+ };
+ host.onclick=e=>{
+  if(e.target.id==='preset-import'){host.querySelector('#preset-file').click();return;}
+  if(e.target.id==='preset-save')void task(async()=>{checkEditable();flush();const p=capturePreset(getProject(),getScene(),kind,name);const portable=await portablePreset(p,assetURL);selected=await savePreset(portable);await refresh();toast('Preset saved with its assets.');});
+  if(e.target.id==='preset-apply')void task(async()=>{const preset=await readPreset(selected);if(!preset)throw Error('This preset is no longer available.');checkEditable();flush();const changed=commit(applyPreset(getProject(),getScene(),preset),'Apply preset: '+preset.name);toast(changed===false?'This preset already matches the current setup.':'Preset applied. Undo restores the previous setup.');});
+  if(e.target.id==='preset-export')void task(async()=>{const preset=await readPreset(selected);if(!preset)throw Error('This preset is no longer available.');downloadPreset(preset);toast('Preset exported with its assets.');});
+  if(e.target.id==='preset-remove')void task(async()=>{const preset=await readPreset(selected);if(!preset)return;if(!confirm('Remove “'+preset.name+'” from saved presets? Export it first if you need a copy.'))return;await deletePreset(selected);await refresh();toast('Preset removed. The current project is unchanged.');});
+ };
+ return {render,open:()=>refresh().catch(e=>toast('Could not open saved presets: '+e.message))};
+}

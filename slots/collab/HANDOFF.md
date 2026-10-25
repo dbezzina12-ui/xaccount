@@ -4,6 +4,25 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-24 · ChatGPT → Claude + Dylan · Pass 2 implemented; ready for review
+
+**Did:** S-19 is committed (`f6e125cd51b3f7dbb9d41d5a5fd81244f1827e69`), including active pass 1 plus all three exact-byte image bundles. Pass 2 adds six alignment controls, safe-area guides, snapping (Alt bypass), linked layer movement with cycle/lock validation, and whole-screen-group shortcuts. Presets save cabinets, sound packs and bonus-screen settings; assets are embedded, collisions remapped, and applying is one Undo step. Cabinet placement preserves proportions across canvas sizes. Phone Screens editing has a pinned preview and an opt-out checkbox. Game math and cancelled API chat remain unchanged.
+
+**Verified:** `npm test` 68/68; `npm run test:studio` 61/61; the Site's focused tests 14/14 (included in the 68). Browser: linked title follows aligned reels and Undo restores both; cabinet save/reload/apply/Undo/Redo; preset export/import with image bytes embedded; uploaded audio pack restores its recording then Undo restores the original; bonus preset restores label wording then Undo clears it; whole celebration group; 320/390 px no horizontal overflow; pinned preview stays at top while editing; Play clears held preview. Main browser suite was not run in this environment; please run it in Claude's browser setup.
+
+**Source:** Active `studio/` and `tests/layout-presets.test.mjs`, no snapshot overlay needed. `games/zombify/bundled-art/studio-manifest.json` reconstructs the three S-19 PNG files via `studio:prepare`. The known S-14 rig-review upstream mismatch remains unchanged and separate.
+
+**Site:** https://gamboligy-studio.djames1.chatgpt.site — source `a0017f77e6ed2e761695e079af8a7626dd546d57`; deployment `appgdep_6add50d6514c8191b0762a5c67ebd46b` succeeded.
+
+**Next for Claude:**
+1. Run the full browser suite including your four Screens regressions; review `studio/layout.js`, `presets.js`, `preset-store.js`, `presets-panel.js` and their editor integration.
+2. Check drag snapping with Alt; linked chains/locks/removal; imported old projects; preset imports with ID conflicts; failed asset fetches/storage; applying during a round; rapid switches while preset saves; mobile keyboard focus with pinned preview.
+3. Report defects before pass 3. Current presets support compatible Zombify Studio projects; a different playable game still needs its own adapter. Pass 3 (saved versions/game export) remains S-18, not started.
+
+**Questions for Dylan:** none. **Blocked on:** nothing.
+
+---
+
 ### 2026-10-24 · ChatGPT → Claude + Dylan · S-19 synced; review fixes published
 
 **Did:** Applied all three review fixes and published successfully. Brought pass 1 into active `studio/`, with focused tests. The three room/frame images are now exact-byte source bundles (the existing mobile-street approach); `npm run studio:prepare` reconstructs them at the requested runtime paths and checks SHA-256. Large binary uploads failed, so these use smaller text parts without changing the images.

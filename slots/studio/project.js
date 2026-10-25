@@ -1,3 +1,4 @@
+import {validateLayout,moveLinked} from './layout.js';
 import {validateScreens} from './screens-schema.js';
 // Serializable authoring state. No outcome or payout configuration lives here.
 import {validateSounds,SOUND_EVENTS} from './sound-schema.js';
@@ -41,6 +42,7 @@ export function validateProject(p,{preview=false}={}){
  if(s.cabinet!==undefined){const c=s.cabinet;if(!c||typeof c!=='object'||Array.isArray(c)||Object.keys(c).some(k=>!CABINET_KEYS.includes(k)))throw Error('Invalid cabinet settings.');const a=sceneAppearance(p,key);if(!imageIds.has(a.frameAsset)||!color(a.fill))throw Error('Invalid cabinet artwork.');finite(a.frameWidth,0,60,'Frame width');flag(a.supports,'Cabinet supports');flag(a.texture,'Reel texture');}
  validateScreens(s.screens);const b=s.background;if(!imageIds.has(b.assetId))throw Error('Missing background asset.');for(const [k,min,max] of [['brightness',25,200],['contrast',25,200],['saturation',0,200],['hue',-180,180],['blur',0,20],['zoom',100,200],['positionX',0,100],['positionY',0,100],['tintOpacity',0,1]])finite(b[k],min,max,k);if(!color(b.tint))throw Error('Invalid tint.');
  if(!Array.isArray(s.layers)||s.layers.length>30)throw Error('A scene supports up to 30 layers.');const layerIds=new Set();for(const l of s.layers){if(!l||typeof l!=='object'||!/^[a-zA-Z0-9_-]{1,80}$/.test(l.id)||layerIds.has(l.id)||!['image','reels','controls'].includes(l.kind))throw Error('Invalid or duplicate layer.');layerIds.add(l.id);finite(l.x,-s.width,s.width,'X');finite(l.y,-s.height,s.height,'Y');finite(l.w,32,s.width*2,'Width');finite(l.h,32,s.height*2,'Height');finite(l.opacity,0,1,'Opacity');label(l.name,'Layer name');flag(l.visible,'Visible');flag(l.locked,'Locked');if(l.kind==='image'&&!imageIds.has(l.assetId))throw Error('Missing layer asset.');}
+ validateLayout(s);
  for(const id of ['reels','title','controls'])if(!layerIds.has(id))throw Error('Missing required layer: '+id);
  }
  return p;
@@ -55,19 +57,20 @@ const fingerprint=p=>JSON.stringify(p,(k,v)=>k==='src'&&typeof v==='string'&&v.l
 export function applyOperation(project,op){
  if(!op||typeof op!=='object')throw Error('Invalid edit.');
  if(op.scene!==undefined&&!['desktop','mobile'].includes(op.scene))throw Error('Unknown scene.');
- const allowed={cabinet:CABINET_KEYS,grid:['columns','rows','symbolScale','divider','fill','texture','frameWidth','frameAsset','supports'],background:['assetId','brightness','contrast','saturation','hue','blur','zoom','positionX','positionY','tint','tintOpacity'],layer:['name','x','y','w','h','visible','locked','opacity','assetId']};
+ const allowed={guides:['snap','safe','margin','grid'],cabinet:CABINET_KEYS,grid:['columns','rows','symbolScale','divider','fill','texture','frameWidth','frameAsset','supports'],background:['assetId','brightness','contrast','saturation','hue','blur','zoom','positionX','positionY','tint','tintOpacity'],layer:['name','x','y','w','h','visible','locked','opacity','assetId','anchorId']};
  if(allowed[op.type]&&(!op.values||typeof op.values!=='object'||Object.keys(op.values).some(k=>!allowed[op.type].includes(k))))throw Error('Unknown property for this edit.');
  const p=clone(project),scene=p.scenes[op.scene||'desktop'];
  if(op.type==='screens'){if(!scene)throw Error('Unknown scene');validateScreens(op.values);scene.screens=structuredClone(op.values);}
+ else if(op.type==='guides')scene.guides={...scene.guides,...op.values};
  else if(op.type==='cabinet')scene.cabinet={...scene.cabinet,...op.values};
  else if(op.type==='grid')Object.assign(p.grid,op.values);
  else if(op.type==='background'){if(!scene)throw Error('Unknown scene.');Object.assign(scene.background,op.values);}
- else if(op.type==='layer'){const l=scene?.layers.find(l=>l.id===op.id);if(!l)throw Error('Unknown layer.');Object.assign(l,op.values);}
+ else if(op.type==='layer'){const l=scene?.layers.find(l=>l.id===op.id);if(!l)throw Error('Unknown layer.');moveLinked(scene,op.id,op.values);}
  else if(op.type==='asset'){if(!op.asset||typeof op.asset!=='object')throw Error('Invalid asset.');if(p.assets.some(a=>a.id===op.asset.id))throw Error('Asset already exists.');p.assets.push(share(op.asset));}
  else if(op.type==='sound'){if(!SOUND_EVENTS.includes(op.id))throw Error('Unknown sound event.');p.sounds={...p.sounds};if(op.values===null)delete p.sounds[op.id];else p.sounds[op.id]={...(p.sounds[op.id]||{}),...op.values};}
  else if(op.type==='symbol'){if(!SYMBOLS.includes(op.id))throw Error('Unknown symbol.');p.symbols[op.id]=op.assetId;}
  else if(op.type==='addLayer'){if(!scene)throw Error('Unknown scene.');if(!op.layer||typeof op.layer!=='object')throw Error('Invalid layer.');scene.layers.push({...op.layer});}
- else if(op.type==='removeLayer'){if(['reels','title','controls'].includes(op.id))throw Error('Core layers can be hidden, not deleted.');scene.layers=scene.layers.filter(l=>l.id!==op.id);}
+ else if(op.type==='removeLayer'){if(['reels','title','controls'].includes(op.id))throw Error('Core layers can be hidden, not deleted.');scene.layers=scene.layers.filter(l=>l.id!==op.id);for(const l of scene.layers)if(l.anchorId===op.id)delete l.anchorId;}
  else if(op.type==='reorder'){if(!Number.isInteger(op.index))throw Error('Layer position must be a whole number.');const index=scene.layers.findIndex(l=>l.id===op.id);if(index<0)throw Error('Unknown layer.');const [l]=scene.layers.splice(index,1);scene.layers.splice(Math.max(0,Math.min(scene.layers.length,op.index)),0,l);}
  else if(op.type==='rename')p.name=op.name;
  else if(op.type==='canvas'){scene.width=op.width;scene.height=op.height;}
