@@ -14,16 +14,17 @@ export async function playZombieLanding(tile,{animate,shouldSkip=()=>false}={}){
   copy.className='expander-landing-art';
   copy.style.backgroundImage=doc.defaultView.getComputedStyle(source).backgroundImage;
   ghost.append(copy);
+  const doors=['left','right'].map(side=>{const door=doc.createElement('span');door.className='expander-landing-door '+side;ghost.append(door);return door;});
   const previousVisibility=source.style.visibility;
   doc.body.append(ghost);source.style.visibility='hidden';
   try{
-    await animate(ghost,[
+    await Promise.all([animate(ghost,[
       {transform:'translateY(0) scale(1)',offset:0},
       {transform:'translateY(5%) scale(1.06,.91)',offset:.16},
       {transform:'translateY(-27%) scale(1.24)',offset:.48},
       {transform:'translateY(2%) scale(1.08,.96)',offset:.82},
       {transform:'translateY(0) scale(1)',offset:1}
-    ],420,{easing:'cubic-bezier(.22,.65,.32,1)'});
+    ],420,{easing:'cubic-bezier(.22,.65,.32,1)'}),...doors.map((door,i)=>animate(door,[{transform:'scaleX(1)',opacity:1},{transform:'scaleX(1)',opacity:1,offset:.15},{transform:'scaleX(.05)',opacity:0}],320,{easing:'cubic-bezier(.2,.8,.2,1)',fill:'forwards'}))]);
   }catch{
     // Cancelling a decorative animation must never interrupt a round.
   }finally{
