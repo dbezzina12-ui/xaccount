@@ -59,5 +59,14 @@
       "zombie-room-simple-mobile-11.b64",
       "zombie-room-simple-mobile-12.b64"
     ]
+  },
+  {
+    "path": "assets/studio/zombie-broken-wall-mobile.webp",
+    "bytes": 175950,
+    "sha256": "6f2754ea6d7a51b89046246a7c24d51d3d5aea857ed1d85902d8ee7cadf3fd50",
+    "parts": [
+      "broken-wall-00.b64",
+      "broken-wall-01.b64"
+    ]
   }
 ]

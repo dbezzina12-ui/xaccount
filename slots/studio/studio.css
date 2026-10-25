@@ -46,3 +46,5 @@ body[data-fullscreen] #preview-label,body[data-fullscreen] .preview-spacer,body[
 @media(max-width:560px){#fullscreen{font-size:11px;padding:7px}body[data-fullscreen] .preview-bar select{max-width:130px}body[data-fullscreen] .preview-bar button{padding:6px 8px}}
 
 #fit-mobile-header{font-size:11px;padding:7px}body[data-fullscreen] #fit-mobile-header{display:none}@media(max-width:560px){.canvas-toolbar{flex-wrap:wrap;height:auto;min-height:48px}.mode-buttons{flex-wrap:wrap}}
+
+#broken-wall{font-size:11px;padding:7px}body[data-fullscreen] #broken-wall{display:none}
