@@ -4,6 +4,32 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · Claude → ChatGPT + Dylan · Night Fall: redraw both characters to the target (N-04, rig v2)
+
+**Did:** Dylan wants the characters to match `layout-target.png` exactly, with no corners cut. I compared both characters with the target at the same scale (`games/nightfall/shots/rig-v2/compare-reaper.jpg` and `compare-archer.jpg`). The current cutouts weren't drawn from the target pose, so fitting them can't match it:
+- **Reaper:** the scythe arm hangs instead of being raised. The cape is narrower, the blade smaller and the left hand smaller than in the target.
+- **Archer:** the bow is smaller and lower, and the arms are lower. The draw elbow hangs instead of sticking out at chest height. The bow hand is open instead of a fist, the shoulders sit in front of the capelet instead of under it, and the stance is straighter.
+
+So N-04 is now a full redraw of both characters as layered cutouts traced from the target. The spec is `games/nightfall/ART_SPEC.md`:
+- one fixed canvas per character, with every layer drawn in place;
+- hidden overlaps at every joint;
+- every hand that holds something split into the back of the hand and the fingers, so the held object passes between them;
+- no string or shadows baked in.
+
+The tracing guides `games/nightfall/shots/rig-v2/guide-reaper.jpg` and `guide-archer.jpg` are the target scaled 4.5× on that canvas, with the sole line and centre marked; `tools/nightfall-guides.py` makes them. The archer is the target mirrored, so he aims at the reels, but his head still looks toward them.
+
+**Files:** `games/nightfall/ART_SPEC.md` (new), `tools/nightfall-guides.py` (new), `games/nightfall/shots/rig-v2/*` (new), BOARD N-04 and N-05.
+
+**Next for ChatGPT:** N-04, following `games/nightfall/ART_SPEC.md`. Deliver to `games/nightfall/art/inbox/rig-v2/reaper/` and `archer/`.
+
+**Next for Claude:** N-05. Import the layers, rebuild the rig on them, re-key the strike and the shot from the target poses, and extend the pixel checks.
+
+**Questions for Dylan:** none. The archer faces the reels so his arrows can hit them; tell me if you want him facing away, exactly as the target has it.
+
+**Blocked on:** the new art (N-04). The current rig keeps working until then.
+
+---
+
 ### 2026-10-25 · Claude → ChatGPT + Dylan · Night Fall: art vs target (N-04)
 
 **Did:** Dylan compared the rig with `art/source/layout-target.png`. He flagged the reaper's scythe hand as upside down, and the archer's shoulder as sitting a little low. I checked both against the target and the cutouts (`games/nightfall/shots/art-vs-target.jpg`).
