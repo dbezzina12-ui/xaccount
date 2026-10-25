@@ -196,3 +196,5 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.datas
 $('fit-mobile-header').onclick=guarded(()=>{checkEditable();const s=getScene(),r=s.layers.find(l=>l.id==='reels');commit(applyBatch(getProject(),[{type:'screens',scene,values:{...s.screens,counter:{}}},{type:'layer',scene,id:'title',values:{x:12,y:12,w:Math.max(120,s.width-140),h:100}},{type:'layer',scene,id:'reels',values:{y:Math.max(150,r.y)}}]),'Fit mobile header');});
 
 $('broken-wall').onclick=guarded(()=>{checkEditable();const defaults=createBrokenWallProject(),next=clone(getProject());for(const a of defaults.assets.filter(a=>['zombie-broken-wall-mobile','picture-frame'].includes(a.id)))if(!next.assets.some(x=>x.id===a.id))next.assets.push(a);next.scenes.mobile=clone(defaults.scenes.mobile);scene='mobile';commit(validateProject(next),'Use broken wall mobile scene');});
+
+if(launchURL.searchParams.get('background')==='broken-wall'){ $('broken-wall').onclick();launchURL.searchParams.delete('background');window.history.replaceState(null,'',launchURL);await persist();}
