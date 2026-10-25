@@ -68,5 +68,33 @@
       "broken-wall-00.b64",
       "broken-wall-01.b64"
     ]
+  },
+  {
+    "path": "assets/studio/subway-background.webp",
+    "bytes": 201912,
+    "sha256": "e6c08b0d5d6e10ea826e6c3fcd82bf91dc7f0e2199fd1d0800db41da01d37a39",
+    "parts": [
+      "subway-background-00.b64",
+      "subway-background-01.b64"
+    ]
+  },
+  {
+    "path": "assets/studio/subway-art.webp",
+    "bytes": 358770,
+    "sha256": "896f167088a5c40605eb15c4385efdf67f952313cc3273dd6af5200f3c78052f",
+    "parts": [
+      "subway-art-00.b64",
+      "subway-art-01.b64",
+      "subway-art-02.b64",
+      "subway-art-03.b64"
+    ]
+  },
+  {
+    "path": "assets/studio/subway-frame.svg",
+    "bytes": 1993,
+    "sha256": "a87402334fa45a0dbab86ab008774573d2173cdb7e5642b3bd00baabdef991b8",
+    "parts": [
+      "subway-frame-00.b64"
+    ]
   }
 ]

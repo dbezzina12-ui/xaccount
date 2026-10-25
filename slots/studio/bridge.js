@@ -71,10 +71,11 @@ function apply(project,key){
  background.style.cssText=`position:absolute;inset:0;z-index:0;background-image:${cssURL(src(b.assetId))};background-size:${b.zoom===100?'cover':b.zoom+'% auto'};background-position:${b.positionX}% ${b.positionY}%;filter:brightness(${b.brightness}%) contrast(${b.contrast}%) saturate(${b.saturation}%) hue-rotate(${b.hue}deg) blur(${b.blur}px);transform:scale(${1+b.blur*.004});`;
  foreground.style.cssText=background.style.cssText+`pointer-events:none;z-index:${s.layers.indexOf(title)+3};mask-image:url("${roomMask}");mask-size:${b.zoom===100?'cover':b.zoom+'% auto'};mask-position:${b.positionX}% ${b.positionY}%;mask-repeat:no-repeat;display:${mobile&&b.assetId==='zombie-broken-wall-mobile'?'block':'none'};`;
  tint.style.cssText=`position:absolute;inset:0;background:${b.tint};opacity:${b.tintOpacity};`;
+ const subway=b.assetId==='subway-background';
  const artRules=SYMBOLS.map(id=>`#game .symbol.art-${id}{background-image:${cssURL(src(project.symbols[id]))}!important;}`).join('\n');
  style.textContent=`
  html,body{width:100%;height:100%;overflow:hidden!important;background:#09131d!important}body{margin:0!important}
- #game{position:relative!important;width:100%!important;height:100%!important;min-height:0!important;padding:0!important;margin:0!important;overflow:hidden!important;display:block!important;background:#071827!important;--frame-width:${fw}px;--frame-top:${fw}px;--frame-bottom:${fw}px;--cabinet-width:${reels.w}px;--reel-texture:${g.texture?cssURL(src('enamel')):'none'};isolation:isolate}
+ #game{position:relative!important;width:100%!important;height:100%!important;min-height:0!important;padding:0!important;margin:0!important;overflow:clip!important;display:block!important;background:#071827!important;--frame-width:${fw}px;--frame-top:${fw}px;--frame-bottom:${fw}px;--cabinet-width:${reels.w}px;--reel-texture:${g.texture?cssURL(src('enamel')):'none'};isolation:isolate}
  #game .city-backdrop,#game .clean-cel-mascot,#game .mobile-zombie-mascot,#game .topbar,#game .left-rail,#game .right-rail,#game .bottom-note,#game .brand-overline,#game .brand-tag,#game .preview-notice,#game .machine-foot,#game .machine-head,#game .title-o-backing{display:none!important}
  #game .play-area{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;padding:0!important;margin:0!important;display:block!important;z-index:2}
  #game .machine{${rect(reels)}z-index:${s.layers.indexOf(reels)+2}!important;filter:none!important;isolation:auto!important;box-shadow:none!important}
@@ -107,6 +108,7 @@ function apply(project,key){
  #game.studio-layout-test .console,#game.studio-layout-test #mobile-controller{pointer-events:none!important}
  #game .studio-preview-column{position:relative;overflow:hidden;height:100%;flex:1 1 0;min-width:0}.studio-preview-tile{position:absolute;left:0;width:100%;display:grid;place-items:center}.studio-preview-tile img{width:100%;height:100%;object-fit:contain;transform:scale(${g.symbolScale});pointer-events:none}
  #game .studio-preview-column.fast img{filter:blur(1.4px);transform:scale(${g.symbolScale}) scaleY(1.1)}
+ ${subway?subwayRules(project,title,g):''}
  ${new URLSearchParams(location.search).get('entry')==='full'?'':'#welcome{display:none!important}'}.studio-extra{position:absolute;pointer-events:none;object-fit:contain}.studio-extras{position:absolute;inset:0;pointer-events:none}
  `;
  const titleImage=document.getElementById('zombify-title'),titleURL=src(title.assetId);if(titleImage.src!==titleURL)titleImage.src=titleURL;
@@ -228,3 +230,13 @@ pushGame();
 setTimeout(()=>{if(!runtime()){bootFailed=true;pushGame();}},1500);
 setInterval(pushState,100);
 setInterval(pushGame,250);
+
+function subwayRules(project,title,g){
+ const sheet=cssURL(src('subway-art'));
+ const crops={j:[58,447,118,120],q:[305,447,118,120],k:[554,447,118,120],a:[554,704,118,120],skater:[182,576,118,120],nurse:[430,447,118,120],builder:[182,447,118,120],cop:[677,447,118,120],scientist:[554,576,118,120],zombie:[430,704,118,120],vial:[305,576,118,120]};
+ const crop=([x,y,w,h])=>`background-image:${sheet}!important;background-size:${853/w*100}% ${1844/h*100}%!important;background-position:${x/(853-w)*100}% ${y/(1844-h)*100}%!important;background-repeat:no-repeat!important;`;
+ let rules=`#game .board-wrap{border-image-slice:64!important;border-image-width:1!important}#game .tile{box-shadow:inset -1px -1px #73737336!important}`;
+ if(title.assetId==='subway-art')rules+=`#game .brand{${crop([180,204,490,146])}}#game .brand h1{visibility:hidden!important}`;
+ for(const [id,box] of Object.entries(crops))if(project.symbols[id]==='symbol-'+id)rules+=`#game .tile:not([data-infection="2"]):not(.carrier-3):not(.carrier-5)>.symbol.art-${id}{${crop(box)}mask-image:none!important;filter:none!important;transform:scale(1)!important}`;
+ return rules;
+}

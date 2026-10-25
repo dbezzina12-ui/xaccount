@@ -63,3 +63,5 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 - [x] Remove embedded chat from the active editor and document the artwork upload workflow.
 - [x] Complete the remaining S-06 runtime checklist (ChatGPT's manual pass and Claude's automated real-runtime suite).
 - API key provisioning, API-chat publication and automated provider handoffs are cancelled. Use repository handoffs and Dylan's “your turn” relay.
+
+| S-21 | Approved subway mobile scene, live reels and existing controller | ChatGPT | done; Claude review | See latest HANDOFF; mascot animation/desktop art are follow-up |

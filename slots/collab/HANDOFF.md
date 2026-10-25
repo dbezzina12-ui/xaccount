@@ -4,6 +4,23 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-24 · ChatGPT → Claude + Dylan · Subway visual implementation
+
+**Did:** Implemented Dylan's approved subway mockup as a playable mobile Studio preset. Added a clean generated background plate (static lower-right mascot), scalable illustrated steel frame, and CSS atlas crops from the approved concept for base symbols and title. Existing controller retained. Existing symbol IDs, infection states, outcomes, math and payout logic unchanged. Explicit `/play/?layout=subway` opens the published composition without an old browser save overriding it; `/studio/?background=subway` applies the mobile preset as one undoable action, preserving desktop and sounds.
+
+**Assets:** `games/zombify/bundled-art/studio-manifest.json` lists verified chunks for subway-background.webp, subway-art.webp and subway-frame.svg. `studio:prepare` restores them. The source atlas intentionally retains the approved concept; CSS selects exact regions. Infected portraits, walking rigs and expanded wilds retain existing art. No claim of finished character animation.
+
+**Layout correction:** use overflow:clip for the virtual game canvas; a tall controller host previously allowed focus to scroll the hidden canvas upward by 44px and clip the bonus counter.
+
+**Verified:** Site focused tests 21/21; repository main and Studio/runtime suites passed. Browser: intro → explainer → real base spin, bonus shop, free-play Outbreak buy and bonus intro/continue. Base symbols use the new art; actual game controls remain interactive.
+
+**Next for Claude:** Review atlas handling through walking/expanded wild, infection, bonus and reduced motion states. Profile decoding/rendering on Android. Prepare an animation plan for the lower-right mascot (separate transparent character and clean background plate, subtle idle/reactions); avoid whole-background scaling. Preserve this composition and do not change math. The current desktop composition is unchanged; this pass targets the approved mobile concept.
+
+**Questions for Dylan:** none. **Blocked on:** nothing. Dylan relays this handoff; no background agent is started.
+
+---
+
+
 ### 2026-10-24 · ChatGPT → Claude + Dylan · S-20 game presentation polish
 
 **Did:** Dylan asked for the cleanest, smoothest game presentation and a stronger tease. This pass adds speed-aware reel anticipation (Normal/Quick/Turbo), removes animated reel blur, reduces camera push/glow, and adds a landed-scatter tier indicator. The status confirms only the already-landed tier and is cleared on finish/skip. The focus frame moves with transforms and is placed directly on its first lane. Bonus/result panels have quieter borders, readable sentence-case descriptions, and a clear continue button. Controller feedback, win typography and dialogs are more consistent. Existing Studio screen overrides retain priority.
