@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101827"><meta name="description" content="Night Fall by Gamboligy Games. Build multiplier tiles, unleash Reaper Strikes and Arrow Trails, and wake the graveyard."><title>Night Fall · Gamboligy Games</title><link rel="preload" href="assets/fonts/barlow-semi-condensed-800.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="assets/nightfall/background.webp" as="image"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="nightfall.css"><script type="module" src="app.js"></script><script type="module" src="studio-adapter.js"></script></head>
+<body>
+<div class="world" aria-hidden="true"><div class="scene"><picture><source media="(max-width:760px) and (orientation:portrait)" srcset="assets/nightfall/background-mobile.webp"><img class="scene-art" src="assets/nightfall/background.webp" alt=""></picture></div></div>
+<div class="court-knight" id="knight-stage" aria-hidden="true"><img class="knight-platform" src="assets/knight-platform.webp" alt=""><span class="knight-shadow"></span><canvas id="knight-attack"></canvas></div>
+<div class="court-knight court-archer" id="archer-stage" aria-hidden="true"><img class="knight-platform" src="assets/knight-platform.webp" alt=""><span class="knight-shadow"></span><canvas></canvas></div>
+<div id="arrow-effects" aria-hidden="true"></div>
+<div class="foreground-stone" aria-hidden="true"></div>
+<main class="game" id="game">
+ <header class="topbar"><a class="studio" href="../../../" aria-label="Studio projects"><img src="assets/studio-gg-diagonal.png" alt="GG"><span>GAMBOLIGY <b>GAMES</b></span></a><div class="game-title"><h1><img class="title-art" src="assets/nightfall/title.webp" alt="Night Fall"></h1></div><button class="icon-button" id="help" aria-label="How to play">?</button></header>
+ <section class="arena">
+  <section class="machine" aria-label="Night Fall game">
+   <div class="board-heading"><span class="heading-wing"></span><span id="mode-name">THE GRAVEYARD</span><span class="heading-wing"></span></div>
+   <div class="board-shell" id="board-shell"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><div id="board" class="board" role="img" aria-label="7 by 7 symbol grid"></div><svg id="strike-fx" class="strike-fx" viewBox="0 0 700 700" aria-hidden="true"></svg><div id="board-toast" class="board-toast" aria-live="polite"></div></div>
+   <div class="reel-status"><span id="status" role="status">5+ connecting symbols win</span><span id="spin-info"><i></i> SWORD STRIKE</span></div>
+   <div class="bonus-rail" id="bonus-rail" hidden><span>FREE SPINS <b id="fs-left">10</b></span><span>TOTAL WIN <b id="bonus-total">0.00</b></span><span>TOP TILE <b id="top-tile">2×</b></span></div>
+  </section>
+ </section>
+ <footer id="controller" aria-label="Game controller"></footer>
+ <div class="footnote"><span id="mode-detail">7 × 7 CLUSTERS · MULTIPLIER TILES</span><span>GAMBOLIGY GAMES</span></div>
+</main>
+<div id="loading" class="loading"><img src="assets/studio-gg-diagonal.png" alt="GG"><p>GAMBOLIGY GAMES</p><h2><img class="title-art" src="assets/nightfall/title.webp" alt="Night Fall"></h2><div class="load-track"><span id="load-progress"></span></div><small id="load-message">Waking the graveyard…</small></div>
+<dialog id="intro" class="intro"><div class="intro-top"><span class="eyebrow">GAMBOLIGY GAMES PRESENTS</span><h2><img class="title-art" src="assets/nightfall/title.webp" alt="Night Fall"></h2><p>A grave night for a good fortune.</p></div><div class="intro-grid"><article><div class="intro-art tile-art">2× <span>4×</span> 8×</div><h3>BUILD YOUR MULTIPLIERS</h3><p>Connect 5+ symbols. Winning cells heat up and double, all the way to 1,024×.</p></article><article><div class="intro-art"><img src="assets/symbols/wild.webp" alt="Reaper wild"></div><h3>MEET YOUR REAPER</h3><p>The Reaper slashes wilds into the grid. The skeleton archer fires a wild trail.</p></article><article><div class="intro-art" id="intro-fs-art"></div><h3>WAKE THE DEAD</h3><p>Collect 3+ FS tombstones. Multipliers stay throughout free spins. Super unlocks cross-cut strikes.</p></article></div><button id="enter" class="primary">ENTER THE GRAVEYARD <span>→</span></button><label class="remember"><input id="skip-intro" type="checkbox"> Skip this introduction next time</label><p class="prototype-note">Playtest credits only · Game math in development</p></dialog>
+<dialog id="menu" class="menu"><div class="dialog-header"><div><span class="eyebrow" id="menu-eyebrow">NIGHT FALL</span><h2 id="menu-title">Choose your adventure</h2></div><button class="close" id="close-menu" aria-label="Close menu">×</button></div><div id="menu-content"></div></dialog>
+<dialog id="splash" class="splash"><button id="splash-settings" class="overlay-menu" aria-label="Settings during bonus">☰</button><span class="eyebrow" id="splash-eyebrow">THE GRAVEYARD AWAITS</span><div class="splash-seal" aria-hidden="true">✦</div><h2 id="splash-title">FREE SPINS</h2><strong id="splash-value">10</strong><p id="splash-copy">Your multiplier tiles stay in play.</p><button class="primary" id="splash-continue">CONTINUE →</button></dialog>
+<div id="win-overlay" class="win-overlay" hidden><button id="win-settings" class="overlay-menu" aria-label="Settings during win">☰</button><div class="win-rays"></div><div class="win-content"><span class="eyebrow">A GRIM REWARD</span><h2 id="win-title">NICE WIN</h2><strong id="win-value">0.00</strong><span class="win-skip">Tap to continue</span></div></div>
+<div id="toast" class="toast" role="status"></div>
+</body></html>

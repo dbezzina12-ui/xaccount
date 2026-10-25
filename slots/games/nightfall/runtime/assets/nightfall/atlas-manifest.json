@@ -1,0 +1,290 @@
+{
+  "symbols/ruby": {
+    "sourceBox": [
+      41,
+      59,
+      420,
+      435
+    ],
+    "size": [
+      300,
+      300
+    ]
+  },
+  "symbols/sapphire": {
+    "sourceBox": [
+      467,
+      83,
+      789,
+      433
+    ],
+    "size": [
+      300,
+      300
+    ]
+  },
+  "symbols/emerald": {
+    "sourceBox": [
+      835,
+      73,
+      1225,
+      433
+    ],
+    "size": [
+      300,
+      300
+    ]
+  },
+  "symbols/amethyst": {
+    "sourceBox": [
+      39,
+      483,
+      420,
+      860
+    ],
+    "size": [
+      300,
+      300
+    ]
+  },
+  "symbols/amber": {
+    "sourceBox": [
+      476,
+      460,
+      785,
+      848
+    ],
+    "size": [
+      300,
+      300
+    ]
+  },
+  "symbols/shield": {
+    "sourceBox": [
+      880,
+      470,
+      1193,
+      847
+    ],
+    "size": [
+      300,
+      300
+    ]
+  },
+  "symbols/crown": {
+    "sourceBox": [
+      43,
+      885,
+      423,
+      1211
+    ],
+    "size": [
+      300,
+      300
+    ]
+  },
+  "symbols/fs": {
+    "sourceBox": [
+      421,
+      857,
+      829,
+      1226
+    ],
+    "size": [
+      300,
+      300
+    ]
+  },
+  "symbols/wild": {
+    "sourceBox": [
+      862,
+      897,
+      1207,
+      1212
+    ],
+    "size": [
+      300,
+      300
+    ]
+  },
+  "reaper/head": {
+    "sourceBox": [
+      41,
+      81,
+      409,
+      418
+    ],
+    "size": [
+      374,
+      343
+    ]
+  },
+  "reaper/body": {
+    "sourceBox": [
+      448,
+      13,
+      803,
+      426
+    ],
+    "size": [
+      361,
+      419
+    ]
+  },
+  "reaper/cape": {
+    "sourceBox": [
+      851,
+      16,
+      1229,
+      424
+    ],
+    "size": [
+      384,
+      414
+    ]
+  },
+  "reaper/upper-left": {
+    "sourceBox": [
+      73,
+      464,
+      308,
+      812
+    ],
+    "size": [
+      241,
+      354
+    ]
+  },
+  "reaper/upper-right": {
+    "sourceBox": [
+      553,
+      464,
+      793,
+      805
+    ],
+    "size": [
+      246,
+      347
+    ]
+  },
+  "reaper/fore-left": {
+    "sourceBox": [
+      963,
+      465,
+      1164,
+      809
+    ],
+    "size": [
+      207,
+      350
+    ]
+  },
+  "reaper/fore-right": {
+    "sourceBox": [
+      91,
+      869,
+      292,
+      1199
+    ],
+    "size": [
+      207,
+      336
+    ]
+  },
+  "reaper/scythe": {
+    "sourceBox": [
+      434,
+      805,
+      788,
+      1249
+    ],
+    "size": [
+      360,
+      450
+    ]
+  },
+  "reaper/blink": {
+    "sourceBox": [
+      870,
+      900,
+      1238,
+      1236
+    ],
+    "size": [
+      374,
+      342
+    ]
+  },
+  "archer/body": {
+    "sourceBox": [
+      52,
+      42,
+      499,
+      648
+    ],
+    "size": [
+      453,
+      612
+    ]
+  },
+  "archer/head": {
+    "sourceBox": [
+      507,
+      92,
+      937,
+      529
+    ],
+    "size": [
+      436,
+      443
+    ]
+  },
+  "archer/bow-arm": {
+    "sourceBox": [
+      950,
+      142,
+      1238,
+      579
+    ],
+    "size": [
+      294,
+      443
+    ]
+  },
+  "archer/draw-arm": {
+    "sourceBox": [
+      33,
+      764,
+      370,
+      1025
+    ],
+    "size": [
+      343,
+      267
+    ]
+  },
+  "archer/bow": {
+    "sourceBox": [
+      399,
+      636,
+      821,
+      1232
+    ],
+    "size": [
+      428,
+      602
+    ]
+  },
+  "archer/blink": {
+    "sourceBox": [
+      854,
+      767,
+      1249,
+      1182
+    ],
+    "size": [
+      401,
+      421
+    ]
+  }
+}

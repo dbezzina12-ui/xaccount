@@ -1,0 +1,17 @@
+import{defaults,validate,readProject,PROJECT_KEY}from'../games/nightfall/project.js';
+const $=id=>document.getElementById(id),frame=$('runtime');let project=readProject(),scene=innerWidth<650?'mobile':'desktop',ready=false;
+function fit(){const [w,h]=scene==='mobile'?[390,844]:[1280,800],r=$('preview-area').getBoundingClientRect(),s=Math.max(.05,Math.min((r.width-16)/w,(r.height-16)/h));$('fit').style.cssText=`width:${w*s}px;height:${h*s}px`;frame.style.cssText=`width:${w}px;height:${h}px;transform:scale(${s})`;$('layout-label').textContent=`${scene.toUpperCase()} · ${w} × ${h}`;}
+function send(){if(ready)frame.contentWindow.postMessage({source:'nightfall-studio',type:'apply',project},location.origin);}
+function render(){const s=project.scenes[scene];for(const k of ['boardScale','boardY','actorScale','cellColor']){$(k).value=s[k];if($(k+'-value'))$(k+'-value').textContent=k==='boardY'?s[k]+'px':Math.round(s[k]*100)+'%';}for(const k of ['desktop','mobile'])$(k).classList.toggle('active',scene===k);fit();send();}
+function save(){try{validate(project);localStorage.setItem(PROJECT_KEY,JSON.stringify(project));$('saved').textContent='Saved in this browser';$('message').textContent='Saved · '+scene+' scene';send();}catch(e){$('message').textContent=e.message;}}
+for(const k of ['boardScale','boardY','actorScale','cellColor'])$(k).oninput=e=>{project.scenes[scene][k]=k==='cellColor'?e.target.value:Number(e.target.value);render();save();};
+for(const k of ['desktop','mobile'])$(k).onclick=()=>{scene=k;render();};
+$('upload').onclick=()=>$('image').click();$('image').onchange=async()=>{const file=$('image').files[0];if(!file)return;if(file.size>5000000){$('message').textContent='Choose an image smaller than 5 MB.';return;}try{if(!['image/png','image/jpeg','image/webp'].includes(file.type))throw Error('Choose a PNG, JPG or WebP.');const src=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file);});const image=new Image();image.src=src;await image.decode();project.scenes[scene].background=src;save();}catch(e){$('message').textContent=e.message;}};
+$('restore-bg').onclick=()=>{project.scenes[scene].background=null;save();};$('reset').onclick=()=>{project.scenes[scene]=defaults().scenes[scene];render();save();};
+$('export').onclick=()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(project,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='night-fall.slotstudio.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+$('import').onclick=()=>$('json').click();$('json').onchange=async()=>{try{const f=$('json').files[0];if(!f)return;project=validate(JSON.parse(await f.text()));save();render();}catch(e){$('message').textContent=e.message;}};
+$('spin').onclick=()=>frame.contentWindow.postMessage({source:'nightfall-studio',type:'spin'},location.origin);$('fullscreen').onclick=()=>frame.requestFullscreen?.();
+window.addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==frame.contentWindow||e.data?.source!=='nightfall-runtime')return;if(e.data.type==='ready'){ready=true;send();}if(e.data.type==='error')$('message').textContent=e.data.message;});
+new ResizeObserver(fit).observe($('preview-area'));render();
+
+for(const [id,actor] of [['reaper-preview','reaper'],['archer-preview','archer']])$(id).onclick=()=>frame.contentWindow.postMessage({source:'nightfall-studio',type:'animation',actor},location.origin);

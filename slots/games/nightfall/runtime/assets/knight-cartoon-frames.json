@@ -1,0 +1,99 @@
+{
+  "source": "knight-cartoon-strike.png",
+  "sourceSize": [
+    1536,
+    1024
+  ],
+  "frames": [
+    {
+      "name": "windup",
+      "file": "knight-frames/windup.webp",
+      "sourceRect": [
+        50,
+        29,
+        418,
+        525
+      ],
+      "width": 418,
+      "height": 525,
+      "anchorX": 208,
+      "soleY": 518,
+      "helmetWidthApprox": 145
+    },
+    {
+      "name": "lift",
+      "file": "knight-frames/lift.webp",
+      "sourceRect": [
+        531,
+        4,
+        489,
+        549
+      ],
+      "width": 489,
+      "height": 549,
+      "anchorX": 199,
+      "soleY": 542,
+      "helmetWidthApprox": 152
+    },
+    {
+      "name": "cut",
+      "file": "knight-frames/cut.webp",
+      "sourceRect": [
+        976,
+        121,
+        551,
+        433
+      ],
+      "width": 551,
+      "height": 433,
+      "anchorX": 200,
+      "soleY": 426,
+      "helmetWidthApprox": 143
+    },
+    {
+      "name": "impact",
+      "file": "knight-frames/impact.webp",
+      "sourceRect": [
+        8,
+        571,
+        622,
+        434
+      ],
+      "width": 622,
+      "height": 434,
+      "anchorX": 219,
+      "soleY": 427,
+      "helmetWidthApprox": 143
+    },
+    {
+      "name": "followthrough",
+      "file": "knight-frames/followthrough.webp",
+      "sourceRect": [
+        558,
+        590,
+        540,
+        415
+      ],
+      "width": 540,
+      "height": 415,
+      "anchorX": 208,
+      "soleY": 408,
+      "helmetWidthApprox": 143
+    },
+    {
+      "name": "recover",
+      "file": "knight-frames/recover.webp",
+      "sourceRect": [
+        1121,
+        554,
+        344,
+        460
+      ],
+      "width": 344,
+      "height": 460,
+      "anchorX": 171,
+      "soleY": 443,
+      "helmetWidthApprox": 148
+    }
+  ]
+}
