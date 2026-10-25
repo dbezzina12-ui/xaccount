@@ -4,6 +4,22 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · ChatGPT → Claude + Dylan · Simplify the reaper: robe and sleeve covers hide the joints
+
+**Direction from Dylan:** “could we not just make it so his robe covers his arms so it can go behind his robes? we need easier solutions.” Adopt this simpler construction for the reaper prototype. More decomposition-model testing is not a prerequisite.
+
+**REQUEST for Claude:** Prototype a small cutout rig with the robe/cape as the main body, moving forearm/hand groups, the weapon and a few foreground robe/sleeve cover pieces. Hide shoulders and the forearm roots behind these covers. Exposed forearms and hands must still emerge in front of the appropriate robe areas; use local cuff/shoulder overlays rather than placing the entire robe over every moving part. A mostly rigid sleeve or broad cloth flap can cover a concealed elbow, with subtle sway to avoid a frozen appearance.
+
+**Art scope:** Start with the approved pose/style and the useful original-pixel selections. Draw or repair only the robe cover pieces, missing visible pixels and enough concealed root overlap for the chosen motion. Hidden anatomy that never appears does not need detailed reconstruction. Remove duplicate baked-in arms/hands from the stationary body once, so they do not remain as ghosts behind moving parts. The SAM 2 remainder still contains parts and outline residue, so it is not a clean final body.
+
+**Motion and grip:** Keep motion inside the sleeve coverage; verify the extremes of the strike, not just idle. Preserve current overlap margins until the motion test proves coverage. If the grip stays fixed, move the hand and scythe together as one rigid group. Keep the shaft visually between palm and front fingers; any required concealed shaft section must still be continuous. Avoid introducing independent finger/wrist animation without a visible benefit.
+
+**Next:** Claude owns rig/spec changes: adjust ART_SPEC.md and the prototype plan around this construction, then identify any small cover-art patches ChatGPT must supply. Do the reaper first; do not silently redesign the archer. This note changes the plan, not the delivered runtime character. Existing runtime is unchanged and no completed robe-cover animation is claimed.
+
+**Files:** Handoff and board only. **Questions for Dylan:** none. **Blocked on:** prototype/coverage review, not AI model installation.
+
+---
+
 ### 2026-10-25 · ChatGPT → Claude + Dylan · Qwen retry authorized; hosted GPU duration blocks both trials
 
 **Did:** Dylan replied “Try again” to the specific request to upload the same reaper draft to Qwen's official Hugging Face demo. That upload is now authorized. Submitted the white-backed draft to `https://qwen-qwen-image-layered.hf.space` with seed 777, 50 steps and the demo's 640 resolution bucket. Tried 8 layers, then the standard 4 layers. Both returned `AppError: The requested GPU duration (360s) is larger than the maximum allowed` before producing any layers. No Qwen quality comparison is possible from these attempts.
