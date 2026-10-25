@@ -59,17 +59,54 @@ export function stepPlan(rigs,source,target,direction){
  if(up)scale=(source.y+source.height-(target.y+target.height*.5))/(hand[5]-b.bottom);
  const end={x:target.x+target.width/2-(b.left+b.right)*scale/2,y:target.y+target.height*.96+b.bottom*scale};
  const start={x:source.x+source.width/2-(b.left+b.right)*scale/2,y:source.y+source.height*(up?1:.96)+b.bottom*scale};
- const strike=up?{...start}:{x:target.x+target.width/2-hand[4]*scale,y:target.y+target.height/2+hand[5]*scale};
- return {view,action:up?'turn-swat':'crawl',clip,rest,move,contact,scale,rotation:0,start,strike,end};
+ // Feet stay on the floor line through the swat: lining the hand up with the
+ // block's centre dropped the whole body about a sixth of a cell into it.
+ const strike=up?{...start}:{x:target.x+target.width/2-hand[4]*scale,y:start.y};
+ // A small lean into the lunge, toward the block; none when turning to climb.
+ const lean=horizontal?(direction==='left'?-1:1)*LEAN:0;
+ return {view,action:up?'turn-swat':'crawl',clip,rest,move,contact,scale,rotation:0,lean,start,strike,end};
+}
+
+// Motion timing shared by the animator and its tests (seconds of clip time).
+export const APPROACH=.18,RECOVER=.46,LEAN=.055,HIT_STOP=.055;
+const smooth=p=>{p=Math.max(0,Math.min(1,p));return p*p*(3-2*p);};
+const mix=(a,b,p)=>a+(b-a)*p;
+// The body's path for a horizontal or upward step: the lunge to the block
+// (leaning in, upright again on contact) and the recovery into its cell.
+export function stepPath(plan){
+ return {
+  approach:t=>{const p=smooth(t/APPROACH);return {x:mix(plan.start.x,plan.strike.x,p),y:mix(plan.start.y,plan.strike.y,p),rotation:(plan.lean||0)*Math.sin(Math.PI*Math.min(1,Math.max(0,t/APPROACH)))};},
+  recover:t=>{const p=smooth(t/RECOVER);return {x:mix(plan.strike.x,plan.end.x,p),y:mix(plan.strike.y,plan.end.y,p),rotation:0};},
+ };
+}
+// A hit-stop: the clip holds its pose for `hold` at `at`, then carries on.
+// Returns the longer duration, the clip time for each moment, and the events
+// with those after the hold moved later.
+export function holdAt({duration,events=[]},at,hold){
+ return {
+  duration:duration+hold,
+  time:t=>t<at?t:t<at+hold?at:t-hold,
+  events:events.map(e=>e.time>at?{...e,time:e.time+hold}:e),
+ };
+}
+// A jump: still until takeoff, then a ballistic arc that is fastest as it
+// lands. `lift` raises the apex above the higher of the two points.
+export function jumpArc(start,end,{takeoff,land,lift},time){
+ if(time<=takeoff)return {x:start.x,y:start.y};
+ const p=Math.min(1,(time-takeoff)/(land-takeoff));
+ const top=Math.min(start.y,end.y)-lift,peak=Math.max(.05,Math.min(.95,Math.sqrt(Math.max(0,start.y-top))/(Math.sqrt(Math.max(0,start.y-top))+Math.sqrt(Math.max(0,end.y-top)))));
+ // Two gravity parabolas joined at the apex: rising to it, then falling.
+ const y=p<peak?top+(start.y-top)*(1-p/peak)**2:top+(end.y-top)*((p-peak)/(1-peak))**2;
+ return {x:mix(start.x,end.x,p),y};
 }
 
 export function stepEvents(data,plan){
  return data.animations[plan.clip].events.map(e=>e.name==='swat_contact'?{...e,time:plan.contact}:e);
 }
 export function downwardJumpPose(plan,time){
- const smooth=p=>{p=Math.max(0,Math.min(1,p));return p*p*(3-2*p);};
  const blend=(a,b,p)=>({x:a.x+(b.x-a.x)*p,y:a.y+(b.y-a.y)*p});
- // Lift at the authored takeoff, land on the block, then drop into its empty cell.
- if(time<=plan.contact)return blend(plan.start,plan.strike,smooth((time-.43)/(plan.contact-.43)));
+ // Still until the authored takeoff, a short arc that lands fast on the block,
+ // then drop into its empty cell.
+ if(time<=plan.contact)return jumpArc(plan.start,plan.strike,{takeoff:.43,land:plan.contact,lift:plan.scale*24},time);
  return blend(plan.strike,plan.end,smooth((time-plan.contact-.18)/.5));
 }

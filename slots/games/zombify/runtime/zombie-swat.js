@@ -1,5 +1,6 @@
 import {getZombieAnimator} from './zombie-jump.js';
 import {createApprovedAnimator,ZOMBIE_ACTION_SPEED} from './approved-rig.js';
+import {HIT_STOP} from './rig-geometry.js';
 // Presentation only: outcomes, bite values and awarded cells come from math.js.
 const fallbackAnimator=createApprovedAnimator();
 export function debrisDirection(direction){return direction==='up'?'left':direction;}
@@ -42,7 +43,17 @@ export async function playSwatStep({event,board,layer,animate,rate=1,shouldSkip,
    return;
   }
   const f=swatTrajectory(a,b,{width:window.innerWidth,height:window.innerHeight},event.direction);
-  try{await animate(flying,debrisFrames(f),470/ZOMBIE_ACTION_SPEED,{fill:'forwards',easing:'linear'});}finally{flying.remove();}
+  try{
+   // The hit: while the zombie holds its contact pose, the block pops and
+   // flashes, and a bite nudges the board the way it was struck. Then it flies.
+   const hold=HIT_STOP*1000/Math.max(.25,rate),tilt=f.rotation>0?4:-4;
+   if(event.human&&board.animate){
+    const push=event.direction==='left'?[-1.5,0]:event.direction==='right'?[1.5,0]:event.direction==='up'?[0,-1.5]:[0,1.5];
+    board.animate([{transform:'translate(0,0)'},{transform:`translate(${push[0]}px,${push[1]}px)`,offset:.3},{transform:'translate(0,0)'}],{duration:150/Math.max(.25,rate),easing:'ease-out'});
+   }
+   await animate(flying,[{transform:'scale(1)',filter:'brightness(1)'},{transform:`scale(1.12) rotate(${tilt}deg)`,filter:'brightness(1.6)'}],hold,{fill:'forwards',easing:'cubic-bezier(.2,.8,.3,1)'});
+   await animate(flying,debrisFrames(f).map((k,i)=>({...k,transform:`${k.transform} scale(${i?1:1.12})`,filter:`brightness(${i?1:1.6})`})),470/ZOMBIE_ACTION_SPEED,{fill:'forwards',easing:'linear'});
+  }finally{flying.remove();}
  })());
  source.style.opacity='0';
  try{
