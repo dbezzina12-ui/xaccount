@@ -1,5 +1,6 @@
 import {playZombieLanding} from './zombie-landing-cue.js';
 import {createTeasePresentation,teaseStage} from './tease-presentation.js';
+import {createTeaseAudio} from './tease-audio.js';
 import {createBonusScreen} from './bonus-screen.js';
 import {createInfectionTubes} from './infection-tubes.js';
 import {reelTeasePlan,reelFrames,mysteryScatterBoard} from './reel-tease.js';
@@ -246,6 +247,7 @@ async function spinReels(board,bonus=false) {
   await Promise.all(stripRigs);
   const stops=reelTeasePlan(board,bonus,playback.read().speed);let settledFS=0;
   const tease=createTeasePresentation({host:document.querySelector('.board-wrap'),board:$('board'),shouldSkip:()=>reduced||playback.read().skipping});
+  const teaseAudio=bonus?null:createTeaseAudio({play:soundEffect,stopCue:name=>audioDirector.stopCue(name),focus:on=>audioDirector.focus(on),shouldSkip:()=>reduced||playback.read().skipping});
   try{await Promise.all(reels.map(async(reelView,reel)=>{
     const {window,strip}=reelView;
     const plan=stops[reel];
@@ -262,7 +264,7 @@ async function spinReels(board,bonus=false) {
 
       }
     }
-    if(!bonus)tease.settle({reel,count:settledFS,board,reels});
+    if(!bonus){tease.settle({reel,count:settledFS,board,reels});teaseAudio.settle({count:settledFS,waiting:stops.some((p,i)=>i>reel&&p.tease)});}
     if(hasVial&&!bonus)for(let i=reel;i<30;i+=6)if(board[i].kind==='vial')effects.scatter(i,teaseStage(settledFS).particle,settledFS);
     // Landing is conveyed by the symbol motion and sound, without floor particles.
     const landed=Array.from({length:5},(_,row)=>row*6+reel);
@@ -271,7 +273,7 @@ async function spinReels(board,bonus=false) {
       ...landed.filter(i=>board[i].kind==='zombie').map(i=>playZombieLanding($('board').children[i],{animate,shouldSkip:()=>reduced||playback.read().skipping}))
     ]);
   }));}finally{
-    tease.clear();surface.replaceChildren();
+    tease.clear();teaseAudio?.clear();surface.replaceChildren();
     for(const tile of $('board').children)tile.classList.remove('fs-locked');
   }
 }

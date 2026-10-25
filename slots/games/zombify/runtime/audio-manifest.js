@@ -7,6 +7,9 @@ for(const scene of ['base','bonus'])AUDIO_ASSETS['music-'+scene]=`${prefix}appro
 // A distinct path also prevents an old cached Kenney cue being reused.
 for(const tier of ['nice','big','epic','max'])AUDIO_ASSETS['celebrate-'+tier]=`${prefix}shared-wins-v109/celebrate-${tier}.mp3`;
 AUDIO_ASSETS['buy']='./assets/audio/gg-bonus-buy-v1.mp3';
+// Reel anticipation (S-20), synthesised by tools/audio/tease-sounds.mjs.
+AUDIO_ASSETS['tease-swell']=`${prefix}tease-swell-v1.mp3`;
+AUDIO_ASSETS['tease-up']=`${prefix}tease-up-v1.mp3`;
 export const AUDIO_CUES={
  buy:{files:['buy'],gain:.55,gap:.15},
  heart:{files:['infect'],gain:.48,gap:.15,duck:.5},
@@ -20,6 +23,9 @@ export const AUDIO_CUES={
  infect:{files:['infect'],gain:.62,gap:.15,duck:.6},bonus:{files:['bonus'],gain:.8,gap:.5,duck:1.3},
  win:{files:['win'],gain:.6,gap:.25,duck:.4},'win-big':{files:['win-big'],gain:.7,gap:.5,duck:.9},
  finish:{files:['finish'],gain:.75,gap:.5,duck:1.2},
+ // Under each reel still teasing, and when a tier is secured. Restrained:
+ // the swell sits under the reel stops and scatter landings and ducks for them.
+ tease:{files:['tease-swell'],gain:.3,gap:.05},'tease-up':{files:['tease-up'],gain:.38,gap:.12},
  'celebrate-nice':{files:['celebrate-nice'],gain:1.6,gap:.4,duck:14.92},
  'celebrate-big':{files:['celebrate-big'],gain:1.4,gap:.4,duck:14},
  'celebrate-epic':{files:['celebrate-epic'],gain:1.5,gap:.4,duck:14.63},

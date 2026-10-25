@@ -1,7 +1,7 @@
 import {SOUND_EVENTS} from './sound-schema.js';
 import {uniqueId} from './project.js';
 import {AUDIO_ASSETS,AUDIO_CUES} from '../games/zombify/runtime/audio-manifest.js';
-const labels={'music-base':'Base music','music-bonus':'Bonus music',ui:'Button click',buy:'Bonus buy',spin:'Reel spin',stop:'Reel stop',vial:'Scatter / anticipation',land:'Wild landing',grow:'Wild expansion',step:'Zombie step',bite:'Zombie bite',full:'Reel completed',infect:'Infection unlocked',win:'Line win',heart:'Heart collected (Second Life)',respin:'Second Life respin',bonus:'Bonus entry',finish:'Bonus complete','celebrate-nice':'Nice Win','celebrate-big':'Big Win','celebrate-epic':'Epic Win','celebrate-max':'Max Win'};
+const labels={'music-base':'Base music','music-bonus':'Bonus music',ui:'Button click',buy:'Bonus buy',spin:'Reel spin',stop:'Reel stop',vial:'Scatter / anticipation',land:'Wild landing',grow:'Wild expansion',step:'Zombie step',bite:'Zombie bite',full:'Reel completed',infect:'Infection unlocked',win:'Line win',heart:'Heart collected (Second Life)',respin:'Second Life respin',tease:'Anticipation swell','tease-up':'Tier secured (anticipation)',bonus:'Bonus entry',finish:'Bonus complete','celebrate-nice':'Nice Win','celebrate-big':'Big Win','celebrate-epic':'Epic Win','celebrate-max':'Max Win'};
 // In the audio manifest but never played by the game, so not offered.
 const UNUSED=['win-big'],EVENTS=SOUND_EVENTS.filter(id=>!UNUSED.includes(id));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

@@ -1,5 +1,5 @@
 import {IMAGE_ASSETS} from './preload-manifest.js?v=125';
-import {AUDIO_ASSETS} from './audio-manifest.js?v=116';
+import {AUDIO_ASSETS} from './audio-manifest.js?v=117';
 import {loadImage,loadBytes} from './asset-cache.js';
 import {preloadApprovedRigs} from './approved-rig.js';
 import {recliningArtReady} from './reclining-art.js';

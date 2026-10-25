@@ -9,7 +9,7 @@
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { serve, chromium } from '../../tools/lib/browser.mjs';
-import { AGENT_TOOLS, runtime, isBusy, whenReady, until, prepared } from './helpers.mjs';
+import { AGENT_TOOLS, AUDIO_TAP, tone, runtime, isBusy, whenReady, until, prepared } from './helpers.mjs';
 
 const skip = prepared ? false : 'needs the Zombify assets: npm run studio:prepare';
 const rt = (f) => new URL(`../../games/zombify/runtime/${f}`, import.meta.url).href;
@@ -65,13 +65,14 @@ after(async () => {
   srv?.close();
 });
 
-async function openStudio(options = {}) {
+async function openStudio({ init = [], ...options } = {}) {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, ...options });
   const page = await ctx.newPage();
   page.errors = [];
   page.on('pageerror', (e) => page.errors.push(e.message));
   await page.addInitScript(AGENT_TOOLS);
   await page.addInitScript(INSTRUMENT);
+  for (const script of init) await page.addInitScript(script);
   await page.goto(`${srv.url}studio/index.html`);
   await whenReady(page, 60000);
   page.ctx = ctx;
@@ -217,3 +218,80 @@ test('hiding the tab mid-tease, then coming back, still lands the selected board
   assert.deepEqual(page.errors, []);
   await page.ctx.close();
 });
+
+// The anticipation swell, measured at the game's audio output. A 1200 Hz tone
+// replaces it through the Sounds tab (so the override is proven to work) and a
+// 440 Hz tone replaces the base music. The reel sounds leak up to about -73 dB
+// at 1200 Hz on their own; the swell measures -55 to -35 dB, so below -60 dB
+// means no swell.
+test('anticipation audio plays only while reels tease, dips the music, and stops on landing, Skip and a hidden tab', { skip }, async () => {
+  const page = await openStudio({ init: [AUDIO_TAP] });
+  const SWELL = 1200, MUSIC = 440;
+  await page.click('[data-tab="sounds"]');
+  for (const [event, hz, seconds] of [['tease', SWELL, 2.4], ['music-base', MUSIC, 3]]) {
+    await page.selectOption('#sound-event', event);
+    await page.setInputFiles('#sound-file', { name: `tone-${hz}.wav`, mimeType: 'audio/wav', buffer: tone(hz, seconds) });
+    await page.waitForFunction((name) => document.querySelector('#sound-asset')?.selectedOptions[0]?.textContent === name, `tone-${hz}.wav`);
+  }
+  await page.click('#play');
+  await runtime(page).click('#menu');
+  await runtime(page).click('#menu-music');
+  await runtime(page).click('#menu-effects');
+  await runtime(page).evaluate(() => document.getElementById('settings').close());
+  await page.click('#edit');
+  await pause(1500);
+  const sample = () => runtime(page).evaluate((p) => ({ teasing: !!document.querySelector('.tease-active'), ...window.__level(p) }), [SWELL, MUSIC]);
+  const quietMusic = (await sample())[MUSIC];
+  assert.ok(quietMusic > -45, `base music plays (${quietMusic} dB)`);
+
+  // A full two-scatter miss.
+  const samples = [];
+  const round = await play(page, FIXTURES.miss, { during: async () => samples.push(await sample()) });
+  assertLanded(round, FIXTURES.miss);
+  const during = samples.filter((x) => x.teasing), outside = samples.filter((x) => !x.teasing);
+  assert.ok(during.length > 10, `${during.length} samples while teasing`);
+  assert.ok(during.filter((x) => x[SWELL] > -50).length >= during.length * 0.7, 'the swell plays while reels tease');
+  assert.ok(outside.slice(0, 5).every((x) => !(x[SWELL] > -60)), 'no swell before the tease');
+  const musicDuring = during.slice(5).map((x) => x[MUSIC]).sort((a, b) => a - b)[Math.floor((during.length - 5) / 2)];
+  assert.ok(musicDuring < quietMusic - 2, `music dips while teasing (${musicDuring.toFixed(1)} dB vs ${quietMusic.toFixed(1)} dB)`);
+  await pause(1200);
+  const after = await sample();
+  assert.ok(!(after[SWELL] > -60), 'the swell is gone once the reels land');
+  assert.ok(Math.abs(after[MUSIC] - quietMusic) < 1, 'the music is back to its level');
+
+  // Skip mid-tease: the swell stops at once.
+  await runtime(page).evaluate((t) => { window.__force(t); window.__watch(); }, FIXTURES.miss.tickets);
+  await page.click('#spin');
+  await until(async () => (await sample())[SWELL] > -50, 15000);
+  const skippedAt = Date.now();
+  await page.click('#spin');
+  let silentAfterSkip = null;
+  while (Date.now() - skippedAt < 1500) { if (!((await sample())[SWELL] > -60)) { silentAfterSkip = Date.now() - skippedAt; break; } await pause(20); }
+  assert.ok(silentAfterSkip !== null && silentAfterSkip < 400, `silent ${silentAfterSkip} ms after Skip`);
+  console.log(`# swell ${Math.round(during.map((x) => x[SWELL]).sort((x, y) => x - y)[Math.floor(during.length / 2)])} dB while teasing; music ${(musicDuring - quietMusic).toFixed(1)} dB under it; silent ${silentAfterSkip} ms after Skip`);
+  await until(async () => !(await isBusy(page)), 30000);
+  assertLanded(await game(page), FIXTURES.miss);
+
+  // Hidden tab mid-tease: the game suspends its audio; the round still lands.
+  const setHidden = (hidden) => runtime(page).evaluate((hidden) => {
+    Object.defineProperty(document, 'hidden', { configurable: true, get: () => hidden });
+    Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => (hidden ? 'hidden' : 'visible') });
+    document.dispatchEvent(new Event('visibilitychange'));
+  }, hidden);
+  let hidden = null;
+  const third = await play(page, FIXTURES.miss, {
+    during: async (seen) => {
+      if (seen.active && hidden === null && (await sample())[SWELL] > -50) {
+        await setHidden(true);
+        await pause(300);
+        hidden = await runtime(page).evaluate(() => window.ZombifyStudioRuntime.read().audio.teasing);
+        await setHidden(false);
+      }
+    },
+  });
+  assert.equal(hidden, 0, 'no swell left playing in a hidden tab');
+  assertLanded(third, FIXTURES.miss);
+  assert.deepEqual(page.errors, []);
+  await page.ctx.close();
+});
+

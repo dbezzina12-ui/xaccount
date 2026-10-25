@@ -1,5 +1,5 @@
 import {loadBytes} from './asset-cache.js';
-import {AUDIO_ASSETS,AUDIO_CUES} from './audio-manifest.js?v=116';
+import {AUDIO_ASSETS,AUDIO_CUES} from './audio-manifest.js?v=117';
 
 // Recorded gameplay audio and approved shared win tracks. No outcome changes.
 export function createGameAudio({env=globalThis,doc=env.document,assets=AUDIO_ASSETS,cues=AUDIO_CUES,
@@ -9,7 +9,7 @@ export function createGameAudio({env=globalThis,doc=env.document,assets=AUDIO_AS
   const clamp=(v,fallback)=>Number.isFinite(v)?Math.max(0,Math.min(1,v)):fallback;
   let levels={music:.38,effects:.75};
   try{const saved=JSON.parse(env.localStorage?.getItem('zombify-audio-levels')||'null');if(saved)levels={music:clamp(saved.music,.38),effects:clamp(saved.effects,.75)};}catch{}
-  let ctx=null,master=null,fxBus=null,musicBus=null,duckBus=null,enabled=false,disposed=false,scene='base';
+  let ctx=null,master=null,fxBus=null,musicBus=null,duckBus=null,teaseBus=null,focusBus=null,focused=false,enabled=false,disposed=false,scene='base';
   let revision=0,currentMusic=null,reported=false;
   const buffers=new Map(),loads=new Map(),voices=new Set(),musicVoices=new Set(),lastCue=new Map(),variants=new Map(),positions={base:0,bonus:0};
   const audible=()=>enabled&&!disposed&&!doc?.hidden&&ctx?.state==='running';
@@ -26,7 +26,10 @@ export function createGameAudio({env=globalThis,doc=env.document,assets=AUDIO_AS
     const compressor=ctx.createDynamicsCompressor();
     compressor.threshold.value=-8;compressor.knee.value=8;compressor.ratio.value=6;compressor.attack.value=.003;compressor.release.value=.18;
     master.gain.value=.85;fxBus.gain.value=levels.effects;musicBus.gain.value=levels.music;duckBus.gain.value=1;
-    fxBus.connect(master);musicBus.connect(duckBus);duckBus.connect(master);master.connect(compressor);compressor.connect(ctx.destination);
+    // Anticipation swells ride their own bus so they can dip under the cues that
+    // matter; focus lowers the music a little while a tease plays.
+    teaseBus=ctx.createGain();teaseBus.connect(fxBus);focusBus=ctx.createGain();focusBus.gain.value=focused?FOCUS:1;
+    fxBus.connect(master);musicBus.connect(focusBus);focusBus.connect(duckBus);duckBus.connect(master);master.connect(compressor);compressor.connect(ctx.destination);
   }
   async function load(key){
     if(disposed||!ctx||!assets[key])return null;
@@ -55,6 +58,15 @@ export function createGameAudio({env=globalThis,doc=env.document,assets=AUDIO_AS
     for(const voice of voices)release(voice,fade);voices.clear();lastCue.clear();
     if(duckBus){duckBus.gain.cancelScheduledValues(ctx.currentTime);ramp(duckBus.gain,1,.1);}
   }
+  // Ends one cue's voices (an anticipation swell when its reel lands).
+  function stopCue(name,fade=.09){
+    if(!ctx)return;
+    for(const voice of [...voices])if(voice.name===name){release(voice,fade);voices.delete(voice);}
+  }
+  function focus(on){
+    focused=!!on;if(!focusBus)return;
+    ramp(focusBus.gain,focused?FOCUS:1,focused?.25:.45);
+  }
   function stopMusic(fade=0){
     if(currentMusic){positions[currentMusic.scene]=(currentMusic.offset+ctx.currentTime-currentMusic.started)%currentMusic.source.buffer.duration;currentMusic=null;}
     for(const voice of musicVoices)release(voice,fade);
@@ -78,6 +90,10 @@ export function createGameAudio({env=globalThis,doc=env.document,assets=AUDIO_AS
       void load('music-'+(wanted==='base'?'bonus':'base'));
     }catch{report();}
   }
+  const FOCUS=.68;
+  function duckTease(){
+    const now=ctx.currentTime;ramp(teaseBus.gain,.4,.02);teaseBus.gain.setValueAtTime(.4,now+.37);teaseBus.gain.linearRampToValueAtTime(1,now+.67);
+  }
   function duck(seconds){
     const now=ctx.currentTime;duckBus.gain.cancelScheduledValues(now);duckBus.gain.setValueAtTime(duckBus.gain.value,now);
     duckBus.gain.linearRampToValueAtTime(.46,now+.03);duckBus.gain.setValueAtTime(.46,now+seconds);
@@ -95,12 +111,15 @@ export function createGameAudio({env=globalThis,doc=env.document,assets=AUDIO_AS
       source.playbackRate.value=(['bite','step','stop'].includes(name)?1+(index-1)*.025:1)*Math.max(.5,Math.min(2,Number.isFinite(rate)?rate:1));
       gain.gain.value=cue.gain*Math.max(.5,Math.min(1.12,intensity));source.connect(gain);
       let panner=null;
-      if(ctx.createStereoPanner){panner=ctx.createStereoPanner();panner.pan.value=Math.max(-.6,Math.min(.6,pan));gain.connect(panner);panner.connect(fxBus);}else gain.connect(fxBus);
-      const voice={source,gain,panner,stopping:false};voices.add(voice);
+      const bus=name==='tease'?teaseBus:fxBus;
+      if(ctx.createStereoPanner){panner=ctx.createStereoPanner();panner.pan.value=Math.max(-.6,Math.min(.6,pan));gain.connect(panner);panner.connect(bus);}else gain.connect(bus);
+      const voice={name,source,gain,panner,stopping:false};voices.add(voice);
       source.onended=()=>{voices.delete(voice);source.disconnect();gain.disconnect();panner?.disconnect();};
       const fade=soundSettings[name]?.fade||0;
       if(fade){const duration=buffer.duration/source.playbackRate.value,edge=Math.min(fade,duration/2),peak=gain.gain.value;gain.gain.setValueAtTime(0,now);gain.gain.linearRampToValueAtTime(peak,now+edge);gain.gain.setValueAtTime(peak,now+duration-edge);gain.gain.linearRampToValueAtTime(0,now+duration);}
-      source.start();if(cue.duck)duck(cue.duck);return true;
+      source.start();if(cue.duck)duck(cue.duck);
+      if(name!=='tease'&&(cue.duck||name==='vial'||name==='tease-up'))duckTease();
+      return true;
     }catch{report();return false;}
   }
   async function setEnabled(value){
@@ -149,6 +168,7 @@ export function createGameAudio({env=globalThis,doc=env.document,assets=AUDIO_AS
     assets=nextAssets;cues=nextCues;soundSettings=structuredClone(settings);positions.base=positions.bonus=0;
     if(enabled){void prepare();void refreshMusic();}
   }
-  return {configure,play,setEnabled,setLevel,setScene,stopEffects,destroy,warmEffects,prepare,
-    read:()=>({enabled,scene,levels:{...levels},activeEffects:voices.size,activeMusic:[...musicVoices].filter(v=>!v.stopping).length,loaded:buffers.size})};
+  return {configure,play,stopCue,focus,setEnabled,setLevel,setScene,stopEffects,destroy,warmEffects,prepare,
+    read:()=>({enabled,scene,levels:{...levels},activeEffects:voices.size,activeMusic:[...musicVoices].filter(v=>!v.stopping).length,loaded:buffers.size,
+      teasing:[...voices].filter(v=>v.name==='tease'&&!v.stopping).length,focused})};
 }
