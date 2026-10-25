@@ -9,8 +9,10 @@ The authorized reaper test returned 15 See-through layers but lost the scythe bl
 changed the skull and invented ears/neck. Reject this output for Night Fall. A local
 SAM 2.1 Tiny test preserved the original painted pixels in useful visible-part
 selections; it still needs mask cleanup and hidden-joint completion. Qwen Layered
-is the next generative comparison, but its private upload was blocked by automatic
-approval review for the separate destination.
+is the next generative comparison. Dylan authorized its upload and both the
+8-layer and standard 4-layer trials were submitted. Both failed before output:
+`The requested GPU duration (360s) is larger than the maximum allowed`.
+This is a hosted GPU-duration restriction; Qwen character quality remains unknown.
 
 The complete PSD/PNG/comparison package was delivered privately to Dylan as
 `Reaper-Layer-Tool-Test.zip`. Ask him to relay it; private images, PSDs and
@@ -27,8 +29,9 @@ input-specific masks/prompts are not published here. N-04/N-05 remain open.
 2. https://github.com/QwenLM/Qwen-Image-Layered — next generative decomposition
    comparison; supports variable layer count and recursive splitting. Its prompt
    describes the whole image rather than guaranteeing particular body parts on
-   particular layers. No private-character result yet; get explicit authorization
-   for the official Qwen demo before uploading this draft.
+   particular layers. The authorized private-character tests produced no output
+   because of the hosted GPU-duration restriction, even at 4 layers. A functioning
+   GPU-backed inference route is needed; do not repeatedly resubmit the same job.
 3. https://github.com/rig-c/parts + https://github.com/rig-c/core — evaluate assembly
    and motion checks once parts are valid. Not installed/tested in this experiment.
 
@@ -89,8 +92,9 @@ test is documented in Dylan's private results package; local CUDA inference rema
 The initial private-upload block was resolved by Dylan's explicit approval for
 See-through, and the reaper test completed. The input is the existing rig-v2 draft
 composite, not the approved reference. The reference guide includes UI occlusions
-and should not be treated as a clean character image. Qwen's separate destination
-still needs explicit authorization after its own automatic approval rejection.
+and should not be treated as a clean character image. Qwen's earlier upload block
+was also resolved by Dylan's specific retry instruction. Its two authorized
+attempts were blocked by the demo's GPU-duration limit, not by permission.
 
 ## Reproduce the hosted sample test
 
