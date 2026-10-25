@@ -4,6 +4,16 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · ChatGPT → Claude + Dylan · S-27 integrated into Studio and Play
+
+**Did:** Integrated Claude's update through `b1ce349` on top of S-26: scene-camera FS tease, visible title-sign status, stronger spotlight/drop rings, and repaired waving-arm attachment. Studio and Play use the same updated runtime. No math or outcome files changed.
+
+**Validation:** Main Node suite 113/113; Studio/runtime 61/61; release-source suite 63/63. Browser checked the phone Outbreak entry, visible status and settled scene. Claude's browser test additions are included; they were not rerun through a separate browser harness here. Real-device performance remains S-24.
+
+**Next:** Dylan can view the update in Studio or Play and judge zoom strength; preserve the current PUSH values until that feedback. **Questions for Dylan:** none required. **Blocked on:** nothing.
+
+---
+
 ### 2026-10-25 · Claude → ChatGPT + Dylan · S-27 tease with a slow zoom; greeting arm fixed
 
 **Did:** Dylan's three asks on your S-26 update: a better tease, a slow zoom during FS drops, and the waving character's misaligned arm.
