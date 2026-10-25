@@ -78,3 +78,11 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 | S-27 | Better tease: slow camera push during FS drops, readable spotlight, visible status, FS shock rings | Claude | done | Dylan 2026-10-25: zoom is good. Presentation only; anticipation tests now check the camera (zooms, rests after, Skip/hidden/reduced motion). `studio/shots/s27-tease-phone.jpg` |
 
 | S-29 | Free Super/Hidden previews paid unrealistic wins (Hidden: the 25,000x cap every time) | Claude | review | They replayed one scripted demo round. Now each plays a real catalog bonus (Hidden averages 816x, caps 1 in 374); credits still untouched. Paid math unchanged. See MATH.md "Free previews" |
+
+## Night Fall (separate project, authorized by Dylan 2026-10-25)
+
+| ID | Task | Owner | Status | Notes |
+|---|---|---|---|---|
+| N-01 | Import Night Fall (Knightfall v0.5.3 engine, unchanged) with the new reaper/archer art | ChatGPT | done | From Dylan's handoff zip; merged on `claude/blissful-rubin-xou20i`. `engine.js` SHA-256 876e2a6d... |
+| N-02 | Rigs: real joints for the reaper and archer, feet planted | Claude | review | Waiting on Dylan's look on a phone. `games/nightfall/shots/rig-before-after.jpg`; `games/nightfall/ANIMATION-HANDOFF.md` "Claude rig pass" |
+| N-03 | Unify the Night Fall editor with the Studio inspector | ChatGPT | todo | From ChatGPT's animation handoff |

@@ -4,6 +4,36 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · Claude → ChatGPT + Dylan · Night Fall: jointed rigs, feet planted (N-02)
+
+**Did:** Night Fall wasn't on GitHub yet, so I merged the Night Fall files from Dylan's handoff zip into `claude/blissful-rubin-xou20i`: `games/nightfall`, `nightfall-studio` and `tools/prepare-nightfall-art.py`. The zip's root `README.md`, `package.json` and `index.html` were left out, so the repo's own aren't replaced. `engine.js` is unchanged (SHA-256 876e2a6d...), and its 15 checks pass (`npm run test:nightfall`).
+- **What was broken:** each part was turned by its own CSS rotation with no parent, so:
+  - **Reaper:** mid-swing, the scythe flipped behind his head while his hand stayed down, and his elbows opened.
+  - **Archer:** the draw arm slid sideways off the string, and the arrow and string were painted into the bow.
+  - **Feet on phones:** the soles sat behind the controller's icon row, with no contact shadow.
+- **Now (`runtime/nightfall-actors.js`):**
+  - **Bones:** a jointed rig on your cutouts. Shoulder, elbow and wrist chains, the scythe held at the grip, and the bow and bow arm turning together.
+  - **Draw arm:** solved backwards from the nock, so the fingers stay on it through the aim and the draw.
+  - **String and arrow:** the string is drawn live, then snaps straight and rings out on release. The arrow leaves from its nocked head and is re-nocked afterwards.
+  - **Body and feet:** the body never moves, so the feet stay planted, and breathing scales the upper body about the soles. Both characters share one ground line with a contact shadow. On phones that's the bottom of the Buy Bonus / - / + row, clear of the icons, as in `layout-target.png`; on desktop it's just above the bar.
+  - **Idle:** a small idle that pauses for a hidden tab, the menu, an action or reduced motion.
+- **Unchanged:** the API (`strike`/`shoot`/`releasePoint`/`idle`/`salute`) and the release timings (.48 and .57).
+- **Parts and joints:** `tools/nightfall-rig.py` measures the joints into `rig.json` and cuts four parts: the bare bow, the arrow, and the draw arm split at the elbow. Details are in `games/nightfall/ANIMATION-HANDOFF.md`, under "Claude rig pass".
+- **Tests:** `tests/browser/nightfall-rig.e2e.mjs` measures every joint from the rendered transforms on every frame of a real strike and shot, and every joint stays within 0.75 px. The same test checks the soles (they move less than 0.5 px), the release point, the ground line at four sizes, and Skip, the menu, a hidden tab and reduced motion. I also played 13 real spins (two strikes, one shot) with no errors. Before/after: `games/nightfall/shots/rig-before-after.jpg`.
+
+**Files:** `games/nightfall/**` (new), `nightfall-studio/**` (new), `tools/prepare-nightfall-art.py` (yours), `tools/nightfall-rig.py`, `tests/browser/nightfall-rig.e2e.mjs`, `package.json` (`test:nightfall`), BOARD (Night Fall section).
+
+**Next for ChatGPT:**
+1. Merge `claude/blissful-rubin-xou20i` and publish Night Fall from the repo copy.
+2. If you redraw rig art, re-run `python3 tools/nightfall-rig.py`.
+3. N-03 (editor and Studio inspector) is yours when you get to it.
+
+**Questions for Dylan:** How does the swing and the shot look on your phone?
+
+**Blocked on:** nothing. No math or engine changes.
+
+---
+
 ### 2026-10-25 · Claude → ChatGPT + Dylan · S-29 free previews play real bonuses
 
 **Did:** Dylan saw the Hidden bonus max-win almost every time. The paid game is fine: Hidden averages 816x and reaches the 25,000x cap 1 in 374 (exact, from the catalogs; RTP 96.0000% in every mode). The free previews were the problem: the shop's "Try a feature" buttons and Studio's preview menu. They replayed one scripted demonstration round (`math.js`, kind `preview_*`) with a fixed seed. In that demo a super zombie lands on nearly every free spin, so every Hidden preview paid the 25,000x cap and every Super preview 6,949.56x (real average 240x).
