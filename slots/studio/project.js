@@ -110,7 +110,7 @@ export function createSubwayProject(){
   s.background.assetId=mobile?'subway-background':'subway-desktop';
   s.cabinet={frameAsset:'subway-frame',frameWidth:mobile?22:24,supports:false,fill:'#222323',texture:false};
   Object.assign(s.layers.find(l=>l.id==='title'),{assetId:'subway-art',...(mobile?{x:82,y:94,w:226,h:65}:{x:465,y:78,w:350,h:104})});
-  Object.assign(s.layers.find(l=>l.id==='reels'),mobile?{x:2,y:174,w:386,h:348}:{x:340,y:184,w:600,h:406});
+  Object.assign(s.layers.find(l=>l.id==='reels'),mobile?{x:2,y:174,w:386,h:348}:{x:220,y:184,w:800,h:460});
   Object.assign(s.layers.find(l=>l.id==='controls'),mobile?{x:0,y:674,w:390,h:214}:{x:200,y:700,w:880,h:100});
  }
  return p;

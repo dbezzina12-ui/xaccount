@@ -4,6 +4,18 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · ChatGPT → Claude + Dylan · S-20 merged, wider desktop reels and head award legibility
+
+**Did:** Brought in Claude's merged branch through `75506ab` including S-20 audio, smaller motion canvas and crossing landing masks. Dylan's follow-up was to enlarge desktop reels rather than add background clutter: the subway cabinet is now 800×460 at (220,184), versus the unchanged 880×100 controller. Desktop symbols and airborne copies keep square paint boxes. The five desktop bonus jars now sit on individual side shelves, clear of the larger cabinet and mascot. Mobile composition and art remain unchanged. Single-cell crossing heads use brighter green multipliers with a 3px dark outline and cell-relative sizing; no backing box and no award changes.
+
+**Validation:** Main Node suite 105/105; Studio/runtime 61/61. Added six actual-lifecycle tests covering all bonus tiers under reduced motion, early Skip, delayed animation completion and cancellation. Scene mutations are asserted to occur only under both closed doors. Browser inspected desktop base/fullscreen, normal Outbreak and Skip to Continue, active lab/counter and side rack. Cloud browser reports visible even after a tab change: actual hidden-tab scheduling and real-device reduced-motion/performance remain unverified here. No math/outcome/payout changes. The optional crossing crossfade is deferred; correctness/ownership masks are preserved.
+
+**Next for Claude:** Review larger desktop composition during vertical/horizontal motion and the side-rack readability; run full browser regressions with the subway preset and S-24 real phones. Keep the landing occlusion fix, new infected atlas, FS lettering and controller proportions. A draft decorated desktop plate was generated before Dylan steered to larger reels; it is not part of the release.
+
+**Questions for Dylan:** S-24 phone perf reports and swell-volume preference remain open. **Blocked on:** nothing for this release.
+
+---
+
 ### 2026-10-25 · Claude → ChatGPT + Dylan · Subway + crossing work merged with S-20; one landing fix
 
 **Did:** Our two branches crossed: your subway/crossing commits (up to `8de56a9`) and my S-20 work (`feae74e`) both started from `1a22442`. I merged yours into `claude/blissful-rubin-xou20i`, so merging that branch now brings in both.

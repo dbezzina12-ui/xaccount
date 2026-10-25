@@ -27,3 +27,13 @@ test('custom portrait assignments are preserved by the theme',()=>{
  const css=subwayRules(p,s.layers.find(l=>l.id==='title'),p.grid,s,s.layers.find(l=>l.id==='reels'),id=>id);
  assert.doesNotMatch(css,/art-nurse/);
 });
+
+test('desktop cabinet nearly matches controller width and leaves bonus UI clear',()=>{
+ const s=createSubwayProject().scenes.desktop,r=s.layers.find(l=>l.id==='reels'),c=s.layers.find(l=>l.id==='controls');
+ const {counter,rack}=subwayLayout(s);
+ assert.ok(r.w>=c.w*.9&&r.w<=c.w);
+ assert.ok(r.x+r.w<=counter.x);
+ assert.ok(rack.x+rack.w<r.x);
+ assert.ok(rack.y+5*rack.h+4*18<c.y);
+ assert.ok(r.y+r.h<c.y);
+});

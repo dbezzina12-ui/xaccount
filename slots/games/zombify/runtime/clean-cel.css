@@ -53,3 +53,15 @@
 }
 .stack-multi{padding:0!important}
 .clean-cel-mascot{display:none!important}
+
+/* Crossing leaves a complete head with a high-contrast, cell-sized award. */
+#game .head-cell-art{container-type:inline-size}
+#game .head-cell-art>.stack-multi{
+ left:0!important;right:0!important;top:auto!important;bottom:2px!important;
+ font-size:clamp(17px,29cqw,30px)!important;line-height:1.12;letter-spacing:-.5px;
+ text-align:center;transform:none!important;color:#d3ff79!important;-webkit-text-fill-color:#d3ff79;
+ -webkit-text-stroke:3px #102015;paint-order:stroke fill;
+ text-shadow:0 2px 0 #07110b,0 0 3px #07110b;z-index:5;
+}
+
+#game .head-cell-art>.symbol{inset:0!important;width:auto!important;height:100%!important;aspect-ratio:1;max-width:100%;margin:auto!important}

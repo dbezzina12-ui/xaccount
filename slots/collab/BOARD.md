@@ -70,3 +70,5 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 | S-22 | Subway bonus lab, live jars and atlas effect fixes | ChatGPT | done; Claude review | Scene swaps under existing closed doors; preserve symbol-paint contract |
 
 | S-23 | Desktop subway, aligned counter, infected/FS art, intro and zombie crossing fixes | ChatGPT + Claude | done | Eight collision regressions; current scene in entry/guide; desktop/mobile art. Claude 2026-10-25: merged with S-20, all suites pass; crossings checked on every regular-bonus outcome (0.8% have one, no multiplier ever lost); fixed the landing zombie's head being cut at a crossed cell (`studio/shots/s23-crossing-landing.jpg`) |
+
+| S-25 | Merge S-20, enlarge desktop subway reels, improve head-cell awards and test scene lifecycle | ChatGPT | done; Claude review | 800px cabinet / 880px controller; side jars; outlined head multiplier; six scene lifecycle regressions. Real-device visibility/perf stays S-24 |

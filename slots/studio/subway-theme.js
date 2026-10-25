@@ -7,7 +7,7 @@ export const INFECTED_CELLS={skater:[0,0],nurse:[1,0],builder:[2,0],cop:[0,1],sc
 export function subwayLayout(s){
  const mobile=s.width<s.height;
  return mobile?{counter:{x:s.width*56/390,y:s.height*147/844,w:s.width*148/390,h:s.height*25/844},rack:{x:s.width*.05,y:s.height*.632,w:s.width*.90,h:s.height*.122},label:10.5,value:20}:
- {counter:{x:s.width*1035/1280,y:s.height*386/800,w:s.width*170/1280,h:s.height*32/800},rack:{x:s.width*365/1280,y:s.height*596/800,w:s.width*550/1280,h:s.height*78/800},label:13,value:26};
+ {counter:{x:s.width*1035/1280,y:s.height*386/800,w:s.width*170/1280,h:s.height*32/800},rack:{x:s.width*100/1280,y:s.height*224/800,w:s.width*70/1280,h:s.height*70/800},label:13,value:26};
 }
 export function subwayRules(project,title,g,s,reels,src){
  const sheet=cssURL(src('subway-art')),infected=cssURL(asset('subway-infected.webp'));
@@ -15,7 +15,9 @@ export function subwayRules(project,title,g,s,reels,src){
  const cell=([x,y])=>`background-image:${infected}!important;background-size:300% 200%!important;background-position:${x*50}% ${y*100}%!important;background-repeat:no-repeat!important;`;
  const paint='mask-image:none!important;filter:none!important;transform:scale(1)!important;';
  const scope=':is(#game,#welcome)';
+ const cellSize=Math.min((reels.w-2*g.frameWidth)/6,(reels.h-2*g.frameWidth)/5)*.94;
  let rules=`html[data-studio-theme=subway]{--entry-frame-width:8px;--entry-frame-slice:64;--entry-reels:#222323;--entry-reel-texture:none;--entry-reel-mask:none}#game .board-wrap{border-image-slice:64!important;border-image-width:1!important}#game .tile{box-shadow:inset -1px -1px #73737336!important}`;
+ if(s.width>s.height)rules+=`#game .tile>.symbol,html[data-studio-theme=subway] :is(.swatted-symbol,.knocked-symbol)>.symbol{position:absolute!important;inset:auto!important;left:50%!important;top:50%!important;width:${cellSize}px!important;height:${cellSize}px!important;margin-left:${-cellSize/2}px!important;margin-top:${-cellSize/2}px!important}`;
  if(title.assetId==='subway-art')rules+=`#game .brand{${crop([180,204,490,146])}}#game .brand h1{visibility:hidden!important}#welcome .guide-heading{${crop([180,204,490,146])}aspect-ratio:490 / 146;max-width:400px}#welcome #guide-page .guide-heading>img{visibility:hidden;height:100%;width:100%;object-fit:contain}`;
  for(const [id,box] of Object.entries(HUMAN_CROPS))if(project.symbols[id]==='symbol-'+id)rules+=`${scope} .symbol.art-${id}{${crop(box)}${paint}}`;
  for(const [id,box] of Object.entries(INFECTED_CELLS)){
@@ -37,7 +39,7 @@ export function subwayRules(project,title,g,s,reels,src){
  #game[data-free-spins] .counter-copy>strong{font-size:${value}px!important;line-height:1!important;letter-spacing:0!important;transform:none!important;filter:none!important;color:#c3f63d!important;margin:0!important;padding:0!important}
  #game[data-free-spins] .infection-tracker{left:${r.x-reels.x}px!important;top:${r.y-reels.y}px!important;width:${r.w}px!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;margin:0!important}
  #game[data-free-spins] .infection-tracker:before,#game[data-free-spins] .infection-tracker:after,#game[data-free-spins] .infection-heading{display:none!important}
- #game[data-free-spins] .infection-people{gap:${mobile?8:18}px!important;align-items:end!important}
+ #game[data-free-spins] .infection-people{grid-template-columns:${mobile?'repeat(5,minmax(0,1fr))':'1fr'}!important;gap:${mobile?8:18}px!important;align-items:end!important}
  #game[data-free-spins] .infection-tube{height:${r.h}px!important;width:${mobile?'100%':r.h*.67+'px'}!important;margin-inline:auto!important;max-height:none!important;filter:drop-shadow(0 2px 1px #0008)!important}
  #game[data-free-spins] .tube-window{inset:13% 7% 21%!important;border:2px solid #a3d75e!important;border-radius:5px!important;background:#193023!important}
  #game[data-free-spins] .tube-frame{inset:0!important;background:none!important;border-radius:7px!important;border-top:10px solid #455c75!important;border-bottom:18px solid #263a52!important;box-shadow:inset 2px 0 #78969f,inset -2px 0 #132439,0 0 0 2px #0a1522!important}
@@ -46,6 +48,7 @@ export function subwayRules(project,title,g,s,reels,src){
  #game[data-free-spins] .tube-markers{inset:18% 9% 26%!important}
  #game[data-free-spins] .tube-character{inset:0!important}
  #game[data-free-spins] .tube-name{display:none!important}
+ ${mobile?'':`#game[data-free-spins] .infection-tube:after{content:'';position:absolute;left:-12px;right:-12px;bottom:-4px;height:5px;border:1px solid #0a1422;background:linear-gradient(#71869a,#283b50);border-radius:2px;z-index:-1;pointer-events:none}`}
  `;
  return rules;
 }

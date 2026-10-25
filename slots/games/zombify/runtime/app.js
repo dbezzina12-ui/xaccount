@@ -160,7 +160,7 @@ function stackArt(multi,span=5,horizontal=false,direction='right',headless=false
   if(singleSymbol){image.className='symbol art-zombie';image.setAttribute('aria-hidden','true');}
   else if(!horizontal){image.className='approved-rig-fallback';image.src='assets/approved-rig/front/idle.png';image.alt='';if(headless)image.hidden=true;}
   const badge=document.createElement('strong');badge.className='stack-multi';badge.textContent=multi?`${multi}×`:'';
-  if(singleSymbol)Object.assign(badge.style,{left:'0',right:'0',top:'auto',bottom:'2px',fontSize:'clamp(14px,2vw,24px)',textAlign:'center',transform:'none'});
+  if(singleSymbol)art.classList.add('head-cell-art');
   art.append(image,badge);art.rigReady=singleSymbol?Promise.resolve():horizontal?recliningArtReady(image):mountApprovedRig(art,{span,direction,...(headless?{clip:'headless',staticPose:true}:{})});return art;
 }
 function stackFrame(stack) {
