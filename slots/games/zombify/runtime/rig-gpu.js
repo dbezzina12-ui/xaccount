@@ -3,9 +3,9 @@ import {attachmentGeometry} from './rig-geometry.js';
 
 // A single shared GPU surface avoids one WebGL context per reel/portrait.
 // Canvas2D remains a fallback for browsers without WebGL.
-let shared;
-function createGPU(){
- const canvas=document.createElement('canvas'),gl=canvas.getContext('webgl',{alpha:true,premultipliedAlpha:true,antialias:true});
+let shared,offscreen;
+function createGPU(canvas=document.createElement('canvas')){
+ const gl=canvas.getContext('webgl',{alpha:true,premultipliedAlpha:true,antialias:true});
  if(!gl)return null;
  const compile=(type,source)=>{const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s;};
  const program=gl.createProgram();
@@ -22,7 +22,7 @@ function createGPU(){
   gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
   textures.set(image,t);return t;
  }
- return {draw(ctx,rig,clip,time,s,x,y,w,h,dpr,rotation){
+ function render(rig,clip,time,s,x,y,w,h,dpr,rotation){
   if(gl.isContextLost())return false;
   const pw=Math.max(1,Math.round(w*dpr)),ph=Math.max(1,Math.round(h*dpr));
   if(canvas.width!==pw||canvas.height!==ph){canvas.width=pw;canvas.height=ph;}
@@ -39,8 +39,47 @@ function createGPU(){
    gl.bindTexture(gl.TEXTURE_2D,texture(img));gl.uniform1f(alpha,slotAlpha(data,clip,slot,time));gl.blendFunc(gl.ONE,slot.blend==='additive'?gl.ONE:gl.ONE_MINUS_SRC_ALPHA);
    gl.drawElements(gl.TRIANGLES,g.indices.length,gl.UNSIGNED_SHORT,0);
   }
-  ctx.drawImage(canvas,0,0,w,h);return true;
- }};
+  return true;
+ }
+ return {canvas,render,draw(ctx,...args){if(!render(...args))return false;ctx.drawImage(canvas,0,0,args[6],args[7]);return true;}};
+}
+// The shared context on an OffscreenCanvas, when the browser can hand its
+// frames to other canvases without copying (transferToImageBitmap).
+function offscreenGPU(){
+ if(offscreen===undefined){
+  offscreen=null;
+  try{if(typeof OffscreenCanvas==='function'&&typeof ImageBitmapRenderingContext==='function'){const gpu=createGPU(new OffscreenCanvas(1,1));if(typeof gpu?.canvas.transferToImageBitmap==='function')offscreen=gpu;}}catch{}
+ }
+ return offscreen;
+}
+// A canvas that shows one rig. Drawing a WebGL canvas into a 2D canvas
+// (drawImage) reads the pixels back on CPU-backed canvases and stalls the GPU,
+// for every rig on every frame; on a phone that was most of the frame budget.
+// Where possible the shared context renders off screen and hands each frame to
+// this canvas through a 'bitmaprenderer' context instead, with no copy. Other
+// browsers keep the 2D path below. Same pose, same pixels either way.
+export function rigSurface(canvas){
+ const gpu=offscreenGPU(),bitmap=gpu?canvas.getContext('bitmaprenderer'):null,ctx=bitmap?null:canvas.getContext('2d');
+ let fallback=null;
+ return {
+  paint(rig,clip,time,fit,width,height,dpr=1){
+   const w=Math.max(1,Math.round(width*dpr)),h=Math.max(1,Math.round(height*dpr));
+   if(bitmap){
+    let drawn=false;
+    if(offscreen)try{drawn=gpu.render(rig,clip,time,fit.scale,fit.x,fit.y,width,height,dpr,fit.rotation||0);}catch{offscreen=null;}
+    if(drawn){bitmap.transferFromImageBitmap(gpu.canvas.transferToImageBitmap());return;}
+    // The GPU context is gone: draw in 2D off screen and hand that over instead.
+    fallback??=new OffscreenCanvas(1,1);fallback.width=w;fallback.height=h;
+    const f=fallback.getContext('2d');f.setTransform(dpr,0,0,dpr,0,0);f.translate(fit.x,fit.y);f.rotate(fit.rotation||0);drawRig(f,rig.data,rig.images,clip,time,fit.scale);
+    bitmap.transferFromImageBitmap(fallback.transferToImageBitmap());return;
+   }
+   if(!ctx)return;
+   if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
+   ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,w,h);ctx.setTransform(dpr,0,0,dpr,0,0);
+   paintRig(ctx,rig,clip,time,fit,width,height,dpr);
+  },
+  clear(){if(bitmap)bitmap.transferFromImageBitmap(null);else ctx?.clearRect(0,0,canvas.width,canvas.height);}
+ };
 }
 export function paintRig(ctx,rig,clip,time,{scale,x,y,rotation=0},width,height,dpr=1){
  if(shared===undefined){try{shared=createGPU();}catch{shared=null;}}

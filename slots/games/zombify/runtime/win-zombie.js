@@ -1,5 +1,5 @@
 import {loadApprovedRig} from './approved-rig.js';
-import {paintRig} from './rig-gpu.js';
+import {rigSurface} from './rig-gpu.js';
 import {WIN_TIERS} from './win-tiers.js';
 
 const clamp=p=>Math.max(0,Math.min(1,p)),smooth=p=>{p=clamp(p);return p*p*(3-2*p);};
@@ -69,22 +69,24 @@ function load(){return prepared??=(loadApprovedRig('front').then(rig=>({data:cre
 export const warmWinZombie=({strict=false}={})=>strict?load():load().catch(()=>null);
 export function createWinZombie(canvas,fallback,{reduced=false}={}){
  let model=null,dead=false,loading=false;
- const ctx=canvas.getContext('2d');
+ const view=rigSurface(canvas);
+ // Size after layout, without forcing a layout on every animation frame.
+ const size={width:canvas.clientWidth,height:canvas.clientHeight};
+ const observer=typeof ResizeObserver==='function'?new ResizeObserver(()=>{size.width=canvas.clientWidth;size.height=canvas.clientHeight;}):null;
+ observer?.observe(canvas);
  function prepare(){if(loading||model||dead)return;loading=true;void load().then(rig=>{if(!dead)model=rig;}).catch(()=>{}).finally(()=>{loading=false;});}
  prepare();
  return {
   draw(tier,progress){
-   if(dead||!ctx)return;
+   if(dead)return;
    if(!model){prepare();return;}
-   const width=canvas.clientWidth,height=canvas.clientHeight;if(!width||!height)return;
-   const dpr=Math.min(globalThis.devicePixelRatio||1,2),w=Math.round(width*dpr),h=Math.round(height*dpr);
-   if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
-   ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,w,h);ctx.setTransform(dpr,0,0,dpr,0,0);
+   const {width,height}=observer?size:{width:canvas.clientWidth,height:canvas.clientHeight};if(!width||!height)return;
+   const dpr=Math.min(globalThis.devicePixelRatio||1,2);
    const top=tier==='max'?720:tier==='big'?670:600,pad=12,scale=Math.min((width-pad*2)/560,(height-pad*2)/top);
    const p=reduced?WIN_TIERS[tier].pose:progress;
-   paintRig(ctx,model,'win_'+tier,p*WIN_TIERS[tier].duration,{scale,x:width/2,y:height-pad},width,height,dpr);
+   view.paint(model,'win_'+tier,p*WIN_TIERS[tier].duration,{scale,x:width/2,y:height-pad},width,height,dpr);
    fallback.hidden=true;
   },
-  destroy(){dead=true;model=null;ctx?.clearRect(0,0,canvas.width,canvas.height);fallback.hidden=false;}
+  destroy(){dead=true;model=null;observer?.disconnect();view.clear();fallback.hidden=false;}
  };
 }

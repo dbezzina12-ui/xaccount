@@ -1,7 +1,7 @@
 import {loadImage} from './asset-cache.js';
 import {clipDuration} from './approved-rig-renderer.js';
-import {fitRig,stepPlan,stepEvents,downwardJumpPose} from './rig-geometry.js';
-import {paintRig} from './rig-gpu.js';
+import {fitRig,rigBounds,stepPlan,stepEvents,downwardJumpPose} from './rig-geometry.js';
+import {rigSurface} from './rig-gpu.js';
 import {createRecliningArt,recliningArtReady} from './reclining-art.js';
 import {fullReelExitIds} from './zombie-layout.js';
 
@@ -21,16 +21,19 @@ export function loadApprovedRig(view){
  return loads.get(view);
 }
 export function preloadApprovedRigs(){return Promise.all(['front','side','rear'].map(loadApprovedRig));}
-function clear(ctx,canvas,dpr){ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);ctx.setTransform(dpr,0,0,dpr,0,0);}
 function surface(host){
  const canvas=document.createElement('canvas');canvas.className='approved-rig-canvas';canvas.setAttribute('aria-hidden','true');host.prepend(canvas);
- const ctx=canvas.getContext('2d');
- return {canvas,draw(rig,clip,time,fit){
-  const width=host.clientWidth,height=host.clientHeight,dpr=Math.min(globalThis.devicePixelRatio||1,2);if(!width||!height)return;
-  const w=Math.max(1,Math.round(width*dpr)),h=Math.max(1,Math.round(height*dpr));
-  if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
-  clear(ctx,canvas,dpr);paintRig(ctx,rig,clip,time,fit,width,height,dpr);
- }};
+ const view=rigSurface(canvas);
+ // The host's size, refreshed after layout by a ResizeObserver: reading
+ // clientWidth on every frame forced a layout per rig per frame.
+ const size={width:host.clientWidth,height:host.clientHeight};
+ const observer=typeof ResizeObserver==='function'?new ResizeObserver(()=>{size.width=host.clientWidth;size.height=host.clientHeight;}):null;
+ observer?.observe(host);
+ const measure=()=>observer?size:{width:host.clientWidth,height:host.clientHeight};
+ return {canvas,measure,draw(rig,clip,time,fit){
+  const {width,height}=measure(),dpr=Math.min(globalThis.devicePixelRatio||1,2);if(!width||!height)return;
+  view.paint(rig,clip,time,fit,width,height,dpr);
+ },remove(){observer?.disconnect();canvas.remove();}};
 }
 function scheduleIdle(){if(idleFrame===null&&active.size&&!document.hidden)idleFrame=requestAnimationFrame(tickIdle);}
 function tickIdle(now){idleFrame=null;for(const owner of [...active])owner.paint(now);scheduleIdle();}
@@ -40,7 +43,7 @@ if(typeof document!=='undefined')document.addEventListener('visibilitychange',()
 });
 export async function mountApprovedRig(host,{horizontal=false,span=2,direction='right',walking=false,staticPose=false,rate=1,view:customView,clip:customClip,fit:customFit,phase=0,ambient=false}={}){
  mounts.get(host)?.stop();let stopped=false,drawSurface,last=-Infinity;
- const owner={host,stop(){stopped=true;active.delete(owner);drawSurface?.canvas.remove();if(mounts.get(host)===owner)mounts.delete(host);if(!active.size&&idleFrame!==null){cancelAnimationFrame(idleFrame);idleFrame=null;}}};
+ const owner={host,stop(){stopped=true;active.delete(owner);drawSurface?.remove();if(mounts.get(host)===owner)mounts.delete(host);if(!active.size&&idleFrame!==null){cancelAnimationFrame(idleFrame);idleFrame=null;}}};
  mounts.set(host,owner);
  const view=customView||(horizontal||walking?'side':'front'),face=direction==='left'?'left':'right';
  let rig;try{rig=await loadApprovedRig(view);}catch{owner.stop();return null;}
@@ -53,7 +56,8 @@ export async function mountApprovedRig(host,{horizontal=false,span=2,direction='
   if(ambient&&document.documentElement?.dataset.backgroundPaused==='true')return;
   if(now-last<1000/(ambient?24:walking?60:30)-1)return;last=now;
   const time=reduced||staticPose?0:((now-start)/1000*rate+phase)%duration;
-  const fit=customFit?customFit(host.clientWidth,host.clientHeight):fitRig(rig.data,clip==='headless'?'idle':clip,host.clientWidth,host.clientHeight,{horizontal:horizontal||walking,padding:.035});
+  const {width,height}=drawSurface.measure();
+  const fit=customFit?customFit(width,height):fitRig(rig.data,clip==='headless'?'idle':clip,width,height,{horizontal:horizontal||walking,padding:.035});
   drawSurface.draw(rig,clip,time,fit);
  };
  owner.paint(start);
@@ -84,11 +88,31 @@ export function runRigTimeline({duration,rate=1,shouldSkip=()=>false,events=[],p
   frame(start);
  });
 }
-function overlay(layer){
+// The smallest box (layer coordinates) holding the rig at every station of a
+// move, in every pose of its clips, plus the cells it starts or ends in.
+// Positions and scale interpolate linearly between stations, so every frame in
+// between stays inside it. A board-sized motion canvas spent most of its
+// pixels on transparency: about 0.45 MP per frame on a phone, for one zombie.
+export function motionBox(data,{stations,clips,rects=[]}){
+ let left=Infinity,top=Infinity,right=-Infinity,bottom=-Infinity;
+ for(const clip of clips){
+  const duration=clipDuration(data,clip);
+  for(let i=0;i<=12;i++){
+   const b=rigBounds(data,clip,duration*i/12);
+   for(const p of stations){left=Math.min(left,p.x+b.left*p.scale);right=Math.max(right,p.x+b.right*p.scale);top=Math.min(top,p.y-b.top*p.scale);bottom=Math.max(bottom,p.y-b.bottom*p.scale);}
+  }
+ }
+ for(const r of rects){left=Math.min(left,r.x);top=Math.min(top,r.y);right=Math.max(right,r.x+r.width);bottom=Math.max(bottom,r.y+r.height);}
+ const margin=4+.06*Math.max(right-left,bottom-top);
+ return {x:Math.floor(left-margin),y:Math.floor(top-margin),width:Math.ceil(right-left+margin*2),height:Math.ceil(bottom-top+margin*2)};
+}
+function overlay(layer,box){
  const host=document.createElement('div');host.className='approved-rig-motion';
  // Overlay dimensions follow the existing board. They never participate in layout.
+ if(box)Object.assign(host.style,{inset:'auto',left:`${box.x}px`,top:`${box.y}px`,width:`${box.width}px`,height:`${box.height}px`});
  layer.append(host);const drawSurface=surface(host);
- return {host,draw:drawSurface.draw,remove(){host.remove();}};
+ const draw=box?(rig,clip,time,fit)=>drawSurface.draw(rig,clip,time,{...fit,x:fit.x-box.x,y:fit.y-box.y}):drawSurface.draw;
+ return {host,draw,remove(){drawSurface.remove();host.remove();}};
 }
 export function createApprovedAnimator(){
  return {
@@ -98,7 +122,9 @@ export function createApprovedAnimator(){
    const rig=await loadApprovedRig(view);if(shouldSkip())return;
    const turning=direction==='up'?await Promise.all(['front','side'].map(loadApprovedRig)):null;if(shouldSkip())return;
    const bounds=layer.getBoundingClientRect(),local=r=>({...r,x:r.x-bounds.left,y:r.y-bounds.top});
-   const plan=stepPlan({[view]:rig},local(source),local(target),direction),motion=overlay(layer);
+   const plan=stepPlan({[view]:rig},local(source),local(target),direction);
+   const at$=p=>({...p,scale:plan.scale});
+   const motion=overlay(layer,motionBox(rig.data,{stations:[plan.start,plan.strike,plan.end].map(at$),clips:[plan.rest,plan.clip,plan.move].filter(c=>rig.data.animations[c]),rects:[local(source),local(target)]}));
    const at=(p,clip,time)=>motion.draw(rig,clip,time,{scale:plan.scale,rotation:plan.rotation,...p});
    try{
     if(plan.action==='jump'){
@@ -141,7 +167,7 @@ export function createApprovedAnimator(){
    const small=fitRig(rig.data,'idle',source.width,source.height,{padding:.035});
    const start={scale:small.scale,x:source.x+small.x,y:source.y+small.y};
    const duration=clipDuration(rig.data,clip),events=rig.data.animations[clip].events,hit=events.find(e=>e.name==='impact').time;
-   const motion=overlay(layer);
+   const motion=overlay(layer,motionBox(rig.data,{stations:[start,end],clips:[clip],rects:[{x:source.x,y:source.y,width:source.width,height:source.height},{x:target.x-target.width/2,y:target.y-target.height,width:target.width,height:target.height}]}));
    try{
     await runRigTimeline({duration,rate,shouldSkip,events,onEvent,paint:t=>{
      const p=ease(Math.min(1,t/hit));
@@ -168,11 +194,11 @@ export async function playFullReelExit(root,{board=[],rate=1,shouldSkip=()=>fals
  if(!exits.length)return finished;
  try{
   await runRigTimeline({duration:clipDuration(rig.data,'head_drop'),rate:rate*1.25,shouldSkip,events:rig.data.animations.head_drop.events,onEvent,paint:t=>{
-   for(const {host,layer}of exits)layer.draw(rig,'head_drop',t,fitRig(rig.data,'idle',host.clientWidth,host.clientHeight,{padding:.035}));
+   for(const {layer}of exits){const {width,height}=layer.measure();layer.draw(rig,'head_drop',t,fitRig(rig.data,'idle',width,height,{padding:.035}));}
   }});
  }finally{
   // Keep the final headless body for the reel-strip handoff, including Skip.
-  for(const {host,layer}of exits)layer.draw(rig,'headless',0,fitRig(rig.data,'idle',host.clientWidth,host.clientHeight,{padding:.035}));
+  for(const {layer}of exits){const {width,height}=layer.measure();layer.draw(rig,'headless',0,fitRig(rig.data,'idle',width,height,{padding:.035}));}
  }
  return finished;
 }
