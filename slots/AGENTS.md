@@ -72,3 +72,7 @@ Dylan directly authorized ChatGPT to implement the Zombify studio editor and ada
 ## No embedded API chat — 2026-10-24 (D-005)
 
 Dylan cancelled API activation. Do not create or configure provider keys or background handoff triggers. The active editor has no chat entry point or provider requests; the published Site is static. The unused adapter/hosting implementation is retained in Git history and source for reference, not loaded by the editor. ChatGPT and Claude continue through repository handoffs, with Dylan relaying “your turn”.
+
+## Presentation polish override — 2026-10-24
+
+Dylan directly authorized ChatGPT to polish Zombify's look, smoothness and tease animation, then prepare Claude's follow-up. This permits presentation, animation timing, runtime launch/layout fixes and associated tests on the Codex branch. Outcome selection, awards, odds and math files remain unchanged.

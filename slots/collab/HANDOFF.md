@@ -4,6 +4,29 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-24 · ChatGPT → Claude + Dylan · S-20 game presentation polish
+
+**Did:** Dylan asked for the cleanest, smoothest game presentation and a stronger tease. This pass adds speed-aware reel anticipation (Normal/Quick/Turbo), removes animated reel blur, reduces camera push/glow, and adds a landed-scatter tier indicator. The status confirms only the already-landed tier and is cleared on finish/skip. The focus frame moves with transforms and is placed directly on its first lane. Bonus/result panels have quieter borders, readable sentence-case descriptions, and a clear continue button. Controller feedback, win typography and dialogs are more consistent. Existing Studio screen overrides retain priority.
+
+**Launch fix:** Runtime `index.html` now loads `launch.js`. Only Studio's `#runtime` iframe imports the editor bridge. Direct play restores `viewport.js` and `entry.js`; previously the Studio background element created an extra layout row and displaced the standalone title. The original separate live Zombify site is unchanged.
+
+**Verified:** `npm test` 71/71; `npm run test:studio` 61/61; Site tests 21/21 (overlapping focused coverage). After the last focus-placement change, the seven anticipation tests passed again. Browser checks: desktop intro and standalone layout; actual Mystery reveal into Super Outbreak; Studio Outbreak continuation/skip; 320/390 phone composition; 844×390 landscape controls; 320 phone bonus panel and 320/320 client/scroll widths. The full browser suite and real-device frame-time profiling were not run here. Math, catalogs, outcome selection, credits logic and payouts were not edited.
+
+**Files:** runtime `app.js`, `index.html`, new `launch.js`, `reel-tease.js`, `tease-presentation.js`, new `presentation-polish.css`, `controller/controller.css`; `tests/presentation-polish.test.mjs`; updated reel-tease tests. Scoped ownership override recorded in AGENTS.md.
+
+**Site:** https://gamboligy-studio.djames1.chatgpt.site — source `d036171cfe13673f086e8032cd5223f651ed423c`. Deployment `appgdep_6add54a66abc81919a315f331bc9b32b` succeeded; existing owner-private access preserved.
+
+**Next for Claude, in order:**
+1. Review S-20 and run your full browser suite, including pass 1 Screens regressions and pending S-17 preset checks. Add deterministic two-scatter miss, 3/4/5 tier upgrade, skip during anticipation, Turbo, reduced motion, hidden-tab/resume and subsequent-spin checks. The old Outbreak preview places two scatters on the final reel and does not exercise anticipation; use an existing deterministic outcome fixture or Mystery's selected-tier reveal without changing outcomes.
+2. Profile midrange Android Chrome and iOS Safari: frame-time distribution, long tasks, raster/filter cost, texture decoding, rig canvas work and memory over repeated rounds. Measure against a 60 fps target; do not claim it from desktop screenshots. Prioritize measured bottlenecks and preserve the selected board at every animation endpoint.
+3. Give the zombie more physical weight: tighten foot contact, bite impact, expansion settle and transitions between poses. Then layer restrained anticipation audio that follows actual landed tiers, ducks under important cues and stops cleanly on Skip/background. Keep the Sounds editor's user overrides effective.
+
+**Scope:** This is a presentation improvement toward Dylan's quality goal, not an assertion that a complete AAA production bar is met. Custom animation/audio polish and real-device performance remain the next work. S-18 saved versions/export stays queued; S-17 still awaits Claude review. No provider APIs or keys. Dylan relays this handoff; writing it does not start Claude automatically.
+
+**Questions for Dylan:** none. **Blocked on:** nothing.
+
+---
+
 ### 2026-10-24 · ChatGPT → Claude + Dylan · Pass 2 implemented; ready for review
 
 **Did:** S-19 is committed (`f6e125cd51b3f7dbb9d41d5a5fd81244f1827e69`), including active pass 1 plus all three exact-byte image bundles. Pass 2 adds six alignment controls, safe-area guides, snapping (Alt bypass), linked layer movement with cycle/lock validation, and whole-screen-group shortcuts. Presets save cabinets, sound packs and bonus-screen settings; assets are embedded, collisions remapped, and applying is one Undo step. Cabinet placement preserves proportions across canvas sizes. Phone Screens editing has a pinned preview and an opt-out checkbox. Game math and cancelled API chat remain unchanged.

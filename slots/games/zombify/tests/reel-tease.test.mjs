@@ -6,8 +6,8 @@ test('only columns following the second landed FS slow; all share its landing ti
  const plans=reelTeasePlan(boardAt([6,14,22,29]));
  assert.deepEqual(plans.map(p=>p.tease),[false,false,false,true,true,true]);
  for(const p of plans.slice(3))assert.equal(p.start,plans[2].ms);
- assert.ok(plans[3].ms-plans[2].ms>=1900);
- assert.equal(plans[4].ms-plans[3].ms,1100);
+ assert.ok(plans[3].ms-plans[2].ms>=1440);
+ assert.equal(plans[4].ms-plans[3].ms,710);
  assert.ok(reelTeasePlan(boardAt([6])).every(p=>!p.tease));
  assert.ok(reelTeasePlan(boardAt([6,14,22]),true).every(p=>!p.tease));
  assert.ok(reelTeasePlan(boardAt([0,6])).slice(1).every(p=>p.tease));
@@ -38,6 +38,6 @@ test('braking stays ordered and retains a slow approach even with a turbo initia
   assert.ok(Math.abs((frames[2].offset-frames[1].offset)*timing.ms-380)<1e-8);
   assert.ok(frames[1].easing.includes('cubic-bezier'));
   for(let i=1;i<frames.length;i++)assert.ok(frames[i].offset>frames[i-1].offset);
-  assert.ok(timing.ms-timing.start>=1900);
+  assert.ok(timing.ms-timing.start>=1440);
  }
 });

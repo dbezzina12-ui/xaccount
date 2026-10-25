@@ -50,3 +50,12 @@ svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:2.6;stroke
  .play-button{width:88px;height:88px}.play-button svg{width:68px;height:68px}.play-button .stop-icon{width:48px;height:48px}.play-button .continue-icon{width:52px;height:52px}.buy-button{font-size:18px}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* Studio presentation polish: tactile controls, quiet readouts. */
+.controller .deck{border-color:#a4c6b14d;box-shadow:0 14px 40px #0006,inset 0 1px #e3f5d820}.controller[data-layout=desktop] .deck{border-radius:14px;background:linear-gradient(165deg,#18312deb,#08171feb)}
+.controller :is(.play-button,.utility,.buy-button,.bet-step){transition:transform .15s cubic-bezier(.2,.8,.2,1),border-color .15s,background .15s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.controller :is(.play-button,.utility,.buy-button,.bet-step):enabled:active{transform:translateY(2px) scale(.97)}
+.controller .money strong{font-variant-numeric:tabular-nums;letter-spacing:-.025em}.controller .money>span{letter-spacing:.11em;opacity:.8}
+.controller[data-layout=desktop] .play-button{box-shadow:0 0 0 1px #d9e9cf33,0 5px 15px #0006}
+.controller :is(.utility,.bet-step):focus-visible{outline:2px solid #d5f3aa;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.controller :is(.play-button,.utility,.buy-button,.bet-step){transition:none}.controller :is(.play-button,.utility,.buy-button,.bet-step):enabled:active{transform:none}}

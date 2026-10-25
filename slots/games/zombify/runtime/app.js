@@ -244,12 +244,12 @@ async function spinReels(board,bonus=false) {
     window.append(strip);surface.append(window);reels.push({window,strip,distance,unit});
   }
   await Promise.all(stripRigs);
-  const stops=reelTeasePlan(board,bonus);let settledFS=0;
+  const stops=reelTeasePlan(board,bonus,playback.read().speed);let settledFS=0;
   const tease=createTeasePresentation({host:document.querySelector('.board-wrap'),board:$('board'),shouldSkip:()=>reduced||playback.read().skipping});
   try{await Promise.all(reels.map(async(reelView,reel)=>{
     const {window,strip}=reelView;
     const plan=stops[reel];
-    // Turbo accelerates the ordinary spin, not the FS suspense. Skip still finishes it.
+    // Keep a readable final approach at each speed; Skip still finishes immediately.
     const timing=plan.tease?{...plan,start:duration(plan.start),ms:duration(plan.start)+plan.ms-plan.start}:plan;
     await animate(strip,reelFrames(reelView,timing),timing.ms,{easing:'linear',fill:'forwards',...(plan.tease?{duration:timing.ms}:{})});
     window.remove();soundEffect('stop',{pan:(reel-2.5)*.19});
