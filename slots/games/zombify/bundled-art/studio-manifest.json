@@ -138,5 +138,54 @@
       "subway-infected-03.b64",
       "subway-infected-04.b64"
     ]
+  },
+  {
+    "path": "assets/studio/subway-lab-desktop-clean.webp",
+    "bytes": 212432,
+    "sha256": "e024bff008acf5b3fbd95692dbbfc4f75f8215231f6a4038e1eaa2d37796ea30",
+    "parts": [
+      "subway-lab-desktop-clean-00.b64",
+      "subway-lab-desktop-clean-01.b64",
+      "subway-lab-desktop-clean-02.b64"
+    ]
+  },
+  {
+    "path": "assets/studio/subway-lab-clean.webp",
+    "bytes": 185168,
+    "sha256": "d879560ed72c90da54f1a976e52b824e6d538c15148c5633e01e66ff3ebbadc6",
+    "parts": [
+      "subway-lab-clean-00.b64",
+      "subway-lab-clean-01.b64",
+      "subway-lab-clean-02.b64"
+    ]
+  },
+  {
+    "path": "assets/studio/subway-background-clean.webp",
+    "bytes": 116098,
+    "sha256": "9a3fb38842a8989f8a6590b90e8c38aac64582094233397eae2ccae7e38975d2",
+    "parts": [
+      "subway-background-clean-00.b64",
+      "subway-background-clean-01.b64"
+    ]
+  },
+  {
+    "path": "assets/studio/subway-mascot-parts.webp",
+    "bytes": 211570,
+    "sha256": "247e224f98236dbb442ee93712b0094086be03220957a3b79864d9bde8e16d61",
+    "parts": [
+      "subway-mascot-parts-00.b64",
+      "subway-mascot-parts-01.b64",
+      "subway-mascot-parts-02.b64"
+    ]
+  },
+  {
+    "path": "assets/studio/subway-desktop-clean.webp",
+    "bytes": 150486,
+    "sha256": "658ccb47692bf140004c05366a6dd26c44397a4e8aef2b4b3f81cd04c3f1c79a",
+    "parts": [
+      "subway-desktop-clean-00.b64",
+      "subway-desktop-clean-01.b64",
+      "subway-desktop-clean-02.b64"
+    ]
   }
 ]

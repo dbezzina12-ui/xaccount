@@ -1,3 +1,4 @@
+import {createSceneMascot} from './scene-mascot.js';
 import {subwayRules,subwayPreloads} from './subway-theme.js';
 import {screenRuntime} from './screens-runtime.js';
 const screens=screenRuntime(status=>notify('screen-preview-status',{status}));
@@ -15,6 +16,7 @@ const screens=screenRuntime(status=>notify('screen-preview-status',{status}));
 import {sceneAppearance,validateProject,compatible,SYMBOLS} from './project.js';
 import {Reel} from '../engine/client/reels.js';
 const rootURL=new URL('../',import.meta.url),game=document.getElementById('game'),runtime=()=>window.ZombifyStudioRuntime;
+const sceneMascot=createSceneMascot(game);
 const style=document.createElement('style');style.id='studio-presentation';document.head.append(style);
 const background=document.createElement('div');background.className='studio-background';
 const tint=document.createElement('div');tint.className='studio-tint';background.append(tint);game.prepend(background);
@@ -76,7 +78,9 @@ function apply(project,key){
  tint.style.cssText=`position:absolute;inset:0;background:${b.tint};opacity:${b.tintOpacity};`;
  const subway=['subway-background','subway-desktop'].includes(b.assetId);
  document.documentElement.dataset.studioTheme=subway?'subway':'';
+ void sceneMascot.configure(s,subway);
  document.documentElement.style.setProperty('--entry-scene',cssURL(src(b.assetId)));
+ document.documentElement.style.setProperty('--mascot-entry-scene',subway?cssURL(new URL('../games/zombify/runtime/assets/studio/'+(mobile?'subway-background-clean.webp':'subway-desktop-clean.webp'),import.meta.url).href):cssURL(src(b.assetId)));
  document.documentElement.style.setProperty('--entry-scene-size',b.zoom===100?'cover':b.zoom+'% auto');
  document.documentElement.style.setProperty('--entry-scene-position',`${b.positionX}% ${b.positionY}%`);
  document.documentElement.style.setProperty('--entry-frame',cssURL(src(g.frameAsset)));

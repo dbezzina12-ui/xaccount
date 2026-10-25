@@ -98,3 +98,13 @@ html[data-entry][data-town-ready] #game .city-backdrop{opacity:1}
 #guide-page{animation:entry-content-in .35s ease both}
 @keyframes entry-content-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){#guide-page{animation:none}html[data-entry] #game .city-backdrop{transition:none}}
+
+/* The mascot greets from a fixed spot; no character walks across the logo. */
+#studio-walker{left:auto;right:5%;bottom:-5%;width:min(29vw,330px);height:auto;aspect-ratio:520 / 450;transform:none;display:block;filter:drop-shadow(0 5px 3px #0005)}
+#studio-walker>.subway-mascot-canvas{position:absolute;inset:0}
+html[data-studio-theme=subway][data-entry=studio] #welcome{background-image:var(--mascot-entry-scene,var(--entry-scene))}
+@media(max-aspect-ratio:1/1){
+ #studio-page .studio-identity{padding-bottom:28dvh}
+ #studio-walker{left:50%;right:auto;bottom:-3%;width:min(68vw,280px);transform:translateX(-50%)}
+}
+@media(prefers-reduced-motion:reduce){#studio-walker{display:block}}

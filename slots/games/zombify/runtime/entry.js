@@ -1,10 +1,9 @@
 import {gameReady} from './game-ready.js?v=125';
 import {loadImage} from './asset-cache.js';
 import {createGuideDemo} from './guide-demo.js';
-import {mountApprovedRig,stopApprovedRigs} from './approved-rig.js';
+import {mountMascot} from './subway-mascot.js';
 import {createGuideNavigation} from './guide-navigation.js';
 import {TOWN_ART} from './scene-character-art.js?v=125';
-import {createIntroWalker} from './intro-walker.js';
 
 const welcome=document.getElementById('welcome');
 const pages=Object.fromEntries(['studio','guide'].map(name=>[name,document.getElementById(`${name}-page`)]));
@@ -12,7 +11,7 @@ const root=document.documentElement;
 const demo=createGuideDemo();
 const guide=createGuideNavigation({cards:[...document.querySelectorAll('.guide-card')],dots:[...document.querySelectorAll('[data-guide-page]')],previous:document.getElementById('guide-previous'),next:document.getElementById('guide-next'),counter:document.getElementById('guide-page-count'),mobile:matchMedia('(max-width: 759px)'),onVisibilityChange:indices=>demo.show(indices)});
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
-let studioTimer=null,studioEpoch=0,studioAnimations=[];
+let studioTimer=null,studioEpoch=0,introMascot=null;
 const playButton=document.getElementById('guide-play');
 const loadingStatus=document.createElement('span');loadingStatus.className='loading-status';loadingStatus.setAttribute('role','status');
 document.querySelector('.guide-actions').prepend(loadingStatus);
@@ -32,27 +31,19 @@ async function prepareTown(){
 }
 void prepareTown().catch(()=>{});
 function stopStudio(){
-  stopApprovedRigs(document.getElementById('studio-walker'));
+  introMascot?.stop();introMascot=null;
   studioEpoch++;clearTimeout(studioTimer);
-  for(const animation of studioAnimations)animation.cancel();
-  studioAnimations=[];pages.studio.classList.remove('ident-ready');
+  pages.studio.classList.remove('ident-ready');
 }
 async function startStudio(){
   stopStudio();const token=studioEpoch;
   const source=document.getElementById('studio-logo-source');
   try{await Promise.all([loadImage(source.getAttribute('src')),prepareTown()]);}catch{if(token===studioEpoch)show('guide');return;}
   if(token!==studioEpoch||root.dataset.entry!=='studio'||document.hidden)return;
-  if(!reduced.matches){
-    const walker=document.getElementById('studio-walker');
-    const sprite=createIntroWalker(walker);
-    const rig=await mountApprovedRig(sprite,{walking:true,direction:'right',rate:1.5});
-    if(token!==studioEpoch||root.dataset.entry!=='studio'||document.hidden){rig?.stop();return;}
-    if(!rig){show('guide');return;}
-    const width=walker.getBoundingClientRect().width;
-    studioAnimations.push(
-      walker.animate([{transform:`translateX(${-width}px)`},{transform:`translateX(${pages.studio.clientWidth}px)`}],{duration:2470,delay:1150,fill:'both',easing:'linear'})
-    );
-  }
+  const host=document.getElementById('studio-walker');
+  const mascot=await mountMascot(host,{mode:'wave'});
+  if(token!==studioEpoch||root.dataset.entry!=='studio'||document.hidden){mascot?.stop();return;}
+  introMascot=mascot;
   pages.studio.classList.add('ident-ready');
   studioTimer=setTimeout(()=>{if(token===studioEpoch)show('guide');},reduced.matches?1800:3950);
 }

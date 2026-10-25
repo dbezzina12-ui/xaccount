@@ -4,6 +4,18 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · ChatGPT → Claude + Dylan · S-26 mascot idle and intro greeting
+
+**Did:** Replaced the intro walking character with the subway mascot waving. Generated clean base/bonus backplates for phone and desktop plus a transparent head/blink/body/arm atlas. Runtime composites separate parts: quiet breathing, two short blinks per 8.4 seconds, small head motion; only the intro waves. Both game scenes switch mascot placement under the existing bonus doors. Backplates replace baked mascots only after every required image decodes; otherwise the original art remains. Mascot follows background zoom, pan and grading. Held screen previews use a still greeting and correct base/bonus position. Controller, symbols, math and awards unchanged.
+
+**Validation:** Main Node suite 110/110; Studio/runtime 61/61; deployed-source suite 60/60. Five new regression tests cover motion bounds, frame-rate cap, pause/resume and listener cleanup, reduced motion with zero scheduled frames, removal during asset loading, placement and background panning. Browser checked desktop/mobile base scenes, mobile bonus entry and mascot above reels, and live desktop/390px intro plus guide. Runtime is capped at 30 paints/sec and DPR 2. Hidden-tab/reduced-motion lifecycle is tested with controlled events; actual iPhone/Android scheduling and visual performance remain S-24.
+
+**Next for Claude:** Review `subway-mascot.js` and `studio/scene-mascot.js` with S-24 phone performance, repeated intro Skip/reopen, hidden-tab resume, rapid layout/theme changes, and the held Screens previews. Confirm no duplicate canvas/RAF after repeated mounting and that the greeting arm stays attached at every phase. Keep existing crossing ownership masks and S-25 desktop layout.
+
+**Questions for Dylan:** none for this change. **Blocked on:** nothing.
+
+---
+
 ### 2026-10-25 · ChatGPT → Claude + Dylan · S-20 merged, wider desktop reels and head award legibility
 
 **Did:** Brought in Claude's merged branch through `75506ab` including S-20 audio, smaller motion canvas and crossing landing masks. Dylan's follow-up was to enlarge desktop reels rather than add background clutter: the subway cabinet is now 800×460 at (220,184), versus the unchanged 880×100 controller. Desktop symbols and airborne copies keep square paint boxes. The five desktop bonus jars now sit on individual side shelves, clear of the larger cabinet and mascot. Mobile composition and art remain unchanged. Single-cell crossing heads use brighter green multipliers with a 3px dark outline and cell-relative sizing; no backing box and no award changes.

@@ -1,7 +1,7 @@
 // Scene and symbol presentation only. Never changes a selected game outcome.
 const asset=file=>new URL('../games/zombify/runtime/assets/studio/'+file,import.meta.url).href;
 const cssURL=url=>`url(${JSON.stringify(url)})`;
-export const subwayPreloads=['subway-lab.webp','subway-desktop.webp','subway-lab-desktop.webp','subway-infected.webp'].map(asset);
+export const subwayPreloads=['subway-lab.webp','subway-desktop.webp','subway-lab-desktop.webp','subway-infected.webp','subway-background-clean.webp','subway-desktop-clean.webp','subway-lab-clean.webp','subway-lab-desktop-clean.webp','subway-mascot-parts.webp'].map(asset);
 export const HUMAN_CROPS={j:[58,447,118,120],q:[305,447,118,120],k:[554,447,118,120],a:[554,704,118,120],skater:[182,576,118,120],nurse:[430,447,118,120],builder:[182,447,118,120],cop:[677,447,118,120],scientist:[554,576,118,120],zombie:[430,704,118,120]};
 export const INFECTED_CELLS={skater:[0,0],nurse:[1,0],builder:[2,0],cop:[0,1],scientist:[1,1],vial:[2,1]};
 export function subwayLayout(s){
@@ -30,6 +30,9 @@ export function subwayRules(project,title,g,s,reels,src){
  const {counter:c,rack:r,label,value}=subwayLayout(s);
  rules+=`
  #game[data-free-spins] .studio-background{background-image:${lab}!important}
+ #game[data-mascot-ready] .studio-background{background-image:${cssURL(asset(mobile?'subway-background-clean.webp':'subway-desktop-clean.webp'))}!important}
+ #game[data-mascot-ready][data-free-spins] .studio-background{background-image:${cssURL(asset(mobile?'subway-lab-clean.webp':'subway-lab-desktop-clean.webp'))}!important}
+ #game:not([data-mascot-ready])>.scene-mascot{visibility:hidden}
  #game[data-free-spins] .brand{visibility:hidden!important}
  #game[data-free-spins] .free-spins-counter{left:${c.x-reels.x}px!important;right:auto!important;top:${c.y-reels.y}px!important;bottom:auto!important;width:${c.w}px!important;height:${c.h}px!important;transform:none!important;z-index:35!important}
  #game[data-free-spins] .counter-art{display:none!important}

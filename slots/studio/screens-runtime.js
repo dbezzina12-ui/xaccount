@@ -1,3 +1,5 @@
+import {paintMascot,mascotPlacement,MASCOT_ATLAS} from '../games/zombify/runtime/subway-mascot.js';
+import {loadImage} from '../games/zombify/runtime/asset-cache.js';
 import {createInfectionTubes} from '../games/zombify/runtime/infection-tubes.js';
 import {PEOPLE,LABELS,HUMAN_MULTIS} from '../games/zombify/runtime/math.js';
 import {createGuideScenes} from '../games/zombify/runtime/guide-scenes.js';
@@ -12,7 +14,7 @@ function snapshotTree(source,originalText=()=>undefined){
 }
 // Snapshot the complete styled scene, never an isolated component. No scripts or
 // event handlers run in the held copy; the original round state stays untouched.
-export function screenRuntime(report=()=>{}){let project,scene,shown=null,view=null,viewText=null,currentSettings={};const liveText=createScreenText(document);const style=document.createElement('style');style.id='studio-screen-adjustments';document.head.append(style);
+export function screenRuntime(report=()=>{}){let project,scene,shown=null,view=null,viewText=null,currentSettings={};const liveText=createScreenText(document);const style=document.createElement('style');style.id='studio-screen-adjustments';document.head.append(style);let mascotImage=null;void loadImage(MASCOT_ATLAS).then(image=>{mascotImage=image;if(shown?.name==='intro')show(shown.name,shown.options);}).catch(()=>{});
  function close(){document.querySelectorAll('iframe[data-screen-preview]').forEach(x=>x.remove());viewText?.dispose();viewText=null;view=null;shown=null;report('Preview closed');}
  function show(name,options={}){if(!name){close();return;}if(!SCREEN_PARTS[name])throw Error('Unknown screen');if(!project)throw Error('Wait for the scene to load.');const tier=['regular','super','hidden'].includes(options.tier)?options.tier:'regular',winTier=['nice','big','epic','max'].includes(options.winTier)?options.winTier:'nice',guidePage=[0,1,2].includes(options.guidePage)?options.guidePage:0;shown={name,options:{tier,winTier,guidePage}};
  const body=snapshotTree(document.body,el=>liveText.original(el));
@@ -27,6 +29,9 @@ export function screenRuntime(report=()=>{}){let project,scene,shown=null,view=n
  if(name==='intro')rules+=' #studio-page .studio-main,#studio-page .studio-gam,#studio-page .studio-es,#studio-page .studio-presenting{opacity:1;transform:none;clip-path:inset(0)}';
  if(name==='intro')rules+=' #studio-page .gg-piece{opacity:1;transform:none}';
  if(name==='guide'){const scenes=createGuideScenes();body.querySelectorAll('[data-guide-scene]').forEach((card,i)=>{card.hidden=project.scenes[scene].width<760&&i!==guidePage;const board=card.querySelector('.guide-demo-board');board.replaceChildren();for(const index of scenes[i].indices){const cell=scenes[i].initial[index],tile=document.createElement('div'),art=document.createElement('span');tile.className='tile';tile.dataset.kind=cell.kind;art.className='symbol art-'+cell.kind;tile.append(art);board.append(tile);}card.querySelector('.guide-demo-caption').textContent=scenes[i].openingCaption;card.querySelector('.guide-demo-toggle').textContent='HELD PREVIEW';});body.querySelector('#guide-page-count').textContent=`${guidePage+1} of 3`;const play=body.querySelector('#guide-play');play.disabled=false;play.textContent='TAP TO PLAY';body.querySelector('.loading-status')?.remove();}
+ const actor=body.querySelector('.scene-mascot');
+ if(actor){const p=mascotPlacement(project.scenes[scene],game.hasAttribute('data-free-spins'));Object.assign(actor.style,{left:p.x+'px',top:p.y+'px',width:p.w+'px',height:p.h+'px'});}
+ if(name==='intro'&&mascotImage){const canvas=document.createElement('canvas');canvas.width=520;canvas.height=450;paintMascot(canvas,mascotImage,{mode:'wave',reduced:true});const image=document.createElement('img');image.className='subway-mascot-canvas';image.src=canvas.toDataURL();image.style.cssText='width:100%;height:100%';welcome.querySelector('#studio-walker').replaceChildren(image);welcome.querySelector('#studio-page').classList.add('ident-ready');}
  const head=[...document.head.querySelectorAll('link[rel="stylesheet"],style')].map(x=>x.outerHTML).join('');const html=document.documentElement.cloneNode(false);if(name==='intro'||name==='guide')html.dataset.entry=name==='guide'?'guide':'studio';else html.removeAttribute('data-entry');
  const next=document.createElement('iframe');next.title='Held screen preview';next.setAttribute('sandbox','allow-same-origin');next.style.cssText='position:fixed;inset:0;width:100%;height:100%;border:0;z-index:2147483647;background:transparent;visibility:hidden';
  // Keep the previous image until the replacement has loaded its CSS and art.
