@@ -94,7 +94,7 @@ function apply(project,key){
  #game #mobile-controller{position:absolute!important;left:${controls.x}px!important;top:${controls.y}px!important;right:auto!important;bottom:auto!important;width:390px!important;height:214px!important;max-width:none!important;margin:0!important;transform:scale(${controls.w/390},${controls.h/214})!important;transform-origin:0 0!important;display:${mobile&&controls.visible?'block':'none'}!important;z-index:10!important;opacity:${controls.opacity}!important}
  #game .infection-tracker{position:absolute!important;top:${rackTop}px!important;bottom:auto!important;left:0!important;right:auto!important;width:${rackWidth}px!important;max-width:none!important;margin:0!important;z-index:20!important}
  #game .infection-people{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:4px!important}#game .infection-tube{height:${tubeHeight}px!important;width:${tubeHeight*977/1610}px!important;max-width:100%!important;max-height:none!important}.infection-heading{font-size:9px!important}.tube-name{display:none!important}
- #game .free-spins-counter{--counter-size:${mobile?88:140}px;right:0!important;top:-65px!important}
+ #game .free-spins-counter{--counter-size:${mobile?100:140}px;right:${mobile?reels.x+reels.w-s.width+12:0}px!important;top:${mobile?12-reels.y:-65}px!important}
  #game .studio-preview-board{position:absolute;inset:0;z-index:1;display:none;overflow:hidden;background:${g.fill} ${g.texture?cssURL(src('enamel')):'none'} center / 100% 100% no-repeat;box-shadow:inset 0 6px 14px #0004}
  #game.studio-layout-test .studio-preview-board{display:flex}
  #game.studio-layout-test #board,#game.studio-layout-test #stack-layer{visibility:hidden!important}
