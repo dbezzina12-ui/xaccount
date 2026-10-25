@@ -323,7 +323,8 @@ function showLine(win) {
   const length=positions.slice(1).reduce((sum,p,i)=>sum+Math.hypot(p.x-positions[i].x,p.y-positions[i].y),0);
   polyline.style.strokeDasharray=String(length);
   void animate(polyline,[{strokeDashoffset:length},{strokeDashoffset:0}],480,{easing:'ease-out'});
-  effects.line(win.cells);
+  // The optional trace is above the board; never draw it through a tall zombie.
+  if(!$('stack-layer').children.length)effects.line(win.cells);
   for(const index of win.cells){
     $('board').children[index].classList.add('hit');
     const owner=currentBoard[index].stackId||currentBoard[index].owner||currentBoard[index].id;
@@ -349,9 +350,11 @@ function point(index) {
   return {x:rect.left-outer.left+rect.width/2,y:rect.top-outer.top+rect.height/2};
 }
 function renderInfection(progress=freshInfection()) {
-  currentInfection={...progress};$('infection-tracker').hidden=bonusTier!=='regular';
+  currentInfection={...progress};$('infection-tracker').hidden=!bonusTier;
+  // Super and Hidden already unlock every infection; display that state from entry.
+  const displayed=bonusTier==='super'||bonusTier==='hidden'?Object.fromEntries(PEOPLE.map(kind=>[kind,3])):progress;
   $('carrier-note').textContent=bonusTier?'Zombified bites: Skater +2×, Medic +3×, Builder +4×, Officer +5×, Scientist +10×.':'In base play, zombified characters add +3× or +5× when eaten. Bonuses have their own infection rules.';
-  $('infection-summary').textContent=`${infectionTubes.update(progress)} / 5 INFECTED`;
+  $('infection-summary').textContent=`${infectionTubes.update(displayed)} / 5 INFECTED`;
 }
 async function walking(event) {
   const isHeart=event.type==='heart';

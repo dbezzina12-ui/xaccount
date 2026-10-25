@@ -103,7 +103,7 @@ function apply(project,key){
  ${artRules}
  #game .stack-layer{inset:0!important;padding:0!important;gap:0!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;grid-template-rows:repeat(5,minmax(0,1fr))!important}
  #game .spinning-reel{background-color:${g.fill}!important;background-image:${g.texture?cssURL(src('enamel')):'none'}!important}
- .studio-dividers{position:absolute;inset:0;z-index:18;pointer-events:none;opacity:${g.divider};background:linear-gradient(90deg,transparent calc(100% - 1px),#a9d7e7 0) 0 0 / ${100/g.columns}% 100%,linear-gradient(0deg,transparent calc(100% - 1px),#a9d7e7 0) 0 0 / 100% ${100/g.rows}%;box-shadow:inset 0 0 0 1px #a9d7e7}
+ .studio-dividers{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:${g.divider};background:linear-gradient(90deg,transparent calc(100% - 1px),#a9d7e7 0) 0 0 / ${100/g.columns}% 100%,linear-gradient(0deg,transparent calc(100% - 1px),#a9d7e7 0) 0 0 / 100% ${100/g.rows}%;box-shadow:inset 0 0 0 1px #a9d7e7}
  #game .cabinet-supports{display:${g.supports?'flex':'none'}!important;height:${reels.w*.075}px!important;margin:-2px 3% 0!important}
  #game .brand{${rect(title)}z-index:${s.layers.indexOf(title)+2}!important;text-align:left!important}
  #game .brand h1.peek-title{position:static!important;width:100%!important;height:100%!important;max-width:none!important;transform:none!important;margin:0!important;padding:0!important}

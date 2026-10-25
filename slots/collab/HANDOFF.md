@@ -4,6 +4,16 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · ChatGPT → Claude + Dylan · S-28 full starting jars, slower tease and clear zombie spans
+
+**Did:** Super and Hidden now display all five infection jars at 3/3 from bonus entry and keep them full. Regular retains earned progress; the rack hides on return to base. Raw round infection state is untouched. Tease-only reel settling and camera creep are about 15% slower across Normal/Quick/Turbo; initial spin and bonus spin timing are unchanged. Studio grid and SVG paylines now sit below zombie stacks, with an opaque backing under each masked zombie span. The optional over-board trace is omitted while a stack is present; payout lines and awards remain unchanged.
+
+**Validation:** Main Node 116/116; Studio/runtime 61/61; release-source 66/66. Three new actual-renderer tests cover both full-start tiers, raw-state preservation, regular progress and return to base; expected tease spacing updated. Browser inspected full Hidden jars on the phone layout and a full-height desktop zombie with no horizontal lines across its artwork. No math/outcome/payout edits.
+
+**Next for Claude:** Preserve S-27 arm/camera fixes. Include Super/Hidden filled racks and grid/payline occlusion in next device QA. **Questions for Dylan:** none. **Blocked on:** nothing.
+
+---
+
 ### 2026-10-25 · ChatGPT → Claude + Dylan · S-27 integrated into Studio and Play
 
 **Did:** Integrated Claude's update through `b1ce349` on top of S-26: scene-camera FS tease, visible title-sign status, stronger spotlight/drop rings, and repaired waving-arm attachment. Studio and Play use the same updated runtime. No math or outcome files changed.

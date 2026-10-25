@@ -65,3 +65,7 @@
 }
 
 #game .head-cell-art>.symbol{inset:0!important;width:auto!important;height:100%!important;aspect-ratio:1;max-width:100%;margin:auto!important}
+
+/* Keep grid and winning paths below the continuous expanded-zombie artwork. */
+#game .payline-effects{z-index:4}
+#game .expanded-zombie{background-color:#102018}

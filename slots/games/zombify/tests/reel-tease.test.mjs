@@ -7,7 +7,7 @@ test('only columns following the second landed FS slow; all share its landing ti
  assert.deepEqual(plans.map(p=>p.tease),[false,false,false,true,true,true]);
  for(const p of plans.slice(3))assert.equal(p.start,plans[2].ms);
  assert.ok(plans[3].ms-plans[2].ms>=1440);
- assert.equal(plans[4].ms-plans[3].ms,710);
+ assert.equal(plans[4].ms-plans[3].ms,817);
  assert.ok(reelTeasePlan(boardAt([6])).every(p=>!p.tease));
  assert.ok(reelTeasePlan(boardAt([6,14,22]),true).every(p=>!p.tease));
  assert.ok(reelTeasePlan(boardAt([0,6])).slice(1).every(p=>p.tease));

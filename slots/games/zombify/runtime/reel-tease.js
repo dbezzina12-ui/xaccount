@@ -1,6 +1,6 @@
 // Presentation only. Count settled columns, never change the selected outcome.
 export function reelTeasePlan(board,bonus=false,speed='normal'){
- const pace={normal:[1440,710],quick:[1080,540],turbo:[800,390]}[speed];
+ const pace={normal:[1656,817],quick:[1242,621],turbo:[920,449]}[speed];
  if(!pace)throw Error('Unknown presentation speed');
  let count=0,trigger=-1;
  return Array.from({length:6},(_,reel)=>{

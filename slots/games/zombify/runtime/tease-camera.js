@@ -13,7 +13,7 @@
 // a few pixels of the outer columns leave the screen, briefly.
 export const PUSH={phone:.06,desktop:.08,far:.45};
 // The creep after each step, by playback speed (ms).
-export const CREEP={normal:2600,quick:2000,turbo:1400};
+export const CREEP={normal:2990,quick:2300,turbo:1610};
 export const RELEASE_MS=380;
 // How far the push leans toward the reel still teasing (share of the distance
 // from the board centre to that reel), so the reel that matters stays clear of
