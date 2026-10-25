@@ -4,6 +4,36 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · Claude → ChatGPT + Dylan · Night Fall: arms seated (N-02, second pass)
+
+**Did:** Dylan said the arms weren't connected, and they weren't. My first rig pass kept your placement boxes, and there the arm pieces sit end to end:
+- **Reaper:** each forearm's socket cap (the mauve tube end meant to sit inside the sleeve) showed beside the sleeve, so each arm read as two separate tubes.
+- **Archer:** both arms hung from shoulder balls 22–35 rig units away from the body's own shoulder balls, so there were two balls per side. The bow hand sat beside the bow instead of on it.
+- **Why my tests missed it:** they only checked that my own pivot points coincide.
+- **Now:** each arm gets a rest placement, a small turn or move of its art inside its bone (`rig.json` `rest`).
+  - **Reaper:** the forearms slide up into their sleeves. Each sleeve is drawn again, less what the body covers, over its forearm, so the forearm comes out of the sleeve. The scythe shaft runs over the sleeve and under the fist, as in `layout-target.png`. The fist grips 16 higher on the shaft and the left hand hangs at the pouch.
+  - **Archer:** each arm's ball sits on the body's shoulder ball. The bow arm rises 18° and the hand closes over the riser with the arrow resting across it. The draw fingers now hold the string at the knuckles.
+  - **Unchanged:** the motion keys and release timings.
+- **Checks from the art's pixels** (`tests/browser/nightfall-rig.e2e.mjs`): these run through the real drawn transforms on every frame, at desktop, 390x844 and 390x693.
+  - No pixel of either socket cap shows.
+  - The archer's arm balls hide the body's balls.
+  - The bow hand covers at least 85% of the riser.
+
+  With your original placement the cap check fails at once (46 of 46 points showing). `tools/nightfall-rig.py` also asserts that both caps stay at least 3 rig units inside their sleeves at every elbow bend the strike uses.
+- **Results:** `npm test` 119, studio 61, Night Fall 15 and browser 49 all pass. `engine.js` is unchanged (876e2a6d...). Before/after: `games/nightfall/shots/arms-before-after.jpg`.
+
+**Files:** `games/nightfall/runtime/nightfall-actors.js`, `nightfall.css` (string layer), `assets/nightfall/rig.json`, new `assets/nightfall/reaper/upper-right-hem.webp`, `upper-left-hem.webp`, `fore-right-fist.webp`, `tools/nightfall-rig.py`, `tests/browser/nightfall-rig.e2e.mjs`, `games/nightfall/ANIMATION-HANDOFF.md`, BOARD N-02.
+
+**Next for ChatGPT:**
+1. Merge `claude/blissful-rubin-xou20i` before publishing Night Fall.
+2. If you redraw arm art, keep each forearm's socket cap and each shoulder ball. Then re-run `python3 tools/nightfall-rig.py`; it fails loudly if a cap would show.
+
+**Questions for Dylan:** Do the arms look right on your phone now?
+
+**Blocked on:** nothing. No math or engine changes.
+
+---
+
 ### 2026-10-25 · Claude → ChatGPT + Dylan · Night Fall: jointed rigs, feet planted (N-02)
 
 **Did:** Night Fall wasn't on GitHub yet, so I merged the Night Fall files from Dylan's handoff zip into `claude/blissful-rubin-xou20i`: `games/nightfall`, `nightfall-studio` and `tools/prepare-nightfall-art.py`. The zip's root `README.md`, `package.json` and `index.html` were left out, so the repo's own aren't replaced. `engine.js` is unchanged (SHA-256 876e2a6d...), and its 15 checks pass (`npm run test:nightfall`).

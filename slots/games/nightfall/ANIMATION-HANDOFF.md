@@ -38,10 +38,31 @@ Dylan supplied `art/source/layout-target.png` as the authoritative target for si
 
 ## Claude rig pass (2026-10-25)
 
-Dylan: the rigs weren't working and the feet weren't planted. `runtime/nightfall-actors.js` is now a jointed rig; the art is unchanged apart from four parts cut from it.
+Dylan: the rigs weren't working and the feet weren't planted. `runtime/nightfall-actors.js` is now a jointed rig; the art is unchanged apart from parts cut from it (four in the first pass, three more in the second).
 
 - **Joints come from the art.** `tools/nightfall-rig.py` measures them (elbows = where sleeve and forearm overlap, the scythe grip = where the fist covers the shaft, the bow's nock and tips = fitted to the string pixels) into `runtime/assets/nightfall/rig.json`, and cuts four parts: `archer/bow-bare.webp` (the bow without its painted arrow and string; the wood behind the arrow is filled from the wrap above), `archer/arrow.webp`, and the draw arm split at the elbow (`draw-upper.webp`, `draw-fore.webp`, overlapping by a few pixels so bends never open a gap). Re-run it after any rig art change.
 - **Bones, not separate CSS rotations.** Each part hangs from a bone that turns about its joint and carries its children: shoulder, elbow, then the scythe at the grip; the bow and bow arm turn together about the bow shoulder; the draw arm is solved (two-bone IK) so the fingers stay on the nock while aiming and drawing. The string is drawn live (tips, fingers, tips), snaps straight and rings out on release, and the arrow is loosed at the release point and nocked again. Parts stay flat siblings with their original draw order.
 - **Feet planted.** The body (legs and boots) never moves; breathing scales the upper body about the soles. Both characters stand on one ground line with a soft contact shadow: on phones the soles sit on the bottom of the controller's first row (Buy Bonus, - and +), clear of the icon row, as in `art/source/layout-target.png`; on desktop on the floor just above the controller bar.
 - **Lifecycle.** A slow idle (breathing, a little sway carried down the arms) at most 30 paints a second; none in a hidden tab, with the menu open, during an action or under reduced motion. Skip ends an action at once; the release still resolves at the same phase (strike .48, shot .57), and the arrow trail starts at the nocked arrow's head.
-- **Checks.** `tests/browser/nightfall-rig.e2e.mjs` measures every joint from the rendered transforms on every frame of a real strike and shot (desktop and 390x844), the soles, the release point, the ground line at 390x844, 390x693, 375x667 and 1280x800, and the pause/skip/hidden/reduced-motion behaviour. `npm run test:nightfall` runs the engine checks; `engine.js` is byte-identical (SHA-256 876e2a6d...).
+- **Arms seated (second pass).** Dylan: the arms weren't connected. The cutouts are separate tubes. Every reaper forearm has a socket cap on top that is meant to sit inside its sleeve, and every archer arm has a shoulder ball meant to sit on the body's. ChatGPT's placement boxes stacked them end to end, so the caps showed and the archer's arms hung from balls beside the body's own shoulders. Each arm now has a **rest placement** (its art's turn or move inside its bone, in `rig.json` `rest`):
+  - **Reaper:**
+    - Each forearm slides up into its sleeve. The scythe fist turns 15° on the shaft and slides 16 up it; the left hand rises 33 to the pouch.
+    - Two new layers, `reaper/upper-*-hem.webp`, are each sleeve again less what the body covers, drawn over its forearm, so the forearm comes out of the sleeve.
+    - The shaft runs over the sleeve and under the fist (`reaper/fore-right-fist.webp`), as in the layout target.
+    - Both caps stay at least 3 rig units inside their sleeves at every elbow bend the strike uses. The tool asserts this.
+  - **Archer:**
+    - Each arm's ball is on the body's shoulder ball. The left is in full view; the right, half under the cape, is fitted from its outline.
+    - The bow arm rises 18° and the bow sits in the hand. The open hand closes over the riser, and the arrow rests across it. The bow arm is now drawn over the body and the bow.
+    - The string is held at the front of the fist's top knuckles (`fingers`) instead of a point in front of it.
+- **Checks.** `tests/browser/nightfall-rig.e2e.mjs` measures:
+  - every joint from the rendered transforms, on every frame of a real strike and shot (desktop, 390x844 and 390x693);
+  - the soles and the release point;
+  - the ground line at 390x844, 390x693, 375x667 and 1280x800;
+  - the pause/skip/hidden/reduced-motion behaviour.
+
+  It also checks the arms from the art's own pixels, through the drawn transforms, so these checks don't lean on the rig's pivots:
+  - no pixel of a reaper socket cap shows;
+  - the archer's arm balls sit on and hide the body's shoulder balls;
+  - the bow hand covers at least 85% of the riser around the arrow's rest.
+
+  With ChatGPT's original placement the cap check fails at once (46 of 46 points showing). `npm run test:nightfall` runs the engine checks; `engine.js` is byte-identical (SHA-256 876e2a6d...). Before/after: `shots/arms-before-after.jpg`.

@@ -8,39 +8,46 @@
 // measured from the art by tools/nightfall-rig.py (assets/nightfall/rig.json).
 // The body, with the legs and boots, never moves: the feet stay planted on the
 // ground line place() measures, and breathing scales the upper body about the
-// soles. Parts stay flat siblings (their art's draw order is kept); each gets
-// the matrix of its bone.
+// soles. Parts stay flat siblings in a fixed draw order; each gets the matrix
+// of its bone, times its rest placement: the art's own turn or move inside the
+// bone (rig.json `rest`), which seats each forearm's socket cap inside its
+// sleeve and each shoulder ball on the body's socket. ChatGPT's boxes stacked
+// the arm pieces end to end, so the caps showed and the archer's shoulders
+// floated beside the body.
 const ROOT='assets/nightfall/';
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 const SIZE=[320,430];
 
 // Placement boxes [x, y, w, h] in rig space (from ChatGPT's atlas extraction)
-// and draw order. `bone` is the bone the part hangs from.
+// and draw order. `bone` is the bone the part hangs from; `rest` names the
+// rest placement it shares (default: its own). The reaper's hems are the
+// sleeves again, less what the body covers, drawn over the forearms so each
+// comes out of its sleeve; the shaft runs over the sleeve and under the fist,
+// as in the layout target.
 export const RIGS={
  reaper:{size:SIZE,parts:{
   cape:{file:'cape',box:[36,151,205,245],bone:'cape',z:0},
   upperLeft:{file:'upper-left',box:[64,172,62,106],bone:'upperLeft',z:1},
   upperRight:{file:'upper-right',box:[225,170,60,100],bone:'upperRight',z:1},
   body:{file:'body',box:[66,149,212,267],bone:'chest',z:2},
-  scythe:{file:'scythe',box:[103,5,185,390],bone:'scythe',z:3},
-  head:{file:'head',box:[55,48,193,177],bone:'head',z:4},
-  foreLeft:{file:'fore-left',box:[69,257,58,98],bone:'foreLeft',z:5},
-  foreRight:{file:'fore-right',box:[244,246,58,98],bone:'foreRight',z:5}
+  foreRight:{file:'fore-right',box:[244,246,58,98],bone:'foreRight',z:3},
+  hemRight:{file:'upper-right-hem',box:[225,170,60,100],bone:'upperRight',rest:'upperRight',z:4},
+  scythe:{file:'scythe',box:[103,5,185,390],bone:'scythe',z:5},
+  head:{file:'head',box:[55,48,193,177],bone:'head',z:6},
+  foreLeft:{file:'fore-left',box:[69,257,58,98],bone:'foreLeft',z:7},
+  hemLeft:{file:'upper-left-hem',box:[64,172,62,106],bone:'upperLeft',rest:'upperLeft',z:8},
+  fistRight:{file:'fore-right-fist',box:[244,246,58,98],bone:'foreRight',rest:'foreRight',z:9}
  }},
  archer:{size:SIZE,parts:{
-  bowArm:{file:'bow-arm',box:[41,183,90,137],bone:'bowArm',z:1},
   body:{file:'body',box:[87,147,174,264],bone:'chest',z:2},
   bow:{file:'bow-bare',box:[4,155,156,221],bone:'bow',z:3},
-  arrow:{file:'arrow',box:[4,155,156,221],bone:'arrow',z:4},
-  head:{file:'head',box:[65,36,190,194],bone:'head',z:5},
-  drawUpper:{file:'draw-upper',box:[146,210,128,99],bone:'drawUpper',z:6},
-  drawFore:{file:'draw-fore',box:[146,210,128,99],bone:'drawFore',z:7}
+  bowArm:{file:'bow-arm',box:[41,183,90,137],bone:'bowArm',z:4},
+  arrow:{file:'arrow',box:[4,155,156,221],bone:'arrow',z:5},
+  head:{file:'head',box:[65,36,190,194],bone:'head',z:6},
+  drawUpper:{file:'draw-upper',box:[146,210,128,99],bone:'drawUpper',z:7},
+  drawFore:{file:'draw-fore',box:[146,210,128,99],bone:'drawFore',z:8}
  }}
 };
-// The bow hand's rest grip: the arm lifts a little and the bow moves into the
-// hand, so the palm sits on the riser just under the arrow (the cutouts had the
-// hand beside the bow). Degrees, and rig units.
-export const BOW_GRIP={armLift:-13,bowShift:[-16,4]};
 
 // 2D affine [a,b,c,d,e,f]: x' = a x + c y + e, y' = b x + d y + f.
 const I=[1,0,0,1,0,0];
@@ -48,6 +55,8 @@ const mul=(m,n)=>[m[0]*n[0]+m[2]*n[1],m[1]*n[0]+m[3]*n[1],m[0]*n[2]+m[2]*n[3],m[
 const rotAbout=(deg,[x,y])=>{const r=deg*Math.PI/180,c=Math.cos(r),s=Math.sin(r);return [c,s,-s,c,x-c*x+s*y,y-s*x-c*y];};
 const move=([x,y])=>[1,0,0,1,x,y];
 const apply=(m,[x,y])=>[m[0]*x+m[2]*y+m[4],m[1]*x+m[3]*y+m[5]];
+// A part's rest placement (rig.json), identity if it has none.
+export const restOf=(J,kind,name)=>J.rest?.[RIGS[kind].parts[name].rest||name]||I;
 const ang=([x,y])=>Math.atan2(y,x)*180/Math.PI;
 const sub=(a,b)=>[a[0]-b[0],a[1]-b[1]],add=(a,b)=>[a[0]+b[0],a[1]+b[1]],len=v=>Math.hypot(v[0],v[1]),scale=(v,k)=>[v[0]*k,v[1]*k];
 const ease=t=>t<.5?2*t*t:1-(-2*t+2)**2/2,clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
@@ -87,17 +96,19 @@ function archerBones(J,pose){
  b.chest=breathe(J.sole,pose.breath||0);
  b.head=mul(b.chest,rotAbout(pose.head||0,J.neck));
  const aim=mul(b.chest,rotAbout(pose.aim||0,J.bowShoulder));
- b.bowArm=mul(aim,rotAbout(BOW_GRIP.armLift+(pose.bowArm||0),J.bowShoulder));
- b.bow=mul(aim,move(BOW_GRIP.bowShift));
+ // The bow hand's rest grip: the arm rises about its shoulder and the bow sits
+ // in the hand, the arrow's rest on the grip in the palm.
+ b.bowArm=mul(aim,rotAbout(J.armLift+(pose.bowArm||0),J.bowShoulder));
+ b.bow=mul(aim,move(J.bowShift));
  // Where the nock rests on the string, in the bow's frame, drawn back along the arrow.
  const nock=apply(b.bow,J.nock),grip=apply(b.bow,J.grip),back=scale(sub(nock,grip),1/len(sub(nock,grip)));
  const target=add(nock,scale(back,pose.pull||0));
- // The hand holds the nock: solve the draw arm for it (in the chest's frame).
+ // The fingers hold the nock: solve the draw arm for it (in the chest's frame).
  const inv=invert(b.chest),local=apply(inv,pose.hand||target);
- const ik=solveArm(J.drawShoulder,J.drawElbow,J.nock,local);
+ const ik=solveArm(J.drawShoulder,J.drawElbow,J.fingers,local);
  b.drawUpper=mul(b.chest,rotAbout(ik.upper,J.drawShoulder));
  b.drawFore=mul(b.drawUpper,rotAbout(ik.fore,J.drawElbow));
- const pinch=apply(b.drawFore,J.nock);
+ const pinch=apply(b.drawFore,J.fingers);
  // The arrow: nock in the fingers, shaft resting on the grip.
  const turn=ang(sub(grip,pinch))-ang(sub(J.grip,J.nock));
  b.arrow=mul(move(sub(pinch,J.nock)),rotAbout(turn,J.nock));
@@ -186,7 +197,7 @@ class Actor {
   if(!this.joints)return;
   const s=this.rig.clientWidth/SIZE[0]||1,frame=this.bones(pose);
   for(const [name,el] of Object.entries(this.parts)){
-   const m=frame.bones[RIGS[this.kind].parts[name].bone]||I,[bx,by]=RIGS[this.kind].parts[name].box;
+   const spec=RIGS[this.kind].parts[name],m=mul(frame.bones[spec.bone]||I,restOf(this.joints,this.kind,name)),[bx,by]=spec.box;
    // Element px: p_css = s*B + L*q + t, with t = s*((L - I) B + T).
    const e=s*((m[0]-1)*bx+m[2]*by+m[4]),f=s*(m[1]*bx+(m[3]-1)*by+m[5]);
    el.style.transform=`matrix(${m[0].toFixed(5)},${m[1].toFixed(5)},${m[2].toFixed(5)},${m[3].toFixed(5)},${e.toFixed(2)},${f.toFixed(2)})`;

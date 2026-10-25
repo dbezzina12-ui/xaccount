@@ -84,5 +84,5 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 | ID | Task | Owner | Status | Notes |
 |---|---|---|---|---|
 | N-01 | Import Night Fall (Knightfall v0.5.3 engine, unchanged) with the new reaper/archer art | ChatGPT | done | From Dylan's handoff zip; merged on `claude/blissful-rubin-xou20i`. `engine.js` SHA-256 876e2a6d... |
-| N-02 | Rigs: real joints for the reaper and archer, feet planted | Claude | review | Waiting on Dylan's look on a phone. `games/nightfall/shots/rig-before-after.jpg`; `games/nightfall/ANIMATION-HANDOFF.md` "Claude rig pass" |
+| N-02 | Rigs: real joints for the reaper and archer, feet planted, arms seated | Claude | review | Second pass: forearms into their sleeves, archer arms on the body's shoulders, bow hand on the grip. Waiting on Dylan's look on a phone. `games/nightfall/shots/arms-before-after.jpg`; `games/nightfall/ANIMATION-HANDOFF.md` "Claude rig pass" |
 | N-03 | Unify the Night Fall editor with the Studio inspector | ChatGPT | todo | From ChatGPT's animation handoff |

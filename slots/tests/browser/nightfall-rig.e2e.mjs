@@ -3,6 +3,10 @@
 // together (shoulders, elbows, the scythe in its fist, the fingers on the
 // nock, the string on the bow tips, the bow in its hand), the soles never
 // move, and the characters stand on the ground line at every screen size.
+// The arms are also checked from the art's own pixels, so these checks do not
+// lean on the rig's pivots: no pixel of a reaper forearm's socket cap shows
+// (each stays under an opaque sleeve pixel); the archer's arm balls sit on the
+// body's shoulder balls and hide them; and the bow hand covers the riser.
 // Also the release point, Skip, menu pause, hidden tabs and reduced motion.
 //
 //   npm run test:studio-browser
@@ -29,32 +33,63 @@ async function open(viewport, extra = {}) {
   return page;
 }
 
-// In the page: where a rig-space point of a part is drawn (rig px), from the
-// part's computed transform; the contact pairs; and a recorder on draw().
-const MEASURE = () => {
-  const at = (actor, part, [x, y]) => {
-    const el = actor.parts[part], rig = actor.rig, s = rig.clientWidth / 320;
+// In the page: where a point of a part is drawn (rig px), from the part's
+// computed transform; the contact pairs; the art checks; and a recorder on draw().
+const MEASURE = async () => {
+  const { restOf } = await import(new URL('nightfall-actors.js', location.href).href);
+  const inv = (m) => { const d = m[0] * m[3] - m[1] * m[2]; return [m[3] / d, -m[1] / d, -m[2] / d, m[0] / d, (m[2] * m[5] - m[3] * m[4]) / d, (m[1] * m[4] - m[0] * m[5]) / d]; };
+  const ap = (m, [x, y]) => [m[0] * x + m[2] * y + m[4], m[1] * x + m[3] * y + m[5]];
+  // A joint (rig units, in its bone's frame) as drawn by a part: the art point
+  // under it is the joint moved back through the part's rest placement.
+  const at = (actor, part, p) => {
+    const el = actor.parts[part], s = actor.rig.clientWidth / 320, [x, y] = ap(inv(restOf(actor.joints, actor.kind, part)), p);
     const box = [parseFloat(el.style.left) * 3.2, parseFloat(el.style.top) * 4.3];
-    const m = new DOMMatrix(getComputedStyle(el).transform);
-    const q = m.transformPoint(new DOMPoint((x - box[0]) * s, (y - box[1]) * s));
+    const q = new DOMMatrix(getComputedStyle(el).transform).transformPoint(new DOMPoint((x - box[0]) * s, (y - box[1]) * s));
     return [box[0] * s + q.x, box[1] * s + q.y];
   };
+  // A native pixel of a part's image, drawn (rig px); and a drawn point back
+  // to a part's native pixel.
+  const box = (el) => ({ x: parseFloat(el.style.left) / 100 * el.parentElement.clientWidth, y: parseFloat(el.style.top) / 100 * el.parentElement.clientHeight, w: el.offsetWidth, h: el.offsetHeight, m: new DOMMatrix(getComputedStyle(el).transform) });
+  const drawn = (el, [u, v]) => { const b = box(el), q = b.m.transformPoint(new DOMPoint(u * b.w / el.naturalWidth, v * b.h / el.naturalHeight)); return [b.x + q.x, b.y + q.y]; };
+  const native = (el, [x, y]) => { const b = box(el), q = b.m.inverse().transformPoint(new DOMPoint(x - b.x, y - b.y)); return [q.x * el.naturalWidth / b.w, q.y * el.naturalHeight / b.h]; };
+  const alphas = new Map();
+  const alphaAt = (el, [u, v]) => {
+    let a = alphas.get(el.src);
+    if (!a) { const c = document.createElement('canvas'); c.width = el.naturalWidth; c.height = el.naturalHeight; const g = c.getContext('2d'); g.drawImage(el, 0, 0); a = { d: g.getImageData(0, 0, c.width, c.height).data, w: c.width, h: c.height }; alphas.set(el.src, a); }
+    const x = Math.round(u), y = Math.round(v);
+    return x < 0 || y < 0 || x >= a.w || y >= a.h ? 0 : a.d[(y * a.w + x) * 4 + 3];
+  };
+  // Is a point of `part` hidden under an opaque pixel of a part drawn over it
+  // (of `by`, if given)?
+  const hidden = (actor, part, pt, by) => {
+    const parts = Object.entries(actor.parts), el = actor.parts[part], z = +el.style.zIndex, i = parts.findIndex(([n]) => n === part);
+    return parts.some(([n, o], k) => (!by || by.includes(n)) && (+o.style.zIndex > z || (+o.style.zIndex === z && k > i)) && alphaAt(o, native(o, pt)) >= 128);
+  };
+  const bare = (actor, part, points, by) => points.filter((p) => !hidden(actor, part, drawn(actor.parts[part], p), by)).length;
   const gap = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
   window.__pairs = (actor) => {
-    const J = actor.joints, R = actor.kind === 'reaper';
+    const J = actor.joints, R = actor.kind === 'reaper', unit = actor.rig.clientWidth / 320;
     const same = R
-      ? [['body', 'upperRight', J.shoulderRight], ['upperRight', 'foreRight', J.elbowRight], ['foreRight', 'scythe', J.grip], ['body', 'upperLeft', J.shoulderLeft], ['upperLeft', 'foreLeft', J.elbowLeft], ['body', 'head', J.neck], ['body', 'cape', J.shoulders]]
+      ? [['body', 'upperRight', J.shoulderRight], ['upperRight', 'foreRight', J.elbowRight], ['foreRight', 'scythe', J.grip], ['body', 'upperLeft', J.shoulderLeft], ['upperLeft', 'foreLeft', J.elbowLeft], ['body', 'head', J.neck], ['body', 'cape', J.shoulders], ['upperRight', 'hemRight', J.elbowRight], ['foreRight', 'fistRight', J.grip], ['upperLeft', 'hemLeft', J.elbowLeft]]
       : [['body', 'drawUpper', J.drawShoulder], ['drawUpper', 'drawFore', J.drawElbow], ['body', 'head', J.neck], ['body', 'bowArm', J.bowShoulder]];
-    const out = {};
+    const out = { art: {} };
     for (const [a, b, p] of same) out[`${a}/${b}`] = gap(at(actor, a, p), at(actor, b, p));
     out.sole = at(actor, 'body', [160, J.sole])[1];
-    if (!R) {
+    if (R) {
+      for (const fore of ['foreRight', 'foreLeft']) out.art[`${fore} socket cap points showing`] = bare(actor, fore, J.stubs[fore]);
+    } else {
       const s = actor.rig.clientWidth / 320, pts = actor.stringLine.getAttribute('points').split(' ').map((p) => p.split(',').map((v) => +v * s));
       out['string/tipTop'] = gap(pts[0], at(actor, 'bow', J.tipTop));
       out['string/tipBottom'] = gap(pts[2], at(actor, 'bow', J.tipBottom));
       out.nocked = actor.parts.arrow.style.opacity !== '0' && !actor.pose.loosed;
-      if (out.nocked) { out['fingers/nock'] = gap(at(actor, 'drawFore', J.nock), at(actor, 'arrow', J.nock)); out['string/fingers'] = gap(pts[1], at(actor, 'drawFore', J.nock)); }
+      if (out.nocked) { out['fingers/nock'] = gap(at(actor, 'drawFore', J.fingers), at(actor, 'arrow', J.nock)); out['string/fingers'] = gap(pts[1], at(actor, 'drawFore', J.fingers)); }
       out.handToBow = gap(at(actor, 'bowArm', J.palm), at(actor, 'bow', J.grip));
+      // Each arm's ball centred on the body's ball (rig units), hiding it.
+      out.art['bow arm ball off its socket'] = gap(drawn(actor.parts.bowArm, J.balls.bowArm), drawn(actor.parts.body, J.balls.bodyLeft)) / unit;
+      out.art['draw arm ball off its socket'] = gap(drawn(actor.parts.drawUpper, J.balls.drawUpper), drawn(actor.parts.body, J.balls.bodyRight)) / unit;
+      out.art['body shoulder ball points showing'] = bare(actor, 'body', J.sockets.bodyLeft) + bare(actor, 'body', J.sockets.bodyRight);
+      // The riser under the hand (share of its points the hand covers).
+      out.art['riser under the hand'] = 1 - bare(actor, 'bow', J.riser, ['bowArm']) / J.riser.length;
     }
     return out;
   };
@@ -67,6 +102,8 @@ const MEASURE = () => {
 
 async function playActions(page) {
   await page.evaluate(MEASURE);
+  // The rest pose first.
+  const rest = await page.evaluate(() => { const { reaper, archer } = globalThis.NightFall.actors; for (const a of [reaper, archer]) { a.stopIdle(); a.draw({}); } return { reaper: window.__pairs(reaper).art, archer: window.__pairs(archer).art }; });
   return page.evaluate(async () => {
     const { reaper, archer } = globalThis.NightFall.actors;
     const rf = window.__record(reaper), af = window.__record(archer);
@@ -78,12 +115,23 @@ async function playActions(page) {
     const loose = af.findIndex((f) => !f.nocked);
     await new Promise((r) => setTimeout(r, 700));
     return { rf, af, origin, loose };
-  });
+  }).then((r) => ({ ...r, rest }));
 }
 
-function assertRig({ rf, af }, label) {
+function assertArt(art, label) {
+  for (const [k, v] of Object.entries(art)) {
+    if (k.startsWith('riser')) assert.ok(v >= 0.85, `${label}: ${k} ${(v * 100).toFixed(0)}%`);
+    else if (k.includes('off its socket')) assert.ok(v < 1.5, `${label}: ${k} by ${v.toFixed(2)} rig units`);
+    else assert.equal(v, 0, `${label}: ${k}: ${v}`);
+  }
+}
+
+function assertRig({ rf, af, rest }, label) {
+  assertArt(rest.reaper, `${label} reaper at rest`);
+  assertArt(rest.archer, `${label} archer at rest`);
   for (const [name, frames] of [['reaper', rf], ['archer', af]]) {
     assert.ok(frames.length > 20, `${label} ${name}: ${frames.length} frames`);
+    frames.forEach((f, i) => assertArt(f.art, `${label} ${name} frame ${i}`));
     const worst = {};
     for (const f of frames) for (const [k, v] of Object.entries(f)) if (typeof v === 'number' && k !== 'sole' && k !== 'handToBow') worst[k] = Math.max(worst[k] ?? 0, v);
     for (const [k, v] of Object.entries(worst)) assert.ok(v < 0.75, `${label} ${name} ${k} drifted ${v.toFixed(2)} px`);
@@ -102,11 +150,13 @@ test('desktop: every joint holds through a real strike and shot, and the feet st
   await page.ctx.close();
 });
 
-test('phone: every joint holds through a real strike and shot, and the feet stay planted', async () => {
-  const page = await open({ width: 390, height: 844 }, PHONE);
-  assertRig(await playActions(page), '390x844');
-  assert.deepEqual(page.errors, []);
-  await page.ctx.close();
+test('phones: every joint holds through a real strike and shot, and the feet stay planted', async () => {
+  for (const vp of [{ width: 390, height: 844 }, { width: 390, height: 693 }]) {
+    const page = await open(vp, PHONE);
+    assertRig(await playActions(page), `${vp.width}x${vp.height}`);
+    assert.deepEqual(page.errors, []);
+    await page.ctx.close();
+  }
 });
 
 test('the loosed arrow leaves from the head of the nocked arrow', async () => {

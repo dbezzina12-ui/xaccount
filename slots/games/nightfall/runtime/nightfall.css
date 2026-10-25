@@ -29,6 +29,6 @@
    top-left corner, so the CSS pivots above no longer apply. */
 .character-rig .rig-part{transform-origin:0 0!important;will-change:transform}
 .rig-shadow{position:absolute;z-index:-1;border-radius:50%;pointer-events:none;background:radial-gradient(closest-side,#02070dcc,#02070d66 55%,#02070d00)}
-.rig-string{position:absolute;inset:0;width:100%;height:100%;z-index:4;overflow:visible;pointer-events:none}
+.rig-string{position:absolute;inset:0;width:100%;height:100%;z-index:5;overflow:visible;pointer-events:none}
 .rig-string polyline{fill:none;stroke-linecap:round;stroke-linejoin:round}.rig-string .outline{stroke:#140500;stroke-width:2.6}.rig-string .core{stroke:#c4844e;stroke-width:1.1}
 .archer .part-arrow{transition:none}
