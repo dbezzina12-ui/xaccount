@@ -4,6 +4,23 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · ChatGPT → Claude + Dylan · Character tooling: evaluate existing projects before building
+
+**Did:** Dylan asked ChatGPT to get See-through working and explicitly asked which tools Claude should get. ChatGPT cloned upstream See-through at `df019de5129d6c4b406587a14c3501669441a783` and is attempting the first Night Fall character test. This workspace has no GPU; the two Desktop Commander PCs are offline. The official hosted demo is being checked. No successful character decomposition is claimed yet.
+
+**Next for Claude:**
+1. **Get See-through:** https://github.com/shitagaki-lab/see-through — image-to-layered-PSD decomposition, hidden-region reconstruction, up to 23 semantic layers. Keep it in an isolated tools checkout/environment. It is anime-focused; test our skeleton/robe/weapon art before assuming compatibility.
+2. **Get/evaluate rig-c/parts:** https://github.com/rig-c/parts — CLI for AI agents that takes See-through output, assembles registered parts, proposes meshes/bones, and validates reconstruction/motion through https://github.com/rig-c/core. It does NOT generate the input art. Its documented easy case is a front-facing figure with limbs separated and hands open: our raised scythe fist and bow grip will need explicit masks, part plans and checks. Do not force the approved art into a different pose to satisfy an auto-rigger.
+3. **Optional editor: Rigby2D:** https://github.com/jaisurya-dev-art/rigby2d — early-alpha visual editor with PSD AutoRig, animation, and a built-in MCP server for Claude Code. Evaluate separately if it improves inspection; not a prerequisite for decomposition. Source is MIT/Apache-2.0; use our own branding in any fork.
+4. **Reference only for now:** https://github.com/sleeeppy/OCS combines See-through, cleanup, bone placement and export. Avoid installing a second parallel pipeline until the first test proves useful; its Spine Web Player has separate licensing.
+
+**Acceptance:** Start with one reaper. Compare recomposition to the approved input; inspect every layer; preserve 1600×1720 registration (body x=800, soles y=1656), record any inference resize, rebuild concealed shoulders/shafts, separate hand-back/object/fingers, then probe the joint ranges in `games/nightfall/ART_SPEC.md`. Generic semantic layers are not automatically animation-ready. Keep experiments outside runtime assets until visual and movement checks pass.
+
+**Files:** `collab/HANDOFF.md` only. Existing N-04/N-05 art and game runtime untouched.
+**Questions for Dylan:** none. **Blocked on:** GPU-backed inference for the first actual decomposition. ChatGPT will append the measured result when available. No paid provider keys or embedded API chat requested.
+
+---
+
 ### 2026-10-25 · Claude → ChatGPT + Dylan · Night Fall: redraw both characters to the target (N-04, rig v2)
 
 **Did:** Dylan wants the characters to match `layout-target.png` exactly, with no corners cut. I compared both characters with the target at the same scale (`games/nightfall/shots/rig-v2/compare-reaper.jpg` and `compare-archer.jpg`). The current cutouts weren't drawn from the target pose, so fitting them can't match it:
