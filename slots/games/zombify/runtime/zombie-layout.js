@@ -23,3 +23,69 @@ export function fullReelExitIds(board=[]){
  }
  return ids;
 }
+
+// Claims can share a trail cell after a full-reel award. The board's stackId
+// decides which portrait is visible there; the underlying payout is untouched.
+export function visibleStackCells(stack,board){
+ return [...new Set(stack.cells)].filter(index=>{
+  const cell=board[index];
+  return cell&&(!cell.stackId||cell.stackId===stack.id)&&
+   (cell.kind!=='zombie'||cell.id===stack.id);
+ }).sort((a,b)=>a-b);
+}
+// A portrait is never sliced by a crossing claim. Keep its complete silhouette
+// in the connected owned segment containing the live head; the backdrop can
+// still cover the other owned trail cells without inventing another character.
+export function stackPortraitCells(stack,board,width=6){
+ const owned=new Set(visibleStackCells(stack,board));
+ const head=board.findIndex(cell=>cell.kind==='zombie'&&cell.id===stack.id);
+ if(!owned.has(head))return [];
+ const horizontal=stack.horizontal??stack.cells.every(i=>Math.floor(i/width)===Math.floor(stack.cells[0]/width));
+ const stride=horizontal?1:width,cells=[head];
+ for(const direction of [-1,1])for(let i=head+stride*direction;owned.has(i)&&(!horizontal||Math.floor(i/width)===Math.floor(head/width));i+=stride*direction)cells.push(i);
+ return cells.sort((a,b)=>a-b);
+}
+export function stackPortraitRegion(stack,board,width=6){
+ const cells=stackPortraitCells(stack,board,width);
+ if(!cells.length)return null;
+ const bounds=indices=>({left:Math.min(...indices.map(i=>i%width)),right:Math.max(...indices.map(i=>i%width))+1,top:Math.min(...indices.map(i=>Math.floor(i/width))),bottom:Math.max(...indices.map(i=>Math.floor(i/width)))+1});
+ const outer=bounds(stack.cells),inner=bounds(cells),w=outer.right-outer.left,h=outer.bottom-outer.top;
+ return {cells,left:(inner.left-outer.left)/w,top:(inner.top-outer.top)/h,width:(inner.right-inner.left)/w,height:(inner.bottom-inner.top)/h};
+}
+const maskURL=(width,height,path)=>`url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}"><path fill="white" fill-rule="evenodd" d="${path}"/></svg>`)}")`;
+const boxPath=(x,y,w,h)=>`M${x} ${y}h${w}v${h}h${-w}Z`;
+export function stackPresentationMask(stack,board,width=6){
+ const visible=visibleStackCells(stack,board);
+ if(visible.length===stack.cells.length)return 'none';
+ const xs=stack.cells.map(i=>i%width),ys=stack.cells.map(i=>Math.floor(i/width));
+ const x=Math.min(...xs),y=Math.min(...ys),w=Math.max(...xs)-x+1,h=Math.max(...ys)-y+1;
+ return maskURL(w,h,visible.map(i=>boxPath(i%width-x,Math.floor(i/width)-y,1,1)).join(''));
+}
+export function otherZombieCells(board,owner){
+ const claimed=new Set();
+ for(const head of board){
+  if(head.kind!=='zombie'||head.id===owner)continue;
+  const cells=head.spanCells||[board.indexOf(head)];
+  for(const index of visibleStackCells({id:head.id,cells},board))claimed.add(index);
+ }
+ return [...claimed];
+}
+// A board-space mask stays still while the rig animates inside it. Using
+// normalized rectangles also handles a scaled Studio iframe without offsets.
+export function motionOcclusionMask(bounds,rects){
+ if(!bounds.width||!bounds.height||!rects.length)return 'none';
+ const paths=[boxPath(0,0,1,1)];
+ for(const r of rects){
+  const x=Math.max(0,(r.left-bounds.left)/bounds.width),y=Math.max(0,(r.top-bounds.top)/bounds.height);
+  const right=Math.min(1,(r.right-bounds.left)/bounds.width),bottom=Math.min(1,(r.bottom-bounds.top)/bounds.height);
+  if(right>x&&bottom>y)paths.push(boxPath(x,y,right-x,bottom-y));
+ }
+ return paths.length>1?maskURL(1,1,paths.join('')):'none';
+}
+export function maskZombieMotion(host,board,cells=[]){
+ if(!board||!cells.length)return;
+ const rects=cells.map(index=>board.children[index]?.getBoundingClientRect()).filter(Boolean);
+ const mask=motionOcclusionMask(host.getBoundingClientRect(),rects);
+ host.style.maskImage=mask;host.style.webkitMaskImage=mask;
+ host.style.maskSize='100% 100%';host.style.maskRepeat='no-repeat';
+}

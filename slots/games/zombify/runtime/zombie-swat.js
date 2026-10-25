@@ -1,3 +1,5 @@
+import {otherZombieCells} from './zombie-layout.js';
+import {copySymbolPaint} from './symbol-paint.js';
 import {getZombieAnimator} from './zombie-jump.js';
 import {createApprovedAnimator,ZOMBIE_ACTION_SPEED} from './approved-rig.js';
 import {HIT_STOP} from './rig-geometry.js';
@@ -18,7 +20,7 @@ function flyingTile(target){
  const copy=target.cloneNode(true),style=getComputedStyle(target);
  copy.className='swatted-symbol flying-tile';copy.querySelectorAll('.carrier-value').forEach(n=>n.remove());
  Object.assign(copy.style,{background:style.background,border:style.border,borderRadius:style.borderRadius,boxShadow:style.boxShadow});
- copy.firstElementChild.style.backgroundImage=getComputedStyle(target.firstElementChild).backgroundImage;
+ copySymbolPaint(target.firstElementChild,copy.firstElementChild);
  copy.setAttribute('aria-hidden','true');
  target.style.background='transparent';target.style.borderColor='transparent';target.style.boxShadow='none';
  return copy;
@@ -57,7 +59,7 @@ export async function playSwatStep({event,board,layer,animate,rate=1,shouldSkip,
  })());
  source.style.opacity='0';
  try{
-  await adapter.playStep({source:{x:a.left,y:a.top,width:a.width,height:a.height},target:{x:b.left,y:b.top,width:b.width,height:b.height},direction:event.direction,layer,rate,shouldSkip,onEvent:name=>(name==='swat_contact'||name==='impact')?contact():undefined});
+  await adapter.playStep({board,occludedCells:otherZombieCells(event.before,event.headId),source:{x:a.left,y:a.top,width:a.width,height:a.height},target:{x:b.left,y:b.top,width:b.width,height:b.height},direction:event.direction,layer,rate,shouldSkip,onEvent:name=>(name==='swat_contact'||name==='impact')?contact():undefined});
   await contact();
  }finally{await contactTask;source.style.opacity='';}
 }

@@ -14,3 +14,15 @@
 }
 .expander-landing-art{display:block;width:100%;height:100%;background-position:center;background-size:contain;background-repeat:no-repeat}
 @media(prefers-reduced-motion:reduce){.expander-landing-pop{display:none}}
+
+/* The expanding zombie owns a warm containment bay; infected humans do not. */
+#game .tile[data-kind=zombie]:not(.stack-covered):not(.claimed){
+ background:radial-gradient(ellipse at 50% 35%,#8a5936 0,#392433 55%,#100f1b 100%)!important;
+ border-radius:7px;box-shadow:inset 0 0 0 3px #e6b36b,inset 0 0 0 5px #523a32,inset 0 0 18px #0009;
+}
+#game .tile[data-kind=zombie]:not(.stack-covered):not(.claimed)>.symbol{filter:drop-shadow(0 2px 1px #160e15) drop-shadow(0 0 3px #ffd997);}
+.expander-landing-door{position:absolute;top:0;bottom:0;width:50%;z-index:2;border:2px solid #d8ab6b;background:repeating-linear-gradient(0deg,transparent 0 23%,#080d1655 24% 25%),linear-gradient(90deg,#293137,#4d4a40,#21292f);box-shadow:inset 0 0 0 2px #161e24;pointer-events:none;}
+.expander-landing-door.left{left:0;border-radius:6px 0 0 6px;transform-origin:left center}
+.expander-landing-door.right{right:0;border-radius:0 6px 6px 0;transform-origin:right center}
+.expander-landing-door::after{content:'';position:absolute;top:43%;height:16%;width:5px;background:#efc374;box-shadow:0 0 5px #ffcb6f55;}
+.expander-landing-door.left::after{right:5px}.expander-landing-door.right::after{left:5px}

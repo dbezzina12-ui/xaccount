@@ -1,3 +1,4 @@
+import {subwayRules,subwayPreloads} from './subway-theme.js';
 import {screenRuntime} from './screens-runtime.js';
 const screens=screenRuntime(status=>notify('screen-preview-status',{status}));
 // Runs inside the imported, real Zombify runtime. All coordinates come from
@@ -17,6 +18,10 @@ const rootURL=new URL('../',import.meta.url),game=document.getElementById('game'
 const style=document.createElement('style');style.id='studio-presentation';document.head.append(style);
 const background=document.createElement('div');background.className='studio-background';
 const tint=document.createElement('div');tint.className='studio-tint';background.append(tint);game.prepend(background);
+// Duplicate the room above the title through a scene-space silhouette mask.
+// The source artwork remains unchanged; the logo is still an editable layer.
+const foreground=document.createElement('div');foreground.className='studio-room-foreground';document.querySelector('.play-area').append(foreground);
+const roomMask='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 941 1672"><path fill="white" d="M0 0H30L50 35 54 100 77 143 130 149 162 221 190 211 213 192 245 191 271 198 274 181Q254 174 263 151Q274 130 289 148L289 127 301 115 321 110 338 101 351 97 367 101 378 108 392 112 404 131 414 150 414 182 400 214 388 234 414 246 457 271 489 252 509 243 530 247 544 265 569 260 604 270 603 240Q566 232 573 207Q583 181 620 168L647 151Q679 141 700 157L719 179 725 208Q742 200 743 218L737 244 730 266 752 252 780 248 812 242 840 214 855 184 865 148 899 139 922 111 941 104V330H0Z"/></svg>');
 const boardWrap=document.querySelector('.board-wrap');
 const dividers=document.createElement('div');dividers.className='studio-dividers';boardWrap.append(dividers);
 // Non-6×5 layout tests draw into their own board; Zombify's #board is never touched.
@@ -27,6 +32,8 @@ const MISSING="Zombify's game code didn't load in this checkout. From slots/, ru
 const STRIP=Int16Array.from({length:60},(_,i)=>(i*7+(i/12|0))%SYMBOLS.length);
 let current=null,sceneKey='desktop',round=null,pending=null,lastState='',lastGame='',spinToken=0,hurry=false,previewShape='',columns=[],landed=null,bootFailed=false;
 const extraImages=new Map();
+const themePreloads=subwayPreloads.map(url=>{const img=new Image();img.src=url;return img;});
+
 const cssURL=url=>`url(${JSON.stringify(url)})`;
 const src=id=>{const asset=current.assets.find(a=>a.id===id);return new URL(asset.src,rootURL).href;};
 const notify=(type,payload={})=>parent.postMessage({source:'slot-runtime',type,...payload},location.origin);
@@ -59,19 +66,28 @@ function apply(project,key){
  current=project;sceneKey=key;
  runtime()?.configureAudio?.(project.sounds||{},project.assets.filter(a=>a.kind==='audio').map(a=>({...a,src:new URL(a.src,rootURL).href})));
  const s=project.scenes[key],g=sceneAppearance(project,key),reels=s.layers.find(l=>l.id==='reels'),title=s.layers.find(l=>l.id==='title'),controls=s.layers.find(l=>l.id==='controls'),mobile=s.width<s.height;
+ const controllerScale=Math.min(controls.w/390,controls.h/214);
  const rackTop=mobile?reels.h+(g.supports?reels.w*.075:0)+6:Math.max(-reels.y,-100);
  const rackWidth=mobile?reels.w:Math.max(120,reels.w-160);
  const tubeHeight=mobile?Math.max(32,Math.min(65,controls.y-reels.y-rackTop-12)):60;
  const b=s.background,fw=Math.min(g.frameWidth,Math.floor(Math.min(reels.w,reels.h)/7));
  background.style.cssText=`position:absolute;inset:0;z-index:0;background-image:${cssURL(src(b.assetId))};background-size:${b.zoom===100?'cover':b.zoom+'% auto'};background-position:${b.positionX}% ${b.positionY}%;filter:brightness(${b.brightness}%) contrast(${b.contrast}%) saturate(${b.saturation}%) hue-rotate(${b.hue}deg) blur(${b.blur}px);transform:scale(${1+b.blur*.004});`;
+ foreground.style.cssText=background.style.cssText+`pointer-events:none;z-index:${s.layers.indexOf(title)+3};mask-image:url("${roomMask}");mask-size:${b.zoom===100?'cover':b.zoom+'% auto'};mask-position:${b.positionX}% ${b.positionY}%;mask-repeat:no-repeat;display:${mobile&&b.assetId==='zombie-broken-wall-mobile'?'block':'none'};`;
  tint.style.cssText=`position:absolute;inset:0;background:${b.tint};opacity:${b.tintOpacity};`;
+ const subway=['subway-background','subway-desktop'].includes(b.assetId);
+ document.documentElement.dataset.studioTheme=subway?'subway':'';
+ document.documentElement.style.setProperty('--entry-scene',cssURL(src(b.assetId)));
+ document.documentElement.style.setProperty('--entry-scene-size',b.zoom===100?'cover':b.zoom+'% auto');
+ document.documentElement.style.setProperty('--entry-scene-position',`${b.positionX}% ${b.positionY}%`);
+ document.documentElement.style.setProperty('--entry-frame',cssURL(src(g.frameAsset)));
  const artRules=SYMBOLS.map(id=>`#game .symbol.art-${id}{background-image:${cssURL(src(project.symbols[id]))}!important;}`).join('\n');
  style.textContent=`
  html,body{width:100%;height:100%;overflow:hidden!important;background:#09131d!important}body{margin:0!important}
- #game{position:relative!important;width:100%!important;height:100%!important;min-height:0!important;padding:0!important;margin:0!important;overflow:hidden!important;display:block!important;background:#071827!important;--frame-width:${fw}px;--frame-top:${fw}px;--frame-bottom:${fw}px;--cabinet-width:${reels.w}px;--reel-texture:${g.texture?cssURL(src('enamel')):'none'};isolation:isolate}
+ #game{position:relative!important;width:100%!important;height:100%!important;min-height:0!important;padding:0!important;margin:0!important;overflow:clip!important;display:block!important;background:#071827!important;--frame-width:${fw}px;--frame-top:${fw}px;--frame-bottom:${fw}px;--cabinet-width:${reels.w}px;--reel-texture:${g.texture?cssURL(src('enamel')):'none'};isolation:isolate}
  #game .city-backdrop,#game .clean-cel-mascot,#game .mobile-zombie-mascot,#game .topbar,#game .left-rail,#game .right-rail,#game .bottom-note,#game .brand-overline,#game .brand-tag,#game .preview-notice,#game .machine-foot,#game .machine-head,#game .title-o-backing{display:none!important}
  #game .play-area{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;padding:0!important;margin:0!important;display:block!important;z-index:2}
  #game .machine{${rect(reels)}z-index:${s.layers.indexOf(reels)+2}!important;filter:none!important;isolation:auto!important;box-shadow:none!important}
+ #game[data-free-spins] .machine{z-index:${s.layers.length+3}!important}
  #game .machine:before,#game .machine:after,#game .board-wrap:before,#game .board-wrap:after,#game .brand:before,#game .brand:after{display:none!important}
  #game .machine-crown{height:0!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;background:none!important}
  #game .reel-stage{width:100%!important;height:100%!important;position:relative!important;transform:none!important}
@@ -81,7 +97,6 @@ function apply(project,key){
  #game .tile>.symbol,#game .reel-strip .tile>.symbol{transform:scale(${g.symbolScale})!important}
  #game .symbol{background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important}
  ${artRules}
- #game .tile[data-infection="0"] .symbol{background-size:contain!important}
  #game .stack-layer{inset:0!important;padding:0!important;gap:0!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;grid-template-rows:repeat(5,minmax(0,1fr))!important}
  #game .spinning-reel{background-color:${g.fill}!important;background-image:${g.texture?cssURL(src('enamel')):'none'}!important}
  .studio-dividers{position:absolute;inset:0;z-index:18;pointer-events:none;opacity:${g.divider};background:linear-gradient(90deg,transparent calc(100% - 1px),#a9d7e7 0) 0 0 / ${100/g.columns}% 100%,linear-gradient(0deg,transparent calc(100% - 1px),#a9d7e7 0) 0 0 / 100% ${100/g.rows}%;box-shadow:inset 0 0 0 1px #a9d7e7}
@@ -90,17 +105,18 @@ function apply(project,key){
  #game .brand h1.peek-title{position:static!important;width:100%!important;height:100%!important;max-width:none!important;transform:none!important;margin:0!important;padding:0!important}
  #game .brand img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important}
  #game .console{visibility:visible!important;pointer-events:auto;position:absolute!important;left:${controls.x}px!important;top:${controls.y}px!important;bottom:auto!important;width:880px!important;height:100px!important;max-width:none!important;min-height:0!important;margin:0!important;transform:scale(${controls.w/880},${controls.h/100})!important;transform-origin:0 0!important;display:${!mobile&&controls.visible?'flex':'none'}!important;align-items:center!important;justify-content:space-evenly!important;gap:14px!important;padding:8px 18px!important;border:0!important;background:#06121baa!important;border-radius:16px!important;z-index:10!important;opacity:${controls.opacity}!important}
- #game #mobile-controller{position:absolute!important;left:${controls.x}px!important;top:${controls.y}px!important;right:auto!important;bottom:auto!important;width:390px!important;height:214px!important;max-width:none!important;margin:0!important;transform:scale(${controls.w/390},${controls.h/214})!important;transform-origin:0 0!important;display:${mobile&&controls.visible?'block':'none'}!important;z-index:10!important;opacity:${controls.opacity}!important}
+ #game #mobile-controller{position:absolute!important;left:${controls.x+(controls.w-390*controllerScale)/2}px!important;top:${controls.y}px!important;right:auto!important;bottom:auto!important;width:390px!important;height:214px!important;background:transparent!important;max-width:none!important;margin:0!important;transform:scale(${controllerScale})!important;transform-origin:0 0!important;display:${mobile&&controls.visible?'block':'none'}!important;z-index:10!important;opacity:${controls.opacity}!important}
  #game .infection-tracker{position:absolute!important;top:${rackTop}px!important;bottom:auto!important;left:0!important;right:auto!important;width:${rackWidth}px!important;max-width:none!important;margin:0!important;z-index:20!important}
  #game .infection-people{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:4px!important}#game .infection-tube{height:${tubeHeight}px!important;width:${tubeHeight*977/1610}px!important;max-width:100%!important;max-height:none!important}.infection-heading{font-size:9px!important}.tube-name{display:none!important}
- #game .free-spins-counter{--counter-size:${mobile?88:140}px;right:0!important;top:-65px!important}
+ #game .free-spins-counter{--counter-size:${mobile?100:140}px;right:${mobile?reels.x+reels.w-s.width+12:0}px!important;top:${mobile?(s.background.assetId==='zombie-broken-wall-mobile'?170:12)-reels.y:-65}px!important}
  #game .studio-preview-board{position:absolute;inset:0;z-index:1;display:none;overflow:hidden;background:${g.fill} ${g.texture?cssURL(src('enamel')):'none'} center / 100% 100% no-repeat;box-shadow:inset 0 6px 14px #0004}
  #game.studio-layout-test .studio-preview-board{display:flex}
  #game.studio-layout-test #board,#game.studio-layout-test #stack-layer{visibility:hidden!important}
  #game.studio-layout-test .console,#game.studio-layout-test #mobile-controller{pointer-events:none!important}
  #game .studio-preview-column{position:relative;overflow:hidden;height:100%;flex:1 1 0;min-width:0}.studio-preview-tile{position:absolute;left:0;width:100%;display:grid;place-items:center}.studio-preview-tile img{width:100%;height:100%;object-fit:contain;transform:scale(${g.symbolScale});pointer-events:none}
  #game .studio-preview-column.fast img{filter:blur(1.4px);transform:scale(${g.symbolScale}) scaleY(1.1)}
- #welcome{display:none!important}.studio-extra{position:absolute;pointer-events:none;object-fit:contain}.studio-extras{position:absolute;inset:0;pointer-events:none}
+ ${subway?subwayRules(project,title,g,s,reels,src):''}
+ ${new URLSearchParams(location.search).get('entry')==='full'?'':'#welcome{display:none!important}'}.studio-extra{position:absolute;pointer-events:none;object-fit:contain}.studio-extras{position:absolute;inset:0;pointer-events:none}
  `;
  const titleImage=document.getElementById('zombify-title'),titleURL=src(title.assetId);if(titleImage.src!==titleURL)titleImage.src=titleURL;
  syncExtras(s);
@@ -221,3 +237,4 @@ pushGame();
 setTimeout(()=>{if(!runtime()){bootFailed=true;pushGame();}},1500);
 setInterval(pushState,100);
 setInterval(pushGame,250);
+

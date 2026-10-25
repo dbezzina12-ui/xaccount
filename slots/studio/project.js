@@ -12,11 +12,11 @@ const root='games/zombify/runtime/assets/';
 const asset=(id,name,file,kind='image')=>({id,name,src:root+file,kind});
 const layer=(id,name,kind,x,y,w,h,extra={})=>({id,name,kind,x,y,w,h,visible:true,locked:false,opacity:1,...extra});
 export function createProject(){
- const assets=[asset('zombie-room-simple-mobile','Simple zombie room · mobile','studio/zombie-room-simple-mobile.png'),asset('picture-frame','Antique picture frame','studio/picture-frame.png'),asset('zombie-room-mobile','Zombie window room · mobile','studio/zombie-room-mobile.png'),asset('street','Moonlit street · desktop','street-v119/scene.png'),asset('portrait','Moonlit street · mobile','studio/mobile-street.png'),asset('alley','Purple alley','moonlit-v118/street.png'),asset('title','Zombify title','clean-cel-v117/title.png'),asset('frame','Teal cabinet','street-v119/frame.png'),asset('blocks','Concrete supports','street-v119/blocks.png'),asset('mascot','Zombie mascot','clean-cel-v117/mascot.png'),asset('enamel','Reel enamel','street-v119/reel-enamel.svg')];
+ const assets=[asset('subway-desktop','Subway · desktop','studio/subway-desktop.webp'),asset('subway-lab-desktop','Subway lab · desktop','studio/subway-lab-desktop.webp'),asset('subway-infected','Subway infected portraits and FS','studio/subway-infected.webp'),asset('subway-lab','Subway outbreak lab','studio/subway-lab.webp'),asset('subway-background','Subway · mobile','studio/subway-background.webp'),asset('subway-art','Subway artwork','studio/subway-art.webp'),asset('subway-frame','Subway steel frame','studio/subway-frame.svg'),asset('zombie-broken-wall-mobile','Broken wall zombies · mobile','studio/zombie-broken-wall-mobile.webp'),asset('zombie-room-simple-mobile','Simple zombie room · mobile','studio/zombie-room-simple-mobile.png'),asset('picture-frame','Antique picture frame','studio/picture-frame.png'),asset('zombie-room-mobile','Zombie window room · mobile','studio/zombie-room-mobile.png'),asset('street','Moonlit street · desktop','street-v119/scene.png'),asset('portrait','Moonlit street · mobile','studio/mobile-street.png'),asset('alley','Purple alley','moonlit-v118/street.png'),asset('title','Zombify title','clean-cel-v117/title.png'),asset('frame','Teal cabinet','street-v119/frame.png'),asset('blocks','Concrete supports','street-v119/blocks.png'),asset('mascot','Zombie mascot','clean-cel-v117/mascot.png'),asset('enamel','Reel enamel','street-v119/reel-enamel.svg')];
  const symbols={};for(const id of SYMBOLS){const f=id==='wild'?'w':id==='vial'?'fs':['skater','nurse','builder','cop','scientist'].includes(id)?id+'-human':id;assets.push(asset('symbol-'+id,id.toUpperCase(),'clean-cel-v117/'+f+'.png','symbol'));symbols[id]='symbol-'+id;}
  const bg=(id)=>({assetId:id,brightness:100,contrast:100,saturation:100,hue:0,blur:0,zoom:100,positionX:50,positionY:50,tint:'#152645',tintOpacity:0});
  return {schemaVersion:VERSION,id:'zombify',name:'Zombify',adapter:'zombify-v125',grid:{columns:6,rows:5,symbolScale:1.08,divider:0.22,fill:'#0b1d28',texture:true,frameWidth:26,frameAsset:'frame',supports:true},symbols,assets,
- scenes:{desktop:{width:1280,height:800,background:bg('street'),layers:[layer('reels','Reels & cabinet','reels',330,140,620,520),layer('title','Zombify title','image',30,40,275,112,{assetId:'title'}),layer('controls','Game controls','controls',200,690,880,100)]},mobile:{width:390,height:844,background:bg('portrait'),layers:[layer('reels','Reels & cabinet','reels',10,180,370,350),layer('title','Zombify title','image',23,52,285,115,{assetId:'title'}),layer('controls','Game controls','controls',0,620,390,214)]}}};
+ scenes:{desktop:{width:1280,height:800,background:bg('street'),layers:[layer('reels','Reels & cabinet','reels',330,140,620,520),layer('title','Zombify title','image',30,40,275,112,{assetId:'title'}),layer('controls','Game controls','controls',200,690,880,100)]},mobile:{width:390,height:844,background:bg('portrait'),layers:[layer('reels','Reels & cabinet','reels',10,180,370,350),layer('title','Zombify title','image',12,12,250,100,{assetId:'title'}),layer('controls','Game controls','controls',0,620,390,214)]}}};
 }
 const finite=(v,min,max,name)=>{if(typeof v!=='number'||!Number.isFinite(v)||v<min||v>max)throw Error(`${name} must be between ${min} and ${max}.`);};
 const color=v=>typeof v==='string'&&/^#[0-9a-f]{6}$/i.test(v);
@@ -96,4 +96,22 @@ export function parseCommand(text,project,scene='desktop',attachment){
  if(/show (?:the )?(title|controls|reels)/.test(t)){const id=t.match(/show (?:the )?(title|controls|reels)/)[1];ops.push({type:'layer',scene,id,values:{visible:true}});}
  if(!ops.length)throw Error('Try “grid 7×7”, “make reels bigger”, “saturation 120”, “blur 3”, “symbols 115%”, or attach an image and say “change background”. These are local edit commands; an AI model is not connected.');
  applyBatch(project,ops);return ops;
+}
+
+export function createBrokenWallProject(){const p=createProject(),s=p.scenes.mobile;s.background.assetId='zombie-broken-wall-mobile';s.cabinet={frameAsset:'picture-frame',supports:false};Object.assign(s.layers.find(l=>l.id==='reels'),{x:10,y:260,w:370,h:345});Object.assign(s.layers.find(l=>l.id==='title'),{x:20,y:6,w:350,h:80});Object.assign(s.layers.find(l=>l.id==='controls'),{x:0,y:650,w:390,h:214});return p;}
+
+// Upgrade only the untouched room preset; keep custom placements intact.
+export function upgradeRoomComposition(project){const p=clone(project),s=p.scenes.mobile;if(s.background.assetId!=='zombie-broken-wall-mobile')return p;const t=s.layers.find(l=>l.id==='title'),c=s.layers.find(l=>l.id==='controls');if(t.x===18&&t.y===170&&t.w===240&&t.h===82){Object.assign(t,{x:20,y:6,w:350,h:80});if(c.x===0&&c.w===390&&((c.y===620&&c.h===214)||(c.y===690&&c.h===144)))Object.assign(c,{y:650,h:214});}return p;}
+
+export function createSubwayProject(){
+ const p=createProject();p.grid.symbolScale=1;
+ for(const key of ['mobile','desktop']){
+  const s=p.scenes[key],mobile=key==='mobile';
+  s.background.assetId=mobile?'subway-background':'subway-desktop';
+  s.cabinet={frameAsset:'subway-frame',frameWidth:mobile?22:24,supports:false,fill:'#222323',texture:false};
+  Object.assign(s.layers.find(l=>l.id==='title'),{assetId:'subway-art',...(mobile?{x:82,y:94,w:226,h:65}:{x:465,y:78,w:350,h:104})});
+  Object.assign(s.layers.find(l=>l.id==='reels'),mobile?{x:2,y:174,w:386,h:348}:{x:340,y:184,w:600,h:406});
+  Object.assign(s.layers.find(l=>l.id==='controls'),mobile?{x:0,y:674,w:390,h:214}:{x:200,y:700,w:880,h:100});
+ }
+ return p;
 }

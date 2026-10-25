@@ -59,5 +59,84 @@
       "zombie-room-simple-mobile-11.b64",
       "zombie-room-simple-mobile-12.b64"
     ]
+  },
+  {
+    "path": "assets/studio/zombie-broken-wall-mobile.webp",
+    "bytes": 175950,
+    "sha256": "6f2754ea6d7a51b89046246a7c24d51d3d5aea857ed1d85902d8ee7cadf3fd50",
+    "parts": [
+      "broken-wall-00.b64",
+      "broken-wall-01.b64"
+    ]
+  },
+  {
+    "path": "assets/studio/subway-background.webp",
+    "bytes": 201912,
+    "sha256": "e6c08b0d5d6e10ea826e6c3fcd82bf91dc7f0e2199fd1d0800db41da01d37a39",
+    "parts": [
+      "subway-background-00.b64",
+      "subway-background-01.b64"
+    ]
+  },
+  {
+    "path": "assets/studio/subway-art.webp",
+    "bytes": 358770,
+    "sha256": "896f167088a5c40605eb15c4385efdf67f952313cc3273dd6af5200f3c78052f",
+    "parts": [
+      "subway-art-00.b64",
+      "subway-art-01.b64",
+      "subway-art-02.b64",
+      "subway-art-03.b64"
+    ]
+  },
+  {
+    "path": "assets/studio/subway-frame.svg",
+    "bytes": 1993,
+    "sha256": "a87402334fa45a0dbab86ab008774573d2173cdb7e5642b3bd00baabdef991b8",
+    "parts": [
+      "subway-frame-00.b64"
+    ]
+  },
+  {
+    "path": "assets/studio/subway-lab.webp",
+    "bytes": 265058,
+    "sha256": "0f6fc17ad6672e76d6d368ee4fc8fb8c7887e3bb0800263a11a295d8ee563145",
+    "parts": [
+      "subway-lab-00.b64",
+      "subway-lab-01.b64",
+      "subway-lab-02.b64"
+    ]
+  },
+  {
+    "path": "assets/studio/subway-desktop.webp",
+    "bytes": 213580,
+    "sha256": "0931da206977ff7280a65bf781395f0d1d27364bb2f3a6da75b291d9eca77cb1",
+    "parts": [
+      "subway-desktop-00.b64",
+      "subway-desktop-01.b64",
+      "subway-desktop-02.b64"
+    ]
+  },
+  {
+    "path": "assets/studio/subway-lab-desktop.webp",
+    "bytes": 274300,
+    "sha256": "ae92fbdda78774beb3feacbc4674755e6096fd7b91d227c12dae12bcd1d423a5",
+    "parts": [
+      "subway-lab-desktop-00.b64",
+      "subway-lab-desktop-01.b64",
+      "subway-lab-desktop-02.b64"
+    ]
+  },
+  {
+    "path": "assets/studio/subway-infected.webp",
+    "bytes": 462828,
+    "sha256": "5eabb4327cb1a54e6811852a7b4978700109f89b87ac869c23c10a25c748352e",
+    "parts": [
+      "subway-infected-00.b64",
+      "subway-infected-01.b64",
+      "subway-infected-02.b64",
+      "subway-infected-03.b64",
+      "subway-infected-04.b64"
+    ]
   }
 ]

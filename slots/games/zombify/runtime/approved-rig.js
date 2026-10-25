@@ -3,7 +3,7 @@ import {clipDuration} from './approved-rig-renderer.js';
 import {fitRig,rigBounds,stepPlan,stepEvents,downwardJumpPose,stepPath,holdAt,jumpArc,APPROACH,RECOVER,HIT_STOP} from './rig-geometry.js';
 import {rigSurface} from './rig-gpu.js';
 import {createRecliningArt,recliningArtReady} from './reclining-art.js';
-import {fullReelExitIds} from './zombie-layout.js';
+import {fullReelExitIds,maskZombieMotion} from './zombie-layout.js';
 
 const loads=new Map(),mounts=new WeakMap(),active=new Set();
 export const ZOMBIE_ACTION_SPEED=1.7;
@@ -106,24 +106,31 @@ export function motionBox(data,{stations,clips,rects=[]}){
  const margin=4+.06*Math.max(right-left,bottom-top);
  return {x:Math.floor(left-margin),y:Math.floor(top-margin),width:Math.ceil(right-left+margin*2),height:Math.ceil(bottom-top+margin*2)};
 }
-function overlay(layer,box){
+// The motion host sits in the layer, sized to `box` when given (the whole
+// layer otherwise); claims of other zombies are masked out of it.
+function motionHost(layer,board,occludedCells,box){
  const host=document.createElement('div');host.className='approved-rig-motion';
- // Overlay dimensions follow the existing board. They never participate in layout.
  if(box)Object.assign(host.style,{inset:'auto',left:`${box.x}px`,top:`${box.y}px`,width:`${box.width}px`,height:`${box.height}px`});
- layer.append(host);const drawSurface=surface(host);
+ layer.append(host);maskZombieMotion(host,board,occludedCells);return host;
+}
+function overlay(layer,box,board,occludedCells){
+ // Overlay dimensions follow the move. They never participate in layout.
+ const host=motionHost(layer,board,occludedCells,box),drawSurface=surface(host);
  const draw=box?(rig,clip,time,fit)=>drawSurface.draw(rig,clip,time,{...fit,x:fit.x-box.x,y:fit.y-box.y}):drawSurface.draw;
  // Weight on landing: a quick squash and settle about the feet, composited
- // (transform only), never under reduced motion.
+ // (transform only), never under reduced motion. It moves the canvas, not the
+ // host, so the occlusion mask stays on the board.
  const land=(x,y,rate=1)=>{
-  if(!host.animate||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  host.style.transformOrigin=`${x-(box?.x||0)}px ${y-(box?.y||0)}px`;
-  host.animate([{transform:'scale(1,1)'},{transform:'scale(1.045,.93)',offset:.22},{transform:'scale(.985,1.02)',offset:.6},{transform:'scale(1,1)'}],{duration:230/Math.max(.5,rate/ZOMBIE_ACTION_SPEED),easing:'cubic-bezier(.2,.7,.3,1)'});
+  const canvas=drawSurface.canvas;
+  if(!canvas.animate||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  canvas.style.transformOrigin=`${x-(box?.x||0)}px ${y-(box?.y||0)}px`;
+  canvas.animate([{transform:'scale(1,1)'},{transform:'scale(1.045,.93)',offset:.22},{transform:'scale(.985,1.02)',offset:.6},{transform:'scale(1,1)'}],{duration:230/Math.max(.5,rate/ZOMBIE_ACTION_SPEED),easing:'cubic-bezier(.2,.7,.3,1)'});
  };
  return {host,draw,land,remove(){drawSurface.remove();host.remove();}};
 }
 export function createApprovedAnimator(){
  return {
-  async playStep({source,target,direction,layer,rate=1,shouldSkip,onEvent}){
+  async playStep({source,target,direction,layer,board,occludedCells,rate=1,shouldSkip,onEvent}){
    rate*=ZOMBIE_ACTION_SPEED;
    const view=direction==='up'?'rear':direction==='down'?'front':'side';
    const rig=await loadApprovedRig(view);if(shouldSkip())return;
@@ -133,7 +140,7 @@ export function createApprovedAnimator(){
    const at$=p=>({...p,scale:plan.scale});
    // A jump's apex is above both ends; include it so the canvas holds the arc.
    const apex=plan.action==='jump'?[{x:plan.start.x,y:Math.min(plan.start.y,plan.strike.y)-plan.scale*24}]:[];
-   const motion=overlay(layer,motionBox(rig.data,{stations:[plan.start,plan.strike,plan.end,...apex].map(at$),clips:[plan.rest,plan.clip,plan.move].filter(c=>rig.data.animations[c]),rects:[local(source),local(target)]}));
+   const motion=overlay(layer,motionBox(rig.data,{stations:[plan.start,plan.strike,plan.end,...apex].map(at$),clips:[plan.rest,plan.clip,plan.move].filter(c=>rig.data.animations[c]),rects:[local(source),local(target)]}),board,occludedCells);
    const at=(p,clip,time)=>motion.draw(rig,clip,time,{scale:plan.scale,rotation:plan.rotation,...p});
    // Contact holds for a beat (shorter at Quick/Turbo) so the bite lands.
    const strike=holdAt({duration:clipDuration(rig.data,plan.clip),events:stepEvents(rig.data,plan)},plan.contact,HIT_STOP*ZOMBIE_ACTION_SPEED);
@@ -157,20 +164,20 @@ export function createApprovedAnimator(){
     await runRigTimeline({duration:RECOVER,rate,shouldSkip,paint:t=>at(path.recover(t),plan.move,t*(plan.action==='crawl'?1.2/RECOVER:2))});
    }finally{motion.remove();}
   },
-  async play({rig:kind,cells,target,layer,source,direction,rate=1,shouldSkip,onEvent}){
+  async play({rig:kind,cells,target,layer,source,direction,board,occludedCells,rate=1,shouldSkip,onEvent}){
    rate*=ZOMBIE_EXPAND_SPEED;
    if(kind==='horizontal'){
     // Crawl/swat remains skeletal. The awarded row resolves into the full artwork.
     const image=createRecliningArt(direction,cells.length);await recliningArtReady(image);if(shouldSkip())return;
     const host=document.createElement('div');host.className='reclining-resolve-motion';
     Object.assign(host.style,{left:`${target.x-target.width/2}px`,top:`${target.y-target.height}px`,width:`${target.width}px`,height:`${target.height}px`});
-    host.append(image);layer.append(host);
+    const motion=motionHost(layer,board,occludedCells);host.append(image);motion.append(host);
     try{
      await runRigTimeline({duration:.56,rate,shouldSkip,events:[{time:.3,name:'impact'},{time:.56,name:'settle'}],onEvent,paint:t=>{
       const p=ease(Math.min(1,t/.3)),bounce=t>.3?Math.sin((t-.3)/.26*Math.PI)*2:0;
       host.style.transform=`translateY(${-8*(1-p)-bounce}px) scale(${.88+.12*p})`;
      }});
-    }finally{host.remove();}
+    }finally{motion.remove();}
     return;
    }
    const rig=await loadApprovedRig('front');if(shouldSkip())return;
@@ -180,7 +187,7 @@ export function createApprovedAnimator(){
    const start={scale:small.scale,x:source.x+small.x,y:source.y+small.y};
    const events=rig.data.animations[clip].events,hit=events.find(e=>e.name==='impact').time,takeoff=events.find(e=>e.name==='takeoff')?.time??0;
    const lift=target.height*.08,apex={x:start.x,y:Math.min(start.y,end.y)-lift,scale:end.scale};
-   const motion=overlay(layer,motionBox(rig.data,{stations:[start,end,apex],clips:[clip],rects:[{x:source.x,y:source.y,width:source.width,height:source.height},{x:target.x-target.width/2,y:target.y-target.height,width:target.width,height:target.height}]}));
+   const motion=overlay(layer,motionBox(rig.data,{stations:[start,end,apex],clips:[clip],rects:[{x:source.x,y:source.y,width:source.width,height:source.height},{x:target.x-target.width/2,y:target.y-target.height,width:target.width,height:target.height}]}),board,occludedCells);
    const landing=holdAt({duration:clipDuration(rig.data,clip),events},hit,HIT_STOP*ZOMBIE_EXPAND_SPEED);
    try{
     await runRigTimeline({duration:landing.duration,rate,shouldSkip,events:landing.events,onEvent:name=>{if(name==='impact')motion.land(target.x,target.y,rate);onEvent(name);},paint:t=>{

@@ -8,8 +8,8 @@ test('linked descendants preserve offsets through movement, import and Undo; loc
  let p=createProject();p=edit(p,'title',{anchorId:'reels'});p=edit(p,'controls',{anchorId:'title'});
  const h=new History(p),start=clone(p);h.commit(edit(p,'reels',{x:30,y:190}));
  const s=validateProject(JSON.parse(JSON.stringify(h.current))).scenes.mobile;
- assert.equal(s.layers.find(l=>l.id==='title').x,43);assert.equal(s.layers.find(l=>l.id==='controls').y,630);
- assert.deepEqual(h.current.scenes.desktop,start.scenes.desktop);h.undo();assert.deepEqual(h.current,start);h.redo();assert.equal(h.current.scenes.mobile.layers[1].x,43);
+ assert.equal(s.layers.find(l=>l.id==='title').x,start.scenes.mobile.layers.find(l=>l.id==='title').x+20);assert.equal(s.layers.find(l=>l.id==='controls').y,630);
+ assert.deepEqual(h.current.scenes.desktop,start.scenes.desktop);h.undo();assert.deepEqual(h.current,start);h.redo();assert.equal(h.current.scenes.mobile.layers[1].x,start.scenes.mobile.layers.find(l=>l.id==='title').x+20);
  p=edit(p,'controls',{locked:true});assert.throws(()=>edit(p,'reels',{x:50}),/Unlock linked/);assert.deepEqual(p.scenes.mobile.layers.find(l=>l.id==='reels').x,10);
 });
 test('links reject missing parents/cycles and deleting a parent detaches children',()=>{

@@ -17,6 +17,7 @@ html[data-entry=studio] #welcome{padding:0;background:#000}
 .ident-ready .studio-gam{animation:studio-gam 1s 1.85s cubic-bezier(.2,.8,.2,1) both}
 .ident-ready .studio-es{animation:studio-es .7s 2.65s ease-out both}
 #studio-walker{position:absolute;z-index:2;left:0;bottom:8%;width:clamp(145px,28dvh,275px);height:clamp(145px,28dvh,275px);opacity:0;pointer-events:none;filter:drop-shadow(0 10px 7px #000b)}
+#studio-walker>.approved-intro-walker{position:absolute;inset:0;display:block;background:none!important;mask:none!important;animation:none!important}
 .ident-ready #studio-walker{opacity:1}
 #welcome #studio-skip{position:absolute;bottom:max(22px,env(safe-area-inset-bottom));right:max(22px,env(safe-area-inset-right));z-index:3;font-size:12px;letter-spacing:1.8px;color:#c8c9c2;min-height:44px}
 #studio-skip span{margin-left:10px}
@@ -27,7 +28,7 @@ html[data-entry=studio] #welcome{padding:0;background:#000}
 @keyframes studio-es{from{opacity:0;transform:translateX(-.12em)}to{opacity:1;transform:none}}
 
 /* Reel close-ups over stone plaques. One full panel per mobile page. */
-html[data-entry=guide] #welcome{padding:clamp(12px,2.3dvh,26px) max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));overflow-y:auto;background:linear-gradient(#06131680,#071515d9 65%,#050f11f5),var(--town-art) center/cover}
+html[data-entry=guide] #welcome{padding:clamp(12px,2.3dvh,26px) max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));overflow-y:auto;background:linear-gradient(#06131680,#071515d9 65%,#050f11f5),var(--entry-scene,var(--town-art)) var(--entry-scene-position,center) / var(--entry-scene-size,cover)}
 #welcome #guide-page{width:min(1180px,100%);height:auto;max-height:none;display:grid;grid-template-rows:auto auto auto auto auto;gap:clamp(12px,2dvh,20px);margin:auto;align-content:center}
 #guide-page[hidden],#guide-page .guide-card[hidden]{display:none!important}
 #guide-page .guide-heading>img{display:block;width:clamp(165px,26dvh,235px);height:auto;margin:0 auto 8px}

@@ -4,6 +4,54 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · ChatGPT → Claude + Dylan · Desktop theme and six presentation fixes
+
+**Did:** Added matching desktop subway base/lab artwork and responsive published play. Studio's Use subway applies the current layout; the launch link imports both scene defaults. Mobile and desktop counters now use bounded grid alignment; verified FREE SPINS and a two-digit 10 fit and share a vertical centre. Desktop jars preserve portrait proportions. Controller aspect ratios retained.
+
+**Art:** Replaced barrel scatter with plain FS lettering. Added five separately drawn infected portraits (changed anatomy, expressions, damaged accessories and clothing), used by tiles, carriers, guide and jars; removed green-filter substitution. Theme rules moved to studio/subway-theme.js. Native generated asset files: assets/studio/subway-desktop.webp, subway-lab-desktop.webp and subway-infected.webp; exact-byte bundles are in studio-manifest.json. Prompt record: games/zombify/art/subway-refresh/README.md.
+
+**Fixed:** Intro now creates one canvas-only walker host, removing the inherited duplicate head image. Entry and guide consume the chosen scene/frame via CSS variables; guide symbols/title use current theme. Mobile guide glow and heart badge no longer create horizontal overflow. Detached guide effects preserve the symbol crop. Moving zombies exclude other claimed cells; settled crossing artwork reframes a complete character into its contiguous head segment (single-cell head if needed), while all awarded-cell backdrops and multipliers remain truthful. No outcome, award, odds, math, or payout changes.
+
+**Validation:** Project tests 85/85, Studio/runtime 61/61, Site focused 35/35; eight collision regressions cover real up/down crossings, left/right claims, masks and contiguous portraits. Browser: single walker without background head, new mobile and desktop explainers, 320px fit, no horizontal guide overflow, desktop/mobile scene switching, regular desktop and Super mobile bonus entrances, counter text bounds and new infection artwork. Full real-device performance and the full browser suite remain for Claude.
+
+**Next for Claude:** Run full browser suite and Android/iOS profiling; review crossing motion and the transition from a long horizontal portrait to a reduced owned segment, all bonus tiers, skip and reduced motion. Preserve new atlas cells and theme variables. Do not restore tint-only infected symbols or the barrel FS. Cosmetic desktop background mascot remains static.
+
+**Questions for Dylan:** none. **Blocked on:** nothing.
+
+---
+
+### 2026-10-24 · ChatGPT → Claude + Dylan · Bonus lab and atlas-animation fixes
+
+**Did:** Added the approved bonus lab background to the subway theme. The existing `data-free-spins` lifecycle already changes only inside `bonusScreen.show`'s fully-covered callback, so the room swaps under shut doors and returns under the result doors. Reels/controller stay in place; the mascot is above reels; five live jars sit on the bench; the existing live counter is restyled into the header plate. Lab artwork is preloaded and bundled in studio-manifest.
+
+**Fixed:** Landing pop, swatted symbols and expansion debris copied only background-image, displaying the full concept atlas. Shared `symbol-paint.js` now preserves resolved crop size/position, repeat, mask and filter with inline priority. Subway atlas rules now cover carrier/infected states consistently; removed the old infection=0 contain rule that could override atlas sizing. Infection uses a green treatment of the new portraits, including jars, instead of falling back to old artwork. Existing walking/expansion rigs remain unchanged.
+
+**Validation:** Main repository and Studio/runtime suites pass; Site focused tests include two new crop-transfer regressions. Browser QA covers Outbreak transition, five jars and counter, resolved symbol crops in bonus play, and return to base. Outcome/math/payout code unchanged.
+
+**Next for Claude:** Review scene lifecycle under skip, hidden-tab, reduced motion and all bonus tiers. Preserve the atlas crop contract in any future detached effects. Lower-right/base and upper-right/lab mascot art remain static; rigging them is still follow-up.
+
+**Questions for Dylan:** none. **Blocked on:** nothing.
+
+---
+
+
+### 2026-10-24 · ChatGPT → Claude + Dylan · Subway visual implementation
+
+**Did:** Implemented Dylan's approved subway mockup as a playable mobile Studio preset. Added a clean generated background plate (static lower-right mascot), scalable illustrated steel frame, and CSS atlas crops from the approved concept for base symbols and title. Existing controller retained. Existing symbol IDs, infection states, outcomes, math and payout logic unchanged. Explicit `/play/?layout=subway` opens the published composition without an old browser save overriding it; `/studio/?background=subway` applies the mobile preset as one undoable action, preserving desktop and sounds.
+
+**Assets:** `games/zombify/bundled-art/studio-manifest.json` lists verified chunks for subway-background.webp, subway-art.webp and subway-frame.svg. `studio:prepare` restores them. The source atlas intentionally retains the approved concept; CSS selects exact regions. Infected portraits, walking rigs and expanded wilds retain existing art. No claim of finished character animation.
+
+**Layout correction:** use overflow:clip for the virtual game canvas; a tall controller host previously allowed focus to scroll the hidden canvas upward by 44px and clip the bonus counter.
+
+**Verified:** Site focused tests 21/21; repository main and Studio/runtime suites passed. Browser: intro → explainer → real base spin, bonus shop, free-play Outbreak buy and bonus intro/continue. Base symbols use the new art; actual game controls remain interactive.
+
+**Next for Claude:** Review atlas handling through walking/expanded wild, infection, bonus and reduced motion states. Profile decoding/rendering on Android. Prepare an animation plan for the lower-right mascot (separate transparent character and clean background plate, subtle idle/reactions); avoid whole-background scaling. Preserve this composition and do not change math. The current desktop composition is unchanged; this pass targets the approved mobile concept.
+
+**Questions for Dylan:** none. **Blocked on:** nothing. Dylan relays this handoff; no background agent is started.
+
+---
+
+
 ### 2026-10-25 · Claude → ChatGPT + Dylan · S-20: regressions, phone performance, zombie weight, anticipation audio
 
 **Did:**
@@ -26,7 +74,7 @@ Newest on top. Format is in `AGENTS.md`.
    | Expanding zombie | 47–53% | 8–19% |
    | Outbreak | about 35% | 11–18% |
 
-   Memory stays flat over repeated rounds, at about 23 MB heap. **Caveats:** no phone GPU and no iOS Safari here. So I added `?perf`, an on-device recorder ([`perf-probe.js`](../games/zombify/runtime/perf-probe.js)) that reports frame times per round against the phone's own refresh rate (S-21).
+   Memory stays flat over repeated rounds, at about 23 MB heap. **Caveats:** no phone GPU and no iOS Safari here. So I added `?perf`, an on-device recorder ([`perf-probe.js`](../games/zombify/runtime/perf-probe.js)) that reports frame times per round against the phone's own refresh rate (S-24).
 3. **Zombie weight** (presentation only):
    - **Feet:** in a horizontal swat the feet sank **10.3 px into the floor**; now 0.
    - **Lunge:** a small lean into the block.
@@ -48,7 +96,7 @@ Newest on top. Format is in `AGENTS.md`.
 1. Merge `claude/blissful-rubin-xou20i` and publish. The two new MP3s are in Git, not the asset manifest.
 2. On the published Site, check one round by eye and by ear on a phone: the bite pop, the landing squash, the anticipation swell.
 
-**Questions for Dylan:** S-21: once it's published, open `…/games/zombify/runtime/index.html?perf` on an Android phone (Chrome) and an iPhone (Safari). Play about 10 spins and a bonus, tap **Copy report** and paste both reports to me. Also tell me if the anticipation swell is too loud or too quiet.
+**Questions for Dylan:** S-24 (first numbered S-21, which ChatGPT also used): once it's published, open `…/games/zombify/runtime/index.html?perf` on an Android phone (Chrome) and an iPhone (Safari). Play about 10 spins and a bonus, tap **Copy report** and paste both reports to me. Also tell me if the anticipation swell is too loud or too quiet.
 
 **Blocked on:** nothing. Real-phone numbers decide any further performance work.
 

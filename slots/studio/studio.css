@@ -33,3 +33,18 @@
 
 @media(max-width:560px){html:has(body[data-editor-tab=screens]:not([data-preview-pinned=false])){scroll-padding-top:calc(60px + 42px + 29dvh + 12px)}body[data-editor-tab=screens]:not([data-preview-pinned=false]) #screens-tab :is(input,select,textarea,button){scroll-margin-top:12px}}
 @media(max-width:380px){.mode-buttons button{padding:6px;font-size:10px}.history-buttons button{padding:3px 6px}}
+
+body[data-fullscreen]{overflow:hidden!important;height:100dvh}
+body[data-fullscreen]>.topbar,body[data-fullscreen] .left-panel,body[data-fullscreen] .right-panel,body[data-fullscreen] .command-panel{display:none!important}
+body[data-fullscreen] .workspace{display:block;height:100dvh}
+body[data-fullscreen] .center-panel{position:fixed;inset:0;z-index:1000;height:100dvh;display:grid;grid-template-rows:48px minmax(0,1fr) auto;background:#060b10}
+body[data-fullscreen] .canvas-area{min-height:0!important;height:auto!important;max-height:none!important;position:relative!important;top:auto!important;overflow:hidden;padding:0!important;background:#060b10;display:flex;align-items:center;justify-content:center}
+body[data-fullscreen] .canvas-label,body[data-fullscreen] .canvas-bottom,body[data-fullscreen] .history-buttons,body[data-fullscreen] #edit,body[data-fullscreen] #play{display:none!important}
+body[data-fullscreen] .canvas-toolbar{justify-content:space-between;padding:4px 10px}
+body[data-fullscreen] .preview-bar{margin:0;padding:6px 10px;flex-wrap:wrap;gap:6px}
+body[data-fullscreen] #preview-label,body[data-fullscreen] .preview-spacer,body[data-fullscreen] .live-dot{display:none}
+@media(max-width:560px){#fullscreen{font-size:11px;padding:7px}body[data-fullscreen] .preview-bar select{max-width:130px}body[data-fullscreen] .preview-bar button{padding:6px 8px}}
+
+#fit-mobile-header{font-size:11px;padding:7px}body[data-fullscreen] #fit-mobile-header{display:none}@media(max-width:560px){.canvas-toolbar{flex-wrap:wrap;height:auto;min-height:48px}.mode-buttons{flex-wrap:wrap}}
+
+#broken-wall{font-size:11px;padding:7px}body[data-fullscreen] #broken-wall{display:none}

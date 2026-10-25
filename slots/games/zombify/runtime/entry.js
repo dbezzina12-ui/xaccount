@@ -4,6 +4,7 @@ import {createGuideDemo} from './guide-demo.js';
 import {mountApprovedRig,stopApprovedRigs} from './approved-rig.js';
 import {createGuideNavigation} from './guide-navigation.js';
 import {TOWN_ART} from './scene-character-art.js?v=125';
+import {createIntroWalker} from './intro-walker.js';
 
 const welcome=document.getElementById('welcome');
 const pages=Object.fromEntries(['studio','guide'].map(name=>[name,document.getElementById(`${name}-page`)]));
@@ -43,7 +44,7 @@ async function startStudio(){
   if(token!==studioEpoch||root.dataset.entry!=='studio'||document.hidden)return;
   if(!reduced.matches){
     const walker=document.getElementById('studio-walker');
-    const sprite=walker.firstElementChild;sprite.classList.remove('zombie-walk-sprite');sprite.classList.add('approved-intro-walker');
+    const sprite=createIntroWalker(walker);
     const rig=await mountApprovedRig(sprite,{walking:true,direction:'right',rate:1.5});
     if(token!==studioEpoch||root.dataset.entry!=='studio'||document.hidden){rig?.stop();return;}
     if(!rig){show('guide');return;}

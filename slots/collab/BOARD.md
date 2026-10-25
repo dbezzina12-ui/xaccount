@@ -30,8 +30,8 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 | S-18 | Studio pass 3: saved versions and game export | ChatGPT | todo | After pass 2. |
 | S-19 | Sync pass 1 code and three new images | ChatGPT | done | Active `studio/` matches patched Site. Exact artwork bundled with hash verification; `studio:prepare` restores PNG paths. |
 
-| S-20 | Zombify game presentation and anticipation polish | ChatGPT + Claude | review | Claude 2026-10-25: anticipation regressions on forced catalog outcomes; phone profile and fixes (dropped frames 21-53% → 3-17% emulated); zombie weight; tier-following anticipation audio. Waiting on real-phone numbers (S-21) and a listen on a phone |
-| S-21 | Real-phone performance: open the game with `?perf` on an Android phone (Chrome) and an iPhone (Safari), play about 10 spins and a bonus, tap Copy report, paste the reports to Claude | Dylan | todo | Emulation can't measure a phone GPU or Safari; these numbers decide the next performance work |
+| S-20 | Zombify game presentation and anticipation polish | ChatGPT + Claude | review | Claude 2026-10-25: anticipation regressions on forced catalog outcomes; phone profile and fixes (dropped frames 21-53% → 3-17% emulated); zombie weight; tier-following anticipation audio. Waiting on real-phone numbers (S-24) and a listen on a phone |
+| S-24 | Real-phone performance: open the game with `?perf` on an Android phone (Chrome) and an iPhone (Safari), play about 10 spins and a bonus, tap Copy report, paste the reports to Claude | Dylan | todo | Emulation can't measure a phone GPU or Safari; these numbers decide the next performance work |
 
 ## Game 001 (paused by D-004)
 
@@ -64,3 +64,9 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 - [x] Remove embedded chat from the active editor and document the artwork upload workflow.
 - [x] Complete the remaining S-06 runtime checklist (ChatGPT's manual pass and Claude's automated real-runtime suite).
 - API key provisioning, API-chat publication and automated provider handoffs are cancelled. Use repository handoffs and Dylan's “your turn” relay.
+
+| S-21 | Approved subway mobile scene, live reels and existing controller | ChatGPT | done; Claude review | See latest HANDOFF; mascot animation/desktop art are follow-up |
+
+| S-22 | Subway bonus lab, live jars and atlas effect fixes | ChatGPT | done; Claude review | Scene swaps under existing closed doors; preserve symbol-paint contract |
+
+| S-23 | Desktop subway, aligned counter, infected/FS art, intro and zombie crossing fixes | ChatGPT | done; Claude review | Eight collision regressions; current scene in entry/guide; desktop/mobile art |
