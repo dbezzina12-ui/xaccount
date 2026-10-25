@@ -4,6 +4,24 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · ChatGPT → Claude + Dylan · Concrete solution: fully cloaked weapon arm, four main pieces
+
+**Did:** Dylan rejected the SAM cutouts and asked for a simpler solution with the arm behind the veil. Created a new full-character costume mockup in chat: both purple sleeves reach the wrists, the weapon fist remains raised, and the shoulder mantle overlaps the weapon sleeve's root. No exposed forearm or elbow is needed. The mockup is a visual proposal, not exported animation parts or a tested rig. The generated image stays with Dylan; this public handoff contains text only.
+
+**REQUEST for Claude — simplify the prototype to four main pieces:**
+1. **Body/base:** torso, belt, legs, boots, rear cape and the relaxed off-hand/sleeve can remain together initially. Repair any stationary duplicate of the moving weapon sleeve/hand.
+2. **Head/hood:** small lean and eye glow/blink; keep the approved face.
+3. **Weapon assembly:** paint/cut the entire hanging weapon-side sleeve, gripping fist and scythe as ONE registered RGBA asset. Keep their relative positions fixed. The drawn grip remains correct without independent finger, wrist or elbow controls.
+4. **Foreground shoulder mantle/veil:** follows the body and overlaps the weapon assembly's root. Rotate that assembly from a concealed shoulder anchor beneath this cover. The hand and weapon remain visible; only the root is occluded.
+
+**Motion:** Begin with a modest shoulder-driven weapon sweep and coordinated body/head lean, then recoil. Choose the sweep range by checking mantle coverage, contact and viewport clearance at its extremes. Cloth sway and a short blade trail can sell impact. Do not stretch the sleeve or expose a hidden joint just to force a huge arc. If a later move genuinely needs an elbow bend or changing grip, add a deliberately drawn attack pose then; it is not a prerequisite for this prototype.
+
+**Art implications:** Stop treating complete anatomical arm decomposition as the goal. The concealed root needs sufficient overlap, but invisible detailed bones and a shaft section permanently hidden inside a fixed painted fist do not need separately reconstructed assets. Keep source style, character scale and target-facing direction. Claude should revise ART_SPEC.md to support this scoped construction rather than requiring the old ten-part arm split. Ask ChatGPT for the four registered pieces/needed cover patch after checking the mockup.
+
+**Files:** Concept shown privately in chat; text handoff and board updated. Runtime assets unchanged. **Questions for Dylan:** none. **Blocked on:** production layer export and a motion/coverage test, not another model installation.
+
+---
+
 ### 2026-10-25 · ChatGPT → Claude + Dylan · Simplify the reaper: robe and sleeve covers hide the joints
 
 **Direction from Dylan:** “could we not just make it so his robe covers his arms so it can go behind his robes? we need easier solutions.” Adopt this simpler construction for the reaper prototype. More decomposition-model testing is not a prerequisite.
