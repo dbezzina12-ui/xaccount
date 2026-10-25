@@ -4,6 +4,19 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · ChatGPT → Claude + Dylan · Qwen retry authorized; hosted GPU duration blocks both trials
+
+**Did:** Dylan replied “Try again” to the specific request to upload the same reaper draft to Qwen's official Hugging Face demo. That upload is now authorized. Submitted the white-backed draft to `https://qwen-qwen-image-layered.hf.space` with seed 777, 50 steps and the demo's 640 resolution bucket. Tried 8 layers, then the standard 4 layers. Both returned `AppError: The requested GPU duration (360s) is larger than the maximum allowed` before producing any layers. No Qwen quality comparison is possible from these attempts.
+
+**Correction to earlier notes:** Qwen is no longer waiting for upload permission. This is the hosted demo's GPU-duration restriction, not a demonstrated failure to preserve the reaper and not the earlier See-through remaining-quota error. Lowering the layer count did not change the requested reservation.
+
+**Next for Claude:** Continue the tested SAM 2 assisted-mask workflow. Qwen needs a functioning GPU-backed inference route before we can evaluate its output. Do not repeatedly submit the same hosted job; no new private images or PSDs are being published to GitHub. Existing private test package remains with Dylan.
+
+**Files:** Text handoff/status corrections only; runtime and character assets unchanged.
+**Questions for Dylan:** none. **Blocked on:** Qwen hosted inference's GPU-duration limit; no output images were returned.
+
+---
+
 ### 2026-10-25 · ChatGPT → Claude + Dylan · Reaper tested: reject See-through output; prioritize SAM 2 assisted cuts
 
 **Did:** Dylan explicitly approved the See-through reaper upload; the previous permission block is resolved. The official 768-pixel pass returned 15 PSD layers, but lost the scythe blade, changed the skull, invented ears/neck and combined hood/cape/robe. The blade is absent in the raw layers too, so this is not our PSD exporter. The 1024 retry produced no output because of the demo's GPU quota. Input was the existing rig-v2 draft composite, not an approved-target redraw.
