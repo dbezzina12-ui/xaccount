@@ -84,9 +84,11 @@ const MEASURE = async () => {
       out.nocked = actor.parts.arrow.style.opacity !== '0' && !actor.pose.loosed;
       if (out.nocked) { out['fingers/nock'] = gap(at(actor, 'drawFore', J.fingers), at(actor, 'arrow', J.nock)); out['string/fingers'] = gap(pts[1], at(actor, 'drawFore', J.fingers)); }
       out.handToBow = gap(at(actor, 'bowArm', J.palm), at(actor, 'bow', J.grip));
-      // Each arm's ball centred on the body's ball (rig units), hiding it.
+      // Each arm's ball on the body's ball (rig units; the draw shoulder sits
+      // J.shoulderRaise above its socket, as in the layout target), hiding it.
+      const right = drawn(actor.parts.body, J.balls.bodyRight);
       out.art['bow arm ball off its socket'] = gap(drawn(actor.parts.bowArm, J.balls.bowArm), drawn(actor.parts.body, J.balls.bodyLeft)) / unit;
-      out.art['draw arm ball off its socket'] = gap(drawn(actor.parts.drawUpper, J.balls.drawUpper), drawn(actor.parts.body, J.balls.bodyRight)) / unit;
+      out.art['draw arm ball off its socket'] = gap(drawn(actor.parts.drawUpper, J.balls.drawUpper), [right[0], right[1] - J.shoulderRaise * unit]) / unit;
       out.art['body shoulder ball points showing'] = bare(actor, 'body', J.sockets.bodyLeft) + bare(actor, 'body', J.sockets.bodyRight);
       // The riser under the hand (share of its points the hand covers).
       out.art['riser under the hand'] = 1 - bare(actor, 'bow', J.riser, ['bowArm']) / J.riser.length;

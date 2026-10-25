@@ -4,6 +4,35 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · Claude → ChatGPT + Dylan · Night Fall: art vs target (N-04)
+
+**Did:** Dylan compared the rig with `art/source/layout-target.png`. He flagged the reaper's scythe hand as upside down, and the archer's shoulder as sitting a little low. I checked both against the target and the cutouts (`games/nightfall/shots/art-vs-target.jpg`).
+- **Reaper scythe hand: an art issue.** In the target the arm is raised and the fist grips the shaft at chest height: the knuckles are on top and the wrist bones run down from the fist into the sleeve. `reaper/fore-right.webp` is drawn as a hanging forearm, with the wrist above and the fist at the bottom. No turn of that cutout gives the target's hand; turned over, its sleeve tatters would point up.
+- **Archer draw shoulder: rig, now raised 5 rig units** toward the target, where it is level with the cape's skull brooch. Past 5, the edge of the body's own shoulder ball shows during an aimed draw. The cutouts limit how far it can go:
+  - the body's socket ball sits lower than in the target;
+  - it sits in front of the cape, where the target tucks the shoulder under the cape;
+  - it is about 30% smaller than the arm's ball.
+- **Archer bow hand (minor):** the target closes a fist round the riser. `archer/bow-arm.webp` is an open hand, so the rig drapes it over the riser.
+- **Checks:** all suites pass (119, 15, browser 49). `engine.js` is unchanged.
+
+**Files:** `tools/nightfall-rig.py` (`SHOULDER_RAISE`), `assets/nightfall/rig.json`, `tests/browser/nightfall-rig.e2e.mjs`, `games/nightfall/shots/art-vs-target.jpg`, `ANIMATION-HANDOFF.md`, BOARD N-04.
+
+**REQUEST for ChatGPT (N-04):** redraw the parts below to match `layout-target.png`. Use the same style, line weight and scale as the current cutouts, on a transparent canvas, and keep the file names.
+1. **`reaper/fore-right.webp` (needed):** the right forearm raised, as in the target.
+   - It rises from the elbow to a fist at chest height. The fist is above the wrist, knuckles on top, fingers wrapped round a near-vertical shaft (about 4° lean, like `scythe.webp`). Leave a gap where the shaft passes, so it shows above and below the fist.
+   - Keep the mauve socket cap, now at the elbow end (the bottom), about the size of the current one, so it seats inside the sleeve. Bare bones (or a short cuff) run from the sleeve to the hand, and any tatters hang down.
+   - If the sleeve should hang long below the elbow as in the target, send `reaper/upper-right.webp` too.
+2. **Optional, `archer/bow-arm.webp`:** a fist closed round the riser, as in the target. If you can, put the front fingers on their own layer, `archer/bow-fingers.webp`, on the same canvas, so the riser can pass between palm and fingers.
+3. **Optional, the archer's right shoulder:** the draw shoulder level with the cape's skull brooch and tucked under the cape edge, as in the target. Either move the socket ball up under the cape in `archer/body.webp`, or draw the ball in `archer/draw-arm.webp` the same size as the socket's.
+
+**Next for Claude:** when the new parts land, re-run `python3 tools/nightfall-rig.py`, refit the rest placements and re-key the strike for the raised hand. The tool and the rig test fail loudly if a socket cap or shoulder ball shows.
+
+**Questions for Dylan:** none. The art request above is for ChatGPT.
+
+**Blocked on:** the reaper's raised forearm art (N-04).
+
+---
+
 ### 2026-10-25 · Claude → ChatGPT + Dylan · Night Fall: arms seated (N-02, second pass)
 
 **Did:** Dylan said the arms weren't connected, and they weren't. My first rig pass kept your placement boxes, and there the arm pieces sit end to end:

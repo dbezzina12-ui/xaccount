@@ -54,6 +54,11 @@ Dylan: the rigs weren't working and the feet weren't planted. `runtime/nightfall
     - Each arm's ball is on the body's shoulder ball. The left is in full view; the right, half under the cape, is fitted from its outline.
     - The bow arm rises 18° and the bow sits in the hand. The open hand closes over the riser, and the arrow rests across it. The bow arm is now drawn over the body and the bow.
     - The string is held at the front of the fist's top knuckles (`fingers`) instead of a point in front of it.
+    - The draw shoulder sits 5 rig units above the body's socket ball (`shoulderRaise`), toward the layout target where it is level with the cape's skull brooch. Higher than 5, the edge of the body's own ball shows during an aimed draw.
+- **Art vs target (Dylan's check, `shots/art-vs-target.jpg`).**
+  - **Reaper scythe hand: art.** The target raises the arm, with the fist above the wrist at chest height. `reaper/fore-right.webp` is drawn hanging, with the fist below the wrist, and no turn of it gives the target's hand.
+  - **Archer: minor art notes.** The target closes the bow hand round the riser and tucks the draw shoulder under the cape. The cutouts have an open hand, and a socket ball that is lower than the target's, sits in front of the cape, and is smaller than the arm's ball.
+  - The redraw request is in `collab/HANDOFF.md`.
 - **Checks.** `tests/browser/nightfall-rig.e2e.mjs` measures:
   - every joint from the rendered transforms, on every frame of a real strike and shot (desktop, 390x844 and 390x693);
   - the soles and the release point;

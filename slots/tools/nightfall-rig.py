@@ -69,6 +69,11 @@ REAPER_FIT = {
 FIST_ROW, FIST_FEATHER = 215, 8
 # The archer's bow arm rises this much at rest so the hand closes on the riser.
 ARMLIFT = 18
+# The draw arm's shoulder sits this far (rig units) above the body's socket
+# ball, toward the layout target (shoulder level with the cape's skull
+# brooch). 5 is the most for which the arm's ball, larger than the socket's,
+# still hides the socket through every aimed draw; at 10 its edge shows.
+SHOULDER_RAISE = 5
 
 
 # 3 x 3 affine matrices, the same convention as nightfall-actors.js.
@@ -399,6 +404,7 @@ def archer():
     ba = load(k, 'bowArm').shape
     sockets = {'bowArm': to_rig(k, 'body', *left_socket, body.shape), 'drawArm': to_rig(k, 'body', *right_socket, body.shape)}
     balls = {'bowArm': to_rig(k, 'bowArm', *bow_ball, ba), 'drawArm': to_rig(k, 'drawArm', *draw_ball, (ah, aw))}
+    sockets['drawArm'] = sockets['drawArm'] - [0, SHOULDER_RAISE]
     t_bow, t_draw = sockets['bowArm'] - balls['bowArm'], sockets['drawArm'] - balls['drawArm']
     rest = {'bowArm': move(t_bow), 'drawUpper': move(t_draw), 'drawFore': move(t_draw)}
     # The bow hand: the arm rises ARMLIFT degrees about its shoulder, and the
@@ -424,7 +430,7 @@ def archer():
         'tipBottom': rnd(to_rig(k, 'bow', bottom[0], bottom[1], (h, w))),
         'arrowTip': rnd(to_rig(k, 'bow', *arrow_tip, (h, w))),
         'grip': rnd(grip),
-        'armLift': ARMLIFT, 'bowShift': rnd(bow_shift),
+        'armLift': ARMLIFT, 'bowShift': rnd(bow_shift), 'shoulderRaise': SHOULDER_RAISE,
         'neck': [190, 222], 'sole': sole(k),
         'rest': {p: js(m) for p, m in rest.items()},
         # For the browser test, in native px: the ball centres; points on the
