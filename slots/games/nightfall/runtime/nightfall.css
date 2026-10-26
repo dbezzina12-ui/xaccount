@@ -35,3 +35,9 @@
 .character-rig.debug-joints .part-mantle{opacity:.25}.character-rig.debug-joints .part-body{opacity:.45}
 /* The breathing parts of reaper v2 are canvases (the old knight canvas rule above hides others). */
 .court-knight .character-rig canvas.rig-part{display:block!important}
+
+/* Multipliers belong to the board tiles, below the symbol and tumble planes.
+   Cell-relative type stays readable on phones; higher tiers fit long values. */
+.board .cell .multi{z-index:1;top:50%;font-size:clamp(18px,50cqw,52px);color:#d6ff9d;-webkit-text-stroke:2px #172513;text-shadow:0 2px 1px #08140c;line-height:1}
+.board .cell.hot .multi{font-size:clamp(16px,40cqw,44px)}
+.board .cell.superhot .multi{font-size:clamp(13px,32cqw,36px)}
