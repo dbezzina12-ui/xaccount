@@ -67,15 +67,27 @@ export const restOf=(J,kind,name,spec=RIGS[kind])=>J.rest?.[spec.parts[name]?.re
 // stub, in front of the mantle, robe and boots; and the hood again, faded in
 // while the blade swings behind the head. `fade` names the pose key that
 // sets a part's opacity.
-export const REAPER_V2={size:[400,430],dir:'reaper-v2',blink:false,parts:{
- body:{file:'body',bone:'chest',z:0},
+//
+// Breathing (`breath` 0..1, the inhale): the robe and mantle are warped, not
+// moved. `warp` parts are drawn row by row into a canvas: everything above
+// `top` (shoulders, hood) rises `lift` rig units, nothing below `waist` (the
+// hips, legs and boots) moves, and the chest between stretches smoothly and
+// widens by up to `widen`. The hood copy rises with the shoulders and the arm
+// with the robe at the elbow, so the joints stay under the mantle.
+export const REAPER_V2={size:[400,430],dir:'reaper-v2',blink:false,
+ breath:{lift:4,widen:.008,top:190,waist:300,period:3.8},
+ parts:{
+ body:{file:'body',bone:'chest',z:0,warp:true},
  armUpper:{file:'arm-upper',bone:'upper',z:1},
  armFore:{file:'arm-fore',bone:'fore',z:2},
  hand:{file:'hand',bone:'hand',z:3},
- mantle:{file:'mantle',bone:'chest',z:4},
+ mantle:{file:'mantle',bone:'chest',z:4,warp:true},
  handFront:{file:'hand-front',bone:'hand',z:5},
- head:{file:'head',bone:'chest',z:6,fade:'headOver'}
+ head:{file:'head',bone:'crown',z:6,fade:'headOver'}
 }};
+// How much of the breath's lift a height gets: 1 at the shoulders and above,
+// 0 at the hips and below, smooth between.
+export const breathShare=(B,y)=>{const t=Math.max(0,Math.min(1,(B.waist-y)/(B.waist-B.top)));return t*t*(3-2*t);};
 const ang=([x,y])=>Math.atan2(y,x)*180/Math.PI;
 const sub=(a,b)=>[a[0]-b[0],a[1]-b[1]],add=(a,b)=>[a[0]+b[0],a[1]+b[1]],len=v=>Math.hypot(v[0],v[1]),scale=(v,k)=>[v[0]*k,v[1]*k];
 const ease=t=>t<.5?2*t*t:1-(-2*t+2)**2/2,clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
@@ -110,10 +122,10 @@ function reaperBones(J,pose){
  b.scythe=mul(b.foreRight,rotAbout(pose.scythe||0,J.grip));
  return b;
 }
-function reaperV2Bones(J,pose){
- const b={};
- b.chest=breathe(J.sole,pose.breath||0);
- b.upper=mul(b.chest,rotAbout(pose.shoulder||0,J.shoulder));
+function reaperV2Bones(J,pose,B=REAPER_V2.breath){
+ const b={},lift=B.lift*(pose.breath||0);
+ b.chest=I;b.crown=move([0,-lift]);
+ b.upper=mul(move([0,-lift*breathShare(B,J.elbow[1])]),rotAbout(pose.shoulder||0,J.shoulder));
  b.fore=mul(b.upper,rotAbout(pose.elbow||0,J.elbow));
  b.hand=mul(b.fore,rotAbout(pose.wrist||0,J.wrist));
  return b;
@@ -254,17 +266,25 @@ class Actor {
   const tick=now=>{this.idleRaf=requestAnimationFrame(tick);if(this.pending||document.getElementById('menu')?.open||now-last<33)return;last=now;
    const t=(now-start)/1000,pose=this.idlePose(t);
    if(this.nod){const k=clamp((now-this.nod)/620);pose.head=(pose.head||0)-7*Math.sin(Math.PI*k);if(k>=1)this.nod=null;}
+   // After an action, ease the idle back in from the rest pose.
+   const k=this.calm?ease(clamp((now-this.calm)/700)):1;
+   if(k<1)for(const key in pose)if(typeof pose[key]==='number')pose[key]*=k;
    this.pose=pose;this.draw(pose);};
   this.idleRaf=requestAnimationFrame(tick);
  }
  stopIdle(){cancelAnimationFrame(this.idleRaf);this.idleRaf=0;}
- idle(){this.run++;cancelAnimationFrame(this.raf);this.pending?.();this.pending=null;this.pose={};this.draw({});this.stage.classList.remove('attacking','shooting');this.scheduleBlink();this.startIdle();}
+ idle(){this.run++;cancelAnimationFrame(this.raf);this.pending?.();this.pending=null;this.pose={};this.draw({});this.calm=performance.now();this.stage.classList.remove('attacking','shooting');this.scheduleBlink();this.startIdle();}
  salute(){if(!reduced())this.nod=performance.now();}
  // Runs `pose(p)` over `duration` ms; resolves at `release` (or on Skip,
  // reduced motion, or a new idle()), and ends in the rest pose.
- action({duration=900,paused=()=>document.hidden||document.getElementById('menu')?.open,skip=()=>false,pose,release=.55,onRelease}){
-  this.idle();this.stopBlink();
+ action({duration=900,paused=()=>document.hidden||document.getElementById('menu')?.open,skip=()=>false,pose:keyed,release=.55,onRelease}){
+  // The idle pose the action starts from (mid-breath, mid-sway) blends out
+  // over its first 15%, so nothing jumps.
+  const from=this.pose||{};
+  const pose=p=>{const q=keyed(p),k=1-ease(span(p,0,.15));if(k>0)for(const key in from)if(typeof from[key]==='number')q[key]=(q[key]||0)+from[key]*k;return q;};
+  this.idle();this.stopBlink();this.calm=performance.now();
   if(reduced()||skip()){this.draw({});this.scheduleBlink();return Promise.resolve(this.releasePoint?.());}
+  this.pose=pose(0);this.draw(this.pose);
   const id=++this.run;let resolved=false;
   return new Promise(resolve=>{
    const done=()=>{if(!resolved){resolved=true;const at=this.releasePoint?.();onRelease?.();resolve(at);}};
@@ -276,7 +296,7 @@ class Actor {
     // arrow's head) and anything held at release are read at full draw.
     if(p>=release&&!resolved){this.pose=pose(release-1e-4);this.draw(this.pose);done();}
     this.pose=pose(p);this.draw(this.pose);
-    if(p<1)this.raf=requestAnimationFrame(tick);else{this.pending=null;this.pose={};this.draw({});this.stage.classList.remove('attacking','shooting');this.scheduleBlink();}};
+    if(p<1)this.raf=requestAnimationFrame(tick);else{this.pending=null;this.pose={};this.draw({});this.calm=performance.now();this.stage.classList.remove('attacking','shooting');this.scheduleBlink();}};
    this.raf=requestAnimationFrame(tick);
   });
  }
@@ -314,13 +334,48 @@ export class CourtKnight extends Actor {
   const rig=await fetch(ROOT+'reaper-v2/rig.json').then(r=>r.json());
   this.spec={...REAPER_V2,size:rig.size,parts:Object.fromEntries(Object.entries(REAPER_V2.parts).map(([n,p])=>[n,{...p,box:rig.parts[p.file].box}]))};
   this.size=rig.size;this.build();
+  // The breathing parts: each image becomes the source of a canvas the same
+  // size plus room for the lift and the widening (the box grows to match).
+  const B=REAPER_V2.breath;this.sources={};
+  for(const [name,p] of Object.entries(this.spec.parts)){
+   if(!p.warp)continue;
+   const img=this.parts[name];await img.decode();
+   const q=img.naturalWidth/p.box[2],padX=Math.ceil(img.naturalWidth*B.widen/2)+2,padY=Math.ceil(B.lift*q)+2,box0=p.box;
+   const c=document.createElement('canvas');c.width=img.naturalWidth+2*padX;c.height=img.naturalHeight+padY;
+   c.className=img.className;c.dataset.part=name;
+   p.box=[box0[0]-padX/q,box0[1]-padY/q,box0[2]+2*padX/q,box0[3]+padY/q];
+   const [W,H]=this.size;Object.assign(c.style,{left:p.box[0]/W*100+'%',top:p.box[1]/H*100+'%',width:p.box[2]/W*100+'%',height:p.box[3]/H*100+'%',zIndex:p.z});
+   img.replaceWith(c);this.parts[name]=c;this.sources[name]={img,q,padX,padY,box0};
+  }
+  this.warped=null;
   // `&reaperDebug=joints`: the mantle and robe see-through, to inspect the joints.
   if(new URLSearchParams(location.search).get('reaperDebug')==='joints')this.rig.classList.add('debug-joints');
   return {...rig.joints,checks:rig.checks};
  }
  bones(pose){return {bones:this.v2?reaperV2Bones(this.joints,pose):reaperBones(this.joints,pose)};}
+ // v2: redraw the breathing parts when the breath changes.
+ paintExtras(frame,pose){
+  if(!this.v2)return;
+  const b=+(pose.breath||0).toFixed(4);if(b===this.warped)return;this.warped=b;
+  for(const name in this.sources)this.warp(name,b);
+ }
+ // Draws a breathing part's image into its canvas, row band by row band:
+ // each band's top and bottom rise by their share of the lift, so the bands
+ // meet with no gaps; the chest bands also widen about the body's centre.
+ warp(name,b){
+  const {img,q,padX,padY,box0}=this.sources[name],c=this.parts[name],g=c.getContext('2d'),B=REAPER_V2.breath,W=img.naturalWidth,H=img.naturalHeight;
+  g.clearRect(0,0,c.width,c.height);
+  if(!b){g.drawImage(img,padX,padY);return;}
+  const share=r=>breathShare(B,box0[1]+r/q),up=r=>B.lift*b*q*share(r),cx=(this.joints.centre*this.size[0]-box0[0])*q;
+  const band=(r0,r1,k)=>{const y0=padY+r0-up(r0),y1=padY+r1-up(r1);g.drawImage(img,0,r0,W,r1-r0,padX+cx*(1-k),y0,W*k,y1-y0+(r1<H?.75:0));};
+  const top=clamp(Math.floor((B.top-box0[1])*q),0,H),bottom=clamp(Math.ceil((B.waist-box0[1])*q),0,H);
+  if(top>0)band(0,top,1);
+  for(let r=top;r<bottom;r+=4){const r1=Math.min(bottom,r+4),w=share((r+r1)/2);band(r,r1,1+B.widen*b*4*w*(1-w));}
+  if(bottom<H)band(bottom,H,1);
+ }
  idlePose(t){const w=Math.sin(t*Math.PI*2/4.2),v=Math.sin(t*Math.PI*2/5.6+1);
-  if(this.v2)return {breath:.0065*w,shoulder:.8*v,elbow:.6*Math.sin(t*Math.PI*2/5.6+.4),wrist:-.5*v};
+  // v2: a breath every `period` seconds, in over 40% of it and out over 60%.
+  if(this.v2){const u=(t/REAPER_V2.breath.period)%1,breath=u<.4?ease(u/.4):1-ease((u-.4)/.6);return {breath,shoulder:.6*v,elbow:.5*Math.sin(t*Math.PI*2/5.6+.4),wrist:-.4*v};}
   return {breath:.0065*w,cape:.7*v,head:.8*Math.sin(t*Math.PI*2/6.3),upperRight:.8*v,foreRight:.6*Math.sin(t*Math.PI*2/5.6+.4),scythe:-.5*v,upperLeft:-.7*v,foreLeft:-.8*Math.sin(t*Math.PI*2/5.6+.5)};}
  // The blade's position on screen (its curve's midpoint), for tests and effects.
  bladePoint(){const J=this.joints,b=(this.frame||this.bones({})).bones,[x,y]=this.v2?apply(b.hand,J.blade):apply(b.scythe,[160,40]),r=this.rig.getBoundingClientRect();return {x:r.left+x*r.width/this.size[0],y:r.top+y*r.height/this.size[1]};}

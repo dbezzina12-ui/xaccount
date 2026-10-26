@@ -4,6 +4,8 @@
 // 390x844 and 390x693: the shoulder and elbow never show from under the
 // mantle (or the fist); the hood layer only fades while the blade is clear of
 // it; the boots stay planted; and the reaper stands on the archer's ground line.
+// Breathing: the shoulders and hood rise and the boots do not, the warped robe
+// has no seams, and the joints stay hidden through the whole idle cycle.
 //
 // The v2 art is git-ignored until Dylan clears it, so this skips without it
 // (make it with tools/nightfall-reaper-v2.py).
@@ -42,12 +44,19 @@ async function open(viewport, extra = {}) {
 // an opaque, fully shown part drawn over it; and a recorder on draw().
 const MEASURE = () => {
   const box = (el) => ({ x: parseFloat(el.style.left) / 100 * el.parentElement.clientWidth, y: parseFloat(el.style.top) / 100 * el.parentElement.clientHeight, w: el.offsetWidth, h: el.offsetHeight, m: new DOMMatrix(getComputedStyle(el).transform) });
-  const drawn = (el, [u, v]) => { const b = box(el), q = b.m.transformPoint(new DOMPoint(u * b.w / el.naturalWidth, v * b.h / el.naturalHeight)); return [b.x + q.x, b.y + q.y]; };
-  const native = (el, [x, y]) => { const b = box(el), q = b.m.inverse().transformPoint(new DOMPoint(x - b.x, y - b.y)); return [q.x * el.naturalWidth / b.w, q.y * el.naturalHeight / b.h]; };
+  // Parts are images, or canvases (the breathing robe and mantle).
+  const nw = (el) => el.naturalWidth || el.width, nh = (el) => el.naturalHeight || el.height;
+  const drawn = (el, [u, v]) => { const b = box(el), q = b.m.transformPoint(new DOMPoint(u * b.w / nw(el), v * b.h / nh(el))); return [b.x + q.x, b.y + q.y]; };
+  const native = (el, [x, y]) => { const b = box(el), q = b.m.inverse().transformPoint(new DOMPoint(x - b.x, y - b.y)); return [q.x * nw(el) / b.w, q.y * nh(el) / b.h]; };
   const alphas = new Map();
+  window.__pixels = (el) => {
+    if (el.getContext) { const d = el.getContext('2d').getImageData(0, 0, el.width, el.height); return { d: d.data, w: el.width, h: el.height }; }
+    const c = document.createElement('canvas'); c.width = el.naturalWidth; c.height = el.naturalHeight; const g = c.getContext('2d'); g.drawImage(el, 0, 0);
+    return { d: g.getImageData(0, 0, c.width, c.height).data, w: c.width, h: c.height };
+  };
   const alphaAt = (el, [u, v]) => {
-    let a = alphas.get(el.src);
-    if (!a) { const c = document.createElement('canvas'); c.width = el.naturalWidth; c.height = el.naturalHeight; const g = c.getContext('2d'); g.drawImage(el, 0, 0); a = { d: g.getImageData(0, 0, c.width, c.height).data, w: c.width, h: c.height }; alphas.set(el.src, a); }
+    let a = alphas.get(el);
+    if (!a) { a = window.__pixels(el); alphas.set(el, a); }
     const x = Math.round(u), y = Math.round(v);
     return x < 0 || y < 0 || x >= a.w || y >= a.h ? 0 : a.d[(y * a.w + x) * 4 + 3];
   };
@@ -57,6 +66,7 @@ const MEASURE = () => {
     return Object.values(actor.parts).some((o) => +o.style.zIndex > z && shown(o) && alphaAt(o, native(o, pt)) >= 128);
   };
   window.__v2 = (actor) => {
+    for (const el of alphas.keys()) if (el.getContext) alphas.delete(el);
     const J = actor.joints, P = actor.parts, out = {};
     // Shoulder and elbow points showing.
     for (const [part, file] of [['armUpper', 'arm-upper'], ['armFore', 'arm-fore']]) out[`${file} joint points showing`] = J.checks.joints[file].filter((p) => !hidden(actor, part, drawn(P[part], p))).length;
@@ -66,7 +76,7 @@ const MEASURE = () => {
     out['blade points on the fading hood'] = fade > 0.01 && fade < 0.99 ? J.checks.blade.filter((p) => alphaAt(P.head, native(P.head, drawn(P.handFront, p))) >= 128).length : 0;
     // The soles: the body's bottom centre, drawn.
     const b = actor.spec.parts.body.box, el = P.body;
-    out.sole = drawn(el, [(J.feet[0] - b[0]) / b[2] * el.naturalWidth, (J.sole - b[1]) / b[3] * el.naturalHeight])[1];
+    out.sole = drawn(el, [(J.feet[0] - b[0]) / b[2] * nw(el), (J.sole - b[1]) / b[3] * nh(el)])[1];
     return out;
   };
   window.__record = (actor) => {
@@ -121,4 +131,42 @@ test('reaper v2 stands on the archer\'s ground line', { skip }, async () => {
     assert.ok(Math.abs(g.reaperGround - g.archerGround) < 0.5, `${vp.width}x${vp.height}: grounds ${g.reaperGround} vs ${g.archerGround}`);
     await page.ctx.close();
   }
+});
+
+test('reaper v2 breathes: shoulders and hood rise, boots stay, no seams, joints hidden all cycle', { skip }, async () => {
+  const page = await open({ width: 1280, height: 800 });
+  const r = await page.evaluate(async () => {
+    const a = globalThis.NightFall.actors.reaper, unit = a.rig.clientWidth / a.size[0];
+    a.stopIdle();
+    // The body canvas's opaque extent in its centre column, in rig units.
+    const extent = () => {
+      const c = a.parts.body, px = window.__pixels(c), x = Math.round(c.width * 0.55), rows = [];
+      for (let y = 0; y < px.h; y++) if (px.d[(y * px.w + x) * 4 + 3] > 128) rows.push(y);
+      const q = c.height / (c.getBoundingClientRect().height / unit);
+      return { top: rows[0] / q, bottom: rows.at(-1) / q };
+    };
+    // Seams: a see-through pixel with solid robe two rows above and below it.
+    const seams = () => {
+      const px = window.__pixels(a.parts.body); let n = 0;
+      for (let y = 2; y < px.h - 2; y++) for (let x = 0; x < px.w; x++) {
+        const at = (yy) => px.d[(yy * px.w + x) * 4 + 3];
+        if (at(y) < 230 && at(y - 2) > 250 && at(y + 2) > 250) n++;
+      }
+      return n;
+    };
+    a.draw({ breath: 0 }); const out = window.__v2(a), e0 = extent();
+    a.draw({ breath: 1 }); const inn = window.__v2(a), e1 = extent(), seam = seams();
+    // The whole idle cycle, a frame every 0.1 s.
+    let worst = 0;
+    for (let t = 0; t < 2 * a.spec.breath.period; t += 0.1) { a.draw(a.idlePose(t)); const f = window.__v2(a); worst = Math.max(worst, f['arm-upper joint points showing'] + f['arm-fore joint points showing']); }
+    return { out, inn, rise: e0.top - e1.top, boots: e1.bottom - e0.bottom, lift: a.spec.breath.lift, seam, worst };
+  });
+  assert.ok(r.rise > r.lift * 0.9, `the hood rose ${r.rise.toFixed(2)} of ${r.lift} units`);
+  assert.ok(Math.abs(r.boots) < 0.2, `the boots moved ${r.boots.toFixed(2)} units`);
+  assert.ok(Math.abs(r.inn.sole - r.out.sole) < 0.5, 'the soles moved');
+  assert.ok(r.seam < 30, `${r.seam} seam pixels in the breathing robe`);
+  for (const f of [r.out, r.inn]) for (const [k, v] of Object.entries(f)) if (k.includes('showing')) assert.equal(v, 0, `${k}: ${v}`);
+  assert.equal(r.worst, 0, `joint points showing during the idle: ${r.worst}`);
+  assert.deepEqual(page.errors, []);
+  await page.ctx.close();
 });

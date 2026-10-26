@@ -4,6 +4,30 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: reaper v2 breathes (N-06)
+
+**Did:** Dylan approved the v2 reaper ("It's good") and asked for a breathing animation. Before this, v2 only stretched the whole figure 0.65% from the soles, which wasn't visible. Now the robe and mantle are warped row by row on each breath:
+- **Moves:** the shoulders and hood rise 4 rig units and the chest stretches smoothly, widening by up to 0.8%. The arm (and so the scythe) rises with the robe at the elbow, and the hood copy rises with the shoulders.
+- **Stays:** the hips, legs and boots don't move.
+- **Timing:** one breath every 3.8 s, in over 40% of it and out over 60%.
+
+Any action now starts from the idle pose and blends out of it over its first 15%, and the idle eases back in afterwards. So the breath and sway no longer snap at the start and end of a strike or shot. This applies to both characters.
+
+**Checks:** `tests/browser/nightfall-reaper-v2.e2e.mjs` gains a breathing test.
+- The hood rises at least 90% of the lift, while the boots move less than 0.2 units.
+- No seam pixels appear in the warped robe.
+- No shoulder or elbow point shows through two full idle cycles.
+
+All suites pass (119, studio 61, Night Fall 15, browser 52). `engine.js` is unchanged.
+
+**Files:** `games/nightfall/runtime/nightfall-actors.js`, `nightfall.css` (the old knight-canvas rule no longer hides the rig's canvases), `tests/browser/nightfall-reaper-v2.e2e.mjs`.
+
+**Questions for Dylan:** May the v2 art be committed so the published game can show it and v2 can become the default?
+
+**Blocked on:** that answer.
+
+---
+
 ### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: reaper v2 candidate, bone arm under the mantle (N-06)
 
 **Did:** Built the reaper from ChatGPT's `Reaper-Arm-Pieces-v1` (SHA-256 matches) and the shoulder mantle Dylan sent, as Dylan directed: the bare bone arm, no purple sleeves, with the mantle's skull replacing the chest clasp. The game shows it with `?reaper=v2`; the current reaper stays the default. Add `&reaperDebug=joints` to see through the mantle and robe.
