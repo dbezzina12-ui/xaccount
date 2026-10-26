@@ -137,7 +137,7 @@ ChatGPT's brief: `art/inbox/mage-zap/HANDOFF.md`. Engine and math: `MATH.md`.
   - The wild appears the instant the bolt lands, with a crack (`audio.zap()`). Then a 210 ms spark (140 ms in turbo) stays inside that cell: a glow, an ivory ring and six rays.
   - The bolt's kinks are a fixed function of the cell; nothing in the show is random.
 - **Free spins:** the roamers leave with the board as the new drop falls in, then a bolt puts each one on its new cell. Roamers never clear after a win; burst wilds do.
-- **The mage wilds:** for now both use the same W tile. A one-time wild (`arrow-wild`) has a violet rim. A roamer (`roam-wild`) has a brighter rim and a slow pulsing glow until ChatGPT draws its own art.
+- **The mage wilds:** a one-time wild (`arrow-wild`) is the W tile with a violet rim. A roamer (`roam-wild`) is ChatGPT's animated soul lantern (`assets/nightfall/roaming-wild/`, cd4dc9e; see `art/inbox/roam-wild/HANDOFF.md`).
 - **Turbo, Skip, pause:** Turbo shortens the slam and the bolt. Skip lands the wild at once. Opening the menu (or hiding the tab) holds the bolt where it is. Reduced motion draws no bolt; the cell gets a brief outline (`.mage-lit`) instead.
 - **`?archer=archer`:** the archer shoots, and the same bolts leave its bow.
 - **Multipliers:** ChatGPT's tile treatment (`nightfall.css`, 2db6025). The number is centred on the tile, behind the symbol and the tumble plane: it shows in tumble gaps and around the symbols, and wilds cover it. `styles.css` centres it in the cell with container units.
