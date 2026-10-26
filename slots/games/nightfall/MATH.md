@@ -1,5 +1,31 @@
 # Night Fall: current development math
 
+## 2026-10-26 — Mystery Buy
+
+Mystery costs **370× base bet** in playtest credits. One RNG draw chooses **40% Regular / 50% Super / 10% Hidden**, then that existing ten-spin bonus runs unchanged. Hidden is now accessible through Mystery as well as a natural Hidden scatter trigger; there is no direct Hidden buy.
+
+| Measurement | Result |
+|---|---:|
+| Whole Mystery buys | 1,000,000 |
+| Return / 370× price | **96.09% ± 0.61 percentage points** |
+| Average award | 355.54× base bet |
+| Selected Regular / Super / Hidden | 399,851 / 500,039 / 100,110 |
+| Cap rate | 0.078% |
+
+This is a Monte Carlo development estimate, not certification. The 370× price was chosen from the existing measured bonus values (~353.91× weighted average / 0.96), rounded to 370×, then independently verified above. Reprice Mystery when Claude retunes its underlying bonuses; the standalone regular and Super buys still need the balancing pass described below.
+
+`math/sim-mystery.json` records the current engine hash and full output. The earlier `math/sim-after.json` remains the original measurement of the underlying tiers with its original hash. All 1,000 checked existing-mode rounds (200 each of base, feature, regular, Super and Hidden) reproduce the previous engine's outcomes and complete event sequences exactly; the sole additional return metadata is `purchaseMode`.
+
+The menu and confirmation show the same odds from `RULES.mystery`. Selection happens once in the engine after purchase confirmation; animation never rerolls it. The selected tier's own scatter art drops before its bonus splash. Hidden keeps its opening multiplier strikes and starting lantern. History records Mystery Buy plus the selected tier and the single 370× charge. Total award is capped at 25,000× base bet as for every other round.
+
+Reproduce:
+
+```sh
+node tools/math/nightfall-sim.mjs --rounds base=0,feature=0,regular=0,super=0,hidden=0,mystery=1000000 --json games/nightfall/math/sim-mystery.json
+```
+
+108 Site tests pass, including exact probability boundaries, deterministic selection, equivalence to each selected bonus, all three scatter artworks and recorded/unrecorded parity.
+
 ## 2026-10-26 — hold lanterns until a winning use
 
 Dylan corrected the roaming rule: a lantern stays visible in its cell between spins and moves only after contributing to a win. This supersedes the earlier rule that moved every lantern at the start of every free spin.

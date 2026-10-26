@@ -61,3 +61,10 @@
 .fs-symbol.fs-super img.fs-shield{filter:drop-shadow(0 0 3px #a754e677)}
 .fs-symbol.fs-hidden img.fs-shield{filter:drop-shadow(0 0 3px #e43c2977)}
 .fs-symbol.fs-super:after,.fs-symbol.fs-hidden:after{content:none}
+
+/* Mystery uses the approved Hidden tombstone; odds stay readable on phones. */
+.feature-card.mystery{border-color:#bb71d37a;background:linear-gradient(120deg,#4c264e88,#19162d)}
+.mystery-art{display:block;position:relative}
+.mystery-art b{position:absolute;inset:0;display:grid;place-items:center;color:#fff1c2;font:bold 38px Georgia;text-shadow:0 2px 3px #170a24,0 0 9px #8f4bd1}
+.mystery-art .fs-symbol{filter:brightness(.6)}
+.mystery-odds{display:block;margin-top:8px;color:#e9c4ff;font-size:12px;line-height:1.5}

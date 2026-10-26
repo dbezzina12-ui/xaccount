@@ -2,7 +2,7 @@
   "sourceProject": "appgprj_6ada21a1fc088191b0521ac235315e00",
   "sourceCommit": "b49911bdd51dffbecbf4b6ea7c34c63881527e90",
   "importedEngineSha256": "876e2a6d901e54162bea8afbd359686315bf77cee5e468adb9401031678b306e",
-  "engineSha256": "9e675d1ec33f246ecd1c687827bd7d9dca8e2bf45340299d2f86f0711d995685",
+  "engineSha256": "5b731542be6a3dc8b493a16b1f7efebfe4e20a58a9474190f0ffd8d3eb52a3db",
   "originalTitle": "Knightfall",
   "title": "Night Fall",
   "mechanicsChanged": true,
@@ -14,6 +14,7 @@
     "2026-10-26 Super tombstones (4.2% of base/Reaper Strike tombstones) start Super (1 in 2,646 spins) and, three at once, Hidden Free Spins; base attack chance 30% -> 20% (base 95.4%). Measured in MATH.md.",
     "2026-10-26 Hidden tombstone (0.107% of base/Reaper Strike tombstones): 3+ tombstones with one start Hidden (1 in 90,909 base spins), replacing 3 gold; base attack chance 19%; base 95.7%. Measured in MATH.md.",
     "2026-10-26 Hidden opens with 3-5 mage strikes on the cleared board, each raising a plus of tiles one step (Hidden 2,415x average; base 96.0%). Measured in MATH.md.",
-    "2026-10-26 Dylan correction: lanterns hold their cells across spins and relocate only after participating in a win; Super buys drop sfs artwork. Parameters unchanged; remeasured in MATH.md."
+    "2026-10-26 Dylan correction: lanterns hold their cells across spins and relocate only after participating in a win; Super buys drop sfs artwork. Parameters unchanged; remeasured in MATH.md.",
+    "2026-10-26 Mystery Buy: 370x playtest price; selects Regular/Super/Hidden at 40/50/10, then runs that existing bonus unchanged. Measured in math/sim-mystery.json."
   ]
 }

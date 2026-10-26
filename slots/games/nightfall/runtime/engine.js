@@ -1,5 +1,5 @@
 // Knightfall v1 — transparent prototype math, independent of presentation.
-export const RULES = Object.freeze({size:7,cluster:5,maxWin:25000,maxMultiplier:1024,bonusCost:120,superCost:500,featureCost:4,payScale:.46,scatterChance:.0055,strikeChance:{base:.19,regular:.32,super:.25,hidden:.25,feature:1},mage:{chance:{regular:.11,super:.075,hidden:.15},roamer:.5,burst:3},superScatter:{base:.042,feature:.042},hiddenScatter:{base:.00107,feature:.00107},hiddenPrize:1000,hiddenStrikes:[3,5]});
+export const RULES = Object.freeze({size:7,cluster:5,maxWin:25000,maxMultiplier:1024,bonusCost:120,superCost:500,mysteryCost:370,mystery:Object.freeze({regular:.4,super:.5,hidden:.1}),featureCost:4,payScale:.46,scatterChance:.0055,strikeChance:{base:.19,regular:.32,super:.25,hidden:.25,feature:1},mage:{chance:{regular:.11,super:.075,hidden:.15},roamer:.5,burst:3},superScatter:{base:.042,feature:.042},hiddenScatter:{base:.00107,feature:.00107},hiddenPrize:1000,hiddenStrikes:[3,5]});
 export const SYMBOLS=['ruby','sapphire','emerald','amethyst','amber','shield','crown'];
 // `arrow-wild` is the mage's one-time wild; `roam-wild` his sticky roamer.
 export const isWild = kind => kind==='wild'||kind==='arrow-wild'||kind==='roam-wild';
@@ -157,7 +157,14 @@ export function bonusFor(scatters,supers=0,hiddens=0){
  if(supers)return {mode:'super',count:10+(n>=5?4:n===4?2:0),prize:0};
  return {mode:'regular',count:fsCount(n),prize:0};
 }
+export function mysteryBonus(rng){
+ const draw=rng();let edge=0;
+ for(const [mode,chance] of Object.entries(RULES.mystery)){edge+=chance;if(draw<edge)return mode;}
+ return 'hidden';
+}
 export function generateRound({rng,mode='base',record=true}){
+ const purchaseMode=mode;
+ if(mode==='mystery')mode=mysteryBonus(rng);
  let total=0,events=[],bonusMode=null,remaining=0,played=0,retriggers=0,mageZaps=0,roams=0,roamerStrikes=0,bursts=0,supers=0;
  const emit=e=>{if(record)events.push(e);};
  if(mode==='regular'||mode==='super'||mode==='hidden'){
@@ -185,5 +192,5 @@ export function generateRound({rng,mode='base',record=true}){
   }
   emit({type:'bonusEnd',mode:bonusMode,total,played,capped:total>=RULES.maxWin});
  }
- return {total:Math.round(total*10000)/10000,events,bonusMode,played,retriggers,capped:total>=RULES.maxWin,mageZaps,roams,roamerStrikes,bursts,supers};
+ return {total:Math.round(total*10000)/10000,events,bonusMode,purchaseMode,played,retriggers,capped:total>=RULES.maxWin,mageZaps,roams,roamerStrikes,bursts,supers};
 }
