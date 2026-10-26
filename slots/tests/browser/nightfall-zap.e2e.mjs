@@ -2,10 +2,10 @@
 // real rounds with a fixed seed, at desktop and 390x844. One bolt per zap
 // event, from the staff's crystal as it lands to the engine's chosen cell;
 // the wild appears as the bolt lands, never before; the spark stays inside
-// that cell; nothing is left on screen after the round. In free spins the
-// one mage wild moves each spin (never two at once) and is never cleared
-// after a win. Turbo, Skip, a pause and reduced motion change the
-// presentation only: the same cells, the same award.
+// that cell; nothing is left on screen after the round. In free spins a
+// burst gets one bolt per cell; a roamer stays, moves each spin (one bolt to
+// its new cell) and is never cleared after a win. Turbo, Skip, a pause and
+// reduced motion change the presentation only: the same cells, the same award.
 //
 //   npm run test:studio-browser
 
@@ -21,8 +21,9 @@ after(async () => { await browser?.close(); srv?.close(); });
 const PHONE = { deviceScaleFactor: 2, isMobile: true, hasTouch: true };
 const DESK = [{ width: 1280, height: 800 }, {}], MOBILE = [{ width: 390, height: 844 }, PHONE];
 // Seeds for the game's own RNG (crypto is fixed to them): a base spin whose
-// zap makes a win, and a regular bonus buy.
-const BASE = 20, BONUS = 3;
+// zap makes a win, and a regular bonus buy with a burst on spin 1 and a roamer
+// from spin 2.
+const BASE = 20, BONUS = 66;
 
 async function open([viewport, extra], { seed, turbo = false, reduced = false }) {
   const ctx = await browser.newContext({ viewport, ...extra, reducedMotion: reduced ? 'reduce' : 'no-preference' });
@@ -46,9 +47,9 @@ const RECORD = () => {
   const { bolt } = globalThis.NightFall.effects, mage = globalThis.NightFall.actors.archer, host = document.getElementById('arrow-effects');
   const log = (window.__zaps = { plays: [], svgs: 0, clearedWilds: 0 });
   new MutationObserver((list) => { for (const m of list) for (const n of m.addedNodes) if (n.nodeName === 'svg') log.svgs++; }).observe(host, { childList: true });
-  // A mage wild that is cleared off the board after a win.
-  new MutationObserver((list) => { for (const m of list) if (m.target.classList.contains('clearing') && m.target.dataset.kind === 'arrow-wild') log.clearedWilds++; }).observe(document.getElementById('board'), { subtree: true, attributeFilter: ['class'] });
-  const wilds = () => [...document.querySelectorAll('#board .cell[data-kind=arrow-wild]')].length;
+  // A roamer that is cleared off the board after a win.
+  new MutationObserver((list) => { for (const m of list) if (m.target.classList.contains('clearing') && m.target.dataset.kind === 'roam-wild') log.clearedWilds++; }).observe(document.getElementById('board'), { subtree: true, attributeFilter: ['class'] });
+  const wilds = () => document.querySelectorAll('#board .cell[data-kind=arrow-wild],#board .cell[data-kind=roam-wild]').length;
   const play = bolt.play.bind(bolt);
   bolt.play = (opts) => {
     const cell = opts.element, r = cell.getBoundingClientRect();
@@ -71,14 +72,22 @@ const RECORD = () => {
     requestAnimationFrame(sample);
     return done.then(() => { live = false; rec.target = bolt.last.target; rec.end = host.children.length; setTimeout(() => { rec.lit = cell.classList.contains('mage-lit'); }, 60); });
   };
-  // The engine's own round for this seed, for the expected cells.
+  // The engine's own round for this seed: every bolt it implies, in order (the
+  // cell, the wild it leaves, and how many mage wilds its event's board holds).
   window.__expected = async (mode) => {
     const { generateRound, seedRng, RULES } = await import('./engine.js'), seed = new Uint32Array(1); crypto.getRandomValues(seed);
-    const round = generateRound({ rng: seedRng(seed[0]), mode });
-    // Wins the roaming wild is part of.
-    let cell = -1, roamWins = 0;
-    for (const e of round.events) { if (e.type === 'zap' && e.roam) cell = e.cell; if (e.type === 'win' && e.positions.includes(cell)) roamWins++; }
-    return { cells: round.events.filter((e) => e.type === 'zap').map((e) => e.cell), total: round.total, roams: round.events.filter((e) => e.type === 'zap' && e.roam).length, roamWins, cost: mode === 'regular' ? RULES.bonusCost : 1 };
+    const round = generateRound({ rng: seedRng(seed[0]), mode }), bolts = [];
+    let pinned = new Set(), roamWins = 0;
+    for (const e of round.events) {
+      if (e.type === 'drop') pinned = new Set();
+      if (e.type === 'zap' || e.type === 'roam') {
+        const max = e.board.filter((k) => k === 'arrow-wild' || k === 'roam-wild').length;
+        for (const cell of e.type === 'roam' ? e.moves.map((m) => m.cell) : e.cells) { bolts.push({ cell, kind: e.board[cell], max }); if (e.board[cell] === 'roam-wild') pinned.add(cell); }
+      }
+      // Wins a roamer is part of.
+      if (e.type === 'win' && e.positions.some((i) => pinned.has(i))) roamWins++;
+    }
+    return { bolts, cells: bolts.map((b) => b.cell), total: round.total, roamerStrikes: round.roamerStrikes, bursts: round.bursts, moves: round.events.filter((e) => e.type === 'roam').length, roamWins, cost: mode === 'regular' ? RULES.bonusCost : 1 };
   };
 };
 
@@ -104,18 +113,18 @@ const near = (a, b, tol = 1) => Math.hypot(a.x - b.x, a.y - b.y) <= tol;
 const ends = (d) => { const n = d.slice(1).split('L').map((p) => p.split(' ').map(Number)); return { first: { x: n[0][0], y: n[0][1] }, last: { x: n.at(-1)[0], y: n.at(-1)[1] } }; };
 
 function assertBolts({ expected, log }, label, { motion = true } = {}) {
-  assert.deepEqual(log.plays.map((p) => p.index), expected.cells, `${label}: one bolt per zap, to the engine's cell`);
+  assert.deepEqual(log.plays.map((p) => p.index), expected.cells, `${label}: one bolt per mage cell, to the engine's cell`);
   assert.equal(log.host, 0, `${label}: the effect layer is empty after the round`);
   assert.equal(log.flashes, 0, `${label}: no flash left on a cell`);
   for (const [k, p] of log.plays.entries()) {
-    const at = `${label} zap ${k} (cell ${p.index})`;
-    assert.equal(p.after, 'arrow-wild', `${at}: the wild appears on the hit`);
+    const at = `${label} bolt ${k} (cell ${p.index})`, want = expected.bolts[k];
+    assert.equal(p.after, want.kind, `${at}: the wild appears on the hit`);
     assert.ok(near(p.origin, p.crystal), `${at}: the bolt leaves ${JSON.stringify(p.origin)}, the crystal lands at ${JSON.stringify(p.crystal)}`);
     assert.ok(near(p.target, p.centre), `${at}: the bolt ends at ${JSON.stringify(p.target)}, the cell's centre is ${JSON.stringify(p.centre)}`);
     assert.ok(p.crystal.y >= 0, `${at}: the crystal is off the top of the screen`);
     for (const f of p.frames) {
       assert.ok(f.svgs <= 1, `${at}: ${f.svgs} bolts on screen`);
-      assert.ok(f.wilds <= 1, `${at}: ${f.wilds} mage wilds on the board at once`);
+      assert.ok(f.wilds <= want.max, `${at}: ${f.wilds} mage wilds on the board, the engine has ${want.max}`);
       if (f.left > 0) assert.equal(f.kind, p.before, `${at}: the wild showed before the bolt landed`);
       // The bolt starts on the crystal as it moves, and ends on the cell.
       if (f.d) { const e = ends(f.d); assert.ok(near(e.first, f.crystal, 0.1) && near(e.last, p.centre), `${at}: the bolt path runs ${f.d.slice(0, 40)}…, the crystal is at ${JSON.stringify(f.crystal)}`); }
@@ -143,23 +152,23 @@ test('mage zap: one bolt from the crystal to the chosen cell, the wild on the hi
   }
 });
 
-test('roaming wild: the one mage wild moves each free spin, one bolt each', async () => {
+test('free spins: a burst gets a bolt per cell; a roamer stays and moves each spin, one bolt each', async () => {
   for (const vp of [MOBILE, DESK]) {
     const label = `${vp[0].width}x${vp[0].height} bonus`, page = await open(vp, { seed: BONUS, turbo: true });
-    // Watch three free spins in turbo, then Skip the rest.
+    // Watch the burst (3 bolts), the roamer (1) and two of its moves in turbo, then Skip the rest.
     const r = await round(page, 'regular', async (page) => {
-      await page.waitForFunction(() => window.__zaps.plays.length >= 3 && window.__zaps.plays[2].after, null, { timeout: 60000 });
+      await page.waitForFunction(() => window.__zaps.plays.length >= 6 && window.__zaps.plays[5].after, null, { timeout: 60000 });
       await page.evaluate(() => { globalThis.NightFall.state.skip = true; });
     });
-    assert.equal(r.expected.roams, r.expected.cells.length);
-    assert.ok(r.expected.cells.length >= 10, `${label}: ${r.expected.cells.length} zaps`);
-    for (let k = 1; k < r.expected.cells.length; k++) assert.notEqual(r.expected.cells[k], r.expected.cells[k - 1], `${label}: the wild stayed on ${r.expected.cells[k]}`);
-    assert.equal(r.log.svgs, 3, `${label}: bolts drawn before Skip`);
-    // It wins and stays: never cleared like a paid symbol.
-    assert.ok(r.expected.roamWins > 0, `${label}: the seed has no win with the roaming wild`);
-    assert.equal(r.log.clearedWilds, 0, `${label}: the roaming wild was cleared after a win`);
+    const kinds = r.expected.bolts.slice(0, 6).map((b) => b.kind);
+    assert.deepEqual(kinds, ['arrow-wild', 'arrow-wild', 'arrow-wild', 'roam-wild', 'roam-wild', 'roam-wild'], `${label}: the seed's first bolts`);
+    assert.ok(r.expected.moves >= 8, `${label}: the roamer moved ${r.expected.moves} times`);
+    assert.equal(r.log.svgs, 6, `${label}: bolts drawn before Skip`);
     assertBolts(r, label, { motion: false });
-    for (const p of r.log.plays.slice(0, 3)) assert.ok(p.frames.some((f) => f.left > 0.2), `${label}: the bolt to ${p.index} was never seen travelling`);
+    for (const p of r.log.plays.slice(0, 6)) assert.ok(p.frames.some((f) => f.left > 0.2), `${label}: the bolt to ${p.index} was never seen travelling`);
+    // A roamer wins and stays: never cleared like a paid symbol.
+    assert.ok(r.expected.roamWins > 0, `${label}: the seed has no win with the roamer`);
+    assert.equal(r.log.clearedWilds, 0, `${label}: the roamer was cleared after a win`);
     assert.equal(r.award, Math.round(r.expected.total * 100), `${label}: the award`);
     assert.deepEqual(page.errors, []);
     await page.ctx.close();

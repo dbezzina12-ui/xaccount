@@ -127,23 +127,23 @@ This is the archer's replacement: Dylan approved a skeleton mage that bangs its 
 ChatGPT's brief: `art/inbox/mage-zap/HANDOFF.md`. Engine and math: `MATH.md`.
 
 - **Engine events:**
-  - The engine picks the cell once and emits `{type:'zap', cell, from, roam, board, hits}`.
-  - Base zaps have `roam:false` and come after the tumbles, where the archer's trail used to be.
-  - A free-spin zap has `roam:true` and comes right after its `drop` (every regular free spin, about half of Super's); `from` is the cell the wild was last on.
-  - Tumbles in a free spin carry `fixed`, the wild's cell, which doesn't fall (`falls[fixed]` is 0).
-- **The show** (`runtime/app.js` `zapPresentation`, `runtime/mage-bolt.js`):
-  - The staff slams (the quicker slam when the wild moves), and at the impact the staff lands with a low thud (`audio.staff()`).
+  - The engine picks every cell. A zap is `{type:'zap', cells, roamer, board, hits}`.
+  - Base zaps (one cell, `roamer:false`) come after the tumbles, where the archer's trail used to be.
+  - In free spins, after each `drop`, the roamers from the last spin move first: `{type:'roam', moves:[{from, cell}], board, hits}`. Then the mage may strike: a `zap` with one `roam-wild` cell (`roamer:true`) or three `arrow-wild` cells (a burst, `roamer:false`).
+  - Tumbles carry `fixed`, the roamers' cells, which don't fall (`falls` is 0 there).
+- **The show** (`runtime/app.js` `magePresentation`, `runtime/mage-bolt.js`):
+  - The staff slams (the quicker slam when roamers move), and at the impact the staff lands with a low thud (`audio.staff()`). One bolt then goes to each cell in turn: three for a burst, one per roamer.
   - One bolt runs from the crystal to the cell's centre in 150 ms (90 ms in turbo): violet glow, lilac arc, ivory core. It stays on the crystal while the staff bounces.
   - The wild appears the instant the bolt lands, with a crack (`audio.zap()`). Then a 210 ms spark (140 ms in turbo) stays inside that cell: a glow, an ivory ring and six rays.
   - The bolt's kinks are a fixed function of the cell; nothing in the show is random.
-- **Free spins:** the old wild leaves with the board as the new drop falls in, then the new zap lands. There is never more than one mage wild on the board.
-- **The mage wild:** the same W tile, with a violet rim and glow (`.cell[data-kind=arrow-wild]`). On wild cells the multiplier sits under the W, as in Dylan's reference.
+- **Free spins:** the roamers leave with the board as the new drop falls in, then a bolt puts each one on its new cell. Roamers never clear after a win; burst wilds do.
+- **The mage wilds:** for now both use the same W tile. A one-time wild (`arrow-wild`) has a violet rim. A roamer (`roam-wild`) has a brighter rim and a slow pulsing glow until ChatGPT draws its own art. On wild cells the multiplier sits under the W, as in Dylan's reference.
 - **Turbo, Skip, pause:** Turbo shortens the slam and the bolt. Skip lands the wild at once. Opening the menu (or hiding the tab) holds the bolt where it is. Reduced motion draws no bolt; the cell gets a brief outline (`.mage-lit`) instead.
-- **`?archer=archer`:** the archer shoots, and the same single bolt leaves its bow. The engine has no multi-cell trail any more.
+- **`?archer=archer`:** the archer shoots, and the same bolts leave its bow.
 - **Multipliers:** centred inside their cell (`.multi`, sized 29% of the cell with container units), on desktop and phones.
 - **Checks:**
-  - `tests/browser/nightfall-zap.e2e.mjs` plays fixed-seed rounds at desktop and 390x844. It checks one bolt per zap to the engine's cell, the path from the moving crystal to the cell centre, the wild only on the hit, the spark inside the cell, never two mage wilds, and nothing left on screen.
+  - `tests/browser/nightfall-zap.e2e.mjs` plays fixed-seed rounds at desktop and 390x844. It checks one bolt per mage cell, in the engine's order: a base zap, a burst, a new roamer and its moves. For each bolt it checks the path from the moving crystal to the cell centre, the right wild only on the hit, and the spark inside the cell. It also checks that no more mage wilds show than the engine placed, that a roamer is never cleared after a win, and that nothing is left on screen.
   - It also checks that turbo, Skip, a pause and reduced motion give the same cells and award.
   - The mage test also runs the quick slam.
   - `tests/engine.test.mjs` covers the mechanic.
-- **Clip:** `shots/zap/zap-phone.mp4` (390x844): a base zap, then three free spins of the roaming wild.
+- **Clip:** `shots/zap/zap-phone.mp4` (390x844): a base zap, then a Free Spins buy with a burst on spin 1, a roamer on spin 2 and its first moves.

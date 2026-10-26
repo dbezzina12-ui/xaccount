@@ -1,19 +1,50 @@
 # Night Fall: math sheet
 
-> Owned by Claude. Measured by `node tools/math/nightfall-sim.mjs`, which plays whole rounds through the game's own engine (`runtime/engine.js`, `generateRound`). Night Fall's math is **development math**: these are simulated measurements with 95% confidence intervals, not certified returns. Prices and pays are playtest values; only the Super buy has been balanced.
+> Owned by Claude. Measured by `node tools/math/nightfall-sim.mjs`, which plays whole rounds through the game's own engine (`runtime/engine.js`, `generateRound`). Night Fall's math is **development math**: these are simulated measurements with 95% confidence intervals, not certified returns. Prices and pays are playtest values; both bonus buys are balanced, the base game is not yet.
 
 ## Where it stands (2026-10-26)
 
 | Mode (price) | Return | Notes |
 |---|---|---|
-| Base spin (1×) | 65.59% ± 1.79% | Not balanced yet (BOARD N-09) |
-| Reaper Strike spin (4×) | 96.68% ± 1.02% | |
-| Free Spins buy (120×) | 70.32% ± 1.15% | Not balanced yet (BOARD N-09) |
-| **Super Free Spins buy (500×)** | **96.28% ± 0.91%** | Balanced: option B below |
+| Base spin (1×) | 79.99% ± 6.54% | Not balanced yet (BOARD N-09). Base-game wins 39.47%, triggered free spins about 40.5% |
+| Reaper Strike spin (4×) | 101.51% ± 2.92% | Above 96% because its triggered free spins pay more now |
+| **Free Spins buy (120×)** | **96.69% ± 3.84%** | Balanced: sticky roamers and bursts |
+| **Super Free Spins buy (500×)** | **95.61% ± 1.18%** | Balanced: sticky roamers and bursts, cross-cuts 25% |
 
-## Super balance, option B (2026-10-26)
+## Sticky roamers and bursts (current, 2026-10-26)
 
-Dylan: Super should be priced at 500×, and "Go B so it doesn't feel like the mage happens every spin". What changed:
+Dylan: "It's supposed to be sticky wilds that roam. So if it strikes at spin 1 it's in all the next spins. Mage is probably going to have to strike less." Then: "Adds a second roamer, we could make it so that if it strikes and it doesn't stay and it's a one time thing then it makes like 3 wilds."
+
+- **The mage's free-spin strike.** After the drop of each free spin, the mage strikes with a chance of **11%** in Free Spins and **7.5%** in Super (`RULES.mage.chance`). It strikes before wins are evaluated.
+- **A roamer, half of strikes** (`RULES.mage.roamer`). One cell becomes a roaming wild (`roam-wild`). It stays for the rest of the bonus, retriggers included. It holds its cell through every tumble of a spin, and the column falls past it. It stays when it wins. After each later drop it moves to another cell. Roamers stack: each roamer strike adds one more.
+- **A burst, the other half.** Three cells (`RULES.mage.burst`) become one-time mage wilds (`arrow-wild`) for that spin only. They clear and fall like any wild.
+- **Never** on an FS tombstone or an existing wild. A roamer that finds no free cell is lost, and a burst takes what cells it can.
+- **Multipliers stay on their cells.** A cross-cut over a mage wild leaves it as it is.
+- **Unchanged:** the base game's single zap, Super's cross-cut chance (25%, from option B), the reaper's strikes and the free-spin triggers.
+
+| | Free Spins buy (120×) | Super buy (500×) |
+|---|---|---|
+| Return | 96.69% ± 3.84% | 95.61% ± 1.18% |
+| Average award | 116.0× | 478.1× |
+| Roamer strikes per bonus | 0.57 | 0.39 |
+| Bursts per bonus | 0.57 | 0.39 |
+| Reaches the 25,000× cap | 1 in 840 | 1 in 775 |
+| SD per buy (× price) | 8.8 | 2.7 |
+
+200,000 buys each. Roamers that stay all bonus build big multipliers, so the bonuses are much more volatile than before. The Free Spins buy return has a wide interval (±3.8%) for that reason, and so does the base game (±6.5% over 4,000,000 spins).
+
+How the strike chance was chosen (50,000 bonuses each, roamer/burst half and half):
+
+| Strike chance | 3% | 5% | 7% | 9% | 12% |
+|---|---|---|---|---|---|
+| Free Spins at 120× | 35.8% | 43.0% | 55.4% | 72.1% | 112.5% |
+| Super at 500× | 77.9% | 84.5% | 93.7% | 104.7% | 124.1% |
+
+Confirmed with 200,000 bonuses: Free Spins 85.3% at 10% and 96.7% at 11%; Super 95.6% at 7.5% and 98.7% at 8%. Roamers alone, stacking without bursts, ran away quickly: Free Spins measured 85.9% at a 5% strike chance and 267% at 10%.
+
+## Super balance, option B (2026-10-26, superseded)
+
+Replaced by sticky roamers and bursts above; Super keeps its 500× price and 25% cross-cuts from here. Dylan: Super should be priced at 500×, and "Go B so it doesn't feel like the mage happens every spin". What changed:
 
 - **Price:** Super Free Spins 550× → **500×**.
 - **The mage wild in Super** appears on about **half** the free spins (`roamChance.super` 0.5), about 5.2 times per bonus. When it appears, it behaves as before: it holds its cell through the spin's tumbles and lands somewhere other than where it was last. Free spins without it have no mage wild at all.
@@ -33,7 +64,9 @@ Super's return depends far more on the cross-cuts than on the mage wild. With no
 - cross-cuts 28% with the wild on a quarter of spins: 95.8% ± 1.2%;
 - cross-cuts 20% with the wild every spin: 97.8% ± 1.4%.
 
-## N-08: Roaming Wild (2026-10-26)
+## N-08: Roaming Wild, first version (2026-10-26)
+
+The base-game zap below is still current; the free-spin mechanic was replaced by sticky roamers and bursts (above).
 
 Dylan: "make it zap a single spot when it does. But I think it should be a roaming wild single space for bonuses." What changed in the engine:
 
@@ -80,8 +113,8 @@ One more regular-buy run (100,000 rounds) used the new engine with no roaming wi
 
 ## Still to balance (decision for Dylan)
 
-- **Base game, 65.6%:** the base attack chance (18% of spins that reach it, shared by the mage and the reaper) measured 85.9% ± 3.1% at 30% and 109.2% ± 2.4% at 45%. About **36%** would put the base near 96%. Raising every pay instead (pay scale 0.46 → 0.673) would lift all modes together, including Super.
-- **Free Spins buy, 70.3% at 120×:** about **88×** would make it 96% as it plays now. The alternative is to give the bonus more value, such as more wild or reaper action, at 120×. With the mage wild on only part of the spins, it measured 46.7% (half the spins) and 40.9% (a third). Without the mage wild it measured 29.1%.
+- **Base game, 80.0%:** the base-game wins are 39.5% (the single zap) and the free spins they trigger add about 40.5%. The base attack chance (18% of spins that reach it, shared by the mage and the reaper) is the natural lever. With the earlier free spins it measured +20 points at 30% and +44 at 45%, so about **27%** may be enough now. That needs its own run.
+- **Reaper Strike spins, 101.5% at 4×:** they trigger free spins more often (1 in 178), so they gained the most. Base-game changes will move them too.
 
 ## Reproduce
 
@@ -90,4 +123,4 @@ node tools/math/nightfall-sim.mjs --json games/nightfall/math/sim-after.json
 node tools/math/nightfall-sim.mjs --engine <copy of engine.js at 1e631e8> --json games/nightfall/math/sim-before.json
 ```
 
-About 2 min 20 s each on 4 cores. The figures are in `math/sim-after.json` (as it plays now), `math/sim-before.json` (the archer, before N-08) and `math/sim-n08-every-spin.json` (N-08 before option B). The option scans used copies of the engine with one value changed and 50,000–100,000 bonuses each.
+About 2 min 20 s each on 4 cores. The figures are in `math/sim-after.json` (as it plays now), `math/sim-before.json` (the archer, before N-08), `math/sim-n08-every-spin.json` (N-08 as first built) and `math/sim-option-b.json` (Super option B). The option scans used copies of the engine with one value changed and 50,000–100,000 bonuses each.

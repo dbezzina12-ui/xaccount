@@ -22,106 +22,148 @@ test('arrow wilds survive gravity with their artwork identity',()=>{
  const b=Array.from({length:49},(_,i)=>SYMBOLS[i%7]);b[0]='arrow-wild';const r=collapse(b,[42],seedRng(1));assert.equal(r.board[7],'arrow-wild');
 });
 
-// The skeleton mage (N-08): one zapped cell in the base game, one roaming wild in free spins.
-const mageWilds=board=>board.flatMap((kind,i)=>kind==='arrow-wild'?[i]:[]);
+// The skeleton mage (N-08): one zapped cell in the base game. In free spins
+// he may strike: a sticky roamer that stays for the rest of the bonus and
+// moves every spin, or a one-time burst of three wilds.
+const kinds=(board,kind)=>board.flatMap((k,i)=>k===kind?[i]:[]);
+const mageWilds=board=>kinds(board,'arrow-wild'),roamWilds=board=>kinds(board,'roam-wild');
 // Free spins of a round: each one's events, from its freeSpin event to the next.
 function freeSpins(round){const out=[];for(const e of round.events){if(e.type==='freeSpin')out.push([]);else if(e.type==='bonusEnd')break;else out.at(-1)?.push(e);}return out;}
+// Plays out a bonus spin by spin: the roamers expected after each one.
+function walk(round,check){let roamers=[];for(const spin of freeSpins(round)){roamers=check(spin,roamers);}return roamers;}
 test('base game: the mage zaps exactly one cell, never a tombstone, and shares the attack limit',()=>{
  let zaps=0,strikes=0;
  for(let seed=1;seed<=3000;seed++){
-  const r=resolveSpin({rng:seedRng(seed)});assert.ok(r.events.filter(e=>e.type==='strike'||e.type==='zap').length<=1);assert.ok(!r.events.some(e=>e.type==='arrow'));
+  const r=resolveSpin({rng:seedRng(seed)});assert.ok(r.events.filter(e=>e.type==='strike'||e.type==='zap').length<=1);assert.ok(!r.events.some(e=>e.type==='arrow'||e.type==='roam'));
   let board;
   for(const e of r.events){
-   if(e.type==='zap'){zaps++;assert.equal(e.roam,false);assert.ok(board[e.cell]!=='fs'&&!isWild(board[e.cell]));for(let i=0;i<49;i++)assert.equal(e.board[i],i===e.cell?'arrow-wild':board[i]);}
+   if(e.type==='zap'){zaps++;assert.equal(e.roamer,false);assert.equal(e.cells.length,1);const cell=e.cells[0];assert.ok(board[cell]!=='fs'&&!isWild(board[cell]));for(let i=0;i<49;i++)assert.equal(e.board[i],i===cell?'arrow-wild':board[i]);}
    if(e.type==='strike'){strikes++;assert.equal(e.horizontal,false);}
    if(e.board)board=e.board;
   }
+  assert.deepEqual(r.roamers,[]);
  }
  // The mage keeps the archer's opportunity: half of the base attacks.
  assert.ok(zaps>100&&zaps/strikes>.8&&zaps/strikes<1.25,`${zaps} zaps, ${strikes} strikes`);
 });
-test('free spins: one mage wild, placed after the drop, before any win; every regular spin, about half of Super\'s',()=>{
- const shown={regular:[0,0],super:[0,0]};
- for(const mode of ['regular','super'])for(let seed=1;seed<=60;seed++){
-  const round=generateRound({rng:seedRng(seed),mode});let last=-1;
-  assert.ok(!round.events.some(e=>e.type==='arrow'||(e.type==='zap'&&!e.roam)));
-  for(const spin of freeSpins(round)){
-   assert.equal(spin[0].type,'drop');assert.equal(mageWilds(spin[0].board).length,0);assert.ok(!spin[0].board.includes('wild'));
-   shown[mode][1]++;
-   // A free spin without the mage has no mage wild at all.
-   if(spin[1]?.type!=='zap'){assert.ok(spin.every(e=>e.type!=='zap'&&!(e.board&&mageWilds(e.board).length)));continue;}
-   shown[mode][0]++;
-   const zap=spin[1];assert.equal(zap.roam,true);assert.equal(zap.from,last);
-   assert.notEqual(zap.cell,last);assert.notEqual(spin[0].board[zap.cell],'fs');assert.deepEqual(zap.hits,spin[0].hits);
-   for(let i=0;i<49;i++)assert.equal(zap.board[i],i===zap.cell?'arrow-wild':spin[0].board[i]);
-   for(const e of spin.slice(2)){assert.notEqual(e.type,'zap');if(e.board)assert.deepEqual(mageWilds(e.board),[zap.cell]);}
-   last=zap.cell;
-  }
-  assert.equal(round.roams,round.events.filter(e=>e.type==='zap').length);
+test('free spins: roamers move after the drop, then the mage may strike: a new roamer or a burst of three',()=>{
+ const count={regular:{spins:0,roamer:0,burst:0},super:{spins:0,roamer:0,burst:0}};
+ for(const mode of ['regular','super'])for(let seed=1;seed<=400;seed++){
+  const round=generateRound({rng:seedRng(seed),mode});
+  assert.ok(!round.events.some(e=>e.type==='arrow'));
+  const end=walk(round,(spin,roamers)=>{
+   count[mode].spins++;
+   const [drop,...rest]=spin;assert.equal(drop.type,'drop');assert.ok(!drop.board.some(isWild),'the drop has no wilds');
+   let k=0,board=drop.board,now=[];
+   // Every roamer from last spin moves, to a cell that is not where it was, not an FS tombstone.
+   if(roamers.length){
+    const roam=rest[k++];assert.equal(roam.type,'roam');assert.deepEqual(roam.moves.map(m=>m.from),roamers);
+    for(const {from,cell} of roam.moves){assert.notEqual(cell,from);assert.notEqual(board[cell],'fs');now.push(cell);}
+    assert.equal(new Set(now).size,now.length);assert.deepEqual(roamWilds(roam.board).sort((a,b)=>a-b),[...now].sort((a,b)=>a-b));
+    for(let i=0;i<49;i++)if(!now.includes(i))assert.equal(roam.board[i],board[i]);
+    assert.deepEqual(roam.hits,drop.hits);board=roam.board;
+   }else assert.notEqual(rest[0]?.type,'roam');
+   const zap=rest[k]?.type==='zap'?rest[k++]:null;
+   if(zap){
+    count[mode][zap.roamer?'roamer':'burst']++;assert.equal(zap.cells.length,zap.roamer?1:3);
+    for(const c of zap.cells){assert.notEqual(board[c],'fs');assert.ok(!isWild(board[c]));assert.equal(zap.board[c],zap.roamer?'roam-wild':'arrow-wild');}
+    if(zap.roamer)now.push(zap.cells[0]);board=zap.board;
+   }
+   // The rest of the spin: no more mage events; the roamers stay put on every board.
+   for(const e of rest.slice(k)){assert.ok(e.type!=='zap'&&e.type!=='roam');if(e.board)assert.deepEqual(roamWilds(e.board).sort((a,b)=>a-b),[...now].sort((a,b)=>a-b));}
+   return now;
+  });
+  assert.equal(round.roamerStrikes+round.bursts,round.events.filter(e=>e.type==='zap').length);
+  void end;
  }
- assert.equal(shown.regular[0],shown.regular[1]);
- const share=shown.super[0]/shown.super[1];assert.ok(share>.42&&share<.58,`the mage showed on ${(share*100).toFixed(1)}% of Super spins`);
+ for(const mode of ['regular','super']){
+  const c=count[mode],rate=(c.roamer+c.burst)/c.spins,chance=RULES.mage.chance[mode];
+  assert.ok(Math.abs(rate-chance)<chance*.25,`${mode}: the mage struck on ${(rate*100).toFixed(1)}% of spins`);
+  assert.ok(c.roamer>10&&c.burst>10&&Math.abs(c.roamer/(c.roamer+c.burst)-.5)<.15,`${mode}: ${c.roamer} roamers, ${c.burst} bursts`);
+ }
 });
-test('the roaming wild holds its cell through every tumble while the column falls past it',()=>{
- let held=0;
- for(let seed=1;seed<=60&&held<20;seed++){
+test('roamers stay for the rest of the bonus and stack up',()=>{
+ let stacked=0;
+ for(let seed=1;seed<=3000&&stacked<3;seed++){
+  const round=generateRound({rng:seedRng(seed),mode:'regular'});if(round.roamerStrikes<2)continue;stacked++;
+  // After each roamer strike there is one more roamer on every later spin.
+  let have=0;
+  for(const spin of freeSpins(round)){
+   const roam=spin.find(e=>e.type==='roam');assert.equal(roam?.moves.length??0,have);
+   if(spin.some(e=>e.type==='zap'&&e.roamer))have++;
+  }
+  assert.equal(have,round.roamerStrikes);assert.ok(have>=2);
+ }
+ assert.equal(stacked,3);
+});
+test('roamers hold their cells through every tumble while the column falls past them; bursts do not',()=>{
+ let held=0,burstFell=0;
+ for(let seed=1;seed<=1500&&(held<5||burstFell<3);seed++){
   for(const spin of freeSpins(generateRound({rng:seedRng(seed),mode:'regular'}))){
-   const cell=spin[1].cell,tumbles=spin.filter(e=>e.type==='tumble');
-   for(const t of tumbles){assert.equal(t.fixed,cell);assert.equal(t.board[cell],'arrow-wild');assert.equal(t.falls[cell],0);}
-   // It can win more than once in a spin: its position advances each time.
-   const wins=spin.filter(e=>e.type==='win'&&e.positions.includes(cell));
-   if(tumbles.length>=2&&wins.length>=2)held++;
+   const pinned=[...(spin.find(e=>e.type==='roam')?.moves.map(m=>m.cell)||[]),...(spin.find(e=>e.type==='zap'&&e.roamer)?.cells||[])];
+   const tumbles=spin.filter(e=>e.type==='tumble');
+   for(const t of tumbles){assert.deepEqual(t.fixed.slice().sort((a,b)=>a-b),pinned.slice().sort((a,b)=>a-b));for(const c of pinned){assert.equal(t.board[c],'roam-wild');assert.equal(t.falls[c],0);}}
+   // A roamer can win more than once in a spin: its cell advances each time.
+   if(pinned.length&&spin.filter(e=>e.type==='win'&&pinned.some(c=>e.positions.includes(c))).length>=2)held++;
+   const burst=spin.find(e=>e.type==='zap'&&!e.roamer);
+   if(burst&&tumbles.length&&tumbles.some(t=>burst.cells.some(c=>t.board[c]!=='arrow-wild')))burstFell++;
   }
  }
- assert.ok(held>=5,`${held} free spins where the wild won twice or more`);
- // Column 0: the wild at row 3 wins with row 5; the rows above fall past it.
- const b=Array.from({length:49},(_,i)=>SYMBOLS[(i+Math.floor(i/7))%7]);b[21]='arrow-wild';
- const before=[0,7,14,21,28,35,42].map(i=>b[i]),r=collapse(b,[21,35],seedRng(3),21);
- assert.deepEqual([42,35,28,21,14,7].map(i=>r.board[i]),[before[6],before[4],before[2],'arrow-wild',before[1],before[0]]);
+ assert.ok(held>=5,`${held} free spins where a roamer won twice or more`);
+ assert.ok(burstFell>=3,`${burstFell} free spins where a burst wild cleared or fell`);
+ // Column 0: the roamer at row 3 wins with row 5; the rows above fall past it.
+ const b=Array.from({length:49},(_,i)=>SYMBOLS[(i+Math.floor(i/7))%7]);b[21]='roam-wild';
+ const before=[0,7,14,21,28,35,42].map(i=>b[i]),r=collapse(b,[21,35],seedRng(3),[21]);
+ assert.deepEqual([42,35,28,21,14,7].map(i=>r.board[i]),[before[6],before[4],before[2],'roam-wild',before[1],before[0]]);
  assert.deepEqual([0,7,14,21,28,35,42].map(i=>r.falls[i]),[1,1,1,0,2,1,0]);
 });
-test('tile multipliers stay on their own cells as the wild moves',()=>{
+test('tile multipliers stay on their own cells as the wilds move',()=>{
  for(let seed=1;seed<=30;seed++){
   const round=generateRound({rng:seedRng(seed),mode:'super'});let previous=null;
   for(const spin of freeSpins(round)){
    if(previous)assert.deepEqual(spin[0].hits,previous);
-   // Winning positions advance as before; the mage's cell only when it wins.
+   // Winning positions advance as before; a wild's cell only when it wins.
    let hits=spin[0].hits;for(const e of spin.filter(x=>x.hits)){for(let i=0;i<49;i++)assert.ok(e.hits[i]>=hits[i]);hits=e.hits;}
    previous=hits;
   }
  }
 });
-test('retriggers keep the one wild; the bonus ends with it gone',()=>{
+test('retriggers keep the roamers; the bonus ends with them gone',()=>{
  let retriggered=0;
- for(let seed=1;seed<=400&&retriggered<3;seed++){
-  const round=generateRound({rng:seedRng(seed),mode:'regular'});if(!round.retriggers)continue;retriggered++;
-  assert.equal(round.played,10+round.events.filter(e=>e.type==='retrigger').reduce((s,e)=>s+e.count,0));
-  assert.equal(round.roams,round.played);assert.equal(round.events.filter(e=>e.type==='zap').length,round.played);
-  for(const spin of freeSpins(round))for(const e of spin)if(e.board&&e.type!=='drop')assert.equal(mageWilds(e.board).length,1);
-  assert.equal(round.events.at(-1).type,'bonusEnd');
+ for(let seed=1;seed<=3000&&retriggered<3;seed++){
+  const round=generateRound({rng:seedRng(seed),mode:'regular'});if(!round.retriggers||!round.roamerStrikes)continue;
+  const events=round.events,at=events.findIndex(e=>e.type==='retrigger'),before=events.slice(0,at).filter(e=>e.type==='zap'&&e.roamer).length;
+  if(!before)continue;retriggered++;
+  assert.equal(round.played,10+events.filter(e=>e.type==='retrigger').reduce((s,e)=>s+e.count,0));
+  // The first spin after the retrigger moves every roamer struck before it.
+  const next=events.slice(at).find(e=>e.type==='roam');assert.ok(next.moves.length>=before);
+  assert.equal(events.at(-1).type,'bonusEnd');
  }
  assert.equal(retriggered,3);
- // A base-game bonus: no roaming wild before the bonus starts.
- for(let seed=1;seed<=4000;seed++){const r=generateRound({rng:seedRng(seed),record:false});if(!r.bonusMode)continue;const round=generateRound({rng:seedRng(seed)}),start=round.events.findIndex(e=>e.type==='bonusStart');assert.ok(!round.events.slice(0,start).some(e=>e.type==='zap'&&e.roam));assert.equal(round.roams,round.played);break;}
+ // A base-game bonus: no roamers before the bonus starts, none after it.
+ for(let seed=1;seed<=4000;seed++){const r=generateRound({rng:seedRng(seed),record:false});if(!r.bonusMode)continue;const round=generateRound({rng:seedRng(seed)}),start=round.events.findIndex(e=>e.type==='bonusStart');assert.ok(!round.events.slice(0,start).some(e=>e.type==='roam'||(e.type==='zap'&&e.roamer)));break;}
+ const after=resolveSpin({rng:seedRng(9)});assert.deepEqual(after.roamers,[]);
 });
 test('the reaper keeps its opportunities: regular strikes are vertical, Super keeps the cross',()=>{
  for(const mode of ['regular','super'])for(let seed=1;seed<=30;seed++)for(const e of generateRound({rng:seedRng(seed),mode}).events)if(e.type==='strike'){if(mode==='super')assert.equal(e.cross,true);else assert.equal(e.horizontal,false);}
- // A slash across the roaming wild leaves it the mage's.
- const b=Array(49).fill('ruby');b[24]='arrow-wild';let across=0;
- for(let seed=1;seed<400;seed++){const s=strike(b,Array(49).fill(0),'super',seedRng(seed));assert.deepEqual(mageWilds(s.board),[24]);if(s.cells.includes(24))across++;}
- assert.ok(across>20,`${across} cross-cuts over the wild`);
+ // A slash across a roamer leaves it the mage's.
+ const b=Array(49).fill('ruby');b[24]='roam-wild';let across=0;
+ for(let seed=1;seed<400;seed++){const s=strike(b,Array(49).fill(0),'super',seedRng(seed));assert.deepEqual(roamWilds(s.board),[24]);if(s.cells.includes(24))across++;}
+ assert.ok(across>20,`${across} cross-cuts over the roamer`);
 });
-test('the cap still ends a spin with the roaming wild on the board',()=>{
- const r=resolveSpin({rng:seedRng(1),board:Array(49).fill('crown'),hits:Array(49).fill(11),cap:100,mage:-1});
- assert.equal(r.events[1].type,'zap');assert.equal(r.total,100);assert.equal(r.capped,true);assert.equal(r.events.at(-1).type,'win');
+test('the cap still ends a spin with roamers on the board',()=>{
+ const r=resolveSpin({rng:seedRng(1),board:Array(49).fill('crown'),hits:Array(49).fill(11),cap:100,roamers:[3,4]});
+ assert.equal(r.events[1].type,'roam');assert.equal(r.total,100);assert.equal(r.capped,true);assert.equal(r.events.at(-1).type,'win');assert.equal(r.roamers.length,2);
 });
 test('no eligible cell: no wild, nothing overwritten',()=>{
  assert.equal(mageTarget(Array(49).fill('fs'),seedRng(1)),-1);
  const walled=Array(49).fill('fs');walled[10]='wild';assert.equal(mageTarget(walled,seedRng(1),-1),-1);
- // One free cell: the wild may stay on it.
+ // One free cell: a roamer may stay on it.
  const one=Array(49).fill('fs');one[30]='ruby';assert.equal(mageTarget(one,seedRng(1),30),30);
- const r=resolveSpin({rng:seedRng(2),board:Array(49).fill('fs'),mage:5});
- assert.equal(r.mage,-1);assert.ok(!r.events.some(e=>e.type==='zap'));assert.equal(r.scatters,49);
+ const r=resolveSpin({rng:seedRng(2),board:Array(49).fill('fs'),roamers:[5,6]});
+ assert.deepEqual(r.roamers,[]);assert.ok(!r.events.some(e=>e.type==='zap'||e.type==='roam'));assert.equal(r.scatters,49);
+ // Two roamers, one free cell: one roamer lands, the other has nowhere to go.
+ const r2=resolveSpin({rng:seedRng(2),board:one,roamers:[5,6]});assert.deepEqual(r2.roamers,[30]);
  // The prior cell is avoided whenever another exists.
  for(let seed=1;seed<200;seed++){const two=Array(49).fill('fs');two[3]='ruby';two[4]='crown';assert.equal(mageTarget(two,seedRng(seed),3),4);}
 });

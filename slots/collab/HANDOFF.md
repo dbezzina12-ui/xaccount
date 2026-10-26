@@ -4,6 +4,32 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: sticky roaming wilds and bursts (N-09)
+
+**Did:** Dylan: "It's supposed to be sticky wilds that roam. So if it strikes at spin 1 it's in all the next spins… Mage is probably going to have to strike less." Then: "Adds a second roamer… if it strikes and it doesn't stay and it's a one time thing then it makes like 3 wilds. Roaming maybe will get different art."
+- **The mage's free-spin strike:** after each drop, the mage strikes on **11%** of Free Spins and **7.5%** of Super Free Spins.
+  - **Half are roamers:** a wild that stays for the rest of the bonus, including retriggers. It holds its cell through every tumble, moves to a new cell every free spin, and never clears when it wins. Each roamer strike adds another roamer.
+  - **Half are bursts:** 3 one-time wilds for that spin only.
+- **Balance:** Free Spins buy **96.7%** at 120× (±3.8%; average 116×). Super buy **95.6%** at 500× (±1.2%; average 478×). That's about one mage strike per bonus. The bonuses are much more volatile now: Free Spins reach the cap 1 in 840 buys, Super 1 in 775.
+- **Unchanged:** the base-game single zap, Super's cross-cuts (25%) and the reaper.
+- **Show:** one slam, then one bolt per cell: three for a burst, one per roamer as they move (the quicker slam). Roamers use a new symbol ID, `roam-wild`. For now it is the W tile with a brighter, slowly pulsing violet rim. Burst wilds look like the base zap's mage wild.
+- **Copy:** the rules ("Roaming Wilds in Free Spins…"), both buy cards and the intro now describe roamers and bursts.
+- **Tests:** engine (roamers stack and stay, bursts don't, chances, tumbles, retriggers, cap, no room) and browser (a burst, a roamer and its moves, bolt by bolt). All suites pass.
+
+**Files:** `runtime/engine.js` (`RULES.mage`, `roam-wild`, `roam` events), `runtime/app.js`, `runtime/symbols.js`, `runtime/styles.css`, `runtime/index.html`, `tools/math/nightfall-sim.mjs`, `games/nightfall/tests/engine.test.mjs`, `tests/browser/nightfall-zap.e2e.mjs`, `MATH.md`, `math/`, `import-manifest.json`, `ANIMATION-HANDOFF.md`, BOARD N-09. New clip: `shots/zap/zap-phone.mp4` (a base zap, then a burst, a roamer and its moves).
+
+**Next for ChatGPT:**
+1. **Roaming-wild art:** a W tile for the sticky roamer that reads as different from the one-time mage wild and the reaper wild, maybe with a rune ring or trailing wisps. Same size and format as `assets/nightfall/symbols/wild.webp`, delivered to `games/nightfall/art/inbox/roam-wild/`. Its ID is `roam-wild`.
+2. Polish the new rules, buy-card and intro lines if needed.
+
+**Questions for Dylan:**
+- **Base spin is at 80.0%.** Raise the base attack chance (now 18%) to about 27% to reach 96%? I'd run it first.
+- Reaper Strike spins (4×) sit at 101.5%; base changes will move them too.
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: Super balanced at 500× (N-09, option B)
 
 **Did:** Dylan set Super's price target at 500×, then picked option B "so it doesn't feel like the mage happens every spin":

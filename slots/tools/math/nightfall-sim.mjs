@@ -20,13 +20,13 @@ const COST = { base: 1, feature: 'featureCost', regular: 'bonusCost', super: 'su
 if (!isMainThread) {
   const { engine, mode, from, to } = workerData;
   const { generateRound, seedRng, RULES } = await import(engine);
-  const s = { n: 0, sum: 0, sq: 0, hits: 0, bonuses: 0, bonusSum: 0, played: 0, retriggers: 0, capped: 0, max: 0, mage: 0, roams: 0 };
+  const s = { n: 0, sum: 0, sq: 0, hits: 0, bonuses: 0, bonusSum: 0, played: 0, retriggers: 0, capped: 0, max: 0, mage: 0, roams: 0, roamerStrikes: 0, bursts: 0 };
   for (let i = from; i < to; i++) {
     const r = generateRound({ rng: seedRng(i * 7919 + 104729 * (MODES.indexOf(mode) + 1)), mode, record: false });
     s.n++; s.sum += r.total; s.sq += r.total * r.total; if (r.total > 0) s.hits++;
     if (r.bonusMode) { s.bonuses++; s.bonusSum += r.total; s.played += r.played; s.retriggers += r.retriggers; }
     if (r.capped) s.capped++; if (r.total > s.max) s.max = r.total;
-    s.mage += r.mageZaps || 0; s.roams += r.roams || 0;
+    s.mage += r.mageZaps || 0; s.roams += r.roams || 0; s.roamerStrikes += r.roamerStrikes || 0; s.bursts += r.bursts || 0;
   }
   parentPort.postMessage({ s, cost: typeof COST[mode] === 'number' ? COST[mode] : RULES[COST[mode]] });
 } else {
@@ -50,6 +50,7 @@ if (!isMainThread) {
       hitRate: s.hits / s.n, bonusRate: s.bonuses / s.n, bonusAverage: s.bonuses ? s.bonusSum / s.bonuses : 0,
       freeSpinsPerBonus: s.bonuses ? s.played / s.bonuses : 0, retriggersPerBonus: s.bonuses ? s.retriggers / s.bonuses : 0,
       capRate: s.capped / s.n, maxWin: s.max, mageZapsPerRound: s.mage / s.n, roamsPerBonus: s.bonuses ? s.roams / s.bonuses : 0,
+      roamersPerBonus: s.bonuses ? s.roamerStrikes / s.bonuses : 0, burstsPerBonus: s.bonuses ? s.bursts / s.bonuses : 0,
     };
     console.log(mode.padEnd(8), `${s.n.toLocaleString('en-US')} rounds`, `RTP ${(mean / cost * 100).toFixed(3)}% ± ${(out.modes[mode].ci95 * 100).toFixed(3)}%`, `hit ${(s.hits / s.n * 100).toFixed(2)}%`);
   }
