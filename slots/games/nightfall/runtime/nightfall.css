@@ -1,4 +1,4 @@
-:root{--court-art:url('assets/nightfall/background.webp');--board-size:min(740px,calc(100dvh - 185px),calc(100vw - 440px));--gold:#ffce6f;--light:#fff1d2;--board-scale:1;--actor-scale:1;background:#062338}
+:root{--court-art:url('assets/nightfall/background-desktop-v2.webp');--board-size:min(740px,calc(100dvh - 208px),39vw);--gold:#ffce6f;--light:#fff1d2;--board-scale:1;--actor-scale:1;background:#062338}
 .scene{width:100%;height:100%;inset:0;transform:none}.scene-art{object-fit:cover;object-position:center;filter:none}.world:after{background:linear-gradient(transparent 70%,#04111e60)}
 .game{height:100dvh;min-height:0;padding:0 18px 6px;overflow:hidden}.topbar{height:48px}.arena{align-items:center;padding:0}.machine{width:calc(var(--board-size)*var(--board-scale));max-width:100%}.board-heading{display:none}.reel-status{height:25px;font-size:12px}.footnote{display:none}
 .board-shell{padding:9px;border:5px solid #52606a;border-radius:10px;background:repeating-linear-gradient(100deg,#56616a 0 25px,#859092 26px,#434f57 28px 58px);box-shadow:inset 0 0 0 3px #19212b,0 4px 0 #172632,0 8px 18px #0007}.board-shell:before{inset:3px;border:2px solid #a1a69766}.corner{display:none}.board{gap:3px;padding:2px;background:#100f1a;border-radius:6px}.cell,.cell:nth-child(even){background:linear-gradient(135deg,var(--cell-color,#35233e),#1b1729);border:1px solid #68506b77;border-radius:8px;box-shadow:inset 0 1px 4px #8c609222,0 1px 2px #000}.cell.marked{background:#4b3449}.cell.multiplied{background:linear-gradient(#785135,#413049)}.cell.hot{background:#79461e}.cell.superhot{background:#6f3580}.cell .symbol{width:100%;height:100%}.multi{color:#a9ff63;-webkit-text-stroke-color:#172513;text-shadow:0 2px #172513}
@@ -68,3 +68,11 @@
 .mystery-art b{position:absolute;inset:0;display:grid;place-items:center;color:#fff1c2;font:bold 38px Georgia;text-shadow:0 2px 3px #170a24,0 0 9px #8f4bd1}
 .mystery-art .fs-symbol{filter:brightness(.6)}
 .mystery-odds{display:block;margin-top:8px;color:#e9c4ff;font-size:12px;line-height:1.5}
+
+/* Desktop reference: a full-height cast flanking the board on a quiet floor. */
+@media(min-width:761px) and (min-height:541px){
+ .arena{align-items:flex-end;padding-bottom:12px}
+ .scene-art{object-fit:fill}
+ .game-title{top:12px;left:calc((100vw - var(--board-size))*.21)}
+ .game-title .title-art{width:min(260px,calc((100vw - var(--board-size))/2 - 24px))}
+}

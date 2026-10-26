@@ -289,8 +289,6 @@ class Actor {
   const board=document.getElementById('board-shell').getBoundingClientRect(),c=document.getElementById('controller').getBoundingClientRect();
   const mobile=innerWidth<=760&&innerHeight>innerWidth,extra=Number(document.documentElement.style.getPropertyValue('--actor-scale'))||1;
   const [W,H]=this.size,soleFrac=this.joints.sole/H,centre=this.joints.centre??(this.kind==='reaper'?.5375:.544);
-  // How far right the art reaches (desktop: the reaper's reach ends 18 px into the board).
-  const reach=this.joints.right?this.joints.right/W+.06:1;
   let h,ground,x;
   if(mobile){
    // The shared controller lives in an open shadow root.
@@ -304,8 +302,17 @@ class Actor {
    x=(this.kind==='reaper'?.175:.83)*innerWidth-w*centre;
   }else{
    ground=c.top-6;
-   h=Math.min(490,innerHeight*.64)*extra;const w=h*W/H;
-   x=this.kind==='reaper'?Math.max(-w*.08,board.left-w*reach+18):Math.min(innerWidth-w*.92,board.right-18);
+   // Match the desktop reference: visible art nearly as tall as the reels.
+   // Fit the actual cutout bounds into its side lane, not the transparent
+   // 400px canvas, so boots and weapons stay onscreen on smaller laptops.
+   const boxes=Object.values(this.spec.parts).map(part=>part.box);
+   const left=Math.min(...boxes.map(box=>box[0]));
+   const right=Math.max(...boxes.map(box=>box[0]+box[2]));
+   const lane=this.kind==='reaper'?board.left:innerWidth-board.right;
+   const fit=Math.max(1,lane-24)*H/(right-left);
+   h=Math.min(board.height*1.02*extra,fit,innerHeight*.80);
+   const scale=h/H;
+   x=this.kind==='reaper'?board.left-8-right*scale:board.right+8-left*scale;
   }
   const w=h*W/H,y=ground-h*soleFrac;
   this.ground=ground;
