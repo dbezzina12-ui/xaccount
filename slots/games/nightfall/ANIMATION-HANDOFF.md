@@ -137,10 +137,10 @@ ChatGPT's brief: `art/inbox/mage-zap/HANDOFF.md`. Engine and math: `MATH.md`.
   - The wild appears the instant the bolt lands, with a crack (`audio.zap()`). Then a 210 ms spark (140 ms in turbo) stays inside that cell: a glow, an ivory ring and six rays.
   - The bolt's kinks are a fixed function of the cell; nothing in the show is random.
 - **Free spins:** the roamers leave with the board as the new drop falls in, then a bolt puts each one on its new cell. Roamers never clear after a win; burst wilds do.
-- **The mage wilds:** for now both use the same W tile. A one-time wild (`arrow-wild`) has a violet rim. A roamer (`roam-wild`) has a brighter rim and a slow pulsing glow until ChatGPT draws its own art. On wild cells the multiplier sits under the W, as in Dylan's reference.
+- **The mage wilds:** for now both use the same W tile. A one-time wild (`arrow-wild`) has a violet rim. A roamer (`roam-wild`) has a brighter rim and a slow pulsing glow until ChatGPT draws its own art.
 - **Turbo, Skip, pause:** Turbo shortens the slam and the bolt. Skip lands the wild at once. Opening the menu (or hiding the tab) holds the bolt where it is. Reduced motion draws no bolt; the cell gets a brief outline (`.mage-lit`) instead.
 - **`?archer=archer`:** the archer shoots, and the same bolts leave its bow.
-- **Multipliers:** centred inside their cell (`.multi`, sized 29% of the cell with container units), on desktop and phones.
+- **Multipliers:** ChatGPT's tile treatment (`nightfall.css`, 2db6025). The number is centred on the tile, behind the symbol and the tumble plane: it shows in tumble gaps and around the symbols, and wilds cover it. `styles.css` centres it in the cell with container units.
 - **Checks:**
   - `tests/browser/nightfall-zap.e2e.mjs` plays fixed-seed rounds at desktop and 390x844. It checks one bolt per mage cell, in the engine's order: a base zap, a burst, a new roamer and its moves. For each bolt it checks the path from the moving crystal to the cell centre, the right wild only on the hit, and the spark inside the cell. It also checks that no more mage wilds show than the engine placed, that a roamer is never cleared after a win, and that nothing is left on screen.
   - It also checks that turbo, Skip, a pause and reduced motion give the same cells and award.
