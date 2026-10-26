@@ -4,6 +4,25 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-26 · ChatGPT → Claude + Dylan · Actual hidden arm and sleeve pieces ready for integration
+
+**Did:** Followed Dylan's direction: “then we need an arm to connect behind the robe.” Created a real two-part skeletal arm underneath separate sleeve pieces, plus a repaired body and a fixed hand/scythe attachment. Generated six source layers, registered six transparent 1600 × 1720 PNGs, assembled the actual artwork, and rendered a 48-frame bend/recovery proof. This supersedes the earlier mockup-only and rigid single-arm proposals.
+
+**Files / delivery:** `Reaper-Arm-Pieces-v1.zip` (20,257,844 bytes; SHA-256 `36b500fb9708daf76a4feed40536914f591f8bce13c8a587e4debde29cab7fa0`) is delivered privately to Dylan in ChatGPT for attachment to Claude. The artwork is NOT committed to this public repository. Package includes `parts/{body,arm-upper,arm-fore,sleeve-upper,sleeve-fore,hand-scythe}.png`, `rig.json`, README, generation prompts/sources, reproducible affine renderer, and assembled / revealed-arm / pose / animated previews.
+
+**How it connects:** Shoulder → upper arm → elbow → forearm → wrist → hand+scythe. Upper and lower sleeves follow their respective bones. Keep the arm underneath the robe; the repaired body covers the shoulder/root. Hand and scythe stay one wrist attachment so the grip cannot drift. Do not fuse the upper and lower arm together.
+
+**Import coordinates:** All `parts/` files share a 1600 × 1720 canvas; do not crop/recenter individually. Pivots: shoulder (997.80, 801.00), elbow (1065.64, 948.20), wrist (1164.20, 784.36). Back-to-front proof order: upper arm, forearm, hand+scythe, lower sleeve, upper sleeve, body. The sleeve cuff covers the wrist stump. Preserve aspect ratio when mapping into the current runtime and transform all pivots consistently. Use `parts/`, not unregistered `sources/`.
+
+**Validation and limits:** Actual-pixel alpha checks across 48 interpolated frames kept elbow and wrist contact and 100% coverage of a 20-source-pixel shoulder disk. Four pose keys (shoulder, elbow, wrist degrees): (0,0,0), (-8,-18,18), (-12,-10,10), (8,10,-10). This is a scoped weapon-arm integration prototype, not a finished game rig or proof of the full ART_SPEC motion/40px overlap range. Body still includes head/cape/opposite arm/legs. Rigid cloth; no mesh. With the current body-in-front order, the shaft can disappear behind the torso/boots during a crossing pose: resolve the weapon draw-order transition for the actual strike.
+
+**Next for Claude:** 1. Receive the ZIP from Dylan and import into a separate candidate directory; preserve current working assets. 2. Map it onto `upperRight → foreRight → scythe`, sharing sleeve transforms and keeping hand/scythe together; add a debug sleeve-hide/body-fade toggle. 3. Test the actual rest/wind-up/strike/recovery at desktop and mobile sizes, especially joint/cuff coverage, shaft/feet occlusion, and weapon/face intersections. 4. Show Dylan the in-game result; request specific art extensions only for demonstrated failures. Full instructions and measurements are in the package README/`rig.json`.
+
+**Questions for Dylan:** none.
+**Blocked on:** Claude receiving the private ZIP and performing engine integration; no runtime code changed here.
+
+---
+
 ### 2026-10-25 · ChatGPT → Claude + Dylan · Correction: keep shoulder/elbow articulation; withdraw the rigid four-piece proposal
 
 **Correction:** Dylan correctly challenged the last plan. Fusing the whole sleeve, hand and scythe into one shoulder-driven piece removes the elbow bend and is not an adequate solution for the intended strike. The costume mockup only hides anatomy; it does not prove a rig. Do not implement the previous four-piece prescription as the finished animation solution.
