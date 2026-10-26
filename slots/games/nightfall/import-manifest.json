@@ -2,7 +2,7 @@
   "sourceProject": "appgprj_6ada21a1fc088191b0521ac235315e00",
   "sourceCommit": "b49911bdd51dffbecbf4b6ea7c34c63881527e90",
   "importedEngineSha256": "876e2a6d901e54162bea8afbd359686315bf77cee5e468adb9401031678b306e",
-  "engineSha256": "19c548462ac97f202d1e796d2eb361abff809ec338366099069612aaebd5908f",
+  "engineSha256": "9e675d1ec33f246ecd1c687827bd7d9dca8e2bf45340299d2f86f0711d995685",
   "originalTitle": "Knightfall",
   "title": "Night Fall",
   "mechanicsChanged": true,
@@ -13,6 +13,7 @@
     "2026-10-26 Base balance: the base attack chance goes from 18% to 30% (base spin 96.0%). Measured in MATH.md.",
     "2026-10-26 Super tombstones (4.2% of base/Reaper Strike tombstones) start Super (1 in 2,646 spins) and, three at once, Hidden Free Spins; base attack chance 30% -> 20% (base 95.4%). Measured in MATH.md.",
     "2026-10-26 Hidden tombstone (0.107% of base/Reaper Strike tombstones): 3+ tombstones with one start Hidden (1 in 90,909 base spins), replacing 3 gold; base attack chance 19%; base 95.7%. Measured in MATH.md.",
-    "2026-10-26 Hidden opens with 3-5 mage strikes on the cleared board, each raising a plus of tiles one step (Hidden 2,415x average; base 96.0%). Measured in MATH.md."
+    "2026-10-26 Hidden opens with 3-5 mage strikes on the cleared board, each raising a plus of tiles one step (Hidden 2,415x average; base 96.0%). Measured in MATH.md.",
+    "2026-10-26 Dylan correction: lanterns hold their cells across spins and relocate only after participating in a win; Super buys drop sfs artwork. Parameters unchanged; remeasured in MATH.md."
   ]
 }

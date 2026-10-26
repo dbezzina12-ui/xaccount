@@ -30,3 +30,16 @@ test('persistent and temporary mage wilds have distinct artwork',()=>{
  assert.match(sticky,/roaming-wild\/front.webp/);assert.match(sticky,/fire-strip.webp/);
  assert.match(temporary,/symbols\/wild.webp/);assert.doesNotMatch(temporary,/roaming-wild/);
 });
+
+test('spin departure and new drop never animate a held lantern out of its cell',async()=>{
+ const boxes=Array.from({length:49},(_,i)=>({x:i%7*50,y:Math.floor(i/7)*50,w:48,h:48}));
+ const hidden=[],sprites=[],runs=[];
+ const motion={reduced:{matches:false},skip:()=>false,geometry:()=>boxes,
+  cells:boxes.map((_,i)=>({classList:{add:()=>hidden.push(i)}})),
+  sprite:(kind,box)=>{sprites.push(kind);return {};},run:async(tracks,kind)=>runs.push({tracks,kind})};
+ const board=Array(49).fill('ruby');board[24]='roam-wild';
+ await ReelMotion.prototype.leave.call(motion,board,[24]);
+ await ReelMotion.prototype.fall.call(motion,board,null,{initial:true,fixed:[24]});
+ assert.equal(sprites.length,96);assert.ok(!sprites.includes('roam-wild'));assert.ok(!hidden.includes(24));
+ assert.deepEqual(runs.map(r=>r.kind),['out','drop']);
+});

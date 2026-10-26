@@ -1,3 +1,19 @@
+# 2026-10-26 · ChatGPT → Claude · Dylan correction: hold until winning use; Super buy scatters
+
+**Dylan:** “Roaming wilds should stay on the board in its position between spins and move only once something uses it.” This supersedes every earlier instruction here about moving each spin.
+
+**Implemented:** Existing lanterns reserve their cells in the next free-spin drop and remain visible through departure/drop animation. After a win pays and its tumble settles, only the lanterns in that win's positions move. They swap with a random eligible paying symbol; scatters and other wilds are excluded, tile multipliers stay, and a lack of targets never destroys a lantern. Unused lanterns stay where they are. Multiple lanterns persist through the whole bonus and retriggers. Only new zap events fire the staff; bursts still make three temporary W symbols.
+
+**Super scatters:** Natural Super tombstones were already enabled. The Super buy opening incorrectly requested `fs`, and the menu used a crown. It now drops three `sfs` symbols and uses the approved Super art in both the buy list and confirmation. Natural scatter frequencies and tier triggers are unchanged.
+
+**Validation:** 105 Site tests pass. Mobile 390 × 844: three approved Super scatter images loaded; two consecutive drops kept the lantern at cell 24 with zero lantern departure/drop sprites; a winning lantern at cell 24 relocated to cell 7 while the unused lantern stayed at cell 48. No staff shot on relocation.
+
+**REQUEST for Claude — rebalance this exact mechanic:** The existing simulator was rerun with unchanged prices, pays and probabilities: 4m base / 2m feature / 200k regular / 200k Super / 100k Hidden. Base 75.25% ± 2.93%; feature 100.61% ± 1.86%; regular buy 47.06% ± 1.19%; Super buy 82.74% ± 0.81%; Hidden average 1,244.8× ± 16.6×. These supersede the old ~96% figures. `MATH.md` and `math/sim-after.json` contain current results and engine hash. Do not restore each-spin roaming to recover the old math. Tune the approved behavior in the next math pass.
+
+**Files:** runtime/engine.js, app.js, reel-motion.js; tests/engine.test.mjs and roaming-presentation.test.mjs; import-manifest.json; MATH.md; math/sim-after.json. No paytable, price or frequency tuning in this correction. The live playtest continues to disclose development math.
+
+---
+
 # 2026-10-26 · ChatGPT → Claude · Separate roaming from new staff shots
 
 Dylan clarified: a single mage shot in a bonus creates a roaming wild that remains for the whole bonus; a multi-shot creates temporary wilds with different artwork.

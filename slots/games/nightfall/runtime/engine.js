@@ -78,19 +78,23 @@ export function strike(board,hits,mode,rng){
  return {board:next,hits:marks,cells:affected,cross,gold,row,col,horizontal};
 }
 // `roamers` (free spins only): the cells the mage's sticky roamers were on
-// last spin. Each moves to a new cell after the drop. Then the mage may strike
+// last spin. They remain in those cells through the next drop. Then the mage may strike
 // (RULES.mage.chance): a new roamer that stays for the rest of the bonus
 // (RULES.mage.roamer of strikes), or a one-time burst of RULES.mage.burst wilds
 // for this spin only (Dylan, 2026-10-26).
 export function resolveSpin({rng,mode='base',hits=Array(49).fill(0),board=null,cap=RULES.maxWin,record=true,roamers=null}){
  const special=RULES.superScatter[mode]?{gold:RULES.superScatter[mode],hidden:RULES.hiddenScatter[mode]||0}:null;
- let grid=board?.slice()||createBoard(rng,true,special),marks=hits.slice(),total=0,usedStrike=false,pinned=[],zaps=0,mageStrike=null;
+ let pinned=[...new Set((roamers||[]).filter(i=>Number.isInteger(i)&&i>=0&&i<49))];
+ const held=new Set(pinned);
+ let grid=board?.slice()||Array.from({length:49},(_,i)=>held.has(i)?'roam-wild':symbol(rng,true,special)),marks=hits.slice(),total=0,usedStrike=false,zaps=0,mageStrike=null;
+ for(const i of pinned)grid[i]='roam-wild';
  const events=[];const emit=e=>{if(record)events.push(e);};
- emit({type:'drop',board:grid.slice(),hits:marks.slice()});
+ emit({type:'drop',board:grid.slice(),hits:marks.slice(),fixed:pinned.slice()});
  if(roamers!==null){
   const moves=[];
-  for(const from of roamers){const cell=mageTarget(grid,rng,from);if(cell>=0){grid[cell]='roam-wild';pinned.push(cell);moves.push({from,cell});}}
-  if(moves.length)emit({type:'roam',moves,board:grid.slice(),hits:marks.slice()});
+  // Hidden's starting lantern has no previous cell. Existing ones never move on a drop.
+  for(const from of roamers.filter(i=>i===-1)){const cell=mageTarget(grid,rng);if(cell>=0){grid[cell]='roam-wild';pinned.push(cell);moves.push({from,cell});}}
+  if(moves.length)emit({type:'roam',moves,board:grid.slice(),hits:marks.slice(),fixed:pinned.slice()});
   if(rng()<RULES.mage.chance[mode]){
    const roamer=rng()<RULES.mage.roamer,cells=[];
    for(let k=0;k<(roamer?1:RULES.mage.burst);k++){const cell=mageTarget(grid,rng);if(cell<0)break;grid[cell]=roamer?'roam-wild':'arrow-wild';cells.push(cell);}
@@ -105,6 +109,14 @@ export function resolveSpin({rng,mode='base',hits=Array(49).fill(0),board=null,c
    emit({type:'win',...ev,total:paid,roundTotal:total});
    if(total>=cap)return {total,events,hits:marks,scatters:0,supers:0,hiddens:0,capped:true,roamers:pinned,zaps,mageStrike};
    const fall=collapse(grid,ev.positions,rng,pinned,special);grid=fall.board;emit({type:'tumble',...fall,hits:marks.slice(),fixed:pinned.slice()});
+   // Only lanterns used in this win roam, after its tumble resolves. Swap with
+   // a paying symbol so no scatter or wild is overwritten and no cell is empty.
+   // The multiplier stays on the tile; unused lanterns do not move.
+   const used=pinned.filter(i=>ev.positions.includes(i)),moves=[];
+   if(used.length){grid=grid.slice();for(const from of used){const cell=mageTarget(grid,rng,from);if(cell<0)continue;
+    grid[from]=grid[cell];grid[cell]='roam-wild';pinned[pinned.indexOf(from)]=cell;moves.push({from,cell});
+   }}
+   if(moves.length)emit({type:'roam',moves,board:grid.slice(),hits:marks.slice(),fixed:pinned.slice()});
   }else if(!usedStrike){
    usedStrike=true;
    if(rng()<RULES.strikeChance[mode]){
@@ -149,7 +161,7 @@ export function generateRound({rng,mode='base',record=true}){
  let total=0,events=[],bonusMode=null,remaining=0,played=0,retriggers=0,mageZaps=0,roams=0,roamerStrikes=0,bursts=0,supers=0;
  const emit=e=>{if(record)events.push(e);};
  if(mode==='regular'||mode==='super'||mode==='hidden'){
-  bonusMode=mode;remaining=10;emit({type:'drop',board:triggerBoard(rng,3,mode==='hidden'?'hfs':'fs'),hits:Array(49).fill(0),trigger:true});
+  bonusMode=mode;remaining=10;emit({type:'drop',board:triggerBoard(rng,3,mode==='hidden'?'hfs':mode==='super'?'sfs':'fs'),hits:Array(49).fill(0),trigger:true});
  }else{
   const base=resolveSpin({rng,mode,record});total=base.total;mageZaps=base.zaps;supers=base.supers;if(record)events.push(...base.events);
   const bonus=base.capped?null:bonusFor(base.scatters,base.supers,base.hiddens);
