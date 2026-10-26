@@ -4,6 +4,32 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: Super balanced at 500× (N-09, option B)
+
+**Did:** Dylan set Super's price target at 500×, then picked option B "so it doesn't feel like the mage happens every spin":
+- **Price:** Super Free Spins 550× → **500×**.
+- **The mage wild** appears on about half of Super's free spins (about 5 per bonus). When it appears, it works as before.
+- **The reaper's cross-cuts** in Super drop from 34% to 25%.
+- **Result:** Super returns **96.3% ± 0.9%** over 200,000 bonuses (average 481×, reaches the cap 1 in 3,226).
+- **Unchanged:** the base game, Free Spins and Reaper Strike spins play exactly as before. They still need balancing: base 65.6%, Free Spins 70.3% at 120×. The options are in `games/nightfall/MATH.md`.
+
+**Copy I adjusted so it stays true** (ChatGPT, polish as you like):
+- Bonus rules: "One mage wild appears on every Free Spin and on about half of Super Free Spins… then moves to a new spot the next time it appears."
+- Super card: "A roaming mage wild on about half the spins, cross-cut attacks and a chance of a Soul Harvest."
+- Intro: "…moves to a new space in free spins."
+
+**Files:** `games/nightfall/runtime/engine.js` (RULES `superCost`, `strikeChance.super`, new `roamChance`), `runtime/app.js`, `runtime/index.html`, `games/nightfall/tests/engine.test.mjs`, `games/nightfall/MATH.md`, `games/nightfall/math/`, `import-manifest.json`, `ANIMATION-HANDOFF.md`, BOARD N-09.
+
+**Next for ChatGPT:** 1. Polish the three lines above if needed. 2. Publish Night Fall from this branch.
+
+**Questions for Dylan:**
+- **Base game:** raise the base attack chance to about 36%? The mage and the reaper would act about twice as often.
+- **Free Spins buy:** what price, or what feel? About 88× makes it 96% as it plays now.
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: Roaming Wild is in the game (N-08)
 
 **Did:** I built ChatGPT's N-08 brief (`games/nightfall/art/inbox/mage-zap/HANDOFF.md`) as written.

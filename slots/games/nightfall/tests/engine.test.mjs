@@ -40,20 +40,27 @@ test('base game: the mage zaps exactly one cell, never a tombstone, and shares t
  // The mage keeps the archer's opportunity: half of the base attacks.
  assert.ok(zaps>100&&zaps/strikes>.8&&zaps/strikes<1.25,`${zaps} zaps, ${strikes} strikes`);
 });
-test('free spins: one mage wild, placed after the drop, before any win',()=>{
- for(const mode of ['regular','super'])for(let seed=1;seed<=40;seed++){
+test('free spins: one mage wild, placed after the drop, before any win; every regular spin, about half of Super\'s',()=>{
+ const shown={regular:[0,0],super:[0,0]};
+ for(const mode of ['regular','super'])for(let seed=1;seed<=60;seed++){
   const round=generateRound({rng:seedRng(seed),mode});let last=-1;
   assert.ok(!round.events.some(e=>e.type==='arrow'||(e.type==='zap'&&!e.roam)));
   for(const spin of freeSpins(round)){
    assert.equal(spin[0].type,'drop');assert.equal(mageWilds(spin[0].board).length,0);assert.ok(!spin[0].board.includes('wild'));
-   const zap=spin[1];assert.equal(zap.type,'zap');assert.equal(zap.roam,true);assert.equal(zap.from,last);
+   shown[mode][1]++;
+   // A free spin without the mage has no mage wild at all.
+   if(spin[1]?.type!=='zap'){assert.ok(spin.every(e=>e.type!=='zap'&&!(e.board&&mageWilds(e.board).length)));continue;}
+   shown[mode][0]++;
+   const zap=spin[1];assert.equal(zap.roam,true);assert.equal(zap.from,last);
    assert.notEqual(zap.cell,last);assert.notEqual(spin[0].board[zap.cell],'fs');assert.deepEqual(zap.hits,spin[0].hits);
    for(let i=0;i<49;i++)assert.equal(zap.board[i],i===zap.cell?'arrow-wild':spin[0].board[i]);
    for(const e of spin.slice(2)){assert.notEqual(e.type,'zap');if(e.board)assert.deepEqual(mageWilds(e.board),[zap.cell]);}
    last=zap.cell;
   }
-  assert.equal(round.roams,round.played);
+  assert.equal(round.roams,round.events.filter(e=>e.type==='zap').length);
  }
+ assert.equal(shown.regular[0],shown.regular[1]);
+ const share=shown.super[0]/shown.super[1];assert.ok(share>.42&&share<.58,`the mage showed on ${(share*100).toFixed(1)}% of Super spins`);
 });
 test('the roaming wild holds its cell through every tumble while the column falls past it',()=>{
  let held=0;
@@ -77,9 +84,9 @@ test('tile multipliers stay on their own cells as the wild moves',()=>{
  for(let seed=1;seed<=30;seed++){
   const round=generateRound({rng:seedRng(seed),mode:'super'});let previous=null;
   for(const spin of freeSpins(round)){
-   const zap=spin[1];if(previous)assert.deepEqual(spin[0].hits,previous);
+   if(previous)assert.deepEqual(spin[0].hits,previous);
    // Winning positions advance as before; the mage's cell only when it wins.
-   let hits=zap.hits;for(const e of spin.filter(x=>x.hits)){for(let i=0;i<49;i++)assert.ok(e.hits[i]>=hits[i]);hits=e.hits;}
+   let hits=spin[0].hits;for(const e of spin.filter(x=>x.hits)){for(let i=0;i<49;i++)assert.ok(e.hits[i]>=hits[i]);hits=e.hits;}
    previous=hits;
   }
  }

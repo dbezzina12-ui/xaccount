@@ -129,7 +129,7 @@ ChatGPT's brief: `art/inbox/mage-zap/HANDOFF.md`. Engine and math: `MATH.md`.
 - **Engine events:**
   - The engine picks the cell once and emits `{type:'zap', cell, from, roam, board, hits}`.
   - Base zaps have `roam:false` and come after the tumbles, where the archer's trail used to be.
-  - Each free spin's zap has `roam:true` and comes right after its `drop`; `from` is the cell the wild left.
+  - A free-spin zap has `roam:true` and comes right after its `drop` (every regular free spin, about half of Super's); `from` is the cell the wild was last on.
   - Tumbles in a free spin carry `fixed`, the wild's cell, which doesn't fall (`falls[fixed]` is 0).
 - **The show** (`runtime/app.js` `zapPresentation`, `runtime/mage-bolt.js`):
   - The staff slams (the quicker slam when the wild moves), and at the impact the staff lands with a low thud (`audio.staff()`).

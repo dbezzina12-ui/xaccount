@@ -2,11 +2,12 @@
   "sourceProject": "appgprj_6ada21a1fc088191b0521ac235315e00",
   "sourceCommit": "b49911bdd51dffbecbf4b6ea7c34c63881527e90",
   "importedEngineSha256": "876e2a6d901e54162bea8afbd359686315bf77cee5e468adb9401031678b306e",
-  "engineSha256": "993a44ffc48ebfa2168a7016a368a9a9a8e706abd282baf68b2dc80a2e90eec8",
+  "engineSha256": "133d512bff01eb34865eb269189dd74fbeeacc70add0f154439fced9704e7c9f",
   "originalTitle": "Knightfall",
   "title": "Night Fall",
   "mechanicsChanged": true,
   "mechanicsChanges": [
-    "2026-10-26 N-08 Roaming Wild: the base mage zap turns one cell wild (was the archer's 3-5 cell trail); one mage wild roams each free spin. Measured in MATH.md."
+    "2026-10-26 N-08 Roaming Wild: the base mage zap turns one cell wild (was the archer's 3-5 cell trail); one mage wild roams each free spin. Measured in MATH.md.",
+    "2026-10-26 Super balance (option B): Super buy 500x, the mage wild on about half of Super free spins, cross-cuts 25%. Measured in MATH.md."
   ]
 }

@@ -1,5 +1,5 @@
 // Knightfall v1 — transparent prototype math, independent of presentation.
-export const RULES = Object.freeze({size:7,cluster:5,maxWin:25000,maxMultiplier:1024,bonusCost:120,superCost:550,featureCost:4,payScale:.46,scatterChance:.0055,strikeChance:{base:.18,regular:.32,super:.34,feature:1}});
+export const RULES = Object.freeze({size:7,cluster:5,maxWin:25000,maxMultiplier:1024,bonusCost:120,superCost:500,featureCost:4,payScale:.46,scatterChance:.0055,strikeChance:{base:.18,regular:.32,super:.25,feature:1},roamChance:{regular:1,super:.5}});
 export const SYMBOLS=['ruby','sapphire','emerald','amethyst','amber','shield','crown'];
 export const isWild = kind => kind==='wild'||kind==='arrow-wild';
 export const PAYTABLE=[
@@ -71,13 +71,16 @@ export function strike(board,hits,mode,rng){
  for(const i of affected){if(next[i]!=='arrow-wild')next[i]='wild';if(gold)marks[i]=Math.min(11,marks[i]<2?2:marks[i]+1);}
  return {board:next,hits:marks,cells:affected,cross,gold,row,col,horizontal};
 }
-// `mage` (free spins only): the cell the roaming wild left on the last free
-// spin, -1 on the first. It lands on a new cell after the drop.
+// `mage` (free spins only): the cell the roaming wild was last on, -1 before
+// it first appears. It lands on a new cell after the drop: every regular free
+// spin, about half of Super's (Dylan, 2026-10-26: the mage shouldn't feel like
+// every spin; Super is priced for it at 500x, MATH.md).
 export function resolveSpin({rng,mode='base',hits=Array(49).fill(0),board=null,cap=RULES.maxWin,record=true,mage=null}){
  let grid=board?.slice()||createBoard(rng),marks=hits.slice(),total=0,usedStrike=false,roam=-1,zaps=0;
  const events=[];const emit=e=>{if(record)events.push(e);};
  emit({type:'drop',board:grid.slice(),hits:marks.slice()});
- if(mage!==null){
+ const chance=RULES.roamChance[mode]??1;
+ if(mage!==null&&(chance>=1||rng()<chance)){
   roam=mageTarget(grid,rng,mage);
   if(roam>=0){grid[roam]='arrow-wild';emit({type:'zap',cell:roam,from:mage,roam:true,board:grid.slice(),hits:marks.slice()});}
  }

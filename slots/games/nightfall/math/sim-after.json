@@ -1,6 +1,6 @@
 {
  "engine": "games/nightfall/runtime/engine.js",
- "generated": "2026-10-26T12:53:44.470Z",
+ "generated": "2026-10-26T14:14:33.423Z",
  "modes": {
   "base": {
    "rounds": 4000000,
@@ -52,20 +52,20 @@
   },
   "super": {
    "rounds": 200000,
-   "cost": 550,
-   "rtp": 1.8772819133454555,
-   "ci95": 0.01680897560790846,
-   "sdPerCost": 3.8353073562672613,
-   "hitRate": 0.99985,
+   "cost": 500,
+   "rtp": 0.9628053147999991,
+   "ci95": 0.00909953363143273,
+   "sdPerCost": 2.0762424248397044,
+   "hitRate": 0.99866,
    "bonusRate": 1,
-   "bonusAverage": 1032.5050523400005,
-   "freeSpinsPerBonus": 10.39443,
-   "retriggersPerBonus": 0.0394,
-   "capRate": 0.002175,
+   "bonusAverage": 481.40265739999955,
+   "freeSpinsPerBonus": 10.37232,
+   "retriggersPerBonus": 0.036755,
+   "capRate": 0.00031,
    "maxWin": 25000,
    "mageZapsPerRound": 0,
-   "roamsPerBonus": 10.39443
+   "roamsPerBonus": 5.18858
   }
  },
- "seconds": 134
+ "seconds": 143
 }

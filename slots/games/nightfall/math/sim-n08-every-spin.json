@@ -1,0 +1,71 @@
+{
+ "engine": "games/nightfall/runtime/engine.js",
+ "generated": "2026-10-26T12:53:44.470Z",
+ "modes": {
+  "base": {
+   "rounds": 4000000,
+   "cost": 1,
+   "rtp": 0.655923797999285,
+   "ci95": 0.017936340181503245,
+   "sdPerCost": 18.302387940309433,
+   "hitRate": 0.33311975,
+   "bonusRate": 0.00304075,
+   "bonusAverage": 85.89624286771353,
+   "freeSpinsPerBonus": 10.503165337498972,
+   "retriggersPerBonus": 0.034448737975828335,
+   "capRate": 0,
+   "maxWin": 20553.697,
+   "mageZapsPerRound": 0.08994325,
+   "roamsPerBonus": 10.503165337498972
+  },
+  "feature": {
+   "rounds": 2000000,
+   "cost": 4,
+   "rtp": 0.9668281437498003,
+   "ci95": 0.010239279791283354,
+   "sdPerCost": 7.388024668247792,
+   "hitRate": 0.991143,
+   "bonusRate": 0.005617,
+   "bonusAverage": 92.96874345736158,
+   "freeSpinsPerBonus": 10.56720669396475,
+   "retriggersPerBonus": 0.03792059818408403,
+   "capRate": 0,
+   "maxWin": 21395.359,
+   "mageZapsPerRound": 0,
+   "roamsPerBonus": 10.56720669396475
+  },
+  "regular": {
+   "rounds": 200000,
+   "cost": 120,
+   "rtp": 0.7031627821666682,
+   "ci95": 0.01147922045890261,
+   "sdPerCost": 2.619216048450262,
+   "hitRate": 0.99819,
+   "bonusRate": 1,
+   "bonusAverage": 84.37953386000018,
+   "freeSpinsPerBonus": 10.35899,
+   "retriggersPerBonus": 0.03533,
+   "capRate": 0.00001,
+   "maxWin": 25000,
+   "mageZapsPerRound": 0,
+   "roamsPerBonus": 10.35899
+  },
+  "super": {
+   "rounds": 200000,
+   "cost": 550,
+   "rtp": 1.8772819133454555,
+   "ci95": 0.01680897560790846,
+   "sdPerCost": 3.8353073562672613,
+   "hitRate": 0.99985,
+   "bonusRate": 1,
+   "bonusAverage": 1032.5050523400005,
+   "freeSpinsPerBonus": 10.39443,
+   "retriggersPerBonus": 0.0394,
+   "capRate": 0.002175,
+   "maxWin": 25000,
+   "mageZapsPerRound": 0,
+   "roamsPerBonus": 10.39443
+  }
+ },
+ "seconds": 134
+}
