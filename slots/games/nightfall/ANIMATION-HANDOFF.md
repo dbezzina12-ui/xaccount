@@ -148,10 +148,11 @@ ChatGPT's brief: `art/inbox/mage-zap/HANDOFF.md`. Engine and math: `MATH.md`.
   - `tests/engine.test.mjs` covers the mechanic.
 - **Clip:** `shots/zap/zap-phone.mp4` (390x844): a base zap, then a Free Spins buy with a burst on spin 1, a roamer on spin 2 and its first moves.
 
-## Super tombstones, Super and Hidden from base spins (Claude, 2026-10-26)
+## Gold and Hidden tombstones, Super and Hidden from base spins (Claude, 2026-10-26)
 
 - **The gold Super tombstone** (`sfs`): for now it is the FS tombstone art, gilded with a CSS filter, with a SUPER label and a gold cell rim (`.fs-super`, `.cell[data-kind=sfs]`). ChatGPT is drawing the real art. It lands, bounces and counts like an FS tombstone.
-- **Status lines while tombstones land:** "ONE MORE FOR SUPER…" for 2 with a gold one, "A GOLDEN GRAVE OPENS" for a Super trigger, "THE HIDDEN CRYPT STIRS" for 3 gold.
+- **The Hidden tombstone** (`hfs`): the FS tombstone tinted cyan-violet, with a HIDDEN label and a cyan rim (`.fs-hidden`, `.cell[data-kind=hfs]`), until ChatGPT draws it.
+- **Status lines while tombstones land:** "ONE MORE FOR SUPER…" / "ONE MORE FOR HIDDEN…" for 2 with a special one, "A GOLDEN GRAVE OPENS" for a Super trigger, "THE HIDDEN CRYPT OPENS" for a Hidden one.
 - **Bonus intros:** Super keeps its splash and SOUL HARVEST name. Hidden has its own: "HIDDEN FREE SPINS", the HIDDEN CRYPT mode name, and `body.hidden-bonus` alongside `super-bonus`. Its first free spin puts the roamer out with the usual slam and bolt (a `roam` move from -1).
-- **5 gold tombstones:** a `prize` event pays 1,000× before Hidden starts, with a "1,000× SOUL PRIZE" toast.
-- **Checks:** `tests/browser/nightfall-bonus.e2e.mjs` plays a natural Super (seed 9430) and a natural Hidden (seed 2559963) on a phone. Shots: `shots/bonus/gold-tombstones.jpg`.
+- **5+ tombstones with a Hidden one:** a `prize` event pays 1,000× before Hidden starts, with a "1,000× SOUL PRIZE" toast.
+- **Checks:** `tests/browser/nightfall-bonus.e2e.mjs` plays a natural Super (seed 9430) and a natural Hidden (seed 206172) on a phone. Shots: `shots/bonus/tombstones.jpg`.

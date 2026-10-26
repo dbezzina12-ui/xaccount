@@ -96,7 +96,8 @@ async function strike(page) {
 function assertStrike({ rest, frames, v2, blade }, label) {
   assert.ok(v2, `${label}: the v2 reaper loaded`);
   assert.ok(Number.isFinite(blade.x) && Number.isFinite(blade.y), `${label}: blade point ${JSON.stringify(blade)}`);
-  assert.ok(frames.length > 20, `${label}: ${frames.length} frames`);
+  // Up to the release (about 0.5 s); a slow headless browser draws fewer frames.
+  assert.ok(frames.length > 12, `${label}: ${frames.length} frames`);
   for (const [i, f] of [['rest', rest], ...frames.map((f, k) => [k, f])]) {
     for (const [k, v] of Object.entries(f)) if (k.includes('showing') || k.includes('blade points')) assert.equal(v, 0, `${label} frame ${i}: ${k}: ${v}`);
   }

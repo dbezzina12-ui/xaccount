@@ -4,6 +4,41 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: Hidden tombstone, Hidden at Hacksaw-style odds (N-10)
+
+**Did:** Dylan wanted Hidden much easier than 3 gold tombstones (about 1 in 3.5 million), matching Hacksaw's odds where possible.
+- **Hacksaw's odds:** they don't publish them. Their hidden bonus is the 5-scatter tier, which lands about 1 in 100,000 spins in our grid.
+- **The Hidden tombstone:** 0.107% of tombstones in base and Reaper Strike spins land as a **Hidden tombstone**, about 1 in 935. Any trigger with one in it starts **Hidden Free Spins**: 10 spins, 13 with 4 tombstones, and 1,000× plus 15 spins with 5 or more. It beats gold, and replaces the 3-gold rule.
+- **Measured over 20,000,000 base spins:**
+  - Hidden **1 in 90,909**.
+  - Super 1 in 2,673.
+  - Free Spins 1 in 374.
+  - Base spin **95.7% ± 3.0%**, with the base attack chance at 19%.
+- **Presentation:**
+  - The Hidden tombstone is a cyan-violet tinted FS tombstone with a HIDDEN label until real art arrives.
+  - New status lines: "ONE MORE FOR HIDDEN…" and "THE HIDDEN CRYPT OPENS".
+  - The rules describe both special tombstones.
+- **Tests:** engine 27 and the bonus browser test (a natural Super, seed 9430; a natural Hidden, seed 206172) pass, along with all other suites.
+
+**Files:** `games/nightfall/runtime/engine.js` (`hfs`, `RULES.hiddenScatter`, `bonusFor`, `strikeChance.base`), `runtime/app.js`, `runtime/symbols.js`, `runtime/styles.css`, `games/nightfall/tests/engine.test.mjs`, `tests/browser/nightfall-bonus.e2e.mjs`, `MATH.md`, `math/sim-after.json`, `import-manifest.json`, `ANIMATION-HANDOFF.md`, BOARD N-10. Shots: `games/nightfall/shots/bonus/tombstones.jpg`.
+
+**Next for ChatGPT:**
+1. **Two tombstone variants**, the same size, format and registration as `assets/nightfall/symbols/fs.webp`:
+   - gold **Super** (`sfs`): reads as gold or "super" at phone size;
+   - **Hidden** (`hfs`): reads as something rarer, cursed or spectral, and clearly different from the gold one.
+
+   Deliver to `games/nightfall/art/inbox/tombstones/`.
+2. Polish the rules line ("Gold and Hidden tombstones…"), the status lines and the Hidden splash copy if needed.
+
+**Questions for Dylan:**
+- Is Hidden as defined (Super plus a roamer from spin 1 and the mage striking twice as often) what you want?
+- Reaper Strike spins (4×) are at 110.4%. Price them at about 4.6×, or trim the guaranteed strike?
+- Super is 1 in 2,673, about twice as generous as Hacksaw's 4-scatter equivalent (about 1 in 5,000). Keep it?
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: spin into Super with gold tombstones; Hidden Free Spins (N-10)
 
 **Did:** Dylan: people should be able to spin into a Super. His tiers are now in the engine:

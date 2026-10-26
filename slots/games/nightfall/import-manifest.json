@@ -2,7 +2,7 @@
   "sourceProject": "appgprj_6ada21a1fc088191b0521ac235315e00",
   "sourceCommit": "b49911bdd51dffbecbf4b6ea7c34c63881527e90",
   "importedEngineSha256": "876e2a6d901e54162bea8afbd359686315bf77cee5e468adb9401031678b306e",
-  "engineSha256": "4e2344059beba20cec089a7fdad94367a83a12c004df0abde6ad164841491f08",
+  "engineSha256": "dabcf00095a392d0d0beac1c22b134026a4f8927a7a7d2ff310602d2fe4ac538",
   "originalTitle": "Knightfall",
   "title": "Night Fall",
   "mechanicsChanged": true,
@@ -11,6 +11,7 @@
     "2026-10-26 Super balance (option B): Super buy 500x, the mage wild on about half of Super free spins, cross-cuts 25%. Measured in MATH.md.",
     "2026-10-26 Sticky roamers and bursts: in free spins the mage strikes (11% regular, 7.5% Super); half his strikes leave a roaming wild that stays all bonus and moves each spin, half zap 3 one-time wilds. Measured in MATH.md.",
     "2026-10-26 Base balance: the base attack chance goes from 18% to 30% (base spin 96.0%). Measured in MATH.md.",
-    "2026-10-26 Super tombstones (4.2% of base/Reaper Strike tombstones) start Super (1 in 2,646 spins) and, three at once, Hidden Free Spins; base attack chance 30% -> 20% (base 95.4%). Measured in MATH.md."
+    "2026-10-26 Super tombstones (4.2% of base/Reaper Strike tombstones) start Super (1 in 2,646 spins) and, three at once, Hidden Free Spins; base attack chance 30% -> 20% (base 95.4%). Measured in MATH.md.",
+    "2026-10-26 Hidden tombstone (0.107% of base/Reaper Strike tombstones): 3+ tombstones with one start Hidden (1 in 90,909 base spins), replacing 3 gold; base attack chance 19%; base 95.7%. Measured in MATH.md."
   ]
 }

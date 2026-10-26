@@ -1,8 +1,9 @@
 // Night Fall's bonus tiers (Claude, 2026-10-26): base spins with fixed seeds
-// that land a gold Super tombstone (Super Free Spins) and three of them (Hidden
-// Free Spins), on a phone. The gold tombstone shows on the board, the right
-// bonus starts with the right spin count and 2x tiles, Hidden's first spin puts
-// its roamer out with a bolt from the crystal, and the award is the engine's.
+// that land a gold Super tombstone (Super Free Spins) and a Hidden tombstone
+// (Hidden Free Spins), on a phone. The special tombstone shows on the board,
+// the right bonus starts with the right spin count and 2x tiles, Hidden's first
+// spin puts its roamer out with a bolt from the crystal, and the award is the
+// engine's.
 //
 //   npm run test:studio-browser
 
@@ -16,8 +17,8 @@ before(async () => { srv = await serve(); browser = await chromium(); });
 after(async () => { await browser?.close(); srv?.close(); });
 
 // Base-spin seeds for the game's own RNG: 2 tombstones + 1 gold (Super, 10
-// spins); 3 gold (Hidden, 10 spins).
-const SUPER = 9430, HIDDEN = 2559963;
+// spins); 2 tombstones + 1 Hidden (Hidden, 10 spins).
+const SUPER = 9430, HIDDEN = 206172;
 
 async function open(seed) {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
@@ -41,14 +42,16 @@ async function open(seed) {
 async function play(page) {
   return page.evaluate(async () => {
     const { generateRound, seedRng } = await import('./engine.js'), seed = new Uint32Array(1); crypto.getRandomValues(seed);
-    const round = generateRound({ rng: seedRng(seed[0]) }), out = { round: { mode: round.bonusMode, total: round.total, start: round.events.find((e) => e.type === 'bonusStart') }, gold: 0, golden: false, bolts: [] };
+    const round = generateRound({ rng: seedRng(seed[0]) }), out = { round: { mode: round.bonusMode, total: round.total, start: round.events.find((e) => e.type === 'bonusStart') }, sfs: 0, hfs: 0, styled: { sfs: false, hfs: false }, bolts: [] };
     const { bolt, } = globalThis.NightFall.effects, play = bolt.play.bind(bolt), mage = globalThis.NightFall.actors.archer;
     bolt.play = (o) => { out.bolts.push({ index: o.index, origin: o.origin, crystal: mage.releasePoint() }); return play(o); };
     const board = document.getElementById('board');
     new MutationObserver(() => {
-      const gold = board.querySelectorAll('.cell[data-kind=sfs]');
-      out.gold = Math.max(out.gold, gold.length);
-      if ([...gold].some((c) => c.querySelector('.fs-super'))) out.golden = true;
+      for (const [kind, cls] of [['sfs', '.fs-super'], ['hfs', '.fs-hidden']]) {
+        const cells = board.querySelectorAll(`.cell[data-kind=${kind}]`);
+        out[kind] = Math.max(out[kind], cells.length);
+        if ([...cells].some((c) => c.querySelector(cls))) out.styled[kind] = true;
+      }
     }).observe(board, { subtree: true, attributes: true, attributeFilter: ['data-kind'] });
     const start = globalThis.NightFall.state.balance;
     const done = globalThis.NightFall.spin();
@@ -78,7 +81,7 @@ test('a gold tombstone in a base spin starts Super Free Spins', async () => {
   const page = await open(SUPER);
   const r = await play(page);
   assert.equal(r.round.mode, 'super');
-  assert.ok(r.gold >= 1 && r.golden, `the gold tombstone showed (${r.gold})`);
+  assert.ok(r.sfs >= 1 && r.styled.sfs && !r.hfs, `the gold tombstone showed (${r.sfs})`);
   assert.deepEqual(r.splash, { title: 'SUPER FREE SPINS', value: String(r.round.start.count) });
   assert.deepEqual(r.classes.sort(), ['bonus', 'super-bonus']);
   assert.equal(r.mode, 'SOUL HARVEST');
@@ -90,11 +93,11 @@ test('a gold tombstone in a base spin starts Super Free Spins', async () => {
   await page.ctx.close();
 });
 
-test('three gold tombstones start Hidden Free Spins, with a roamer out on the first spin', async () => {
+test('a Hidden tombstone starts Hidden Free Spins, with a roamer out on the first spin', async () => {
   const page = await open(HIDDEN);
   const r = await play(page);
   assert.equal(r.round.mode, 'hidden');
-  assert.ok(r.gold >= 3 && r.golden, `three gold tombstones showed (${r.gold})`);
+  assert.ok(r.hfs >= 1 && r.styled.hfs, `the Hidden tombstone showed (${r.hfs})`);
   assert.deepEqual(r.splash, { title: 'HIDDEN FREE SPINS', value: String(r.round.start.count) });
   assert.deepEqual(r.classes.sort(), ['bonus', 'hidden-bonus', 'super-bonus']);
   assert.equal(r.mode, 'HIDDEN CRYPT');

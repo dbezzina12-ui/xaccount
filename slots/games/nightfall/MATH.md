@@ -1,37 +1,42 @@
 # Night Fall: math sheet
 
-> Owned by Claude. Measured by `node tools/math/nightfall-sim.mjs`, which plays whole rounds through the game's own engine (`runtime/engine.js`, `generateRound`). Night Fall's math is **development math**: these are simulated measurements with 95% confidence intervals, not certified returns. Prices and pays are playtest values. The base spin and both bonus buys are balanced to about 96%; Reaper Strike spins are at 108.9%.
+> Owned by Claude. Measured by `node tools/math/nightfall-sim.mjs`, which plays whole rounds through the game's own engine (`runtime/engine.js`, `generateRound`). Night Fall's math is **development math**: these are simulated measurements with 95% confidence intervals, not certified returns. Prices and pays are playtest values. The base spin and both bonus buys are balanced to about 96%; Reaper Strike spins are at 110.4%.
 
 ## Where it stands (2026-10-26)
 
 | Mode (price) | Return | Notes |
 |---|---|---|
-| **Base spin (1×)** | **95.37% ± 2.87%** | 20,000,000 spins. Base-game wins 42.4%, won Free Spins 34.4%, won Super 18.6%, won Hidden 0.02%. Base attack chance 20% |
-| Reaper Strike spin (4×) | 108.88% ± 2.30% | 4,000,000 spins. Above 96%: its guaranteed strike wins bonuses (and Supers) more often. About 4.55× would make it 96% |
+| **Base spin (1×)** | **95.71% ± 2.96%** | 20,000,000 spins. Base-game wins 40.9%, won Free Spins 33.9%, won Super 18.4%, won Hidden 2.6%. Base attack chance 19% |
+| Reaper Strike spin (4×) | 110.40% ± 2.43% | 4,000,000 spins. Its guaranteed strike wins bonuses more often (Super 1 in 1,440, Hidden 1 in 47,000). About 4.6× would make it 96% |
 | **Free Spins buy (120×)** | **96.69% ± 3.84%** | Sticky roamers and bursts |
 | **Super Free Spins buy (500×)** | **95.61% ± 1.18%** | Sticky roamers and bursts, cross-cuts 25% |
-| Hidden Free Spins (won only) | 2,008.8× average | 100,000 bonuses; reaches the 25,000× cap 1 in 35 |
+| Hidden Free Spins (won only) | 2,008.8× average (10 spins) | 100,000 bonuses; reaches the 25,000× cap 1 in 35 |
 
-## Super tombstones and the bonus tiers (2026-10-26)
+## Gold and Hidden tombstones, the bonus tiers (2026-10-26)
 
-Dylan: people should be able to spin into a Super. A tombstone that lands in a base or Reaper Strike spin is a gold **Super tombstone** 4.2% of the time (`RULES.superScatter`; `sfs`). There are none in free spins. What a spin's tombstones start (`bonusFor`):
+Dylan: people should be able to spin into a Super, and Hidden should match Hacksaw's odds where possible. Hacksaw doesn't publish its odds, so this matches their structure. Their hidden bonus is their 5-scatter tier, and 5 tombstones land about 1 in 100,000 spins here. Their super bonus is the 4-scatter tier, about 1 in 5,000 here; Dylan chose a more generous Super.
+
+In base and Reaper Strike spins, a tombstone lands as a **Hidden tombstone** (`hfs`) 0.107% of the time, about 1 tombstone in 935. It lands **gold** (`sfs`) 4.2% of the time (`RULES.hiddenScatter`, `RULES.superScatter`). There are none in free spins. What a spin's tombstones start (`bonusFor`), counting all kinds:
 
 | Tombstones at the end of the spin | Bonus | How often (base spins) |
 |---|---|---|
-| 3+ FS, no gold | Free Spins, 10 / 12 / 15 / 20 / 30 spins for 3 / 4 / 5 / 6 / 7+ | 1 in 371 |
-| 3 with at least one gold (e.g. 2 FS + 1 gold) | **Super Free Spins**, 10 spins | |
-| 4 with at least one gold | Super, 12 spins | about 1 in 33,000 |
-| 5+ with at least one gold | Super, 14 spins | about 1 in 540,000 |
-| any Super, all counts | | **1 in 2,646** (20,000,000 spins); 1 in 2,626 in a 24,000,000-seed search |
-| 3 gold | **Hidden Free Spins**, 10 spins | **about 1 in 3.5 million** (4 in 20,000,000 spins; 7 in the 24,000,000 seeds) |
-| 4 gold | Hidden, 13 spins | about 1 in 1.4 billion |
-| 5 gold | 1,000× bet, then Hidden, 15 spins | about 1 in 700 billion |
+| 3+, none special | Free Spins, 10 / 12 / 15 / 20 / 30 spins for 3 / 4 / 5 / 6 / 7+ | 1 in 374 |
+| 3 with a gold one | **Super Free Spins**, 10 spins | |
+| 4 with a gold one | Super, 12 spins | about 1 in 33,000 |
+| 5+ with a gold one | Super, 14 spins | about 1 in 540,000 |
+| any Super, all counts | | **1 in 2,673** (20,000,000 spins) |
+| 3 with a Hidden one | **Hidden Free Spins**, 10 spins | |
+| 4 with a Hidden one | Hidden, 13 spins | about 1 in 1.3 million |
+| 5+ with a Hidden one | 1,000× bet, then Hidden, 15 spins | about 1 in 20 million |
+| any Hidden, all counts | | **1 in 90,909** (220 in 20,000,000 spins) |
 
-The rows marked "about" are worked out from how often a spin ends with 3, 4, 5 and 6+ tombstones (exactly 3: 1 in 335; exactly 4: 1 in 5,200; exactly 5: 1 in 105,000; 6+: 1 in 800,000; measured over 4,000,000 spins at the 30% attack chance, a little more often than now) and the 4.2% gold share. Hidden is out of reach in ordinary spins; the planned enhanced spin, with more gold, is the way to it.
+A Hidden tombstone beats gold. The rows marked "about" are worked out from how often a spin ends with exactly 3, 4 and 5 tombstones (1 in 335, 1 in 5,200, 1 in 105,000; measured over 4,000,000 spins at the 30% attack chance) and the shares above.
 
-**Hidden Free Spins** (Claude's first version, for Dylan to change): everything in Super (tiles start at 2×, cross-cuts on 25% of spins, Soul Harvest), plus one roamer already out from the first spin, and the mage strikes on 15% of spins. It averages 2,008.8× (± 29.8×).
+**Hidden Free Spins** (Claude's first version, for Dylan to change): everything in Super (tiles start at 2×, cross-cuts on 25% of spins, Soul Harvest), plus one roamer already out from the first spin, and the mage strikes on 15% of spins. It averages 2,008.8× (± 29.8×) for 10 spins; the ones won in base spins, some with 13 or 15 spins, averaged about 2,330×.
 
-**Paying for it.** A natural Super averages about 493× (12 and 14-spin ones included). At 1 in 2,646 that adds 18.6% to the base spin. The base attack chance went back down from 30% to **20%** of spins (`strikeChance.base`), which brings the base-game wins from 57.2% to 42.4%. Every spin that would have started Free Spins with a gold tombstone in it now starts Super, so Free Spins themselves come a little less often (1 in 371 instead of 1 in 311).
+**Paying for them.** Won Supers add 18.4% to the base spin and won Hidden 2.6%. The base attack chance is **19%** of spins (`strikeChance.base`; it was 30% before the special tombstones), so base-game wins are 40.9%. Free Spins come a little less often (1 in 374 instead of 1 in 311), because triggers with a special tombstone start Super or Hidden instead.
+
+The first version of these tiers (3 gold for Hidden, about 1 in 3.5 million) is superseded.
 
 ## Base game balance (2026-10-26, before Super tombstones)
 
@@ -148,7 +153,7 @@ One more regular-buy run (100,000 rounds) used the new engine with no roaming wi
 
 ## Still to balance (decision for Dylan)
 
-- **Reaper Strike spins, 108.9% ± 2.3% at 4×:** they trigger bonuses more often (1 in 178, Super 1 in 1,432), so they gained the most from the roamers and the Super tombstones. The base attack chance doesn't touch them, since their strike is guaranteed. A price of about **4.55×** would make them 96%; so would a smaller guaranteed strike.
+- **Reaper Strike spins, 110.4% ± 2.4% at 4×:** they trigger bonuses more often (1 in 178; Super 1 in 1,440; Hidden 1 in 47,000), so they gained the most from the roamers and the special tombstones. The base attack chance doesn't touch them, since their strike is guaranteed. A price of about **4.6×** would make them 96%; so would a smaller guaranteed strike.
 
 ## Reproduce
 
