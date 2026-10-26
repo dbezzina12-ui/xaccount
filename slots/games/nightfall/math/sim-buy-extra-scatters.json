@@ -1,0 +1,128 @@
+{
+  "engine": "games/nightfall/runtime/engine.js",
+  "generated": "2026-10-26T18:45:14.854Z",
+  "modes": {
+    "regular": {
+      "rounds": 200000,
+      "cost": 120,
+      "selectedTiers": {
+        "regular": 0,
+        "super": 0,
+        "hidden": 0
+      },
+      "rtp": 0.5698791429583299,
+      "ci95": 0.015215531226865593,
+      "sdPerCost": 3.471730830310433,
+      "hitRate": 0.995645,
+      "bonusRate": 1,
+      "bonusAverage": 68.38549715499958,
+      "freeSpinsPerBonus": 10.8888,
+      "retriggersPerBonus": 0.034585,
+      "capRate": 0.000115,
+      "maxWin": 25000,
+      "mageZapsPerRound": 0,
+      "roamsPerBonus": 3.695745,
+      "roamersPerBonus": 0.599155,
+      "burstsPerBonus": 0.599765,
+      "naturalSuperRate": 0,
+      "naturalHiddenRate": 0,
+      "returnFrom": {
+        "regular": 0,
+        "super": 0,
+        "hidden": 0
+      }
+    },
+    "super": {
+      "rounds": 200000,
+      "cost": 500,
+      "selectedTiers": {
+        "regular": 0,
+        "super": 0,
+        "hidden": 0
+      },
+      "rtp": 0.9358494833600002,
+      "ci95": 0.009371839548883185,
+      "sdPerCost": 2.138374520971813,
+      "hitRate": 0.99836,
+      "bonusRate": 1,
+      "bonusAverage": 467.92474168000007,
+      "freeSpinsPerBonus": 10.8792,
+      "retriggersPerBonus": 0.03726,
+      "capRate": 0.00051,
+      "maxWin": 25000,
+      "mageZapsPerRound": 0,
+      "roamsPerBonus": 2.51527,
+      "roamersPerBonus": 0.407895,
+      "burstsPerBonus": 0.40792,
+      "naturalSuperRate": 0,
+      "naturalHiddenRate": 0,
+      "returnFrom": {
+        "regular": 0,
+        "super": 0,
+        "hidden": 0
+      }
+    },
+    "hidden": {
+      "rounds": 100000,
+      "cost": 1,
+      "selectedTiers": {
+        "regular": 0,
+        "super": 0,
+        "hidden": 0
+      },
+      "rtp": 1566.4226293599995,
+      "ci95": 19.846344492857476,
+      "sdPerCost": 3202.02305233515,
+      "hitRate": 0.99971,
+      "bonusRate": 1,
+      "bonusAverage": 1566.4226293599995,
+      "freeSpinsPerBonus": 11.08655,
+      "retriggersPerBonus": 0.03851,
+      "capRate": 0.00834,
+      "maxWin": 25000,
+      "mageZapsPerRound": 0,
+      "roamsPerBonus": 16.33403,
+      "roamersPerBonus": 0.83519,
+      "burstsPerBonus": 0.83635,
+      "naturalSuperRate": 0,
+      "naturalHiddenRate": 0,
+      "returnFrom": {
+        "regular": 0,
+        "super": 0,
+        "hidden": 0
+      }
+    },
+    "mystery": {
+      "rounds": 1000000,
+      "cost": 370,
+      "selectedTiers": {
+        "regular": 399851,
+        "super": 500039,
+        "hidden": 100110
+      },
+      "rtp": 1.130586027189196,
+      "ci95": 0.007225711032690979,
+      "sdPerCost": 3.6865872615770305,
+      "hitRate": 0.997336,
+      "bonusRate": 1,
+      "bonusAverage": 418.31683006000253,
+      "freeSpinsPerBonus": 10.911079,
+      "retriggersPerBonus": 0.036678,
+      "capRate": 0.001104,
+      "maxWin": 25000,
+      "mageZapsPerRound": 0,
+      "roamsPerBonus": 4.381886,
+      "roamersPerBonus": 0.527369,
+      "burstsPerBonus": 0.526605,
+      "naturalSuperRate": 0,
+      "naturalHiddenRate": 0,
+      "returnFrom": {
+        "regular": 0,
+        "super": 0,
+        "hidden": 0
+      }
+    }
+  },
+  "seconds": 86,
+  "engineSha256": "6ecc51f7d580a4f3faf96a50d6db4d24689f88f2ed488cbcb2017cef0f49468b"
+}

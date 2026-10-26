@@ -135,8 +135,10 @@ export function resolveSpin({rng,mode='base',hits=Array(49).fill(0),board=null,c
  }
  return {total,events,hits:marks,scatters:grid.filter(x=>x==='fs').length,supers:grid.filter(x=>x==='sfs').length,hiddens:grid.filter(x=>x==='hfs').length,capped:false,roamers:pinned,zaps,mageStrike};
 }
-export function triggerBoard(rng,count=3,kind='fs'){
- const b=createBoard(rng,false),available=Array.from({length:49},(_,i)=>i);
+export function triggerBoard(rng,count=3,kind='fs',extraScatters=false){
+ // Buys guarantee three tier tombstones. The other 46 cells retain the normal
+ // scatter chance, so 4/5+ starts can earn the same awards as natural triggers.
+ const b=createBoard(rng,extraScatters),available=Array.from({length:49},(_,i)=>i);
  for(let j=0;j<count;j++){const k=Math.floor(rng()*available.length);b[available.splice(k,1)[0]]=kind;}return b;
 }
 // Hidden opens with the mage's strikes on the cleared board (Dylan, 2026-10-26):
@@ -168,7 +170,12 @@ export function generateRound({rng,mode='base',record=true}){
  let total=0,events=[],bonusMode=null,remaining=0,played=0,retriggers=0,mageZaps=0,roams=0,roamerStrikes=0,bursts=0,supers=0;
  const emit=e=>{if(record)events.push(e);};
  if(mode==='regular'||mode==='super'||mode==='hidden'){
-  bonusMode=mode;remaining=10;emit({type:'drop',board:triggerBoard(rng,3,mode==='hidden'?'hfs':mode==='super'?'sfs':'fs'),hits:Array(49).fill(0),trigger:true});
+  bonusMode=mode;
+  const opening=triggerBoard(rng,3,mode==='hidden'?'hfs':mode==='super'?'sfs':'fs',true);
+  const bonus=bonusFor(opening.filter(k=>k==='fs').length,opening.filter(k=>k==='sfs').length,opening.filter(k=>k==='hfs').length);
+  remaining=bonus.count;
+  emit({type:'drop',board:opening,hits:Array(49).fill(0),trigger:true});
+  if(bonus.prize){total=bonus.prize;emit({type:'prize',amount:bonus.prize,tombstones:opening.filter(isScatter).length,roundTotal:total});}
  }else{
   const base=resolveSpin({rng,mode,record});total=base.total;mageZaps=base.zaps;supers=base.supers;if(record)events.push(...base.events);
   const bonus=base.capped?null:bonusFor(base.scatters,base.supers,base.hiddens);

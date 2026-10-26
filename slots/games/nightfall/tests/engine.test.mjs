@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {SYMBOLS,RULES,seedRng,clusters,evaluate,collapse,strike,resolveSpin,generateRound,multiplier,fsCount,mageTarget,isWild,bonusFor,adjacent} from '../runtime/engine.js';
+import {SYMBOLS,RULES,seedRng,clusters,evaluate,collapse,strike,resolveSpin,generateRound,multiplier,fsCount,mageTarget,isWild,bonusFor,adjacent,isScatter,triggerBoard} from '../runtime/engine.js';
 const empty=()=>Array(49).fill('fs');
 test('clusters connect orthogonally, not diagonally; five required',()=>{const b=empty();[0,8,16,24,32].forEach(i=>b[i]='ruby');assert.equal(clusters(b).length,0);[0,1,2,9,16].forEach(i=>b[i]='ruby');assert.equal(clusters(b)[0].cells.length,6);});
 test('first hit marks; second activates 2x; shared cells advance only once',()=>{const b=empty();[0,1,2,3,4].forEach(i=>b[i]='ruby');let e=evaluate(b,Array(49).fill(0));assert.equal(e.wins[0].multiplier,1);assert.equal(e.hits[0],1);e=evaluate(b,e.hits);assert.equal(e.wins[0].multiplier,10);assert.equal(e.hits[0],2);assert.equal(multiplier(99),1024);});
@@ -10,7 +10,7 @@ test('strikes never overwrite scatters; regular strike at most five cells',()=>{
 test('seeded rounds reproduce independently of recording events',()=>{for(const mode of ['base','feature','regular','super']){const a=generateRound({rng:seedRng(123),mode}),b=generateRound({rng:seedRng(123),mode,record:false});assert.equal(a.total,b.total);assert.equal(a.played,b.played);}});
 test('guaranteed feature has exactly one strike unless cap reached first',()=>{for(let seed=1;seed<80;seed++){const r=resolveSpin({rng:seedRng(seed),mode:'feature'});assert.equal(r.events.filter(x=>x.type==='strike').length,r.capped?0:1);}});
 test('super starts with every multiplier at 2x, and bonus history retains cells',()=>{const r=generateRound({rng:seedRng(42),mode:'super'});const start=r.events.findIndex(e=>e.type==='bonusStart');const drop=r.events.slice(start).find(e=>e.type==='drop');assert.ok(drop.hits.every(x=>x===2));let previous=Array(49).fill(2);for(const e of r.events.slice(start)){if(e.hits){for(let i=0;i<49;i++)assert.ok(e.hits[i]>=previous[i]);previous=e.hits;}}});
-test('bonus buys visibly start with three scatter symbols',()=>{for(const mode of ['regular','super']){const r=generateRound({rng:seedRng(5),mode});assert.equal(r.events[0].type,'drop');assert.equal(r.events[0].board.filter(s=>s===(mode==='super'?'sfs':'fs')).length,3);assert.equal(r.events[1].count,10);}});
+test('bonus buys visibly start with at least three scatter symbols',()=>{for(const mode of ['regular','super']){const r=generateRound({rng:seedRng(5),mode});assert.equal(r.events[0].type,'drop');assert.ok(r.events[0].board.filter(isScatter).length>=3);assert.ok(r.events.find(e=>e.type==='bonusStart').count>=10);}});
 test('cap limits total award and ends the spin',()=>{const r=resolveSpin({rng:seedRng(1),board:Array(49).fill('crown'),hits:Array(49).fill(11),cap:100});assert.equal(r.total,100);assert.equal(r.capped,true);assert.equal(r.events.at(-1).type,'win');});
 test('recorded awards sum to round payout without missing bonus awards',()=>{for(const mode of ['base','feature','regular','super'])for(let seed=1;seed<=60;seed++){const r=generateRound({rng:seedRng(seed),mode});const sum=r.events.filter(e=>e.type==='win').reduce((s,e)=>s+e.total,0);assert.ok(Math.abs(sum-r.total)<.0001);assert.ok(r.total<=RULES.maxWin);assert.ok(Number.isFinite(r.total));}});
 test('scatter counts and extra scatter overflow are well-defined',()=>{assert.deepEqual([3,4,5,6,7,8].map(fsCount),[10,12,15,20,30,30]);});
@@ -120,7 +120,7 @@ test('retriggers keep the roamers; the bonus ends with them gone',()=>{
   const round=generateRound({rng:seedRng(seed),mode:'regular'});if(!round.retriggers||!round.roamerStrikes)continue;
   const events=round.events,at=events.findIndex(e=>e.type==='retrigger'),before=events.slice(0,at).filter(e=>e.type==='zap'&&e.roamer).length;
   if(!before)continue;retriggered++;
-  assert.equal(round.played,10+events.filter(e=>e.type==='retrigger').reduce((s,e)=>s+e.count,0));
+  assert.equal(round.played,events.find(e=>e.type==='bonusStart').count+events.filter(e=>e.type==='retrigger').reduce((s,e)=>s+e.count,0));
   // The first drop after a retrigger still holds every existing lantern.
   const next=events.slice(at).find(e=>e.type==='drop');assert.ok(next.fixed.length>=before);
   assert.equal(events.at(-1).type,'bonusEnd');
@@ -218,6 +218,32 @@ test('Hidden opens with 3 to 5 mage strikes that raise a plus of tiles one step 
 test('bonus buys drop the scatter artwork for their own tier',()=>{
  for(const [mode,kind] of [['regular','fs'],['super','sfs'],['hidden','hfs']]){
   const first=generateRound({mode,rng:seedRng(42)}).events[0];
-  assert.equal(first.type,'drop');assert.equal(first.trigger,true);assert.equal(first.board.filter(x=>x===kind).length,3);
+  assert.equal(first.type,'drop');assert.equal(first.trigger,true);assert.ok(first.board.filter(x=>x===kind).length>=3);
  }
+});
+
+test('buy openings can land 4 and 5+ scatters at the existing scatter chance',()=>{
+ const counts={3:0,4:0,more:0};
+ for(let seed=1;seed<=20000;seed++){
+  const b=triggerBoard(seedRng(seed),3,'sfs',true),n=b.filter(isScatter).length;
+  assert.equal(b.filter(k=>k==='sfs').length,3);assert.ok(n>=3&&n<=49);
+  counts[n===3?3:n===4?4:'more']++;
+ }
+ assert.ok(counts[4]>1000&&counts.more>100);
+ const noExtras=(1-RULES.scatterChance)**46;
+ assert.ok(Math.abs(counts[3]/20000-noExtras)<.015);
+});
+
+test('all purchased tiers use the natural 3/4/5+ awards, including the Hidden prize',()=>{
+ const reached=new Set();
+ for(const mode of ['regular','super','hidden','mystery'])for(let seed=1;seed<=1200;seed++){
+  const r=generateRound({mode,rng:seedRng(seed)}),b=r.events[0].board;
+  const count=b.filter(isScatter).length,award=bonusFor(b.filter(k=>k==='fs').length,b.filter(k=>k==='sfs').length,b.filter(k=>k==='hfs').length);
+  assert.equal(r.bonusMode,award.mode);assert.equal(r.events.find(e=>e.type==='bonusStart').count,award.count);
+  assert.equal(r.events.find(e=>e.type==='prize')?.amount||0,award.prize);
+  const paid=r.events.reduce((sum,e)=>sum+(e.type==='win'?e.total:e.type==='prize'?e.amount:0),0);
+  assert.ok(Math.abs(paid-r.total)<.0001);assert.ok(r.total<=RULES.maxWin);
+  reached.add(`${mode}:${Math.min(5,count)}`);
+ }
+ for(const mode of ['regular','super','hidden','mystery'])for(const n of [3,4,5])assert.ok(reached.has(`${mode}:${n}`));
 });

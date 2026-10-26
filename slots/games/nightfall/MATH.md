@@ -1,85 +1,55 @@
 # Night Fall: current development math
 
-## 2026-10-26 — Mystery Buy
+## 2026-10-26 — extra scatters on purchased bonuses
 
-Mystery costs **370× base bet** in playtest credits. One RNG draw chooses **40% Regular / 50% Super / 10% Hidden**, then that existing ten-spin bonus runs unchanged. Hidden is now accessible through Mystery as well as a natural Hidden scatter trigger; there is no direct Hidden buy.
+Dylan flagged that buys were always showing exactly three scatters, although Claude's natural trigger rules already supported 4/5+ awards. The opening is corrected for Regular, Super, Hidden and Mystery. This is a play-money development build, not certified math.
 
-| Measurement | Result |
-|---|---:|
-| Whole Mystery buys | 1,000,000 |
-| Return / 370× price | **96.09% ± 0.61 percentage points** |
-| Average award | 355.54× base bet |
-| Selected Regular / Super / Hidden | 399,851 / 500,039 / 100,110 |
-| Cap rate | 0.078% |
+### Opening and awards
 
-This is a Monte Carlo development estimate, not certification. The 370× price was chosen from the existing measured bonus values (~353.91× weighted average / 0.96), rounded to 370×, then independently verified above. Reprice Mystery when Claude retunes its underlying bonuses; the standalone regular and Super buys still need the balancing pass described below.
+Each buy guarantees three tier tombstones in three distinct positions. The other 46 cells independently retain `RULES.scatterChance = 0.0055` for ordinary FS tombstones; they are not forced to be paying symbols. Thus total starting scatters are `3 + Binomial(46, 0.0055)`, and **22.407%** of buys have at least four. There is no new arbitrary count-weight table. All extra scatters are ordinary FS, so they add awards without changing the chosen bonus tier or Mystery's advertised tier odds.
 
-`math/sim-mystery.json` records the current engine hash and full output. The earlier `math/sim-after.json` remains the original measurement of the underlying tiers with its original hash. All 1,000 checked existing-mode rounds (200 each of base, feature, regular, Super and Hidden) reproduce the previous engine's outcomes and complete event sequences exactly; the sole additional return metadata is `purchaseMode`.
+The existing `bonusFor` is the single source for both purchased and natural awards, counting all tombstone kinds:
 
-The menu and confirmation show the same odds from `RULES.mystery`. Selection happens once in the engine after purchase confirmation; animation never rerolls it. The selected tier's own scatter art drops before its bonus splash. Hidden keeps its opening multiplier strikes and starting lantern. History records Mystery Buy plus the selected tier and the single 370× charge. Total award is capped at 25,000× base bet as for every other round.
+| Tier | 3 scatters | 4 scatters | 5+ scatters |
+|---|---:|---:|---|
+| Regular | 10 spins | 12 spins | 15 with 5; 20 with 6; 30 with 7+ |
+| Super | 10 spins | 12 spins | 14 spins |
+| Hidden | 10 spins | 13 spins | 15 spins + 1,000× base bet |
 
-Reproduce:
+Hidden's 1,000× prize is credited once after the scatter drop and before bonus start, and is included in the 25,000× total-round cap. Opening symbols, awarded spin count, displayed splash and monetary accounting all derive from the same result.
 
-```sh
-node tools/math/nightfall-sim.mjs --rounds base=0,feature=0,regular=0,super=0,hidden=0,mystery=1000000 --json games/nightfall/math/sim-mystery.json
-```
+### Hidden reachability
 
-108 Site tests pass, including exact probability boundaries, deterministic selection, equivalence to each selected bonus, all three scatter artworks and recorded/unrecorded parity.
+Mystery remains **40% Regular / 50% Super / 10% Hidden**. Every selection is independent: 10% is not a guarantee of one Hidden in ten buys. Direct Regular and Super buys stay in their selected tier. Hidden can also trigger naturally from 3+ total tombstones including a Hidden one. It still has no direct public buy.
 
-## 2026-10-26 — hold lanterns until a winning use
+One million Mystery rounds selected **399,851 Regular / 500,039 Super / 100,110 Hidden**. These counts are identical to the prior Mystery run because selection is still the first seeded RNG draw; extra scatters change the selected bonus's opening, not its tier.
 
-Dylan corrected the roaming rule: a lantern stays visible in its cell between spins and moves only after contributing to a win. This supersedes the earlier rule that moved every lantern at the start of every free spin.
+## Current measured buy returns
 
-**These measurements supersede the previous ~96% figures. The new rule is implemented, but balance has NOT been retuned.** Claude owns the next balancing pass. No paytable, price, attack probability, scatter probability or win cap was changed. This remains a play-money development build, not certified math.
+Prices, probabilities and paytable have not been retuned as part of the scatter correction. The added spins/prize increase buy returns, so the prior 96.09% Mystery estimate is **superseded**. Claude's balancing pass must use this mechanic and rerun all buys together.
 
-## Reproducible simulation
-
-Measured using the existing `tools/math/nightfall-sim.mjs` against this runtime's `generateRound`, with its normal deterministic seeds and worker partitioning. Full output is `math/sim-after.json`; the engine SHA-256 is recorded there and in `import-manifest.json`. Intervals are approximate 95% Monte Carlo confidence intervals, in percentage points.
-
-| Mode | Whole rounds | Measured return |
+| Mode | Rounds | Return with approximate 95% interval |
 |---|---:|---:|
-| Base spin (1×) | 4,000,000 | 75.25% ± 2.93% |
-| Reaper Strike (4×) | 2,000,000 | 100.61% ± 1.86% |
-| Free Spins buy (120×) | 200,000 | 47.06% ± 1.19% |
-| Super buy (500×) | 200,000 | 82.74% ± 0.81% |
+| Regular buy (120×) | 200,000 | 56.99% ± 1.52% |
+| Super buy (500×) | 200,000 | 93.58% ± 0.94% |
+| Mystery buy (370×) | 1,000,000 | 113.06% ± 0.72% |
 
-Hidden is won only, so it has no buy-price RTP. Across 100,000 ten-spin Hidden bonuses, average award is **1,244.8× ± 16.6×** base bet. The 25,000× cap occurred in 0.559% of those bonuses.
+Hidden test entries (100,000; same 3+ opening distribution, not a direct public buy) average **1,566.42× ± 19.85×** base bet, including the possible opening prize. This is an average award, not RTP at a Hidden buy price.
 
-The change reduces repeated wins on the same multiplier tile: a used lantern now leaves that tile after the winning tumble instead of camping there through the entire cascade. Regular and Super both need rebalancing before their earlier return targets can be claimed. This report deliberately does not silently tune frequencies to compensate.
+Full current output and engine SHA-256: `math/sim-buy-extra-scatters.json`. Earlier `math/sim-mystery.json` and `math/sim-after.json` are retained as historical measurements, with their original hashes, and are not current buy-return claims.
 
-## Exact lantern contract
+Base and Reaper Strike paths are unchanged. 2,000 seeded natural-spin rounds (1,000 per mode), including triggered bonuses, match the preceding engine's complete results and event sequences. Their earlier measurements remain 75.25% ± 2.93% (4m base rounds) and 100.61% ± 1.86% (2m feature rounds) after the hold-until-use lantern correction. These are development estimates and still need balancing.
 
-- During any bonus, a single mage zap creates one `roam-wild`, using the animated soul-lantern art. It persists for the remainder of the bonus, including retriggers. Additional single shots add lanterns.
-- A three-cell burst creates `arrow-wild` symbols with the regular W art. These remain temporary, clear in wins, and expire on the next spin.
-- Existing lantern cells are reserved before a new free-spin board is generated. They are present in the `drop` event's board and `fixed` list. No symbol or scatter is generated underneath them; no random new scatter is overwritten.
-- Unused lanterns stay in their exact cells across spins and tumbles. Presentation excludes those cells from both departure and initial drop animation.
-- After a winning cluster is paid, the winning tumble resolves around all lanterns. Only lanterns in that win's union of positions may then move, once per win resolution (even if shared by multiple clusters).
-- Each used lantern selects an eligible paying-symbol cell uniformly, excluding scatters and all current wilds. It swaps with that symbol. The target symbol fills its old cell; no scatter is lost and no cell is left empty. The next evaluation uses that resulting board. A lantern may move again if it participates in a later win.
-- If no eligible target exists, the lantern stays. It is never deleted merely for lacking a target.
-- Tile multipliers stay on their cells and are never carried with the lantern.
-- At the round cap, the bonus ends immediately, so no further relocation is needed.
-- Hidden's one starting lantern uses `from: -1` to materialize after its first drop. This is the only relocation event not caused by a winning use.
+## Lantern and bonus contract retained
 
-## Scatters and tiers
+A single bonus mage zap adds one persistent animated lantern; a burst adds three temporary W wilds. Lanterns reserve their cells before each free-spin drop and remain visible there. Only a lantern used in a winning cluster may relocate after the winning tumble, swapping with an eligible paying symbol. Scatters and other wilds cannot be overwritten. No eligible destination means it stays, never disappears. Unused lanterns keep their cells, including across retriggers. Tile multipliers stay behind. Hidden keeps its 3–5 opening multiplier strikes and one starting lantern. None of those rules changed in this update.
 
-Natural scatter probabilities are unchanged: `scatterChance = 0.0055`; in base and Reaper Strike, 4.2% of tombstones are Super (`sfs`) and 0.107% are Hidden (`hfs`). Special tombstones do not randomly land during free spins.
-
-Three or more total tombstones trigger a bonus. A Hidden tombstone takes precedence, otherwise any Super tombstone starts Super, otherwise regular Free Spins. Existing awards remain unchanged:
-
-| Trigger | Spins / additional award |
-|---|---|
-| Regular, 3 / 4 / 5 / 6 / 7+ | 10 / 12 / 15 / 20 / 30 spins |
-| Super, 3 / 4 / 5+ | 10 / 12 / 14 spins |
-| Hidden, 3 / 4 / 5+ | 10 / 13 / 15 spins; 5+ also pays 1,000× |
-
-Super buys now visibly drop three approved `sfs` tombstones, fixing an `fs` presentation mismatch. Regular buys drop `fs`; Hidden previews drop `hfs`. Buy opening board positions and RNG consumption are unchanged by that artwork correction. The Super buy menu and confirmation also use `sfs.webp`.
-
-Hidden still starts with 2× tiles, 3–5 opening mage strikes upgrading a plus of cells, one starting lantern, and a 15% mage strike chance. Regular and Super keep their 11% and 7.5% chances. Half of bonus mage strikes create a lantern; half create a temporary burst. All prior Reaper behavior, prices, and the 25,000× total cap remain.
-
-## Reproduce
+## Reproduce and verify
 
 ```sh
-node tools/math/nightfall-sim.mjs --rounds base=4000000,feature=2000000,regular=200000,super=200000,hidden=100000 --json games/nightfall/math/sim-after.json
+node tools/math/nightfall-sim.mjs --rounds base=0,feature=0,regular=200000,super=200000,hidden=100000,mystery=1000000 --json games/nightfall/math/sim-buy-extra-scatters.json
 ```
 
-105 Site tests pass, including the engine's all-tier lantern checks, retriggers, reduced motion, distinct artwork and exclusion of held lanterns from departure/drop motion. Mobile presentation is checked separately. Earlier math sheets and measurements remain available in Git history before this correction.
+110 Site tests pass. New checks cover extra-scatter frequency, 3/4/5+ entries for every purchase mode, exact shared spin/prize awards, prize accounting and caps. Example Mystery seeds: 1 = Super with 4 scatters / 12 spins; 4 = Hidden with 4 / 13; 6 = Super with 5 / 14; 1740 = Hidden with 5 / 15 + 1,000×. These are deterministic local QA fixtures only; production uses crypto-generated random seeds.
+
+App and engine URLs now carry the release query `20261026-extra-scatters`. Settings show **Build 2026.10.26-SCATTERS** so an old open tab can be identified after refresh.

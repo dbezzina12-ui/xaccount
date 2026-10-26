@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {RULES,seedRng,mysteryBonus,generateRound} from '../runtime/engine.js';
+import {RULES,seedRng,mysteryBonus,generateRound,bonusFor} from '../runtime/engine.js';
 
 test('Mystery uses the advertised 40/50/10 boundaries and fixed price',()=>{
  assert.equal(RULES.mysteryCost,370);
@@ -15,8 +15,10 @@ test('Mystery selects once then plays the existing selected bonus, with correct 
   const actual=generateRound({rng:seedRng(seed),mode:'mystery'});seen.add(tier);
   assert.equal(actual.purchaseMode,'mystery');assert.equal(actual.bonusMode,tier);
   assert.equal(actual.total,expected.total);assert.deepEqual(actual.events,expected.events);
-  assert.equal(actual.events[0].board.filter(k=>k===({regular:'fs',super:'sfs',hidden:'hfs'})[tier]).length,3);
-  assert.equal(actual.events.find(e=>e.type==='bonusStart').count,10);
+  assert.ok(actual.events[0].board.filter(k=>k===({regular:'fs',super:'sfs',hidden:'hfs'})[tier]).length>=3);
+  const b=actual.events[0].board,award=bonusFor(b.filter(k=>k==='fs').length,b.filter(k=>k==='sfs').length,b.filter(k=>k==='hfs').length);
+  assert.equal(actual.events.find(e=>e.type==='bonusStart').count,award.count);
+  assert.equal(actual.events.find(e=>e.type==='prize')?.amount||0,award.prize);
   assert.equal(actual.events.some(e=>e.type==='hiddenStrikes'),tier==='hidden');
   const unrecorded=generateRound({rng:seedRng(seed),mode:'mystery',record:false});
   assert.equal(unrecorded.total,actual.total);assert.equal(unrecorded.bonusMode,tier);assert.deepEqual(unrecorded.events,[]);
