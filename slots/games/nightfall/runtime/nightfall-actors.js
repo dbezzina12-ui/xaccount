@@ -88,6 +88,8 @@ export const REAPER_V2={size:[400,430],dir:'reaper-v2',blink:false,
 // How much of the breath's lift a height gets: 1 at the shoulders and above,
 // 0 at the hips and below, smooth between.
 export const breathShare=(B,y)=>{const t=Math.max(0,Math.min(1,(B.waist-y)/(B.waist-B.top)));return t*t*(3-2*t);};
+// A breath every `period` seconds, in over 40% of it and out over 60% (0..1).
+const breathCurve=(t,period)=>{const u=(t/period)%1,k=u<.4?u/.4:1-(u-.4)/.6,e=k<.5?2*k*k:1-(-2*k+2)**2/2;return e;};
 const ang=([x,y])=>Math.atan2(y,x)*180/Math.PI;
 const sub=(a,b)=>[a[0]-b[0],a[1]-b[1]],add=(a,b)=>[a[0]+b[0],a[1]+b[1]],len=v=>Math.hypot(v[0],v[1]),scale=(v,k)=>[v[0]*k,v[1]*k];
 const ease=t=>t<.5?2*t*t:1-(-2*t+2)**2/2,clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
@@ -122,7 +124,7 @@ function reaperBones(J,pose){
  b.scythe=mul(b.foreRight,rotAbout(pose.scythe||0,J.grip));
  return b;
 }
-function reaperV2Bones(J,pose,B=REAPER_V2.breath){
+function reaperV2Bones(J,pose,B){
  const b={},lift=B.lift*(pose.breath||0);
  b.chest=I;b.crown=move([0,-lift]);
  b.upper=mul(move([0,-lift*breathShare(B,J.elbow[1])]),rotAbout(pose.shoulder||0,J.shoulder));
@@ -199,6 +201,51 @@ class Actor {
   this.parts=Object.fromEntries([...this.rig.querySelectorAll('[data-part]')].map(e=>[e.dataset.part,e]));
  }
  async loadJoints(){return (await fetch(ROOT+'rig.json').then(r=>r.json()))[this.kind];}
+ // A rig made by a tools/nightfall-*.py import (its own folder and rig.json):
+ // the boxes come from the rig, then the parts are built and the breathing
+ // parts prepared. Returns the joints, with the art sample points as `checks`.
+ async loadRig(base){
+  const rig=await fetch(ROOT+base.dir+'/rig.json').then(r=>r.json());
+  this.spec={...base,size:rig.size,parts:Object.fromEntries(Object.entries(base.parts).map(([n,p])=>[n,{...p,box:rig.parts[p.file].box}]))};
+  this.size=rig.size;this.build();await this.prepareWarp();
+  return {...rig.joints,checks:rig.checks};
+ }
+ // The breathing parts: each image becomes the source of a canvas the same
+ // size plus room for the lift and the widening (the box grows to match).
+ async prepareWarp(){
+  const B=this.spec.breath;this.sources={};this.warped=null;
+  if(!B)return;
+  for(const [name,p] of Object.entries(this.spec.parts)){
+   if(!p.warp)continue;
+   const img=this.parts[name];await img.decode();
+   const q=img.naturalWidth/p.box[2],padX=Math.ceil(img.naturalWidth*B.widen/2)+2,padY=Math.ceil(B.lift*q)+2,box0=p.box;
+   const c=document.createElement('canvas');c.width=img.naturalWidth+2*padX;c.height=img.naturalHeight+padY;
+   c.className=img.className;c.dataset.part=name;
+   p.box=[box0[0]-padX/q,box0[1]-padY/q,box0[2]+2*padX/q,box0[3]+padY/q];
+   const [W,H]=this.size;Object.assign(c.style,{left:p.box[0]/W*100+'%',top:p.box[1]/H*100+'%',width:p.box[2]/W*100+'%',height:p.box[3]/H*100+'%',zIndex:p.z});
+   img.replaceWith(c);this.parts[name]=c;this.sources[name]={img,q,padX,padY,box0};
+  }
+ }
+ // Redraws the breathing parts when the breath changes.
+ paintWarp(pose){
+  const b=+(pose.breath||0).toFixed(4);if(b===this.warped)return;this.warped=b;
+  for(const name in this.sources)this.warp(name,b);
+ }
+ // Draws a breathing part's image into its canvas, row band by row band:
+ // each band's top and bottom rise by their share of the lift, so the bands
+ // meet with no gaps; the chest bands also widen about the body's centre.
+ // A negative breath (an impact) settles the shoulders instead.
+ warp(name,b){
+  const {img,q,padX,padY,box0}=this.sources[name],c=this.parts[name],g=c.getContext('2d'),B=this.spec.breath,W=img.naturalWidth,H=img.naturalHeight;
+  g.clearRect(0,0,c.width,c.height);
+  if(!b){g.drawImage(img,padX,padY);return;}
+  const share=r=>breathShare(B,box0[1]+r/q),up=r=>B.lift*b*q*share(r),cx=(this.joints.centre*this.size[0]-box0[0])*q;
+  const band=(r0,r1,k)=>{const y0=padY+r0-up(r0),y1=padY+r1-up(r1);g.drawImage(img,0,r0,W,r1-r0,padX+cx*(1-k),y0,W*k,y1-y0+(r1<H?.75:0));};
+  const top=clamp(Math.floor((B.top-box0[1])*q),0,H),bottom=clamp(Math.ceil((B.waist-box0[1])*q),0,H);
+  if(top>0)band(0,top,1);
+  for(let r=top;r<bottom;r+=4){const r1=Math.min(bottom,r+4),w=share((r+r1)/2);band(r,r1,1+B.widen*b*4*w*(1-w));}
+  if(bottom<H)band(bottom,H,1);
+ }
  async load(){
   const joints=await this.loadJoints();
   let blink=null;if(this.blinks){blink=new Image();blink.src=ROOT+this.dir+'/blink.webp';this.blink=blink;}
@@ -251,6 +298,7 @@ class Actor {
    const e=s*((m[0]-1)*bx+m[2]*by+m[4]),f=s*(m[1]*bx+(m[3]-1)*by+m[5]);
    el.style.transform=`matrix(${m[0].toFixed(5)},${m[1].toFixed(5)},${m[2].toFixed(5)},${m[3].toFixed(5)},${e.toFixed(2)},${f.toFixed(2)})`;
   }
+  if(this.sources)this.paintWarp(pose);
   this.paintExtras?.(frame,pose);
   this.frame=frame;
  }
@@ -331,51 +379,14 @@ export class CourtKnight extends Actor {
  // v2: the boxes and joints come from its own rig.json.
  async loadJoints(){
   if(!this.v2)return super.loadJoints();
-  const rig=await fetch(ROOT+'reaper-v2/rig.json').then(r=>r.json());
-  this.spec={...REAPER_V2,size:rig.size,parts:Object.fromEntries(Object.entries(REAPER_V2.parts).map(([n,p])=>[n,{...p,box:rig.parts[p.file].box}]))};
-  this.size=rig.size;this.build();
-  // The breathing parts: each image becomes the source of a canvas the same
-  // size plus room for the lift and the widening (the box grows to match).
-  const B=REAPER_V2.breath;this.sources={};
-  for(const [name,p] of Object.entries(this.spec.parts)){
-   if(!p.warp)continue;
-   const img=this.parts[name];await img.decode();
-   const q=img.naturalWidth/p.box[2],padX=Math.ceil(img.naturalWidth*B.widen/2)+2,padY=Math.ceil(B.lift*q)+2,box0=p.box;
-   const c=document.createElement('canvas');c.width=img.naturalWidth+2*padX;c.height=img.naturalHeight+padY;
-   c.className=img.className;c.dataset.part=name;
-   p.box=[box0[0]-padX/q,box0[1]-padY/q,box0[2]+2*padX/q,box0[3]+padY/q];
-   const [W,H]=this.size;Object.assign(c.style,{left:p.box[0]/W*100+'%',top:p.box[1]/H*100+'%',width:p.box[2]/W*100+'%',height:p.box[3]/H*100+'%',zIndex:p.z});
-   img.replaceWith(c);this.parts[name]=c;this.sources[name]={img,q,padX,padY,box0};
-  }
-  this.warped=null;
+  const J=await this.loadRig(REAPER_V2);
   // `&reaperDebug=joints`: the mantle and robe see-through, to inspect the joints.
   if(new URLSearchParams(location.search).get('reaperDebug')==='joints')this.rig.classList.add('debug-joints');
-  return {...rig.joints,checks:rig.checks};
+  return J;
  }
- bones(pose){return {bones:this.v2?reaperV2Bones(this.joints,pose):reaperBones(this.joints,pose)};}
- // v2: redraw the breathing parts when the breath changes.
- paintExtras(frame,pose){
-  if(!this.v2)return;
-  const b=+(pose.breath||0).toFixed(4);if(b===this.warped)return;this.warped=b;
-  for(const name in this.sources)this.warp(name,b);
- }
- // Draws a breathing part's image into its canvas, row band by row band:
- // each band's top and bottom rise by their share of the lift, so the bands
- // meet with no gaps; the chest bands also widen about the body's centre.
- warp(name,b){
-  const {img,q,padX,padY,box0}=this.sources[name],c=this.parts[name],g=c.getContext('2d'),B=REAPER_V2.breath,W=img.naturalWidth,H=img.naturalHeight;
-  g.clearRect(0,0,c.width,c.height);
-  if(!b){g.drawImage(img,padX,padY);return;}
-  const share=r=>breathShare(B,box0[1]+r/q),up=r=>B.lift*b*q*share(r),cx=(this.joints.centre*this.size[0]-box0[0])*q;
-  const band=(r0,r1,k)=>{const y0=padY+r0-up(r0),y1=padY+r1-up(r1);g.drawImage(img,0,r0,W,r1-r0,padX+cx*(1-k),y0,W*k,y1-y0+(r1<H?.75:0));};
-  const top=clamp(Math.floor((B.top-box0[1])*q),0,H),bottom=clamp(Math.ceil((B.waist-box0[1])*q),0,H);
-  if(top>0)band(0,top,1);
-  for(let r=top;r<bottom;r+=4){const r1=Math.min(bottom,r+4),w=share((r+r1)/2);band(r,r1,1+B.widen*b*4*w*(1-w));}
-  if(bottom<H)band(bottom,H,1);
- }
+ bones(pose){return {bones:this.v2?reaperV2Bones(this.joints,pose,this.spec.breath):reaperBones(this.joints,pose)};}
  idlePose(t){const w=Math.sin(t*Math.PI*2/4.2),v=Math.sin(t*Math.PI*2/5.6+1);
-  // v2: a breath every `period` seconds, in over 40% of it and out over 60%.
-  if(this.v2){const u=(t/REAPER_V2.breath.period)%1,breath=u<.4?ease(u/.4):1-ease((u-.4)/.6);return {breath,shoulder:.6*v,elbow:.5*Math.sin(t*Math.PI*2/5.6+.4),wrist:-.4*v};}
+  if(this.v2)return {breath:breathCurve(t,this.spec.breath.period),shoulder:.6*v,elbow:.5*Math.sin(t*Math.PI*2/5.6+.4),wrist:-.4*v};
   return {breath:.0065*w,cape:.7*v,head:.8*Math.sin(t*Math.PI*2/6.3),upperRight:.8*v,foreRight:.6*Math.sin(t*Math.PI*2/5.6+.4),scythe:-.5*v,upperLeft:-.7*v,foreLeft:-.8*Math.sin(t*Math.PI*2/5.6+.5)};}
  // The blade's position on screen (its curve's midpoint), for tests and effects.
  bladePoint(){const J=this.joints,b=(this.frame||this.bones({})).bones,[x,y]=this.v2?apply(b.hand,J.blade):apply(b.scythe,[160,40]),r=this.rig.getBoundingClientRect();return {x:r.left+x*r.width/this.size[0],y:r.top+y*r.height/this.size[1]};}
@@ -435,5 +446,89 @@ export class CourtArcher extends Actor {
     }
     return pose;
    }});
+ }
+}
+
+// The skeleton mage (`?archer=mage`), the archer's replacement: ChatGPT's
+// registered mage layers under Dylan's shoulder mantle, made by
+// tools/nightfall-mage.py into assets/nightfall/mage/ (rig space 400 x 430).
+// Back to front: the body (robe, ribs, free arm, legs, boots); the upper arm
+// and forearm, under the mantle; the back of the fist, the staff and the
+// fingers, one rigid grip; the head; and the mantle, over the shoulder, the
+// elbow and the neck. The body and mantle breathe (the same warp as the
+// reaper); the arm is solved from the shoulder to the grip every frame, so
+// it follows both the breath and the staff.
+export const MAGE={size:[400,430],dir:'mage',
+ breath:{lift:3.5,widen:.008,top:178,waist:240,period:4.2},
+ parts:{
+ body:{file:'body',bone:'chest',z:0,warp:true},
+ armUpper:{file:'arm-upper',bone:'upper',z:1},
+ armFore:{file:'arm-fore',bone:'fore',z:2},
+ handBack:{file:'hand-back',bone:'grip',z:3},
+ staff:{file:'staff',bone:'grip',z:4},
+ fingers:{file:'fingers',bone:'grip',z:5},
+ head:{file:'head',bone:'head',z:6},
+ mantle:{file:'mantle',bone:'chest',z:7,warp:true}
+}};
+function mageBones(J,pose,B){
+ const b={},lift=B.lift*(pose.breath||0);
+ b.chest=I;
+ b.head=mul(move([0,-lift]),rotAbout(pose.head||0,J.head));
+ b.grip=move([0,-(pose.raise||0)]);
+ // The shoulder rides the breath; the arm reaches from it to the grip.
+ const rise=[0,-lift*breathShare(B,J.shoulder[1])],wrist=apply(b.grip,J.wrist);
+ const ik=solveArm(J.shoulder,J.elbow,J.wrist,sub(wrist,rise));
+ b.upper=mul(move(rise),rotAbout(ik.upper,J.shoulder));
+ b.fore=mul(b.upper,rotAbout(ik.fore,J.elbow));
+ return b;
+}
+// The staff slam, from ChatGPT's proof (seconds of a 1.2 s action): lift the
+// staff `J.lift` over 0.6 s, hold to 0.75, slam down to the impact at 0.91,
+// bounce 13 canvas px and settle by 1.2. The release (the trail and the
+// sound) is the impact. The head looks up with the lift and nods into the
+// impact; the shoulders rise, then settle hard as the staff lands.
+export const SLAM={duration:1200,impact:.91/1.2};
+export const SLAM_FACE=[
+ [0,{}],
+ [.5,{head:-4,breath:.35}],
+ [.625,{head:-4.5,breath:.4}],
+ [SLAM.impact,{head:5,breath:-.9}],
+ [.84,{head:2,breath:-.2}],
+ [1,{}]
+];
+export function slamRaise(p,lift){
+ const t=p*SLAM.duration/1000,s=x=>x*x*(3-2*x),bounce=lift/12;
+ if(t<.6)return lift*s(t/.6);
+ if(t<.75)return lift;
+ if(t<.91){const u=(t-.75)/.16;return lift*(1-u*u);}
+ if(t<1.01)return bounce*Math.sin((t-.91)/.1*Math.PI/2);
+ return bounce*(1-Math.min(1,(t-1.01)/.19))**2;
+}
+
+export class CourtMage extends Actor {
+ constructor(stage){super(stage,'mage',MAGE);}
+ async loadJoints(){
+  const J=await this.loadRig(MAGE);
+  // `&mageDebug=joints`: the mantle and robe see-through, to inspect the joints.
+  if(new URLSearchParams(location.search).get('mageDebug')==='joints')this.rig.classList.add('debug-joints');
+  return J;
+ }
+ bones(pose){return {bones:mageBones(this.joints,pose,this.spec.breath)};}
+ idlePose(t){return {breath:breathCurve(t,this.spec.breath.period),head:.8*Math.sin(t*Math.PI*2/6.1)};}
+ // Where the slam's magic leaves from: the staff's crystal, on screen.
+ releasePoint(){
+  const J=this.joints,r=this.rig.getBoundingClientRect();
+  if(!J)return {x:r.left+r.width*.15,y:r.top+r.height*.1};
+  const [x,y]=apply((this.frame||this.bones({})).bones.grip,J.crystal);
+  return {x:r.left+x*r.width/this.size[0],y:r.top+y*r.height/this.size[1]};
+ }
+ // The archer's interface: `shoot` plays the slam and resolves at the impact
+ // with the crystal's position. The target is not needed: the staff comes
+ // straight down.
+ shoot({turbo=false,paused,skip}={}){
+  this.stage.classList.add('shooting');
+  const lift=this.joints?.lift||0;
+  return this.action({duration:turbo?SLAM.duration/2:SLAM.duration,paused,skip,release:SLAM.impact,
+   pose:p=>({...sample(SLAM_FACE,p),raise:slamRaise(p,lift)})});
  }
 }

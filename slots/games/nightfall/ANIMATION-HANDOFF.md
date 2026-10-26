@@ -88,3 +88,32 @@ Dylan approved it and asked for it in the game. The first rig is still there wit
   - the boots stay planted;
   - the warp has no seams.
 - **Previews:** `shots/reaper-v2/` (strike at real speed and slowed, phone strike, breathing).
+
+## Skeleton mage, candidate (Claude, 2026-10-26)
+
+This is the archer's replacement: Dylan approved a skeleton mage that bangs its staff. The game shows it with `?archer=mage`, and the archer stays the default until Dylan's look.
+
+- **Art:**
+  - ChatGPT's registered mage layers are in `art/source/mage-v1/`; ChatGPT's own `HANDOFF.md`, rig and proof are there too.
+  - Dylan's `mantle.png` replaces ChatGPT's `robe-cover.png`. It has no sleeve, so the bone arm comes out from under a long flap and there is no sleeve to deform. A skinned bell sleeve was prototyped, but it showed cut edges where the art had no hidden sleeve cloth.
+  - `python3 tools/nightfall-mage.py` builds `runtime/assets/nightfall/mage/`.
+- **Layers, back to front:** body (robe, ribs, free arm, legs, boots); upper arm and forearm; the back of the fist, the staff and the fingers (one rigid grip); the head (`blink.webp` is its blink); the mantle (over the shoulder, elbow and neck).
+- **Rig:**
+  - The arm is solved from the shoulder to the grip every frame, so it follows both the breath and the staff. Its elbow matches ChatGPT's proof to 0.02 rig units.
+  - The body and mantle breathe with the same warp as the reaper.
+  - `&mageDebug=joints` makes the mantle and robe see-through.
+- **Slam** (`SLAM`, from ChatGPT's timing over 1.2 s):
+  - lift 39 rig units by 0.6 s, hold to 0.75 s, slam to the impact at 0.91 s, then a small bounce;
+  - the head looks up during the lift and nods into the impact, and the shoulders settle hard as the staff lands;
+  - `shoot()` resolves at the impact with the crystal's position, so the game's existing trail starts there.
+- **Checks:** `tests/browser/nightfall-mage.e2e.mjs` checks every frame of a real slam at desktop, 390x844 and 390x693, plus the idle:
+  - no shoulder or elbow point shows;
+  - the fingers stay on the shaft and the forearm on the wrist;
+  - the feet stay planted;
+  - the lifted staff stays on screen, and the slam resolves at the impact;
+  - the mage shares the reaper's ground line.
+- **Previews:** `shots/mage/`.
+- **Still open:**
+  - The slam's effect on the reels still uses the archer's arrow trail; Dylan is choosing a mage effect.
+  - The rules and intro copy still say "archer".
+  - The free arm is part of the body, so it doesn't move.

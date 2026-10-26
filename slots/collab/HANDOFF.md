@@ -4,6 +4,33 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: skeleton mage in the game, candidate (N-07)
+
+**Did:** Brought ChatGPT's mage into the game in place of the archer, behind `?archer=mage`; the archer stays the default for now. Dylan asked for the sleeve to move with the arm, then sent a new mantle without the sleeve: a long flap over the staff arm, registered to the mage canvas (its skull is within 3 px of the robe cover's).
+- **Mantle:** it hides the shoulder and elbow at every height of the lift (100% of both 26 px joint disks), and the bone forearm and leather bracer come out from under the flap. This is the bone-arm look Dylan approved on the reaper.
+- **Sleeve morph, tried first:** I prototyped a sleeve skinned to the bones, with the cuff on the forearm and the tatters hanging. It showed cut edges where the art has no cloth under the capelet, so the mantle is the better fit. The prototype is in this session, not the repo.
+- **Rig:**
+  - The arm is solved from the shoulder to the grip every frame. Its elbow matches ChatGPT's proof to 0.02 rig units.
+  - The grip moves as one piece, so the fingers stay on the shaft.
+  - The body and mantle breathe, using the reaper's warp, which is now shared code.
+- **Slam:** ChatGPT's timing over 1.2 s, with the release at the impact, 0.91 s. The head looks up during the lift and nods into the impact, and the shoulders settle as the staff lands.
+- **Checks** (`tests/browser/nightfall-mage.e2e.mjs`): these read the art's pixels on every frame at desktop, 390x844 and 390x693, plus the idle.
+  - Joints hidden, grip closed, forearm on the wrist (under 0.75 px), feet planted.
+  - The lifted staff stays on screen, the slam resolves at the impact, and the ground line matches the reaper's.
+  - Hiding the mantle shows 71 joint points; a slipped grip puts 33 finger points off the shaft.
+
+All suites pass (119, studio 61, Night Fall 15, browser 54). `engine.js` is unchanged. The mage art moved from `art/inbox/mage-v1/` to `art/source/mage-v1/`, with Dylan's `mantle.png` beside it.
+
+**Files:** `tools/nightfall-mage.py`, `runtime/assets/nightfall/mage/`, `runtime/nightfall-actors.js` (`MAGE`, `SLAM`, `CourtMage`, shared `loadRig`/breathing warp), `runtime/app.js` (`?archer=mage`), `tests/browser/nightfall-mage.e2e.mjs`, `shots/mage/`, `ANIMATION-HANDOFF.md`, BOARD N-07.
+
+**Next for ChatGPT:** once Dylan picks the slam's reel effect, update the rules and intro copy that still say "skeleton archer" and "Arrow Trail". If the free arm should move, send it as its own layer on the same canvas.
+
+**Questions for Dylan:** 1. Does the mage and his slam look right? 2. What should the slam do on the reels? It uses the archer's arrow trail for now; a shockwave or magic bolt along the row would suit him. 3. Should he replace the archer by default?
+
+**Blocked on:** Dylan's answers.
+
+---
+
 ### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: reaper v2 is the default, art in the repo (N-06 done)
 
 **Did:** Dylan: "Add whatever you have here there… and push to game." The v2 reaper (bone arm under the shoulder mantle, the new strike, breathing) is now the game's default; the first rig stays available with `?reaper=v1`. Everything used to make it is committed:
