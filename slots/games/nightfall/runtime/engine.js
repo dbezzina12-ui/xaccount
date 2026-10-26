@@ -41,13 +41,24 @@ export function evaluate(board,hits){
  for(const win of wins){win.base=PAYTABLE[SYMBOLS.indexOf(win.symbol)][Math.min(15,win.cells.length)-5];win.multiplier=Math.max(1,win.cells.reduce((s,i)=>s+multiplier(next[i]),0));win.pay=win.base*win.multiplier*RULES.payScale;total+=win.pay;}
  return {wins,positions,hits:next,total};
 }
-export function collapse(board,positions,rng){
+// `fixed` is the mage's roaming wild: it stays on its cell, even when it wins,
+// and the column's other symbols fall past it.
+export function collapse(board,positions,rng,fixed=-1){
  const gone=new Set(positions),next=Array(49),falls=Array(49).fill(0);
  for(let c=0;c<7;c++){
-  const keep=[];for(let r=6;r>=0;r--)if(!gone.has(r*7+c))keep.push({s:board[r*7+c],r});
-  for(let j=0;j<7;j++){const r=6-j,p=r*7+c;if(j<keep.length){next[p]=keep[j].s;falls[p]=r-keep[j].r;}else{next[p]=symbol(rng);falls[p]=7-keep.length;}}
+  const keep=[],slots=[];for(let r=6;r>=0;r--){const p=r*7+c;if(p===fixed)continue;slots.push(r);if(!gone.has(p))keep.push({s:board[p],r});}
+  const fresh=slots.length-keep.length;
+  for(let j=0;j<slots.length;j++){const r=slots[j],p=r*7+c;if(j<keep.length){next[p]=keep[j].s;falls[p]=r-keep[j].r;}else{next[p]=symbol(rng);falls[p]=r-(slots.length-1-j)+fresh;}}
+  if(fixed%7===c)next[fixed]=board[fixed];
  }
  return {board:next,falls};
+}
+// The mage's target: one cell that is neither an FS tombstone nor already wild,
+// away from `avoid` (its last cell) when another exists; -1 when none is free.
+export function mageTarget(board,rng,avoid=-1){
+ let open=board.flatMap((kind,i)=>kind==='fs'||isWild(kind)?[]:[i]);
+ if(open.length>1)open=open.filter(i=>i!==avoid);
+ return open.length?open[Math.floor(rng()*open.length)]:-1;
 }
 export function strike(board,hits,mode,rng){
  const row=Math.floor(rng()*7),col=Math.floor(rng()*7),horizontal=rng()<.5;
@@ -56,60 +67,70 @@ export function strike(board,hits,mode,rng){
  if(cross){for(let d=-1;d<=1;d++){if(col+d>=0&&col+d<7)cells.push(row*7+col+d);if(row+d>=0&&row+d<7)cells.push((row+d)*7+col);}}
  else {const start=Math.min(horizontal?col:row,7-length);for(let d=0;d<length;d++)cells.push(horizontal?row*7+start+d:(start+d)*7+col);}
  const affected=[...new Set(cells)].filter(i=>board[i]!=='fs'),next=board.slice(),marks=hits.slice();
- for(const i of affected){next[i]='wild';if(gold)marks[i]=Math.min(11,marks[i]<2?2:marks[i]+1);}
+ // A slash across the mage's roaming wild leaves it the mage's.
+ for(const i of affected){if(next[i]!=='arrow-wild')next[i]='wild';if(gold)marks[i]=Math.min(11,marks[i]<2?2:marks[i]+1);}
  return {board:next,hits:marks,cells:affected,cross,gold,row,col,horizontal};
 }
-export function resolveSpin({rng,mode='base',hits=Array(49).fill(0),board=null,cap=RULES.maxWin,record=true}){
- let grid=board?.slice()||createBoard(rng),marks=hits.slice(),total=0,usedStrike=false;
+// `mage` (free spins only): the cell the roaming wild left on the last free
+// spin, -1 on the first. It lands on a new cell after the drop.
+export function resolveSpin({rng,mode='base',hits=Array(49).fill(0),board=null,cap=RULES.maxWin,record=true,mage=null}){
+ let grid=board?.slice()||createBoard(rng),marks=hits.slice(),total=0,usedStrike=false,roam=-1,zaps=0;
  const events=[];const emit=e=>{if(record)events.push(e);};
  emit({type:'drop',board:grid.slice(),hits:marks.slice()});
+ if(mage!==null){
+  roam=mageTarget(grid,rng,mage);
+  if(roam>=0){grid[roam]='arrow-wild';emit({type:'zap',cell:roam,from:mage,roam:true,board:grid.slice(),hits:marks.slice()});}
+ }
  for(let iteration=0;iteration<300;iteration++){
   const ev=evaluate(grid,marks);
   if(ev.wins.length){
    marks=ev.hits;const paid=Math.min(cap-total,ev.total);total+=paid;
    emit({type:'win',...ev,total:paid,roundTotal:total});
-   if(total>=cap)return {total,events,hits:marks,scatters:0,capped:true};
-   const fall=collapse(grid,ev.positions,rng);grid=fall.board;emit({type:'tumble',...fall,hits:marks.slice()});
+   if(total>=cap)return {total,events,hits:marks,scatters:0,capped:true,mage:roam,zaps};
+   const fall=collapse(grid,ev.positions,rng,roam);grid=fall.board;emit({type:'tumble',...fall,hits:marks.slice(),fixed:roam});
   }else if(!usedStrike){
    usedStrike=true;
    if(rng()<RULES.strikeChance[mode]){
     const attack=strike(grid,marks,mode,rng);
-    // The archer owns horizontal standard/regular attacks. Same cells and RNG:
-    // this adds a distinct feature presentation without changing the payout math.
-    const arrow=(mode==='base'||mode==='regular')&&attack.horizontal&&!attack.cross;
-    if(arrow)for(const i of attack.cells)attack.board[i]='arrow-wild';
-    grid=attack.board;marks=attack.hits;emit({type:arrow?'arrow':'strike',...attack});
+    // Horizontal standard/regular attacks were the archer's. In the base game the
+    // mage zaps one cell wild instead; in free spins the roaming wild is the mage's
+    // whole feature, so those draws do nothing. The reaper keeps the rest.
+    if((mode==='base'||mode==='regular')&&attack.horizontal&&!attack.cross){
+     if(mode==='base'){const cell=mageTarget(grid,rng);if(cell>=0){grid=grid.slice();grid[cell]='arrow-wild';zaps++;emit({type:'zap',cell,from:-1,roam:false,board:grid.slice(),hits:marks.slice()});}}
+     else break;
+    }else{grid=attack.board;marks=attack.hits;emit({type:'strike',...attack});}
    }
    else break;
   }else break;
   if(iteration===299)throw Error('Unexpected tumble limit; no wager should be committed.');
  }
- return {total,events,hits:marks,scatters:grid.filter(x=>x==='fs').length,capped:false};
+ return {total,events,hits:marks,scatters:grid.filter(x=>x==='fs').length,capped:false,mage:roam,zaps};
 }
 export function triggerBoard(rng,count=3){
  const b=createBoard(rng,false),available=Array.from({length:49},(_,i)=>i);
  for(let j=0;j<count;j++){const k=Math.floor(rng()*available.length);b[available.splice(k,1)[0]]='fs';}return b;
 }
 export function generateRound({rng,mode='base',record=true}){
- let total=0,events=[],bonusMode=null,remaining=0,played=0,retriggers=0;
+ let total=0,events=[],bonusMode=null,remaining=0,played=0,retriggers=0,mageZaps=0,roams=0;
  const emit=e=>{if(record)events.push(e);};
  if(mode==='regular'||mode==='super'){
   bonusMode=mode;remaining=10;emit({type:'drop',board:triggerBoard(rng),hits:Array(49).fill(0),trigger:true});
  }else{
-  const base=resolveSpin({rng,mode,record});total=base.total;if(record)events.push(...base.events);
+  const base=resolveSpin({rng,mode,record});total=base.total;mageZaps=base.zaps;if(record)events.push(...base.events);
   if(base.scatters>=3&&!base.capped){bonusMode='regular';remaining=fsCount(base.scatters);}
  }
  if(bonusMode){
   emit({type:'bonusStart',mode:bonusMode,count:remaining,total});
-  let hits=Array(49).fill(bonusMode==='super'?2:0);
+  // One mage roaming wild for the whole bonus, retriggers included.
+  let hits=Array(49).fill(bonusMode==='super'?2:0),mage=-1;
   while(remaining>0&&total<RULES.maxWin){
    if(played>=2000)throw Error('Unexpected free-spin limit; no wager should be committed.');
    remaining--;played++;emit({type:'freeSpin',remaining,number:played,mode:bonusMode,total});
-   const spin=resolveSpin({rng,mode:bonusMode,hits,cap:RULES.maxWin-total,record});
-   if(record)events.push(...spin.events);hits=spin.hits;total=Math.min(RULES.maxWin,total+spin.total);
+   const spin=resolveSpin({rng,mode:bonusMode,hits,cap:RULES.maxWin-total,record,mage});
+   if(record)events.push(...spin.events);hits=spin.hits;if(spin.mage>=0){mage=spin.mage;roams++;}total=Math.min(RULES.maxWin,total+spin.total);
    if(spin.scatters>=3&&!spin.capped){const add=fsCount(spin.scatters);remaining+=add;retriggers++;emit({type:'retrigger',count:add,remaining});}
   }
   emit({type:'bonusEnd',mode:bonusMode,total,played,capped:total>=RULES.maxWin});
  }
- return {total:Math.round(total*10000)/10000,events,bonusMode,played,retriggers,capped:total>=RULES.maxWin};
+ return {total:Math.round(total*10000)/10000,events,bonusMode,played,retriggers,capped:total>=RULES.maxWin,mageZaps,roams};
 }

@@ -1,6 +1,6 @@
 # Night Fall — animation handoff for Claude
 
-Night Fall is a separate project inside Gamboligy Studio. Source gameplay is Knightfall v0.5.3, Sites commit b49911bdd51dffbecbf4b6ea7c34c63881527e90. The original engine.js is byte-identical; keep outcome selection, weights, costs, awards, multipliers and the seeded RNG unchanged.
+Night Fall is a separate project inside Gamboligy Studio. Source gameplay is Knightfall v0.5.3, Sites commit b49911bdd51dffbecbf4b6ea7c34c63881527e90. engine.js was byte-identical until N-08 (2026-10-26), when Dylan's Roaming Wild changed the mage's mechanic (see `MATH.md`). Presentation still never selects outcomes: keep weights, costs, awards, multipliers and the seeded RNG in the engine.
 
 ## Play and edit
 
@@ -111,7 +111,7 @@ This is the archer's replacement: Dylan approved a skeleton mage that bangs its 
 - **Slam** (`SLAM`, from ChatGPT's timing; the action now runs 1.45 s so the flap settles):
   - lift 39 rig units by 0.6 s, hold to 0.75 s, slam to the impact at 0.91 s, a small bounce, the staff still by 1.2 s and the flap by 1.45 s;
   - the head looks up during the lift and nods into the impact, and the shoulders settle hard as the staff lands;
-  - `shoot()` resolves at the impact with the crystal's position, so the game's existing trail starts there.
+  - `shoot()` resolves at the impact with the crystal's position, where the zap's bolt starts; `shoot({quick:true})` plays it in 60% of the time for the roaming wild.
 - **Checks:** `tests/browser/nightfall-mage.e2e.mjs` checks every frame of a real slam at desktop, 390x844 and 390x693, plus the idle:
   - no shoulder or elbow point shows;
   - the fingers stay on the shaft and the forearm on the wrist;
@@ -120,7 +120,30 @@ This is the archer's replacement: Dylan approved a skeleton mage that bangs its 
   - the mage shares the reaper's ground line;
   - the flap moves more than 15 units, never covers the fist, and is back at rest when the slam ends.
 - **Previews:** `shots/mage/`.
-- **Still open:**
-  - The slam's effect on the reels still uses the archer's arrow trail; Dylan is choosing a mage effect.
-  - The rules and intro copy still say "archer".
-  - The free arm is part of the body, so it doesn't move.
+- **Still open:** the free arm is part of the body, so it doesn't move.
+
+## The mage's zap and Roaming Wild (Claude, N-08, 2026-10-26)
+
+ChatGPT's brief: `art/inbox/mage-zap/HANDOFF.md`. Engine and math: `MATH.md`.
+
+- **Engine events:**
+  - The engine picks the cell once and emits `{type:'zap', cell, from, roam, board, hits}`.
+  - Base zaps have `roam:false` and come after the tumbles, where the archer's trail used to be.
+  - Each free spin's zap has `roam:true` and comes right after its `drop`; `from` is the cell the wild left.
+  - Tumbles in a free spin carry `fixed`, the wild's cell, which doesn't fall (`falls[fixed]` is 0).
+- **The show** (`runtime/app.js` `zapPresentation`, `runtime/mage-bolt.js`):
+  - The staff slams (the quicker slam when the wild moves), and at the impact the staff lands with a low thud (`audio.staff()`).
+  - One bolt runs from the crystal to the cell's centre in 150 ms (90 ms in turbo): violet glow, lilac arc, ivory core. It stays on the crystal while the staff bounces.
+  - The wild appears the instant the bolt lands, with a crack (`audio.zap()`). Then a 210 ms spark (140 ms in turbo) stays inside that cell: a glow, an ivory ring and six rays.
+  - The bolt's kinks are a fixed function of the cell; nothing in the show is random.
+- **Free spins:** the old wild leaves with the board as the new drop falls in, then the new zap lands. There is never more than one mage wild on the board.
+- **The mage wild:** the same W tile, with a violet rim and glow (`.cell[data-kind=arrow-wild]`). On wild cells the multiplier sits under the W, as in Dylan's reference.
+- **Turbo, Skip, pause:** Turbo shortens the slam and the bolt. Skip lands the wild at once. Opening the menu (or hiding the tab) holds the bolt where it is. Reduced motion draws no bolt; the cell gets a brief outline (`.mage-lit`) instead.
+- **`?archer=archer`:** the archer shoots, and the same single bolt leaves its bow. The engine has no multi-cell trail any more.
+- **Multipliers:** centred inside their cell (`.multi`, sized 29% of the cell with container units), on desktop and phones.
+- **Checks:**
+  - `tests/browser/nightfall-zap.e2e.mjs` plays fixed-seed rounds at desktop and 390x844. It checks one bolt per zap to the engine's cell, the path from the moving crystal to the cell centre, the wild only on the hit, the spark inside the cell, never two mage wilds, and nothing left on screen.
+  - It also checks that turbo, Skip, a pause and reduced motion give the same cells and award.
+  - The mage test also runs the quick slam.
+  - `tests/engine.test.mjs` covers the mechanic.
+- **Clip:** `shots/zap/zap-phone.mp4` (390x844): a base zap, then three free spins of the roaming wild.

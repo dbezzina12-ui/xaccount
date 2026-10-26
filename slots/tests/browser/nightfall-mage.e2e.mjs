@@ -7,7 +7,8 @@
 // on the wrist; the boots stay planted; the lifted crystal stays on screen;
 // the slam resolves at the impact. The mantle's flap rides on the arm (it
 // moves with the lift, never covers the fist, and is back at rest when the
-// slam ends). Breathing: the joints stay hidden through
+// slam ends), in the full slam and the quicker one the roaming wild uses.
+// Breathing: the joints stay hidden through
 // the idle cycle. The art is made by tools/nightfall-mage.py.
 //
 //   npm run test:studio-browser
@@ -85,40 +86,43 @@ const MEASURE = () => {
   };
 };
 
-async function slam(page) {
-  return page.evaluate(async () => {
+async function slam(page, opts = {}) {
+  return page.evaluate(async (opts) => {
     const { archer } = globalThis.NightFall.actors;
     archer.stopIdle(); archer.draw({});
     const rest = window.__mage(archer);
     const frames = window.__record(archer);
-    const origin = await archer.shoot({});
+    const origin = await archer.shoot(opts);
     const atImpact = window.__mage(archer);
     await new Promise((r) => setTimeout(r, 700));
     return { kind: archer.kind, rest, frames, origin, atImpact, lift: archer.joints.lift, unit: archer.rig.clientWidth / archer.size[0] };
-  });
+  }, opts);
 }
 
 test('mage: the shoulder and elbow stay hidden, the grip closed and the feet planted through a real slam', async () => {
   for (const [vp, extra] of [[{ width: 1280, height: 800 }, {}], [{ width: 390, height: 844 }, PHONE], [{ width: 390, height: 693 }, PHONE]]) {
     const page = await open(vp, extra);
-    const r = await slam(page), label = `${vp.width}x${vp.height}`;
-    assert.equal(r.kind, 'mage', `${label}: the mage loaded`);
-    assert.ok(r.frames.length > 20, `${label}: ${r.frames.length} frames`);
-    for (const [i, f] of [['rest', r.rest], ...r.frames.map((f, k) => [k, f])]) {
-      for (const [k, v] of Object.entries(f)) if (k.includes('showing') || k.includes('off the shaft')) assert.equal(v, 0, `${label} frame ${i}: ${k}: ${v}`);
-      assert.ok(f.wristGap < 0.75, `${label} frame ${i}: the forearm is ${f.wristGap.toFixed(2)} px off the wrist`);
-      assert.ok(f.staffTop >= 0, `${label} frame ${i}: the staff is cut off at the top (${f.staffTop.toFixed(1)})`);
+    // The full slam (base zap) and the quicker one (the roaming wild moving).
+    for (const opts of [{}, { quick: true }]) {
+      const r = await slam(page, opts), label = `${vp.width}x${vp.height}${opts.quick ? ' quick' : ''}`;
+      assert.equal(r.kind, 'mage', `${label}: the mage loaded`);
+      assert.ok(r.frames.length > (opts.quick ? 12 : 20), `${label}: ${r.frames.length} frames`);
+      for (const [i, f] of [['rest', r.rest], ...r.frames.map((f, k) => [k, f])]) {
+        for (const [k, v] of Object.entries(f)) if (k.includes('showing') || k.includes('off the shaft')) assert.equal(v, 0, `${label} frame ${i}: ${k}: ${v}`);
+        assert.ok(f.wristGap < 0.75, `${label} frame ${i}: the forearm is ${f.wristGap.toFixed(2)} px off the wrist`);
+        assert.ok(f.staffTop >= 0, `${label} frame ${i}: the staff is cut off at the top (${f.staffTop.toFixed(1)})`);
+      }
+      for (const f of r.frames) assert.ok(f.fingersUnderFlap <= r.rest.fingersUnderFlap, `${label}: the flap covers the fist (${f.fingersUnderFlap} finger points)`);
+      const flap = Math.max(...r.frames.map((f) => f.flap));
+      assert.ok(flap > 15, `${label}: the flap moved only ${flap.toFixed(1)} units`);
+      assert.ok(r.frames.at(-1).flap < 0.3, `${label}: the flap is ${r.frames.at(-1).flap.toFixed(2)} units off rest when the slam ends`);
+      const soles = [r.rest, ...r.frames].map((f) => f.sole);
+      assert.ok(Math.max(...soles) - Math.min(...soles) < 0.5, `${label}: the feet moved`);
+      // The staff really lifts, and the slam resolves at the impact (staff down).
+      const high = Math.min(...r.frames.map((f) => f.crystal));
+      assert.ok((r.rest.crystal - high) / r.unit > r.lift * 0.95, `${label}: the crystal rose ${((r.rest.crystal - high) / r.unit).toFixed(1)} of ${r.lift} units`);
+      assert.ok(Math.abs(r.origin.y - r.rest.crystal) / r.unit < 1.5, `${label}: released ${((r.origin.y - r.rest.crystal) / r.unit).toFixed(2)} units from the landed crystal`);
     }
-    for (const f of r.frames) assert.ok(f.fingersUnderFlap <= r.rest.fingersUnderFlap, `${label}: the flap covers the fist (${f.fingersUnderFlap} finger points)`);
-    const flap = Math.max(...r.frames.map((f) => f.flap));
-    assert.ok(flap > 15, `${label}: the flap moved only ${flap.toFixed(1)} units`);
-    assert.ok(r.frames.at(-1).flap < 0.3, `${label}: the flap is ${r.frames.at(-1).flap.toFixed(2)} units off rest when the slam ends`);
-    const soles = [r.rest, ...r.frames].map((f) => f.sole);
-    assert.ok(Math.max(...soles) - Math.min(...soles) < 0.5, `${label}: the feet moved`);
-    // The staff really lifts, and the slam resolves at the impact (staff down).
-    const high = Math.min(...r.frames.map((f) => f.crystal));
-    assert.ok((r.rest.crystal - high) / r.unit > r.lift * 0.95, `${label}: the crystal rose ${((r.rest.crystal - high) / r.unit).toFixed(1)} of ${r.lift} units`);
-    assert.ok(Math.abs(r.origin.y - r.rest.crystal) / r.unit < 1.5, `${label}: released ${((r.origin.y - r.rest.crystal) / r.unit).toFixed(2)} units from the landed crystal`);
     assert.deepEqual(page.errors, []);
     await page.ctx.close();
   }

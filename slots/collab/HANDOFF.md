@@ -4,6 +4,64 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: Roaming Wild is in the game (N-08)
+
+**Did:** I built ChatGPT's N-08 brief (`games/nightfall/art/inbox/mage-zap/HANDOFF.md`) as written.
+- **Base game:** when the mage's opportunity comes up (as often as the archer's did), it slams its staff and zaps **one** cell wild. That cell is never an FS tombstone or a wild.
+- **Free Spins and Super:**
+  - One mage wild lands after each drop, before any win is evaluated. It holds its cell through every tumble (symbols fall past it), and it stays when it wins.
+  - On the next free spin it moves to a different cell. Retriggers keep the same single wild, and it is gone when the bonus ends.
+  - Multipliers stay on their cells.
+  - The regular bonus no longer has any arrow trails, and the reaper gets no extra strikes. Super keeps its cross-cuts and Soul Harvest.
+- **The show:**
+  - The slam is quicker when the wild moves. At the staff's impact there is a low thud, and one violet bolt with an ivory core runs from the crystal to the cell in 150 ms. It stays on the crystal while the staff bounces.
+  - The wild appears as the bolt lands, with a crack. A 210 ms spark follows, inside that cell only. The mage wild is the W tile with a violet rim.
+  - Turbo shortens it. Skip lands the wild at once. Opening the menu freezes the bolt. Reduced motion shows a brief outline instead of the bolt.
+- **Multipliers:** centered inside the cell on desktop and phones. 1,024× fits a 46 px phone cell. All the before/after shots are in `games/nightfall/shots/multi/`.
+- **Copy:** ChatGPT's prepared strings are in: the rules, the bonus rules, the intro, both buy cards and the studio button ("Preview staff slam"). The arrow wild's display name is now "Mage wild".
+- **Tests:** all suites pass.
+  - `npm test` 119, studio 61, Night Fall 22 (8 new engine tests for the mechanic).
+  - Browser suite: includes the new `nightfall-zap.e2e.mjs` and the quick slam in the mage test.
+
+**Math (development math; `games/nightfall/MATH.md`):** it moved a lot. Prices and pays are unchanged.
+
+| Mode | Before | After |
+|---|---|---|
+| Base spin | 101.2% | **65.6%** (base-game wins 64.3% → 39.5%) |
+| Reaper Strike spin (4×) | 101.0% | 96.7% |
+| Free Spins buy (120×) | 91.3% | **70.3%** |
+| Super buy (550×) | 98.8% | **187.7%** (caps 1 in 460) |
+
+The archer's 3–5 wild trail was worth about +62 points of the regular bonus; the roaming wild adds about +41. In Super every tile starts at 2×, so a wild that stays put and keeps winning adds about +89.
+
+**Where I filled in the brief:**
+1. On wild cells the multiplier sits under the W, at 77% of the cell height, as in Dylan's reference, instead of over the W. Every other cell centers it.
+2. The relocation slam runs in 60% of the time, to keep free spins moving.
+3. The bolt stays attached to the crystal as it bounces after the impact.
+
+**Files:**
+- Engine: `games/nightfall/runtime/engine.js`.
+- Show: `runtime/mage-bolt.js` (new), `runtime/app.js`, `runtime/audio.js`, `runtime/styles.css`, `runtime/nightfall.css`, `runtime/nightfall-actors.js` (quick slam), `runtime/symbols.js`, `runtime/index.html`.
+- Removed: `runtime/arrow-trail.js`.
+- Copy: `nightfall-studio/index.html`.
+- Tests: `games/nightfall/tests/engine.test.mjs`, `tests/browser/nightfall-zap.e2e.mjs`, `tests/browser/nightfall-mage.e2e.mjs`.
+- Math: `tools/math/nightfall-sim.mjs`, `games/nightfall/MATH.md`, `games/nightfall/math/`, `import-manifest.json`.
+- Docs: `ANIMATION-HANDOFF.md`, BOARD N-08 and N-09.
+- Clip: `games/nightfall/shots/zap/zap-phone.mp4`.
+
+**Next for ChatGPT:**
+1. Review the clip, the zap stills (`shots/zap/`) and the multiplier before/after shots against Dylan's reference.
+2. Publish Night Fall from this branch.
+
+**Questions for Dylan:** How should the math be retuned (BOARD N-09)? The buy prices on the cards come from the engine, so they update on their own.
+- **Reprice the buys** to about 96%: Free Spins 120× → **88×**, Super 550× → **1,075×**.
+- **Raise the base game:** the base sits at 66%. Raising the pay scale from 0.46 to 0.673 brings it to about 96%, but it raises every mode, so the buys would then need 129× and 1,575×.
+- **Leave it** for playtesting.
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: the mage is in the game (N-07 done)
 
 **Did:** Dylan: "Push to game". The skeleton mage now stands in the archer's place by default; `?archer=archer` still shows the archer, and `?reaper=v1&archer=archer` the first rigs. In 12 real spins both characters played with no errors. The mage's slam resolved at its crystal, where the existing trail starts.

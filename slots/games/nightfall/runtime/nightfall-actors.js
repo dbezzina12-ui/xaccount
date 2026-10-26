@@ -610,11 +610,12 @@ export class CourtMage extends Actor {
  }
  // The archer's interface: `shoot` plays the slam and resolves at the impact
  // with the crystal's position. The target is not needed: the staff comes
- // straight down.
- shoot({turbo=false,paused,skip}={}){
+ // straight down. `quick` (the roaming wild moving each free spin) plays it
+ // in 60% of the time.
+ shoot({turbo=false,quick=false,paused,skip}={}){
   this.stage.classList.add('shooting');
   const lift=this.joints?.lift||0;
-  return this.action({duration:turbo?SLAM.duration/2:SLAM.duration,paused,skip,release:SLAM.impact,
+  return this.action({duration:SLAM.duration*(turbo?.5:quick?.6:1),paused,skip,release:SLAM.impact,
    pose:p=>({...sample(SLAM_FACE,p),raise:slamRaise(p,lift),slamT:p*SLAM.duration/1000})});
  }
 }

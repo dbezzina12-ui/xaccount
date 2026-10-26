@@ -1,0 +1,71 @@
+{
+ "engine": "/tmp/claude-0/-home-user-xaccount/157fe5f9-dbf5-53b7-9dfc-95dc330d547a/scratchpad/nfmath/engine-baseline-1e631e8.js",
+ "generated": "2026-10-26T12:46:43.885Z",
+ "modes": {
+  "base": {
+   "rounds": 4000000,
+   "cost": 1,
+   "rtp": 1.0118987252488223,
+   "ci95": 0.021118631137264674,
+   "sdPerCost": 21.54962360945375,
+   "hitRate": 0.38875825,
+   "bonusRate": 0.0032665,
+   "bonusAverage": 113.02382014388478,
+   "freeSpinsPerBonus": 10.516301852135314,
+   "retriggersPerBonus": 0.03574161947038114,
+   "capRate": 0,
+   "maxWin": 22836.861,
+   "mageZapsPerRound": 0,
+   "roamsPerBonus": 0
+  },
+  "feature": {
+   "rounds": 2000000,
+   "cost": 4,
+   "rtp": 1.0095296936247968,
+   "ci95": 0.012052502881747666,
+   "sdPerCost": 8.6963331815859,
+   "hitRate": 0.9911425,
+   "bonusRate": 0.005617,
+   "bonusAverage": 123.3775380986291,
+   "freeSpinsPerBonus": 10.572102545842977,
+   "retriggersPerBonus": 0.03845469111625423,
+   "capRate": 0,
+   "maxWin": 21835.441,
+   "mageZapsPerRound": 0,
+   "roamsPerBonus": 0
+  },
+  "regular": {
+   "rounds": 200000,
+   "cost": 120,
+   "rtp": 0.9133012693750021,
+   "ci95": 0.014168673805666042,
+   "sdPerCost": 3.232869161274481,
+   "hitRate": 0.998785,
+   "bonusRate": 1,
+   "bonusAverage": 109.59615232500025,
+   "freeSpinsPerBonus": 10.37539,
+   "retriggersPerBonus": 0.037,
+   "capRate": 0.00005,
+   "maxWin": 25000,
+   "mageZapsPerRound": 0,
+   "roamsPerBonus": 0
+  },
+  "super": {
+   "rounds": 200000,
+   "cost": 550,
+   "rtp": 0.9880610114545435,
+   "ci95": 0.008627302035576162,
+   "sdPerCost": 1.9684932463235312,
+   "hitRate": 0.99905,
+   "bonusRate": 1,
+   "bonusAverage": 543.4335562999989,
+   "freeSpinsPerBonus": 10.38401,
+   "retriggersPerBonus": 0.03799,
+   "capRate": 0.000395,
+   "maxWin": 25000,
+   "mageZapsPerRound": 0,
+   "roamsPerBonus": 0
+  }
+ },
+ "seconds": 133
+}
