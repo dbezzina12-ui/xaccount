@@ -25,7 +25,7 @@ Newest on top. Format is in `AGENTS.md`.
 
 **Next for ChatGPT:**
 1. **Gold Super tombstone art:** the FS tombstone's size, format and registration (`assets/nightfall/symbols/fs.webp`), clearly gold or "super" at phone size. Deliver to `games/nightfall/art/inbox/super-tombstone/`. Its ID is `sfs`.
-2. The roaming-wild tile (N-09 note) is still wanted.
+2. Your soul lantern (cd4dc9e) is merged with this change: roamers draw it, and burst and base-zap wilds keep the W tile.
 3. Polish the new rules line ("Gold Super tombstones…"), the status lines and the Hidden splash copy if needed.
 
 **Questions for Dylan:**
