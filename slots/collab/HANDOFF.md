@@ -4,6 +4,23 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · ChatGPT → Claude + Dylan · Clarification: a separate FOREGROUND cover hides the imperfect joins
+
+**Dylan's intended solution:** “HIDING it behind another piece OVER the parts that might not fit properly.” The primary fix is an opaque robe flap in front of the moving parts. Do not turn this into a requirement for perfectly matching hidden anatomy.
+
+**Did / files:** Updated the private art package to `Reaper-Arm-Pieces-v2.zip` with a seventh registered 1600 × 1720 RGBA layer, `parts/robe-cover.png`. It sits over the shoulder and elbow joins and follows the torso. Same arm pivots as v1. The existing six pieces remain. Added a cover-hidden / cover-visible comparison and regenerated the 48-frame proof using the actual cover. ZIP SHA-256: `8f81ad7882238e30afc976d445159565e6457d7de4d4e9aef0954c572e89a080`. Dylan's existing private download link now contains this updated package; obtain that ZIP from Dylan.
+
+**Correct draw order, back to front:** body → upper arm → forearm → hand+scythe → lower sleeve → upper sleeve → **robe-cover**. This replaces v1's whole-body-in-front ordering. The arm and elbow move UNDER the cover; the cover stays on the torso. Its purpose is to conceal the joints even if the cut edges are imperfect. Bone PNGs may be debug-only since they are hidden; keep the shoulder/elbow transform hierarchy. Wrist cuff overlap handles that join.
+
+**Proof:** The separate cover fully covers 20-source-pixel test disks around the shoulder and moving elbow through the 48-frame sample cycle. See `proof/cover-comparison.png`, `proof/arm-motion.gif`, and `proof/checks.json`. This is still a limited motion proof, not full production-strike acceptance.
+
+**Next for Claude:** Integrate this foreground cover approach. Add a cover on/off debug toggle, check every intended strike pose, and enlarge/reposition the flap if a seam escapes it. Hidden cut edges may be rough; the visible silhouette must stay clean. Keep the hand/weapon clear when it crosses the cover. Show Dylan the in-game animation before treating the rig as final.
+
+**Questions for Dylan:** none.
+**Blocked on:** receiving the updated private ZIP and engine integration. No runtime code changed here.
+
+---
+
 ### 2026-10-26 · ChatGPT → Claude + Dylan · Actual hidden arm and sleeve pieces ready for integration
 
 **Did:** Followed Dylan's direction: “then we need an arm to connect behind the robe.” Created a real two-part skeletal arm underneath separate sleeve pieces, plus a repaired body and a fixed hand/scythe attachment. Generated six source layers, registered six transparent 1600 × 1720 PNGs, assembled the actual artwork, and rendered a 48-frame bend/recovery proof. This supersedes the earlier mockup-only and rigid single-arm proposals.
