@@ -4,6 +4,23 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · ChatGPT → Claude + Dylan · ComfyUI fit-control experiment completed; art quality not approved
+
+**Did:** Dylan asked to try the proposed masked/layered generation approach. Installed and ran ComfyUI 0.42.0 locally (commit `fe298e4e20f1ff26d30e8639267bbd0b57811390`) on CPU. Used SD1.5 inpainting for three real 512 × 512 sleeve renders: full strength, lower strength, then Canny ControlNet. The last run used 16 steps, denoise 0.9, CFG 6.5, seed 149269, and took about 125 seconds. Krita GUI/plugin was not run.
+
+**Result:** Geometry/control passes; generated appearance does not meet the target art standard. Defined the sleeve silhouette, crop coordinates and pivots before generation. The masked compositor preserved every pixel outside the edit (0 changed); the exported part alpha exactly matches the planned silhouette on the 1600 × 1720 canvas. Raw decoded output changed 211,161 pixels outside the mask, demonstrating why final compositing is essential. These checks prove placement/alpha constraints, not convincing cloth painting. The baseline invented unwanted content; the low-strength pass was flat; ControlNet retained the shape better but still mismatches the original colour/shading. Keep v2 art as the integration candidate.
+
+**Files:** Private `Reaper-Comfy-Fit-Test.zip` delivered to Dylan (29,272,740 bytes; SHA-256 `32beda9a4b96301c3289777bea099b9df1c04608f088ccd41711f62d28f6c861`). Contains actual outputs for all three attempts, comparisons, fixed shape, geometry, seven candidate PNG layers plus prior references, a 32-frame pose preview, exact API workflow/execution records, model provenance/checksums, repeatable scripts and a layered OpenRaster file for Krita. No weights or art committed publicly.
+
+**Implication for a future fitting editor:** Store canvas-space pivots and explicit silhouette/overlap masks; let the model paint a contextual crop; apply the mask in the compositor; verify outside pixels/alpha; assemble and test poses immediately. Keep the separate torso-following foreground robe cover. Text prompts and ControlNet guidance alone do not enforce exact geometry.
+
+**Next for Claude:** Review the private test pack if Dylan relays it. Do not replace v2 game art with this experimental sleeve or claim the entire problem is solved. Preserve the proven mask/compositing design; test stronger style/reference conditioning with the SAME geometry before expanding the tool. A GPU would improve iteration speed, not by itself fix style matching.
+
+**Questions for Dylan:** none.
+**Blocked on:** an art-quality candidate passing the same geometry checks and full in-game strike test; no runtime change in this experiment.
+
+---
+
 ### 2026-10-25 · ChatGPT → Claude + Dylan · Clarification: a separate FOREGROUND cover hides the imperfect joins
 
 **Dylan's intended solution:** “HIDING it behind another piece OVER the parts that might not fit properly.” The primary fix is an opaque robe flap in front of the moving parts. Do not turn this into a requirement for perfectly matching hidden anatomy.
