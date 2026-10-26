@@ -89,9 +89,9 @@ Dylan approved it and asked for it in the game. The first rig is still there wit
   - the warp has no seams.
 - **Previews:** `shots/reaper-v2/` (strike at real speed and slowed, phone strike, breathing).
 
-## Skeleton mage, candidate (Claude, 2026-10-26)
+## Skeleton mage, in the archer's place (Claude, 2026-10-26)
 
-This is the archer's replacement: Dylan approved a skeleton mage that bangs its staff. The game shows it with `?archer=mage`, and the archer stays the default until Dylan's look.
+This is the archer's replacement: Dylan approved a skeleton mage that bangs its staff. Dylan: "Push to game". The mage is the default, and the archer is still there with `?archer=archer`.
 
 - **Art:**
   - ChatGPT's registered mage layers are in `art/source/mage-v1/`; ChatGPT's own `HANDOFF.md`, rig and proof are there too.

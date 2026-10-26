@@ -90,4 +90,5 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 | N-05 | Rig v2: import the new layers, rebuild joints, re-key strike and shot, pixel checks | Claude | blocked | Waits on N-04 |
 
 | N-06 | Reaper arm behind the robe: bone arm under the shoulder mantle | ChatGPT + Claude | done | Default reaper since 2026-10-26 (Dylan approved, art in the repo). `?reaper=v1` shows the first rig. Previews: `games/nightfall/shots/reaper-v2/` |
-| N-07 | Skeleton mage in place of the archer: Dylan's mantle, staff slam, breathing, flap riding on the arm | Claude | review | `?archer=mage`. Waiting on Dylan's look and his choice of the slam's reel effect (arrow trail for now). Copy (rules, intro) says archer: ChatGPT once Dylan picks. Previews `games/nightfall/shots/mage/` |
+| N-07 | Skeleton mage in place of the archer: Dylan's mantle, staff slam, breathing, flap riding on the arm | Claude | done | Default since 2026-10-26 (`?archer=archer` shows the archer). Previews `games/nightfall/shots/mage/` |
+| N-08 | The mage's slam effect on the reels (still the archer's arrow trail) and the copy that says archer | Dylan → Claude (effect), ChatGPT (copy) | todo | Rules (`Arrow Trail`), intro ('The skeleton archer fires a wild trail'), studio button ('Preview bow release'). Math unchanged |

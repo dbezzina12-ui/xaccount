@@ -166,8 +166,8 @@ async function boot(){
  const assetPaths=['assets/nightfall/background.webp','assets/nightfall/background.webp','assets/nightfall/title.webp',...symbolAssets];
  const assets=assetPaths.map(src=>new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>img.decode().then(resolve).catch(resolve);img.onerror=()=>reject(new Error('Could not load '+src));img.src=src;}));
  knight=new CourtKnight($('knight-stage'));
- // `?archer=mage`: the skeleton mage in the archer's place (candidate).
- archer=new (new URLSearchParams(location.search).get('archer')==='mage'?CourtMage:CourtArcher)($('archer-stage'));
+ // The skeleton mage stands in the archer's place (Dylan, 2026-10-26); `?archer=archer` shows the archer.
+ archer=new (new URLSearchParams(location.search).get('archer')==='archer'?CourtArcher:CourtMage)($('archer-stage'));
  $('load-progress').style.width='55%';
  try{await Promise.all([...assets,knight.load(),archer.load(),audio.preload(),document.fonts.ready]);}catch(e){console.error(e);$('load-message').textContent='An artwork file could not load. Refresh to retry.';return;}
  $('load-progress').style.width='100%';state.ready=true;update();

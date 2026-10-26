@@ -1,4 +1,5 @@
-// Night Fall's skeleton mage (`?archer=mage`; Claude, animation): ChatGPT's
+// Night Fall's skeleton mage (the default in the archer's place; Claude,
+// animation): ChatGPT's
 // mage layers under Dylan's shoulder mantle. Checked from the art's own
 // pixels, through the drawn transforms, on every frame of a real staff slam
 // at desktop, 390x844 and 390x693: the shoulder and elbow never show from
@@ -27,7 +28,7 @@ async function open(viewport, extra = {}) {
   page.errors = [];
   page.on('pageerror', (e) => page.errors.push(e.message));
   await page.addInitScript(() => { try { localStorage.setItem('nightfall-skip-intro', 'yes'); } catch {} });
-  await page.goto(`${srv.url}games/nightfall/runtime/index.html?archer=mage`);
+  await page.goto(`${srv.url}games/nightfall/runtime/index.html`);
   await page.waitForFunction(() => globalThis.NightFall?.state.ready && globalThis.NightFall.actors.reaper.joints && globalThis.NightFall.actors.archer.joints, null, { timeout: 60000 });
   await page.evaluate(MEASURE);
   page.ctx = ctx;

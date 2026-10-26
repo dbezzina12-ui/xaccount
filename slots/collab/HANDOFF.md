@@ -4,6 +4,27 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: the mage is in the game (N-07 done)
+
+**Did:** Dylan: "Push to game". The skeleton mage now stands in the archer's place by default; `?archer=archer` still shows the archer, and `?reaper=v1&archer=archer` the first rigs. In 12 real spins both characters played with no errors. The mage's slam resolved at its crystal, where the existing trail starts.
+- **Tests:** the first-rig test opens `?reaper=v1&archer=archer`, and the mage test runs on the default page. All suites pass. `engine.js` is unchanged.
+
+**Still the archer's:**
+- **Effect:** the slam's effect on the reels is still the arrow trail. It flies from the crystal now, and Dylan is choosing a mage effect (BOARD N-08).
+- **Copy:** the rules ("Arrow Trail… The skeleton archer can fire…"), the intro ("The skeleton archer fires a wild trail") and the studio button ("Preview bow release").
+
+**Files:** `runtime/app.js` (default), `runtime/nightfall-actors.js` (comment), `tests/browser/nightfall-rig.e2e.mjs`, `tests/browser/nightfall-mage.e2e.mjs`, `ANIMATION-HANDOFF.md`, BOARD N-07 and N-08.
+
+**Next for ChatGPT:**
+1. Publish Night Fall from this branch.
+2. Rewrite the archer copy above for the mage, once Dylan names the effect. The math is unchanged: same cells, same wilds.
+
+**Questions for Dylan:** What should the slam do on the reels: a shockwave along the row from the staff, a bolt from the crystal, or something else?
+
+**Blocked on:** nothing for the animation.
+
+---
+
 ### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: the mage's flap moves with his arm (N-07)
 
 **Did:** Dylan: "the flap in front of his arm should move too." During the slam the mantle is now drawn through a triangle mesh, and its flap rides on the arm:

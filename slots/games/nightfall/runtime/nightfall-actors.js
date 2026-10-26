@@ -474,7 +474,8 @@ export class CourtArcher extends Actor {
  }
 }
 
-// The skeleton mage (`?archer=mage`), the archer's replacement: ChatGPT's
+// The skeleton mage, in the archer's place by default (`?archer=archer` shows
+// the archer): ChatGPT's
 // registered mage layers under Dylan's shoulder mantle, made by
 // tools/nightfall-mage.py into assets/nightfall/mage/ (rig space 400 x 430).
 // Back to front: the body (robe, ribs, free arm, legs, boots); the upper arm
