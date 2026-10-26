@@ -41,3 +41,18 @@
 .board .cell .multi{z-index:1;top:50%;font-size:clamp(18px,50cqw,52px);color:#d6ff9d;-webkit-text-stroke:2px #172513;text-shadow:0 2px 1px #08140c;line-height:1}
 .board .cell.hot .multi{font-size:clamp(16px,40cqw,44px)}
 .board .cell.superhot .multi{font-size:clamp(13px,32cqw,36px)}
+
+/* Roaming soul lantern: a rigid W/frame above independently moving fire/wisps.
+   Fire is pre-clipped and baked at 25 fps, so phones need no live SVG filters. */
+.roaming-wild{display:block;position:relative;width:100%;height:100%;isolation:isolate;overflow:hidden}
+.roaming-wild .roam-layer,.roaming-wild .roam-still,.roam-fire-window{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.roam-fire-window{overflow:hidden}
+.roaming-wild .roam-fire-strip{position:absolute;left:0;top:0;width:12000%;max-width:none;height:100%;object-fit:fill;animation:roam-fire-frames 4.8s steps(120,end) infinite;will-change:transform}
+.roaming-wild .roam-wisp-left{animation:roam-wisp-drift 2.4s ease-in-out infinite}
+.roaming-wild .roam-wisp-right{animation:roam-wisp-drift 2.4s ease-in-out -1.2s infinite reverse}
+.roaming-wild .roam-still{display:none}
+.board .cell[data-kind=roam-wild]{animation:none}
+@keyframes roam-fire-frames{to{transform:translateX(-100%)}}
+@keyframes roam-wisp-drift{50%{transform:translate(.4%,-.6%)}}
+.lantern-paused .roaming-wild *:not(.roam-still),body:has(#menu[open]) .roaming-wild *{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.roaming-wild .roam-layer,.roaming-wild .roam-fire-window{display:none}.roaming-wild .roam-still{display:block}}
