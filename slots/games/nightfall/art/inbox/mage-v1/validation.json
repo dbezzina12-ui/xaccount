@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "sampledStrokePoses": 49,
+  "minimumJointDiskCoverage": 1.0,
+  "jointDiskRadiusPixels": 26,
+  "minimumFingerShaftOpaqueOverlapPixels": 5628,
+  "minimumForearmCuffOverlapPixels": 1219,
+  "bodyAndFeetFixed": true,
+  "fullEqualsStack": true,
+  "missingCoverNegativeControl": "detected",
+  "scope": "standalone art proof only; not engine or browser tests",
+  "sha256": {
+    "full.png": "670c061e652dfb06c7171eeb7d6a647fc26896805123d2276abc92b963622504",
+    "robe-cover.png": "3dc38cfcb11dd0f3e4e179f65aa930c928b14e39f1edc9f88365acc856910287",
+    "arm-fore.png": "268e15207755cc7803444ece87869d9c2aa47efa5247be7b3cd29a96d21c0940",
+    "staff.png": "030a2ab1f67084664e3250e0fa579ff32e846cb3fac6c8e3230e7bafbf405508",
+    "body.png": "ca9d84e2869999087fb9b8500d776ee3fe3a4cadc86e4c1a2b844adecc2eeb37",
+    "hand-back.png": "20570ad161a778b9b0280248892e6cf8802ca119232f1c09cb0d2729f9e805dc",
+    "arm-upper.png": "5179788dd3c3fcb1d6b0734d17c3c731113e1de1caca1c532ed453a5944fc8fd",
+    "head.png": "e79ace31ea08263bc5e110027abe969442454fbd28082d3fce34f7e18da931ba",
+    "approved-concept.png": "1b6225a28ac01cd28e26f8c61e69d4cc2347c906e3eb4b8496cd068fc7cf45f5",
+    "head-blink.png": "92ccc2101d11fc19ccd859e2d729bb442f73534095cd970539c291124539ffff",
+    "fingers.png": "7b329fc1c3f9b155021a8772d472dbbb309f22717f9c595d13a7f4485abc170a"
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "version": 1,
+  "status": "art handoff; runtime integration pending",
+  "canvas": [
+    1600,
+    1720
+  ],
+  "soleY": 1656,
+  "bodyCenterX": 800,
+  "drawOrder": [
+    "body",
+    "arm-upper",
+    "arm-fore",
+    "hand-back",
+    "staff",
+    "fingers",
+    "head",
+    "robe-cover"
+  ],
+  "alternateHead": "head-blink",
+  "pivots": {
+    "shoulder": [
+      598.5,
+      683.5
+    ],
+    "elbow": [
+      559.5,
+      826.5
+    ],
+    "wrist": [
+      433.4,
+      856.4
+    ],
+    "head": [
+      774.0,
+      605.5
+    ]
+  },
+  "rigidGripGroup": [
+    "hand-back",
+    "staff",
+    "fingers"
+  ],
+  "ikBranch": -1,
+  "liftPixels": 156,
+  "proofTopPadding": 180,
+  "timingSeconds": {
+    "idleEnd": 0.35,
+    "liftEnd": 0.95,
+    "holdEnd": 1.1,
+    "impact": 1.26,
+    "reboundEnd": 1.36,
+    "settleEnd": 1.55,
+    "loopEnd": 2.4
+  },
+  "limitations": [
+    "Free casting arm stays on body.",
+    "Head blink is a separately generated alternate; not pixel-identical outside eyes.",
+    "Supersedes archer pose; does not trace old archer guide.",
+    "Pose matched by registration; assembled full is authoritative.",
+    "No production runtime or mobile layout integration in this drop."
+  ],
+  "sources": {
+    "body": {
+      "image": "exec-08a34366-752c-4129-8b6c-4626f69da93d.png",
+      "registrationBoundsIn1210x1300": [
+        350,
+        400,
+        1075,
+        1243
+      ],
+      "method": "built-in image generation"
+    },
+    "robe-cover": {
+      "image": "exec-8a3c4214-a7b4-40c0-a16a-f3fd44c02047.png",
+      "registrationBoundsIn1210x1300": [
+        355,
+        390,
+        875,
+        840
+      ],
+      "method": "built-in image generation"
+    },
+    "staff": {
+      "image": "exec-574dfde8-ac14-4419-913e-ff4c09d51753.png",
+      "registrationBoundsIn1210x1300": [
+        181,
+        36,
+        431,
+        1243
+      ],
+      "method": "built-in image generation"
+    },
+    "head": {
+      "image": "exec-be28a500-ab10-495d-b3f8-581edc56ca51.png",
+      "registrationBoundsIn1210x1300": [
+        440,
+        78,
+        875,
+        503
+      ],
+      "method": "built-in image generation"
+    },
+    "head-blink": {
+      "image": "exec-cac3a6ad-cf5c-4a1d-bd77-e8ee16b71f56.png",
+      "registrationBoundsIn1210x1300": [
+        440,
+        78,
+        875,
+        503
+      ],
+      "method": "built-in image generation"
+    },
+    "fingers": {
+      "image": "exec-f58613b7-e494-4cb5-8fd1-944a73526161.png",
+      "registrationBoundsIn1210x1300": [
+        285,
+        570,
+        365,
+        663
+      ],
+      "method": "built-in image generation"
+    },
+    "hand-back": {
+      "image": "exec-00497136-7f7e-4eb7-a956-27b0af03ae4f.png",
+      "registrationBoundsIn1210x1300": [
+        292,
+        576,
+        426,
+        677
+      ],
+      "method": "built-in image generation"
+    },
+    "arm-upper": {
+      "image": "exec-1e25b1a9-0f7b-4ff1-9450-0a881186ad65.png",
+      "registrationBoundsIn1210x1300": null,
+      "method": "built-in image generation; existing generated bone art reused for concealed arm segments"
+    },
+    "arm-fore": {
+      "image": "exec-79a32247-2bd4-4450-aefa-b378a6b4b2e1.png",
+      "registrationBoundsIn1210x1300": null,
+      "method": "built-in image generation; existing generated bone art reused for concealed arm segments"
+    }
+  }
+}
