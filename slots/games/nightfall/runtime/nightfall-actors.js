@@ -58,7 +58,7 @@ const apply=(m,[x,y])=>[m[0]*x+m[2]*y+m[4],m[1]*x+m[3]*y+m[5]];
 // A part's rest placement (rig.json), identity if it has none.
 export const restOf=(J,kind,name,spec=RIGS[kind])=>J.rest?.[spec.parts[name]?.rest||name]||I;
 
-// Reaper v2 candidate (`?reaper=v2`): ChatGPT's registered bone arm under
+// Reaper v2, the default (`?reaper=v1` shows the first rig): ChatGPT's registered bone arm under
 // Dylan's shoulder mantle, made by tools/nightfall-reaper-v2.py into
 // assets/nightfall/reaper-v2/ (boxes and joints in its rig.json; rig space
 // 400 x 430). Back to front: the robe body; the upper arm, forearm and hand
@@ -325,7 +325,7 @@ export const STRIKE_V2=[
 
 export class CourtKnight extends Actor {
  constructor(stage){
-  const v2=new URLSearchParams(location.search).get('reaper')==='v2';
+  const v2=new URLSearchParams(location.search).get('reaper')!=='v1';
   super(stage,'reaper',v2?REAPER_V2:RIGS.reaper);this.v2=v2;
  }
  // v2: the boxes and joints come from its own rig.json.

@@ -1,4 +1,4 @@
-// Night Fall reaper v2 candidate (`?reaper=v2`; Claude, animation): ChatGPT's
+// Night Fall's reaper, v2 (the default; Claude, animation): ChatGPT's
 // bone arm under Dylan's shoulder mantle. Checked from the art's own pixels,
 // through the drawn transforms, on every frame of a real strike at desktop,
 // 390x844 and 390x693: the shoulder and elbow never show from under the
@@ -7,22 +7,17 @@
 // Breathing: the shoulders and hood rise and the boots do not, the warped robe
 // has no seams, and the joints stay hidden through the whole idle cycle.
 //
-// The v2 art is git-ignored until Dylan clears it, so this skips without it
-// (make it with tools/nightfall-reaper-v2.py).
+// The art is made by tools/nightfall-reaper-v2.py.
 //
 //   npm run test:studio-browser
 
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync } from 'node:fs';
 import { serve, chromium } from '../../tools/lib/browser.mjs';
-
-const ART = new URL('../../games/nightfall/runtime/assets/nightfall/reaper-v2/rig.json', import.meta.url);
-const skip = !existsSync(ART) && 'reaper v2 art not present (git-ignored; run tools/nightfall-reaper-v2.py)';
 
 let srv;
 let browser;
-before(async () => { if (skip) return; srv = await serve(); browser = await chromium(); });
+before(async () => { srv = await serve(); browser = await chromium(); });
 after(async () => { await browser?.close(); srv?.close(); });
 
 const PHONE = { deviceScaleFactor: 2, isMobile: true, hasTouch: true };
@@ -32,7 +27,7 @@ async function open(viewport, extra = {}) {
   page.errors = [];
   page.on('pageerror', (e) => page.errors.push(e.message));
   await page.addInitScript(() => { try { localStorage.setItem('nightfall-skip-intro', 'yes'); } catch {} });
-  await page.goto(`${srv.url}games/nightfall/runtime/index.html?reaper=v2`);
+  await page.goto(`${srv.url}games/nightfall/runtime/index.html`);
   await page.waitForFunction(() => globalThis.NightFall?.state.ready && globalThis.NightFall.actors.reaper.joints && globalThis.NightFall.actors.archer.joints, null, { timeout: 60000 });
   await page.evaluate(MEASURE);
   page.ctx = ctx;
@@ -110,7 +105,7 @@ function assertStrike({ rest, frames, v2, blade }, label) {
   assert.ok(Math.max(...soles) - Math.min(...soles) < 0.5, `${label}: the feet moved ${(Math.max(...soles) - Math.min(...soles)).toFixed(2)} px`);
 }
 
-test('reaper v2: the shoulder and elbow stay hidden through a real strike, on desktop and phones', { skip }, async () => {
+test('reaper v2: the shoulder and elbow stay hidden through a real strike, on desktop and phones', async () => {
   for (const [vp, extra] of [[{ width: 1280, height: 800 }, {}], [{ width: 390, height: 844 }, PHONE], [{ width: 390, height: 693 }, PHONE]]) {
     const page = await open(vp, extra);
     assertStrike(await strike(page), `${vp.width}x${vp.height}`);
@@ -119,7 +114,7 @@ test('reaper v2: the shoulder and elbow stay hidden through a real strike, on de
   }
 });
 
-test('reaper v2 stands on the archer\'s ground line', { skip }, async () => {
+test('reaper v2 stands on the archer\'s ground line', async () => {
   for (const [vp, extra] of [[{ width: 390, height: 844 }, PHONE], [{ width: 1280, height: 800 }, {}]]) {
     const page = await open(vp, extra);
     const g = await page.evaluate(() => {
@@ -133,7 +128,7 @@ test('reaper v2 stands on the archer\'s ground line', { skip }, async () => {
   }
 });
 
-test('reaper v2 breathes: shoulders and hood rise, boots stay, no seams, joints hidden all cycle', { skip }, async () => {
+test('reaper v2 breathes: shoulders and hood rise, boots stay, no seams, joints hidden all cycle', async () => {
   const page = await open({ width: 1280, height: 800 });
   const r = await page.evaluate(async () => {
     const a = globalThis.NightFall.actors.reaper, unit = a.rig.clientWidth / a.size[0];

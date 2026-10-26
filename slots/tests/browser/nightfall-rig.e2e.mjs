@@ -8,6 +8,8 @@
 // (each stays under an opaque sleeve pixel); the archer's arm balls sit on the
 // body's shoulder balls and hide them; and the bow hand covers the riser.
 // Also the release point, Skip, menu pause, hidden tabs and reduced motion.
+// This is the first reaper rig, still in the game with `?reaper=v1` (the
+// default reaper is v2: nightfall-reaper-v2.e2e.mjs); the archer is the same.
 //
 //   npm run test:studio-browser
 
@@ -27,7 +29,7 @@ async function open(viewport, extra = {}) {
   page.errors = [];
   page.on('pageerror', (e) => page.errors.push(e.message));
   await page.addInitScript(() => { try { localStorage.setItem('nightfall-skip-intro', 'yes'); } catch {} });
-  await page.goto(`${srv.url}games/nightfall/runtime/index.html`);
+  await page.goto(`${srv.url}games/nightfall/runtime/index.html?reaper=v1`);
   await page.waitForFunction(() => globalThis.NightFall?.state.ready && globalThis.NightFall.actors.reaper.joints && globalThis.NightFall.actors.archer.joints, null, { timeout: 60000 });
   page.ctx = ctx;
   return page;

@@ -71,3 +71,20 @@ Dylan: the rigs weren't working and the feet weren't planted. `runtime/nightfall
   - the bow hand covers at least 85% of the riser around the arrow's rest.
 
   With ChatGPT's original placement the cap check fails at once (46 of 46 points showing). `npm run test:nightfall` runs the engine checks; `engine.js` is byte-identical (SHA-256 876e2a6d...). Before/after: `shots/arms-before-after.jpg`.
+
+## Reaper v2, the default (Claude, 2026-10-26)
+
+Dylan approved it and asked for it in the game. The first rig is still there with `?reaper=v1`.
+
+- **Art:** ChatGPT's registered bone-arm pieces (`art/source/reaper-v2/parts/`, from `Reaper-Arm-Pieces-v1`) and the shoulder mantle Dylan sent (`art/source/reaper-v2/shoulder-mantle.png`). There are no sleeves: the mantle's skull replaces the chest clasp, and the mantle hides the shoulder and elbow. Dylan approved putting all of it in the public repo.
+- **Build:** `python3 tools/nightfall-reaper-v2.py` writes `runtime/assets/nightfall/reaper-v2/` (layers and `rig.json`).
+- **Layers, back to front:** robe body; upper arm, forearm, and hand with the scythe; mantle; fist and scythe again (in front of the mantle, robe and boots); hood again (faded in while the blade is behind the head).
+- **Strike** (`STRIKE_V2`): blade back behind the hood, over the top, then a chop toward the board. The release is at .48, as before.
+- **Breathing:** the robe and mantle are warped row by row. The shoulders and hood rise 4 rig units, the chest stretches and widens a little, and the hips, legs and boots don't move. One breath every 3.8 s.
+- **Debug:** `&reaperDebug=joints` makes the mantle and robe see-through.
+- **Checks:** `tests/browser/nightfall-reaper-v2.e2e.mjs` reads the art's pixels on every frame (desktop, 390x844, 390x693):
+  - the joints stay hidden through the strike and the idle;
+  - the blade is clear of the hood while it fades;
+  - the boots stay planted;
+  - the warp has no seams.
+- **Previews:** `shots/reaper-v2/` (strike at real speed and slowed, phone strike, breathing).

@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """Night Fall reaper v2 candidate (Claude, animation).
 
-Imports ChatGPT's registered reaper arm package (Reaper-Arm-Pieces-v1:
-1600 x 1720 layers drawn in place, with measured shoulder, elbow and wrist
-pivots) and the shoulder mantle Dylan sent, into a candidate rig for
-nightfall-actors.js. The current reaper stays the default; the game uses
-this one with `?reaper=v2`.
+Builds the game's reaper from ChatGPT's registered reaper arm package
+(Reaper-Arm-Pieces-v1: 1600 x 1720 layers drawn in place, with measured
+shoulder, elbow and wrist pivots) and the shoulder mantle Dylan sent, both
+in games/nightfall/art/source/reaper-v2/. It is the default reaper; the
+first rig is still there with `?reaper=v1`.
 
 Dylan's direction: the bare bone arm, no sleeves, with the shoulder and the
 elbow hidden behind the robe, under the mantle, whose skull replaces the
 robe's chest clasp. So the robe body, the upper arm, the forearm, the
 hand-and-scythe and the mantle are used; the package's sleeve layers are not.
 
-    python3 tools/nightfall-reaper-v2.py PATH/TO/Reaper-Arm-Pieces-v1 PATH/TO/mantle.png
+    python3 tools/nightfall-reaper-v2.py [PACKAGE_DIR MANTLE_PNG]
 
 Back to front, the rig draws:
   body        the robe, hood, cape, left arm and legs
@@ -26,8 +26,7 @@ Back to front, the rig draws:
   head        the hood and skull again, faded in while the blade swings
               behind the head (the wind-up) and out before it comes over
 
-Writes games/nightfall/runtime/assets/nightfall/reaper-v2/ (git-ignored
-until Dylan clears the art for the public repo): each layer as webp, cropped
+Writes games/nightfall/runtime/assets/nightfall/reaper-v2/: each layer as webp, cropped
 to its pixels with its canvas offset kept, at 3 px per rig unit, and
 rig.json (boxes, joints and art sample points; rig units are the canvas at
 4 px per unit, so 400 x 430).
@@ -40,7 +39,9 @@ from pathlib import Path
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
-OUT = Path(__file__).resolve().parents[1] / 'games/nightfall/runtime/assets/nightfall/reaper-v2'
+GAME = Path(__file__).resolve().parents[1] / 'games/nightfall'
+OUT = GAME / 'runtime/assets/nightfall/reaper-v2'
+SOURCE = GAME / 'art/source/reaper-v2'
 CANVAS = (1600, 1720)
 UNIT = 4            # canvas px per rig unit
 SCALE = 0.75        # stored px per canvas px (3 px per rig unit)
@@ -100,7 +101,6 @@ def main(src, mantle):
     OUT.mkdir(parents=True, exist_ok=True)
     for old in OUT.glob('*.webp'):
         old.unlink()
-    (OUT / '.gitignore').write_text('# Candidate art: not for the public repo until Dylan says so.\n*\n')
     parts, crops = {}, {}
     for name, arr in layers.items():
         a = arr[..., 3]
@@ -157,4 +157,4 @@ def main(src, mantle):
 
 
 if __name__ == '__main__':
-    main(*sys.argv[1:3])
+    main(*(sys.argv[1:3] or (SOURCE, SOURCE / 'shoulder-mantle.png')))

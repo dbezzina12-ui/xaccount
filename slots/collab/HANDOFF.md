@@ -4,6 +4,29 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: reaper v2 is the default, art in the repo (N-06 done)
+
+**Did:** Dylan: "Add whatever you have here there… and push to game." The v2 reaper (bone arm under the shoulder mantle, the new strike, breathing) is now the game's default; the first rig stays available with `?reaper=v1`. Everything used to make it is committed:
+- **Source art:** `games/nightfall/art/source/reaper-v2/`, which holds ChatGPT's registered parts, its `rig.json`, README and prompts, and `shoulder-mantle.png`.
+- **Built layers:** `runtime/assets/nightfall/reaper-v2/`. `python3 tools/nightfall-reaper-v2.py` rebuilds them from the source folder, and the rebuild is byte-identical.
+- **Previews:** `games/nightfall/shots/reaper-v2/`, with the strike at real speed and slowed, the phone strike, and the breathing.
+
+Dylan approved making this art public, which ChatGPT's package had kept private.
+
+**Checks:** all suites pass. `engine.js` is unchanged.
+
+**Files:** the folders above, `nightfall-actors.js` (default switch), `tools/nightfall-reaper-v2.py`, both Night Fall rig tests, `ANIMATION-HANDOFF.md`, BOARD N-06.
+
+**Next for ChatGPT:**
+1. Publish Night Fall from this branch so the live game gets the new reaper.
+2. In `nightfall-studio/index.html`, the "Animation assets" note still describes Grim's old layers (head, blink, cape, upper arms, forearms). Please update its copy to the v2 layers: robe, bone arm, hand and scythe, mantle, hood.
+
+**Questions for Dylan:** none.
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: reaper v2 breathes (N-06)
 
 **Did:** Dylan approved the v2 reaper ("It's good") and asked for a breathing animation. Before this, v2 only stretched the whole figure 0.65% from the soles, which wasn't visible. Now the robe and mantle are warped row by row on each breath:

@@ -1,0 +1,183 @@
+{
+  "name": "Reaper hidden-arm pieces v1",
+  "canvas": [
+    1600,
+    1720
+  ],
+  "pivots": {
+    "shoulder": [
+      997.8000000000001,
+      801.0
+    ],
+    "elbow": [
+      1065.64,
+      948.2
+    ],
+    "wrist": [
+      1164.2,
+      784.36
+    ]
+  },
+  "hierarchy": {
+    "upper": "body",
+    "fore": "upper",
+    "hand-scythe": "fore"
+  },
+  "draw_order_back_to_front": [
+    "arm-upper",
+    "arm-fore",
+    "hand-scythe",
+    "sleeve-fore",
+    "sleeve-upper",
+    "body"
+  ],
+  "pose_units": "degrees; positive clockwise in screen coordinates",
+  "registered_sources": {
+    "body": [
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "hand-scythe": [
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "arm-upper": [
+      [
+        0.6164032464758651,
+        -0.023636622525986063,
+        298.6732165741136
+      ],
+      [
+        0.023636622525986063,
+        0.6164032464758651,
+        177.66453082728174
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "arm-fore": [
+      [
+        0.7392139953184674,
+        0.05785388690402849,
+        154.87281015153383
+      ],
+      [
+        -0.05785388690402849,
+        0.7392139953184674,
+        187.42000739189348
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "sleeve-upper": [
+      [
+        0.38633965989489066,
+        -0.07699306046205516,
+        547.3661307962564
+      ],
+      [
+        0.07699306046205516,
+        0.38633965989489066,
+        317.72384123266323
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "sleeve-fore": [
+      [
+        0.41570945945945953,
+        0.25050675675675677,
+        365.1537162162162
+      ],
+      [
+        -0.25050675675675677,
+        0.41570945945945953,
+        588.1402027027027
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "canvas_transform": [
+    [
+      1.28,
+      0.0,
+      25.0
+    ],
+    [
+      0.0,
+      1.28,
+      65.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "poses": {
+    "Rest": [
+      0,
+      0,
+      0
+    ],
+    "Elbow bent": [
+      -8,
+      -18,
+      18
+    ],
+    "Arm raised": [
+      -12,
+      -10,
+      10
+    ],
+    "Return": [
+      8,
+      10,
+      -10
+    ]
+  },
+  "notes": [
+    "Body includes hood, head, cape, relaxed arm and legs. These are not separated in this scoped right-arm pack.",
+    "Hand and scythe are one wrist attachment; fingers cannot slide off the shaft.",
+    "Right arm is behind the body robe. Sleeve layers share the corresponding bone transform."
+  ]
+}
