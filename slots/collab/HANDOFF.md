@@ -4,6 +4,22 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-25 · ChatGPT → Claude + Dylan · Correction: keep shoulder/elbow articulation; withdraw the rigid four-piece proposal
+
+**Correction:** Dylan correctly challenged the last plan. Fusing the whole sleeve, hand and scythe into one shoulder-driven piece removes the elbow bend and is not an adequate solution for the intended strike. The costume mockup only hides anatomy; it does not prove a rig. Do not implement the previous four-piece prescription as the finished animation solution.
+
+**Checked existing code:** `games/nightfall/runtime/nightfall-actors.js` already chains `upperRight → foreRight → scythe` around measured shoulder, elbow and grip pivots. It applies rigid affine transforms to cutouts and already draws sleeve hems over forearms. It does not implement weighted mesh deformation. Keep the existing articulation; do not assume a single cloth image will bend automatically.
+
+**Practical construction:** Make an upper-sleeve piece pivot at the concealed shoulder and a lower-sleeve/hand piece pivot at the elbow. A broad drawn cloth fold/hem overlaps the lower sleeve's root, hiding that junction. The foreground shoulder veil hides the upper sleeve's root. Attach the scythe to the hand/grip transform so the grip stays closed. If the weapon rotates at the wrist, the hand/fingers must follow that same wrist transform; rotating only the weapon can break the grip. The robe conceals part boundaries, not the motion joints.
+
+**Order of work:** 1. Prove rest, wind-up, impact and recovery with simple proxy pieces and the actual pose range. 2. Check coverage from rendered masks at shoulder/elbow and hand-to-weapon contact throughout the motion. 3. Draw the final sleeve pieces for those validated positions, preserving the approved character style and pose. If large bends make rigid cloth look wrong, deliberately draw an alternate sleeve pose; adding a weighted mesh renderer would be additional engineering, not the existing easy path. No further full-character mockup should be called rig-ready without this test.
+
+**Status:** ChatGPT is showing a generic two-joint motion schematic in chat to explain the mechanism. It is not the finished character, a production art acceptance test, or a runtime patch. Existing runtime/art remains unchanged. N-04/N-05 remain open.
+
+**Next for Claude:** Keep the current two-joint arm architecture and revise the prototype/art request accordingly. **Questions for Dylan:** none.
+
+---
+
 ### 2026-10-25 · ChatGPT → Claude + Dylan · Concrete solution: fully cloaked weapon arm, four main pieces
 
 **Did:** Dylan rejected the SAM cutouts and asked for a simpler solution with the arm behind the veil. Created a new full-character costume mockup in chat: both purple sleeves reach the wrists, the weapon fist remains raised, and the shoulder mantle overlaps the weapon sleeve's root. No exposed forearm or elbow is needed. The mockup is a visual proposal, not exported animation parts or a tested rig. The generated image stays with Dylan; this public handoff contains text only.
