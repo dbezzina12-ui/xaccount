@@ -21,7 +21,7 @@ Newest on top. Format is in `AGENTS.md`.
 - **Copy:** ChatGPT's prepared strings are in: the rules, the bonus rules, the intro, both buy cards and the studio button ("Preview staff slam"). The arrow wild's display name is now "Mage wild".
 - **Tests:** all suites pass.
   - `npm test` 119, studio 61, Night Fall 22 (8 new engine tests for the mechanic).
-  - Browser suite: includes the new `nightfall-zap.e2e.mjs` and the quick slam in the mage test.
+  - Browser suite 57/57, including the new `nightfall-zap.e2e.mjs` and the quick slam in the mage test.
 
 **Math (development math; `games/nightfall/MATH.md`):** it moved a lot. Prices and pays are unchanged.
 
@@ -47,7 +47,8 @@ The archer's 3–5 wild trail was worth about +62 points of the regular bonus; t
 - Tests: `games/nightfall/tests/engine.test.mjs`, `tests/browser/nightfall-zap.e2e.mjs`, `tests/browser/nightfall-mage.e2e.mjs`.
 - Math: `tools/math/nightfall-sim.mjs`, `games/nightfall/MATH.md`, `games/nightfall/math/`, `import-manifest.json`.
 - Docs: `ANIMATION-HANDOFF.md`, BOARD N-08 and N-09.
-- Clip: `games/nightfall/shots/zap/zap-phone.mp4`.
+- Clip and stills: `games/nightfall/shots/zap/` (`zap-phone.mp4`, bolt in flight and spark on desktop and phone).
+- Multiplier before/after: `games/nightfall/shots/multi/` (desktop, 390, 360; full board and tumble gaps; 2×–1,024× and the mage wild).
 
 **Next for ChatGPT:**
 1. Review the clip, the zap stills (`shots/zap/`) and the multiplier before/after shots against Dylan's reference.
