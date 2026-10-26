@@ -1,15 +1,28 @@
 # Night Fall: math sheet
 
-> Owned by Claude. Measured by `node tools/math/nightfall-sim.mjs`, which plays whole rounds through the game's own engine (`runtime/engine.js`, `generateRound`). Night Fall's math is **development math**: these are simulated measurements with 95% confidence intervals, not certified returns. Prices and pays are playtest values; both bonus buys are balanced, the base game is not yet.
+> Owned by Claude. Measured by `node tools/math/nightfall-sim.mjs`, which plays whole rounds through the game's own engine (`runtime/engine.js`, `generateRound`). Night Fall's math is **development math**: these are simulated measurements with 95% confidence intervals, not certified returns. Prices and pays are playtest values. The base spin and both bonus buys are balanced to about 96%; Reaper Strike spins are at 101.5%.
 
 ## Where it stands (2026-10-26)
 
 | Mode (price) | Return | Notes |
 |---|---|---|
-| Base spin (1×) | 79.99% ± 6.54% | Not balanced yet (BOARD N-09). Base-game wins 39.47%, triggered free spins about 40.5% |
+| **Base spin (1×)** | **95.99% ± 2.67%** | Balanced: base attack chance 30%. Base-game wins 57.23%, triggered free spins 38.8% (20,000,000 spins) |
 | Reaper Strike spin (4×) | 101.51% ± 2.92% | Above 96% because its triggered free spins pay more now |
 | **Free Spins buy (120×)** | **96.69% ± 3.84%** | Balanced: sticky roamers and bursts |
 | **Super Free Spins buy (500×)** | **95.61% ± 1.18%** | Balanced: sticky roamers and bursts, cross-cuts 25% |
+
+## Base game balance (2026-10-26)
+
+Dylan: "raise that so base spins are closer to RTP". The one attack draw after a base spin's tumbles goes from 18% to **30%** of spins (`strikeChance.base`). The mage and the reaper still share it half and half. The mage now zaps on 1 spin in 6.7 (was 1 in 11), and the reaper strikes about as often.
+
+| Base attack chance | Base-game wins | Free spins trigger | Return |
+|---|---|---|---|
+| 18% (before) | 39.47% | 1 in 329 | 79.99% ± 6.54% |
+| **30% (now)** | **57.23%** | **1 in 311** | **95.99% ± 2.67%** |
+| 32% | 60.32% | 1 in 310 | about 98.3% |
+| 34% | 63.28% | 1 in 308 | about 101.6% |
+
+The triggered free spins make the base return very noisy: one spin's SD is 61× the bet. So the rows are read two ways: the base-game wins (precise), plus the trigger rate times the value of a triggered bonus. That value is about 118× (the 120× buy's 116× average, scaled up for the slightly longer bonuses that 4+ tombstones give). This estimate gives 95.2% at 30%. The 30% row was then confirmed directly with 20,000,000 spins: 95.99% ± 2.67%, hit rate 38.36%, average triggered bonus 120.6×. The 32% and 34% rows are estimates from 4,000,000 spins each.
 
 ## Sticky roamers and bursts (current, 2026-10-26)
 
@@ -113,8 +126,7 @@ One more regular-buy run (100,000 rounds) used the new engine with no roaming wi
 
 ## Still to balance (decision for Dylan)
 
-- **Base game, 80.0%:** the base-game wins are 39.5% (the single zap) and the free spins they trigger add about 40.5%. The base attack chance (18% of spins that reach it, shared by the mage and the reaper) is the natural lever. With the earlier free spins it measured +20 points at 30% and +44 at 45%, so about **27%** may be enough now. That needs its own run.
-- **Reaper Strike spins, 101.5% at 4×:** they trigger free spins more often (1 in 178), so they gained the most. Base-game changes will move them too.
+- **Reaper Strike spins, 101.5% ± 2.9% at 4×:** they trigger free spins more often (1 in 178), so they gained the most from the roamers. The base attack chance doesn't touch them, since their strike is guaranteed. A price of about 4.25× would make them 96%; so would a slightly smaller guaranteed strike.
 
 ## Reproduce
 
@@ -123,4 +135,4 @@ node tools/math/nightfall-sim.mjs --json games/nightfall/math/sim-after.json
 node tools/math/nightfall-sim.mjs --engine <copy of engine.js at 1e631e8> --json games/nightfall/math/sim-before.json
 ```
 
-About 2 min 20 s each on 4 cores. The figures are in `math/sim-after.json` (as it plays now), `math/sim-before.json` (the archer, before N-08), `math/sim-n08-every-spin.json` (N-08 as first built) and `math/sim-option-b.json` (Super option B). The option scans used copies of the engine with one value changed and 50,000–100,000 bonuses each.
+About 2 min 20 s each on 4 cores, or about 5 min with `--rounds base=2e7` (the current figures). The figures are in `math/sim-after.json` (as it plays now), `math/sim-before.json` (the archer, before N-08), `math/sim-n08-every-spin.json` (N-08 as first built) and `math/sim-option-b.json` (Super option B). The option scans used copies of the engine with one value changed and 50,000–100,000 bonuses each.

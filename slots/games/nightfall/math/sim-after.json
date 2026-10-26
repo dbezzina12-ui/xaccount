@@ -1,24 +1,24 @@
 {
  "engine": "games/nightfall/runtime/engine.js",
- "generated": "2026-10-26T14:30:19.539Z",
+ "generated": "2026-10-26T14:47:32.223Z",
  "modes": {
   "base": {
-   "rounds": 4000000,
+   "rounds": 20000000,
    "cost": 1,
-   "rtp": 0.7998452109990839,
-   "ci95": 0.06537317923458981,
-   "sdPerCost": 66.70732574958144,
-   "hitRate": 0.333112,
-   "bonusRate": 0.00304075,
-   "bonusAverage": 133.22713590397123,
-   "freeSpinsPerBonus": 10.50094549042177,
-   "retriggersPerBonus": 0.03477760420948779,
-   "capRate": 0.00000525,
+   "rtp": 0.9599093593530554,
+   "ci95": 0.02673075929933143,
+   "sdPerCost": 60.99162743213238,
+   "hitRate": 0.38360925,
+   "bonusRate": 0.0032143,
+   "bonusAverage": 120.58363397940428,
+   "freeSpinsPerBonus": 10.496344460691287,
+   "retriggersPerBonus": 0.03453317985253399,
+   "capRate": 0.000004,
    "maxWin": 25000,
-   "mageZapsPerRound": 0.08994325,
-   "roamsPerBonus": 3.424319657979117,
-   "roamersPerBonus": 0.5732138452684371,
-   "burstsPerBonus": 0.5672942530625668
+   "mageZapsPerRound": 0.15011115,
+   "roamsPerBonus": 3.404862645054911,
+   "roamersPerBonus": 0.5735930062533056,
+   "burstsPerBonus": 0.5732818965249044
   },
   "feature": {
    "rounds": 2000000,
@@ -75,5 +75,5 @@
    "burstsPerBonus": 0.388505
   }
  },
- "seconds": 157
+ "seconds": 310
 }

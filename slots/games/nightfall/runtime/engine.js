@@ -1,5 +1,5 @@
 // Knightfall v1 — transparent prototype math, independent of presentation.
-export const RULES = Object.freeze({size:7,cluster:5,maxWin:25000,maxMultiplier:1024,bonusCost:120,superCost:500,featureCost:4,payScale:.46,scatterChance:.0055,strikeChance:{base:.18,regular:.32,super:.25,feature:1},mage:{chance:{regular:.11,super:.075},roamer:.5,burst:3}});
+export const RULES = Object.freeze({size:7,cluster:5,maxWin:25000,maxMultiplier:1024,bonusCost:120,superCost:500,featureCost:4,payScale:.46,scatterChance:.0055,strikeChance:{base:.30,regular:.32,super:.25,feature:1},mage:{chance:{regular:.11,super:.075},roamer:.5,burst:3}});
 export const SYMBOLS=['ruby','sapphire','emerald','amethyst','amber','shield','crown'];
 // `arrow-wild` is the mage's one-time wild; `roam-wild` his sticky roamer.
 export const isWild = kind => kind==='wild'||kind==='arrow-wild'||kind==='roam-wild';

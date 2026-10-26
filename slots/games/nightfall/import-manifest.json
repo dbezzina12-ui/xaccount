@@ -2,13 +2,14 @@
   "sourceProject": "appgprj_6ada21a1fc088191b0521ac235315e00",
   "sourceCommit": "b49911bdd51dffbecbf4b6ea7c34c63881527e90",
   "importedEngineSha256": "876e2a6d901e54162bea8afbd359686315bf77cee5e468adb9401031678b306e",
-  "engineSha256": "52f24bc7bf151f4bfb9fac3568c418c9a65fddbe33ecec31408f42e7e07e54e3",
+  "engineSha256": "99e812ff4f1f0fe724ca1503fbf8a95f63eb0f6c71002b68b76c1cc64b365785",
   "originalTitle": "Knightfall",
   "title": "Night Fall",
   "mechanicsChanged": true,
   "mechanicsChanges": [
     "2026-10-26 N-08 Roaming Wild: the base mage zap turns one cell wild (was the archer's 3-5 cell trail); one mage wild roams each free spin. Measured in MATH.md.",
     "2026-10-26 Super balance (option B): Super buy 500x, the mage wild on about half of Super free spins, cross-cuts 25%. Measured in MATH.md.",
-    "2026-10-26 Sticky roamers and bursts: in free spins the mage strikes (11% regular, 7.5% Super); half his strikes leave a roaming wild that stays all bonus and moves each spin, half zap 3 one-time wilds. Measured in MATH.md."
+    "2026-10-26 Sticky roamers and bursts: in free spins the mage strikes (11% regular, 7.5% Super); half his strikes leave a roaming wild that stays all bonus and moves each spin, half zap 3 one-time wilds. Measured in MATH.md.",
+    "2026-10-26 Base balance: the base attack chance goes from 18% to 30% (base spin 96.0%). Measured in MATH.md."
   ]
 }

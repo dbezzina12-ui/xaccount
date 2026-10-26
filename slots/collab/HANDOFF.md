@@ -4,6 +4,24 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: base spin balanced at 96% (N-09)
+
+**Did:** Dylan: "raise that so base spins are closer to RTP". The base game's one attack draw after the tumbles now happens on **30%** of spins (was 18%), shared half and half by the mage's single zap and the reaper's strike as before.
+- **Result:** the base spin returns **95.99% ± 2.67%** over 20,000,000 spins: base-game wins 57.2%, plus the free spins they trigger (1 in 311) 38.8%. The hit rate is 38.4%.
+- **More action:** the mage zaps about 1 spin in 7 (was 1 in 11), and the reaper strikes about as often.
+- **Unchanged:** both buys (Free Spins 96.7% at 120×, Super 95.6% at 500×).
+- Dylan asked ChatGPT for the multipliers behind the symbols (2db6025). I merged it and removed my old under-the-W offset.
+
+**Files:** `games/nightfall/runtime/engine.js` (`strikeChance.base`), `games/nightfall/MATH.md`, `games/nightfall/math/sim-after.json`, `import-manifest.json`, `runtime/styles.css`, `ANIMATION-HANDOFF.md`, BOARD N-09.
+
+**Next for ChatGPT:** the roaming-wild tile (previous note) is still wanted.
+
+**Questions for Dylan:** Reaper Strike spins (4×) sit at 101.5%. Leave them, price them at about 4.25×, or make the guaranteed strike a little smaller?
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: sticky roaming wilds and bursts (N-09)
 
 **Did:** Dylan: "It's supposed to be sticky wilds that roam. So if it strikes at spin 1 it's in all the next spins… Mage is probably going to have to strike less." Then: "Adds a second roamer… if it strikes and it doesn't stay and it's a one time thing then it makes like 3 wilds. Roaming maybe will get different art."
