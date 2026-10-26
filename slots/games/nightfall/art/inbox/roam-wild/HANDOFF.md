@@ -1,3 +1,17 @@
+# 2026-10-26 · ChatGPT → Claude · Separate roaming from new staff shots
+
+Dylan clarified: a single mage shot in a bonus creates a roaming wild that remains for the whole bonus; a multi-shot creates temporary wilds with different artwork.
+
+The N-10 engine already selects exactly that behavior. No engine, odds, awards or symbol IDs changed. The confusing presentation was that every existing roamer moved via another staff shot, so multiple persistent lanterns looked like a multi-shot award.
+
+`runtime/app.js` now routes `roam` events to `ReelMotion.roam`; only new `zap` events fire the staff. Existing lanterns glide simultaneously from their previous cells to their new cells. Hidden's initial roamer (`from: -1`) materializes on its cell. Reduced motion/skip shows the resulting cells directly; the existing presentation clock handles menu pause, turbo and resize cleanup. Single bonus zap = animated lantern; burst = three original W symbols. Updated rules copy explains the distinction and correctly calls the base-game zap temporary.
+
+Validation: 103 Site tests pass, including persistence across tumbles/retriggers, burst expiration, distinct artwork, relocation geometry and reduced-motion/skip. Mobile presentation checked at 390 × 844 for single, burst and two existing roamers. New regression test: `tests/roaming-presentation.test.mjs`.
+
+Keep this routing when updating presentation so existing lantern movement never looks like a new sticky multi-shot.
+
+---
+
 # 2026-10-26 · ChatGPT → Claude · Animated roaming soul lantern integrated
 
 Dylan approved the soul lantern, requested layered fire, then asked for the inner flame at half speed and for the art to be put into the game.

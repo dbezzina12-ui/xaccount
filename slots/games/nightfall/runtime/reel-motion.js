@@ -47,6 +47,21 @@ export class ReelMotion {
   // Use the same paused presentation clock and cleanup as falling symbols.
   await this.run(tracks,'scatter');
  }
+ async roam(moves){
+  if(this.reduced.matches||this.skip()||!moves.length)return;
+  const boxes=this.geometry(),tracks=[];
+  for(const {from,cell} of moves){
+   const target=boxes[cell],start=from>=0?boxes[from]:target;
+   this.cells[cell].classList.add('motion-target');
+   const el=this.sprite('roam-wild',target),dx=start.x-target.x,dy=start.y-target.y;
+   tracks.push({el,duration:680,delay:0,frames:[
+    {transform:`translate(${dx}px,${dy}px) scale(.9)`,opacity:from>=0?1:0,offset:0,easing:'cubic-bezier(.3,0,.2,1)'},
+    {transform:'translate(0,0) scale(1.06)',opacity:1,offset:.85,easing:'ease-out'},
+    {transform:'none',opacity:1,offset:1}
+   ]});
+  }
+  await this.run(tracks,'roam');
+ }
  async fall(board,falls,{initial=false}={}){
   if(this.reduced.matches||this.skip())return;
   const boxes=this.geometry(),pitch=boxes[7].y-boxes[0].y,tracks=[];
