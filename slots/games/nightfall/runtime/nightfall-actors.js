@@ -218,7 +218,7 @@ class Actor {
   for(const [name,p] of Object.entries(this.spec.parts)){
    if(!p.warp)continue;
    const img=this.parts[name];await img.decode();
-   const q=img.naturalWidth/p.box[2],padX=Math.ceil(img.naturalWidth*B.widen/2)+2,padY=Math.ceil(B.lift*q)+2,box0=p.box;
+   const q=img.naturalWidth/p.box[2],padX=Math.ceil(img.naturalWidth*B.widen/2+(p.pad?.[0]||0)*q)+2,padY=Math.ceil((B.lift+(p.pad?.[1]||0))*q)+2,box0=p.box;
    const c=document.createElement('canvas');c.width=img.naturalWidth+2*padX;c.height=img.naturalHeight+padY;
    c.className=img.className;c.dataset.part=name;
    p.box=[box0[0]-padX/q,box0[1]-padY/q,box0[2]+2*padX/q,box0[3]+padY/q];
@@ -226,10 +226,35 @@ class Actor {
    img.replaceWith(c);this.parts[name]=c;this.sources[name]={img,q,padX,padY,box0};
   }
  }
- // Redraws the breathing parts when the breath changes.
+ // Redraws the breathing parts when the breath (or a cloth mesh) changes.
  paintWarp(pose){
-  const b=+(pose.breath||0).toFixed(4);if(b===this.warped)return;this.warped=b;
-  for(const name in this.sources)this.warp(name,b);
+  const b=+(pose.breath||0).toFixed(4),mesh=this.clothMesh?.(pose),key=b+'|'+(mesh?.key||'');if(key===this.warped)return;this.warped=key;
+  for(const name in this.sources)if(mesh?.part===name)this.drawMesh(name,b,mesh);else this.warp(name,b);
+ }
+ // Draws a part's image into its canvas through a triangle mesh: `mesh.grid`
+ // is the rest vertices (rig units), `mesh.moved` the same vertices after the
+ // cloth moved; the breath is applied on top, as in warp(). Each triangle is
+ // its own affine map, clipped a little outside its edges so neighbours meet
+ // with no seams.
+ drawMesh(name,b,mesh){
+  const {img,q,padX,padY,box0}=this.sources[name],c=this.parts[name],g=c.getContext('2d'),B=this.spec.breath;
+  g.clearRect(0,0,c.width,c.height);
+  const cx=this.joints.centre*this.size[0];
+  const breathe=([x,y])=>{const w=breathShare(B,y),k=1+B.widen*b*4*w*(1-w);return [cx+(x-cx)*k,y-B.lift*b*w];};
+  const src=([x,y])=>[(x-box0[0])*q,(y-box0[1])*q],dst=([x,y])=>[padX+(x-box0[0])*q,padY+(y-box0[1])*q];
+  const S=mesh.grid.map(src),D=mesh.moved.map(v=>dst(breathe(v)));
+  for(const [i,j,k] of mesh.triangles){
+   const [s0,s1,s2]=[S[i],S[j],S[k]],[d0,d1,d2]=[D[i],D[j],D[k]];
+   // Source -> dest affine: [a c e; b d f].
+   const det=(s1[0]-s0[0])*(s2[1]-s0[1])-(s2[0]-s0[0])*(s1[1]-s0[1]);if(!det)continue;
+   const a=((d1[0]-d0[0])*(s2[1]-s0[1])-(d2[0]-d0[0])*(s1[1]-s0[1]))/det,cc=((d2[0]-d0[0])*(s1[0]-s0[0])-(d1[0]-d0[0])*(s2[0]-s0[0]))/det;
+   const bb=((d1[1]-d0[1])*(s2[1]-s0[1])-(d2[1]-d0[1])*(s1[1]-s0[1]))/det,dd=((d2[1]-d0[1])*(s1[0]-s0[0])-(d1[1]-d0[1])*(s2[0]-s0[0]))/det;
+   const e=d0[0]-a*s0[0]-cc*s0[1],f=d0[1]-bb*s0[0]-dd*s0[1];
+   const mx=(d0[0]+d1[0]+d2[0])/3,my=(d0[1]+d1[1]+d2[1])/3,grow=p=>{const dx=p[0]-mx,dy=p[1]-my,l=Math.hypot(dx,dy)||1;return [p[0]+dx/l*.8,p[1]+dy/l*.8];};
+   const [g0,g1,g2]=[grow(d0),grow(d1),grow(d2)];
+   g.save();g.beginPath();g.moveTo(g0[0],g0[1]);g.lineTo(g1[0],g1[1]);g.lineTo(g2[0],g2[1]);g.closePath();g.clip();
+   g.setTransform(a,bb,cc,dd,e,f);g.drawImage(img,0,0);g.restore();
+  }
  }
  // Draws a breathing part's image into its canvas, row band by row band:
  // each band's top and bottom rise by their share of the lift, so the bands
@@ -468,8 +493,20 @@ export const MAGE={size:[400,430],dir:'mage',
  staff:{file:'staff',bone:'grip',z:4},
  fingers:{file:'fingers',bone:'grip',z:5},
  head:{file:'head',bone:'head',z:6},
- mantle:{file:'mantle',bone:'chest',z:7,warp:true}
-}};
+ mantle:{file:'mantle',bone:'chest',z:7,warp:true,pad:[14,40]}
+},
+ // The mantle's flap over the staff arm rides on the arm in the slam (rig
+ // units). Each flap point is moved by `ride` of the motion of its nearest
+ // point on the arm: none near the shoulder, full along the forearm, easing
+ // off by `taper` toward the wrist (the cloth slides off the end of the
+ // raised arm). Cloth above the arm follows less with distance (`above`);
+ // the tatters below hang from it. It is pinned at the clasp (fading out from
+ // `pin0` over `pin1`) and where it joins the capelet (x past `right`). The
+ // cloth trails the arm by `lag` s (more for tatters further below it) and
+ // overshoots the landing by `overshoot` of the lift.
+ flap:{ride:.8,taper:.45,above:55,clasp:[150,172.5],pin0:17.5,pin1:37.5,right:160,rightFade:10,lag:.02,lagDepth:.003,overshoot:.14,
+  grid:{x:[90,97,104,111,118,125,132,139,146,153,160,190,225,263],y:{from:135,to:287,rows:20}}}
+};
 function mageBones(J,pose,B){
  const b={},lift=B.lift*(pose.breath||0);
  b.chest=I;
@@ -482,22 +519,27 @@ function mageBones(J,pose,B){
  b.fore=mul(b.upper,rotAbout(ik.fore,J.elbow));
  return b;
 }
-// The staff slam, from ChatGPT's proof (seconds of a 1.2 s action): lift the
-// staff `J.lift` over 0.6 s, hold to 0.75, slam down to the impact at 0.91,
-// bounce 13 canvas px and settle by 1.2. The release (the trail and the
-// sound) is the impact. The head looks up with the lift and nods into the
-// impact; the shoulders rise, then settle hard as the staff lands.
-export const SLAM={duration:1200,impact:.91/1.2};
+// The staff slam, from ChatGPT's proof (seconds): lift the staff `J.lift`
+// over 0.6 s, hold to 0.75, slam down to the impact at 0.91, bounce 13 canvas
+// px and settle by 1.2. The action runs to 1.45 s so the mantle's flap, which
+// trails the arm and overshoots the landing, settles before the idle comes
+// back. The release (the trail and the sound) is the impact. The head looks
+// up with the lift and nods into the impact; the shoulders rise, then settle
+// hard as the staff lands.
+export const SLAM={duration:1450,impact:.91/1.45};
+const slamAt=t=>t/1.45;
 export const SLAM_FACE=[
  [0,{}],
- [.5,{head:-4,breath:.35}],
- [.625,{head:-4.5,breath:.4}],
+ [slamAt(.6),{head:-4,breath:.35}],
+ [slamAt(.75),{head:-4.5,breath:.4}],
  [SLAM.impact,{head:5,breath:-.9}],
- [.84,{head:2,breath:-.2}],
+ [slamAt(1.01),{head:2,breath:-.2}],
+ [slamAt(1.2),{}],
  [1,{}]
 ];
-export function slamRaise(p,lift){
- const t=p*SLAM.duration/1000,s=x=>x*x*(3-2*x),bounce=lift/12;
+export function slamRaise(p,lift){return slamRaiseAt(p*SLAM.duration/1000,lift);}
+function slamRaiseAt(t,lift){
+ const s=x=>x*x*(3-2*x),bounce=lift/12;if(t<=0)return 0;
  if(t<.6)return lift*s(t/.6);
  if(t<.75)return lift;
  if(t<.91){const u=(t-.75)/.16;return lift*(1-u*u);}
@@ -515,6 +557,49 @@ export class CourtMage extends Actor {
  }
  bones(pose){return {bones:mageBones(this.joints,pose,this.spec.breath)};}
  idlePose(t){return {breath:breathCurve(t,this.spec.breath.period),head:.8*Math.sin(t*Math.PI*2/6.1)};}
+ // The flap mesh: rest vertices, their nearest arm points and weights
+ // (fixed), worked out once.
+ flapSetup(){
+  const J=this.joints,F=this.spec.flap,ss=t=>{t=clamp(t);return t*t*(3-2*t);};
+  const ys=Array.from({length:F.grid.y.rows+1},(_,i)=>F.grid.y.from+(F.grid.y.to-F.grid.y.from)*i/F.grid.y.rows),xs=F.grid.x;
+  const grid=[],info=[],triangles=[];
+  const segs=[[J.shoulder,J.elbow,0,.45,'upper'],[J.elbow,J.wrist,.45,1,'fore']];
+  for(const y of ys)for(const x of xs){
+   const v=[x,y];let best=null;
+   for(const [a,b,s0,s1,bone] of segs){const ab=sub(b,a),t=clamp(((x-a[0])*ab[0]+(y-a[1])*ab[1])/(ab[0]*ab[0]+ab[1]*ab[1])),q=add(a,scale(ab,t)),d=len(sub(v,q));if(!best||d<best.d)best={d,q,s:s0+(s1-s0)*t,bone};}
+   let w=F.ride*ss((best.s-.15)/.35)*(1-F.taper*ss((best.s-.7)/.3));
+   const below=y>best.q[1]+.5;if(!below)w*=1-ss(best.d/F.above);
+   w*=ss((len(sub(v,F.clasp))-F.pin0)/F.pin1)*(1-ss((x-F.right)/F.rightFade));
+   grid.push(v);info.push({...best,w,depth:below?y-best.q[1]:0});
+  }
+  // Triangles over nothing but empty canvas are skipped (checked on a 6 x 6
+  // sample of each cell of the mantle's own pixels).
+  const {img,box0,q}=this.sources.mantle,tmp=document.createElement('canvas');tmp.width=img.naturalWidth;tmp.height=img.naturalHeight;
+  const tg=tmp.getContext('2d');tg.drawImage(img,0,0);const A=tg.getImageData(0,0,tmp.width,tmp.height).data;
+  const opaque=(x0,y0,x1,y1)=>{for(let a=0;a<=5;a++)for(let c=0;c<=5;c++){const px=Math.round(((x0+(x1-x0)*a/5)-box0[0])*q),py=Math.round(((y0+(y1-y0)*c/5)-box0[1])*q);if(px>=0&&py>=0&&px<tmp.width&&py<tmp.height&&A[(py*tmp.width+px)*4+3]>0)return true;}return false;};
+  const n=xs.length;
+  for(let j=0;j<ys.length-1;j++)for(let i=0;i<n-1;i++){const k=j*n+i;if(opaque(xs[i],ys[j],xs[i+1],ys[j+1]))triangles.push([k,k+1,k+n],[k+1,k+n+1,k+n]);}
+  this.flap={grid,info,triangles};
+ }
+ // The mantle mesh for a pose, or null when the flap is at rest. The cloth
+ // follows the arm as it was `lag` seconds earlier (the slam time is in
+ // `pose.slamT`), with the overshoot after the landing.
+ clothMesh(pose){
+  if(pose.slamT===undefined||!this.joints)return null;
+  if(!this.flap)this.flapSetup();
+  const J=this.joints,F=this.spec.flap,impact=SLAM.impact*SLAM.duration/1000,cache=new Map();
+  const arm=r=>{const k=r.toFixed(2);if(!cache.has(k)){const b=mageBones(J,{raise:r},{...this.spec.breath,lift:0});cache.set(k,b);}return cache.get(k);};
+  let moved=false;
+  const out=this.flap.grid.map((v,i)=>{
+   const f=this.flap.info[i];if(f.w<=0)return v;
+   const t=pose.slamT-F.lag-f.depth*F.lagDepth;let r=slamRaiseAt(t,J.lift);
+   const u=(t-impact)/.3;if(u>0&&u<1)r-=J.lift*F.overshoot*Math.sin(Math.PI*u)*Math.exp(-2*u);
+   if(Math.abs(r)<.01)return v;
+   moved=true;const b=arm(r)[f.bone],p=apply(b,f.q);
+   return add(v,scale(sub(p,f.q),f.w));
+  });
+  return moved?{part:'mantle',grid:this.flap.grid,moved:out,triangles:this.flap.triangles,key:pose.slamT.toFixed(3)}:null;
+ }
  // Where the slam's magic leaves from: the staff's crystal, on screen.
  releasePoint(){
   const J=this.joints,r=this.rig.getBoundingClientRect();
@@ -529,6 +614,6 @@ export class CourtMage extends Actor {
   this.stage.classList.add('shooting');
   const lift=this.joints?.lift||0;
   return this.action({duration:turbo?SLAM.duration/2:SLAM.duration,paused,skip,release:SLAM.impact,
-   pose:p=>({...sample(SLAM_FACE,p),raise:slamRaise(p,lift)})});
+   pose:p=>({...sample(SLAM_FACE,p),raise:slamRaise(p,lift),slamT:p*SLAM.duration/1000})});
  }
 }

@@ -4,7 +4,9 @@
 // at desktop, 390x844 and 390x693: the shoulder and elbow never show from
 // under the mantle; the fingers stay closed on the shaft; the forearm stays
 // on the wrist; the boots stay planted; the lifted crystal stays on screen;
-// the slam resolves at the impact. Breathing: the joints stay hidden through
+// the slam resolves at the impact. The mantle's flap rides on the arm (it
+// moves with the lift, never covers the fist, and is back at rest when the
+// slam ends). Breathing: the joints stay hidden through
 // the idle cycle. The art is made by tools/nightfall-mage.py.
 //
 //   npm run test:studio-browser
@@ -67,6 +69,11 @@ const MEASURE = () => {
     out.wristGap = Math.hypot(w1[0] - w2[0], w1[1] - w2[1]); void unit;
     out.sole = at('body', [J.feet[0], J.sole])[1];
     out.staffTop = P.staff.getBoundingClientRect().top;
+    // Finger points the mantle covers (opaque mantle pixels over them).
+    out.fingersUnderFlap = J.checks.grip.filter((p) => alphaAt(P.mantle, native(P.mantle, drawn(P.fingers, p))) >= 128).length;
+    // How far the flap mesh has moved from rest (rig units), as drawn.
+    const mesh = actor.clothMesh?.(actor.pose);
+    out.flap = mesh ? Math.max(...mesh.moved.map((v, i) => Math.hypot(v[0] - mesh.grid[i][0], v[1] - mesh.grid[i][1]))) : 0;
     out.crystal = actor.releasePoint().y;
     return out;
   };
@@ -101,6 +108,10 @@ test('mage: the shoulder and elbow stay hidden, the grip closed and the feet pla
       assert.ok(f.wristGap < 0.75, `${label} frame ${i}: the forearm is ${f.wristGap.toFixed(2)} px off the wrist`);
       assert.ok(f.staffTop >= 0, `${label} frame ${i}: the staff is cut off at the top (${f.staffTop.toFixed(1)})`);
     }
+    for (const f of r.frames) assert.ok(f.fingersUnderFlap <= r.rest.fingersUnderFlap, `${label}: the flap covers the fist (${f.fingersUnderFlap} finger points)`);
+    const flap = Math.max(...r.frames.map((f) => f.flap));
+    assert.ok(flap > 15, `${label}: the flap moved only ${flap.toFixed(1)} units`);
+    assert.ok(r.frames.at(-1).flap < 0.3, `${label}: the flap is ${r.frames.at(-1).flap.toFixed(2)} units off rest when the slam ends`);
     const soles = [r.rest, ...r.frames].map((f) => f.sole);
     assert.ok(Math.max(...soles) - Math.min(...soles) < 0.5, `${label}: the feet moved`);
     // The staff really lifts, and the slam resolves at the impact (staff down).

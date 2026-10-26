@@ -4,6 +4,31 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: the mage's flap moves with his arm (N-07)
+
+**Did:** Dylan: "the flap in front of his arm should move too." During the slam the mantle is now drawn through a triangle mesh, and its flap rides on the arm:
+- **Riding:** each flap point moves with its nearest point on the arm, from nothing at the shoulder to fully along the forearm, easing off toward the wrist.
+- **Hanging:** the tatters hang from the arm and trail it slightly.
+- **Pinned:** the flap is fixed at the clasp and where it joins the capelet.
+- **Landing:** the cloth swings a little past rest when the staff lands, then settles.
+- **Action length:** the action now runs 1.45 s so the cloth settles before the idle resumes. The impact (release) is still at 0.91 s.
+
+**Checks:**
+- The mage test also checks that the flap moves more than 15 rig units, never covers the fist, and is back at rest at the end.
+- A first version lagged too much: a joint point showed for about 50 ms during the plunge. The test caught it, and I fixed it by lagging only the hanging tatters.
+- Stepping the slam 290 times at desktop and 390x693 shows no joint point.
+- The mesh draw takes about 1.7 ms a frame.
+
+All suites pass. `engine.js` is unchanged.
+
+**Files:** `runtime/nightfall-actors.js` (`drawMesh`, `MAGE.flap`, `CourtMage.clothMesh`), `tests/browser/nightfall-mage.e2e.mjs`, `shots/mage/`, `ANIMATION-HANDOFF.md`, BOARD N-07.
+
+**Questions for Dylan:** as before. Does he look right now? What should the slam do on the reels? Should he replace the archer by default?
+
+**Blocked on:** Dylan's answers.
+
+---
+
 ### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: skeleton mage in the game, candidate (N-07)
 
 **Did:** Brought ChatGPT's mage into the game in place of the archer, behind `?archer=mage`; the archer stays the default for now. Dylan asked for the sleeve to move with the arm, then sent a new mantle without the sleeve: a long flap over the staff arm, registered to the mage canvas (its skull is within 3 px of the robe cover's).

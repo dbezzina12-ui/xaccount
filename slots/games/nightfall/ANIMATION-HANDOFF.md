@@ -102,8 +102,14 @@ This is the archer's replacement: Dylan approved a skeleton mage that bangs its 
   - The arm is solved from the shoulder to the grip every frame, so it follows both the breath and the staff. Its elbow matches ChatGPT's proof to 0.02 rig units.
   - The body and mantle breathe with the same warp as the reaper.
   - `&mageDebug=joints` makes the mantle and robe see-through.
-- **Slam** (`SLAM`, from ChatGPT's timing over 1.2 s):
-  - lift 39 rig units by 0.6 s, hold to 0.75 s, slam to the impact at 0.91 s, then a small bounce;
+- **The mantle's flap rides on the arm** (Dylan: "the flap in front of his arm should move too"):
+  - During the slam the mantle is drawn through a triangle mesh. Each flap point moves with its nearest point on the arm: not at all near the shoulder, fully along the forearm, and easing off toward the wrist.
+  - The cloth above the arm follows less with distance, and the tatters below hang from it.
+  - It is pinned at the clasp and where the flap joins the capelet.
+  - The cloth trails the arm slightly (more for the tatters further down) and swings a little past rest on the landing.
+  - Out of the slam, the cheaper row warp handles the breathing.
+- **Slam** (`SLAM`, from ChatGPT's timing; the action now runs 1.45 s so the flap settles):
+  - lift 39 rig units by 0.6 s, hold to 0.75 s, slam to the impact at 0.91 s, a small bounce, the staff still by 1.2 s and the flap by 1.45 s;
   - the head looks up during the lift and nods into the impact, and the shoulders settle hard as the staff lands;
   - `shoot()` resolves at the impact with the crystal's position, so the game's existing trail starts there.
 - **Checks:** `tests/browser/nightfall-mage.e2e.mjs` checks every frame of a real slam at desktop, 390x844 and 390x693, plus the idle:
@@ -111,7 +117,8 @@ This is the archer's replacement: Dylan approved a skeleton mage that bangs its 
   - the fingers stay on the shaft and the forearm on the wrist;
   - the feet stay planted;
   - the lifted staff stays on screen, and the slam resolves at the impact;
-  - the mage shares the reaper's ground line.
+  - the mage shares the reaper's ground line;
+  - the flap moves more than 15 units, never covers the fist, and is back at rest when the slam ends.
 - **Previews:** `shots/mage/`.
 - **Still open:**
   - The slam's effect on the reels still uses the archer's arrow trail; Dylan is choosing a mage effect.
