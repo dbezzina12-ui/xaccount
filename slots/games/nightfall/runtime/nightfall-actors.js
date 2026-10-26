@@ -56,7 +56,26 @@ const rotAbout=(deg,[x,y])=>{const r=deg*Math.PI/180,c=Math.cos(r),s=Math.sin(r)
 const move=([x,y])=>[1,0,0,1,x,y];
 const apply=(m,[x,y])=>[m[0]*x+m[2]*y+m[4],m[1]*x+m[3]*y+m[5]];
 // A part's rest placement (rig.json), identity if it has none.
-export const restOf=(J,kind,name)=>J.rest?.[RIGS[kind].parts[name].rest||name]||I;
+export const restOf=(J,kind,name,spec=RIGS[kind])=>J.rest?.[spec.parts[name]?.rest||name]||I;
+
+// Reaper v2 candidate (`?reaper=v2`): ChatGPT's registered bone arm under
+// Dylan's shoulder mantle, made by tools/nightfall-reaper-v2.py into
+// assets/nightfall/reaper-v2/ (boxes and joints in its rig.json; rig space
+// 400 x 430). Back to front: the robe body; the upper arm, forearm and hand
+// with the scythe, under the mantle; the mantle, pinned at the chest clasp,
+// over the shoulder and elbow; the fist and scythe again without the wrist
+// stub, in front of the mantle, robe and boots; and the hood again, faded in
+// while the blade swings behind the head. `fade` names the pose key that
+// sets a part's opacity.
+export const REAPER_V2={size:[400,430],dir:'reaper-v2',blink:false,parts:{
+ body:{file:'body',bone:'chest',z:0},
+ armUpper:{file:'arm-upper',bone:'upper',z:1},
+ armFore:{file:'arm-fore',bone:'fore',z:2},
+ hand:{file:'hand',bone:'hand',z:3},
+ mantle:{file:'mantle',bone:'chest',z:4},
+ handFront:{file:'hand-front',bone:'hand',z:5},
+ head:{file:'head',bone:'chest',z:6,fade:'headOver'}
+}};
 const ang=([x,y])=>Math.atan2(y,x)*180/Math.PI;
 const sub=(a,b)=>[a[0]-b[0],a[1]-b[1]],add=(a,b)=>[a[0]+b[0],a[1]+b[1]],len=v=>Math.hypot(v[0],v[1]),scale=(v,k)=>[v[0]*k,v[1]*k];
 const ease=t=>t<.5?2*t*t:1-(-2*t+2)**2/2,clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
@@ -89,6 +108,14 @@ function reaperBones(J,pose){
  b.upperRight=mul(b.chest,rotAbout(pose.upperRight||0,J.shoulderRight));
  b.foreRight=mul(b.upperRight,rotAbout(pose.foreRight||0,J.elbowRight));
  b.scythe=mul(b.foreRight,rotAbout(pose.scythe||0,J.grip));
+ return b;
+}
+function reaperV2Bones(J,pose){
+ const b={};
+ b.chest=breathe(J.sole,pose.breath||0);
+ b.upper=mul(b.chest,rotAbout(pose.shoulder||0,J.shoulder));
+ b.fore=mul(b.upper,rotAbout(pose.elbow||0,J.elbow));
+ b.hand=mul(b.fore,rotAbout(pose.wrist||0,J.wrist));
  return b;
 }
 function archerBones(J,pose){
@@ -140,28 +167,35 @@ export const STRIKE=[
 ];
 
 class Actor {
- constructor(stage,kind){
+ constructor(stage,kind,spec=RIGS[kind]){
   this.stage=stage;this.kind=kind;this.run=0;this.pending=null;this.raf=0;this.idleRaf=0;this.blinkTimer=0;this.joints=null;this.pose={};this.nod=null;
+  this.spec=spec;this.size=spec.size||SIZE;this.dir=spec.dir||kind;this.blinks=spec.blink!==false;this.parts={};
   this.stage.querySelector('canvas')?.remove();
   this.rig=document.createElement('div');this.rig.className='character-rig '+kind;
-  const spec=RIGS[kind];
-  this.rig.innerHTML=`<span class="rig-shadow"></span>`+Object.entries(spec.parts).map(([name,{file,box:[x,y,w,h],z}])=>`<img class="rig-part part-${name}" data-part="${name}" src="${ROOT}${kind}/${file}.webp" style="left:${x/3.2}%;top:${y/4.3}%;width:${w/3.2}%;height:${h/4.3}%;z-index:${z}" alt="" draggable="false">`).join('');
   this.stage.append(this.rig);
-  this.parts=Object.fromEntries([...this.rig.querySelectorAll('[data-part]')].map(e=>[e.dataset.part,e]));
+  if(Object.values(spec.parts).every(p=>p.box))this.build();
   this.onVisibility=()=>{if(document.hidden){this.stopBlink();this.stopIdle();}else{this.scheduleBlink();this.startIdle();}};
   document.addEventListener('visibilitychange',this.onVisibility);
   this.resize=new ResizeObserver(()=>this.place());
   for(const id of ['board-shell','controller'])if(document.getElementById(id))this.resize.observe(document.getElementById(id));
   window.addEventListener('resize',()=>this.place());
  }
+ // The part images, placed by their boxes (rig units) as % of the rig.
+ build(){
+  const [W,H]=this.size;
+  this.rig.innerHTML=`<span class="rig-shadow"></span>`+Object.entries(this.spec.parts).map(([name,{file,box:[x,y,w,h],z}])=>`<img class="rig-part part-${name}" data-part="${name}" src="${ROOT}${this.dir}/${file}.webp" style="left:${x/W*100}%;top:${y/H*100}%;width:${w/W*100}%;height:${h/H*100}%;z-index:${z}" alt="" draggable="false">`).join('');
+  this.parts=Object.fromEntries([...this.rig.querySelectorAll('[data-part]')].map(e=>[e.dataset.part,e]));
+ }
+ async loadJoints(){return (await fetch(ROOT+'rig.json').then(r=>r.json()))[this.kind];}
  async load(){
-  const blink=new Image();blink.src=ROOT+this.kind+'/blink.webp';this.blink=blink;
-  const [joints]=await Promise.all([fetch(ROOT+'rig.json').then(r=>r.json()),...[...this.rig.querySelectorAll('img'),blink].map(i=>i.decode())]);
-  this.joints=joints[this.kind];
+  const joints=await this.loadJoints();
+  let blink=null;if(this.blinks){blink=new Image();blink.src=ROOT+this.dir+'/blink.webp';this.blink=blink;}
+  await Promise.all([...this.rig.querySelectorAll('img'),...(blink?[blink]:[])].map(i=>i.decode()));
+  this.joints=joints;
   this.shadow();this.place();this.idle();
  }
  // The contact shadow under the boots, on the sole line (rig space).
- shadow(){const J=this.joints,[cx,w]=this.kind==='reaper'?[180,196]:[176,168];Object.assign(this.rig.querySelector('.rig-shadow').style,{left:(cx-w/2)/3.2+'%',width:w/3.2+'%',top:(J.sole-8)/4.3+'%',height:16/4.3+'%'});}
+ shadow(){const J=this.joints,[W,H]=this.size,[cx,w]=J.feet||(this.kind==='reaper'?[180,196]:[176,168]);Object.assign(this.rig.querySelector('.rig-shadow').style,{left:(cx-w/2)/W*100+'%',width:w/W*100+'%',top:(J.sole-8)/H*100+'%',height:16/H*100+'%'});}
  // Stand both characters on one ground line. Phones: the soles sit on the
  // bottom of the controller's first row (Buy Bonus, - and +), on the stone path
  // and clear of the icon row under it, as in the layout target. Desktop: on the
@@ -170,7 +204,9 @@ class Actor {
   if(!this.joints)return;
   const board=document.getElementById('board-shell').getBoundingClientRect(),c=document.getElementById('controller').getBoundingClientRect();
   const mobile=innerWidth<=760&&innerHeight>innerWidth,extra=Number(document.documentElement.style.getPropertyValue('--actor-scale'))||1;
-  const soleFrac=this.joints.sole/SIZE[1],[topFrac,centre]=this.kind==='reaper'?[5/SIZE[1],.5375]:[36/SIZE[1],.544];
+  const [W,H]=this.size,soleFrac=this.joints.sole/H,centre=this.joints.centre??(this.kind==='reaper'?.5375:.544);
+  // How far right the art reaches (desktop: the reaper's reach ends 18 px into the board).
+  const reach=this.joints.right?this.joints.right/W+.06:1;
   let h,ground,x;
   if(mobile){
    // The shared controller lives in an open shadow root.
@@ -180,14 +216,14 @@ class Actor {
    // room between the board and the ground; the blade may cross the frame a little.
    const room=ground-(board.bottom-14);
    h=clamp(room/((414-5)/SIZE[1]),120,Math.min(innerWidth*.74,330))*extra;
-   const w=h*SIZE[0]/SIZE[1];
+   const w=h*W/H;
    x=(this.kind==='reaper'?.175:.83)*innerWidth-w*centre;
   }else{
    ground=c.top-6;
-   h=Math.min(490,innerHeight*.64)*extra;const w=h*SIZE[0]/SIZE[1];
-   x=this.kind==='reaper'?Math.max(-w*.08,board.left-w+18):Math.min(innerWidth-w*.92,board.right-18);
+   h=Math.min(490,innerHeight*.64)*extra;const w=h*W/H;
+   x=this.kind==='reaper'?Math.max(-w*.08,board.left-w*reach+18):Math.min(innerWidth-w*.92,board.right-18);
   }
-  const w=h*SIZE[0]/SIZE[1],y=ground-h*soleFrac;
+  const w=h*W/H,y=ground-h*soleFrac;
   this.ground=ground;
   Object.assign(this.stage.style,{width:w+'px',height:h+'px',left:x+'px',right:'auto',top:y+'px',bottom:'auto',transform:'none'});
  }
@@ -195,9 +231,10 @@ class Actor {
  // the part's own pixels (transform-origin 0 0).
  draw(pose=this.pose){
   if(!this.joints)return;
-  const s=this.rig.clientWidth/SIZE[0]||1,frame=this.bones(pose);
+  const s=this.rig.clientWidth/this.size[0]||1,frame=this.bones(pose);
   for(const [name,el] of Object.entries(this.parts)){
-   const spec=RIGS[this.kind].parts[name],m=mul(frame.bones[spec.bone]||I,restOf(this.joints,this.kind,name)),[bx,by]=spec.box;
+   const spec=this.spec.parts[name],m=mul(frame.bones[spec.bone]||I,restOf(this.joints,this.kind,name,this.spec)),[bx,by]=spec.box;
+   if(spec.fade)el.style.opacity=clamp(pose[spec.fade]||0).toFixed(3);
    // Element px: p_css = s*B + L*q + t, with t = s*((L - I) B + T).
    const e=s*((m[0]-1)*bx+m[2]*by+m[4]),f=s*(m[1]*bx+(m[3]-1)*by+m[5]);
    el.style.transform=`matrix(${m[0].toFixed(5)},${m[1].toFixed(5)},${m[2].toFixed(5)},${m[3].toFixed(5)},${e.toFixed(2)},${f.toFixed(2)})`;
@@ -205,8 +242,8 @@ class Actor {
   this.paintExtras?.(frame,pose);
   this.frame=frame;
  }
- stopBlink(){clearTimeout(this.blinkTimer);if(this.parts.head)this.parts.head.src=ROOT+this.kind+'/head.webp';}
- scheduleBlink(){clearTimeout(this.blinkTimer);if(document.hidden||reduced())return;this.blinkTimer=setTimeout(()=>{if(this.pending||document.getElementById('menu')?.open){this.scheduleBlink();return;}this.parts.head.src=this.blink.src;this.blinkTimer=setTimeout(()=>{this.parts.head.src=ROOT+this.kind+'/head.webp';this.scheduleBlink();},130);},3400+Math.random()*2200);}
+ stopBlink(){clearTimeout(this.blinkTimer);if(this.blinks&&this.parts.head)this.parts.head.src=ROOT+this.dir+'/head.webp';}
+ scheduleBlink(){clearTimeout(this.blinkTimer);if(!this.blinks||document.hidden||reduced())return;this.blinkTimer=setTimeout(()=>{if(this.pending||document.getElementById('menu')?.open){this.scheduleBlink();return;}this.parts.head.src=this.blink.src;this.blinkTimer=setTimeout(()=>{this.parts.head.src=ROOT+this.dir+'/head.webp';this.scheduleBlink();},130);},3400+Math.random()*2200);}
  // A slow idle cycle: breathing, and a little sway carried down each arm.
  // At most 30 paints a second; none while hidden, under reduced motion, during
  // an action, or with the menu open.
@@ -245,13 +282,49 @@ class Actor {
  }
 }
 
+// The v2 strike, toward the board on the reaper's right. Keys are the
+// shoulder, elbow and wrist turns (degrees, clockwise); the scythe turns by
+// their sum. Wind up with the blade back behind the hood (-56 at .38, the
+// fist raised beside the hood, the hood drawn over the blade), bring it over
+// the top, then chop down toward the board: +66 at the release (.48), +94 in
+// the follow-through, and settle back. The hood layer fades out (.43 to .45)
+// while the blade is above the head, clear of it. The elbow and shoulder
+// stay under the mantle throughout (tests/browser/nightfall-reaper-v2.e2e.mjs).
+export const STRIKE_V2=[
+ [0,{}],
+ [.08,{shoulder:-2,elbow:3,wrist:-6,headOver:1}],
+ [.2,{shoulder:-8,elbow:10,wrist:-24,headOver:1}],
+ [.38,{shoulder:-20,elbow:24,wrist:-60,headOver:1}],
+ [.43,{shoulder:-4,elbow:8,wrist:-4,headOver:1}],
+ [.45,{shoulder:0,elbow:14,wrist:12}],
+ [.48,{shoulder:6,elbow:25,wrist:35}],
+ [.58,{shoulder:10,elbow:38,wrist:46}],
+ [.74,{shoulder:4,elbow:14,wrist:16}],
+ [1,{}]
+];
+
 export class CourtKnight extends Actor {
- constructor(stage){super(stage,'reaper');}
- bones(pose){return {bones:reaperBones(this.joints,pose)};}
- idlePose(t){const w=Math.sin(t*Math.PI*2/4.2),v=Math.sin(t*Math.PI*2/5.6+1);return {breath:.0065*w,cape:.7*v,head:.8*Math.sin(t*Math.PI*2/6.3),upperRight:.8*v,foreRight:.6*Math.sin(t*Math.PI*2/5.6+.4),scythe:-.5*v,upperLeft:-.7*v,foreLeft:-.8*Math.sin(t*Math.PI*2/5.6+.5)};}
+ constructor(stage){
+  const v2=new URLSearchParams(location.search).get('reaper')==='v2';
+  super(stage,'reaper',v2?REAPER_V2:RIGS.reaper);this.v2=v2;
+ }
+ // v2: the boxes and joints come from its own rig.json.
+ async loadJoints(){
+  if(!this.v2)return super.loadJoints();
+  const rig=await fetch(ROOT+'reaper-v2/rig.json').then(r=>r.json());
+  this.spec={...REAPER_V2,size:rig.size,parts:Object.fromEntries(Object.entries(REAPER_V2.parts).map(([n,p])=>[n,{...p,box:rig.parts[p.file].box}]))};
+  this.size=rig.size;this.build();
+  // `&reaperDebug=joints`: the mantle and robe see-through, to inspect the joints.
+  if(new URLSearchParams(location.search).get('reaperDebug')==='joints')this.rig.classList.add('debug-joints');
+  return {...rig.joints,checks:rig.checks};
+ }
+ bones(pose){return {bones:this.v2?reaperV2Bones(this.joints,pose):reaperBones(this.joints,pose)};}
+ idlePose(t){const w=Math.sin(t*Math.PI*2/4.2),v=Math.sin(t*Math.PI*2/5.6+1);
+  if(this.v2)return {breath:.0065*w,shoulder:.8*v,elbow:.6*Math.sin(t*Math.PI*2/5.6+.4),wrist:-.5*v};
+  return {breath:.0065*w,cape:.7*v,head:.8*Math.sin(t*Math.PI*2/6.3),upperRight:.8*v,foreRight:.6*Math.sin(t*Math.PI*2/5.6+.4),scythe:-.5*v,upperLeft:-.7*v,foreLeft:-.8*Math.sin(t*Math.PI*2/5.6+.5)};}
  // The blade's position on screen (its curve's midpoint), for tests and effects.
- bladePoint(){const J=this.joints,m=(this.frame||this.bones({})).bones.scythe,[x,y]=apply(m,[160,40]),r=this.rig.getBoundingClientRect();return {x:r.left+x*r.width/SIZE[0],y:r.top+y*r.height/SIZE[1]};}
- strike({turbo=false}={}){this.stage.classList.add('attacking');return this.action({duration:turbo?520:1050,release:.48,skip:()=>globalThis.NightFall?.state.skip,pose:p=>sample(STRIKE,p)});}
+ bladePoint(){const J=this.joints,b=(this.frame||this.bones({})).bones,[x,y]=this.v2?apply(b.hand,J.blade):apply(b.scythe,[160,40]),r=this.rig.getBoundingClientRect();return {x:r.left+x*r.width/this.size[0],y:r.top+y*r.height/this.size[1]};}
+ strike({turbo=false}={}){this.stage.classList.add('attacking');const keys=this.v2?STRIKE_V2:STRIKE;return this.action({duration:turbo?520:1050,release:.48,skip:()=>globalThis.NightFall?.state.skip,pose:p=>sample(keys,p)});}
 }
 
 export class CourtArcher extends Actor {

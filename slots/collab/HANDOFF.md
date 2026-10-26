@@ -4,6 +4,39 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: reaper v2 candidate, bone arm under the mantle (N-06)
+
+**Did:** Built the reaper from ChatGPT's `Reaper-Arm-Pieces-v1` (SHA-256 matches) and the shoulder mantle Dylan sent, as Dylan directed: the bare bone arm, no purple sleeves, with the mantle's skull replacing the chest clasp. The game shows it with `?reaper=v2`; the current reaper stays the default. Add `&reaperDebug=joints` to see through the mantle and robe.
+- **Layers, back to front:**
+  - the robe body;
+  - the upper arm, forearm and hand with the scythe, under the mantle;
+  - the mantle, pinned at the chest clasp at 0.8 scale, so its skull matches the clasp, and hiding the shoulder and elbow;
+  - the fist and scythe again without the wrist stub, so the fist and shaft pass in front of the mantle, robe and boots;
+  - the hood again, faded in while the blade swings behind the head.
+
+  This also fixes the shaft vanishing behind the body that v1's order caused. `tools/nightfall-reaper-v2.py` builds the layers.
+- **Strike:**
+  - the fist rises beside the hood while the blade goes back behind it (-56° at .38);
+  - the blade comes over the top, then chops down toward the board (+66° at the release, .48, and +94° in the follow-through).
+  - The hood layer fades out (.43–.45) only while the blade is above the head, clear of it.
+- **Checks** (`tests/browser/nightfall-reaper-v2.e2e.mjs`): these read the art's pixels on every frame of a real strike at desktop, 390x844 and 390x693.
+  - No shoulder or elbow point shows.
+  - The blade is clear of the hood whenever the hood is mid-fade.
+  - The boots stay planted, and the reaper shares the archer's ground line.
+
+  With the mantle hidden, 69 joint points show; with a bad fade, 24 blade points land on the hood. The test skips where the art is absent. All suites pass (119, studio 61, Night Fall 15, browser 51). `engine.js` is unchanged.
+- **Not done in this pass:** the head, cape and left arm are baked into ChatGPT's body layer, so they don't move. Blink is off for v2.
+
+**Files:** `games/nightfall/runtime/nightfall-actors.js` (`REAPER_V2`, `STRIKE_V2`, size-aware rig), `nightfall.css` (debug view), `tools/nightfall-reaper-v2.py`, `tests/browser/nightfall-reaper-v2.e2e.mjs`. The art is in `runtime/assets/nightfall/reaper-v2/`, git-ignored.
+
+**Next for ChatGPT:** nothing until Dylan's verdict. If he wants the head, cape and left arm to move too, they need to be separate layers on the same 1600 × 1720 canvas.
+
+**Questions for Dylan:** 1. Does the v2 reaper and its swing look right? 2. May the v2 art be committed to the repo, like the rest of Night Fall's art? Until then the published game can't show it.
+
+**Blocked on:** Dylan's look.
+
+---
+
 ### 2026-10-25 · ChatGPT → Claude + Dylan · ComfyUI fit-control experiment completed; art quality not approved
 
 **Did:** Dylan asked to try the proposed masked/layered generation approach. Installed and ran ComfyUI 0.42.0 locally (commit `fe298e4e20f1ff26d30e8639267bbd0b57811390`) on CPU. Used SD1.5 inpainting for three real 512 × 512 sleeve renders: full strength, lower strength, then Canny ControlNet. The last run used 16 steps, denoise 0.9, CFG 6.5, seed 149269, and took about 125 seconds. Krita GUI/plugin was not run.
