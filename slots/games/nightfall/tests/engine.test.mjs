@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {SYMBOLS,RULES,seedRng,clusters,evaluate,collapse,strike,resolveSpin,generateRound,multiplier,fsCount,mageTarget,isWild} from '../runtime/engine.js';
+import {SYMBOLS,RULES,seedRng,clusters,evaluate,collapse,strike,resolveSpin,generateRound,multiplier,fsCount,mageTarget,isWild,bonusFor} from '../runtime/engine.js';
 const empty=()=>Array(49).fill('fs');
 test('clusters connect orthogonally, not diagonally; five required',()=>{const b=empty();[0,8,16,24,32].forEach(i=>b[i]='ruby');assert.equal(clusters(b).length,0);[0,1,2,9,16].forEach(i=>b[i]='ruby');assert.equal(clusters(b)[0].cells.length,6);});
 test('first hit marks; second activates 2x; shared cells advance only once',()=>{const b=empty();[0,1,2,3,4].forEach(i=>b[i]='ruby');let e=evaluate(b,Array(49).fill(0));assert.equal(e.wins[0].multiplier,1);assert.equal(e.hits[0],1);e=evaluate(b,e.hits);assert.equal(e.wins[0].multiplier,10);assert.equal(e.hits[0],2);assert.equal(multiplier(99),1024);});
@@ -166,4 +166,49 @@ test('no eligible cell: no wild, nothing overwritten',()=>{
  const r2=resolveSpin({rng:seedRng(2),board:one,roamers:[5,6]});assert.deepEqual(r2.roamers,[30]);
  // The prior cell is avoided whenever another exists.
  for(let seed=1;seed<200;seed++){const two=Array(49).fill('fs');two[3]='ruby';two[4]='crown';assert.equal(mageTarget(two,seedRng(seed),3),4);}
+});
+
+// Super tombstones and the bonus tiers (Dylan, 2026-10-26).
+test('the tombstones on a base spin pick the bonus: Free Spins, Super, Hidden',()=>{
+ const t=(fs,sfs)=>bonusFor(fs,sfs);
+ assert.equal(t(2,0),null);assert.equal(t(1,1),null);assert.equal(t(0,2),null);
+ assert.deepEqual(t(3,0),{mode:'regular',count:10,prize:0});assert.deepEqual(t(4,0),{mode:'regular',count:12,prize:0});assert.deepEqual(t(5,0),{mode:'regular',count:15,prize:0});
+ // 2 tombstones + a Super tombstone: Super; 3 + 1: Super + 2 spins; 4 + 1: Super + 4.
+ assert.deepEqual(t(2,1),{mode:'super',count:10,prize:0});assert.deepEqual(t(1,2),{mode:'super',count:10,prize:0});
+ assert.deepEqual(t(3,1),{mode:'super',count:12,prize:0});assert.deepEqual(t(4,1),{mode:'super',count:14,prize:0});assert.deepEqual(t(6,1),{mode:'super',count:14,prize:0});
+ // 3 Super tombstones: Hidden; 4: Hidden + 3; 5: 1,000x and Hidden + 5.
+ assert.deepEqual(t(0,3),{mode:'hidden',count:10,prize:0});assert.deepEqual(t(2,3),{mode:'hidden',count:10,prize:0});
+ assert.deepEqual(t(0,4),{mode:'hidden',count:13,prize:0});assert.deepEqual(t(0,5),{mode:'hidden',count:15,prize:1000});
+});
+test('Super tombstones land only in base and Reaper Strike spins, never pay, and nothing replaces them',()=>{
+ let fs=0,sfs=0;
+ for(let seed=1;seed<=20000;seed++){
+  const r=resolveSpin({rng:seedRng(seed),mode:seed%4?'base':'feature'});
+  for(const e of r.events)if(e.board){fs+=e.board.filter(k=>k==='fs').length;sfs+=e.board.filter(k=>k==='sfs').length;}
+  let board;for(const e of r.events){if((e.type==='zap'||e.type==='strike')&&board)for(let i=0;i<49;i++)if(board[i]==='sfs')assert.equal(e.board[i],'sfs');if(e.board)board=e.board;}
+ }
+ const share=sfs/(fs+sfs);assert.ok(Math.abs(share-RULES.superScatter.base)<.02,`${(share*100).toFixed(1)}% of tombstones were Super`);
+ for(const mode of ['regular','super','hidden'])for(let seed=1;seed<=20;seed++)for(const e of generateRound({rng:seedRng(seed),mode}).events)if(e.board&&e.type!=='drop'||e.type==='drop'&&!e.trigger)assert.ok(!e.board?.includes('sfs')||mode==='hidden'&&e.trigger,`${mode}: a Super tombstone in free spins`);
+ const b=empty();b.fill('sfs');[0,1,2,3,4].forEach(i=>b[i]='ruby');assert.equal(clusters(b).length,1);assert.equal(clusters(b)[0].cells.length,5);
+ assert.equal(mageTarget(Array(49).fill('sfs'),seedRng(1)),-1);
+});
+test('a natural Super from a base spin: tiles at 2x, the spins its tombstones earned',()=>{
+ let found=0;
+ for(let seed=1;seed<=60000&&found<3;seed++){
+  const r=generateRound({rng:seedRng(seed),record:false});if(r.bonusMode!=='super')continue;found++;
+  const round=generateRound({rng:seedRng(seed)}),start=round.events.findIndex(e=>e.type==='bonusStart'),last=round.events.slice(0,start).filter(e=>e.board).at(-1).board;
+  const fsN=last.filter(k=>k==='fs').length,sfsN=last.filter(k=>k==='sfs').length,want=bonusFor(fsN,sfsN);
+  assert.equal(want.mode,'super');assert.equal(round.events[start].mode,'super');assert.equal(round.events[start].count,want.count);
+  assert.ok(round.events.slice(start).find(e=>e.type==='drop').hits.every(h=>h===2));
+ }
+ assert.equal(found,3);
+});
+test('Hidden Free Spins: tiles at 2x, a roamer out from the first spin, cross-cuts',()=>{
+ for(let seed=1;seed<=20;seed++){
+  const round=generateRound({rng:seedRng(seed),mode:'hidden'});
+  assert.equal(round.events[0].board.filter(k=>k==='sfs').length,3);
+  const spins=freeSpins(round);assert.ok(spins[0][0].hits.every(h=>h===2));
+  const roam=spins[0].find(e=>e.type==='roam');assert.ok(roam&&roam.moves.length>=1&&roam.moves[0].from===-1,'a roamer lands on the first spin');
+  for(const e of round.events)if(e.type==='strike')assert.equal(e.cross,true);
+ }
 });

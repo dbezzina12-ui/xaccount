@@ -4,6 +4,39 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: spin into Super with gold tombstones; Hidden Free Spins (N-10)
+
+**Did:** Dylan: people should be able to spin into a Super. His tiers are now in the engine:
+- **Gold Super tombstone:** 4.2% of tombstones in base and Reaper Strike spins land gold. There are none in free spins.
+- **Super Free Spins** start from 3 tombstones with at least one gold: 10 spins, 12 with 4 tombstones, 14 with 5 or more. **About 1 in 2,646 base spins.**
+- **Hidden Free Spins** start from 3 gold: 10 spins, 13 with 4 gold. 5 gold pay 1,000× and give 15 spins.
+  - **Odds:** about 1 in 3.5 million spins for 3 gold, and far rarer for 4 or 5. The enhanced spin Dylan is planning, with more gold, is how players will reach it.
+  - **My first version of Hidden** (for Dylan to change): everything in Super, plus a roamer already out on spin 1, and the mage striking twice as often. It averages about 2,009×.
+- **Paying for natural Supers:** the base attack chance went back from 30% to 20%. The base spin is **95.4% ± 2.9%** over 20,000,000 spins. Free Spins now come 1 in 371, since triggers with a gold tombstone start Super instead.
+- **Presentation:**
+  - The gold tombstone is a gilded FS tombstone with a SUPER label until real art arrives.
+  - New status lines while tombstones land.
+  - A Hidden splash and mode name ("HIDDEN CRYPT").
+  - A 1,000× prize toast for 5 gold.
+  - The rules now list the tiers.
+- **Tests:** engine 27 (tiers table, gold only in base and Reaper Strike spins, a natural Super, Hidden). The new browser test plays a natural Super and a natural Hidden. All suites pass.
+
+**Files:** `games/nightfall/runtime/engine.js` (`sfs`, `bonusFor`, `hidden`, `RULES.superScatter`, `hiddenPrize`, `strikeChance.base`), `runtime/app.js`, `runtime/symbols.js`, `runtime/styles.css`, `tools/math/nightfall-sim.mjs`, `games/nightfall/tests/engine.test.mjs`, `tests/browser/nightfall-bonus.e2e.mjs`, `MATH.md`, `math/`, `import-manifest.json`, `ANIMATION-HANDOFF.md`, BOARD N-10. Shots: `games/nightfall/shots/bonus/gold-tombstones.jpg`.
+
+**Next for ChatGPT:**
+1. **Gold Super tombstone art:** the FS tombstone's size, format and registration (`assets/nightfall/symbols/fs.webp`), clearly gold or "super" at phone size. Deliver to `games/nightfall/art/inbox/super-tombstone/`. Its ID is `sfs`.
+2. The roaming-wild tile (N-09 note) is still wanted.
+3. Polish the new rules line ("Gold Super tombstones…"), the status lines and the Hidden splash copy if needed.
+
+**Questions for Dylan:**
+- Is Hidden as defined above what you want?
+- Reaper Strike spins (4×) are now at 108.9%. Price them at about 4.55×, or trim the guaranteed strike?
+- The enhanced spin: what price and how much more gold? I'll balance it when you're ready.
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: base spin balanced at 96% (N-09)
 
 **Did:** Dylan: "raise that so base spins are closer to RTP". The base game's one attack draw after the tumbles now happens on **30%** of spins (was 18%), shared half and half by the mage's single zap and the reaper's strike as before.

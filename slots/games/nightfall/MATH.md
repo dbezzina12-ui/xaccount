@@ -1,19 +1,41 @@
 # Night Fall: math sheet
 
-> Owned by Claude. Measured by `node tools/math/nightfall-sim.mjs`, which plays whole rounds through the game's own engine (`runtime/engine.js`, `generateRound`). Night Fall's math is **development math**: these are simulated measurements with 95% confidence intervals, not certified returns. Prices and pays are playtest values. The base spin and both bonus buys are balanced to about 96%; Reaper Strike spins are at 101.5%.
+> Owned by Claude. Measured by `node tools/math/nightfall-sim.mjs`, which plays whole rounds through the game's own engine (`runtime/engine.js`, `generateRound`). Night Fall's math is **development math**: these are simulated measurements with 95% confidence intervals, not certified returns. Prices and pays are playtest values. The base spin and both bonus buys are balanced to about 96%; Reaper Strike spins are at 108.9%.
 
 ## Where it stands (2026-10-26)
 
 | Mode (price) | Return | Notes |
 |---|---|---|
-| **Base spin (1×)** | **95.99% ± 2.67%** | Balanced: base attack chance 30%. Base-game wins 57.23%, triggered free spins 38.8% (20,000,000 spins) |
-| Reaper Strike spin (4×) | 101.51% ± 2.92% | Above 96% because its triggered free spins pay more now |
-| **Free Spins buy (120×)** | **96.69% ± 3.84%** | Balanced: sticky roamers and bursts |
-| **Super Free Spins buy (500×)** | **95.61% ± 1.18%** | Balanced: sticky roamers and bursts, cross-cuts 25% |
+| **Base spin (1×)** | **95.37% ± 2.87%** | 20,000,000 spins. Base-game wins 42.4%, won Free Spins 34.4%, won Super 18.6%, won Hidden 0.02%. Base attack chance 20% |
+| Reaper Strike spin (4×) | 108.88% ± 2.30% | 4,000,000 spins. Above 96%: its guaranteed strike wins bonuses (and Supers) more often. About 4.55× would make it 96% |
+| **Free Spins buy (120×)** | **96.69% ± 3.84%** | Sticky roamers and bursts |
+| **Super Free Spins buy (500×)** | **95.61% ± 1.18%** | Sticky roamers and bursts, cross-cuts 25% |
+| Hidden Free Spins (won only) | 2,008.8× average | 100,000 bonuses; reaches the 25,000× cap 1 in 35 |
 
-## Base game balance (2026-10-26)
+## Super tombstones and the bonus tiers (2026-10-26)
 
-Dylan: "raise that so base spins are closer to RTP". The one attack draw after a base spin's tumbles goes from 18% to **30%** of spins (`strikeChance.base`). The mage and the reaper still share it half and half. The mage now zaps on 1 spin in 6.7 (was 1 in 11), and the reaper strikes about as often.
+Dylan: people should be able to spin into a Super. A tombstone that lands in a base or Reaper Strike spin is a gold **Super tombstone** 4.2% of the time (`RULES.superScatter`; `sfs`). There are none in free spins. What a spin's tombstones start (`bonusFor`):
+
+| Tombstones at the end of the spin | Bonus | How often (base spins) |
+|---|---|---|
+| 3+ FS, no gold | Free Spins, 10 / 12 / 15 / 20 / 30 spins for 3 / 4 / 5 / 6 / 7+ | 1 in 371 |
+| 3 with at least one gold (e.g. 2 FS + 1 gold) | **Super Free Spins**, 10 spins | |
+| 4 with at least one gold | Super, 12 spins | about 1 in 33,000 |
+| 5+ with at least one gold | Super, 14 spins | about 1 in 540,000 |
+| any Super, all counts | | **1 in 2,646** (20,000,000 spins); 1 in 2,626 in a 24,000,000-seed search |
+| 3 gold | **Hidden Free Spins**, 10 spins | **about 1 in 3.5 million** (4 in 20,000,000 spins; 7 in the 24,000,000 seeds) |
+| 4 gold | Hidden, 13 spins | about 1 in 1.4 billion |
+| 5 gold | 1,000× bet, then Hidden, 15 spins | about 1 in 700 billion |
+
+The rows marked "about" are worked out from how often a spin ends with 3, 4, 5 and 6+ tombstones (exactly 3: 1 in 335; exactly 4: 1 in 5,200; exactly 5: 1 in 105,000; 6+: 1 in 800,000; measured over 4,000,000 spins at the 30% attack chance, a little more often than now) and the 4.2% gold share. Hidden is out of reach in ordinary spins; the planned enhanced spin, with more gold, is the way to it.
+
+**Hidden Free Spins** (Claude's first version, for Dylan to change): everything in Super (tiles start at 2×, cross-cuts on 25% of spins, Soul Harvest), plus one roamer already out from the first spin, and the mage strikes on 15% of spins. It averages 2,008.8× (± 29.8×).
+
+**Paying for it.** A natural Super averages about 493× (12 and 14-spin ones included). At 1 in 2,646 that adds 18.6% to the base spin. The base attack chance went back down from 30% to **20%** of spins (`strikeChance.base`), which brings the base-game wins from 57.2% to 42.4%. Every spin that would have started Free Spins with a gold tombstone in it now starts Super, so Free Spins themselves come a little less often (1 in 371 instead of 1 in 311).
+
+## Base game balance (2026-10-26, before Super tombstones)
+
+Superseded: with Super tombstones the base attack chance is 20% (above). Dylan: "raise that so base spins are closer to RTP". The one attack draw after a base spin's tumbles goes from 18% to **30%** of spins (`strikeChance.base`). The mage and the reaper still share it half and half. The mage now zaps on 1 spin in 6.7 (was 1 in 11), and the reaper strikes about as often.
 
 | Base attack chance | Base-game wins | Free spins trigger | Return |
 |---|---|---|---|
@@ -126,7 +148,7 @@ One more regular-buy run (100,000 rounds) used the new engine with no roaming wi
 
 ## Still to balance (decision for Dylan)
 
-- **Reaper Strike spins, 101.5% ± 2.9% at 4×:** they trigger free spins more often (1 in 178), so they gained the most from the roamers. The base attack chance doesn't touch them, since their strike is guaranteed. A price of about 4.25× would make them 96%; so would a slightly smaller guaranteed strike.
+- **Reaper Strike spins, 108.9% ± 2.3% at 4×:** they trigger bonuses more often (1 in 178, Super 1 in 1,432), so they gained the most from the roamers and the Super tombstones. The base attack chance doesn't touch them, since their strike is guaranteed. A price of about **4.55×** would make them 96%; so would a smaller guaranteed strike.
 
 ## Reproduce
 
@@ -135,4 +157,4 @@ node tools/math/nightfall-sim.mjs --json games/nightfall/math/sim-after.json
 node tools/math/nightfall-sim.mjs --engine <copy of engine.js at 1e631e8> --json games/nightfall/math/sim-before.json
 ```
 
-About 2 min 20 s each on 4 cores, or about 5 min with `--rounds base=2e7` (the current figures). The figures are in `math/sim-after.json` (as it plays now), `math/sim-before.json` (the archer, before N-08), `math/sim-n08-every-spin.json` (N-08 as first built) and `math/sim-option-b.json` (Super option B). The option scans used copies of the engine with one value changed and 50,000–100,000 bonuses each.
+About 2 min 20 s each on 4 cores, or about 6 min with `--rounds base=2e7,feature=4e6,hidden=1e5` (the current figures). The figures are in `math/sim-after.json` (as it plays now), `math/sim-before.json` (the archer, before N-08), `math/sim-n08-every-spin.json` (N-08 as first built) and `math/sim-option-b.json` (Super option B). The option scans used copies of the engine with one value changed and 50,000–100,000 bonuses each.
