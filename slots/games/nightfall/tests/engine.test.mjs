@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {SYMBOLS,RULES,seedRng,clusters,evaluate,collapse,strike,resolveSpin,generateRound,multiplier,fsCount,mageTarget,isWild,bonusFor} from '../runtime/engine.js';
+import {SYMBOLS,RULES,seedRng,clusters,evaluate,collapse,strike,resolveSpin,generateRound,multiplier,fsCount,mageTarget,isWild,bonusFor,adjacent} from '../runtime/engine.js';
 const empty=()=>Array(49).fill('fs');
 test('clusters connect orthogonally, not diagonally; five required',()=>{const b=empty();[0,8,16,24,32].forEach(i=>b[i]='ruby');assert.equal(clusters(b).length,0);[0,1,2,9,16].forEach(i=>b[i]='ruby');assert.equal(clusters(b)[0].cells.length,6);});
 test('first hit marks; second activates 2x; shared cells advance only once',()=>{const b=empty();[0,1,2,3,4].forEach(i=>b[i]='ruby');let e=evaluate(b,Array(49).fill(0));assert.equal(e.wins[0].multiplier,1);assert.equal(e.hits[0],1);e=evaluate(b,e.hits);assert.equal(e.wins[0].multiplier,10);assert.equal(e.hits[0],2);assert.equal(multiplier(99),1024);});
@@ -203,12 +203,28 @@ test('a natural Super from a base spin: tiles at 2x, the spins its tombstones ea
  }
  assert.equal(found,3);
 });
-test('Hidden Free Spins: tiles at 2x, a roamer out from the first spin, cross-cuts',()=>{
+test('Hidden Free Spins: tiles at 2x or more, a roamer out from the first spin, cross-cuts',()=>{
  for(let seed=1;seed<=20;seed++){
   const round=generateRound({rng:seedRng(seed),mode:'hidden'});
   assert.equal(round.events[0].board.filter(k=>k==='hfs').length,3);
-  const spins=freeSpins(round);assert.ok(spins[0][0].hits.every(h=>h===2));
+  // Every tile at 2x or more; the opening strikes raised some.
+  const spins=freeSpins(round);assert.ok(spins[0][0].hits.every(h=>h>=2)&&spins[0][0].hits.some(h=>h>2));
   const roam=spins[0].find(e=>e.type==='roam');assert.ok(roam&&roam.moves.length>=1&&roam.moves[0].from===-1,'a roamer lands on the first spin');
   for(const e of round.events)if(e.type==='strike')assert.equal(e.cross,true);
  }
+});
+test('Hidden opens with 3 to 5 mage strikes that raise a plus of tiles one step each',()=>{
+ const counts=new Set();
+ for(let seed=1;seed<=60;seed++){
+  const round=generateRound({rng:seedRng(seed),mode:'hidden'}),at=round.events.findIndex(e=>e.type==='hiddenStrikes'),e=round.events[at];
+  assert.equal(round.events[at-1].type,'bonusStart');assert.equal(round.events[at+1].type,'freeSpin');
+  assert.ok(e.strikes.length>=3&&e.strikes.length<=5);counts.add(e.strikes.length);
+  const want=Array(49).fill(2);for(const s of e.strikes){assert.deepEqual(s.cells.slice().sort((a,b)=>a-b),[s.cell,...adjacent(s.cell)].sort((a,b)=>a-b));for(const i of s.cells)want[i]=Math.min(11,want[i]+1);}
+  assert.deepEqual(e.hits,want);
+  // The first free spin's drop starts from those tiles.
+  assert.deepEqual(round.events.slice(at).find(x=>x.type==='drop').hits,want);
+ }
+ assert.deepEqual([...counts].sort(),[3,4,5]);
+ // No other bonus opens this way.
+ for(const mode of ['regular','super'])assert.ok(!generateRound({rng:seedRng(7),mode}).events.some(e=>e.type==='hiddenStrikes'));
 });

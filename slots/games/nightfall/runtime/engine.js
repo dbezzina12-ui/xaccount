@@ -1,5 +1,5 @@
 // Knightfall v1 — transparent prototype math, independent of presentation.
-export const RULES = Object.freeze({size:7,cluster:5,maxWin:25000,maxMultiplier:1024,bonusCost:120,superCost:500,featureCost:4,payScale:.46,scatterChance:.0055,strikeChance:{base:.19,regular:.32,super:.25,hidden:.25,feature:1},mage:{chance:{regular:.11,super:.075,hidden:.15},roamer:.5,burst:3},superScatter:{base:.042,feature:.042},hiddenScatter:{base:.00107,feature:.00107},hiddenPrize:1000});
+export const RULES = Object.freeze({size:7,cluster:5,maxWin:25000,maxMultiplier:1024,bonusCost:120,superCost:500,featureCost:4,payScale:.46,scatterChance:.0055,strikeChance:{base:.19,regular:.32,super:.25,hidden:.25,feature:1},mage:{chance:{regular:.11,super:.075,hidden:.15},roamer:.5,burst:3},superScatter:{base:.042,feature:.042},hiddenScatter:{base:.00107,feature:.00107},hiddenPrize:1000,hiddenStrikes:[3,5]});
 export const SYMBOLS=['ruby','sapphire','emerald','amethyst','amber','shield','crown'];
 // `arrow-wild` is the mage's one-time wild; `roam-wild` his sticky roamer.
 export const isWild = kind => kind==='wild'||kind==='arrow-wild'||kind==='roam-wild';
@@ -127,6 +127,13 @@ export function triggerBoard(rng,count=3,kind='fs'){
  const b=createBoard(rng,false),available=Array.from({length:49},(_,i)=>i);
  for(let j=0;j<count;j++){const k=Math.floor(rng()*available.length);b[available.splice(k,1)[0]]=kind;}return b;
 }
+// Hidden opens with the mage's strikes on the cleared board (Dylan, 2026-10-26):
+// 3 to 5 of them, each raising its tile and the tiles touching it one step.
+export function hiddenStrikes(hits,rng){
+ const [lo,hi]=RULES.hiddenStrikes,marks=hits.slice(),strikes=[],n=lo+Math.floor(rng()*(hi-lo+1));
+ for(let k=0;k<n;k++){const cell=Math.floor(rng()*49),cells=[cell,...adjacent(cell)];for(const i of cells)marks[i]=Math.min(11,marks[i]+1);strikes.push({cell,cells});}
+ return {strikes,hits:marks};
+}
 // What a base spin's tombstones start (Dylan, 2026-10-26), counting all kinds:
 // 3+ with a Hidden tombstone, Hidden Free Spins (+3 spins for 4; 5+ pay 1,000x
 // and +5); else 3+ with a gold one, Super Free Spins (+2 for 4, +4 for 5+);
@@ -156,6 +163,7 @@ export function generateRound({rng,mode='base',record=true}){
   // The mage's roamers stay for the whole bonus, retriggers included. Super
   // and Hidden tiles start at 2x; Hidden starts with one roamer already out.
   let hits=Array(49).fill(bonusMode==='regular'?0:2),roamers=bonusMode==='hidden'?[-1]:[];
+  if(bonusMode==='hidden'){const opening=hiddenStrikes(hits,rng);hits=opening.hits;emit({type:'hiddenStrikes',...opening});}
   while(remaining>0&&total<RULES.maxWin){
    if(played>=2000)throw Error('Unexpected free-spin limit; no wager should be committed.');
    remaining--;played++;emit({type:'freeSpin',remaining,number:played,mode:bonusMode,total});

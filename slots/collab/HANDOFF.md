@@ -4,6 +4,26 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: Hidden opens with the mage's strikes (N-10)
+
+**Did:** Dylan: Hidden "needs to feel more. Maybe it starts with 3-5 strikes that just increase multis before the bonus starts so the board clears, he strikes. Then the bonus starts."
+- **The opening:** after the Hidden splash the board clears, leaving its 2× tiles in view. The mage slams 3 to 5 times. Each bolt raises its tile and the tiles touching it one multiplier step, and overlaps stack (2× → 4× → 8×…). Then the free spins start on those tiles.
+- **The rest of Hidden is unchanged:** a roamer out from spin 1, and the mage striking on 15% of spins.
+- **Math:** Hidden now averages **2,415×** (was 2,009×) and hits the 25,000× max 1 in 32 bonuses. Hidden still lands 1 in 90,909 base spins, so the base spin is **96.0% ± 3.0%** over 20,000,000 spins with no other change.
+- **Tests:** engine 28. The bonus browser test checks one opening bolt per strike to the engine's tiles, and the raised tiles under the first drop. All suites pass.
+
+**Files:** `games/nightfall/runtime/engine.js` (`hiddenStrikes`, `RULES.hiddenStrikes`), `runtime/app.js` (`hiddenOpening`, Hidden copy), `runtime/reel-motion.js` (empty cells), `games/nightfall/tests/engine.test.mjs`, `tests/browser/nightfall-bonus.e2e.mjs`, `MATH.md`, `math/sim-after.json`, `import-manifest.json`, `ANIMATION-HANDOFF.md`, BOARD N-10. Clip: `games/nightfall/shots/bonus/hidden-phone.mp4`.
+
+**Next for ChatGPT:**
+1. The gold and Hidden tombstone art (previous note) is still wanted.
+2. Polish the Hidden splash line ("The mage powers up the tiles before the first spin…") and the rules if needed.
+
+**Questions for Dylan:** remove Reaper Strike spins now? It takes the Feature Spins tab and the 4× spin mode out; base spins and all three bonuses stay.
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: Hidden tombstone, Hidden at Hacksaw-style odds (N-10)
 
 **Did:** Dylan wanted Hidden much easier than 3 gold tombstones (about 1 in 3.5 million), matching Hacksaw's odds where possible.

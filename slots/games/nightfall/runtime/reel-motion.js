@@ -21,7 +21,8 @@ export class ReelMotion {
  async leave(board){
   if(this.reduced.matches||this.skip())return;
   const boxes=this.geometry(),pitch=boxes[7].y-boxes[0].y,tracks=[];
-  for(let i=0;i<49;i++){this.cells[i].classList.add('motion-target');const el=this.sprite(board[i],boxes[i]);tracks.push({el,duration:190,delay:(i%7)*12,frames:[{transform:'translateY(0)',opacity:1},{transform:`translateY(${(7-Math.floor(i/7))*pitch}px)`,opacity:.8}]});}
+  // Empty cells (Hidden's cleared board) have nothing to drop out.
+  for(let i=0;i<49;i++){if(!board[i])continue;this.cells[i].classList.add('motion-target');const el=this.sprite(board[i],boxes[i]);tracks.push({el,duration:190,delay:(i%7)*12,frames:[{transform:'translateY(0)',opacity:1},{transform:`translateY(${(7-Math.floor(i/7))*pitch}px)`,opacity:.8}]});}
   await this.run(tracks,'out');
  }
  async scatters(indices,{trigger=false}={}){

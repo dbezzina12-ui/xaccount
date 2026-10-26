@@ -1,9 +1,9 @@
 // Night Fall's bonus tiers (Claude, 2026-10-26): base spins with fixed seeds
 // that land a gold Super tombstone (Super Free Spins) and a Hidden tombstone
 // (Hidden Free Spins), on a phone. The special tombstone shows on the board,
-// the right bonus starts with the right spin count and 2x tiles, Hidden's first
-// spin puts its roamer out with a bolt from the crystal, and the award is the
-// engine's.
+// the right bonus starts with the right spin count and 2x tiles. Hidden clears
+// the board and the mage's 3 to 5 opening strikes raise the engine's tiles
+// before its first spin puts the roamer out. The award is the engine's.
 //
 //   npm run test:studio-browser
 
@@ -42,9 +42,9 @@ async function open(seed) {
 async function play(page) {
   return page.evaluate(async () => {
     const { generateRound, seedRng } = await import('./engine.js'), seed = new Uint32Array(1); crypto.getRandomValues(seed);
-    const round = generateRound({ rng: seedRng(seed[0]) }), out = { round: { mode: round.bonusMode, total: round.total, start: round.events.find((e) => e.type === 'bonusStart') }, sfs: 0, hfs: 0, styled: { sfs: false, hfs: false }, bolts: [] };
+    const round = generateRound({ rng: seedRng(seed[0]) }), out = { round: { mode: round.bonusMode, total: round.total, start: round.events.find((e) => e.type === 'bonusStart'), opening: round.events.find((e) => e.type === 'hiddenStrikes') }, sfs: 0, hfs: 0, styled: { sfs: false, hfs: false }, bolts: [] };
     const { bolt, } = globalThis.NightFall.effects, play = bolt.play.bind(bolt), mage = globalThis.NightFall.actors.archer;
-    bolt.play = (o) => { out.bolts.push({ index: o.index, origin: o.origin, crystal: mage.releasePoint() }); return play(o); };
+    bolt.play = (o) => { out.bolts.push({ index: o.index, origin: o.origin, crystal: mage.releasePoint(), freeSpin: document.getElementById('status').textContent !== 'THE HIDDEN CRYPT OPENS' }); return play(o); };
     const board = document.getElementById('board');
     new MutationObserver(() => {
       for (const [kind, cls] of [['sfs', '.fs-super'], ['hfs', '.fs-hidden']]) {
@@ -61,11 +61,8 @@ async function play(page) {
     out.classes = [...document.body.classList].filter((c) => c.endsWith('bonus'));
     out.mode = document.getElementById('mode-name').textContent;
     document.getElementById('splash-continue').click();
-    // The first free spin's drop: every tile at 2x.
-    while (!globalThis.NightFall.state.bonus || document.getElementById('fs-left').textContent === String(out.round.start.count)) await new Promise((r) => setTimeout(r, 30));
-    while (document.querySelector('#board[data-motion]')) await new Promise((r) => setTimeout(r, 20));
-    await new Promise((r) => setTimeout(r, 200));
-    out.tiles = [...document.querySelectorAll('#board .multi')].map((m) => m.hidden ? '' : m.textContent);
+    // The tiles as the first free spin's symbols start to drop (before any of its wins).
+    await new Promise((ok) => { const watch = new MutationObserver(() => { if (board.dataset.motion === 'drop') { out.tiles = [...document.querySelectorAll('#board .multi')].map((m) => (m.hidden ? '' : m.textContent)); watch.disconnect(); ok(); } }); watch.observe(board, { attributes: true, attributeFilter: ['data-motion'] }); });
     // Skip the rest, clicking through the end splash.
     globalThis.NightFall.state.skip = true;
     const clicker = setInterval(() => { if (document.getElementById('splash').open) document.getElementById('splash-continue').click(); }, 50);
@@ -101,10 +98,16 @@ test('a Hidden tombstone starts Hidden Free Spins, with a roamer out on the firs
   assert.deepEqual(r.splash, { title: 'HIDDEN FREE SPINS', value: String(r.round.start.count) });
   assert.deepEqual(r.classes.sort(), ['bonus', 'hidden-bonus', 'super-bonus']);
   assert.equal(r.mode, 'HIDDEN CRYPT');
-  // The first spin's roamer: a bolt from the crystal.
-  assert.ok(r.bolts.length >= 1, 'a bolt put the roamer out');
-  const b = r.bolts[0];
-  assert.ok(Math.hypot(b.origin.x - b.crystal.x, b.origin.y - b.crystal.y) < 1, 'the bolt left the crystal');
+  // The opening: one bolt per strike, to the engine's tiles, before the first free spin.
+  const opening = r.bolts.filter((b) => !b.freeSpin);
+  assert.deepEqual(opening.map((b) => b.index), r.round.opening.strikes.map((s) => s.cell), 'one bolt per opening strike');
+  assert.ok(opening.length >= 3 && opening.length <= 5);
+  // The first free spin starts on the raised tiles, then its roamer goes out with a bolt.
+  const raised = r.round.opening.hits.map((h) => (h >= 2 ? 2 ** (h - 1) + '×' : ''));
+  assert.deepEqual(r.tiles, raised, 'the tiles the strikes raised');
+  assert.ok(r.tiles.some((t) => parseInt(t) >= 4));
+  assert.ok(r.bolts.some((b) => b.freeSpin), 'a bolt put the roamer out');
+  for (const b of r.bolts) assert.ok(Math.hypot(b.origin.x - b.crystal.x, b.origin.y - b.crystal.y) < 1, 'each bolt left the crystal');
   assert.equal(r.award, Math.round(r.round.total * 100), 'the award');
   assert.equal(r.host, 0);
   assert.deepEqual(r.after, []);
