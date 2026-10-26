@@ -56,3 +56,8 @@
 @keyframes roam-wisp-drift{50%{transform:translate(.4%,-.6%)}}
 .lantern-paused .roaming-wild *:not(.roam-still),body:has(#menu[open]) .roaming-wild *{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){.roaming-wild .roam-layer,.roaming-wild .roam-fire-window{display:none}.roaming-wild .roam-still{display:block}}
+
+/* Approved Super and Hidden tombstones carry their own colors and lettering. */
+.fs-symbol.fs-super img.fs-shield{filter:drop-shadow(0 0 3px #a754e677)}
+.fs-symbol.fs-hidden img.fs-shield{filter:drop-shadow(0 0 3px #e43c2977)}
+.fs-symbol.fs-super:after,.fs-symbol.fs-hidden:after{content:none}
