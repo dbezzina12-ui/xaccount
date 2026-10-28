@@ -480,7 +480,7 @@ async function play(kind=session.read().spinMode) {
         $('message').textContent=`SECOND LIFE · ${event.zombies} GUARANTEED ZOMBIES · COLLECT HEARTS FOR RESPINS`;
       }else if(event.type==='heartRespin'){
         soundEffect('respin');
-        banner('SECOND LIFE','RESPIN',event.joins?`+${event.joins} ZOMBIE${event.joins>1?'S':''} JOINS · MULTIPLIERS CARRY OVER`:'ZOMBIES RETURN · MULTIPLIERS CARRY OVER');
+        banner('SECOND LIFE','RESPIN',event.joins?`+${event.joins} ZOMBIE${event.joins>1?'S JOIN':' JOINS'} · MULTIPLIERS CARRY OVER`:'ZOMBIES RETURN · MULTIPLIERS CARRY OVER');
         await pause(1150);$('win-banner').hidden=true;
       }else if(event.type==='reveal') {
         playback.beginSpin(event.turn);syncControls();

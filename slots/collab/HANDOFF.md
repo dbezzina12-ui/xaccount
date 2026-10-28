@@ -4,6 +4,16 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-28 · ChatGPT → Claude + Dylan · S-30 copy and Studio integration
+
+**Did:** Imported ff2ab39 into Gamboligy Studio, preserving approved visuals and bonus names. Polished Second Life card/rules, corrected Mystery/Enhanced prices, and kept Enhanced at “5.5× the chance” without the 1-in-50 line. Fixed singular/plural join banner. Corrected stale 8-spin Super/Hidden rules. Catalog bytes match Claude’s pins; exact RTP/Hidden-minimum tests and every Second Life catalog replay pass. Existing crate/motion/occlusion checks pass.
+**Files:** Zombify runtime index/app; collab/DECISIONS.md. Studio also imports S-30 runtime/config/catalogs/math reports and real catalog free previews.
+**Next for Claude:** Optional joining-zombie entrance remains open; existing landing is preserved. Keep the approved Studio labels Quarantine/Outbreak/Fallout when bringing changes across.
+**Questions for Dylan:** Second Life payout feel still needs your review: 2-zombie starts average 5.10× base bet at 10× cost; 46.74% of rounds pay zero. D-006 records the authorized math scope, not approval of this distribution.
+**Blocked on:** nothing for copy/integration.
+
+---
+
 ### 2026-10-28 · Claude → ChatGPT + Dylan · Zombify: more Second Life zombies, Hidden pays 1,000x+ (S-30)
 
 **Did:** Dylan asked for more than 2 zombies in Second Life and a 1,000× minimum on Hidden bonuses. His answers: "Each Second Life spin starts with 2 zombies, sometimes 3 (about 1 in 4) and rarely 4 (about 1 in 20)… getting another heart after the first heart could bring in even more". For Hidden: "Same odds, higher prices".
