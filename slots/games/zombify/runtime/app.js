@@ -13,7 +13,7 @@ import {zombieAnchor} from './zombie-layout.js';
 import {LABELS, SYMBOLS, PEOPLE, HUMAN_MULTIS, freshInfection, humanBiteValue, expandedZombies, seeded, makeRound} from './math.js';
 import {createSession, BETS} from './session.js?v=bet500';
 import {createPlayback} from './playback.js';
-import {BONUS_BUYS,BONUS_FEATURES,FEATURE_SPIN,PREVIEW_MODES,roundCostMultiplier} from './config.js';
+import {BONUS_BUYS,BONUS_FEATURES,FEATURE_SPIN,PREVIEW_MODES,SPIN_MODES,roundCostMultiplier} from './config.js';
 import {CATALOG_PREVIEWS} from './outcome-model.js';
 import {createAutoSpins,AUTO_COUNTS} from './auto-spins.js';
 import {playFS,registerFSAnimator} from './fs-presentation.js';
@@ -96,13 +96,14 @@ function syncControls() {
   $('game').classList.toggle('enhanced-spins',enhanced);
   $('game').classList.toggle('second-life-spins',life);
   $('enhanced-setting').checked=enhanced;$('enhanced-setting').disabled=locked;
-  $('activate-enhanced').disabled=locked||(!enhanced&&state.credits<state.bet*3);
+  $('activate-enhanced').disabled=locked||(!enhanced&&state.credits<Math.round(state.bet*SPIN_MODES.enhanced.cost));
   $('activate-enhanced').textContent=enhanced?'DISABLE':'ACTIVATE';$('activate-enhanced').setAttribute('aria-pressed',String(enhanced));
   $('second-life-setting').checked=life;$('second-life-setting').disabled=locked;
   for(const button of document.querySelectorAll('[data-shop-preview]'))button.disabled=locked;
   for(const button of document.querySelectorAll('[data-win-preview]'))button.disabled=locked;
-  $('enhanced-price').textContent=money(state.bet*3);
-  $('enhanced-setting-price').textContent=`3× · ${money(state.bet*3)} / SPIN`;
+  const enhancedCost=Math.round(state.bet*SPIN_MODES.enhanced.cost);
+  $('enhanced-price').textContent=money(enhancedCost);
+  $('enhanced-setting-price').textContent=`${SPIN_MODES.enhanced.cost}× · ${money(enhancedCost)} / SPIN`;
   $('shop-bet').textContent=money(state.bet);
   for(const id of ['minus','shop-minus'])$(id).disabled=locked||state.betIndex===0;
   for(const id of ['plus','shop-plus'])$(id).disabled=locked||state.betIndex===BETS.length-1;
@@ -462,7 +463,7 @@ async function play(kind=session.read().spinMode) {
   let round;
   // Super and Hidden previews draw a fresh real bonus each time (outcome-model.js);
   // the other previews replay their fixed demonstration seeds.
-  try { round=session.begin(kind,PREVIEW_MODES.includes(kind)&&!Object.hasOwn(CATALOG_PREVIEWS,kind)?seeded(kind==='preview_feature'?24:kind==='outbreak'?3:2):undefined); }
+  try { round=session.begin(kind,PREVIEW_MODES.includes(kind)&&!Object.hasOwn(CATALOG_PREVIEWS,kind)?seeded(kind==='preview_feature'?3013:kind==='outbreak'?3:2):undefined); }
   catch(error) {toast(error.message);return false;}
   busy=true;playback.endSpin();currentMode=kind;syncControls();
   if(round.result.featureSpin)$('game').dataset.featureSpin='true';else delete $('game').dataset.featureSpin;
@@ -476,10 +477,10 @@ async function play(kind=session.read().spinMode) {
   try {
     for(const event of round.result.events) {
       if(event.type==='featureSpinStart'){
-        $('message').textContent='SECOND LIFE · TWO GUARANTEED ZOMBIES · COLLECT HEARTS FOR RESPINS';
+        $('message').textContent=`SECOND LIFE · ${event.zombies} GUARANTEED ZOMBIES · COLLECT HEARTS FOR RESPINS`;
       }else if(event.type==='heartRespin'){
         soundEffect('respin');
-        banner('SECOND LIFE','RESPIN','ZOMBIES RETURN · MULTIPLIERS CARRY OVER');
+        banner('SECOND LIFE','RESPIN',event.joins?`+${event.joins} ZOMBIE${event.joins>1?'S':''} JOINS · MULTIPLIERS CARRY OVER`:'ZOMBIES RETURN · MULTIPLIERS CARRY OVER');
         await pause(1150);$('win-banner').hidden=true;
       }else if(event.type==='reveal') {
         playback.beginSpin(event.turn);syncControls();
@@ -491,7 +492,7 @@ async function play(kind=session.read().spinMode) {
         if(event.carriedMultipliers)currentCarriedMultis=[...event.carriedMultipliers];
         const upgrade=event.upgrades?.find(change=>change.from!==null);
         $('message').textContent=event.bonus?(event.tier!=='regular'?`${upgrade?`REEL ${upgrade.reel+1} UPGRADED TO ROW ${upgrade.to+1}`:'ZOMBIES RETURN · UPWARD ONLY'} · ${event.tier==='hidden'?'MULTIPLIERS CARRY OVER':'FRESH MULTIPLIERS'}`:'INFECTION CARRIES OVER · BUILD STRONGER BITES'):'HUMANS ARE FOOD · CARDS STOP THE WALK';
-        if(event.featureSpin){$('phase').textContent=`SECOND LIFE · SPIN ${event.turn}`;$('message').textContent=event.turn>1?'ZOMBIES RETURN · MULTIPLIERS CARRY OVER · NEW DIRECTIONS':'TWO GUARANTEED ZOMBIES · COLLECT HEARTS FOR RESPINS';}
+        if(event.featureSpin){$('phase').textContent=`SECOND LIFE · SPIN ${event.turn}`;$('message').textContent=event.turn>1?'ZOMBIES RETURN · MULTIPLIERS CARRY OVER · NEW DIRECTIONS':`${event.zombies} GUARANTEED ZOMBIES · COLLECT HEARTS FOR RESPINS`;}
         await spinReels(event.board,event.bonus);
         await pause(440);
       } else if(event.type==='walk'||event.type==='pass'||event.type==='heart') await walking(event);
@@ -577,7 +578,7 @@ function resetCredits(){if(busy||auto.active)return;session.reset();syncControls
 function setSpinMode(mode){
   if(busy||auto.active||pending)return false;
   const state=session.read();
-  if(mode!=='base'&&state.credits<state.bet*roundCostMultiplier(mode)){
+  if(mode!=='base'&&state.credits<Math.round(state.bet*roundCostMultiplier(mode))){
     toast('Not enough free-play credits for this spin mode. Lower your bet or reset credits in the menu.');
     syncControls();return false;
   }
@@ -774,7 +775,7 @@ if(document.modelContext?.registerTool) {
   const lifecycle=new AbortController();
   const specs=[
     {name:'read_zombify_state',title:'Read Zombify state',description:'Read the current board, free-play credits and round status.',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:true,untrustedContentHint:false},execute(input){validInput(input);return readState();}},
-    {name:'start_zombify_round',title:'Start a Zombify round',description:'Start a free-play spin or feature preview. Returns after the round begins animating. Base spins cost 1× base bet, Enhanced spins cost 3×; previews leave credits unchanged. Read state for progress and continue Outbreak when it is offered.',inputSchema:{type:'object',properties:{mode:{type:'string',enum:['base','enhanced','single','showcase','triple','down','carriers','horizontal','horizontal_left','reel','outbreak','preview_super','preview_hidden','preview_feature']}},required:['mode'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},execute(input){validInput(input,['mode']);if(!['base','enhanced','single','showcase','triple','down','carriers','horizontal','horizontal_left','reel','outbreak','preview_super','preview_hidden','preview_feature'].includes(input.mode))throw Error('Unknown mode.');if(busy||auto.active||document.querySelector('dialog[open]'))throw Error('Finish the current round or close the dialog first.');if(session.read().credits<session.read().bet*roundCostMultiplier(input.mode))throw Error('Insufficient free-play credits.');void play(input.mode);return readState();}},
+    {name:'start_zombify_round',title:'Start a Zombify round',description:'Start a free-play spin or feature preview. Returns after the round begins animating. Base spins cost 1× base bet, Enhanced spins cost 3.3×; previews leave credits unchanged. Read state for progress and continue Outbreak when it is offered.',inputSchema:{type:'object',properties:{mode:{type:'string',enum:['base','enhanced','single','showcase','triple','down','carriers','horizontal','horizontal_left','reel','outbreak','preview_super','preview_hidden','preview_feature']}},required:['mode'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},execute(input){validInput(input,['mode']);if(!['base','enhanced','single','showcase','triple','down','carriers','horizontal','horizontal_left','reel','outbreak','preview_super','preview_hidden','preview_feature'].includes(input.mode))throw Error('Unknown mode.');if(busy||auto.active||document.querySelector('dialog[open]'))throw Error('Finish the current round or close the dialog first.');if(session.read().credits<session.read().bet*roundCostMultiplier(input.mode))throw Error('Insufficient free-play credits.');void play(input.mode);return readState();}},
     {name:'continue_zombify_outbreak',title:'Continue Outbreak',description:'Accept the displayed Outbreak and start its awarded free spins, as with Tap to continue.',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},execute(input){validInput(input);if(!completeFeature)throw Error('No Outbreak is awaiting continuation.');completeFeature();return readState();}}
   ];
   for(const spec of specs) {

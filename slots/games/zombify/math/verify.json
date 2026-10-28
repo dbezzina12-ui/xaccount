@@ -1,10 +1,10 @@
 {
- "generated": "2026-10-24T14:32:15.980Z",
- "seconds": 209,
- "modelVersion": "zombify-96-v1",
- "featureVersion": "second-life-v2",
- "sourceHash": "39d3e5488768c7ceb71bbe5f53e5b66df7c75122221d73ededbd3b1e83ab1113",
- "featureSourceHash": "adf21fe1f76661741ffdd375e18532f8d5c8a1883e7ce0b2cef013f4825b6937",
+ "generated": "2026-10-28T18:41:16.512Z",
+ "seconds": 109,
+ "modelVersion": "zombify-96-v2",
+ "featureVersion": "second-life-v3",
+ "sourceHash": "ef44a02b2bbf7d19f9909e385334b35758b7a39c55783aec9cb8bf16d3c09302",
+ "featureSourceHash": "8cd15e92698d22457a971fb3d47b835f1a6853cd3972723fb6f8d3370735eddf",
  "replay": {
   "base spins": {
    "checked": 24000,
@@ -37,27 +37,12 @@
    "examples": []
   },
   "hidden via buy_mystery": {
-   "checked": 40000,
+   "checked": 23905,
    "mismatches": 0,
    "examples": []
   },
   "Second Life": {
-   "checked": 16000,
-   "mismatches": 0,
-   "examples": []
-  },
-  "natural regular (enhanced)": {
-   "checked": 1000,
-   "mismatches": 0,
-   "examples": []
-  },
-  "natural super (enhanced)": {
-   "checked": 1000,
-   "mismatches": 0,
-   "examples": []
-  },
-  "natural hidden (enhanced)": {
-   "checked": 1000,
+   "checked": 36762,
    "mismatches": 0,
    "examples": []
   },
@@ -75,31 +60,46 @@
    "checked": 1000,
    "mismatches": 0,
    "examples": []
+  },
+  "natural regular (enhanced)": {
+   "checked": 1000,
+   "mismatches": 0,
+   "examples": []
+  },
+  "natural super (enhanced)": {
+   "checked": 1000,
+   "mismatches": 0,
+   "examples": []
+  },
+  "natural hidden (enhanced)": {
+   "checked": 1000,
+   "mismatches": 0,
+   "examples": []
   }
  },
  "sessions": {
   "base": {
-   "rounds": 4000000,
-   "hits": 1098660,
-   "bonuses": 14491,
+   "rounds": 2000000,
+   "hits": 536223,
+   "bonuses": 7276,
    "errors": 0,
-   "rtp": 0.9582896125000001,
-   "ci95": 0.015761217441712445,
-   "hitRate": 0.274665,
-   "exactRtp": 0.9600000000004435,
-   "exactHit": 0.2749999999718995,
+   "rtp": 0.939259945,
+   "ci95": 0.023615895559842594,
+   "hitRate": 0.2681115,
+   "exactRtp": 0.9600000000040566,
+   "exactHit": 0.2681413612227553,
    "withinCi": true
   },
   "enhanced": {
-   "rounds": 1000000,
-   "hits": 284735,
-   "bonuses": 19841,
+   "rounds": 500000,
+   "hits": 142310,
+   "bonuses": 9806,
    "errors": 0,
-   "rtp": 0.9600397033333333,
-   "ci95": 0.022750429502010176,
-   "hitRate": 0.284735,
-   "exactRtp": 0.9599999999988167,
-   "exactHit": 0.2849999996648655,
+   "rtp": 0.9607144909090909,
+   "ci95": 0.055136010322536566,
+   "hitRate": 0.28462,
+   "exactRtp": 0.9600000000003112,
+   "exactHit": 0.28500122018470236,
    "withinCi": true
   },
   "buy_outbreak": {
@@ -128,26 +128,26 @@
   },
   "buy_mystery": {
    "rounds": 40000,
-   "hits": 39777,
+   "hits": 39809,
    "bonuses": 40000,
    "errors": 0,
-   "rtp": 0.967056249,
-   "ci95": 0.02622232756394708,
-   "hitRate": 0.994425,
-   "exactRtp": 0.9599999999987184,
-   "exactHit": 0.9942218273999976,
+   "rtp": 0.9561505456250001,
+   "ci95": 0.026108523127644594,
+   "hitRate": 0.995225,
+   "exactRtp": 0.9599999999990401,
+   "exactHit": 0.994944028499988,
    "withinCi": true
   },
   "buy_feature": {
    "rounds": 400000,
-   "hits": 262091,
+   "hits": 212765,
    "bonuses": 0,
    "errors": 0,
-   "rtp": 0.96155547,
-   "ci95": 0.005543530918790935,
-   "hitRate": 0.6552275,
-   "exactRtp": 0.9599999999999985,
-   "exactHit": 0.6545537209999974,
+   "rtp": 0.9602561574999999,
+   "ci95": 0.017865057327653356,
+   "hitRate": 0.5319125,
+   "exactRtp": 0.9600000000000001,
+   "exactHit": 0.5325733789999998,
    "withinCi": true
   }
  }

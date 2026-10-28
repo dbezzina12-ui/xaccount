@@ -9,7 +9,7 @@ export const BETS = [10,20,50,100,200,500,1000,2000,5000,10000,20000,30000,40000
 export function createSession() {
   let units=100000000, betIndex=3, active=null, lastWin=0, spinMode='base';
   return {
-    read() { return {credits:units/100, bet:BETS[betIndex], betIndex, lastWin, busy:!!active,spinMode,spinCost:BETS[betIndex]*roundCostMultiplier(spinMode)}; },
+    read() { return {credits:units/100, bet:BETS[betIndex], betIndex, lastWin, busy:!!active,spinMode,spinCost:Math.round(BETS[betIndex]*roundCostMultiplier(spinMode))}; },
     setSpinMode(mode) {
       if(!Object.hasOwn(SPIN_MODES,mode)&&mode!==FEATURE_SPIN.kind)throw Error('Unknown spin mode.');
       if(active)return false;
@@ -26,7 +26,7 @@ export function createSession() {
     },
     begin(kind=spinMode, rng) {
       if(active) throw Error('A round is already playing.');
-      const bet=BETS[betIndex],preview=PREVIEW_MODES.includes(kind),cost=bet*roundCostMultiplier(kind);
+      const bet=BETS[betIndex],preview=PREVIEW_MODES.includes(kind),cost=Math.round(bet*roundCostMultiplier(kind));
       if(units<cost*100) throw Error('Not enough free-play credits. Lower your bet or reset credits in the menu.');
       const result=makePaidRound({kind,rng});
       active={result,bet,preview,cost,kind};

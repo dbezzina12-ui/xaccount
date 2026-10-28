@@ -4,7 +4,7 @@ import data from './outcomes.js';
 import featureData from './feature-outcomes.js';
 import {makeFeatureRound} from './feature-spin.js';
 
-export const MODEL_VERSION='zombify-96-v1';
+export const MODEL_VERSION='zombify-96-v2';
 // Rejection of the uneven uint32 tail avoids modulo bias in rare events.
 export function randomTicket(total,fill=n=>crypto.getRandomValues(n)){
  if(!Number.isSafeInteger(total)||total<1||total>2**32)throw Error('Invalid ticket range');
@@ -51,7 +51,7 @@ export function makePaidRound({kind='base',rng}={}){
  if(Object.hasOwn(CATALOG_PREVIEWS,kind))return catalogPreview(CATALOG_PREVIEWS[kind],rng);
  if(kind==='preview_feature')return makeFeatureRound({...(rng?{rng}:{})});
  if(kind==='buy_feature'){
-  if(featureData.version!=='second-life-v2')throw Error('Game update required. Please reload.');
+  if(featureData.version!=='second-life-v3')throw Error('Game update required. Please reload.');
   const entry=pickEntry(featureData.pool,rng),result=makeFeatureRound({rng:seeded(entry[0])});
   if(result.total!==entry[2]||result.hearts!==entry[3]||result.spins!==entry[4])throw Error('Outcome validation failed. No credits were charged.');
   return result;

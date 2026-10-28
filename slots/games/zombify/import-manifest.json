@@ -1360,13 +1360,13 @@
     },
     {
       "path": "feature-outcomes.js",
-      "sha256": "c30490a9986a3abe1a95ca9ef8b494c1138bb057330f278df9e51168819c431a",
-      "bytes": 400969
+      "sha256": "f5b1c7f69231d4fb7fc0fedfc6f1c71fb5b868568372421155194df84b586339",
+      "bytes": 995469
     },
     {
       "path": "outcomes.js",
-      "sha256": "a3bcb569f510da3e1d49dc36c85f73ae65cf7f9188c1848b18b5cf6bfe54bf14",
-      "bytes": 3963084
+      "sha256": "1856ba0735d91697b8e8e3c6f9e4a63bdb2b854e3361ae227081ce239dff384c",
+      "bytes": 3532898
     },
     {
       "path": "rig-review.html",

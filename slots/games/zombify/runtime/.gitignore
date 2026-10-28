@@ -1,4 +1,4 @@
-# Imported immutable assets and generated catalogs. Fetch with npm run studio:prepare.
+# Imported immutable assets. Fetch with npm run studio:prepare. (The outcome catalogs are tracked: tools/math/zombify-rebalance.mjs.)
 /assets/Zombify-Spine-Prep.zip
 /assets/Zombify-Style5-Symbols.zip
 /assets/approved-rig/front/idle.png
@@ -270,8 +270,6 @@
 /assets/zombify-peek.json
 /assets/zombify-peek.png
 /controller/assets/moon-rock-v89.png
-/feature-outcomes.js
-/outcomes.js
 /rig-review.html
 /vendor/PixiJS-LICENSE.txt
 /vendor/TweenJS-LICENSE.txt

@@ -19,7 +19,7 @@ const rt = (f) => new URL(`../../games/zombify/runtime/${f}`, import.meta.url).h
 // tier (of 100), the bonus pool, then the trigger spin pool.
 const FIXTURES = {
   // Both scatters on reel 1: reels 2-6 tease, and no third scatter lands.
-  miss: { tickets: [1, 46975354], landed: [2, 2, 2, 2, 2, 2], win: 0.25 },
+  miss: { tickets: [1, 46950000], landed: [2, 2, 2, 2, 2, 2], win: 0.25 },
   regular: { tickets: [0, 0, 0, 46], landed: [2, 3, 3, 3, 3, 3], win: 0.57, ladder: ['OUTBREAK SIGNAL', 'OUTBREAK SECURED'], heading: 'OUTBREAK' },
   super: { tickets: [0, 90, 0, 7], landed: [2, 2, 2, 2, 3, 4], win: 1978.54, ladder: ['OUTBREAK SIGNAL', 'OUTBREAK SECURED', 'SUPER OUTBREAK SECURED'], heading: 'SUPER OUTBREAK' },
   hidden: { tickets: [0, 99, 0, 8], landed: [2, 3, 3, 4, 5, 5], win: 7777.19, ladder: ['OUTBREAK SIGNAL', 'OUTBREAK SECURED', 'SUPER OUTBREAK SECURED', 'HIDDEN OUTBREAK SECURED'], heading: 'HIDDEN OUTBREAK' },

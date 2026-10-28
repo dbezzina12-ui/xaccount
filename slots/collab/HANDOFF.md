@@ -4,6 +4,46 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-28 · Claude → ChatGPT + Dylan · Zombify: more Second Life zombies, Hidden pays 1,000x+ (S-30)
+
+**Did:** Dylan asked for more than 2 zombies in Second Life and a 1,000× minimum on Hidden bonuses. His answers: "Each Second Life spin starts with 2 zombies, sometimes 3 (about 1 in 4) and rarely 4 (about 1 in 20)… getting another heart after the first heart could bring in even more". For Hidden: "Same odds, higher prices".
+- **Second Life (still 10×, 96%):**
+  - **Start:** 2 zombies 75%, 3 zombies 20%, 4 zombies 5%. Each zombie is on its own reel with its own guaranteed first bite.
+  - **Joins:** every heart after the first brings one more zombie onto a free reel for the next respins, up to 6.
+  - **Respins:** still 22% of rounds.
+  - **Average win by start:** 2 zombies 5.1×, 3 zombies 15.8×, 4 zombies 52.2×.
+  - **The feel changes:** 46.7% of rounds pay nothing (was 34.5%). 14.4% return the 10× cost (was 27.5%). The top win can now reach the 25,000× cap (1 in 5.6 million) instead of stopping at 1,104×.
+- **Hidden:** every Hidden bonus now pays at least **1,000×** and averages **2,256×** (was 816×). Its odds are unchanged: 1% of natural bonuses and 10% of Mystery.
+  - **Mystery Buy:** 250× → **400×**.
+  - **Enhanced spin:** 3× → **3.3×**.
+  - **Base spins without a bonus:** return 48.5% instead of 53.7%. The hit rate is 26.8% (was 27.5%), and base play swings more (SD 26 per spin, was 18).
+- **Every mode is exactly 96.0000%.** All 238,667 catalog outcomes were replayed through the engine with 0 mismatches. Session play was inside its confidence interval.
+- **Free previews:**
+  - The Second Life demo is now seed 3013 (25.45×): 2 zombies, two hearts, a third zombie joins, and it pays most on the last spin.
+  - The Hidden preview always pays 1,000× or more.
+- **How:** `tools/math/zombify-rebalance.mjs` rebuilds both catalogs from the hash-verified v125 catalogs (Hidden: only its 1,000×+ outcomes, lightly reweighted). The catalogs are now tracked in the repository and re-pinned in `import-manifest.json`. This supersedes D-004's "math unchanged" for Zombify, at Dylan's request.
+- **Tests:** feature-spin 11 (exact start and respin mixes, joins, directions for 3–6 zombies); zombify-math 4 (new: the Hidden minimum); previews 3. `npm test` 120, studio 63, Night Fall 38; Zombify browser suites 38 of 38 (one anticipation fixture moved to its outcome's new tickets).
+
+**Files:**
+- Engine and config: `games/zombify/runtime/feature-spin.js`, `config.js` (`FEATURE_SPIN.startZombies`, `maxZombies`, enhanced 3.3, Mystery 400), `outcome-model.js`, `session.js`, `app.js` (prices, zombie count, "+1 ZOMBIE JOINS", demo seed).
+- Copy: `index.html` (prices and Second Life copy, flagged below).
+- Catalogs: `outcomes.js`, `feature-outcomes.js`, `runtime/.gitignore`, `import-manifest.json`.
+- Tools: `tools/math/zombify-rebalance.mjs` (new), `zombify-report.mjs`, `zombify.js`.
+- Math sheet: `games/zombify/MATH.md` (new Second Life table), `math/summary.json`, `math/verify.json`.
+- Tests: `games/zombify/tests/feature-spin.test.mjs`, `tests/zombify-math.test.mjs`, `tests/zombify-previews.test.mjs`, `tests/browser/anticipation.e2e.mjs`.
+
+**Next for ChatGPT:**
+1. Polish the copy I changed so it was functional: the Second Life card ("Two to four guaranteed zombies… later hearts bring more zombies"), the Second Life rules paragraph, the Mystery and Enhanced price lines, and the respin banner line "+1 ZOMBIE JOINS · MULTIPLIERS CARRY OVER".
+2. Optional presentation: the joining zombie simply lands with the respin, with no multiplier, while the others carry theirs. A small entrance (a rise or a heart burst on its cell) would sell the moment.
+
+**Questions for Dylan:**
+1. Is the Second Life shape OK? Two-zombie rounds now average 5.1× of the 10× price, and more of the value sits in 3–4 zombie starts and big chains. If you want it to feel steadier, I can trade some of the top end for more mid wins.
+2. Please record the decision in DECISIONS.md: Zombify's math is now Claude-maintained, not frozen at v125.
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-26 · Claude → ChatGPT + Dylan · Night Fall: Hidden opens with the mage's strikes (N-10)
 
 **Did:** Dylan: Hidden "needs to feel more. Maybe it starts with 3-5 strikes that just increase multis before the bonus starts so the board clears, he strikes. Then the bonus starts."

@@ -1,4 +1,4 @@
-// Exact distributions for Zombify v125, read straight from its outcome catalogs.
+// Exact distributions for Zombify, read straight from its outcome catalogs.
 //
 // The runtime (games/zombify/runtime/outcome-model.js) never computes a payout
 // at spin time: it draws a ticket, picks the catalog entry whose cumulative

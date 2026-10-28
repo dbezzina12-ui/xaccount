@@ -29,14 +29,15 @@ test('each preview is the natural bonus for its tickets: trigger spin plus bonus
   }
 });
 
-test('a Hidden preview averages the real 816x, not the cap; Super averages 240x', () => {
+test('a Hidden preview averages the real 2,256x (never under 1,000x), not the cap; Super averages 240x', () => {
   // Exact, from the catalogs: the distribution every preview is drawn from.
   const value = (tier) => mean(sumCapped(poolDist(data.pools[tier]), poolDist(data.pools[`entry_${tier}`]))) / 100;
-  assert.ok(Math.abs(value('hidden') - 816.08) < 0.01, `hidden ${value('hidden')}`);
+  assert.ok(Math.abs(value('hidden') - 2256.08) < 0.01, `hidden ${value('hidden')}`);
   assert.ok(Math.abs(value('super') - 240.08) < 0.01, `super ${value('super')}`);
   // And in play: varied wins, almost never the cap.
   const wins = Array.from({ length: 40 }, (_, i) => makePaidRound({ kind: 'preview_hidden', rng: seeded(900 + i) }).total);
   assert.ok(new Set(wins).size > 30, 'previews differ from one another');
+  assert.ok(wins.every((w) => w >= 100_000), 'every Hidden pays at least 1,000x');
   assert.ok(wins.filter((w) => w >= CAP).length <= 2, `${wins.filter((w) => w >= CAP).length} of 40 capped`);
 });
 

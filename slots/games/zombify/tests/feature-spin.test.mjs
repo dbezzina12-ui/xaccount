@@ -37,28 +37,36 @@ test('blocked, off-path, and already-collected hearts cannot grant a respin',()=
  const r=walkZombies(board,seeded(2),{hearts:true});assert.equal(r.hearts,1);assert.equal(r.events.filter(e=>e.type==='heart').length,1);
 });
 
-test('all published feature outcomes replay: two zombies, retained identities/multipliers, one spin per collected heart, real line awards',()=>{
- const directions=new Set();let previousWeight=0,weighted=0n,heartTickets=0;
+test('all published feature outcomes replay: 2-4 starting zombies, one more per heart after the first, retained identities/multipliers, real line awards',()=>{
+ const directions=new Set(),startTickets={},heartMix=[0,0,0];let previousWeight=0,weighted=0n,joined=0;
  for(const [seed,end,payout,hearts,spins] of data.pool.entries){
   assert.ok(Number.isSafeInteger(end)&&end>previousWeight);
-  const weight=end-previousWeight;previousWeight=end;weighted+=BigInt(payout)*BigInt(weight);if(hearts)heartTickets+=weight;
+  const weight=end-previousWeight;previousWeight=end;weighted+=BigInt(payout)*BigInt(weight);heartMix[Math.min(2,hearts)]+=weight;
   const r=makeFeatureRound({rng:seeded(seed)});
   assert.equal(r.total,payout);assert.equal(r.hearts,hearts);assert.equal(r.spins,spins);assert.ok(r.total<=CAP);
   if(r.total<CAP)assert.equal(spins,hearts+1);
-  let carried=null,anchors=null,ids=null,sum=0,moved=new Set();
+  const start=r.events[0].zombies;startTickets[start]=(startTickets[start]||0)+weight;
+  let carried=null,anchors=null,ids=null,sum=0,moved=new Set(),collected=0,joining=0;
   for(const event of r.events){
+   if(event.type==='heartRespin'){assert.equal(event.joins,joining);joining=0;}
    if(event.type==='reveal'){
     moved=new Set();
-    const zombies=event.board.filter(c=>c.kind==='zombie');assert.equal(zombies.length,2);
-    const current=zombies.map(c=>c.id).sort();if(ids)assert.deepEqual(current,ids);else ids=current;
-    if(anchors)assert.deepEqual(event.anchors,anchors);else anchors=event.anchors;
+    const zombies=event.board.filter(c=>c.kind==='zombie'),current=zombies.map(c=>c.id).sort();
+    assert.equal(event.zombies,zombies.length);assert.equal(new Set(event.anchors.map(a=>a%6)).size,event.anchors.length,'one zombie per reel');
+    // Earlier zombies keep their identity and anchor; joiners are added after them.
+    if(ids){assert.ok(ids.every(id=>current.includes(id)));assert.deepEqual(event.anchors.slice(0,anchors.length),anchors);assert.equal(zombies.length,ids.length+event.anchors.length-anchors.length);}
+    else assert.equal(zombies.length,start);
+    if(ids&&zombies.length>ids.length)joined++;
+    ids=current;anchors=event.anchors;assert.ok(zombies.length>=2&&zombies.length<=FEATURE_SPIN.maxZombies);
     for(const z of zombies){directions.add(z.direction);assert.equal(z.multi,carried?.[z.id]||0);}
     assert.ok(event.board.filter(c=>c.kind==='heart').length<=1);
     assert.equal(event.board.filter(c=>c.kind==='vial').length,0);
    }
    if(event.type==='walk'||event.type==='heart')moved.add(event.headId);
+   // Every heart after the first brings another zombie, while a reel is free.
+   if(event.type==='heart'&&++collected>1&&ids.length+joining<FEATURE_SPIN.maxZombies)joining++;
    if(event.type==='spinEnd'){
-    assert.deepEqual([...moved].sort(),ids,`seed ${seed}, spin ${event.turn}: both guaranteed zombies must move`);
+    assert.deepEqual([...moved].sort(),ids,`seed ${seed}, spin ${event.turn}: every zombie on the board must move`);
     carried=event.carried;
    }
    if(event.type==='lineWin'){
@@ -66,12 +74,15 @@ test('all published feature outcomes replay: two zombies, retained identities/mu
     assert.equal(event.win,Math.min(CAP-sum,event.uncapped));sum+=event.win;assert.equal(event.total,sum);
    }
   }
-  assert.equal(sum,r.total);
+  assert.equal(sum,r.total);assert.equal(r.zombies,ids.length);
  }
  assert.deepEqual([...directions].sort(),['down','left','right','up']);
+ assert.ok(joined>0,'some published rounds bring in a zombie');
  assert.equal(previousWeight,data.pool.total);
  assert.equal(weighted,BigInt(data.pool.total)*BigInt(FEATURE_SPIN.cost*96));
- assert.equal(heartTickets/data.pool.total,.22);
+ // The starting zombies and the respins are held exactly: 2/3/4 at 75/20/5%; no heart 78%, one 20%, two or more 2%.
+ assert.deepEqual(startTickets,Object.fromEntries(FEATURE_SPIN.startZombies.map(([z,share])=>[z,share*data.pool.total])));
+ assert.deepEqual(heartMix.map(t=>t/data.pool.total),[.78,.2,.02]);
  const hash=createHash('sha256');for(const f of ['math.js','config.js','paylines.js','feature-spin.js'])hash.update(readFileSync(new URL('../runtime/'+f,import.meta.url)));
  assert.equal(data.sourceHash,hash.digest('hex'));
 });
@@ -92,6 +103,31 @@ test('joint directions protect both first steps for every distinct-reel anchor a
  assert.equal(checked,12000);
 });
 
+test('joint directions protect every first step for three to six zombies on distinct reels',()=>{
+ const directions=['up','down','left','right'],rng=seeded(7);let checked=0;
+ for(let n=3;n<=6;n++)for(let k=0;k<400;k++){
+  const reels=[0,1,2,3,4,5].sort(()=>rng()-.5).slice(0,n),anchors=reels.map(r=>r+6*Math.floor(rng()*5));
+  const pick=anchors.map(()=>directions[Math.floor(rng()*4)]),chosen=featureDirections(anchors,pick,rng);
+  assert.equal(chosen.length,n);
+  const paths=anchors.map((source,i)=>{const result=[];for(let at=step(source,chosen[i]);at>=0;at=step(at,chosen[i]))result.push(at);return result;});
+  for(let i=0;i<n;i++){
+   assert.ok(paths[i].length,`${n} zombies: zombie ${i} has a first step`);assert.ok(!anchors.includes(paths[i][0]));
+   for(let j=0;j<n;j++)if(j!==i)assert.ok(!paths[j].includes(paths[i][0]),`${n} zombies: ${anchors} ${chosen}`);
+  }
+  checked++;
+ }
+ assert.equal(checked,1600);
+});
+
+test('starting zombies follow the configured 2/3/4 odds and joins stop at one zombie per reel',()=>{
+ assert.deepEqual(FEATURE_SPIN.startZombies.map(([z])=>z),[2,3,4]);
+ assert.equal(FEATURE_SPIN.startZombies.reduce((a,[,p])=>a+p,0),1);
+ const counts={2:0,3:0,4:0};let most=0;
+ for(let seed=1;seed<=4000;seed++){const r=makeFeatureRound({rng:seeded(seed)});counts[r.events[0].zombies]++;most=Math.max(most,r.zombies);assert.ok(r.zombies<=FEATURE_SPIN.maxZombies);}
+ for(const [z,p] of FEATURE_SPIN.startZombies)assert.ok(Math.abs(counts[z]/4000-p)<.025,`${z} zombies: ${counts[z]}`);
+ assert.ok(most>4,'later hearts can bring more zombies than the start');
+});
+
 test('formerly stranded walkers receive a step before normal path blocking applies',()=>{
  for(const seed of [38,58,73,78,108]){
   const events=makeFeatureRound({rng:seeded(seed)}).events;
@@ -102,9 +138,9 @@ test('formerly stranded walkers receive a step before normal path blocking appli
 });
 
 test('preview is reproducible and free; purchased respins charge once, settle once, and refund once',()=>{
- const demo=makeRound({kind:'preview_feature',rng:seeded(24)});
- assert.equal(demo.hearts,2);assert.equal(demo.spins,3);assert.deepEqual(demo,makeFeatureRound({rng:seeded(24)}));
- const s=createSession(),before=s.read(),preview=s.begin('preview_feature',seeded(24));
+ const demo=makeRound({kind:'preview_feature',rng:seeded(3013)});
+ assert.equal(demo.hearts,2);assert.equal(demo.spins,3);assert.deepEqual(demo,makeFeatureRound({rng:seeded(3013)}));
+ const s=createSession(),before=s.read(),preview=s.begin('preview_feature',seeded(3013));
  assert.equal(preview.cost,0);assert.equal(preview.preview,true);s.finish(preview);assert.equal(s.read().credits,before.credits);
  const index=data.pool.entries.findIndex(e=>e[3]>0),roll=((index?data.pool.entries[index-1][1]:0)+.5)/data.pool.total;
  const purchased=s.begin('buy_feature',()=>roll);assert.equal(purchased.cost,before.bet*10);assert.ok(purchased.result.spins>1);assert.equal(purchased.preview,false);
