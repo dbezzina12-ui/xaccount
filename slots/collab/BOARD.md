@@ -79,7 +79,7 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 
 | S-29 | Free Super/Hidden previews paid unrealistic wins (Hidden: the 25,000x cap every time) | Claude | review | They replayed one scripted demo round. Now each plays a real catalog bonus (Hidden averaged 816x, caps 1 in 374; since S-30, 2,256x, caps 1 in 86); credits still untouched. Paid math unchanged. See MATH.md "Free previews" |
 
-| S-30 | Zombify rebalance (Dylan 2026-10-28): Second Life starts with 2-4 zombies and later hearts bring more; Hidden pays 1,000x+; Mystery 400x, Enhanced 3.3x | Claude | review | Every mode exactly 96%; Hidden averages 2,256x; Second Life 2/3/4 zombies average 5.1x/15.8x/52.2x. `tools/math/zombify-rebalance.mjs`, MATH.md. Copy polished by ChatGPT; Studio integrated. Payout feel review remains with Dylan |
+| S-30 | Zombify rebalance (Dylan 2026-10-28): Second Life starts with 2-4 zombies and later hearts bring more; Hidden pays 1,000x+; Mystery 460x (90% Super / 10% Hidden since 2026-10-29), Enhanced 3.3x | Claude | review | Every mode exactly 96%; Hidden averages 2,256x; Second Life 2/3/4 zombies average 5.1x/15.8x/52.2x. `tools/math/zombify-rebalance.mjs`, MATH.md. Copy polished by ChatGPT; Studio integrated. Payout feel review remains with Dylan |
 
 ## Night Fall (separate project, authorized by Dylan 2026-10-25)
 

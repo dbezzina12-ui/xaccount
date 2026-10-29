@@ -10,7 +10,7 @@
 | Enhanced spin | 3.3x | **96.0000%** | 28.50% | 5.19% | 18.35 | Very high | 25,000.00x | 1 in 395,277 |
 | Buy Outbreak | 100x | **96.0000%** | 99.52% | 30.21% | 1.68 | Low | 25,000.00x | 1 in 1,000,000 |
 | Buy Super Outbreak | 250x | **96.0000%** | 99.37% | 29.90% | 1.59 | Low | 25,000.00x | 1 in 10,000 |
-| Buy Mystery Outbreak | 400x | **96.0000%** | 99.49% | 18.57% | 2.83 | Low | 25,000.00x | 1 in 822 |
+| Buy Mystery Outbreak | 460x | **96.0000%** | 99.44% | 21.19% | 2.48 | Low | 25,000.00x | 1 in 796 |
 | Second Life | 10x | **96.0000%** | 53.26% | 14.41% | 6.03 | Medium | 25,000.00x | 1 in 5,617,978 |
 
 Costs, wins and the cap are in multiples of the base bet. "SD per cost" is the standard deviation of one round's return divided by its cost; volatility uses the same bands as Game 001.
@@ -19,7 +19,7 @@ Costs, wins and the cap are in multiples of the base bet. "SD per cost" is the s
 
 - Every round draws an outcome from a weighted catalog (`games/zombify/runtime/outcomes.js`, `feature-outcomes.js`) and replays its seed to animate a result whose payout is already known. Ticket draws use rejection sampling, so there is no modulo bias.
 - **Base spin:** a bonus starts 1 in 275. **Enhanced spin** (3.3x cost): 1 in 50. A started bonus is 90% regular, 9% super, 1% hidden. It pays the trigger spin plus the bonus, capped at 25,000x.
-- **Buys** skip the trigger spin: Outbreak, Super Outbreak, or Mystery (40% regular, 50% super, 10% hidden). **Second Life** is its own feature with its own catalog.
+- **Buys** skip the trigger spin: Outbreak, Super Outbreak, or Mystery (90% super, 10% hidden). **Second Life** is its own feature with its own catalog.
 - The engine checks every round against its catalog value before crediting, and refuses the round on any mismatch.
 
 ## Where the base-spin RTP comes from
@@ -70,28 +70,27 @@ Chance of a round paying in each band, in multiples of **that mode's cost** ("Un
 
 | Win | Base spin | Enhanced spin | Buy Outbreak | Buy Super Outbreak | Buy Mystery Outbreak | Second Life |
 | --- | --- | --- | --- | --- | --- | --- |
-| No win | 73.19% | 71.50% | 1 in 208 | 1 in 159 | 1 in 198 | 46.74% |
-| Under 1x | 17.02% | 23.31% | 69.31% | 69.47% | 80.92% | 38.85% |
-| 1x to under 2x | 4.61% | 1.50% | 18.28% | 19.19% | 6.35% | 5.71% |
-| 2x to under 5x | 2.88% | 1.39% | 10.93% | 9.21% | 8.83% | 4.68% |
-| 5x to under 10x | 1.14% | 1 in 134 | 1 in 113 | 1.29% | 2.62% | 2.15% |
-| 10x to under 20x | 1 in 223 | 1 in 238 | 1 in 1,694 | 1 in 537 | 1 in 176 | 1.22% |
-| 20x to under 50x | 1 in 228 | 1 in 136 | 1 in 2,094 | 1 in 5,124 | 1 in 1,211 | 1 in 191 |
-| 50x to under 100x | 1 in 731 | 1 in 374 | 1 in 8,231 | 1 in 184,060 | 1 in 809 | 1 in 1,023 |
+| No win | 73.19% | 71.50% | 1 in 208 | 1 in 159 | 1 in 177 | 46.74% |
+| Under 1x | 17.02% | 23.31% | 69.31% | 69.47% | 78.24% | 38.85% |
+| 1x to under 2x | 4.61% | 1.50% | 18.28% | 19.19% | 8.33% | 5.71% |
+| 2x to under 5x | 2.88% | 1.39% | 10.93% | 9.21% | 10.22% | 4.68% |
+| 5x to under 10x | 1.14% | 1 in 134 | 1 in 113 | 1.29% | 2.08% | 2.15% |
+| 10x to under 20x | 1 in 223 | 1 in 238 | 1 in 1,694 | 1 in 537 | 1 in 254 | 1.22% |
+| 20x to under 50x | 1 in 228 | 1 in 136 | 1 in 2,094 | 1 in 5,124 | 1 in 1,871 | 1 in 191 |
+| 50x to under 100x | 1 in 731 | 1 in 374 | 1 in 8,231 | 1 in 184,060 | 1 in 793 | 1 in 1,023 |
 | 100x to under 250x | 1 in 979 | 1 in 1,051 | 1 in 31,117 | 1 in 10,000 | — | 1 in 3,271 |
 | 250x to under 1000x | 1 in 3,136 | 1 in 3,707 | 1 in 1,000,000 | — | — | 1 in 15,545 |
 | 1000x+ | 1 in 20,456 | 1 in 32,890 | — | — | — | 1 in 515,198 |
 
 ## Verification
 
-From `node tools/math/zombify-verify.mjs` (2026-10-28, 109s). **238,667 catalog outcomes replayed through the real engine, 0 mismatches.**
+From `node tools/math/zombify-verify.mjs` (2026-10-29, 164s). **206,667 catalog outcomes replayed through the real engine, 0 mismatches.**
 
 | Replayed | Outcomes | Mismatches |
 | --- | --- | --- |
 | base spins | 24,000 | 0 |
 | enhanced spins | 24,000 | 0 |
 | regular via buy_outbreak | 32,000 | 0 |
-| regular via buy_mystery | 32,000 | 0 |
 | super via buy_super | 30,000 | 0 |
 | super via buy_mystery | 30,000 | 0 |
 | hidden via buy_mystery | 23,905 | 0 |
@@ -111,11 +110,11 @@ Rounds played through the real session code (`createSession().begin/finish`), se
 | Enhanced spin | 500,000 | 96.071% ± 5.514% | 96.000% | 28.46% | 28.50% | 0 |
 | Buy Outbreak | 40,000 | 94.887% ± 1.408% | 96.000% | 99.54% | 99.52% | 0 |
 | Buy Super Outbreak | 40,000 | 96.363% ± 1.735% | 96.000% | 99.42% | 99.37% | 0 |
-| Buy Mystery Outbreak | 40,000 | 95.615% ± 2.611% | 96.000% | 99.52% | 99.49% | 0 |
+| Buy Mystery Outbreak | 40,000 | 94.855% ± 2.258% | 96.000% | 99.48% | 99.44% | 0 |
 | Second Life | 400,000 | 96.026% ± 1.787% | 96.000% | 53.19% | 53.26% | 0 |
 
 ## Catalog identity
 
-- `outcomes.js`: version `zombify-96-v2`, source hash `ef44a02b2bbf7d19f9909e385334b35758b7a39c55783aec9cb8bf16d3c09302`, file SHA-256 `1856ba0735d91697b8e8e3c6f9e4a63bdb2b854e3361ae227081ce239dff384c`
-- `feature-outcomes.js`: version `second-life-v3`, source hash `8cd15e92698d22457a971fb3d47b835f1a6853cd3972723fb6f8d3370735eddf`, file SHA-256 `f5b1c7f69231d4fb7fc0fedfc6f1c71fb5b868568372421155194df84b586339`
+- `outcomes.js`: version `zombify-96-v2`, source hash `63a567629d8817eeba0c1940344a94565bbffc7457cf59ff1f18a8f374b73856`, file SHA-256 `71f02cb7962d152c19509710b7232c815aef63460b8ac160c7a3784c8bfa2953`
+- `feature-outcomes.js`: version `second-life-v3`, source hash `293fb20da7f882a87b8f756e6703216bdaa851def7e3ad714e9f14d79f7564bf`, file SHA-256 `12837ad7ebd813d9763635c85e1986d06dcd124194048e75160648bdf3461825`
 - Both are built by `node tools/math/zombify-rebalance.mjs` from the hash-verified v125 catalogs, tracked in the repository, and hash-pinned in `games/zombify/import-manifest.json` (`npm run studio:prepare` verifies them).

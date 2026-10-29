@@ -599,7 +599,7 @@ function selectBuy(kind){
   soundEffect('buy');pending={kind,bet:state.bet,cost};
   const mystery=kind==='buy_mystery';
   $('confirm').dataset.mode=mystery?'mystery':offer.tier;
-  $('confirm-eyebrow').textContent=mystery?'40% OUTBREAK · 50% SUPER · 10% HIDDEN':`${offer.scatters} SCATTERS · ${offer.spins} FREE SPINS`;
+  $('confirm-eyebrow').textContent=mystery?'90% SUPER · 10% HIDDEN':`${offer.scatters} SCATTERS · ${offer.spins} FREE SPINS`;
   scatterArt($('confirm-scatters'),mystery?1:offer.scatters);
   $('confirm-scatters').classList.toggle('mystery-symbols',mystery);
   $('confirm-title').textContent=offer.title;$('confirm-description').textContent=offer.description;

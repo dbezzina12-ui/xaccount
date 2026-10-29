@@ -1,6 +1,6 @@
 // Pins Zombify's measured math (games/zombify/MATH.md): the catalogs Dylan's
-// 2026-10-28 rebalance built (tools/math/zombify-rebalance.mjs: Hidden 1,000x
-// minimum, Second Life with 2-4 zombies). These only fail if a catalog or the
+// 2026-10-28/29 rebalance built (tools/math/zombify-rebalance.mjs: Hidden 1,000x
+// minimum, Second Life with 2-4 zombies, Mystery 90% Super / 10% Hidden). These only fail if a catalog or the
 // runtime's tier draw changes; then re-measure deliberately, never loosen the
 // pins to make a failure go away. Skips on a checkout without the catalogs.
 
@@ -40,6 +40,7 @@ test('the runtime draws bonuses with the odds the math sheet assumes', { skip },
   }
   const mystery = tierOdds(choosePaidTier, 'buy_mystery', [10]);
   for (const [tier, p] of Object.entries(z.MYSTERY)) close(mystery[tier], p, 1e-12, `mystery ${tier}`);
+  assert.equal(mystery.regular, undefined, 'Mystery never reveals a regular Outbreak');
   assert.equal(choosePaidTier('buy_outbreak'), 'regular');
   assert.equal(choosePaidTier('buy_super'), 'super');
 });
@@ -54,7 +55,7 @@ test('every mode returns exactly 96%, with the measured hit rates, spread and ca
     enhanced: { cost: 3.3, hit: 0.285, sd: 18.35, maxBet: 25000, capOneIn: 395_277 },
     buy_outbreak: { cost: 100, hit: 0.9952, sd: 1.68, maxBet: 25000, capOneIn: 1_000_000 },
     buy_super: { cost: 250, hit: 0.9937, sd: 1.59, maxBet: 25000, capOneIn: 10_000 },
-    buy_mystery: { cost: 400, hit: 0.9949, sd: 2.83, maxBet: 25000, capOneIn: 822 },
+    buy_mystery: { cost: 460, hit: 0.9944, sd: 2.48, maxBet: 25000, capOneIn: 796 },
     buy_feature: { cost: 10, hit: 0.5326, sd: 6.03, maxBet: 25000, capOneIn: 5_617_978 },
   };
   const all = z.modes(catalogs);

@@ -1,10 +1,10 @@
 {
- "generated": "2026-10-28T18:41:16.512Z",
- "seconds": 109,
+ "generated": "2026-10-29T16:36:21.698Z",
+ "seconds": 164,
  "modelVersion": "zombify-96-v2",
  "featureVersion": "second-life-v3",
- "sourceHash": "ef44a02b2bbf7d19f9909e385334b35758b7a39c55783aec9cb8bf16d3c09302",
- "featureSourceHash": "8cd15e92698d22457a971fb3d47b835f1a6853cd3972723fb6f8d3370735eddf",
+ "sourceHash": "63a567629d8817eeba0c1940344a94565bbffc7457cf59ff1f18a8f374b73856",
+ "featureSourceHash": "293fb20da7f882a87b8f756e6703216bdaa851def7e3ad714e9f14d79f7564bf",
  "replay": {
   "base spins": {
    "checked": 24000,
@@ -17,11 +17,6 @@
    "examples": []
   },
   "regular via buy_outbreak": {
-   "checked": 32000,
-   "mismatches": 0,
-   "examples": []
-  },
-  "regular via buy_mystery": {
    "checked": 32000,
    "mismatches": 0,
    "examples": []
@@ -128,14 +123,14 @@
   },
   "buy_mystery": {
    "rounds": 40000,
-   "hits": 39809,
+   "hits": 39791,
    "bonuses": 40000,
    "errors": 0,
-   "rtp": 0.9561505456250001,
-   "ci95": 0.026108523127644594,
-   "hitRate": 0.995225,
-   "exactRtp": 0.9599999999990401,
-   "exactHit": 0.994944028499988,
+   "rtp": 0.9485511760869565,
+   "ci95": 0.02258320700941917,
+   "hitRate": 0.994775,
+   "exactRtp": 0.959999999999992,
+   "exactHit": 0.994355251299994,
    "withinCi": true
   },
   "buy_feature": {

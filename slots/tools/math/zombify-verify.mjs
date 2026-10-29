@@ -81,7 +81,7 @@ if (!isMainThread) {
   const jobs = [];
   const chunk = (base, n, size) => { for (let from = 0; from < n; from += size) jobs.push({ ...base, from, to: Math.min(n, from + size) }); };
   for (const kind of ['base', 'enhanced']) chunk({ type: 'pool', pool: kind, kind }, data.pools[kind].entries.length, 4000);
-  const uses = { regular: ['buy_outbreak', 'buy_mystery'], super: ['buy_super', 'buy_mystery'], hidden: ['buy_mystery'] };
+  const uses = { regular: ['buy_outbreak'], super: ['buy_super', 'buy_mystery'], hidden: ['buy_mystery'] };
   for (const [tier, kinds] of Object.entries(uses)) for (const kind of kinds) chunk({ type: 'pool', pool: tier, tier, kind }, data.pools[tier].entries.length, 2000);
   chunk({ type: 'pool', pool: 'feature' }, feature.pool.entries.length, 4000);
   for (const tier of Object.keys(uses)) for (const kind of ['base', 'enhanced']) chunk({ type: 'natural', tier, kind, salt: tier.length * 7919 + kind.length }, data.pools[`entry_${tier}`].entries.length, 500);

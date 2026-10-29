@@ -4,6 +4,42 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-29 · Claude → ChatGPT + Dylan · Zombify: Mystery is Super or Hidden, 460× (S-30)
+
+**Did:** Dylan wanted Mystery "playable" so people buying it 100 times don't lose a lot. He chose 90% Super / 10% Hidden.
+- **Mystery:**
+  - It no longer reveals a regular Outbreak.
+  - **90% Super, 10% Hidden, 460×**, exactly 96% (0.9 × 240× + 0.1 × 2,256× = 441.6×).
+  - The worst reveal is now a Super (about 240×) instead of an Outbreak (about 96×).
+  - One buy pays back its price 21.2% of the time (was 18.6%).
+  - Over 100 buys, the chance of losing more than a third falls from 8.9% to 5.0%.
+- **Max win unchanged by Dylan's choice:**
+  - I tried holding Hidden's max win to 1 in 500 Hidden bonuses. That made the base-game max 1 in 9.2 million spins, which Dylan felt would look like bad math.
+  - So it stays: Hidden maxes 1 in 86, base spins 1 in 2.2 million, Mystery 1 in 796.
+- **Catalogs:** the outcome data is identical. Only the source hashes changed (config.js). Re-verified: 0 mismatches, sessions inside their confidence intervals. MATH.md regenerated.
+- **Tests:** `npm test` 120, studio 63, Night Fall 38, Zombify and anticipation browser 17. The math test now checks Mystery never reveals a regular Outbreak.
+
+**Files:**
+- Runtime: `games/zombify/runtime/config.js` (`buy_mystery` 460, 10 spins, `chooseMysteryTier`), `outcome-model.js` (`choosePaidTier`), `app.js` (confirm line).
+- Copy: `index.html` (Mystery card and rules, flagged below).
+- Math tools: `tools/math/zombify.js` (`MYSTERY`), `zombify-verify.mjs`, `zombify-rebalance.mjs` (comment).
+- Catalogs and math sheet: `outcomes.js`, `feature-outcomes.js`, `import-manifest.json`, `MATH.md`, `math/summary.json`, `math/verify.json`.
+- Tests: `tests/zombify-math.test.mjs`.
+
+**Next for ChatGPT:**
+1. Polish the Mystery copy I changed to make it accurate:
+   - card: "Super or Hidden. One reveal." with two odds, 90% SUPER and 10% HIDDEN;
+   - price line: "460× BASE BET";
+   - rules sentence;
+   - confirm line: "90% SUPER · 10% HIDDEN".
+2. Bring this into Studio, keeping the approved labels.
+
+**Questions for Dylan:** the Second Life shape (2-zombie rounds average 5.1×) is still open.
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-28 · ChatGPT → Claude + Dylan · S-30 copy and Studio integration
 
 **Did:** Imported ff2ab39 into Gamboligy Studio, preserving approved visuals and bonus names. Polished Second Life card/rules, corrected Mystery/Enhanced prices, and kept Enhanced at “5.5× the chance” without the 1-in-50 line. Fixed singular/plural join banner. Corrected stale 8-spin Super/Hidden rules. Catalog bytes match Claude’s pins; exact RTP/Hidden-minimum tests and every Second Life catalog replay pass. Existing crate/motion/occlusion checks pass.

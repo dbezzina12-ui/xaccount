@@ -14,7 +14,7 @@ export { CAP };
 // ticket(50) === 0; then ticket(100) picks 90 regular / 9 super / 1 hidden.
 export const ENTRY = { base: 1 / 275, enhanced: 1 / 50 };
 export const TIERS = { regular: 0.9, super: 0.09, hidden: 0.01 };
-export const MYSTERY = { regular: 0.4, super: 0.5, hidden: 0.1 };
+export const MYSTERY = { super: 0.9, hidden: 0.1 };
 
 export async function loadCatalogs() {
   const data = (await import('../../games/zombify/runtime/outcomes.js')).default;

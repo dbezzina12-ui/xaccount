@@ -25,7 +25,7 @@ export function pickEntry(pool,rng){
 export function choosePaidTier(kind,rng){
  if(kind==='buy_outbreak')return 'regular';
  if(kind==='buy_super')return 'super';
- if(kind==='buy_mystery'){const n=ticket(10,rng);return n<4?'regular':n<9?'super':'hidden';}
+ if(kind==='buy_mystery')return ticket(10,rng)<9?'super':'hidden';
  if(!['base','enhanced'].includes(kind))throw Error('Unknown round type');
  // Separate integer draws give exact 1/275 or 1/50 entry and 90/9/1 tiers.
  if(ticket(kind==='enhanced'?50:275,rng)!==0)return null;
@@ -37,7 +37,7 @@ export function choosePaidTier(kind,rng){
 // (makeRound kind preview_*) land a super zombie in nearly every free spin;
 // the game replayed them with one fixed seed, so every Super preview paid
 // 6,949.56x and every Hidden preview the 25,000x cap, against real averages
-// of 240x and 816x. Previews still never touch credits (session.js).
+// of 240x and 816x (Hidden 2,256x since S-30). Previews still never touch credits (session.js).
 export const CATALOG_PREVIEWS=Object.freeze({preview_super:'super',preview_hidden:'hidden'});
 function catalogPreview(tier,rng){
  if(data.version!==MODEL_VERSION)throw Error('Game update required. Please reload.');

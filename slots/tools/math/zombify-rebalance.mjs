@@ -9,8 +9,9 @@
 //   (no heart 78%, one 20%, two or more 2%) are held exactly, and payouts are
 //   tilted within them so the feature returns exactly 96% at 10x.
 // - Hidden (outcomes.js pool `hidden`): only outcomes paying 1,000x or more,
-//   reshaped slightly so the bonus averages exactly 2,256x. Mystery Buy rises
-//   to 400x and the enhanced spin to 3.3x (config.js) to pay for it.
+//   reshaped slightly so the bonus averages exactly 2,256x. Mystery Buy (90%
+//   Super, 10% Hidden since 2026-10-29) costs 460x and the enhanced spin 3.3x
+//   (config.js) to pay for it.
 // - Base and enhanced spins (pools `base`, `enhanced`): payouts tilted so each
 //   returns exactly 96% with the new Hidden.
 //
