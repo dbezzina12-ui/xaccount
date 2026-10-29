@@ -4,7 +4,7 @@ import data from './outcomes.js';
 import featureData from './feature-outcomes.js';
 import {makeFeatureRound} from './feature-spin.js';
 
-export const MODEL_VERSION='zombify-96-v2';
+export const MODEL_VERSION='zombify-96-v3';
 // Rejection of the uneven uint32 tail avoids modulo bias in rare events.
 export function randomTicket(total,fill=n=>crypto.getRandomValues(n)){
  if(!Number.isSafeInteger(total)||total<1||total>2**32)throw Error('Invalid ticket range');
@@ -47,11 +47,26 @@ function catalogPreview(tier,rng){
  if(result.total!==expected)throw Error('Outcome validation failed.');
  return result;
 }
+// A Stake Engine round (tools/stake/zombify-export.mjs): the RGS returns a book
+// whose one event is the recipe for an outcome in these catalogs. It replays
+// exactly as the free-play draws do and must pay the book's payoutMultiplier.
+export function roundFromBook(kind,book){
+ const recipe=book?.events?.[0];let result;
+ if(recipe?.type==='secondLife'){
+  result=makeFeatureRound({rng:seeded(recipe.seed)});
+  if(result.hearts!==recipe.hearts||result.spins!==recipe.spins)throw Error('Outcome validation failed.');
+ }else if(recipe?.type==='bonus')result=makeRound({kind,rng:seeded(recipe.seed),forcedTier:recipe.tier,clustered:!!recipe.clustered});
+ else if(recipe?.type==='spin'&&recipe.tier)result=makeRound({kind,rng:seeded(recipe.trigger),forcedScatters:BONUS_FEATURES[recipe.tier].scatters,bonusRng:seeded(recipe.bonus),clustered:!!recipe.clustered});
+ else if(recipe?.type==='spin')result=makeRound({kind,rng:seeded(recipe.seed),forcedScatters:recipe.scatters,baseOnly:true});
+ else throw Error('Unknown round.');
+ if(result.total!==book.payoutMultiplier)throw Error('Outcome validation failed.');
+ return result;
+}
 export function makePaidRound({kind='base',rng}={}){
  if(Object.hasOwn(CATALOG_PREVIEWS,kind))return catalogPreview(CATALOG_PREVIEWS[kind],rng);
  if(kind==='preview_feature')return makeFeatureRound({...(rng?{rng}:{})});
  if(kind==='buy_feature'){
-  if(featureData.version!=='second-life-v3')throw Error('Game update required. Please reload.');
+  if(featureData.version!=='second-life-v4')throw Error('Game update required. Please reload.');
   const entry=pickEntry(featureData.pool,rng),result=makeFeatureRound({rng:seeded(entry[0])});
   if(result.total!==entry[2]||result.hearts!==entry[3]||result.spins!==entry[4])throw Error('Outcome validation failed. No credits were charged.');
   return result;

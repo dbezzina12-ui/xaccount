@@ -43,7 +43,7 @@ export function controllerView(state){
   buyDisabled:!s.ready||locked,betDisabled:!s.ready||locked,settingsDisabled:!s.ready,minusDisabled:locked||!s.canDecrease,plusDisabled:locked||!s.canIncrease,
   turboDisabled:!s.ready,soundDisabled:!s.ready,autoDisabled:!s.ready||(!s.autoActive&&s.busy),autoLabel:s.autoActive?'Stop autoplay':'Autoplay'};
 }
-export function mountController(host,{onAction=()=>{},initial={},layoutTargets=null,layoutMedia=globalThis.matchMedia?.(MOBILE_LAYOUT_QUERY)}={}){
+export function mountController(host,{onAction=()=>{},initial={},layoutTargets=null,layoutMedia=globalThis.matchMedia?.(MOBILE_LAYOUT_QUERY),buyWord='BUY'}={}){
  if(host.shadowRoot)throw Error('Controller is already mounted');
  const root=host.attachShadow({mode:'open'});
  const mobile=!!layoutMedia?.matches;
@@ -94,7 +94,7 @@ export function mountController(host,{onAction=()=>{},initial={},layoutTargets=n
   element('remaining').hidden=!view.autoActive;element('remaining').textContent=String(view.remaining);
   element('buy').setAttribute('aria-label',view.buyActive?'Disable feature spins':'Buy bonus');
   element('buy').dataset.active=String(view.buyActive);
-  const buyCopy=view.buyActive?'DISABLE':'BUY<br><b>BONUS</b>';if(element('buyLabel').innerHTML!==buyCopy)element('buyLabel').innerHTML=buyCopy;
+  const buyCopy=view.buyActive?'DISABLE':`${buyWord}<br><b>BONUS</b>`;if(element('buyLabel').innerHTML!==buyCopy)element('buyLabel').innerHTML=buyCopy;
   element('banner').textContent=view.banner;element('banner').hidden=!view.banner;
  }
  // Games may place the same Buy button over their scene. Coordinates are the

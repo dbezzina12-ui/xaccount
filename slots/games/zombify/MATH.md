@@ -6,12 +6,12 @@
 
 | Mode | Cost | RTP | Hit rate | Returns at least the cost | SD per cost | Volatility | Max win | Reaches the 25,000x cap |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Base spin | 1x | **96.0000%** | 26.81% | 9.79% | 25.98 | Very high | 25,000.00x | 1 in 2,174,024 |
-| Enhanced spin | 3.3x | **96.0000%** | 28.50% | 5.19% | 18.35 | Very high | 25,000.00x | 1 in 395,277 |
-| Buy Outbreak | 100x | **96.0000%** | 99.52% | 30.21% | 1.68 | Low | 25,000.00x | 1 in 1,000,000 |
-| Buy Super Outbreak | 250x | **96.0000%** | 99.37% | 29.90% | 1.59 | Low | 25,000.00x | 1 in 10,000 |
-| Buy Mystery Outbreak | 460x | **96.0000%** | 99.44% | 21.19% | 2.48 | Low | 25,000.00x | 1 in 796 |
-| Second Life | 10x | **96.0000%** | 53.26% | 14.41% | 6.03 | Medium | 25,000.00x | 1 in 5,617,978 |
+| Base spin | 1x | **96.0000%** | 26.49% | 9.92% | 25.66 | Very high | 25,000.00x | 1 in 2,286,372 |
+| Enhanced spin | 3.3x | **96.0000%** | 28.22% | 5.19% | 18.13 | Very high | 25,000.00x | 1 in 415,704 |
+| Buy Outbreak | 100x | **96.0000%** | 99.50% | 30.31% | 1.65 | Low | 25,000.00x | 1 in 1,078,749 |
+| Buy Super Outbreak | 250x | **96.0000%** | 99.25% | 30.09% | 1.52 | Low | 25,000.00x | 1 in 12,099 |
+| Buy Mystery Outbreak | 460x | **96.0000%** | 99.32% | 21.19% | 2.45 | Low | 25,000.00x | 1 in 837 |
+| Second Life | 10x | **96.0000%** | 53.09% | 14.43% | 6.03 | Medium | 25,000.00x | 1 in 5,617,978 |
 
 Costs, wins and the cap are in multiples of the base bet. "SD per cost" is the standard deviation of one round's return divided by its cost; volatility uses the same bands as Game 001.
 
@@ -21,15 +21,16 @@ Costs, wins and the cap are in multiples of the base bet. "SD per cost" is the s
 - **Base spin:** a bonus starts 1 in 275. **Enhanced spin** (3.3x cost): 1 in 50. A started bonus is 90% regular, 9% super, 1% hidden. It pays the trigger spin plus the bonus, capped at 25,000x.
 - **Buys** skip the trigger spin: Outbreak, Super Outbreak, or Mystery (90% super, 10% hidden). **Second Life** is its own feature with its own catalog.
 - The engine checks every round against its catalog value before crediting, and refuses the round on any mismatch.
+- Every line pay, and so every win, is a whole 0.1x (Stake Engine pays in 0.1x steps). The Stake Engine upload is built from these catalogs: see `STAKE.md`.
 
 ## Where the base-spin RTP comes from
 
 | Part | Base spin | Enhanced spin |
 | --- | --- | --- |
-| Spins without a bonus | 48.469% | 16.781% |
-| Bonuses (trigger spin + bonus) | 47.531% | 79.219% |
-|   of which regular | 31.470% | 52.450% |
-|   of which super | 7.857% | 13.095% |
+| Spins without a bonus | 48.466% | 16.776% |
+| Bonuses (trigger spin + bonus) | 47.534% | 79.224% |
+|   of which regular | 31.473% | 52.454% |
+|   of which super | 7.858% | 13.096% |
 |   of which hidden | 8.204% | 13.673% |
 | **Total** | **96.000%** | **96.000%** |
 
@@ -37,8 +38,8 @@ Costs, wins and the cap are in multiples of the base bet. "SD per cost" is the s
 
 | Bonus | Free spins | Average win from a spin trigger | Average win as a buy |
 | --- | --- | --- | --- |
-| Outbreak | 8 | 96.16x | 96.00x |
-| Super Outbreak | 10 | 240.08x | 240.00x |
+| Outbreak | 8 | 96.17x | 96.00x |
+| Super Outbreak | 10 | 240.09x | 240.00x |
 | Hidden Outbreak | 10 | 2,256.08x | 2,256.00x (Mystery only) |
 
 ## Second Life
@@ -47,9 +48,9 @@ Each round starts with 2, 3 or 4 guaranteed zombies, on different reels. A heart
 
 | Starting zombies | Chance | Average win | At least one respin |
 | --- | --- | --- | --- |
-| 2 | 75.00% | 5.10x | 21.07% |
-| 3 | 20.00% | 15.83x | 24.59% |
-| 4 | 5.00% | 52.16x | 25.62% |
+| 2 | 75.00% | 5.10x | 21.09% |
+| 3 | 20.00% | 15.79x | 24.52% |
+| 4 | 5.00% | 52.27x | 25.57% |
 
 Hearts collected: none 78.00%, one 20.00%, two or more 2.00%.
 
@@ -59,10 +60,10 @@ Previews cost nothing and never pay into credits. Super and Hidden previews play
 
 | Preview | Plays | Average win | Reaches the 25,000x cap |
 | --- | --- | --- | --- |
-| Super Outbreak | a real super bonus, drawn afresh | 240.08x | 1 in 10,000 |
-| Hidden Outbreak | a real hidden bonus, drawn afresh | 2,256.08x | 1 in 86 |
-| Outbreak | the same demonstration round (seed 3) | 59.87x every time | never |
-| Second Life | the same demonstration round (seed 3013) | 25.45x every time | never |
+| Super Outbreak | a real super bonus, drawn afresh | 240.09x | 1 in 12,099 |
+| Hidden Outbreak | a real hidden bonus, drawn afresh | 2,256.08x | 1 in 89 |
+| Outbreak | the same demonstration round (seed 3) | 66.40x every time | never |
+| Second Life | the same demonstration round (seed 3013) | 26.80x every time | never |
 
 ## Win distribution
 
@@ -70,21 +71,21 @@ Chance of a round paying in each band, in multiples of **that mode's cost** ("Un
 
 | Win | Base spin | Enhanced spin | Buy Outbreak | Buy Super Outbreak | Buy Mystery Outbreak | Second Life |
 | --- | --- | --- | --- | --- | --- | --- |
-| No win | 73.19% | 71.50% | 1 in 208 | 1 in 159 | 1 in 177 | 46.74% |
-| Under 1x | 17.02% | 23.31% | 69.31% | 69.47% | 78.24% | 38.85% |
-| 1x to under 2x | 4.61% | 1.50% | 18.28% | 19.19% | 8.33% | 5.71% |
-| 2x to under 5x | 2.88% | 1.39% | 10.93% | 9.21% | 10.22% | 4.68% |
-| 5x to under 10x | 1.14% | 1 in 134 | 1 in 113 | 1.29% | 2.08% | 2.15% |
-| 10x to under 20x | 1 in 223 | 1 in 238 | 1 in 1,694 | 1 in 537 | 1 in 254 | 1.22% |
-| 20x to under 50x | 1 in 228 | 1 in 136 | 1 in 2,094 | 1 in 5,124 | 1 in 1,871 | 1 in 191 |
-| 50x to under 100x | 1 in 731 | 1 in 374 | 1 in 8,231 | 1 in 184,060 | 1 in 793 | 1 in 1,023 |
-| 100x to under 250x | 1 in 979 | 1 in 1,051 | 1 in 31,117 | 1 in 10,000 | — | 1 in 3,271 |
-| 250x to under 1000x | 1 in 3,136 | 1 in 3,707 | 1 in 1,000,000 | — | — | 1 in 15,545 |
-| 1000x+ | 1 in 20,456 | 1 in 32,890 | — | — | — | 1 in 515,198 |
+| No win | 73.51% | 71.78% | 1 in 200 | 1 in 133 | 1 in 147 | 46.91% |
+| Under 1x | 16.57% | 23.04% | 69.19% | 69.16% | 78.13% | 38.66% |
+| 1x to under 2x | 4.67% | 1.56% | 18.42% | 19.33% | 8.35% | 5.73% |
+| 2x to under 5x | 3.01% | 1.28% | 10.88% | 9.29% | 10.18% | 4.69% |
+| 5x to under 10x | 1.08% | 1 in 126 | 1 in 112 | 1.28% | 2.09% | 2.14% |
+| 10x to under 20x | 1 in 210 | 1 in 231 | 1 in 1,758 | 1 in 576 | 1 in 249 | 1.21% |
+| 20x to under 50x | 1 in 240 | 1 in 136 | 1 in 2,174 | 1 in 5,728 | 1 in 1,882 | 1 in 190 |
+| 50x to under 100x | 1 in 750 | 1 in 374 | 1 in 8,652 | 1 in 208,160 | 1 in 834 | 1 in 1,016 |
+| 100x to under 250x | 1 in 986 | 1 in 1,061 | 1 in 32,935 | 1 in 12,099 | — | 1 in 3,255 |
+| 250x to under 1000x | 1 in 3,146 | 1 in 3,732 | 1 in 1,078,749 | — | — | 1 in 15,559 |
+| 1000x+ | 1 in 20,571 | 1 in 32,951 | — | — | — | 1 in 521,921 |
 
 ## Verification
 
-From `node tools/math/zombify-verify.mjs` (2026-10-29, 164s). **206,667 catalog outcomes replayed through the real engine, 0 mismatches.**
+From `node tools/math/zombify-verify.mjs` (2026-10-29, 175s). **206,727 catalog outcomes replayed through the real engine, 0 mismatches.**
 
 | Replayed | Outcomes | Mismatches |
 | --- | --- | --- |
@@ -93,28 +94,28 @@ From `node tools/math/zombify-verify.mjs` (2026-10-29, 164s). **206,667 catalog 
 | regular via buy_outbreak | 32,000 | 0 |
 | super via buy_super | 30,000 | 0 |
 | super via buy_mystery | 30,000 | 0 |
-| hidden via buy_mystery | 23,905 | 0 |
-| Second Life | 36,762 | 0 |
-| natural regular (base) | 1,000 | 0 |
-| natural super (base) | 1,000 | 0 |
-| natural hidden (base) | 1,000 | 0 |
+| hidden via buy_mystery | 24,116 | 0 |
+| Second Life | 36,611 | 0 |
 | natural regular (enhanced) | 1,000 | 0 |
 | natural super (enhanced) | 1,000 | 0 |
 | natural hidden (enhanced) | 1,000 | 0 |
+| natural regular (base) | 1,000 | 0 |
+| natural super (base) | 1,000 | 0 |
+| natural hidden (base) | 1,000 | 0 |
 
 Rounds played through the real session code (`createSession().begin/finish`), seeded. The heavy tail makes sample RTP noisy; the exact figures above are authoritative.
 
 | Mode | Rounds | Sample RTP (95% CI) | Exact RTP | Sample hit rate | Exact hit rate | Errors |
 | --- | --- | --- | --- | --- | --- | --- |
-| Base spin | 2,000,000 | 93.926% ± 2.362% | 96.000% | 26.81% | 26.81% | 0 |
-| Enhanced spin | 500,000 | 96.071% ± 5.514% | 96.000% | 28.46% | 28.50% | 0 |
-| Buy Outbreak | 40,000 | 94.887% ± 1.408% | 96.000% | 99.54% | 99.52% | 0 |
-| Buy Super Outbreak | 40,000 | 96.363% ± 1.735% | 96.000% | 99.42% | 99.37% | 0 |
-| Buy Mystery Outbreak | 40,000 | 94.855% ± 2.258% | 96.000% | 99.48% | 99.44% | 0 |
-| Second Life | 400,000 | 96.026% ± 1.787% | 96.000% | 53.19% | 53.26% | 0 |
+| Base spin | 2,000,000 | 96.508% ± 4.192% | 96.000% | 26.48% | 26.49% | 0 |
+| Enhanced spin | 500,000 | 96.336% ± 4.860% | 96.000% | 28.19% | 28.22% | 0 |
+| Buy Outbreak | 40,000 | 94.971% ± 1.442% | 96.000% | 99.51% | 99.50% | 0 |
+| Buy Super Outbreak | 40,000 | 96.044% ± 1.533% | 96.000% | 99.27% | 99.25% | 0 |
+| Buy Mystery Outbreak | 40,000 | 96.615% ± 2.470% | 96.000% | 99.34% | 99.32% | 0 |
+| Second Life | 400,000 | 95.559% ± 1.797% | 96.000% | 53.06% | 53.09% | 0 |
 
 ## Catalog identity
 
-- `outcomes.js`: version `zombify-96-v2`, source hash `63a567629d8817eeba0c1940344a94565bbffc7457cf59ff1f18a8f374b73856`, file SHA-256 `71f02cb7962d152c19509710b7232c815aef63460b8ac160c7a3784c8bfa2953`
-- `feature-outcomes.js`: version `second-life-v3`, source hash `293fb20da7f882a87b8f756e6703216bdaa851def7e3ad714e9f14d79f7564bf`, file SHA-256 `12837ad7ebd813d9763635c85e1986d06dcd124194048e75160648bdf3461825`
+- `outcomes.js`: version `zombify-96-v3`, source hash `aedc4060edda702005b4435df61407bc08b95c7adf45734c9b60fc0cf42cfb79`, file SHA-256 `5798c95fea0a943391bbec7c63d0d1fd98ea114e582302e2f7c00e8c30d98d6d`
+- `feature-outcomes.js`: version `second-life-v4`, source hash `913c3c9d3c3fd28715936ae71fa8f3ccaadc479333d9df0cb14ec5221de5bf7c`, file SHA-256 `7b5a77687932d90bc100d2a5ba4fce1ed34efc2e3210ca8f98ecc0182b1fad78`
 - Both are built by `node tools/math/zombify-rebalance.mjs` from the hash-verified v125 catalogs, tracked in the repository, and hash-pinned in `games/zombify/import-manifest.json` (`npm run studio:prepare` verifies them).

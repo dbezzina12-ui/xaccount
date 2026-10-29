@@ -1,0 +1,120 @@
+{
+ "generated": "2026-10-29T21:25:10.475Z",
+ "cap": 25000,
+ "modes": {
+  "base": {
+   "kind": "base",
+   "cost": 1,
+   "outcomes": 110116,
+   "rtp": 0.96,
+   "hitRate": 0.264864,
+   "maxWin": 25000,
+   "maxWinOneIn": 2286373,
+   "volatility": {
+    "prob5k": 0.000002207,
+    "prob10k": 6.833e-7,
+    "etl40b": 0.5115,
+    "etl10k": 0.01423,
+    "cvar": 343,
+    "over3Star": []
+   }
+  },
+  "enhanced": {
+   "kind": "enhanced",
+   "cost": 3.3,
+   "outcomes": 110116,
+   "rtp": 0.96,
+   "hitRate": 0.282246,
+   "maxWin": 25000,
+   "maxWinOneIn": 415704,
+   "volatility": {
+    "prob5k": 0.00001214,
+    "prob10k": 0.000003758,
+    "etl40b": 1.838,
+    "etl10k": 0.07827,
+    "cvar": 292,
+    "over3Star": [
+     "etl40b"
+    ]
+   }
+  },
+  "outbreak": {
+   "kind": "buy_outbreak",
+   "cost": 100,
+   "outcomes": 32000,
+   "rtp": 0.96,
+   "hitRate": 0.994991,
+   "maxWin": 25000,
+   "maxWinOneIn": 1078749,
+   "volatility": {
+    "prob5k": 0.0001469,
+    "prob10k": 0.00003129,
+    "etl40b": 1.587,
+    "etl10k": 0.444,
+    "cvar": 30.84,
+    "over3Star": [
+     "etl40b"
+    ]
+   }
+  },
+  "super": {
+   "kind": "buy_super",
+   "cost": 250,
+   "outcomes": 30000,
+   "rtp": 0.96,
+   "hitRate": 0.992466,
+   "maxWin": 25000,
+   "maxWinOneIn": 12099,
+   "volatility": {
+    "prob5k": 0.0002096,
+    "prob10k": 0.00007553,
+    "etl40b": 2.22,
+    "etl10k": 2.22,
+    "cvar": 24.12,
+    "over3Star": [
+     "etl40b",
+     "etl10k"
+    ]
+   }
+  },
+  "mystery": {
+   "kind": "buy_mystery",
+   "cost": 460,
+   "outcomes": 54116,
+   "rtp": 0.96,
+   "hitRate": 0.99322,
+   "maxWin": 25000,
+   "maxWinOneIn": 837,
+   "volatility": {
+    "prob5k": 0.003797,
+    "prob10k": 0.001278,
+    "etl40b": 30.53,
+    "etl10k": 35.14,
+    "cvar": 54.35,
+    "over3Star": [
+     "etl40b",
+     "etl10k"
+    ]
+   }
+  },
+  "secondlife": {
+   "kind": "buy_feature",
+   "cost": 10,
+   "outcomes": 36611,
+   "rtp": 0.96,
+   "hitRate": 0.530916,
+   "maxWin": 25000,
+   "maxWinOneIn": 5617978,
+   "volatility": {
+    "prob5k": 0.00001535,
+    "prob10k": 0.000001916,
+    "etl40b": 1.694,
+    "etl10k": 0.02761,
+    "cvar": 119.7,
+    "over3Star": [
+     "etl40b"
+    ]
+   }
+  }
+ }
+}

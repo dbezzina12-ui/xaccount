@@ -4,6 +4,67 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-29 · Claude → ChatGPT + Dylan · Zombify ready for Stake Engine (S-31)
+
+**Did:** Dylan asked to "get it ready for me to upload to Engine" (Stake Engine), with the full game.
+
+**Math: every pay is now a whole 0.1×.**
+- **Why:** Engine only accepts payouts in 0.1× steps. Zombify's 3- and 4-of-a-kind pays (0.05×, 0.15×, 1.05× and so on) broke that in about half of winning base spins.
+- **The new pays:** raised to the next 0.1×:
+  - J 0.1/0.2, Q 0.1/0.2, K 0.1/0.3;
+  - Skater 0.2/0.5, Builder 0.3/0.8, Cop 0.4/1.1.
+
+  Bigger pays are unchanged. Skater and Medic now both pay 0.2× for three.
+- **Rebuilt:** every catalog was re-scored from the v125 seeds and reweighted. Every mode is still 96%, Hidden is still 1,000×+ averaging 2,256×, and Mystery is 90/10 at 460×.
+- **Re-verified:** 0 mismatches. MATH.md is regenerated.
+
+**Stake math files** (`tools/stake/zombify-export.mjs`):
+- `index.json` plus a lookup table and books file for each of six modes: base, enhanced 3.3×, outbreak 100×, super 250×, mystery 460×, secondlife 10×.
+- Each mode returns exactly 96.0000%.
+- All 372,959 books were replayed through the game's own code with 0 mismatches.
+- Engine's own upload checks pass.
+
+**Stake front end** (`runtime/stake.js`, `stake-session.js`):
+- The balance, currency, bet levels and every outcome come from Engine's RGS.
+- Unfinished rounds resume. Replay links work.
+- Stake.us words: no BUY or BET.
+- Engine's jurisdiction switches work: turbo, autoplay, buys, skip, spacebar and minimum round time.
+- Free-play credits, previews and the prototype badge are hidden on Engine.
+- The rules now include the full line paytable and a Stake RTP and max-win note.
+
+**Build:** `npm run stake:zombify` writes `dist/stake/zombify/frontend` (115 MB), `math` (10 MB) and zips of both. See `games/zombify/STAKE.md`.
+
+**Tests:**
+- `npm test` 127, studio 63, Night Fall 38.
+- `tests/stake.test.mjs`: 6.
+- `tests/browser/stake.e2e.mjs`: 6, against a stand-in RGS. It checks money to the cent on base, Super, Outbreak and Mystery→Hidden, plus refusals, resume, replay, Stake.us words and jurisdiction. It passes on the built upload too, with no missing files.
+- The Zombify browser suites pass. Two fixtures moved to their outcomes' new tickets.
+
+**Files:**
+- Paytable and math: `games/zombify/runtime/paylines.js`, `tools/math/zombify-rebalance.mjs`, `outcomes.js`, `feature-outcomes.js`, `import-manifest.json`, `MATH.md`, `math/*.json`.
+- Stake front end: `runtime/stake.js`, `stake-session.js`, `stake.css`, `outcome-model.js` (`roundFromBook`), `session.js` (`bets`), `app.js`, `index.html`, `controller/controller.js` (`buyWord`).
+- Stake tools and docs: `tools/stake/zombify-export.mjs`, `tools/stake/build-zombify.mjs`, `games/zombify/STAKE.md`, `games/zombify/math/stake-summary.json`, `package.json`.
+- Tests: `tests/stake.test.mjs`, `tests/browser/stake.e2e.mjs`, `tests/zombify-math.test.mjs`, `tests/zombify-previews.test.mjs`, `tests/zombie-occlusion.test.mjs`, `tests/browser/anticipation.e2e.mjs`, `games/zombify/tests/feature-spin.test.mjs`.
+
+**Next for ChatGPT:**
+1. Polish the functional copy I added:
+   - the Stake rules note ("Theoretical return to player: 96.00%…");
+   - the line paytable caption;
+   - "Buy prices use your balance";
+   - the replay notice ("REPLAY · NO BALANCE CHANGES");
+   - the RGS error messages in `runtime/stake.js`;
+   - the Stake.us word swaps in `SOCIAL_WORDS`.
+2. Style the line paytable in the rules (`#line-paytable`, which reuses `.infection-paytable`).
+3. Optional, to shrink the upload: WebP versions of the large PNGs. The front end is 115 MB.
+
+**Questions for Dylan:**
+1. AGENTS.md says the games are play-money demos. The Stake build goes to a real-money and social casino, so please record that in DECISIONS.md.
+2. Stake rates every mode except the base game above its 3-star volatility limits (etl40b; Super and Mystery also etl10k). In its code that is a warning, not a rejection. Confirm on Engine when you upload.
+
+**Blocked on:** nothing. Claude's environment can't open stake-engine.com, so the format follows Stake's published SDKs on GitHub.
+
+---
+
 ### 2026-10-29 · Claude → ChatGPT + Dylan · Zombify: Mystery is Super or Hidden, 460× (S-30)
 
 **Did:** Dylan wanted Mystery "playable" so people buying it 100 times don't lose a lot. He chose 90% Super / 10% Hidden.

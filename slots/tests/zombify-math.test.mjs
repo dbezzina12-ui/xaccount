@@ -1,6 +1,7 @@
 // Pins Zombify's measured math (games/zombify/MATH.md): the catalogs Dylan's
-// 2026-10-28/29 rebalance built (tools/math/zombify-rebalance.mjs: Hidden 1,000x
-// minimum, Second Life with 2-4 zombies, Mystery 90% Super / 10% Hidden). These only fail if a catalog or the
+// 2026-10-28/29 rebalance built (tools/math/zombify-rebalance.mjs: line pays in
+// whole 0.1x steps for Stake Engine, Hidden 1,000x minimum, Second Life with
+// 2-4 zombies, Mystery 90% Super / 10% Hidden). These only fail if a catalog or the
 // runtime's tier draw changes; then re-measure deliberately, never loosen the
 // pins to make a failure go away. Skips on a checkout without the catalogs.
 
@@ -47,16 +48,16 @@ test('the runtime draws bonuses with the odds the math sheet assumes', { skip },
 
 test('every mode returns exactly 96%, with the measured hit rates, spread and cap odds', { skip }, async () => {
   const catalogs = await z.loadCatalogs();
-  assert.equal(catalogs.data.version, 'zombify-96-v2');
-  assert.equal(catalogs.feature.version, 'second-life-v3');
+  assert.equal(catalogs.data.version, 'zombify-96-v3');
+  assert.equal(catalogs.feature.version, 'second-life-v4');
   assert.equal(z.CAP, 2_500_000);
   const pins = {
-    base: { cost: 1, hit: 0.2681, sd: 25.98, maxBet: 25000, capOneIn: 2_174_024 },
-    enhanced: { cost: 3.3, hit: 0.285, sd: 18.35, maxBet: 25000, capOneIn: 395_277 },
-    buy_outbreak: { cost: 100, hit: 0.9952, sd: 1.68, maxBet: 25000, capOneIn: 1_000_000 },
-    buy_super: { cost: 250, hit: 0.9937, sd: 1.59, maxBet: 25000, capOneIn: 10_000 },
-    buy_mystery: { cost: 460, hit: 0.9944, sd: 2.48, maxBet: 25000, capOneIn: 796 },
-    buy_feature: { cost: 10, hit: 0.5326, sd: 6.03, maxBet: 25000, capOneIn: 5_617_978 },
+    base: { cost: 1, hit: 0.2649, sd: 25.66, maxBet: 25000, capOneIn: 2_286_372 },
+    enhanced: { cost: 3.3, hit: 0.2822, sd: 18.13, maxBet: 25000, capOneIn: 415_704 },
+    buy_outbreak: { cost: 100, hit: 0.995, sd: 1.65, maxBet: 25000, capOneIn: 1_078_749 },
+    buy_super: { cost: 250, hit: 0.9925, sd: 1.52, maxBet: 25000, capOneIn: 12_099 },
+    buy_mystery: { cost: 460, hit: 0.9932, sd: 2.45, maxBet: 25000, capOneIn: 837 },
+    buy_feature: { cost: 10, hit: 0.5309, sd: 6.03, maxBet: 25000, capOneIn: 5_617_978 },
   };
   const all = z.modes(catalogs);
   assert.deepEqual(all.map((m) => m.kind), Object.keys(pins));
@@ -75,6 +76,11 @@ test('every Hidden bonus pays at least 1,000x and averages exactly 2,256x', { sk
   const { data } = await z.loadCatalogs(), hidden = z.poolDist(data.pools.hidden);
   assert.ok([...hidden.keys()].every((v) => v >= 100_000), 'Hidden minimum');
   close([...hidden].reduce((s, [v, p]) => s + v * p, 0), 225_600, 1e-6, 'Hidden average');
+});
+
+test('every outcome pays a whole 0.1x, as Stake Engine requires', { skip }, async () => {
+  const catalogs = await z.loadCatalogs();
+  for (const m of z.modes(catalogs)) for (const v of m.dist.keys()) assert.equal(v % 10, 0, `${m.kind} pays ${v / 100}x`);
 });
 
 test('the committed math sheet matches the catalogs it was measured from', { skip }, async () => {

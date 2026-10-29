@@ -8,10 +8,12 @@ export const PAYLINES=[
  [0,0,1,2,1,0],[4,4,3,2,3,4],[2,2,1,0,1,2],[2,2,3,4,3,2]
 ];
 // Hundredths of the TOTAL stake for 3, 4, 5 and 6 consecutive matching reels.
+// Every pay is a whole 0.1x (Stake Engine pays in 0.1x steps; Dylan, 2026-10-29),
+// and multipliers are whole numbers, so every win is too.
 export const PAYTABLE={
- j:[5,15,50,150],q:[6,20,60,180],k:[8,25,80,240],a:[10,30,100,300],
- skater:[15,45,150,450],nurse:[20,60,200,600],builder:[25,75,250,750],
- cop:[35,105,350,1050],scientist:[50,150,500,1500],wild:[50,150,500,1500]
+ j:[10,20,50,150],q:[10,20,60,180],k:[10,30,80,240],a:[10,30,100,300],
+ skater:[20,50,150,450],nurse:[20,60,200,600],builder:[30,80,250,750],
+ cop:[40,110,350,1050],scientist:[50,150,500,1500],wild:[50,150,500,1500]
 };
 const wild=cell=>cell.kind==='zombie'||cell.kind==='wild';
 export function lineWins(board){

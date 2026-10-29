@@ -88,10 +88,10 @@ test('a crossing expansion stays visible in the cell it takes from another claim
  for(const walk of result.events.filter(e=>e.type==='walk'&&e.headId==='vertical'))assert.deepEqual(occludingCells(walk).sort((a,b)=>a-b),[0,1,2,3]);
 });
 test('a real Outbreak crossing: every move is masked only out of cells another zombie keeps',()=>{
- // Regular-Outbreak catalog entry at ticket 29248978: on free spin 7 a vertical
+ // Regular-Outbreak catalog entry (seed 851) at ticket 29300000: on free spin 7 a vertical
  // award (cells 4-28) crosses a 5-cell horizontal one (cells 1-5).
- const queue=[29248978],result=makePaidRound({kind:'buy_outbreak',rng:()=>(queue.shift()+.5)/1e9});
- assert.equal(result.total,8643);
+ const queue=[29300000],result=makePaidRound({kind:'buy_outbreak',rng:()=>(queue.shift()+.5)/1e9});
+ assert.equal(result.total,8730);
  const moves=result.events.filter(e=>e.before&&e.board&&e.headId);
  const crossing=moves.find(e=>e.type==='expand'&&e.cells.includes(4)&&e.cells.includes(28));
  assert.ok(crossing,'the crossing expansion is in this outcome');

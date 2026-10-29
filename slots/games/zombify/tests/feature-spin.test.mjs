@@ -163,7 +163,7 @@ test('bonus purchase dialog keeps bonus confirmations and rejects the persistent
  const source=readFileSync(new URL('../runtime/app.js',import.meta.url),'utf8');
  const nodes=new Map(),classes=()=>{const set=new Set();return {toggle(k,v){v?set.add(k):set.delete(k);},contains:k=>set.has(k)};};
  const get=id=>{if(!nodes.has(id))nodes.set(id,{dataset:{},textContent:'',classList:classes(),children:[],replaceChildren(...children){this.children=children;},showModal(){this.open=true;},close(){this.open=false;}});return nodes.get(id);};
- const session=createSession(),ctx=vm.createContext({FEATURE_SPIN,BONUS_BUYS,session,busy:false,auto:{active:false},pending:null,$:get,money:n=>(n/100).toFixed(2),toast(){throw Error('Unexpected toast');},syncControls(){},soundEffect(){},document:{createElement:()=>({})},scatterArt(node,count){node.replaceChildren(...Array.from({length:count},()=>({className:'symbol art-vial'})));}});
+ const session=createSession(),ctx=vm.createContext({FEATURE_SPIN,BONUS_BUYS,session,busy:false,stake:null,allowed:{buy:true},auto:{active:false},pending:null,$:get,money:n=>(n/100).toFixed(2),toast(){throw Error('Unexpected toast');},syncControls(){},soundEffect(){},document:{createElement:()=>({})},scatterArt(node,count){node.replaceChildren(...Array.from({length:count},()=>({className:'symbol art-vial'})));}});
  const start=source.indexOf('function selectBuy('),end=source.indexOf('function showBetPicker(',start);
  const select=vm.runInContext(source.slice(start,end)+';selectBuy',ctx);
  select('buy_feature');assert.equal(ctx.pending,null);assert.equal(get('confirm').open,undefined);

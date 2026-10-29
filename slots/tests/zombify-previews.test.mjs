@@ -33,7 +33,7 @@ test('a Hidden preview averages the real 2,256x (never under 1,000x), not the ca
   // Exact, from the catalogs: the distribution every preview is drawn from.
   const value = (tier) => mean(sumCapped(poolDist(data.pools[tier]), poolDist(data.pools[`entry_${tier}`]))) / 100;
   assert.ok(Math.abs(value('hidden') - 2256.08) < 0.01, `hidden ${value('hidden')}`);
-  assert.ok(Math.abs(value('super') - 240.08) < 0.01, `super ${value('super')}`);
+  assert.ok(Math.abs(value('super') - 240.09) < 0.01, `super ${value('super')}`);
   // And in play: varied wins, almost never the cap.
   const wins = Array.from({ length: 40 }, (_, i) => makePaidRound({ kind: 'preview_hidden', rng: seeded(900 + i) }).total);
   assert.ok(new Set(wins).size > 30, 'previews differ from one another');

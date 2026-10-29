@@ -9,6 +9,7 @@ export const BETS = [10,20,50,100,200,500,1000,2000,5000,10000,20000,30000,40000
 export function createSession() {
   let units=100000000, betIndex=3, active=null, lastWin=0, spinMode='base';
   return {
+    bets:BETS,
     read() { return {credits:units/100, bet:BETS[betIndex], betIndex, lastWin, busy:!!active,spinMode,spinCost:Math.round(BETS[betIndex]*roundCostMultiplier(spinMode))}; },
     setSpinMode(mode) {
       if(!Object.hasOwn(SPIN_MODES,mode)&&mode!==FEATURE_SPIN.kind)throw Error('Unknown spin mode.');

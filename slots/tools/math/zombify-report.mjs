@@ -43,7 +43,8 @@ lines.push('## How the math works', '',
   '- Every round draws an outcome from a weighted catalog (`games/zombify/runtime/outcomes.js`, `feature-outcomes.js`) and replays its seed to animate a result whose payout is already known. Ticket draws use rejection sampling, so there is no modulo bias.',
   `- **Base spin:** a bonus starts 1 in ${Math.round(1 / ENTRY.base)}. **Enhanced spin** (${enhanced.cost}x cost): 1 in ${Math.round(1 / ENTRY.enhanced)}. A started bonus is ${Object.entries(TIERS).map(([t, p]) => `${pct(p, 0)} ${t}`).join(', ')}. It pays the trigger spin plus the bonus, capped at ${x(CAP / 100, 0)}.`,
   `- **Buys** skip the trigger spin: Outbreak, Super Outbreak, or Mystery (${Object.entries(MYSTERY).map(([t, p]) => `${pct(p, 0)} ${t}`).join(', ')}). **Second Life** is its own feature with its own catalog.`,
-  '- The engine checks every round against its catalog value before crediting, and refuses the round on any mismatch.', '');
+  '- The engine checks every round against its catalog value before crediting, and refuses the round on any mismatch.',
+  '- Every line pay, and so every win, is a whole 0.1x (Stake Engine pays in 0.1x steps). The Stake Engine upload is built from these catalogs: see `STAKE.md`.', '');
 
 lines.push('## Where the base-spin RTP comes from', '');
 row('Part', 'Base spin', 'Enhanced spin'); row('---', '---', '---');

@@ -1,0 +1,22 @@
+/* Stake Engine build (stake.js sets html[data-platform="stake"]): free-play
+   credits, previews and the prototype badge are not part of it. Jurisdiction
+   switches from Engine hide the controls they turn off. */
+html:not([data-platform="stake"]) .stake-only{display:none!important}
+html[data-platform="stake"] .free-play-only,
+html[data-platform="stake"] .edition,
+html[data-platform="stake"] .prototype-note,
+html[data-platform="stake"] #reset,
+html[data-platform="stake"] #menu-reset,
+html[data-platform="stake"] .demo-tools,
+html[data-platform="stake"] .shop-previews,
+html[data-no-turbo] #menu-turbo,
+html[data-no-turbo] label:has(> #speed),
+html[data-no-turbo] label:has(> #menu-quick-spin),
+html[data-no-autoplay] #auto,
+html[data-no-buy] #buy,
+html[data-no-buy] .bonus-card,
+html[data-no-buy] .enhanced-setting,
+html[data-no-buy] .second-life-setting{display:none!important}
+/* A replay link shows one past round: no bets or buys. */
+html[data-replay] #buy,html[data-replay] #auto,html[data-replay] .bet-controls,html[data-replay] #minus,html[data-replay] #plus{visibility:hidden!important}
+.line-paytable td,.line-paytable th{text-align:center}

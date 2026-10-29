@@ -2,6 +2,11 @@
 // Zombify catalog rebalance (Dylan, 2026-10-28). Rewrites the two outcome
 // catalogs the game draws from:
 //
+// - Every v125 outcome is first scored again by the current engine: since
+//   2026-10-29 every line pay is a whole 0.1x (paylines.js, for Stake Engine),
+//   so the same seeds pay slightly different amounts. Seeds, scatter counts and
+//   the clustered flag are kept; the weights below are rebuilt from the new pays.
+//
 // - Second Life (feature-outcomes.js, second-life-v3): the round now starts
 //   with 2, 3 or 4 zombies and every heart after the first brings in another
 //   (runtime/feature-spin.js). Plays seeds 1..N through that code and builds a
@@ -34,10 +39,22 @@ const RT = new URL('../../games/zombify/runtime/', import.meta.url);
 const TOTAL = 1e9;
 
 if (!isMainThread) {
-  const { makeFeatureRound } = await import(new URL('feature-spin.js', RT)), { seeded } = await import(new URL('math.js', RT));
-  const { from, to } = workerData, out = new Int32Array((to - from) * 5);
-  for (let s = from, k = 0; s < to; s++, k += 5) { const r = makeFeatureRound({ rng: seeded(s) }); out.set([s, r.total, r.hearts, r.spins, r.events[0].zombies], k); }
-  parentPort.postMessage(out, [out.buffer]);
+  const { makeFeatureRound } = await import(new URL('feature-spin.js', RT)), { seeded, makeRound } = await import(new URL('math.js', RT));
+  const { BONUS_FEATURES } = await import(new URL('config.js', RT));
+  if (workerData.replay) {
+    // Score catalog outcomes: [seed, c3, c4] rows of one pool, as outcome-model.js plays them.
+    const { kind, tier, trigger, bonusSeed, rows } = workerData.replay, out = new Int32Array(rows.length);
+    rows.forEach(([seed, c3, c4], i) => {
+      if (trigger) out[i] = makeRound({ kind: 'base', rng: seeded(seed), forcedScatters: BONUS_FEATURES[trigger].scatters, bonusRng: seeded(bonusSeed), clustered: false }).events.find((e) => e.type === 'bonusStart')?.total ?? -1;
+      else if (tier) out[i] = makeRound({ kind, rng: seeded(seed), forcedTier: tier, clustered: !!c4 }).total;
+      else out[i] = makeRound({ kind, rng: seeded(seed), forcedScatters: c3, baseOnly: true }).total;
+    });
+    parentPort.postMessage(out, [out.buffer]);
+  } else {
+    const { from, to } = workerData, out = new Int32Array((to - from) * 5);
+    for (let s = from, k = 0; s < to; s++, k += 5) { const r = makeFeatureRound({ rng: seeded(s) }); out.set([s, r.total, r.hearts, r.spins, r.events[0].zombies], k); }
+    parentPort.postMessage(out, [out.buffer]);
+  }
 } else {
   const arg = (k, d) => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : d; };
   const { FEATURE_SPIN, BONUS_BUYS, SPIN_MODES } = await import(new URL('config.js', RT));
@@ -46,7 +63,29 @@ if (!isMainThread) {
   const source = JSON.parse(readFileSync(new URL('../import-manifest.json', RT), 'utf8')).source;
   const bytes = arg('--from') ? readFileSync(arg('--from')) : Buffer.from(await (await fetch(new URL('outcomes.js', source))).arrayBuffer());
   if (createHash('sha256').update(bytes).digest('hex') !== V125) throw Error('Not the v125 outcomes.js: rebalance only from the verified v125 catalog');
-  const text = bytes.toString('utf8'), data = JSON.parse(text.slice(text.indexOf('export default ') + 15, text.lastIndexOf(';')));
+  const text = bytes.toString('utf8'), v125 = JSON.parse(text.slice(text.indexOf('export default ') + 15, text.lastIndexOf(';')));
+
+  // ---- replay: every v125 outcome scored by the current engine --------------
+  const REPLAY = {
+    base: { kind: 'base' }, enhanced: { kind: 'enhanced' },
+    regular: { kind: 'buy_outbreak', tier: 'regular' }, super: { kind: 'buy_super', tier: 'super' }, hidden: { kind: 'buy_mystery', tier: 'hidden' },
+    entry_regular: { trigger: 'regular' }, entry_super: { trigger: 'super' }, entry_hidden: { trigger: 'hidden' },
+  };
+  const run = (workerData) => new Promise((ok, bad) => { const w = new Worker(fileURLToPath(import.meta.url), { workerData }); w.once('message', ok); w.once('error', bad); });
+  const jobs = [];
+  for (const [name, how] of Object.entries(REPLAY)) {
+    const entries = v125.pools[name].entries, bonusSeed = how.trigger ? v125.pools[how.trigger].entries[0][0] : 0;
+    for (let from = 0; from < entries.length; from += 2500) jobs.push({ name, from, replay: { ...how, bonusSeed, rows: entries.slice(from, from + 2500).map((e) => [e[0], e[3], e[4]]) } });
+  }
+  const t1 = Date.now(), scored = Object.fromEntries(Object.keys(REPLAY).map((n) => [n, new Int32Array(v125.pools[n].entries.length)]));
+  for (let next = 0; next < jobs.length; ) await Promise.all(jobs.slice(next, (next += 4)).map(async (job) => scored[job.name].set(await run({ replay: job.replay }), job.from)));
+  const data = { pools: Object.fromEntries(Object.entries(v125.pools).map(([n, p]) => [n, { total: p.total, entries: p.entries.map((e, i) => [e[0], e[1], scored[n][i], e[3], e[4]]) }])) };
+  for (const n of Object.keys(REPLAY)) {
+    if (scored[n].some((v) => v < 0 || v % 10)) throw Error(`${n}: an outcome is not a whole 0.1x`);
+    const was = mean(v125.pools[n]) / 100, now = mean(data.pools[n]) / 100;
+    console.log(`replayed ${n}: ${scored[n].length} outcomes, average ${was.toFixed(2)}x -> ${now.toFixed(2)}x with the new pays`);
+  }
+  console.log(`replay: ${((Date.now() - t1) / 1000).toFixed(0)}s`);
 
   // ---- weights -------------------------------------------------------------
   // Integer weights summing to TOTAL (each >= 1) from real-valued shares, then
@@ -60,7 +99,10 @@ if (!isMainThread) {
     for (let k = 0; left < 0; k = (k + 1) % order.length) if (w[order[k][1]] > 1) { w[order[k][1]]--; left++; }
     return w;
   }
-  function exactAverage(values, w, target) { return exactSum(values, w, BigInt(Math.round(target * TOTAL))); }
+  // Every value is a whole 0.1x, so sums move in steps of their common divisor:
+  // aim at the nearest reachable sum (within 1e-10 of the target average).
+  const gcd = (a, b) => (b ? gcd(b, a % b) : a);
+  function exactAverage(values, w, target) { const g = values.reduce(gcd, 0) || 1; return exactSum(values, w, BigInt(Math.round((target * TOTAL) / g)) * BigInt(g)); }
   // Move tickets between entries (the total stays) until sum(w*v) === goal.
   function exactSum(values, w, goal) {
     const total = w.reduce((t, x) => t + x, 0);
@@ -121,7 +163,7 @@ if (!isMainThread) {
     const w = exactAverage(rows.map(({ e }) => e[2]), integerWeights(shares), target);
     return { pool: pool(rows.map(({ e }) => e), w), theta: lo };
   }
-  const mean = (p) => { let prev = 0, s = 0; for (const e of p.entries) { s += (e[1] - prev) * e[2]; prev = e[1]; } return s / p.total; };
+  function mean(p) { let prev = 0, s = 0; for (const e of p.entries) { s += (e[1] - prev) * e[2]; prev = e[1]; } return s / p.total; }
   const distMean = (d) => [...d].reduce((a, [v, q]) => a + v * q, 0);
 
   // ---- Hidden: 1,000x or more, averaging exactly 2,256x ----------------------
@@ -132,13 +174,19 @@ if (!isMainThread) {
   const hidden = tilt(kept, HIDDEN_MEAN);
   console.log(`hidden: ${hidden.pool.entries.length} of ${data.pools.hidden.entries.length} outcomes kept (>= ${HIDDEN_FLOOR / 100}x), average ${(mean(kept) / 100).toFixed(2)}x -> ${(mean(hidden.pool) / 100).toFixed(2)}x (theta ${hidden.theta.toFixed(4)})`);
 
-  // ---- Base and enhanced: exactly 96% with the new Hidden --------------------
+  // ---- Outbreak and Super: the buys' exact averages (96% of 100x and 250x) ----
   const pools = { ...data.pools, hidden: hidden.pool };
+  for (const [tier, kind] of [['regular', 'buy_outbreak'], ['super', 'buy_super']]) {
+    const target = 0.96 * BONUS_BUYS[kind].cost * 100, t = tilt(pools[tier], target);
+    console.log(`${tier}: average ${(mean(pools[tier]) / 100).toFixed(2)}x -> ${(mean(t.pool) / 100).toFixed(2)}x (theta ${t.theta.toFixed(4)})`); pools[tier] = t.pool;
+  }
+
+  // ---- Base and enhanced: exactly 96% with the new Hidden --------------------
   const natural = Object.fromEntries(Object.keys(TIERS).map((t) => [t, sumCapped(poolDist(pools[t]), poolDist(pools[`entry_${t}`]))]));
   const bonusMean = Object.entries(TIERS).reduce((a, [t, p]) => a + p * distMean(natural[t]), 0);
   for (const kind of ['base', 'enhanced']) {
     const cost = SPIN_MODES[kind].cost * 100, target = (0.96 * cost - ENTRY[kind] * bonusMean) / (1 - ENTRY[kind]);
-    const before = mean(pools[kind]), t = tilt(pools[kind], target); pools[kind] = t.pool;
+    const before = mean(v125.pools[kind]), t = tilt(pools[kind], target); pools[kind] = t.pool;
     console.log(`${kind}: no-bonus spins average ${(before / 100).toFixed(4)}x -> ${(target / 100).toFixed(4)}x (theta ${t.theta.toFixed(4)}) for 96% at ${cost / 100}x`);
   }
   const mysteryMean = Object.entries(MYSTERY).reduce((a, [t, p]) => a + p * mean(pools[t]), 0);
@@ -211,7 +259,7 @@ if (!isMainThread) {
   // game's own tests check); the outcome catalog's covers this tool and config.
   const featureSource = ['math.js', 'config.js', 'paylines.js', 'feature-spin.js'].reduce((h, f) => h.update(readFileSync(new URL(f, RT))), createHash('sha256')).digest('hex');
   const toolHash = createHash('sha256').update(readFileSync(fileURLToPath(import.meta.url))).update(readFileSync(new URL('config.js', RT))).digest('hex');
-  writeFileSync(new URL('outcomes.js', RT), `// Rebalanced by tools/math/zombify-rebalance.mjs from the v125 catalogs (Hidden 1,000x+, base/enhanced at 96%).\nexport default ${JSON.stringify({ version: 'zombify-96-v2', sourceHash: toolHash, pools })};\n`);
-  writeFileSync(new URL('feature-outcomes.js', RT), `// Generated by tools/math/zombify-rebalance.mjs (Second Life with 2-4 zombies and heart joins).\nexport default ${JSON.stringify({ version: 'second-life-v3', sourceHash: featureSource, pool: featurePool })};\n`);
-  console.log('wrote outcomes.js (zombify-96-v2) and feature-outcomes.js (second-life-v3)');
+  writeFileSync(new URL('outcomes.js', RT), `// Rebalanced by tools/math/zombify-rebalance.mjs from the v125 seeds, scored with 0.1x pays (Hidden 1,000x+, every mode at 96%).\nexport default ${JSON.stringify({ version: 'zombify-96-v3', sourceHash: toolHash, pools })};\n`);
+  writeFileSync(new URL('feature-outcomes.js', RT), `// Generated by tools/math/zombify-rebalance.mjs (Second Life with 2-4 zombies and heart joins).\nexport default ${JSON.stringify({ version: 'second-life-v4', sourceHash: featureSource, pool: featurePool })};\n`);
+  console.log('wrote outcomes.js (zombify-96-v3) and feature-outcomes.js (second-life-v4)');
 }
