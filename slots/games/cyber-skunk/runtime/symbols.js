@@ -39,6 +39,56 @@ export function symbolHTML(id) {
   // The FS lettering is its own layer over the plate, so it can animate apart.
   return id === 'S' && available.has('S-letters') ? `<span class="scatter-stack">${img}<img class="scatter-letters" src="${available.get('S-letters')}" alt="" draggable="false"></span>` : img;
 }
+// The spinning filler as one image: the symbols drawn once, top to bottom,
+// into a strip of 200 px cells, so a spinning reel moves one element instead
+// of dozens of cells. Drawn as the cells look: painted art scaled 1.12 with
+// its drop shadow, placeholders with their lettering in the game's font.
+// Resolves to an object URL, or null if the browser will not draw it.
+export async function fillerStrip(ids, k = 1.5) {
+  try {
+    await document.fonts.load('56px Anton');
+    const c = document.createElement('canvas');
+    c.width = 200 * k; c.height = 200 * k * ids.length;
+    const g = c.getContext('2d'), art = new Map();
+    for (const id of new Set(ids)) art.set(id, await symbolArt(id));
+    ids.forEach((id, n) => {
+      const { img, texts, painted } = art.get(id);
+      g.setTransform(k, 0, 0, k, 0, n * 200 * k);
+      if (painted) {
+        g.save(); g.shadowColor = '#000c'; g.shadowBlur = 7 * k; g.shadowOffsetY = 7 * k;
+        g.drawImage(img, 100 - 98.56, 100 - 98.56, 197.12, 197.12); g.restore();
+        return;
+      }
+      g.drawImage(img, 12, 12, 176, 176);
+      for (const t of texts) {
+        g.font = `${t.size * 1.76}px Anton, Impact, 'Arial Black', sans-serif`; g.textAlign = 'center';
+        g.lineWidth = t.stroke * 1.76; g.strokeStyle = t.strokeColor; g.fillStyle = t.fill;
+        g.strokeText(t.text, 12 + t.x * 1.76, 12 + t.y * 1.76); g.fillText(t.text, 12 + t.x * 1.76, 12 + t.y * 1.76);
+      }
+    });
+    const blob = await new Promise((resolve) => c.toBlob(resolve, 'image/webp', 0.9));
+    return blob ? URL.createObjectURL(blob) : null;
+  } catch { return null; }
+}
+// One symbol as an image: the painted file, or the placeholder SVG without
+// its <text> (an SVG drawn as an image cannot use the page's fonts), with the
+// text returned to be drawn on the canvas.
+async function symbolArt(id) {
+  const painted = available.has(id), texts = [];
+  let src = available.get(id);
+  if (!painted) {
+    const markup = (PLACEHOLDER[id] || svg('')).replace(/<text ([^>]*)>([^<]*)<\/text>/g, (_, attrs, text) => {
+      const a = Object.fromEntries([...attrs.matchAll(/([\w-]+)="([^"]*)"/g)].map((m) => [m[1], m[2]]));
+      texts.push({ text, x: +a.x, y: +a.y, size: +a['font-size'], fill: a.fill, strokeColor: a.stroke, stroke: +a['stroke-width'] || 0 });
+      return '';
+    });
+    src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(markup)}`;
+  }
+  const img = new Image();
+  img.src = src;
+  await img.decode();
+  return { img, texts, painted };
+}
 export function ventHTML(dir) {
   const rotate = [0, 90, 180, 270][dir];
   const body = available.has('vent') ? `<img src="${available.get('vent')}" alt="" draggable="false">` : VENT_SVG;

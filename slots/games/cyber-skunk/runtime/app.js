@@ -4,7 +4,7 @@
 import { playRound, seeded, at } from './engine.js';
 import { drawRound, CATALOG_VERSION } from './catalog.js';
 import { REELS, ROWS, CELLS, LINES, PAYTABLE, NAMES, MODES, BONUSES, CAP, RETRIGGER, MAX_SPINS, MAX_STICKY, MAX_RESERVOIR, triggerRates } from './rules.js';
-import { loadArt, symbolHTML, ventHTML } from './symbols.js';
+import { loadArt, symbolHTML, ventHTML, fillerStrip } from './symbols.js';
 import { mountController } from './controller/controller.js';
 import { GameAudio } from './audio.js';
 import { Skunk } from './rig.js';
@@ -98,6 +98,13 @@ const reels = [];
 let board = [];
 const FILL = ['H1', 'H2', 'H3', 'H4', 'A', 'K', 'Q', 'J', 'T', 'A', 'K', 'Q', 'J', 'T', 'W'];
 const filler = () => ({ s: FILL[Math.floor(Math.random() * FILL.length)] }); // presentation only, never the result
+// The same symbols drawn once into one strip image (see fillerStrip): a spin
+// then lays out one element per reel for the blur, not dozens of cells.
+const STRIP = [...FILL].sort(() => Math.random() - 0.5);
+let stripReady = false;
+const fillerHTML = (n) => (stripReady
+  ? `<div class="filler" style="height:${n * 200}px;background-position:0 ${-200 * Math.floor(Math.random() * STRIP.length)}px"></div>`
+  : Array.from({ length: n }, () => cellHTML(filler())).join(''));
 const cellHTML = (c, i = -1) => `<div class="cell${c.sticky ? ' sticky' : ''}"${i >= 0 ? ` data-i="${i}"` : ''}><span class="sym">${symbolHTML(c.s)}</span>${c.vent !== undefined ? ventHTML(c.vent) : ''}</div>`;
 function buildReels() {
   for (let reel = 0; reel < REELS; reel++) {
@@ -126,9 +133,9 @@ async function spinTo(cells, { canTrigger }) {
     if (column(cells, reel).some((c) => c.s === 'S')) scatters.push(reel), seen++;
     const dur = speed === 0 ? 0 : (520 + reel * 150) * speed + (tease ? 1100 * Math.max(speed, 0.6) : 0);
     const old = column(board.length ? board : cells, reel), next = column(cells, reel);
-    const extra = Array.from({ length: Math.max(3, Math.round(dur / perCell)) }, filler);
-    strip.innerHTML = [...next.map((c, row) => cellHTML(c, at(row, reel))), ...extra.map((c) => cellHTML(c)), ...old.map((c) => cellHTML(c))].join('');
-    const dist = (ROWS + extra.length) * 200;
+    const extra = Math.max(3, Math.round(dur / perCell));
+    strip.innerHTML = [...next.map((c, row) => cellHTML(c, at(row, reel))), fillerHTML(extra), ...old.map((c) => cellHTML(c))].join('');
+    const dist = (ROWS + extra) * 200;
     if (!dur) return { reel, tease, done: Promise.resolve() };
     el.classList.add('spinning'); if (tease) el.classList.add('tease');
     const anim = strip.animate([
@@ -668,6 +675,7 @@ async function boot() {
   fit();
   state.ready = true; update();
   audio.music('base');
+  void fillerStrip(STRIP).then((url) => { if (url) { $('reels').style.setProperty('--filler', `url("${url}")`); stripReady = true; } });
   introRoute();
   if (!saved?.introHidden) showIntro();
 }
