@@ -221,6 +221,15 @@ dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}
 .reel-banner b{font:400 140px/1 var(--title);color:var(--amber);-webkit-text-stroke:5px #1b120a;text-shadow:0 0 40px #eda83c}
 .reel-banner.show{animation:panel-in .45s cubic-bezier(.2,1.5,.4,1)}
 .bigwin-title img{display:block;width:min(1100px,92vw);margin:0 auto}
+/* Rays behind the big-win title, hotter per tier; a short shake for Epic and above. */
+.bigwin::before{content:"";position:absolute;left:50%;top:50%;width:160vmax;height:160vmax;margin:-80vmax 0 0 -80vmax;z-index:-1;opacity:.35;background:repeating-conic-gradient(from 0deg,#eda83c33 0 6deg,#0000 6deg 18deg);-webkit-mask:radial-gradient(circle,#000 0,#0000 55%);mask:radial-gradient(circle,#000 0,#0000 55%);animation:rays 14s linear infinite}
+.bigwin[data-tier=epic]::before,.bigwin[data-tier=mythic]::before{opacity:.5;background:repeating-conic-gradient(from 0deg,#68c8c344 0 6deg,#0000 6deg 14deg)}
+.bigwin[data-tier=max]::before{opacity:.65;background:repeating-conic-gradient(from 0deg,#ff5a3c44 0 7deg,#0000 7deg 14deg);animation-duration:7s}
+.bigwin{isolation:isolate}
+.bigwin-fx{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+@keyframes rays{to{transform:rotate(360deg)}}
+.stage.shake{animation:shake .6s cubic-bezier(.36,.07,.19,.97)}
+@keyframes shake{10%,90%{translate:-2px 1px}20%,80%{translate:4px -2px}30%,50%,70%{translate:-8px 3px}40%,60%{translate:8px -3px}}
 .bigwin[data-tier=epic] .bigwin-title,.bigwin[data-tier=mythic] .bigwin-title{color:#9ff0ea;text-shadow:0 0 40px #68c8c3,0 8px 0 #0d3a38}
 .bigwin[data-tier=max] .bigwin-title{color:#ff5a3c;text-shadow:0 0 50px #ff5a3c,0 8px 0 #3a0d06}
 .bonus-panel .panel-amount{display:block;font:400 clamp(40px,7vw,80px)/1 var(--title);color:var(--amber);margin-top:6px}
@@ -269,4 +278,4 @@ dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}
   .intro-tiers{gap:4px;padding:6px}.intro-tiers span{border-radius:8px;padding:4px 2px;font-size:10px;gap:4px}.intro-tiers i{font-size:20px}
   .intro-go{min-width:200px;min-height:56px}
 }
-@media (prefers-reduced-motion:reduce){.backdrop .fans i{animation:none}.cell.win .sym{animation:none}.steam,.reel-banner.show,.intro-inner{animation:none}}
+@media (prefers-reduced-motion:reduce){.bigwin::before{animation:none}.backdrop .fans i{animation:none}.cell.win .sym{animation:none}.steam,.reel-banner.show,.intro-inner{animation:none}}

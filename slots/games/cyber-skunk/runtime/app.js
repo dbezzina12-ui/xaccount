@@ -381,10 +381,12 @@ function steam() {
 async function celebrate(total, capped) {
   const x = total / 100, tier = capped ? 'MAX WIN' : WIN_TIERS.find(([min]) => x >= min)?.[1];
   if (!tier) return;
-  const el = $('bigwin'), amount = payOf(total);
-  $('bigwin-title').innerHTML = artImg(`win-${tier.split(' ')[0].toLowerCase()}`, tier) || tier;
-  el.dataset.tier = tier.split(' ')[0].toLowerCase(); $('bigwin-amount').textContent = money(0); el.hidden = false;
+  const el = $('bigwin'), amount = payOf(total), key = tier.split(' ')[0].toLowerCase(), level = ['nice', 'big', 'epic', 'mythic', 'max'].indexOf(key);
+  $('bigwin-title').innerHTML = artImg(`win-${key}`, tier) || tier;
+  el.dataset.tier = key; $('bigwin-amount').textContent = money(0); el.hidden = false;
   audio.duck(true); audio.play(capped ? 'max' : 'bigwin', { tier }); skunk.play('bigwin');
+  if (level >= 2 && !reduced.matches) { stage.classList.remove('shake'); void stage.offsetWidth; stage.classList.add('shake'); }
+  const stop = fountain(level);
   const dur = (capped ? 5200 : x >= 500 ? 4200 : x >= 100 ? 3200 : x >= 25 ? 2400 : 1600) * pace(), t0 = performance.now();
   while (!state.skip && performance.now() - t0 < dur) {
     const k = (performance.now() - t0) / dur;
@@ -393,7 +395,48 @@ async function celebrate(total, capped) {
   }
   $('bigwin-amount').textContent = money(amount);
   await wait(1100);
+  stop(); stage.classList.remove('shake');
   el.hidden = true; audio.duck(false);
+}
+// The big-win fountain: brass nuts, amber sparks and spray droplets thrown up
+// from the cabinet, more for each tier. Its own screen-sized canvas sits in the
+// big-win overlay, above the darkening and behind the title.
+function fountain(level) {
+  if (reduced.matches) return () => {};
+  const canvas = $('bigwin-fx'), dpr = Math.min(2, devicePixelRatio || 1), W = innerWidth, H = innerHeight;
+  canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+  const g = canvas.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const box = $('cabinet').getBoundingClientRect(), cx = box.left + box.width / 2, cy = box.top + box.height * 0.6;
+  const u = H / 1080, size = Math.min(1.2, Math.max(0.6, state.scale * 1.4)), rate = [2, 4, 6, 9, 12][level], bits = [];
+  let running = true, last = performance.now();
+  const spawn = () => {
+    for (let k = 0; k < rate; k++) {
+      const kind = Math.random(), a = -Math.PI / 2 + (Math.random() - 0.5) * 1.2, v = (17 + Math.random() * 13) * u;
+      bits.push({ x: cx + (Math.random() - 0.5) * box.width * 0.4, y: cy, vx: Math.cos(a) * v, vy: Math.sin(a) * v, r: (kind < 0.45 ? 12 + Math.random() * 9 : 4 + Math.random() * 5) * size, spin: Math.random() * 6, vs: (Math.random() - 0.5) * 0.4, type: kind < 0.45 ? 'nut' : kind < 0.8 ? 'spark' : 'drop' });
+    }
+  };
+  const nut = (b) => {
+    g.save(); g.translate(b.x, b.y); g.rotate(b.spin);
+    g.beginPath(); for (let i = 0; i < 6; i++) { const t = (i / 6) * Math.PI * 2; g.lineTo(Math.cos(t) * b.r, Math.sin(t) * b.r); } g.closePath();
+    const grad = g.createLinearGradient(-b.r, -b.r, b.r, b.r); grad.addColorStop(0, '#f3c77a'); grad.addColorStop(0.5, '#ad7840'); grad.addColorStop(1, '#5a3a17');
+    g.fillStyle = grad; g.fill(); g.lineWidth = 1.5; g.strokeStyle = '#2b1a0a'; g.stroke();
+    g.beginPath(); g.arc(0, 0, b.r * 0.42, 0, Math.PI * 2); g.fillStyle = '#1b120a'; g.fill();
+    g.restore();
+  };
+  const frame = (now) => {
+    const dt = Math.min(2, (now - last) / 16.7); last = now;
+    g.clearRect(0, 0, W, H);
+    if (running) spawn();
+    for (const b of bits) {
+      b.vy += 0.55 * u * dt; b.x += b.vx * dt; b.y += b.vy * dt; b.spin += b.vs * dt;
+      if (b.type === 'nut') nut(b);
+      else { g.globalAlpha = b.type === 'spark' ? 0.95 : 0.8; g.fillStyle = b.type === 'spark' ? '#ffd27a' : '#bff7f2'; g.beginPath(); g.arc(b.x, b.y, b.r, 0, Math.PI * 2); g.fill(); g.globalAlpha = 1; }
+    }
+    for (let i = bits.length - 1; i >= 0; i--) if (bits[i].y > H + 60) bits.splice(i, 1);
+    if (running || bits.length) requestAnimationFrame(frame); else g.clearRect(0, 0, W, H);
+  };
+  requestAnimationFrame(frame);
+  return () => { running = false; };
 }
 
 // ---- A round ----
