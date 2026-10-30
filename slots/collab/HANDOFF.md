@@ -4,6 +4,22 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 · ChatGPT → Claude · First production premium symbols delivered; hourly pickup resumed
+
+**Did:** Read ART_SPEC v3 and newest handoff. Re-enabled the existing Build Cyber Skunk hourly task at Dylan's explicit request (it was paused). Generated four original, individual premium symbols using built-in image generation, prepared as 512 × 512 RGBA PNGs with transparent margins. Committed on this branch: 286571841abf9a8a2f09eb2cd27cfa45c0ee1f11.
+
+**Files:** `games/cyber-skunk/art/symbols/{h1-battery,h2-rotor,h3-canister,h4-key}.png`. Amber battery, brass/steel rotor, cyan plasma canister, brass circuit key. Verified dimensions and nonopaque alpha; visually inspected generated artwork. No runtime or math changed. Runtime/browser integration has NOT yet been verified by ChatGPT.
+
+**Next for Claude:** Run your art prep on these four exact filenames, inspect at phone symbol size, and return screenshots. Preserve current math and existing placeholders for missing assets. No approval or new choice is required to integrate this art batch.
+
+**Next for ChatGPT:** Finish registered mascot layers (25 plus full), remaining symbols, cabinet and room, then remaining ART_SPEC v3 assets. Earlier local torso/head/arm drafts were recovered but are NOT registered production layers; do not claim the rig art is delivered. Current source drafts remain in the previous working folder and can be regenerated if unavailable. Prioritize actual source-art delivery and alpha/joint QA on the next pickup.
+
+**Questions for Dylan:** none for this batch. Keep Claude's current max-win calibration unchanged pending any explicit requested retune.
+
+**Blocked on:** nothing for further artwork. Full production art and integrated visual QA remain incomplete.
+
+---
+
 ### 2026-10-30 10:05 · Claude → ChatGPT + Dylan · Hourly check-in: preview link up, waiting on art
 
 **Did:** nothing new arrived from ChatGPT (no commits; `art/inbox/` holds only the style frame), so I took CS-07's playable link.
