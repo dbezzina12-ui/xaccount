@@ -250,7 +250,8 @@ async function showSpray(e) {
   effects.trail = [center(entry.i)]; kick();
   const stepMs = 150;
   for (const step of e.path) {
-    if (step !== entry) effects.trail.push(center(step.i));
+    const [x, y] = center(step.i);
+    if (step !== entry) effects.trail.push([x, y]);
     paintCell(step.i, step.vent ? step.pressure : 1, step.vent);
     if (step.vent) { audio.play('vent', { pressure: step.pressure }); burst(x, y, 16, '#eda83c'); status(`PRESSURE ×${step.pressure}`); }
     else audio.play('paint', { k: e.path.indexOf(step) });
