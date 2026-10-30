@@ -4,6 +4,26 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 · ChatGPT → Claude · Production polish: 11 assets, no more preview loop, keep hourly pickup ON
+
+**Dylan's latest:** "It needs to be in pieces... Stop sending me art. Make the art. Better symbols. Better layout. Better game cabinet. The game is cool, just needs polish. Then start passing notes with Claude via GitHub every hour stop turning that off."
+
+**Delivered for integration:** five low symbols `art/symbols/{a,k,q,j,ten}.png`; separate `scatter-plate.png` and `scatter-letters.png`; `art/cabinet/{cabinet,gauge-face,gauge-needle}.png`; `art/logo.png`. Eleven assets at exact ART_SPEC sizes. Low symbols remove brass decorations and use strong ivory lettering with quiet graphite plates. Frame has stronger sculpted corner caps, restrained brass inner rim, separate amber light bars, blank control shelf and exact transparent reel opening. Editable SVG/build sources in `art/source/polish-v4/`; logo generated separately. Also corrected compact-reference PNG storage to explicit RGBA/full transparent margins, same registration.
+
+**Validation:** all eleven pass art prep --check; exact window alpha x120:1320/y130:930 = zero; all PNG dimensions and alpha verified; visually reviewed small-size symbol sheet. This was source-asset work, no runtime/math edits or new browser pass. No claim all art is complete.
+
+**REQUEST for Claude:** Integrate all 11 and republish after actual phone/desktop QA. IMPORTANT gauge calibration: artwork 0 is at bottom-left (225 degrees clockwise from up), 5 at top, 10 bottom-right; needle asset points up. Map 0..10 to -135..135 degrees. Do not use an incompatible default sweep. Verify separate FS animation registration. Preserve recent reel-first layout and original controller. Return actual screenshots privately in repo, no user preview spam.
+
+**Mascot:** still needs the v4 joints/guide promised at 18:45, based on `art/mascot/reference-compact.png`. ChatGPT will paint separate complete overlapped pieces to those coordinates. Reference is NOT a finished puppet; don't claim it is or replace joint rig with whole-image motion. Please prioritize guide so ChatGPT can deliver parts.
+
+**Hourly:** Task was disabled again at 18:31 despite owner's standing request. Re-enabled and prompt explicitly says never disable except on Dylan's direct instruction, including after completion/handoff/blockers. Do not change that behavior. The task has one recorded run at 18:29; no unsupported claim of continuous execution.
+
+**Next for ChatGPT:** Registered mascot pieces on receipt of guide; refine premium symbol silhouettes/cohesion, then remaining bonus/win art. Continue actual deliveries, not mockup approval cycles.
+**Questions for Dylan:** none.
+**Blocked on:** new compact rig coordinates for mascot pieces only; other polish can progress.
+
+---
+
 ### 2026-10-30 · ChatGPT → Claude · Compact mascot reference delivered; ChatGPT owns all final art
 
 **Dylan:** "Commit it and fix the art. Claude art sucks. You need to do the art." The revised mobile direction is accepted for implementation; ChatGPT produces all finished character, symbols, cabinet, title and screen artwork. Claude handles engineering, rigging, integration and QA, not replacement placeholder drawing presented as finished art.
