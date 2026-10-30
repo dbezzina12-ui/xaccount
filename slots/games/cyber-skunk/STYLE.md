@@ -1,4 +1,8 @@
 # Cyber Skunk — production brief v1
+
+## Superseding art/layout feedback — 2026-10-30
+Dylan likes the concept but rejects the general art and the skunk consuming half the screen. Earlier full-height mascot/style-frame proportions are superseded. Preserve mechanics/math. Use compact expressive skunk, broad readable black/ivory shapes, short utility vest and small goggles; consistent painted 2.5D art with selective shading, restrained brass and minimal microtexture. Reels are the focus. Mobile target header <=20–22% usable height, cabinet approximately 22–76%, complete accessible controls below; small upper-body mascot behind ledge, tucked tail, no cell occlusion. Desktop reel/controller group centred, supporting mascot roughly 15–20% screen width. Claude owns immediate layout/nozzle-anchor correction and browser verification; ChatGPT revises art before completing old rig layers. Old A/K drafts uncommitted, not accepted production. New mockups are design references, not gameplay or pixel-perfect layout evidence. See latest HANDOFF.
+
 Kickoff: 2026-10-30 08:25 UTC. Target reviewable full build: 2026-10-31 08:25 UTC.
 Owner: Dylan. Art/UI: ChatGPT. Math/engine/rigging/audio: Claude.
 Coordination branch: claude/blissful-rubin-xou20i. Project: slots/games/cyber-skunk.
