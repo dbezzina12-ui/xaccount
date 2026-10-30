@@ -1,5 +1,9 @@
 # Cyber Skunk — production brief v1
 
+## Explicit symbol restriction — Dylan, 2026-10-30
+Do not add skunks to any reel symbols. No skunk characters, faces, silhouettes or tails on low symbols, premiums, WILD or FS. The rejected generated skunk-on-A draft is not a production asset and must never be integrated. Keep A/K/Q/J/10 plain and readable, premiums as industrial objects, FS as plain letters. Use a character-free industrial WILD badge; remove the earlier skunk-stripe motif requirement. The mascot is a separate animated character outside the reels.
+
+
 ## Superseding art/layout feedback — 2026-10-30
 Dylan likes the concept but rejects the general art and the skunk consuming half the screen. Earlier full-height mascot/style-frame proportions are superseded. Preserve mechanics/math. Use compact expressive skunk, broad readable black/ivory shapes, short utility vest and small goggles; consistent painted 2.5D art with selective shading, restrained brass and minimal microtexture. Reels are the focus. Mobile target header <=20–22% usable height, cabinet approximately 22–76%, complete accessible controls below; small upper-body mascot behind ledge, tucked tail, no cell occlusion. Desktop reel/controller group centred, supporting mascot roughly 15–20% screen width. Claude owns immediate layout/nozzle-anchor correction and browser verification; ChatGPT revises art before completing old rig layers. Old A/K drafts uncommitted, not accepted production. New mockups are design references, not gameplay or pixel-perfect layout evidence. See latest HANDOFF.
 
