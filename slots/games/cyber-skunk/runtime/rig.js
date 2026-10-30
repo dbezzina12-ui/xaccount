@@ -319,9 +319,33 @@ export class Skunk {
     const [x, y] = apply(M.nozzle, [this.joints.tail_tip[0] + 120, this.joints.tail_tip[1]]);
     return [x / W, y / H];
   }
+  // The vector placeholders, drawn once per canvas size into bitmaps trimmed to
+  // their pixels, so a frame is 25 image draws (as with painted layers) rather
+  // than every path, gradient and fur edge again.
+  bake() {
+    const s = this.canvas.width / W;
+    if (this.bakedScale === s) return;
+    this.bakedScale = s; this.baked = new Map();
+    const full = document.createElement('canvas'); full.width = Math.ceil(W * s); full.height = Math.ceil(H * s);
+    const g = full.getContext('2d', { willReadFrequently: true }), pad = 2;
+    for (const k of this.order) {
+      if (this.images.has(k) || !PLACEHOLDER[k]) continue;
+      g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, full.width, full.height);
+      g.setTransform(s, 0, 0, s, 0, 0); PLACEHOLDER[k](g, this.joints);
+      const { data, width, height } = g.getImageData(0, 0, full.width, full.height);
+      let x0 = width, y0 = height, x1 = -1, y1 = -1;
+      for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) if (data[(y * width + x) * 4 + 3]) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+      if (x1 < 0) continue;
+      x0 = Math.max(0, x0 - pad); y0 = Math.max(0, y0 - pad); x1 = Math.min(width - 1, x1 + pad); y1 = Math.min(height - 1, y1 + pad);
+      const crop = document.createElement('canvas'); crop.width = x1 - x0 + 1; crop.height = y1 - y0 + 1;
+      crop.getContext('2d').drawImage(full, x0, y0, crop.width, crop.height, 0, 0, crop.width, crop.height);
+      this.baked.set(k, { img: crop, x: x0 / s, y: y0 / s, w: crop.width / s, h: crop.height / s });
+    }
+  }
   draw(P = this.current()) {
     const g = this.g, s = this.canvas.width / W, M = this.world(P);
     this.lastWorld = M;
+    this.bake();
     g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, this.canvas.width, this.canvas.height);
     // Contact shadow under the planted boots (not part of any layer).
     g.setTransform(s, 0, 0, s, 0, 0);
@@ -331,8 +355,9 @@ export class Skunk {
       const alpha = P[k]?.alpha ?? (k === 'eyelids' ? 0 : 1);
       if (alpha <= 0) continue;
       const m = M[k]; g.setTransform(m[0] * s, m[1] * s, m[2] * s, m[3] * s, m[4] * s, m[5] * s); g.globalAlpha = alpha;
-      const img = this.images.get(k), box = this.layers[k];
+      const img = this.images.get(k), box = this.layers[k], baked = this.baked.get(k);
       if (img) g.drawImage(img, box.x, box.y, box.w, box.h);
+      else if (baked) g.drawImage(baked.img, baked.x, baked.y, baked.w, baked.h);
       else PLACEHOLDER[k]?.(g, this.joints);
     }
     g.globalAlpha = 1;

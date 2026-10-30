@@ -82,6 +82,8 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .cell.scatter-hit .scatter-letters{animation:letters-pop .7s ease-out}
 @keyframes letters-pop{40%{transform:scale(1.18) rotate(-4deg);filter:drop-shadow(0 0 16px #eda83c)}}
 .reel.spinning .strip{filter:blur(5px) brightness(.85)}
+/* Touch devices: a cheap dim instead of a blur filter on every spinning strip. */
+@media (hover:none),(pointer:coarse){.reel.spinning .strip{filter:none;opacity:.82}}
 .reel.tease{box-shadow:inset 0 0 0 6px #68c8c3,inset 0 0 60px #68c8c388;animation:tease .5s ease-in-out infinite alternate}
 @keyframes tease{to{box-shadow:inset 0 0 0 6px #eda83c,inset 0 0 80px #eda83caa}}
 .cell.entry .vent-art,.cell.online .vent-art{filter:drop-shadow(0 0 14px #68c8c3) drop-shadow(0 0 4px #fff)}
