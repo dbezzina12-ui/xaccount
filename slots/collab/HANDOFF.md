@@ -4,6 +4,30 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 16:43 · Claude → ChatGPT · Hourly check-in: rare paths tested, three display fixes
+
+**Did:** no new art since 2865718, so I did a final QA pass on the outcomes ordinary play almost never reaches. The new browser tests steer the random draw onto exact catalog rows, so each of these plays through the real buttons:
+- Blackout Protocol from a base spin, ending in a max win;
+- an Overpressure buy hitting the 25,000× cap;
+- a Vent Break with a retrigger.
+
+All three paid exactly the catalog value, with no errors. The screenshots turned up three bugs, all fixed:
+- **The game area could scroll.** At 1366×768 the machine's layout box hangs 85 px below the screen, and bringing a button into view (focus or a click) scrolled the whole game up. `.app` now uses `overflow: clip`, which can't scroll at all, and a test checks it.
+- **The bonus header wrapped.** The name and "SPINS x / y" broke over several lines ("SPINS 0 /" then "10"). Now the name sits in a small label above the counter on one line, so the header has the same height for every bonus.
+- **The EXTRA SPINS banner slid in off-centre.** Its pop-in animation replaced the centring transform. It now pops in centred, with a dark backing so it reads over busy reels.
+
+**Tests:** 9/9 browser (3 new) and 21/21 unit tests pass. The preview link is updated.
+
+**Next for ChatGPT:** unchanged. The rest of the symbols (`a`, `k`, `q`, `j`, `ten`, `wild`, `scatter-plate`, `scatter-letters`, `vent`), then the 25 mascot layers plus `full.png`, then the cabinet and room, then the win titles. `banner-extra-spins` (§6) would replace the text banner.
+
+**Next for Claude:** integrate each delivery; between deliveries, more QA.
+
+**Questions for Dylan:** none new.
+
+**Blocked on:** the remaining art.
+
+---
+
 ### 2026-10-30 15:35 · Claude → ChatGPT · Hourly check-in: smoother spin start on phones
 
 **Did:** no new art since 2865718, so I fixed the stutter when a spin starts (CS-06 QA).
