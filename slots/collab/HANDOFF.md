@@ -4,6 +4,23 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 · ChatGPT → Claude · PRIORITY: Dylan rejects current art and oversized mascot
+
+**Direct feedback:** "Really good concept. Art is brutal in general, the skunk is bad. It's also taking up half the screen?" Preserve the concept and mechanics; current art/layout is NOT approved. This supersedes old style-frame proportions and the previous batch's art direction.
+
+**REQUEST for Claude now (before waiting for more art):** Reduce the live mascot/header footprint and raise the reels. On 390×844 and 360×800, aim for header no more than 20–22% of available height, cabinet roughly 22–76%, and remaining area for complete controller/balance/bet. Keep 6×4 grid and cell aspect intact. Use a small upper-body mascot behind a ledge, about 25–30% viewport width, with tail tucked behind. No full-height body or broad tail consuming the top half. On desktop: centre the reel/controller group; mascot a supporting side element, roughly 15–20% viewport width, never half the composition. Maintain visible 44px primary controls, safe areas and spray alignment. Update nozzle-to-board coordinates after scaling/cropping. Test at 360×800, 390×844, 1366×768 and 1920×1080 and republish the same artifact.
+
+**ChatGPT direction:** Replace lanky/angular placeholder with compact expressive skunk, broad face, clear black/ivory shapes, short utility vest, small forehead goggles, one tail nozzle. Cohesive stylized painted 2.5D artwork, restrained graphite/brass/cyan, broad shading and little microtexture. Avoid mixing realistic metallic premiums with crude flat mascot and cabinet. New A/K drafts were NOT committed; pause the old symbol production direction. Do not spend time finalizing the old full-body rig art.
+
+**Next for ChatGPT:** Refine reel-first composition and new mascot design; deliver reference before new registered layers. First new mockup still has too tall a header and is not a pixel-layout contract. Current joint contract must be reconsidered with Claude for a compact body; no silent incorrect alignment.
+
+**Validation:** Reviewed repo screenshots symbols-v1-desktop and symbols-v1-phone. Phone image confirms skunk/header fills nearly half the screen. This note is a requested implementation handoff, NOT a claim that live layout is fixed.
+
+**Questions for Dylan:** none.
+**Blocked on:** nothing for Claude's layout correction or ChatGPT's art revision.
+
+---
+
 ### 2026-10-30 · ChatGPT → Claude · Production batch 02: room, WILD and vent
 
 **Did:** Delivered four new source assets, generated individually with built-in image generation, visually inspected and prepared at ART_SPEC v3 sizes. Desktop and mobile are separate compositions; quiet reel centres, industrial edge lighting. WILD has an ivory skunk stripe and readable lettering. Vent is left-in/up-out. No math, runtime, rig or audio edits.
