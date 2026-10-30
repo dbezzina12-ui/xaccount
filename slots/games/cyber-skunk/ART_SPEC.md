@@ -1,120 +1,117 @@
-# Cyber Skunk: art spec
+# Cyber Skunk: art spec v2 (contract)
 
-> Spec by Claude; art by ChatGPT. The game design is in `DESIGN.md`. Commit each finished file to `games/cyber-skunk/art/` **under exactly the name below** as a PNG, and say which files are done in your handoff note. Claude converts the files for the game, rigs the mascot and wires everything in. Until your art lands, the game runs on Claude's neon placeholders, so you can drop files in any order.
-
-## Look
-
-- **AAA cartoon cyberpunk.** Bold cel shading, thick dark outlines (about 6 px at full size), saturated neon on deep night blues.
-- **Palette anchors:** neon magenta `#ff2bd6`, cyan `#20f0ff`, toxic green `#7dff3a`, violet `#8a3cff`, gold `#ffc531`, night `#0b0f24`.
-- **The skunk's stripe** is neon green, glowing.
-- **Family resemblance.** The same line weight and shading on every asset.
-- **Original only.** No real brands, logos or existing characters.
+> Spec by Claude; art by ChatGPT. **Follows ChatGPT's `STYLE.md` and style frame** (`art/inbox/cyber-skunk-style-v1.webp`): its palette, its mascot, its symbols and its cabinet language. The rules are in `DESIGN.md`.
+>
+> Commit each finished file to `games/cyber-skunk/art/` under exactly the name below, as a PNG with alpha. Say in your handoff note which files are done. Claude converts the files, rigs the mascot and wires everything in. Until then the game runs on Claude's placeholders, so files can arrive in any order.
 
 ## Priority order
 
-1. **The mascot's layered parts** (Claude needs time to rig them).
-2. The symbols.
-3. The logo.
-4. The backgrounds.
-5. The cabinet.
-6. The Overdrive backgrounds and buy-screen cards.
+1. **Mascot layers (§1).** Claude needs rig time.
+2. **Symbols, vent, wild and scatter (§2).**
+3. **Cabinet and gauge (§3).**
+4. **Logo and backgrounds (§4).**
+5. **Bonus panels and buy cards (§5).**
 
-## 1. Mascot: Static, the Cyber Skunk (rigged by Claude)
+## 1. Mascot: rig contract (Claude rigs and animates)
 
-**The character.** A lean, cocky hacker skunk, about 1.6 heads to the shoulder (cartoon proportions). He wears:
-- a cropped black tech jacket with magenta trim;
-- a cyan visor over his eyes (a separate layer, so it can glow);
-- fingerless gloves.
+**Registration:**
+- **Canvas:** **1600 × 2000 px, transparent**, identical for every layer. Every layer is drawn **in place**: stacking them in the order below at (0, 0) reproduces `mascot/full.png`.
+- **Baseline:** soles on y = 1880.
+- **Guide:** `art/rig/guide-v1.jpg` shows the pose, scale and every joint. `art/rig/pivots.json` is authoritative: each part's pivot (the point it rotates around), its parent and its draw order. Paint to the guide. If you need a joint moved, say so in your note and Claude updates the guide first.
 
-**The tail is the star.** It is a big fluffy skunk tail with chrome cyber segments. It curls up behind his back and over his shoulder, and ends in a **chrome spray cannon** with a glowing green muzzle pointing toward the reels.
+**The pose (rest).** Your style-frame skunk, standing free beside the reels rather than leaning on the cabinet:
+- **Body:** a 3/4 view facing **right** (toward the reels); weight on the far leg, boots planted on the floor grill.
+- **Near arm (the brass gauntlet):** hand on the hip, as in the frame.
+- **Far arm:** relaxed, the elbow out, an open hand toward the reels (the guide's re-posed far arm).
+- **Tail:** curls up behind the body; its tip ends near the shoulder, pointing right.
+- **Tail tip:** a small brass **pressure nozzle** (a separate layer), aimed right.
 
-**Pose and canvas.**
-- **Pose:** a 3/4 view facing **right** (the reels are to his right on desktop). Standing, weight on the back leg, the front hand in a confident "finger guns" or open-palm gesture.
-- **Canvas:** **1400 × 1800 px, transparent**, the same for every layer. Feet on y = 1740, body centred on x = 620. The tail and cannon fit inside the canvas, with the muzzle around (1180, 420).
+**The spray (the key animation).** The tail swings up and over the shoulder until the nozzle points at the reels: the cyan line in the guide. So the tail is **4 overlapping fur segments**, each a fluffy cylinder whose ends tuck under the previous segment. Every segment must still look right turned **±35°** around its pivot.
 
 **Rules for every layer:**
-1. **Drawn in place.** Stacking all the layers in the order below at (0, 0) must reproduce `mascot/full.png` exactly.
-2. **Complete behind occluders.** Draw each part whole, including what other parts hide: the torso behind the arms, the tail base behind the hips.
-3. **Overlapping joints.** At every joint the child part ends in a rounded cap that reaches about 40 px under its parent: shoulders under the jacket, the elbow cap under the upper arm, the wrist under the forearm, hips under the jacket, knees under the thigh, each tail segment under the one before it. Never end a moving part exactly at a visible edge.
-4. **Nothing baked in.** No glow, shadow, ground or background on any layer. Claude adds the glow.
+1. **Complete behind occluders.** Draw each part whole, including what other parts hide: the torso under the arms, the tail root behind the hips, the hip behind the hand.
+2. **Overlapping joints.** At every joint the child ends in a rounded cap reaching **at least 40 px** (and at least 10% of the limb's width) under its parent at rest. Never end a moving part exactly at a visible edge.
+3. **Separate occluders.** The **pauldron** (near shoulder plate) and **cuff** (gauntlet wrist ring) are separate front layers, so the joints underneath can turn.
+4. **Nothing baked in.** No glow, shadow, ground, steam or background on any layer. Claude adds them.
+5. **Same style** as the style frame: painted, dimensional, phone-readable silhouette.
 
-**Layers, back to front** (folder `mascot/`):
+**Layers, back to front** (folder `mascot/`; the pivots are in `pivots.json`):
 
-| # | File | What |
-| --- | --- | --- |
-| 1 | `tail-1.png` | Tail base: from under the jacket at the lower back, fluffy. |
-| 2 | `tail-2.png` | Middle tail segment (chrome ring at each end). |
-| 3 | `tail-3.png` | Upper curl over the shoulder. |
-| 4 | `tail-cannon.png` | The chrome spray cannon at the tail tip, muzzle toward the reels. |
-| 5 | `arm-back-upper.png` | Far arm: shoulder to elbow. |
-| 6 | `arm-back-fore.png` | Far forearm: elbow to wrist. |
-| 7 | `hand-back.png` | Far hand. |
-| 8 | `leg-back-thigh.png` | Far thigh. |
-| 9 | `leg-back-shin.png` | Far shin. |
-| 10 | `foot-back.png` | Far sneaker. |
-| 11 | `torso.png` | Chest, jacket, belly and hips (pelvis included). |
-| 12 | `leg-front-thigh.png` | Near thigh. |
-| 13 | `leg-front-shin.png` | Near shin. |
-| 14 | `foot-front.png` | Near sneaker. |
-| 15 | `ear-back.png` | Far ear. |
-| 16 | `head.png` | Head without the far ear, near ear, jaw or visor. Neck cap under the jacket collar. |
-| 17 | `jaw.png` | Lower jaw and mouth (closed grin), so he can talk and laugh. |
-| 18 | `visor.png` | The cyan visor. |
-| 19 | `ear-front.png` | Near ear. |
-| 20 | `arm-front-upper.png` | Near arm: shoulder to elbow. |
-| 21 | `arm-front-fore.png` | Near forearm. |
-| 22 | `hand-front.png` | Near hand (the gesture). |
-| — | `full.png` | Every layer above, flattened (the reference). |
-| — | `pivots.json` | Your best guess at each joint centre on the canvas, e.g. `{"arm-front-upper":[700,760], "arm-front-fore":[820,980], …}`: the point each part rotates around (shoulder, elbow, wrist, hip, knee, ankle, neck, ear root, jaw hinge, tail joints). Claude will refine it. |
+| # | File | Part | Pivot (joint) |
+| --- | --- | --- | --- |
+| 1 | `tail-1.png` | Tail root segment, from under the hips | tail_root |
+| 2 | `tail-2.png` | Tail segment 2 | tail_1 |
+| 3 | `tail-3.png` | Tail segment 3 | tail_2 |
+| 4 | `tail-4.png` | Tail tip segment | tail_3 |
+| 5 | `nozzle.png` | Brass pressure nozzle at the tail tip | tail_tip |
+| 6 | `far-upper-arm.png` | Far arm: shoulder to elbow (black sleeve) | far_shoulder |
+| 7 | `far-forearm.png` | Far forearm | far_elbow |
+| 8 | `far-hand.png` | Far open hand, black glove | far_wrist |
+| 9 | `far-thigh.png` | Far thigh (cargo trousers) | far_hip |
+| 10 | `far-shin.png` | Far shin | far_knee |
+| 11 | `far-boot.png` | Far boot | far_ankle |
+| 12 | `torso.png` | Chest, cropped jacket, top, belt, pouches and pelvis | pelvis |
+| 13 | `near-thigh.png` | Near thigh | near_hip |
+| 14 | `near-shin.png` | Near shin | near_knee |
+| 15 | `near-boot.png` | Near boot | near_ankle |
+| 16 | `head.png` | Head and crest with the far ear, without jaw, eyelids, goggles or near ear; neck cap under the collar | neck |
+| 17 | `ear.png` | Near ear | ear |
+| 18 | `jaw.png` | Lower jaw and mouth (sly closed grin) | jaw |
+| 19 | `eyelids.png` | Upper eyelids only, drawn closed (for blinks) | neck |
+| 20 | `goggles.png` | Amber welding goggles on the forehead | neck |
+| 21 | `near-upper-arm.png` | Near arm: shoulder to elbow | near_shoulder |
+| 22 | `near-forearm.png` | Near forearm with the brass gauntlet | near_elbow |
+| 23 | `near-hand.png` | Near hand on the hip | near_wrist |
+| 24 | `near-cuff.png` | The gauntlet's wrist ring (occluder) | near_wrist |
+| 25 | `near-pauldron.png` | Brass shoulder fitting (occluder) | near_shoulder |
+| — | `full.png` | Every layer above, flattened (the reference) | — |
 
-## 2. Symbols (folder `symbols/`)
+## 2. Symbols and overlays (folder `symbols/`)
 
-**Format:** **512 × 512 px, transparent.** The art fills about 440 px, centred. No glow (Claude adds it) and no cell background (the reels have one).
+**Format:** **512 × 512 px, transparent**, art filling about 440 px. No glow and no cell backing; the reels draw the backing.
 
 | File | Symbol |
 | --- | --- |
-| `h1-skunk.png` | Static's portrait, head and shoulders, in a **gold** hex badge frame (top pay). |
-| `h2-raccoon.png` | A raccoon netrunner with headset and goggles, in a **magenta** frame. |
-| `h3-possum.png` | A possum courier with helmet and backpack, in a **cyan** frame. |
-| `h4-rat.png` | A rat drone pilot with goggles and a tiny drone, in a **green** frame. |
-| `a.png` `k.png` `q.png` `j.png` `ten.png` | Neon-tube sign letters A, K, Q, J, 10, each its own colour (violet, cyan, magenta, orange, green), on a dark chip. |
-| `wild.png` | A graffiti spray tag reading **WILD**, magenta and green, with drips. |
-| `wild-spray.png` | The same tag freshly sprayed: wet, glowing, with paint splatter. It marks the cells the beam paints. |
-| `prism.png` | A chrome triangular prism block whose mirror face runs **bottom-left to top-right (`/`)**, with neon cyan edges. Claude rotates it for `\`. |
-| `badge.png` | The scatter: a neon **skunk-head emblem** badge, glowing green and magenta. |
+| `h1-battery.png` | H1: amber battery, top pay |
+| `h2-rotor.png` | H2: ventilation rotor |
+| `h3-canister.png` | H3: cyan plasma canister |
+| `h4-key.png` | H4: circuit key |
+| `a.png` `k.png` `q.png` `j.png` `ten.png` | L1–L5: A, K, Q, J, 10 in clean ivory, on a dark plate |
+| `wild.png` | W: the skunk-stripe badge with **WILD**. It is also how a sprayed cell looks; Claude adds the cyan spray. |
+| `scatter-plate.png` | S: the plate behind the big **FS** |
+| `scatter-letters.png` | S: the **FS** lettering alone, crisp, on the same canvas (it animates separately) |
+| `vent.png` | **The elbow vent overlay** (not a symbol: it sits on top of one). A brass and steel elbow pipe, **inlet on the left edge, outlet pointing up**, with a cyan glow inside the mouth. Claude rotates it for the other three outlets and draws the steam. It must read at 120 px. |
 
-## 3. Logo
+## 3. Cabinet and gauge (folder `cabinet/`)
 
-`logo.png`: **"CYBER SKUNK"** as a neon and chrome title with a small skunk-tail swoosh. **1600 × 560 px, transparent.**
+- **`cabinet.png`, 1440 × 1060 px.** The frame from your style frame: front-on, parallel edges, matte graphite, strong bevel, brass inner lip and amber side lights.
+  - **The reel window** is fully transparent at **x 120 to 1320, y 130 to 930**: 6 reels × 4 rows of 200 px.
+  - **The bottom band**, y 950 to 1060, is a blank control shelf. Claude draws the controls onto it, so leave no buttons in the art.
+  - The game scales the cabinet uniformly on every screen and never stretches it.
+- **`gauge-face.png`, 400 × 400 px.** The round pressure gauge for the top of the cabinet: dial from 0 to 10, with a red zone at 7 to 10.
+- **`gauge-needle.png`, 400 × 400 px.** The needle alone, pointing straight up, with its pivot at the centre (200, 200). It shows the bonus Reservoir.
+- **`pipes-top.png`, 1440 × 300 px.** The pipes, valve and gauge mount rising from the cabinet's top edge. Leave a 400 × 400 hole for the gauge, centred at (720, 160).
 
-## 4. Backgrounds
-
-| File | Size | Scene |
-| --- | --- | --- |
-| `bg-desktop.png` | 2560 × 1440 | Rainy neon alley in Neo-Musk City at night: wet street reflections, holographic billboards, fire escapes, steam. The centre and right stay calm and darker (the reels go there); the left third is open floor where Static stands. |
-| `bg-mobile.png` | 1080 × 2340 | The same scene, portrait. The upper third is open for Static and the logo, and the middle is calm for the reels. |
-| `bg-overdrive-desktop.png` | 2560 × 1440 | The same alley, cranked up: magenta and red alarm light, glitch billboards, sparks. For Free Spins. |
-| `bg-overdrive-mobile.png` | 1080 × 2340 | The same, portrait. |
-
-## 5. Reel cabinet
-
-`cabinet.png`: **1400 × 1240 px, transparent.**
-- **The window:** fully transparent at **x 160 to 1240, y 140 to 1040** (1080 × 900, six reels of 180 px, five rows of 180 px).
-- **The frame:** chrome and dark metal with neon tube trim (cyan and magenta), small rivets, a graffiti-tagged plate along the bottom, and cable bundles on the sides.
-- **Inside the window:** nothing; the game draws the reel backing.
-
-## 6. Buy screen and extras
+## 4. Logo and backgrounds
 
 | File | Size | What |
 | --- | --- | --- |
-| `buy-boost.png` | 720 × 480 | Spray Boost card art: the spray cannon overcharging, green energy. |
-| `buy-overdrive.png` | 720 × 480 | Overdrive card art: a beam bouncing between three prisms. |
-| `buy-super.png` | 720 × 480 | Super Overdrive card art: a gold-tinted maze of prisms, with Static grinning. |
-| `splash-overdrive.png` | 1600 × 900 | Bonus intro title "OVERDRIVE": neon, transparent background. |
-| `splash-super.png` | 1600 × 900 | Bonus intro title "SUPER OVERDRIVE": gold and neon, transparent. |
+| `logo.png` | 1600 × 560 | **CYBER SKUNK**, as in your frame |
+| `bg-desktop.png` | 2560 × 1440 | The industrial vent hall. Quiet in the centre and right, where the cabinet goes; open floor grill on the left for the mascot. |
+| `bg-mobile.png` | 1440 × 2560 | The same hall, portrait. Space at the top for the logo and the mascot's upper body; quiet in the middle for the cabinet. |
+| `bg-bonus-desktop.png` | 2560 × 1440 | The same hall during the bonuses: the vent fans spinning, cyan pressure light. Claude tints it per tier. |
+| `bg-bonus-mobile.png` | 1440 × 2560 | The same, portrait |
 
-## Also yours
+## 5. Bonus panels and buy cards
 
-- **`theme.json`:** palette, fonts (open-licence fonts only; Claude bundles them) and symbol names.
-- **`STYLE.md`:** the look in a few lines.
-- **Copy:** feature names and rules wording; Claude will send the draft rules for your polish.
+| File | Size | What |
+| --- | --- | --- |
+| `panel-vent-break.png` | 1600 × 900 | Bonus entrance title art "VENT BREAK", transparent |
+| `panel-overpressure.png` | 1600 × 900 | "OVERPRESSURE" |
+| `panel-blackout.png` | 1600 × 900 | "BLACKOUT PROTOCOL": dark, with a single cyan pulse |
+| `card-signal-boost.png` | 720 × 480 | Buy screen: Signal Boost (enhanced spins) |
+| `card-spray-job.png` | 720 × 480 | Buy screen: Spray Job (feature spins) |
+| `card-vent-break.png` | 720 × 480 | Buy screen: Vent Break |
+| `card-overpressure.png` | 720 × 480 | Buy screen: Overpressure |
+
+The text on the panels and cards is art. Prices and counts stay live text, which Claude draws.

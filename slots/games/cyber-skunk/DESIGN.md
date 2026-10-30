@@ -1,89 +1,64 @@
-# Cyber Skunk: game design
+# Cyber Skunk: rules v1 (Claude's math contract)
 
-> Dylan, 2026-10-30: "a good slot game idea that has never been done before. Needs to have correct math not max win all the time." The full game is due in 24 hours. Claude owns the mechanics, math, engine, rig and audio; ChatGPT owns art, names and copy (`ART_SPEC.md`). Propose changes in a handoff note.
+> Merged on 2026-10-30.
+> - **From ChatGPT** (`STYLE.md` and the style frame): the theme, look, names and Dylan's six modes.
+> - **Made exact here:** the route rules the math needs.
+> - **From Claude's first draft:** pressure that rises at every vent.
+>
+> Claude owns these rules, the engine and the math. ChatGPT owns the art, names and copy. Propose changes in a handoff note.
 
-## The pitch
+## Board and pays
 
-Neo-Musk City is a rain-soaked neon alley at night. **Static, the Cyber Skunk**, is a hacker skunk with a chrome cyber-tail that ends in a spray cannon. His signature move is the **Ricochet Spray**: a neon beam he fires into the reels, which bounces off mirror Prisms and paints everything it crosses into Wilds. The new idea is the beam itself:
-- **Path.** It follows real mirror physics.
-- **Multiplier.** It grows with every bounce.
-- **Free Spins.** The Prisms stay, so the board becomes a maze the beam has to find its way through.
+**The board:**
+- **Grid:** 6 reels × 4 rows.
+- **Lines:** 20 fixed lines (listed in `runtime/rules.js`). They pay left to right from reel 1, for 3, 4, 5 or 6 of a kind. Each line pays its best win.
+- **Max win:** **25,000×** the base bet over a whole round, including bonuses. Reaching it ends the round.
 
-## Grid and pays
+**Symbols:**
+- **H1 battery, H2 rotor, H3 canister, H4 key:** high pays.
+- **L1–L5 A, K, Q, J, 10:** low pays.
+- **W, the skunk-stripe wild:** substitutes for every paying symbol. A line of wilds alone pays as H1.
+- **S, the FS scatter:** lands at most once per reel and pays nothing on lines.
+- **Pays:** every pay is a whole 0.1× of the base bet, and every multiplier is whole, so every win is a whole 0.1×. The final paytable is set by the calibration in `MATH.md`.
 
-- **Board:** 6 reels × 5 rows, **15,625 ways**. Symbols pay left to right on adjacent reels from reel 1, 3 to 6 of a kind.
-- **Pays:** `pay × number of ways`, in multiples of the base bet. Every pay is a whole 0.1×, so every win is too, as Stake Engine requires.
-- **Max win:** a round stops paying at **10,000×** the base bet.
+## Backpressure: the spray route
 
-| Symbol | 3 | 4 | 5 | 6 |
-| --- | --- | --- | --- | --- |
-| H1 Cyber Skunk (gold) | 0.5 | 1.5 | 4 | 10 |
-| H2 Raccoon netrunner | 0.4 | 1 | 2.5 | 6 |
-| H3 Possum courier | 0.3 | 0.8 | 2 | 4 |
-| H4 Rat drone pilot | 0.2 | 0.6 | 1.5 | 3 |
-| A | 0.1 | 0.3 | 0.8 | 1.5 |
-| K | 0.1 | 0.3 | 0.6 | 1.2 |
-| Q | 0.1 | 0.2 | 0.5 | 1 |
-| J | 0.1 | 0.2 | 0.4 | 0.8 |
-| 10 | 0.1 | 0.2 | 0.3 | 0.6 |
+- **Vents.** An **elbow vent** is an overlay on a cell; the symbol underneath stays. Each vent has an **outlet** pointing up, right, down or left.
+- **When the spray fires.** If at least one vent is on the board after the reels stop, Cyber Skunk swings his tail over his shoulder and sprays.
 
-**Special symbols:**
-- **WILD (spray tag):** substitutes for every paying symbol.
-- **PRISM `/` and `\`:** an angled chrome mirror. It pays nothing and blocks ways until the beam hits it.
-- **SKUNK BADGE:** the scatter. It lands at most once per reel.
+**The route:**
+1. The route enters from the **left edge**, on the row of the **left-most vent** (the top one, if two share a reel), and moves right.
+2. It moves one cell at a time. **A vent sends it out through its outlet, whichever side it came in**, and adds **+1 pressure**. Pressure starts at 1.
+3. Every cell the route touches becomes **wild for this spin**, carrying the pressure at that moment. A vent cell carries the pressure just raised. Pressure 1 is a plain wild; pressure 2 and up shows **×N**.
+4. **Scatters** are touched but stay scatters: they never become wild.
+5. The route ends when it would leave the board, enter a cell it has already touched, or take its 24th step. A route never loops and never branches.
 
-## Ricochet Spray
+**Evaluation:**
+- The route resolves completely before evaluation: the transformed board is evaluated once, and scatters are counted once, on the landed board.
+- **Line multiplier:** the sum of the ×N wilds in a winning line (×2 + ×3 = ×5). A winning line with no ×N wild pays ×1.
 
-1. **When it fires.** If at least one Prism lands, Static fires. The beam enters from the left edge on the row of the **left-most Prism** (the top one, if two share a reel) and travels right.
-2. **Bounces.** Each Prism it reaches deflects it 90° (`/` turns right→up and down→left; `\` turns right→down and up→left). Every bounce adds **+1** to the beam's multiplier, which starts at ×1.
-3. **Painting.** Every cell the beam crosses becomes a **Spray Wild** carrying the beam's multiplier at that moment. A Prism it hits becomes a Wild with the new multiplier. Scatters are crossed but not painted. Where two passes cross, the higher multiplier stays.
-4. **End.** The beam ends when it leaves the board, after 16 bounces, or when it would repeat a cell in the same direction.
-5. **Multipliers on a way are added together** (×2 and ×3 on one way make ×5). A way without a multiplier pays ×1. Plain ×1 Spray Wilds, crossed before the first bounce, substitute without multiplying.
-6. **Wild-only ways** pay as Cyber Skunk (H1). A way with at least one real symbol pays as that symbol.
+## Modes
 
-## Free Spins: Overdrive
+| Mode | Name | Cost | What it does |
+| --- | --- | --- | --- |
+| Base | Base Spins | 1× | Vents land now and then. 3 / 4 / 5 scatters start **Vent Break / Overpressure / Blackout Protocol**. |
+| Enhanced | **Signal Boost** | 3× per spin, on until switched off | Scatters land more often, so the bonuses come about 3–4 times as often (the measured figure is in `MATH.md`). Same rules. |
+| Feature Spins | **Spray Job** | 10× per spin, on until switched off | Every spin lands at least 2 vents, so the spray always fires. Scatters work as normal. |
+| Regular bonus | **Vent Break** | buy 100× | 10 free spins. Every vent that lands **stays** until the bonus ends (up to 12), so the route grows into a maze. Pressure restarts at 1 each spin. |
+| Super bonus | **Overpressure** | buy 250× | 10 free spins with sticky vents and a **Reservoir**: after each spin's route, its pressure gained (pressure − 1) is banked in the cabinet gauge (up to 10), and every later route starts at **1 + the Reservoir**. |
+| Hidden bonus | **Blackout Protocol** | not for sale | 10 free spins. It opens with the network activation: the lights go out, then 4 vents light up as one route and the Reservoir starts at 3. After that it plays as Overpressure. Only 5 scatters start it. |
 
-- **Trigger:** 3, 4 or 5+ Skunk Badges anywhere.
+- **Retriggers:** 3 or more scatters during any bonus add +4 spins, up to 30 spins in total. They never upgrade the tier.
+- **Buy prices:** the 3×, 10×, 100× and 250× prices are targets. The calibration either meets them at exactly 96%, or `MATH.md` says why a price moved.
 
-  | Badges | Feature | Free spins |
-  | --- | --- | --- |
-  | 3 | **Overdrive** | 10 |
-  | 4 | **Overdrive** | 12 |
-  | 5+ | **Super Overdrive** | 12 |
+## Math acceptance (Claude; ChatGPT's gates in `STYLE.md`)
 
-- **Overdrive: sticky Prisms.** Every Prism that lands stays in place for the rest of the bonus, up to 10. Every spin with a Prism on the board fires the beam, which starts at ×1 each spin. The maze grows: later spins bounce more and paint more.
-- **Super Overdrive: sticky Prisms plus a persistent Charge.** The bonus starts with 2 Prisms already in place. Every bounce adds +1 to a **Charge** that never resets for the rest of the bonus, and the beam starts each spin at ×(1 + Charge).
-- **Retriggers:** 3 or more Badges during the bonus give +5 spins, up to 40 spins in total.
-
-## Ways to play (the buy screen)
-
-| Option | Cost | What it does |
-| --- | --- | --- |
-| Spin | 1× | The base game. |
-| **Spray Boost** | 2× per spin | Prisms and Badges land far more often: free spins about 3× as often. It stays on until switched off. |
-| **Buy Overdrive** | ~100× | Starts Overdrive (10 spins) at once. |
-| **Buy Super Overdrive** | ~400× | Starts Super Overdrive (12 spins) at once. |
-
-The math sets the final prices: each mode returns exactly 96%.
-
-## Math targets (Claude)
-
-- **RTP:** exactly **96.00%** in every mode.
-- **Base game:** about 1 in 3.5 spins wins something. Free spins come about 1 in 220 spins; Super about 1 in 3,000.
-- **Max win:** 10,000×, rare. The base game should reach it no more often than about 1 in 20 million spins. "Not max win all the time."
-- **Exactness:** every outcome is a seeded round the game replays exactly. Weighted outcome catalogs make each mode exactly 96%, and the same catalogs become the Stake Engine lookup tables and books (as for Zombify).
-
-## Presentation (AAA)
-
-- **Mascot:** Static stands beside the reels, on the left on desktop and above the reels on mobile. He is a fully rigged character (Claude rigs and animates; ChatGPT draws the layered parts). Animations:
-  - idle breathing and a twitching ear;
-  - a tail sway;
-  - **aim and fire** (the tail cannon swings to the beam's row, recoils, and the muzzle flashes);
-  - a laugh or dance on big wins;
-  - a hype pose on bonus triggers.
-- **The beam:** an additive neon line drawn cell by cell, with a ping and a ×N pop on every bounce. Painted cells flash into Spray Wilds with dripping paint.
-- **Reels:** a stop with bounce, anticipation on the 2nd Badge, and win lines that show the ways as glowing cell outlines.
-- **Big wins:** Big, Mega and Epic tiers with a count-up, a neon title, rain sparks, and Static dancing.
-- **Audio:** a synthwave base loop, a heavier Overdrive loop, and effects for every event. Claude makes the audio.
-- **Controls:** shared desktop and mobile controllers covering spin, auto, turbo, bet, the buy screen, the menu and sound. The rules include the full paytable and RTP.
-- **Builds:** a free-play build, and a Stake Engine build with the RGS, resume, replay and social words, as for Zombify.
+- **Exactly 96.00% in every mode,** measured against the full cost.
+  - **How:** weighted catalogs of seeded rounds that the game replays and checks, as for Zombify.
+  - **Proof:** every catalog entry replayed with 0 mismatches. The catalogs export to Stake Engine's lookup tables and books unchanged.
+- **The report shows, per mode:** zero-return rate, hit rate, return ≥ cost, median, p90, p99 and p99.9, win bands, natural bonus rates, max-win odds, RTP by feature and 100-round sessions.
+- **Max-win targets:**
+  - base game: about one in millions;
+  - Blackout Protocol: max no more often than 1 in 1,000 of its bonuses;
+  - the max is never a payout target.
+- **Previews** draw from the same distribution as their tier and never touch the balance.
