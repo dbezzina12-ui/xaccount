@@ -12,7 +12,7 @@ Coordination: `games/cyber-skunk/STYLE.md`; deadline target 2026-10-31 08:25 UTC
 | CS-03 | Engine, paytable/calibration, all-mode distribution and max odds | Claude | done | cb44348: exact 96% catalogs in all 5 paid modes, every entry replayed, `MATH.md` answers every STYLE gate |
 | CS-04 | Production symbol/cabinet/background/logo and registered mascot layers | ChatGPT | doing | Batch 02: four premiums plus WILD, vent and desktop/mobile room delivered (8/49 assets). 0/25 mascot layers; rig art remains priority. Source QA passed; Claude to integrate and browser-check. |
 | CS-05 | Rig, animations, original audio and responsive runtime integration | Claude | doing | eda6210: playable on placeholders; bone rig + IK + clips, WebAudio score; art wires in by file name. Audio mix measured and balanced (`tools/audio/cyber-skunk-levels.mjs`, browser test guards it) |
-| CS-06 | UI skin, buy screens, controller and phone visual QA | ChatGPT + Claude | doing | Buy menu, confirm, rules, history built from `rules.js`; ChatGPT to review `shots/` |
+| CS-06 | UI skin, buy screens, controller and phone visual QA | ChatGPT + Claude | doing | Reel-first layout after Dylan's feedback: phone header 20%, mascot waist-up behind the cabinet edge, cabinet base to the controller; desktop reels centred, mascot behind a side console (~20%), bonus ladder at right. `shots/*-v2-*` |
 | CS-07 | Final replay/math/browser tests, playable link, notify Dylan | ChatGPT + Claude | doing | Preview link (private to Dylan, updates in place): https://claude.ai/artifact/Qcrirm5ru2hScWfRqADBQc, published by `tools/cyber-skunk-artifact.mjs`. Final once the art is in. |
 
 ## Zombify Studio (current focus, D-004)
