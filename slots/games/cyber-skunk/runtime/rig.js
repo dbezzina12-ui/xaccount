@@ -29,6 +29,8 @@ const dist = ([x1, y1], [x2, y2]) => Math.hypot(x2 - x1, y2 - y1);
 // the ±35° ART_SPEC allows, bringing the nozzle above the goggles; the nozzle
 // itself then levels out to aim right, at the reels.
 const TAIL = ['tail-1', 'tail-2', 'tail-3', 'tail-4'];
+// At rest the tail is held a little closer behind the back (the tip behind the head).
+const TUCK = [20, 0, 0, 0];
 export function solveTail(joints, target, limit = 35) {
   const J = ['tail_root', 'tail_1', 'tail_2', 'tail_3', 'tail_tip'].map((k) => joints[k]);
   const seg = J.slice(1).map((p, k) => [p[0] - J[k][0], p[1] - J[k][1]]);
@@ -147,7 +149,7 @@ function idle(t, P, amp = 1) {
   P.ear = { r: 3 * wave(t, 2.6, 1) * amp + (t % 7.3 < 0.25 ? 14 * Math.sin((t % 7.3) / 0.25 * Math.PI) : 0) };
   P.jaw = { r: 0 };
   // Tail follow-through: the same sway reaches each segment a little later.
-  TAIL.forEach((k, n) => { P[k] = { r: [1.5, 2.5, 3.5, 5][n] * wave(t, 3.9, -n * 0.7) * amp }; });
+  TAIL.forEach((k, n) => { P[k] = { r: TUCK[n] + [1.5, 2.5, 3.5, 5][n] * wave(t, 3.9, -n * 0.7) * amp }; });
   P.nozzle = { r: 4 * wave(t, 3.9, -2.8) * amp };
   P['far-upper-arm'] = { r: 1.6 * br }; P['far-forearm'] = { r: 2.5 * wave(t, 4.4, 0.8) * amp }; P['far-hand'] = { r: 3 * wave(t, 4.4, 0.2) * amp };
   P['near-upper-arm'] = { r: -0.6 * br }; P['near-forearm'] = { r: 0.6 * br };

@@ -92,5 +92,5 @@ async function symbolArt(id) {
 export function ventHTML(dir) {
   const rotate = [0, 90, 180, 270][dir];
   const body = available.has('vent') ? `<img src="${available.get('vent')}" alt="" draggable="false">` : VENT_SVG;
-  return `<span class="vent-art" style="--turn:${rotate}deg">${body}</span>`;
+  return `<span class="vent-art" data-dir="${dir}" style="--turn:${rotate}deg">${body}</span>`;
 }

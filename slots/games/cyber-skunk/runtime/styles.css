@@ -34,31 +34,61 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .app[data-bonus=hidden] .backdrop{background:radial-gradient(120% 80% at 60% 40%,#0d2d2f 0%,#06100f 55%,#000 100%)}
 .app[data-bonus] .backdrop .fans i{animation-duration:2.4s}
 
-/* Stage: desktop 1920×1080, mobile 1080×1700 (the controller sits below it). */
+/* Stage: desktop 1920×1080; mobile 1080 wide and as tall as the screen above
+   the controller (fit() sets --stage-h, at least 1560). Reels first: on a
+   phone the header (logo, mascot) is the top 480 units, about a fifth. */
 .stage{position:absolute;left:0;top:0;transform-origin:0 0}
 .app[data-layout=desktop] .stage{width:1920px;height:1080px}
-.app[data-layout=mobile] .stage{width:1080px;height:1920px}
+.app[data-layout=mobile] .stage{width:1080px;height:var(--stage-h,1700px)}
 .logo{position:absolute;z-index:4;pointer-events:none}
 .logo-text{display:block;font-family:var(--title);color:var(--ivory);letter-spacing:.01em;line-height:.9;text-shadow:0 4px 0 #2b2116,0 8px 22px #000c;-webkit-text-stroke:2px #1b140c}
 .logo-text b{display:block;font-weight:400;color:var(--amber);text-shadow:0 4px 0 #5a3410,0 8px 22px #000c,0 0 30px #eda83c55}
 .logo img{display:block;width:100%}
-.app[data-layout=desktop] .logo{left:56px;top:36px;width:560px}
-.app[data-layout=desktop] .logo-text{font-size:116px}
-.app[data-layout=mobile] .logo{right:50px;top:70px;width:470px;text-align:right}
-.app[data-layout=mobile] .logo-text{font-size:132px}
+.app[data-layout=desktop] .logo{left:48px;top:40px;width:380px}
+.app[data-layout=desktop] .logo-text{font-size:96px}
+.app[data-layout=mobile] .logo{right:44px;top:56px;width:440px;text-align:right}
+.app[data-layout=mobile] .logo-text{font-size:112px}
 .mascot{position:absolute;z-index:3;pointer-events:none}
 .mascot-canvas{display:block;width:100%;height:100%}
-.app[data-layout=desktop] .mascot{left:-10px;top:196px;width:704px;height:880px}
-.app[data-layout=mobile] .mascot{left:-70px;top:150px;width:800px;height:1000px}
+/* The mascot shows from the waist up: behind the side console on desktop,
+   behind the cabinet's top edge on a phone (its tail curl runs off the left). */
+.app[data-layout=desktop] .mascot{left:-23px;top:326px;width:512px;height:640px}
+.app[data-layout=mobile] .mascot{left:-186px;top:71px;width:640px;height:800px}
+.mascot-ledge{display:none;position:absolute;z-index:4;pointer-events:none}
+.app[data-layout=desktop] .mascot-ledge{display:block;left:-30px;width:470px;top:650px;bottom:0;border-radius:0 26px 0 0;
+  background:linear-gradient(180deg,#3a4448 0,#20272b 18px,#161c1f 60%,#0c1013);box-shadow:0 -10px 40px #000a,inset 0 3px 0 #6c787c,inset -3px 0 0 #2a3236}
+.app[data-layout=desktop] .mascot-ledge::before{content:"";position:absolute;left:40px;right:30px;top:0;height:14px;border-radius:0 8px 0 0;background:linear-gradient(#d9a35d,var(--brass) 50%,#5a3d1c);box-shadow:0 2px 0 #0b0f11}
+.app[data-layout=desktop] .mascot-ledge::after{content:"";position:absolute;left:60px;right:60px;top:52px;height:8px;border-radius:4px;background:var(--amber);box-shadow:0 0 22px #eda83c,0 0 5px #fff4;opacity:.75}
 .machine{position:absolute;z-index:5}
 .jet{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9}
-.app[data-layout=desktop] .machine{left:730px;top:140px;width:1100px}
-.app[data-layout=mobile] .machine{left:10px;top:1112px;width:1060px}
+.app[data-layout=desktop] .machine{left:410px;top:140px;width:1100px}
+.app[data-layout=mobile] .machine{left:-66px;top:480px;width:1212px;bottom:0}
+/* A phone's machine runs down to the controller: a console under the reels. */
+.machine-base{display:none}
+.app[data-layout=mobile] .machine-base{display:block;position:absolute;z-index:-1;left:44px;right:44px;top:860px;bottom:0;border-radius:0 0 30px 30px;
+  background:repeating-linear-gradient(90deg,#0000 0 160px,#ffffff07 160px 163px),linear-gradient(180deg,#20272b,#151b1e 45%,#0c1013);box-shadow:0 30px 80px #000c,inset 0 -3px 0 #050708,inset 3px 0 0 #2a3236,inset -3px 0 0 #2a3236}
+.app[data-layout=mobile] .machine-base::before{content:"";position:absolute;left:70px;right:70px;top:70px;height:10px;border-radius:5px;background:var(--amber);box-shadow:0 0 24px #eda83c,0 0 6px #fff4;opacity:.75}
+/* The bonus ladder: which scatter count opens which bonus. Right of the reels
+   on desktop; in the console on a phone, where the bonus header replaces it
+   during a bonus and a short phone drops it. */
+.tier-strip{position:absolute;z-index:6;display:grid;gap:18px;pointer-events:none}
+.tier-strip > span{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:18px;padding:14px 22px;border-radius:16px;background:linear-gradient(#141b1fe8,#0b1013e8);border:2px solid #ad784099;box-shadow:0 10px 24px #0008}
+.tier-strip i{font:400 34px/1 var(--title);font-style:normal;color:var(--ivory);padding:10px 12px;border-radius:10px;background:#2a2116;border:3px solid var(--brass);white-space:nowrap}
+.tier-strip b{font:400 30px/1 var(--title);letter-spacing:.04em;color:var(--amber)}
+.tier-strip .hidden-tier b{color:var(--cyan)}
+.app[data-layout=desktop] .tier-strip{left:1545px;width:345px;top:300px}
+/* centred in the console between its light strip (1442) and its pipe (90 from the bottom) */
+.app[data-layout=mobile] .tier-strip{left:60px;right:60px;top:calc((1442px + var(--stage-h) - 90px) / 2 - 80px);grid-template-columns:repeat(3,1fr);gap:16px}
+.app[data-layout=mobile] .tier-strip > span{grid-template-columns:1fr;justify-items:center;text-align:center;gap:14px;padding:20px 8px}
+.app[data-layout=mobile] .tier-strip i{font-size:46px}
+.app[data-layout=mobile] .tier-strip b{font-size:36px}
+.app[data-layout=mobile][data-bonus] .tier-strip,.app[data-layout=mobile][data-short] .tier-strip{display:none}
+.app[data-layout=mobile] .machine-base::after{content:"";position:absolute;left:36px;right:36px;bottom:34px;height:44px;border-radius:22px;background:linear-gradient(#5b6569,#2a3235 45%,#14191c);box-shadow:inset 0 2px 0 #8a9599,0 6px 14px #000a}
 
 /* The cabinet: drawn at its art size (1440×1060) and scaled to the machine. */
 .cabinet{position:relative;width:1440px;height:1060px;transform-origin:0 0}
 .app[data-layout=desktop] .cabinet{transform:scale(.7639)}
-.app[data-layout=mobile] .cabinet{transform:scale(.7361);--status-size:54px}
+.app[data-layout=mobile] .cabinet{transform:scale(.8417);--status-size:56px}
 .cabinet-art{position:absolute;inset:0;border-radius:34px;background:
   linear-gradient(180deg,#3a4448 0%,#20272b 7%,#161c1f 92%,#0c1013 100%);box-shadow:0 30px 80px #000c,inset 0 2px 0 #6c787c,inset 0 -3px 0 #050708}
 .cabinet-art::before{content:"";position:absolute;left:96px;top:106px;width:1248px;height:848px;border-radius:14px;border:12px solid var(--brass);box-shadow:inset 0 0 0 4px #5a3d1c,0 0 0 6px #0b0f11,0 0 30px #eda83c33}
@@ -93,7 +123,16 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .app[data-blackout] .cabinet-art{filter:brightness(.35)}
 .pipes{position:absolute;left:0;top:-300px;width:1440px;height:300px;background:var(--pipes-art) 0 0/100% 100% no-repeat;display:none;pointer-events:none}
 .app[data-art-pipes] .pipes{display:block}
-.vent-art{position:absolute;inset:6px;transform:rotate(var(--turn));filter:drop-shadow(0 4px 6px #000b);pointer-events:none}
+.vent-art{position:absolute;inset:6px;transform:rotate(var(--turn));filter:drop-shadow(0 4px 6px #000b);pointer-events:none;z-index:2}
+/* A vent sits on top of its symbol (ART_SPEC §2). In a reel cell the elbow
+   takes the corner it bends in (72% of the cell, turned about the cell's
+   centre with the outlet) and the symbol steps into the opposite corner. */
+.cell > .vent-art{inset:28% 0 0 28%;transform-origin:30.56% 30.56%}
+.cell:has(> .vent-art) .sym{scale:.78;transition:translate .2s,scale .2s}
+.cell:has(> .vent-art[data-dir="0"]) .sym{translate:-9% -9%}
+.cell:has(> .vent-art[data-dir="1"]) .sym{translate:9% -9%}
+.cell:has(> .vent-art[data-dir="2"]) .sym{translate:9% 9%}
+.cell:has(> .vent-art[data-dir="3"]) .sym{translate:-9% 9%}
 .vent-art svg,.vent-art img{width:100%;height:100%}
 .cell.sticky .vent-art{filter:drop-shadow(0 0 10px #eda83caa) drop-shadow(0 4px 6px #000b)}
 .cell.sticky::after{content:"";position:absolute;inset:8px;border:4px solid #eda83c88;border-radius:16px}
@@ -113,7 +152,7 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 /* The Reservoir gauge on top of the cabinet (gauge-*.webp when present). */
 .gauge{position:absolute;z-index:7;width:200px;height:200px;left:50%;transform:translateX(-50%)}
 .app[data-layout=desktop] .gauge{top:-112px}
-.app[data-layout=mobile] .gauge{top:-150px;left:auto;right:60px;transform:none;width:220px;height:220px}
+.app[data-layout=mobile] .gauge{top:-124px}
 .gauge-face{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,#f3ead6 0 58%,#c9b48b 59% 62%,#2b2116 63% 70%,#ad7840 71% 100%);box-shadow:0 10px 30px #000c,inset 0 0 0 3px #5a3d1c}
 .gauge-face i{position:absolute;inset:26px;border-radius:50%;background:conic-gradient(from 225deg,#0000 0 189deg,#c0392b 189deg 270deg,#0000 270deg);-webkit-mask:radial-gradient(circle,#0000 60%,#000 61%);mask:radial-gradient(circle,#0000 60%,#000 61%)}
 .app[data-art-gauge] .gauge-face{background:var(--gauge-face) center/100% no-repeat;box-shadow:none}
@@ -130,13 +169,13 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .bonus-hud .hud-gap{visibility:hidden}
 .bonus-hud b{color:var(--amber)}
 .app[data-layout=desktop] .bonus-hud{left:30px;right:30px;top:-112px}
-.app[data-layout=mobile] .bonus-hud{right:20px;top:-780px;width:500px;grid-template-columns:1fr;gap:12px;font-size:46px}
+.app[data-layout=mobile] .bonus-hud{left:120px;right:120px;top:calc(1060px * .8417 + 40px);grid-template-columns:1fr 1fr;gap:24px;font-size:44px}
 .app[data-layout=mobile] .bonus-hud .hud-gap{display:none}
 /* The controller lives under the cabinet (desktop) or along the bottom of the
    screen (touch layout); controller.js moves the same host between the two. */
 .controller-host{display:block;--controller-accent:#eda83c;--controller-ink:#efe5cf;font-family:var(--font)}
 .machine > .controller-host{position:absolute;left:0;top:calc(1060px * .7639 + 8px);width:calc(100% / 1.3);transform:scale(1.3);transform-origin:0 0}
-.app[data-layout=mobile] .machine > .controller-host{top:calc(1060px * .7361 + 14px);width:calc(100% / 1.9);transform:scale(1.9)}
+.app[data-layout=mobile] .machine > .controller-host{left:66px;top:calc(1060px * .8417 + 14px);width:calc((100% - 132px) / 1.9);transform:scale(1.9)}
 .app > .controller-host{position:absolute;left:0;right:0;bottom:0;z-index:20;padding-bottom:env(safe-area-inset-bottom)}
 
 /* Panels */

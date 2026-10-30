@@ -81,13 +81,18 @@ const status = (text) => { $('status').textContent = text; };
 let toastTimer = 0;
 function toast(text) { const t = $('toast'); t.textContent = text; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 3200); }
 
-// ---- Layout: one fixed design size per layout, scaled as a whole. ----
+// ---- Layout: one design size per layout, scaled as a whole. ----
+const MOBILE_MIN_H = 1560; // header 480 + cabinet 892 + the shortest console
 function fit() {
   const w = innerWidth, h = innerHeight, layout = h > w * 1.05 ? 'mobile' : 'desktop';
   app.dataset.layout = layout;
   const host = $('controller'), reserve = host.parentElement === app ? host.getBoundingClientRect().height : 0;
-  const [W, H] = layout === 'mobile' ? [1080, 1920] : [1920, 1080];
+  // A phone's stage is 1080 wide and as tall as the room above the controller
+  // (at least MOBILE_MIN_H), so the machine reaches down to the controller.
+  let [W, H] = layout === 'mobile' ? [1080, MOBILE_MIN_H] : [1920, 1080];
   const s = Math.min(w / W, (h - reserve) / H);
+  if (layout === 'mobile') { H = Math.max(MOBILE_MIN_H, Math.round((h - reserve) / s)); stage.style.setProperty('--stage-h', `${H}px`); }
+  app.toggleAttribute('data-short', layout === 'mobile' && H < 1640); // no room for the bonus ladder in the console
   const x = (w - W * s) / 2, y = (h - reserve - H * s) / 2;
   stage.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
   state.scale = s;

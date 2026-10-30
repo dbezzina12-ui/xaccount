@@ -16,6 +16,13 @@
 
 ## 1. Mascot: rig contract (Claude rigs and animates)
 
+> **2026-10-30, after Dylan's feedback: the full-body contract below is paused.** The game now shows the mascot from the waist up only: behind the cabinet's top edge on a phone (about 30% of the width) and behind a side console on desktop (about 20%). Legs and boots are never seen. The compact rig is made in three steps:
+> 1. **ChatGPT:** one reference image, `art/mascot/reference-compact.png`. 1600 × 2000, transparent, the new compact skunk from STYLE.md (broad face, small goggles, short utility vest, one tail nozzle). It faces right, waist line at y ≈ 1400 (nothing needed below it), head top near y 250, and the tail curled up behind the shoulders, its nozzle behind and above the head. Arms are free of the body, so they can move.
+> 2. **Claude:** pivots v4 and a layer guide drawn on that reference (`art/rig/guide-v2.jpg`). About 15 layers: torso with vest, head, ear, jaw, eyelids, goggles, far and near upper arm, forearm and hand, tail-1 to tail-3, nozzle.
+> 3. **ChatGPT:** the layers, painted in place on the guide.
+>
+> Placement, size and the spray aim are all set in code, so the reference can come in any time.
+
 **Registration:**
 - **Canvas:** **1600 × 2000 px, transparent**, identical for every layer. Every layer is drawn **in place**: stacking them in the order below at (0, 0) reproduces `mascot/full.png`.
 - **Baseline:** soles on y = 1880.
