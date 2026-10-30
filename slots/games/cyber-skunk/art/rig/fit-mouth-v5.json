@@ -1,0 +1,55 @@
+{
+ "head": {
+  "source": "art/source/mouth-v5/originals/head.png",
+  "scale": 0.652,
+  "offset": [
+   552.5,
+   259.7
+  ],
+  "how": "eye centres matched: near (589,739)->(937,740), far (871,814)->(1120,792); nose lands within about 9 px"
+ },
+ "jaw": {
+  "source": "art/source/mouth-v5/originals/jaw.png",
+  "scale": 0.2347,
+  "hinge_source": [
+   600,
+   430
+  ],
+  "hinge_live": [
+   955,
+   867
+  ],
+  "how": "ChatGPT's own head-to-jaw registration (mouth-v5/registration.json), carried through the head's fit"
+ },
+ "landmarks_live": {
+  "near eye (937,740)": [
+   937,
+   740
+  ],
+  "far eye (1120,792)": [
+   1120,
+   792
+  ],
+  "nose (1080,835)": [
+   1080,
+   835
+  ],
+  "jaw hinge (955,867)": [
+   955,
+   867
+  ],
+  "neck pivot (900,955)": [
+   900,
+   955
+  ]
+ },
+ "clip": {
+  "pixels_outside_live_outline_plus_30px": 42143,
+  "bounds": [
+   597,
+   761,
+   907,
+   1099
+  ]
+ }
+}
