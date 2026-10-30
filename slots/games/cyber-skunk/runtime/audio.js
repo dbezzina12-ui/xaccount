@@ -123,7 +123,11 @@ export class GameAudio {
       if (s === 0) for (const n of CHORDS[chord]) this.#osc({ type: 'sawtooth', f: midi(n + 12), at, dur: STEP * BAR, gain: 0.025, attack: STEP * 6, detune: 7, out: out.tension, filter: { f: 700, f2: 2600, q: 3 } });
       if (s % 2 === 1) this.#noise({ at, dur: 0.03, gain: 0.07, out: out.tension, filter: { type: 'bandpass', f: 5200, q: 9 } });
     }
-    if (m.pulse && (s === 0 || s === 8)) { this.#osc({ f: 55, f2: 45, at, dur: STEP * 6, gain: 0.5, attack: 0.02, out: out.pulse }); this.#noise({ at, dur: STEP * 4, gain: 0.05, attack: 0.08, out: out.pulse, filter: { type: 'bandpass', f: 500, f2: 260, q: 2 } }); }
+    if (m.pulse && (s === 0 || s === 8)) {
+      this.#osc({ f: 55, f2: 45, at, dur: STEP * 6, gain: 0.5, attack: 0.02, out: out.pulse });
+      this.#osc({ type: 'sawtooth', f: 110, f2: 90, at, dur: STEP * 5, gain: 0.18, attack: 0.02, out: out.pulse, filter: { f: 1400, f2: 300, q: 4 } }); // what a phone speaker hears of it
+      this.#noise({ at, dur: STEP * 4, gain: 0.05, attack: 0.08, out: out.pulse, filter: { type: 'bandpass', f: 500, f2: 260, q: 2 } });
+    }
   }
 
   // ---- effects ----
@@ -131,24 +135,38 @@ export class GameAudio {
     if (!this.ctx || this.muted || this.ctx.state !== 'running') return;
     const t = this.ctx.currentTime + 0.005;
     switch (name) {
-      case 'click': this.#osc({ type: 'square', f: 1400, f2: 900, at: t, dur: 0.04, gain: 0.06, filter: { f: 3000 } }); break;
-      case 'tick': this.#osc({ f: 1100, at: t, dur: 0.03, gain: 0.12 }); break;
+      case 'click': this.#osc({ type: 'square', f: 1400, f2: 900, at: t, dur: 0.04, gain: 0.2, filter: { f: 3000 } }); break;
+      case 'tick': this.#osc({ f: 1100, at: t, dur: 0.03, gain: 0.36 }); break;
       case 'buy': this.#thump(t, 160, 0.5); this.#bell(81, t + 0.05, 0.12, 0.8); this.#bell(88, t + 0.12, 0.1, 0.9); break;
-      case 'spin': this.#noise({ at: t, dur: 0.5, gain: 0.12, attack: 0.05, filter: { type: 'bandpass', f: 300, f2: 1100, q: 2 } }); this.#thump(t, 90, 0.35, 0.15); break;
-      case 'stop': this.#thump(t, 100 - (o.index || 0) * 4, 0.5, 0.12); this.#noise({ at: t, dur: 0.05, gain: 0.14, filter: { type: 'bandpass', f: 2600, q: 3 } }); break;
+      case 'spin': this.#noise({ at: t, dur: 0.5, gain: 0.12, attack: 0.05, filter: { type: 'bandpass', f: 300, f2: 1100, q: 2 } }); this.#noise({ at: t, dur: 0.45, gain: 0.22, attack: 0.08, filter: { type: 'bandpass', f: 700, f2: 2600, q: 1.2 } }); this.#thump(t, 90, 0.4, 0.15); break;
+      case 'stop': { // the thump is felt; the clunk and the click are what a phone speaker plays
+        const i = o.index || 0;
+        this.#thump(t, 100 - i * 4, 0.6, 0.12);
+        this.#osc({ type: 'triangle', f: 560 - i * 14, f2: 240, at: t, dur: 0.09, gain: 0.45, attack: 0.002 });
+        this.#noise({ at: t, dur: 0.05, gain: 0.4, filter: { type: 'bandpass', f: 2600, q: 3 } });
+        break;
+      }
       case 'scatter': { const k = Math.min(4, o.index || 0); this.#thump(t, 110, 0.45, 0.14); this.#bell([69, 73, 76, 81, 85][k], t, 0.2, 1.2); this.#bell([76, 81, 85, 88, 93][k], t + 0.06, 0.12, 1); break; }
-      case 'vent-land': this.#noise({ at: t, dur: 0.08, gain: 0.12, filter: { type: 'highpass', f: 2800 } }); this.#osc({ type: 'square', f: 220, f2: 180, at: t, dur: 0.07, gain: 0.05, filter: { f: 1400 } }); break;
-      case 'tease': this.#noise({ at: t, dur: 1.6, gain: 0.12, attack: 1.2, filter: { type: 'bandpass', f: 400, f2: 2800, q: 3 } }); for (let k = 0; k < 6; k++) this.#osc({ f: 55, at: t + k * 0.25, dur: 0.2, gain: 0.25 }); break;
+      case 'vent-land': this.#noise({ at: t, dur: 0.08, gain: 0.3, filter: { type: 'highpass', f: 2800 } }); this.#osc({ type: 'square', f: 220, f2: 180, at: t, dur: 0.07, gain: 0.12, filter: { f: 1400 } }); break;
+      case 'tease':
+        this.#noise({ at: t, dur: 1.6, gain: 0.12, attack: 1.2, filter: { type: 'bandpass', f: 400, f2: 2800, q: 3 } });
+        for (let k = 0; k < 6; k++) { this.#osc({ f: 55, at: t + k * 0.25, dur: 0.2, gain: 0.25 }); this.#noise({ at: t + k * 0.25, dur: 0.03, gain: 0.08 + k * 0.02, filter: { type: 'bandpass', f: 1800, q: 2 } }); }
+        break;
       case 'tease-hit': this.#stab([57, 64, 69, 73], t, 0.9, 0.06, 3200); this.#thump(t, 140, 0.8, 0.4); break;
-      case 'tease-miss': this.#osc({ type: 'sawtooth', f: 330, f2: 110, at: t, dur: 0.5, gain: 0.05, filter: { f: 1200, f2: 300 } }); break;
+      case 'tease-miss': this.#osc({ type: 'sawtooth', f: 330, f2: 110, at: t, dur: 0.5, gain: 0.12, filter: { f: 1200, f2: 300 } }); break;
       case 'charge': this.#osc({ f: 180, f2: 720, at: t, dur: 0.55, gain: 0.12, attack: 0.3 }); this.#noise({ at: t, dur: 0.55, gain: 0.1, attack: 0.45, filter: { type: 'highpass', f: 2000, f2: 5000 } }); break;
       case 'spray': this.#noise({ at: t, dur: 0.9, gain: 0.32, attack: 0.01, filter: { type: 'bandpass', f: 2600, f2: 1300, q: 0.7 } }); this.#thump(t, 160, 0.6, 0.2); break;
-      case 'paint': this.#noise({ at: t, dur: 0.06, gain: 0.08, filter: { type: 'lowpass', f: 1600 + (o.k || 0) * 60 } }); break;
-      case 'vent': { const p = o.pressure || 2; this.#noise({ at: t, dur: 0.35, gain: 0.2, filter: { type: 'bandpass', f: 3800, f2: 1600, q: 1.2 } }); this.#bell(64 + Math.min(p, 14) * 2, t, 0.14, 0.7); this.#thump(t, 120, 0.4, 0.12); break; }
-      case 'gauge': for (let k = 0; k < 5; k++) this.#osc({ type: 'square', f: 600 + k * 120, at: t + k * 0.05, dur: 0.025, gain: 0.05, filter: { f: 2500 } }); this.#bell(76, t + 0.25, 0.1, 0.6); break;
+      case 'paint': { // a splat per wild cell, climbing the A minor pentatonic as the spray travels
+        const k = o.k || 0;
+        this.#noise({ at: t, dur: 0.07, gain: 0.55, filter: { type: 'bandpass', f: 1400 + k * 90, q: 1.4 } });
+        this.#osc({ f: midi([69, 72, 74, 76, 79, 81, 84, 86, 88, 91][Math.min(k, 9)]), at: t, dur: 0.14, gain: 0.14 });
+        break;
+      }
+      case 'vent': { const p = o.pressure || 2; this.#noise({ at: t, dur: 0.35, gain: 0.25, filter: { type: 'bandpass', f: 3800, f2: 1600, q: 1.2 } }); this.#bell(64 + Math.min(p, 14) * 2, t, 0.18, 0.7); this.#thump(t, 120, 0.4, 0.12); break; }
+      case 'gauge': for (let k = 0; k < 5; k++) this.#osc({ type: 'square', f: 600 + k * 120, at: t + k * 0.05, dur: 0.025, gain: 0.09, filter: { f: 2500 } }); this.#bell(76, t + 0.25, 0.18, 0.6); break;
       case 'release': this.#noise({ at: t, dur: 1.2, gain: 0.3, filter: { type: 'bandpass', f: 4200, f2: 900, q: 0.8 } }); this.#thump(t, 70, 0.9, 0.7); break;
-      case 'blackout': this.#osc({ type: 'sawtooth', f: 420, f2: 30, at: t, dur: 1.3, gain: 0.12, filter: { f: 2000, f2: 120 } }); this.#noise({ at: t, dur: 0.05, gain: 0.3, filter: { type: 'highpass', f: 1500 } }); break;
-      case 'retrigger': this.#stab([69, 73, 76], t, 0.3, 0.06, 3600); this.#stab([73, 76, 81], t + 0.18, 0.5, 0.06, 4000); break;
+      case 'blackout': this.#osc({ type: 'sawtooth', f: 420, f2: 30, at: t, dur: 1.3, gain: 0.2, filter: { f: 2000, f2: 120 } }); this.#noise({ at: t, dur: 0.05, gain: 0.4, filter: { type: 'highpass', f: 1500 } }); break;
+      case 'retrigger': this.#thump(t, 140, 0.5, 0.2); this.#stab([69, 73, 76], t, 0.3, 0.11, 3600); this.#stab([73, 76, 81], t + 0.18, 0.5, 0.11, 4000); break;
       case 'bonus-in': {
         const dark = o.tier === 'hidden', root = dark ? 45 : o.tier === 'super' ? 50 : 57;
         this.#thump(t, 90, 1, 0.8);

@@ -1,12 +1,14 @@
 // Cyber Skunk in a real browser, desktop and phone: rounds of every way to play
 // through the real controller and buy screen, with no page errors, the money
 // matching the round history, the buy screen's order and its confirmation,
-// and skip leaving no overlay behind.
+// and skip leaving no overlay behind. Also the audio mix, rendered offline by
+// tools/audio/cyber-skunk-levels.mjs: nothing clips, nothing is buried.
 //
 //   node --test tests/browser/cyber-skunk.e2e.mjs
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { serve, chromium } from '../../tools/lib/browser.mjs';
+import { measure } from '../../tools/audio/cyber-skunk-levels.mjs';
 
 const GAME = 'games/cyber-skunk/runtime/index.html', KEY = 'cyber-skunk-session-v1', START = 1_000_000;
 let srv, browser;
@@ -115,4 +117,17 @@ test('the rules show the shipping prices and 96% RTP', async () => {
   const text = await page.locator('#rules-body').textContent();
   for (const s of ['96.00%', '25,000×', 'VENT BREAK', 'OVERPRESSURE', 'BLACKOUT PROTOCOL', '100× base bet', '250× base bet', '3× base bet per spin', '10× base bet per spin']) assert.ok(text.includes(s), s);
   await page.close();
+});
+
+test('audio: nothing clips, the music sits under the reels, the big moments are loudest, phones hear the reels', async () => {
+  const { music, effects, mix } = await measure();
+  for (const [name, v] of [...Object.entries(music), ...Object.entries(effects), ['mix', mix]]) assert.ok(v.peak <= -1, `${name} peaks at ${v.peak} dBFS after the limiter`);
+  for (const t of ['base', 'bonus', 'hidden']) assert.ok(music[t].i >= -27 && music[t].i <= -21, `${t} music at ${music[t].i} LUFS`);
+  const reel = ['click', 'tick', 'spin', 'stop', 'vent-land', 'paint'], big = ['bonus-in', 'bigwin', 'max'];
+  for (const [name, v] of Object.entries(effects)) assert.ok(v.m >= -33, `${name} is buried at ${v.m} LUFS`);
+  for (const b of big) for (const r of reel) assert.ok(effects[b].m >= effects[r].m + 8, `${b} not clearly above ${r}`);
+  const loudest = Math.max(...Object.values(effects).map((v) => v.m));
+  for (const b of ['bigwin', 'max']) assert.ok(effects[b].m >= loudest - 0.5, `${b} is not the loudest effect`);
+  // A phone speaker loses the thumps; the reel sounds must still reach the music's level there.
+  for (const r of reel) assert.ok(effects[r].phone >= music.base.phone - 6, `${r} at ${effects[r].phone} on a phone, music at ${music.base.phone}`);
 });
