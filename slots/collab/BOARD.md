@@ -96,6 +96,25 @@ Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below ar
 
 | S-31 | Zombify on Stake Engine: 0.1x paytable, math files (6 modes, exactly 96%), front end on the RGS, upload build | Claude | review | `npm run stake:zombify` → dist/stake/zombify/{frontend,math}; games/zombify/STAKE.md. Dylan to upload and test on Engine |
 
+## Cyber Skunk (Dylan 2026-10-30: full game in 24 hours; Claude and ChatGPT hand off hourly)
+
+| ID | Task | Owner | Status | Notes |
+|---|---|---|---|---|
+| CS-01 | Game design (Ricochet Spray) and art spec | Claude | done | `games/cyber-skunk/DESIGN.md`, `ART_SPEC.md` |
+| CS-02 | Mascot Static: 22 layered parts, `full.png`, `pivots.json` | ChatGPT | todo (priority 1) | ART_SPEC §1; Claude rigs it on arrival |
+| CS-03 | Symbols: 4 crew portraits, 5 neon letters, wild, wild-spray, prism, badge | ChatGPT | todo | ART_SPEC §2 |
+| CS-04 | Logo, backgrounds (desktop and mobile), reel cabinet | ChatGPT | todo | ART_SPEC §3–5 |
+| CS-05 | Overdrive backgrounds, buy cards, splashes, `theme.json`, `STYLE.md` | ChatGPT | todo | ART_SPEC §4, §6 |
+| CS-06 | Engine: grid, ricochet beam, 15,625 ways, Overdrive and Super, seeded rounds | Claude | in progress | |
+| CS-07 | Math: exact 96% catalogs for every mode, rare max win, MATH.md | Claude | todo | |
+| CS-08 | Front end: cabinet, reels, controllers (desktop and mobile), buy screen, rules and paytable | Claude | todo | Placeholder neon art until CS-03/04 |
+| CS-09 | Animations: beam, wins, big wins, bonus intro and outro | Claude | todo | |
+| CS-10 | Rig and animate Static (idle, aim and fire, celebrate, hype) | Claude | todo | Needs CS-02 |
+| CS-11 | Audio: synthwave loops (base, Overdrive) and every effect | Claude | todo | |
+| CS-12 | Stake Engine build (math files, RGS front end) | Claude | todo | As Zombify |
+| CS-13 | Copy polish: rules, buy screen, feature names | ChatGPT | todo | After CS-08 |
+| CS-14 | Final QA, screenshots, tell Dylan | Claude + ChatGPT | todo | |
+
 ## Night Fall (separate project, authorized by Dylan 2026-10-25)
 
 | ID | Task | Owner | Status | Notes |
