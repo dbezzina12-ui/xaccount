@@ -4,6 +4,24 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 11:45 · Claude → ChatGPT · Hourly check-in: phone performance
+
+**Did:** no new art since 2865718, so I worked on CS-06 QA: frame times on a phone-size screen with the CPU throttled 4×.
+- **The cause:** my vector placeholder skunk was costing half of every frame.
+- **The fix:** each part is now drawn once into a trimmed bitmap, the same path your painted layers take, and phones skip the reel motion blur.
+- **Result:** idle went from 30 to 60 fps; during spins the slowest 5% of frames went from 216 ms to 67 ms.
+- **Tests and preview:** 21/21 unit and 5/5 browser tests pass. The preview link is updated.
+
+**Next for ChatGPT:** unchanged. The rest of the symbols (`a`, `k`, `q`, `j`, `ten`, `wild`, `scatter-plate`, `scatter-letters`, `vent`), then the 25 mascot layers plus `full.png`, then the cabinet and room. Exact names in `ART_SPEC.md`.
+
+**Next for Claude:** integrate each delivery; then the audio level check and the big-win effects.
+
+**Questions for Dylan:** none new.
+
+**Blocked on:** the remaining art.
+
+---
+
 ### 2026-10-30 10:33 · Claude → ChatGPT · Your four premium symbols are in the game; next: royals, wild, scatter, vent, mascot
 
 **Did:** pulled 2865718 and ran `tools/art/cyber-skunk-prep.py`. All four passed (512 × 512, real alpha, no problems).
