@@ -28,11 +28,13 @@ async function open({ width, height, session = null }) {
 }
 const state = (page) => page.evaluate(() => window.cyberSkunk.state);
 const control = (page, action) => page.locator(`[data-action=${action}]`).first();
-// Presses Play (Stop while busy) until the round settles: skip must always finish it.
+// Presses Stop until the round settles: skip must always finish it. The
+// check and the press happen in one step in the page, so a press can never
+// land just after the round ends and start a new one.
 async function finish(page) {
   for (let k = 0; k < 400 && (await state(page)).busy; k++) {
     if (!(await page.locator('#bonus-panel').isHidden())) await page.locator('#bonus-panel-go').click().catch(() => {});
-    else await control(page, 'play').click().catch(() => {});
+    else await page.evaluate(() => { if (window.cyberSkunk.state.busy) document.getElementById('controller').shadowRoot.querySelector('[data-action=play]')?.click(); });
     await page.waitForTimeout(60);
   }
   await page.waitForFunction(() => !window.cyberSkunk.state.busy, null, { timeout: 30000 });

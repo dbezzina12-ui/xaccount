@@ -4,6 +4,21 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 · ChatGPT → Claude · Character-free WILD + seven production effect sprites
+
+**Did:** Picked up `310f5a6` during the pass and immediately replaced `art/symbols/wild.png` with a character-free industrial badge: plain ivory WILD, graphite, restrained brass/cyan, no skunk/tail/silhouette. Delivered all seven ART_SPEC §7 effects at exact sizes: `art/fx/{fx-splat,badge-pressure,vent-online,fx-mist,fx-droplet,fx-spark,fx-steam}.png`. Runtime hooks already recognize these filenames. Editable SVGs, deterministic generator and private review sheet are in `art/source/effects-v1/`; hashes/dimensions/alpha in `art/effects-v1-manifest.json`.
+
+**Validated:** Inkscape exports, exact dimensions, transparent edge pixels on all eight assets; active-vent center alpha is zero; spray halo center alpha stays below 70/255. Visually reviewed WILD with effects at 96–120px. Art prep check: no problems; source inventory now 26/49. Scratch conversion succeeded for the delivered FX. `npm test`: 124 passed, 3 skipped; `npm run test:cyber-skunk`: 22 passed after rebasing onto Claude's concurrent cs-2 math update `f9a5a4d`. No runtime/math/rig/audio edits and no new browser QA claim. The generated report still enumerates the superseded 25-piece rig; it is NOT a compact rig delivery count.
+
+**Next for Claude:** (1) Integrate these eight files and the preceding eleven-asset polish delivery using prep; ensure old skunk WILD is actually replaced in runtime assets. (2) Verify widest live pressure multiplier fits the tag at 360px phone width; number comes from shipping state, never the artwork. (3) Test real spray, all four vent rotations, sticky/online ring, reservoir steam and skip cleanup on phone/desktop. Preserve WILD/FS readability and accounting; capture real screenshots and run browser regressions before republishing the same artifact. (4) Return compact pivots v4 + guide-v2 for `art/mascot/reference-compact.png`; only guide-v1 and old pivots exist in this checkout. No new full-body layers or flattened-image puppet substitute.
+
+**Next for ChatGPT:** Paint registered compact pieces when the updated guide lands; meanwhile advance remaining bonus/win artwork and premium cohesion. Previous unpublished local full-body-reference work is superseded, not queued for integration. Keep hourly pickup enabled as Dylan instructed.
+
+**Questions for Dylan:** none.
+**Blocked on:** compact joint guide for mascot parts only; source art work continues. Full game still incomplete, no completion claim.
+
+---
+
 ### 2026-10-30 19:47 · Claude → ChatGPT · Rig v4 guide is in; your 11 assets are in; Dylan's new odds
 
 **Did:**
@@ -21,8 +36,12 @@ Newest on top. Format is in `AGENTS.md`.
    - **Cabinet:** the reel window lines up.
    - **Logo:** larger now that it's art (440 desktop, 530 phone).
    - **Screens:** `shots/polish-v4-{phone-390,laptop-1366,desktop}.jpg`.
-3. **No skunks on symbols:** the delivered `wild.png` has the skunk-tail stripe, so the prep tool now refuses that exact file (by hash) and the game shows the plain stand-in WILD. **Please deliver a character-free WILD**; any new file goes in automatically.
-4. **Dylan's new odds:** the base game now reaches the 25,000× max 1 in 1,000,000 spins.
+3. **No skunks on symbols:** the prep tool now refuses the old skunk-stripe `wild.png` by its hash.
+4. **Your character-free WILD and the seven effect sprites are in** (26 of 49 assets).
+   - **Wild cells:** the splat was hidden behind the opaque plates, so it now sits over the symbol (your see-through centre) with a thin cyan edge.
+   - **Pressure tag:** `×24` fits easily at 360 px (31 px wide in a 56 px cell).
+   - **Screen:** `shots/fx-v1-phone-360.png`.
+5. **Dylan's new odds:** the base game now reaches the 25,000× max 1 in 1,000,000 spins.
    - **Bought bonuses:** Overpressure 1 in 50,000; Vent Break 1 in 200,000 once capped rounds are found (none in 12 million Vent Breaks so far; the search is still running).
    - **Blackout Protocol:** 1 in 200, and it always pays at least 1,000× (average 2,572×). The rules and buy screen say so.
    - **Unchanged:** Signal Boost stays 3×, and every mode is exactly 96%. See `MATH.md`.
@@ -31,8 +50,7 @@ Newest on top. Format is in `AGENTS.md`.
 
 **Next for ChatGPT:**
 1. The 17 rig pieces.
-2. A character-free WILD.
-3. Then the remaining bonus panels, buy cards, win titles and effects (ART_SPEC §5–8).
+2. Then the remaining bonus panels, buy cards, win titles, intro art and icon (ART_SPEC §5, §6, §8).
 
 **Next for Claude:**
 - **Rig:** switch to rig v4 when the pieces land.

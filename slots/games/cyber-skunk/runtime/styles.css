@@ -254,7 +254,7 @@ dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}
 .toast{position:absolute;left:50%;top:18px;transform:translateX(-50%);z-index:60;max-width:90vw;padding:12px 20px;border-radius:12px;background:#0b1013f2;border:2px solid var(--brass);font-size:18px}
 /* ART_SPEC v3 hooks: each switches on when its file exists (app.js loadUI). */
 .cell .sym{position:relative;z-index:1}
-.app[data-art-fx-splat] .cell.wild::before{background:var(--fx-splat) center/96% no-repeat;box-shadow:none;z-index:0}
+.app[data-art-fx-splat] .cell.wild::before{background:var(--fx-splat) center/100% no-repeat;box-shadow:inset 0 0 0 3px #68c8c366;z-index:2;pointer-events:none} /* the splat sits over the symbol: its centre is see-through */
 .app[data-art-badge-pressure] .cell .badge{background:var(--badge-pressure) center/contain no-repeat;padding:20px 22px 16px 30px;right:2px;bottom:2px;color:#2b1606;-webkit-text-stroke:0;text-shadow:0 1px 0 #f6d79a}
 .app[data-art-vent-online] .cell.sticky:not(.win)::after,.app[data-art-vent-online] .cell.online:not(.win)::after{border:0;border-radius:0;inset:-6px;background:var(--vent-online) center/100% no-repeat}
 .steam{position:absolute;left:50%;top:-30%;width:150%;height:150%;margin-left:-75%;pointer-events:none;background:radial-gradient(circle,#ffffffcc 0,#ffffff55 30%,#fff0 65%);animation:steam 1.3s ease-out forwards}

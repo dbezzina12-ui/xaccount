@@ -4,10 +4,10 @@
 
 - missing: tail-1, tail-2, tail-3, tail-4, nozzle, far-upper-arm, far-forearm, far-hand, far-thigh, far-shin, far-boot, torso, near-thigh, near-shin, near-boot, head, ear, jaw, eyelids, goggles, near-upper-arm, near-forearm, near-hand, near-cuff, near-pauldron
 
-## Symbols, cabinet, backgrounds, panels, cards: 19 of 49 in
+## Symbols, cabinet, backgrounds, panels, cards: 26 of 49 in
 
-- missing: pipes-top, bg-bonus-desktop, bg-bonus-mobile, panel-vent-break, panel-overpressure, panel-blackout, card-signal-boost, card-spray-job, card-vent-break, card-overpressure, win-nice, win-big, win-epic, win-mythic, win-max, banner-extra-spins, title-total-win, fx-splat, badge-pressure, vent-online, fx-mist, fx-droplet, fx-spark, fx-steam, splash-desktop, splash-mobile, intro-route, intro-bonuses, controller-texture, icon
+- missing: pipes-top, bg-bonus-desktop, bg-bonus-mobile, panel-vent-break, panel-overpressure, panel-blackout, card-signal-boost, card-spray-job, card-vent-break, card-overpressure, win-nice, win-big, win-epic, win-mythic, win-max, banner-extra-spins, title-total-win, splash-desktop, splash-mobile, intro-route, intro-bonuses, controller-texture, icon
 
 ## Problems
 
-- `art/symbols/wild.png`: rejected, not shipped: Dylan, 2026-10-30: no skunks on reel symbols (this WILD has a skunk-tail stripe)
+- none

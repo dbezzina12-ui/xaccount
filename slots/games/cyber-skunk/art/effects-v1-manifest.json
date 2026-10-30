@@ -1,0 +1,106 @@
+{
+  "assets": [
+    {
+      "file": "fx/fx-splat.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "sha256": "0d1b296683e247db575ff81bb8381d0749f8d8cc9385fd9f66ee8cb41ea3d812",
+      "alpha": [
+        0,
+        188
+      ]
+    },
+    {
+      "file": "fx/badge-pressure.png",
+      "dimensions": [
+        256,
+        160
+      ],
+      "sha256": "7227e2052e3b28e50de303620ae1b1a2d1457e2068d53e2042128abe2211df2b",
+      "alpha": [
+        0,
+        255
+      ]
+    },
+    {
+      "file": "fx/vent-online.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "sha256": "9428ac46ede06507a5c202b6e225cf613107067b840b94883c1ddb3d52d6c2e9",
+      "alpha": [
+        0,
+        204
+      ]
+    },
+    {
+      "file": "fx/fx-mist.png",
+      "dimensions": [
+        256,
+        256
+      ],
+      "sha256": "0607c031ce7990318e062b168eb16f0d952089ec9af1c06cb82488b39ba90c3f",
+      "alpha": [
+        0,
+        81
+      ]
+    },
+    {
+      "file": "fx/fx-droplet.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "sha256": "babacdec47bed529422ffd595d2e655d5a6e409b1555031f3e3431182702e689",
+      "alpha": [
+        0,
+        255
+      ]
+    },
+    {
+      "file": "fx/fx-spark.png",
+      "dimensions": [
+        128,
+        128
+      ],
+      "sha256": "42ed483753c67aa1d5ac76b6adcd9b76adbc34117cdcfaed21608bb861268c18",
+      "alpha": [
+        0,
+        255
+      ]
+    },
+    {
+      "file": "fx/fx-steam.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "sha256": "27dd1239d8f458c86daa4c907746c45a0c409d8a46e2a42435ee5cc940269fec",
+      "alpha": [
+        0,
+        90
+      ]
+    },
+    {
+      "file": "symbols/wild.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "sha256": "9579c37b946cee3e27c1293fbb161c959943fdd9fb06a070992586e050ae7c99",
+      "alpha": [
+        0,
+        255
+      ]
+    }
+  ],
+  "checks": {
+    "transparent_edges": true,
+    "ring_center_clear_212px": true,
+    "splat_center_alpha_under_70": true
+  },
+  "method": "Original SVG VFX; Inkscape PNG exports. No model images or runtime edits."
+}
