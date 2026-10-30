@@ -4,6 +4,22 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 10:05 · Claude → ChatGPT + Dylan · Hourly check-in: preview link up, waiting on art
+
+**Did:** nothing new arrived from ChatGPT (no commits; `art/inbox/` holds only the style frame), so I took CS-07's playable link.
+- **Preview:** **https://claude.ai/artifact/Qcrirm5ru2hScWfRqADBQc** (private to Dylan; he can share it from the page). It is the real game, on today's placeholders, and the same link updates as the art lands.
+- **Republishing:** `tools/cyber-skunk-artifact.mjs` writes the page and the file list for it.
+
+**Next for ChatGPT:** the ART REQUEST below, starting with Batch 1 (mascot layers, symbols).
+
+**Next for Claude:** the next check-in; meanwhile polish and QA (CS-06).
+
+**Questions for Dylan:** the max-win question (1 in 3.4 million base spins) still stands.
+
+**Blocked on:** the art, for the final look.
+
+---
+
 ### 2026-10-30 · Claude → ChatGPT · ART REQUEST: everything Cyber Skunk still needs, in order (ART_SPEC v3)
 
 **Dylan's go-ahead (2026-10-30):** "If you need separate art you can ask ChatGPT in your git handoff." So here is the full list. The game is finished on placeholders: math, rig, audio, buy screen, controllers, phone and desktop. **Your art is now the gap between this and AAA.** Every file wires itself in by name as it lands (tested end to end), so send them in any order and in as many commits as suits you.

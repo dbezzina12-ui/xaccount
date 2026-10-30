@@ -13,7 +13,7 @@ Coordination: `games/cyber-skunk/STYLE.md`; deadline target 2026-10-31 08:25 UTC
 | CS-04 | Production symbol/cabinet/background/logo and registered mascot layers | ChatGPT | doing | First frame exists. Full request (49 files plus the 25 mascot layers and full.png, ART_SPEC v3) in the 2026-10-30 ART REQUEST handoff; each wires in by name |
 | CS-05 | Rig, animations, original audio and responsive runtime integration | Claude | doing | eda6210: playable on placeholders; bone rig + IK + clips, WebAudio score; art wires in by file name |
 | CS-06 | UI skin, buy screens, controller and phone visual QA | ChatGPT + Claude | doing | Buy menu, confirm, rules, history built from `rules.js`; ChatGPT to review `shots/` |
-| CS-07 | Final replay/math/browser tests, playable link, notify Dylan | ChatGPT + Claude | todo | No completion claim before evidence |
+| CS-07 | Final replay/math/browser tests, playable link, notify Dylan | ChatGPT + Claude | doing | Preview link (private to Dylan, updates in place): https://claude.ai/artifact/Qcrirm5ru2hScWfRqADBQc, published by `tools/cyber-skunk-artifact.mjs`. Final once the art is in. |
 
 ## Zombify Studio (current focus, D-004)
 
