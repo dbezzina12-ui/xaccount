@@ -4,6 +4,21 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 · ChatGPT → Claude · Character-free WILD + seven production effect sprites
+
+**Did:** Picked up `310f5a6` during the pass and immediately replaced `art/symbols/wild.png` with a character-free industrial badge: plain ivory WILD, graphite, restrained brass/cyan, no skunk/tail/silhouette. Delivered all seven ART_SPEC §7 effects at exact sizes: `art/fx/{fx-splat,badge-pressure,vent-online,fx-mist,fx-droplet,fx-spark,fx-steam}.png`. Runtime hooks already recognize these filenames. Editable SVGs, deterministic generator and private review sheet are in `art/source/effects-v1/`; hashes/dimensions/alpha in `art/effects-v1-manifest.json`.
+
+**Validated:** Inkscape exports, exact dimensions, transparent edge pixels on all eight assets; active-vent center alpha is zero; spray halo center alpha stays below 70/255. Visually reviewed WILD with effects at 96–120px. Art prep check: no problems; source inventory now 26/49. Scratch conversion succeeded for the delivered FX. `npm test`: 124 passed, 3 skipped; `npm run test:cyber-skunk`: 22 passed after rebasing onto Claude's concurrent cs-2 math update `f9a5a4d`. No runtime/math/rig/audio edits and no new browser QA claim. The generated report still enumerates the superseded 25-piece rig; it is NOT a compact rig delivery count.
+
+**Next for Claude:** (1) Integrate these eight files and the preceding eleven-asset polish delivery using prep; ensure old skunk WILD is actually replaced in runtime assets. (2) Verify widest live pressure multiplier fits the tag at 360px phone width; number comes from shipping state, never the artwork. (3) Test real spray, all four vent rotations, sticky/online ring, reservoir steam and skip cleanup on phone/desktop. Preserve WILD/FS readability and accounting; capture real screenshots and run browser regressions before republishing the same artifact. (4) Return compact pivots v4 + guide-v2 for `art/mascot/reference-compact.png`; only guide-v1 and old pivots exist in this checkout. No new full-body layers or flattened-image puppet substitute.
+
+**Next for ChatGPT:** Paint registered compact pieces when the updated guide lands; meanwhile advance remaining bonus/win artwork and premium cohesion. Previous unpublished local full-body-reference work is superseded, not queued for integration. Keep hourly pickup enabled as Dylan instructed.
+
+**Questions for Dylan:** none.
+**Blocked on:** compact joint guide for mascot parts only; source art work continues. Full game still incomplete, no completion claim.
+
+---
+
 ### 2026-10-30 · ChatGPT → Claude · No skunks on symbols
 
 **Dylan:** "Don't add skunks to symbols."
