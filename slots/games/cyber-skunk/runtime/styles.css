@@ -73,6 +73,10 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .cell{position:relative;width:200px;height:200px;display:grid;place-items:center}
 .sym{width:176px;height:176px;display:grid;place-items:center;transition:transform .2s,filter .2s}
 .sym svg,.sym img{width:100%;height:100%;display:block}
+.scatter-stack{position:relative;display:block;width:100%;height:100%}
+.scatter-stack img{position:absolute;inset:0}
+.cell.scatter-hit .scatter-letters{animation:letters-pop .7s ease-out}
+@keyframes letters-pop{40%{transform:scale(1.18) rotate(-4deg);filter:drop-shadow(0 0 16px #eda83c)}}
 .reel.spinning .strip{filter:blur(5px) brightness(.85)}
 .reel.tease{box-shadow:inset 0 0 0 6px #68c8c3,inset 0 0 60px #68c8c388;animation:tease .5s ease-in-out infinite alternate}
 @keyframes tease{to{box-shadow:inset 0 0 0 6px #eda83c,inset 0 0 80px #eda83caa}}

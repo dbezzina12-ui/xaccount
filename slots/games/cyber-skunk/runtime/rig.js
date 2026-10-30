@@ -221,7 +221,7 @@ export function prepare(rig) {
   return { rig, joints: rig.joints, order, topo, legs, sprayPose: solveTail(rig.joints, SPRAY_TARGET) };
 }
 export const SPRAY_TARGET = [1240, 170]; // above the goggles; the nozzle then levels to aim at the reels
-export { apply, CLIPS };
+export { apply, CLIPS, PLACEHOLDER };
 
 export class Skunk {
   constructor(host) {
@@ -231,12 +231,16 @@ export class Skunk {
     this.manual = null; this.showJoints = false; this.scale = 1; this.ready = false; this.time = 0;
     this.reduced = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)');
   }
-  async load(base = 'assets/mascot/') {
+  // Painted layers replace the vector parts only once all of them are in
+  // (requireAll), so the game never shows a half-painted skunk; the rig
+  // preview passes requireAll: false to review a partial drop.
+  async load(base = 'assets/mascot/', { requireAll = true } = {}) {
     this.base = base;
     const rig = await fetch(`${base}pivots.json`).then((r) => r.json());
     Object.assign(this, prepare(rig));
     try {
-      const layers = await fetch(`${base}layers.json`).then((r) => (r.ok ? r.json() : {}));
+      let layers = await fetch(`${base}layers.json`).then((r) => (r.ok ? r.json() : {}));
+      if (requireAll && !Object.keys(this.rig.parts).every((k) => layers[k])) layers = {};
       await Promise.all(Object.entries(layers).map(([k, box]) => new Promise((resolve) => {
         const img = new Image(); img.onload = () => { this.images.set(k, img); this.layers[k] = box; resolve(); }; img.onerror = resolve; img.src = `${base}${box.file || k + '.webp'}`;
       })));

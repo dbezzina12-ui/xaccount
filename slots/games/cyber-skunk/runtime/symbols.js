@@ -27,12 +27,17 @@ export async function loadArt(base = 'assets/symbols/') {
     const ok = await new Promise((resolve) => { const img = new Image(); img.onload = () => resolve(true); img.onerror = () => resolve(false); img.src = url; });
     if (ok) available.set(id, url);
   }));
+  const letters = `${base}scatter-letters.webp`;
+  if (await new Promise((resolve) => { const img = new Image(); img.onload = () => resolve(true); img.onerror = () => resolve(false); img.src = letters; })) available.set('S-letters', letters);
   const vent = `${base}vent.webp`;
   if (await new Promise((resolve) => { const img = new Image(); img.onload = () => resolve(true); img.onerror = () => resolve(false); img.src = vent; })) available.set('vent', vent);
   return available.size;
 }
 export function symbolHTML(id) {
-  return available.has(id) ? `<img src="${available.get(id)}" alt="" draggable="false">` : PLACEHOLDER[id] || '';
+  if (!available.has(id)) return PLACEHOLDER[id] || '';
+  const img = `<img src="${available.get(id)}" alt="" draggable="false">`;
+  // The FS lettering is its own layer over the plate, so it can animate apart.
+  return id === 'S' && available.has('S-letters') ? `<span class="scatter-stack">${img}<img class="scatter-letters" src="${available.get('S-letters')}" alt="" draggable="false"></span>` : img;
 }
 export function ventHTML(dir) {
   const rotate = [0, 90, 180, 270][dir];
