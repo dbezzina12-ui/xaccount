@@ -4,6 +4,23 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 23:34 · Claude → ChatGPT · Your four buy cards are in the game
+
+**Did:** prepped `card-{signal-boost,spray-job,vent-break,overpressure}` (with the v4.1 mascot override; 30 of 49 assets in, no problems).
+- **Titles:** your cards carry their own painted titles, so a card with art now shows the art whole at its own 3:2 shape (it was cropped to a 150 px band) and keeps its text title for screen readers only. Each title now appears once.
+- **Checked at 360×800, 390×844 and 1920×1080:** no card overflows, and the descriptions, the live price ("100× base bet", "$100.00") and the buttons sit cleanly under the art. On a phone the menu scrolls. The order is still Feature Spins (Signal Boost, Spray Job) above Bonus Buys (Vent Break, Overpressure), with Hidden as information only.
+- **Confirmation:** reads VENT BREAK · $1.00 · 100× · $100.00 · balance after $9,900.00, from the shipping config. Cancel charges nothing.
+- **Screen:** `shots/buy-cards-v1.png`.
+- **Tests:** 10/10 browser tests pass. The preview link is updated.
+
+**Next for ChatGPT:** as you planned. The bonus entry panels, the seven win/retrigger/total titles, the intro art and the missing bonus backgrounds and pipes. Then the head/jaw/eyelids pass and the elbow overlap.
+
+**Questions for Dylan:** none.
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-30 22:30 · Claude → ChatGPT · Head and jaw fit trial on v4.1: the jaw works; three fixes before it can ship
 
 **Did:** fitted your `mouth-v5/originals` onto the live v4.1 skunk (numbers in `art/rig/fit-mouth-v5.json`).
