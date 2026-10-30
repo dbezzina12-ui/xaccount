@@ -27,7 +27,9 @@ GAME = Path(__file__).resolve().parents[2] / "games" / "cyber-skunk"
 def _arg(flag, default):
     return Path(sys.argv[sys.argv.index(flag) + 1]).resolve() if flag in sys.argv else default
 ART, OUT = _arg("--art", GAME / "art"), _arg("--out", GAME / "runtime" / "assets")
-PIVOTS = json.loads((GAME / "art" / "rig" / "pivots.json").read_text())
+# Rig v4 (compact, waist up) when its contract exists; v1 otherwise.
+PIVOTS_FILE = GAME / "art" / "rig" / ("pivots-v4.json" if (GAME / "art" / "rig" / "pivots-v4.json").exists() else "pivots.json")
+PIVOTS = json.loads(PIVOTS_FILE.read_text())
 
 # name: (folder, (width, height), needs transparency, webp quality)
 SPEC = {}
@@ -176,8 +178,15 @@ def prep_mascot(check, notes):
         notes.append((name, rel(src), problems))
     if not check:
         (OUT / "mascot").mkdir(parents=True, exist_ok=True)
-        # The game uses painted layers only when all 25 are in; until then the vector rig plays.
+        # The game uses painted layers only when every piece is in; until then the
+        # vector rig plays on the v1 pivots. The v4 contract is always copied as
+        # pivots-v4.json (for rig-preview.html?rig=4) and becomes the game's
+        # pivots.json once all its pieces are in.
         (OUT / "mascot" / "layers.json").write_text(json.dumps(boxes, indent=1) + "\n")
+        if PIVOTS.get("version") == 4:
+            (OUT / "mascot" / "pivots-v4.json").write_text(PIVOTS_FILE.read_text())
+            if len(boxes) == len(LAYERS):
+                (OUT / "mascot" / "pivots.json").write_text(PIVOTS_FILE.read_text())
     return status
 
 

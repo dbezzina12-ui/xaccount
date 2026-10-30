@@ -72,6 +72,11 @@ def contract():
                   for k, (name, (j, parent, what, box)) in enumerate(PARTS.items())},
         "overlap": OVERLAP,
         "tail": ["tail_root", "tail_1", "tail_2", "tail_3", "tail_tip"],
+        # The spray: the tail tip lifts to here (every segment within +-35 degrees)
+        # and the nozzle stays level; the jet leaves from the nozzle's mouth.
+        "sprayTarget": [1180, 200],
+        "nozzleMouth": [1232, 362],
+        "tuck": [0, 0, 0, 0],
         "notes": "Waist up only, no legs. Every piece is painted whole and in place on the 1600 x 2000 canvas, including what the parts in front hide, with at least `overlap` px of paint past each joint on both pieces.",
     }
 

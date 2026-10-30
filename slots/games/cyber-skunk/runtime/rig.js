@@ -29,8 +29,9 @@ const dist = ([x1, y1], [x2, y2]) => Math.hypot(x2 - x1, y2 - y1);
 // the ±35° ART_SPEC allows, bringing the nozzle above the goggles; the nozzle
 // itself then levels out to aim right, at the reels.
 const TAIL = ['tail-1', 'tail-2', 'tail-3', 'tail-4'];
-// At rest the tail is held a little closer behind the back (the tip behind the head).
-const TUCK = [20, 0, 0, 0];
+// At rest the tail is held a little closer behind the back (the tip behind the head);
+// a contract can set its own (rig v4's tail already curls close: none).
+let TUCK = [20, 0, 0, 0];
 export function solveTail(joints, target, limit = 35) {
   const J = ['tail_root', 'tail_1', 'tail_2', 'tail_3', 'tail_tip'].map((k) => joints[k]);
   const seg = J.slice(1).map((p, k) => [p[0] - J[k][0], p[1] - J[k][1]]);
@@ -209,20 +210,21 @@ const CLIPS = {
 export const CLIP_NAMES = Object.keys(CLIPS);
 
 // Everything the rig derives from pivots.json: draw order, parents-first
-// order, the solved spray pose and the two IK legs.
+// order, the solved spray pose and the IK legs (rig v1 only: v4 is waist up).
 export function prepare(rig) {
+  TUCK = rig.tuck ?? [20, 0, 0, 0];
   const order = Object.entries(rig.parts).sort((a, b) => a[1].order - b[1].order).map(([k]) => k);
   const topo = [], seen = new Set();
   const visit = (k) => { if (seen.has(k)) return; const p = rig.parts[k].parent; if (p) visit(p); seen.add(k); topo.push(k); };
   Object.keys(rig.parts).forEach(visit);
-  const legs = ['near', 'far'].map((side) => {
+  const legs = ['near', 'far'].filter((side) => rig.joints[`${side}_hip`]).map((side) => {
     const hip = rig.joints[`${side}_hip`], knee = rig.joints[`${side}_knee`], ankle = rig.joints[`${side}_ankle`];
     const cross = (knee[0] - hip[0]) * (ankle[1] - hip[1]) - (knee[1] - hip[1]) * (ankle[0] - hip[0]);
     return { side, hip, knee, ankle, l1: dist(hip, knee), l2: dist(knee, ankle), bend: Math.sign(cross) || 1 };
   });
-  return { rig, joints: rig.joints, order, topo, legs, sprayPose: solveTail(rig.joints, SPRAY_TARGET) };
+  return { rig, joints: rig.joints, order, topo, legs, sprayPose: solveTail(rig.joints, rig.sprayTarget ?? SPRAY_TARGET) };
 }
-export const SPRAY_TARGET = [1240, 170]; // above the goggles; the nozzle then levels to aim at the reels
+export const SPRAY_TARGET = [1240, 170]; // rig v1: above the goggles; the nozzle then levels to aim at the reels
 export { apply, CLIPS, PLACEHOLDER };
 
 export class Skunk {
@@ -236,9 +238,9 @@ export class Skunk {
   // Painted layers replace the vector parts only once all of them are in
   // (requireAll), so the game never shows a half-painted skunk; the rig
   // preview passes requireAll: false to review a partial drop.
-  async load(base = 'assets/mascot/', { requireAll = true } = {}) {
+  async load(base = 'assets/mascot/', { requireAll = true, pivots = 'pivots.json' } = {}) {
     this.base = base;
-    const rig = await fetch(`${base}pivots.json`).then((r) => r.json());
+    const rig = await fetch(`${base}${pivots}`).then((r) => r.json());
     Object.assign(this, prepare(rig));
     try {
       let layers = await fetch(`${base}layers.json`).then((r) => (r.ok ? r.json() : {}));
@@ -318,7 +320,7 @@ export class Skunk {
   // Where the nozzle's mouth is right now, as a fraction of the mascot box (0..1).
   nozzle() {
     const M = this.lastWorld; if (!M) return null;
-    const [x, y] = apply(M.nozzle, [this.joints.tail_tip[0] + 120, this.joints.tail_tip[1]]);
+    const [x, y] = apply(M.nozzle, this.rig.nozzleMouth ?? [this.joints.tail_tip[0] + 120, this.joints.tail_tip[1]]);
     return [x / W, y / H];
   }
   // The vector placeholders, drawn once per canvas size into bitmaps trimmed to
@@ -349,10 +351,12 @@ export class Skunk {
     this.lastWorld = M;
     this.bake();
     g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    // Contact shadow under the planted boots (not part of any layer).
-    g.setTransform(s, 0, 0, s, 0, 0);
-    const sh = g.createRadialGradient(860, 1880, 20, 860, 1880, 420); sh.addColorStop(0, '#000a'); sh.addColorStop(1, '#0000');
-    g.fillStyle = sh; g.beginPath(); g.ellipse(860, 1880, 420, 70, 0, 0, Math.PI * 2); g.fill();
+    // Contact shadow under the planted boots (not part of any layer; rigs with legs).
+    if (this.legs.length) {
+      g.setTransform(s, 0, 0, s, 0, 0);
+      const sh = g.createRadialGradient(860, 1880, 20, 860, 1880, 420); sh.addColorStop(0, '#000a'); sh.addColorStop(1, '#0000');
+      g.fillStyle = sh; g.beginPath(); g.ellipse(860, 1880, 420, 70, 0, 0, Math.PI * 2); g.fill();
+    }
     for (const k of this.order) {
       const alpha = P[k]?.alpha ?? (k === 'eyelids' ? 0 : 1);
       if (alpha <= 0) continue;

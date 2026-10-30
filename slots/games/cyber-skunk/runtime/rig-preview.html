@@ -45,7 +45,8 @@ const RANGE = { 'tail-1': [-35, 35], 'tail-2': [-35, 35], 'tail-3': [-35, 35], '
   'far-upper-arm': [-125, 30], 'far-forearm': [-70, 40], 'far-hand': [-35, 35], 'near-upper-arm': [-20, 20], 'near-forearm': [-20, 20], 'near-hand': [-15, 15], 'near-cuff': [0, 0], 'near-pauldron': [0, 0],
   'far-thigh': [0, 0], 'far-shin': [0, 0], 'far-boot': [0, 0], 'near-thigh': [0, 0], 'near-shin': [0, 0], 'near-boot': [0, 0] };
 const IK = new Set(['far-thigh', 'far-shin', 'far-boot', 'near-thigh', 'near-shin', 'near-boot']);
-await skunk.load('assets/mascot/', { requireAll: false });
+// ?rig=4 previews the compact v4 contract and whatever of its pieces are in.
+await skunk.load('assets/mascot/', { requireAll: false, pivots: new URLSearchParams(location.search).get('rig') === '4' ? 'pivots-v4.json' : 'pivots.json' });
 const manual = {};
 $('clips').innerHTML = CLIP_NAMES.map((c) => `<button data-clip="${c}" aria-pressed="${c === 'idle'}">${c}</button>`).join('');
 $('clips').onclick = (e) => { const c = e.target.dataset.clip; if (!c) return; skunk.manual = null; $('manual').setAttribute('aria-pressed', 'false'); skunk.play(c); document.querySelectorAll('[data-clip]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.clip === c))); };

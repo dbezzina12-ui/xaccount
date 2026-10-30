@@ -680,6 +680,7 @@ async function boot() {
   buildReels();
   fit();
   await Promise.all([loadArt('assets/symbols/'), loadUI(), skunk.load('assets/mascot/')]);
+  app.dataset.rig = skunk.rig.version ?? 1; // rig v4 (waist up) has its own placement
   const first = playRound({ mode: 'base', rng: seeded(20261030) }).events.find((e) => e.type === 'reveal').board.map((c) => ({ s: c.s }));
   setBoard(first);
   fit();
