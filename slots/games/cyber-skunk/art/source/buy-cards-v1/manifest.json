@@ -1,0 +1,57 @@
+{
+  "assets": [
+    {
+      "path": "cards/card-signal-boost.png",
+      "sourceSize": [
+        1536,
+        1024
+      ],
+      "size": [
+        720,
+        480
+      ],
+      "mode": "RGBA",
+      "sha256": "d927b2bc6576123a1f5838e2a490e640567f8b7374269080a5c64cfb62da1e3c"
+    },
+    {
+      "path": "cards/card-spray-job.png",
+      "sourceSize": [
+        1536,
+        1024
+      ],
+      "size": [
+        720,
+        480
+      ],
+      "mode": "RGBA",
+      "sha256": "29159ca9a395e7ec3f479cedafae1f4237ce6f13b85d740baa33f1e4506dfe8f"
+    },
+    {
+      "path": "cards/card-vent-break.png",
+      "sourceSize": [
+        1536,
+        1024
+      ],
+      "size": [
+        720,
+        480
+      ],
+      "mode": "RGBA",
+      "sha256": "f1ef0ac0f2c822c7758aadb8139b37c6561dfa2ce2f50874fac570aa7b58fdf2"
+    },
+    {
+      "path": "cards/card-overpressure.png",
+      "sourceSize": [
+        1536,
+        1024
+      ],
+      "size": [
+        720,
+        480
+      ],
+      "mode": "RGBA",
+      "sha256": "4730eddce19680f8aa192360b0b01538daa2ab00eee56ca6b2aa7588fad77d63"
+    }
+  ],
+  "status": "production art delivered; runtime integration and browser QA pending"
+}
