@@ -1,0 +1,578 @@
+{
+  "contract_version": 4,
+  "contract_sha256": "1bac8f3010dd5fb52f19b4741b0a1f52d2f2f7849003c97c263b612d35b7176d",
+  "source_manifest_sha256": "5ca7e508f249b2f47353ca96f452eab44e6a8f9e93637a7fe56c9c85c9f350f1",
+  "canvas": [
+    1600,
+    2000
+  ],
+  "overlap_radius": 55,
+  "missing": [
+    "tail-4",
+    "jaw"
+  ],
+  "extra": [
+    "far-ear"
+  ],
+  "decoded_inputs": [
+    {
+      "part": "tail-1",
+      "size": [
+        1600,
+        2000
+      ],
+      "mode": "RGBA",
+      "sha256": "e8b22622396e7bb9ddc611749d9d627c4d2946f25f595b0a3cdbb91fff8da8ac",
+      "matches_staged_hash": true
+    },
+    {
+      "part": "tail-2",
+      "size": [
+        1600,
+        2000
+      ],
+      "mode": "RGBA",
+      "sha256": "59d8e72b7b74ab6b786e763f3fbbfdecc44b316d7be122787f3f608304166314",
+      "matches_staged_hash": true
+    },
+    {
+      "part": "tail-3",
+      "size": [
+        1600,
+        2000
+      ],
+      "mode": "RGBA",
+      "sha256": "ddd3269760f9413316d6e280e1dca223e3925798cd2a784c247024111f6052ea",
+      "matches_staged_hash": true
+    },
+    {
+      "part": "nozzle",
+      "size": [
+        1600,
+        2000
+      ],
+      "mode": "RGBA",
+      "sha256": "542e3bb07e7879abb42f17fdc4a3623a9a4095e9f45c1d18b09aeca1094da063",
+      "matches_staged_hash": true
+    },
+    {
+      "part": "far-upper-arm",
+      "size": [
+        1600,
+        2000
+      ],
+      "mode": "RGBA",
+      "sha256": "e5067920bdbb0da35b9b84a6336feca703f8058b347d05a23a2ffa16220ae75f",
+      "matches_staged_hash": true
+    },
+    {
+      "part": "far-forearm",
+      "size": [
+        1600,
+        2000
+      ],
+      "mode": "RGBA",
+      "sha256": "78fd2e0665393bdf1e427b037e1b3f7dd4bdd71ec43d59f502ade49cc2e82a10",
+      "matches_staged_hash": true
+    },
+    {
+      "part": "far-hand",
+      "size": [
+        1600,
+        2000
+      ],
+      "mode": "RGBA",
+      "sha256": "e75fb5fa20c85b504972c799b7ef29c19fe93e157d98d70849f13a0272f34e9b",
+      "matches_staged_hash": true
+    },
+    {
+      "part": "torso",
+      "size": [
+        1600,
+        2000
+      ],
+      "mode": "RGBA",
+      "sha256": "4536b8dbb76758dc6f3a0d79c6a3ebaaf3826fe8c5e5c9b1177b3a54639eb15f",
+      "matches_staged_hash": true
+    },
+    {
+      "part": "head",
+      "size": [
+        1600,
+        2000
+      ],
+      "mode": "RGBA",
+      "sha256": "25b8f717d927b9a5f6c719e5232d090f5364092151e7d52e365b0f5c31d7ecc0",
+      "matches_staged_hash": true
+    },
+    {
+      "part": "far-ear",
+      "size": [
+        1600,
+        2000
+      ],
+      "mode": "RGBA",
+      "sha256": "e9bff481b76efd25045b95f947384c833ac6428f0b71f78fadfdb01a2fd1c703",
+      "matches_staged_hash": true
+    },
+    {
+      "part": "ear",
+      "size": [
+        1600,
+        2000
+      ],
+      "mode": "RGBA",
+      "sha256": "6b119e490560c0883a0722594b022c2ce93beb996b78c0325eda0e4e570e9aa0",
+      "matches_staged_hash": true
+    },
+    {
+      "part": "goggles",
+      "size": [
+        1600,
+        2000
+      ],
+      "mode": "RGBA",
+      "sha256": "87df1fe3d55c19f17a3c26272104ce10e7a171b8fdb8043dc721def46a6f48fd",
+      "matches_staged_hash": true
+    },
+    {
+      "part": "eyelids",
+      "size": [
+        1600,
+        2000
+      ],
+      "mode": "RGBA",
+      "sha256": "37273b88752e24c599266a43e858ee14b1e332956f4161241e15b7096dea3326",
+      "matches_staged_hash": true
+    },
+    {
+      "part": "near-upper-arm",
+      "size": [
+        1600,
+        2000
+      ],
+      "mode": "RGBA",
+      "sha256": "864eb73b00f3411a713bf7dd50ecdec949904bc2bd7498d3c0f3f8956dd43702",
+      "matches_staged_hash": true
+    },
+    {
+      "part": "near-forearm",
+      "size": [
+        1600,
+        2000
+      ],
+      "mode": "RGBA",
+      "sha256": "7668501de24342fcdc384f71455476c305289d101c4e5441d6003a9059d062d8",
+      "matches_staged_hash": true
+    },
+    {
+      "part": "near-hand",
+      "size": [
+        1600,
+        2000
+      ],
+      "mode": "RGBA",
+      "sha256": "d1aab3e53a966b535743ee30d701f8ee4b7ef829e42572340e43e4e55e9231bf",
+      "matches_staged_hash": true
+    }
+  ],
+  "parts": [
+    {
+      "part": "tail-1",
+      "status": "present",
+      "v4_pivot": [
+        650,
+        930
+      ],
+      "provisional_pivot": [
+        740,
+        1170
+      ],
+      "translation_to_v4": [
+        -90,
+        -240
+      ],
+      "pivot_displacement_px": 256.3,
+      "v4_pivot_alpha": 0,
+      "v4_disk_coverage": 0.0,
+      "parent": "torso",
+      "parent_at_v4_joint_alpha": 0,
+      "parent_v4_disk_coverage": 0.1336,
+      "provisional_pivot_alpha": 253,
+      "provisional_disk_coverage": 0.9247
+    },
+    {
+      "part": "tail-2",
+      "status": "present",
+      "v4_pivot": [
+        470,
+        700
+      ],
+      "provisional_pivot": [
+        480,
+        1030
+      ],
+      "translation_to_v4": [
+        -10,
+        -330
+      ],
+      "pivot_displacement_px": 330.2,
+      "v4_pivot_alpha": 253,
+      "v4_disk_coverage": 1.0,
+      "parent": "tail-1",
+      "parent_at_v4_joint_alpha": 0,
+      "parent_v4_disk_coverage": 0.0,
+      "provisional_pivot_alpha": 0,
+      "provisional_disk_coverage": 0.1248
+    },
+    {
+      "part": "tail-3",
+      "status": "present",
+      "v4_pivot": [
+        520,
+        420
+      ],
+      "provisional_pivot": [
+        475,
+        480
+      ],
+      "translation_to_v4": [
+        45,
+        -60
+      ],
+      "pivot_displacement_px": 75.0,
+      "v4_pivot_alpha": 252,
+      "v4_disk_coverage": 0.7661,
+      "parent": "tail-2",
+      "parent_at_v4_joint_alpha": 252,
+      "parent_v4_disk_coverage": 0.7775,
+      "provisional_pivot_alpha": 0,
+      "provisional_disk_coverage": 0.1734
+    },
+    {
+      "part": "tail-4",
+      "status": "missing",
+      "v4_pivot": [
+        760,
+        265
+      ],
+      "provisional_pivot": null,
+      "translation_to_v4": null,
+      "pivot_displacement_px": null,
+      "v4_pivot_alpha": null,
+      "v4_disk_coverage": null,
+      "parent": "tail-3",
+      "parent_at_v4_joint_alpha": 253,
+      "parent_v4_disk_coverage": 1.0,
+      "provisional_pivot_alpha": null,
+      "provisional_disk_coverage": null
+    },
+    {
+      "part": "nozzle",
+      "status": "present",
+      "v4_pivot": [
+        1085,
+        365
+      ],
+      "provisional_pivot": [
+        1200,
+        360
+      ],
+      "translation_to_v4": [
+        -115,
+        5
+      ],
+      "pivot_displacement_px": 115.1,
+      "v4_pivot_alpha": 0,
+      "v4_disk_coverage": 0.0,
+      "parent": "tail-4",
+      "parent_at_v4_joint_alpha": null,
+      "parent_v4_disk_coverage": null,
+      "provisional_pivot_alpha": 0,
+      "provisional_disk_coverage": 0.373
+    },
+    {
+      "part": "far-upper-arm",
+      "status": "present",
+      "v4_pivot": [
+        975,
+        925
+      ],
+      "provisional_pivot": [
+        1045,
+        955
+      ],
+      "translation_to_v4": [
+        -70,
+        -30
+      ],
+      "pivot_displacement_px": 76.2,
+      "v4_pivot_alpha": 0,
+      "v4_disk_coverage": 0.0703,
+      "parent": "torso",
+      "parent_at_v4_joint_alpha": 0,
+      "parent_v4_disk_coverage": 0.4776,
+      "provisional_pivot_alpha": 253,
+      "provisional_disk_coverage": 0.5761
+    },
+    {
+      "part": "far-forearm",
+      "status": "present",
+      "v4_pivot": [
+        1005,
+        1015
+      ],
+      "provisional_pivot": [
+        1120,
+        1110
+      ],
+      "translation_to_v4": [
+        -115,
+        -95
+      ],
+      "pivot_displacement_px": 149.2,
+      "v4_pivot_alpha": 0,
+      "v4_disk_coverage": 0.0,
+      "parent": "far-upper-arm",
+      "parent_at_v4_joint_alpha": 253,
+      "parent_v4_disk_coverage": 0.4305,
+      "provisional_pivot_alpha": 165,
+      "provisional_disk_coverage": 0.3735
+    },
+    {
+      "part": "far-hand",
+      "status": "present",
+      "v4_pivot": [
+        1118,
+        1060
+      ],
+      "provisional_pivot": [
+        1280,
+        1160
+      ],
+      "translation_to_v4": [
+        -162,
+        -100
+      ],
+      "pivot_displacement_px": 190.4,
+      "v4_pivot_alpha": 0,
+      "v4_disk_coverage": 0.0,
+      "parent": "far-forearm",
+      "parent_at_v4_joint_alpha": 0,
+      "parent_v4_disk_coverage": 0.0629,
+      "provisional_pivot_alpha": 0,
+      "provisional_disk_coverage": 0.3225
+    },
+    {
+      "part": "torso",
+      "status": "present",
+      "v4_pivot": [
+        860,
+        1110
+      ],
+      "provisional_pivot": [
+        850,
+        1250
+      ],
+      "translation_to_v4": [
+        10,
+        -140
+      ],
+      "pivot_displacement_px": 140.4,
+      "v4_pivot_alpha": 253,
+      "v4_disk_coverage": 1.0,
+      "parent": null,
+      "parent_at_v4_joint_alpha": null,
+      "parent_v4_disk_coverage": null,
+      "provisional_pivot_alpha": 253,
+      "provisional_disk_coverage": 1.0
+    },
+    {
+      "part": "jaw",
+      "status": "missing",
+      "v4_pivot": [
+        905,
+        742
+      ],
+      "provisional_pivot": null,
+      "translation_to_v4": null,
+      "pivot_displacement_px": null,
+      "v4_pivot_alpha": null,
+      "v4_disk_coverage": null,
+      "parent": "head",
+      "parent_at_v4_joint_alpha": 252,
+      "parent_v4_disk_coverage": 1.0,
+      "provisional_pivot_alpha": null,
+      "provisional_disk_coverage": null
+    },
+    {
+      "part": "head",
+      "status": "present",
+      "v4_pivot": [
+        875,
+        790
+      ],
+      "provisional_pivot": [
+        900,
+        980
+      ],
+      "translation_to_v4": [
+        -25,
+        -190
+      ],
+      "pivot_displacement_px": 191.6,
+      "v4_pivot_alpha": 253,
+      "v4_disk_coverage": 1.0,
+      "parent": "torso",
+      "parent_at_v4_joint_alpha": 0,
+      "parent_v4_disk_coverage": 0.0007,
+      "provisional_pivot_alpha": 253,
+      "provisional_disk_coverage": 0.8716
+    },
+    {
+      "part": "ear",
+      "status": "present",
+      "v4_pivot": [
+        788,
+        545
+      ],
+      "provisional_pivot": [
+        820,
+        550
+      ],
+      "translation_to_v4": [
+        -32,
+        -5
+      ],
+      "pivot_displacement_px": 32.4,
+      "v4_pivot_alpha": 253,
+      "v4_disk_coverage": 0.8088,
+      "parent": "head",
+      "parent_at_v4_joint_alpha": 253,
+      "parent_v4_disk_coverage": 1.0,
+      "provisional_pivot_alpha": 252,
+      "provisional_disk_coverage": 0.7252
+    },
+    {
+      "part": "eyelids",
+      "status": "present",
+      "v4_pivot": [
+        960,
+        665
+      ],
+      "provisional_pivot": [
+        920,
+        805
+      ],
+      "translation_to_v4": [
+        40,
+        -140
+      ],
+      "pivot_displacement_px": 145.6,
+      "v4_pivot_alpha": 0,
+      "v4_disk_coverage": 0.0,
+      "parent": "head",
+      "parent_at_v4_joint_alpha": 252,
+      "parent_v4_disk_coverage": 1.0,
+      "provisional_pivot_alpha": 253,
+      "provisional_disk_coverage": 0.6963
+    },
+    {
+      "part": "goggles",
+      "status": "present",
+      "v4_pivot": [
+        960,
+        560
+      ],
+      "provisional_pivot": [
+        920,
+        610
+      ],
+      "translation_to_v4": [
+        40,
+        -50
+      ],
+      "pivot_displacement_px": 64.0,
+      "v4_pivot_alpha": 253,
+      "v4_disk_coverage": 0.764,
+      "parent": "head",
+      "parent_at_v4_joint_alpha": 253,
+      "parent_v4_disk_coverage": 1.0,
+      "provisional_pivot_alpha": 253,
+      "provisional_disk_coverage": 0.9805
+    },
+    {
+      "part": "near-upper-arm",
+      "status": "present",
+      "v4_pivot": [
+        700,
+        850
+      ],
+      "provisional_pivot": [
+        695,
+        960
+      ],
+      "translation_to_v4": [
+        5,
+        -110
+      ],
+      "pivot_displacement_px": 110.1,
+      "v4_pivot_alpha": 0,
+      "v4_disk_coverage": 0.0,
+      "parent": "torso",
+      "parent_at_v4_joint_alpha": 0,
+      "parent_v4_disk_coverage": 0.0,
+      "provisional_pivot_alpha": 253,
+      "provisional_disk_coverage": 0.676
+    },
+    {
+      "part": "near-forearm",
+      "status": "present",
+      "v4_pivot": [
+        560,
+        955
+      ],
+      "provisional_pivot": [
+        520,
+        1145
+      ],
+      "translation_to_v4": [
+        40,
+        -190
+      ],
+      "pivot_displacement_px": 194.2,
+      "v4_pivot_alpha": 0,
+      "v4_disk_coverage": 0.0,
+      "parent": "near-upper-arm",
+      "parent_at_v4_joint_alpha": 0,
+      "parent_v4_disk_coverage": 0.0045,
+      "provisional_pivot_alpha": 253,
+      "provisional_disk_coverage": 0.452
+    },
+    {
+      "part": "near-hand",
+      "status": "present",
+      "v4_pivot": [
+        640,
+        1045
+      ],
+      "provisional_pivot": [
+        690,
+        1250
+      ],
+      "translation_to_v4": [
+        -50,
+        -205
+      ],
+      "pivot_displacement_px": 211.0,
+      "v4_pivot_alpha": 0,
+      "v4_disk_coverage": 0.0,
+      "parent": "near-forearm",
+      "parent_at_v4_joint_alpha": 0,
+      "parent_v4_disk_coverage": 0.0,
+      "provisional_pivot_alpha": 253,
+      "provisional_disk_coverage": 0.5647
+    }
+  ],
+  "interpretation": "55px disk coverage is a conservative geometric diagnostic, not proof that rendered extreme poses are gap-free. Accessories may intentionally have empty pivots. No source pixels, pivots or runtime were changed."
+}
