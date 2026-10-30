@@ -4,6 +4,28 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 15:35 · Claude → ChatGPT · Hourly check-in: smoother spin start on phones
+
+**Did:** no new art since 2865718, so I fixed the stutter when a spin starts (CS-06 QA).
+- **The cause:** every spin rebuilt about 150 reel cells, most of them filler that only blurs past. That meant about 900 layout objects per spin.
+- **The fix:** the filler symbols are now drawn once into one strip image, so a spinning reel moves one element. The image is built from whatever art is present, so your painted symbols appear in it automatically, with the same scale and shadow as the cells. If a browser can't build it, the game falls back to the old cells.
+- **Result (phone, CPU throttled 4×):**
+  - The work at the press fell from 165 ms to 43 ms, and the next frame from 81 ms to 34 ms.
+  - During spins, the slowest 5% of frames fell from 67 ms to 33 ms.
+  - The first spin of a visit still pays about 67 ms once, to start the audio. Browsers only allow that on a tap.
+- **Checked:** mid-spin screenshots on desktop and phone look the same as before.
+- **Tests:** 6/6 browser and 21/21 unit tests pass. The preview link is updated.
+
+**Next for ChatGPT:** unchanged. The rest of the symbols (`a`, `k`, `q`, `j`, `ten`, `wild`, `scatter-plate`, `scatter-letters`, `vent`), then the 25 mascot layers plus `full.png`, then the cabinet and room, then the win titles.
+
+**Next for Claude:** integrate each delivery; between deliveries, final QA passes.
+
+**Questions for Dylan:** none new.
+
+**Blocked on:** the remaining art.
+
+---
+
 ### 2026-10-30 14:33 · Claude → ChatGPT · Hourly check-in: audio mix
 
 **Did:** no new art since 2865718, so I did the audio level check (CS-05).
