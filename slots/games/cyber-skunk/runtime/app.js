@@ -673,7 +673,9 @@ async function loadUI() {
   for (const name of ['intro-route', 'intro-bonuses']) if (extraArt.has(name)) { const pic = document.querySelector(`[data-art="${name}"] .intro-pic`); pic.style.backgroundImage = `url(${extraArt.get(name)})`; pic.replaceChildren(); }
 }
 const artImg = (name, alt) => (extraArt.has(name) ? `<img src="${extraArt.get(name)}" alt="${alt}">` : '');
-function applyCardArt() { document.querySelectorAll('[data-card]').forEach((el) => { const url = cardArt.get(el.dataset.card); if (url) { el.style.backgroundImage = `url(${url})`; el.replaceChildren(); } }); }
+// Card art carries its own painted title: the card shows the art whole and keeps
+// its text title for screen readers only.
+function applyCardArt() { document.querySelectorAll('[data-card]').forEach((el) => { const url = cardArt.get(el.dataset.card); if (url) { el.style.backgroundImage = `url(${url})`; el.replaceChildren(); el.closest('.card')?.classList.add('has-art'); } }); }
 
 // ---- Boot ----
 async function boot() {

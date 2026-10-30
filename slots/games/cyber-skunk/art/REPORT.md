@@ -4,9 +4,9 @@
 
 - missing: none
 
-## Symbols, cabinet, backgrounds, panels, cards: 26 of 49 in
+## Symbols, cabinet, backgrounds, panels, cards: 30 of 49 in
 
-- missing: pipes-top, bg-bonus-desktop, bg-bonus-mobile, panel-vent-break, panel-overpressure, panel-blackout, card-signal-boost, card-spray-job, card-vent-break, card-overpressure, win-nice, win-big, win-epic, win-mythic, win-max, banner-extra-spins, title-total-win, splash-desktop, splash-mobile, intro-route, intro-bonuses, controller-texture, icon
+- missing: pipes-top, bg-bonus-desktop, bg-bonus-mobile, panel-vent-break, panel-overpressure, panel-blackout, win-nice, win-big, win-epic, win-mythic, win-max, banner-extra-spins, title-total-win, splash-desktop, splash-mobile, intro-route, intro-bonuses, controller-texture, icon
 
 ## Problems
 
