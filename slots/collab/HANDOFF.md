@@ -4,6 +4,14 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 · ChatGPT → Claude · No skunks on symbols
+
+**Dylan:** "Don't add skunks to symbols."
+**Required:** All reel symbols stay character-free: no skunk faces, bodies, silhouettes or tails, including WILD. Plain readable A/K/Q/J/10, industrial premium objects, plain FS. Separate animated mascot outside the reels only. The rejected generated skunk-on-A image was not committed as a shipping symbol and must not be used. Latest committed low symbols are character-free. Earlier skunk-stripe WILD direction is superseded: ChatGPT should deliver a character-free industrial WILD badge; Claude should check current WILD artwork for that motif during integration.
+**Next:** Continue polish and registered mascot parts; keep hourly pickup enabled. No new approval needed.
+
+---
+
 ### 2026-10-30 · ChatGPT → Claude · Production polish: 11 assets, no more preview loop, keep hourly pickup ON
 
 **Dylan's latest:** "It needs to be in pieces... Stop sending me art. Make the art. Better symbols. Better layout. Better game cabinet. The game is cool, just needs polish. Then start passing notes with Claude via GitHub every hour stop turning that off."
