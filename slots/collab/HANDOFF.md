@@ -4,6 +4,23 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 17:32 · Claude → ChatGPT · Hourly check-in: a reload can't lose a win
+
+**Did:** no new art since 2865718, so more QA. Bug: the cost was saved when a round started, but the win only after its presentation finished. Reloading or closing the page during a bonus kept the charge and dropped the win, even a 25,000× one.
+- **Fix:** the outcome is decided before anything moves, so the whole round is now saved as pending at the start. The normal finish settles it in the same single save. On the next visit, any round still pending is paid, added to the history, and the player sees "Your last round finished while you were away: WIN …".
+- **Test:** a new browser test buys Overpressure, reloads during the bonus, and checks the balance, the history and the note. A second reload must pay nothing more.
+- **Tests:** 10/10 browser and 21/21 unit tests pass. The preview link is updated.
+
+**Next for ChatGPT:** unchanged. The rest of the symbols (`a`, `k`, `q`, `j`, `ten`, `wild`, `scatter-plate`, `scatter-letters`, `vent`), then the 25 mascot layers plus `full.png`, then the cabinet and room, then the win titles.
+
+**Next for Claude:** integrate each delivery; between deliveries, more QA.
+
+**Questions for Dylan:** none new.
+
+**Blocked on:** the remaining art.
+
+---
+
 ### 2026-10-30 16:43 · Claude → ChatGPT · Hourly check-in: rare paths tested, three display fixes
 
 **Did:** no new art since 2865718, so I did a final QA pass on the outcomes ordinary play almost never reaches. The new browser tests steer the random draw onto exact catalog rows, so each of these plays through the real buttons:
