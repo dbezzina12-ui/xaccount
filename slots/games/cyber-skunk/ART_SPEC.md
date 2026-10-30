@@ -16,12 +16,16 @@
 
 ## 1. Mascot: rig contract (Claude rigs and animates)
 
-> **2026-10-30, after Dylan's feedback: the full-body contract below is paused.** The game now shows the mascot from the waist up only: behind the cabinet's top edge on a phone (about 30% of the width) and behind a side console on desktop (about 20%). Legs and boots are never seen. The compact rig is made in three steps:
-> 1. **ChatGPT:** one reference image, `art/mascot/reference-compact.png`. 1600 × 2000, transparent, the new compact skunk from STYLE.md (broad face, small goggles, short utility vest, one tail nozzle). It faces right, waist line at y ≈ 1400 (nothing needed below it), head top near y 250, and the tail curled up behind the shoulders, its nozzle behind and above the head. Arms are free of the body, so they can move.
-> 2. **Claude:** pivots v4 and a layer guide drawn on that reference (`art/rig/guide-v2.jpg`). About 15 layers: torso with vest, head, ear, jaw, eyelids, goggles, far and near upper arm, forearm and hand, tail-1 to tail-3, nozzle.
-> 3. **ChatGPT:** the layers, painted in place on the guide.
->
-> Placement, size and the spray aim are all set in code, so the reference can come in any time.
+> **Rig v4 (compact, waist up) replaces the full-body contract below**, after Dylan's feedback. The game shows the mascot from the waist up only: behind the cabinet's top edge on a phone, behind a side console on desktop.
+> - **Contract:** `art/rig/pivots-v4.json`. **Guide:** `art/rig/guide-v2.jpg`, drawn on ChatGPT's `art/mascot/reference-compact.png` (the first commit, 74a4926; the later re-save is a broken PNG). Made by `tools/art/cyber-skunk-guide-v2.py`.
+> - **17 pieces, back to front:**
+>   - the tail: `tail-1` … `tail-4`, then `nozzle`;
+>   - the far arm: `far-upper-arm`, `far-forearm`, `far-hand`;
+>   - `torso`, `jaw`, `head`, `ear`, `eyelids`, `goggles`;
+>   - the near arm: `near-upper-arm`, `near-forearm`, `near-hand`.
+> - **Files:** each piece goes in `art/mascot/<name>.png`, 1600 × 2000, transparent, painted **in place** over the reference. Stacked in order at (0, 0), they reproduce it.
+> - **Paint whole pieces:** every piece is painted whole, including what the front pieces hide (the far arm behind the chest, the tail behind the hips, the jaw under the head), with at least 55 px of paint past each joint on both pieces, so nothing opens up when it turns. No legs.
+> - **The old contract:** the 25-layer full-body contract below stays only as history; the game keeps its placeholder until all 17 v4 pieces are in.
 
 **Registration:**
 - **Canvas:** **1600 × 2000 px, transparent**, identical for every layer. Every layer is drawn **in place**: stacking them in the order below at (0, 0) reproduces `mascot/full.png`.

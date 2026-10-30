@@ -16,6 +16,7 @@ transparency, and writes WebP into games/cyber-skunk/runtime/assets/:
 
 Writes games/cyber-skunk/art/REPORT.md. Needs Pillow.
 """
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -97,11 +98,24 @@ def has_alpha(im):
     return lo < 255
 
 
+# Delivered files Dylan has rejected (SHA-256, first 16 hex digits). They are
+# never shipped; a new file under the same name goes in as usual.
+REJECTED = {
+    "wild": {"729e3ef9a4db6d39": "Dylan, 2026-10-30: no skunks on reel symbols (this WILD has a skunk-tail stripe)"},
+}
+
+
 def prep_asset(name, check, notes):
     folder, size, alpha, quality = SPEC[name]
     src = find(name)
     if not src:
         return "missing"
+    why = REJECTED.get(name, {}).get(hashlib.sha256(src.read_bytes()).hexdigest()[:16])
+    if why:
+        if not check:
+            (OUT / folder / f"{name}.webp").unlink(missing_ok=True)
+        notes.append((name, rel(src), [f"rejected, not shipped: {why}"]))
+        return "rejected"
     im = Image.open(src)
     im.load()
     problems = []

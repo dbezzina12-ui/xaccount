@@ -45,8 +45,10 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .logo-text b{display:block;font-weight:400;color:var(--amber);text-shadow:0 4px 0 #5a3410,0 8px 22px #000c,0 0 30px #eda83c55}
 .logo img{display:block;width:100%}
 .app[data-layout=desktop] .logo{left:48px;top:40px;width:380px}
+.app[data-art-logo][data-layout=desktop] .logo{left:22px;top:22px;width:440px}
 .app[data-layout=desktop] .logo-text{font-size:96px}
 .app[data-layout=mobile] .logo{right:44px;top:56px;width:440px;text-align:right}
+.app[data-art-logo][data-layout=mobile] .logo{right:18px;top:36px;width:530px}
 .app[data-layout=mobile] .logo-text{font-size:112px}
 .mascot{position:absolute;z-index:3;pointer-events:none}
 .mascot-canvas{display:block;width:100%;height:100%}
