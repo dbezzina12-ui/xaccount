@@ -13,7 +13,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 
 /* The hall behind everything (bg-*.webp when present). */
-.app{position:fixed;inset:0;overflow:hidden}
+.app{position:fixed;inset:0;overflow:hidden;overflow:clip} /* clip: nothing (focus, scrollIntoView) may scroll the game */
 .backdrop{position:absolute;inset:0;background:radial-gradient(120% 80% at 60% 40%,#1b252b 0%,#0e151b 55%,#070b0f 100%)}
 .backdrop .hall{position:absolute;inset:0;background:var(--bg-desktop,none) center/cover no-repeat}
 .app[data-layout=mobile] .backdrop .hall{background-image:var(--bg-mobile,var(--bg-desktop,none))}
@@ -123,11 +123,13 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .gauge-value{position:absolute;left:0;right:0;bottom:44px;text-align:center;font:900 28px/1 var(--title);color:#2b2116}
 .app:not([data-bonus=super]):not([data-bonus=hidden]) .gauge{filter:saturate(.6) brightness(.85)}
 
-.bonus-hud{position:absolute;display:grid;grid-template-columns:1fr 250px 1fr;align-items:center;font:700 30px/1 var(--font);letter-spacing:.06em;pointer-events:none}
-.bonus-hud > span{display:flex;gap:22px;justify-content:center;padding:12px 22px;border-radius:12px;background:#0b1013e6;border:2px solid var(--brass)}
+.bonus-hud{position:absolute;display:grid;grid-template-columns:1fr 250px 1fr;align-items:stretch;font:700 30px/1 var(--font);letter-spacing:.06em;pointer-events:none}
+.bonus-hud > span{display:flex;gap:22px;justify-content:center;align-items:center;padding:12px 22px;border-radius:12px;background:#0b1013e6;border:2px solid var(--brass);white-space:nowrap}
+.bonus-hud > span:first-child{flex-direction:column;gap:6px}
+.bonus-hud #hud-tier{font-size:.72em;letter-spacing:.1em}
 .bonus-hud .hud-gap{visibility:hidden}
 .bonus-hud b{color:var(--amber)}
-.app[data-layout=desktop] .bonus-hud{left:30px;right:30px;top:-84px}
+.app[data-layout=desktop] .bonus-hud{left:30px;right:30px;top:-112px}
 .app[data-layout=mobile] .bonus-hud{right:20px;top:-780px;width:500px;grid-template-columns:1fr;gap:12px;font-size:46px}
 .app[data-layout=mobile] .bonus-hud .hud-gap{display:none}
 /* The controller lives under the cabinet (desktop) or along the bottom of the
@@ -218,10 +220,12 @@ dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}
 .app[data-art-fx-steam] .steam{background:var(--fx-steam) center/contain no-repeat}
 @keyframes steam{from{transform:translateY(20px) scale(.3);opacity:.95}to{transform:translateY(-90px) scale(1.4);opacity:0}}
 .reel-banner{position:absolute;left:50%;top:50%;z-index:12;transform:translate(-50%,-50%);display:grid;place-items:center;gap:6px;text-align:center;pointer-events:none}
+.reel-banner::before{content:"";position:absolute;inset:-50px -90px;z-index:-1;background:radial-gradient(closest-side,#0b1013f2,#0b1013b3 55%,#0b101300)}
 .reel-banner img{width:900px;max-width:none}
 .reel-banner .banner-word{font:400 120px/1 var(--title);color:var(--ivory);-webkit-text-stroke:4px #1b120a;text-shadow:0 0 40px #68c8c3,0 8px 0 #2b2116}
 .reel-banner b{font:400 140px/1 var(--title);color:var(--amber);-webkit-text-stroke:5px #1b120a;text-shadow:0 0 40px #eda83c}
-.reel-banner.show{animation:panel-in .45s cubic-bezier(.2,1.5,.4,1)}
+.reel-banner.show{animation:banner-in .45s cubic-bezier(.2,1.5,.4,1)}
+@keyframes banner-in{from{transform:translate(-50%,-50%) scale(.6);opacity:0}}
 .bigwin-title img{display:block;width:min(1100px,92vw);margin:0 auto}
 /* Rays behind the big-win title, hotter per tier; a short shake for Epic and above. */
 .bigwin::before{content:"";position:absolute;left:50%;top:50%;width:160vmax;height:160vmax;margin:-80vmax 0 0 -80vmax;z-index:-1;opacity:.35;background:repeating-conic-gradient(from 0deg,#eda83c33 0 6deg,#0000 6deg 18deg);-webkit-mask:radial-gradient(circle,#000 0,#0000 55%);mask:radial-gradient(circle,#000 0,#0000 55%);animation:rays 14s linear infinite}

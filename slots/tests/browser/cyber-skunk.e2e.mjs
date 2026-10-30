@@ -131,3 +131,74 @@ test('audio: nothing clips, the music sits under the reels, the big moments are 
   // A phone speaker loses the thumps; the reel sounds must still reach the music's level there.
   for (const r of reel) assert.ok(effects[r].phone >= music.base.phone - 6, `${r} at ${effects[r].phone} on a phone, music at ${music.base.phone}`);
 });
+
+// Rare outcomes through the real UI. The page's random tickets are steered so
+// drawRound lands on a chosen catalog row; the round is still drawn, replayed
+// and checked by the game exactly as in play.
+const STEER = () => {
+  window.__tickets = [];
+  const real = crypto.getRandomValues.bind(crypto);
+  crypto.getRandomValues = (a) => {
+    if (!(a instanceof Uint32Array && a.length === 2 && window.__tickets.length)) return real(a);
+    const { t, total } = window.__tickets.shift(), x = Math.floor(((t + 0.5) / total) * 2 ** 53);
+    a[0] = Math.floor(x / 2 ** 21); a[1] = (x % 2 ** 21) * 2 ** 11;
+    return a;
+  };
+  // What the round showed, however briefly.
+  window.__seen = new Set();
+  new MutationObserver(() => {
+    const app = document.getElementById('app'), big = document.getElementById('bigwin');
+    if (app && 'blackout' in app.dataset) window.__seen.add('blackout');
+    if (big && !big.hidden) window.__seen.add(`bigwin-${big.dataset.tier}`);
+    if (document.getElementById('reel-banner')?.hidden === false) window.__seen.add('banner');
+  }).observe(document, { subtree: true, attributes: true, attributeFilter: ['hidden', 'data-blackout', 'data-tier'] });
+};
+// Queues the tickets for one outcome and returns its value (hundredths of the bet).
+const steer = (page, kind) => page.evaluate(async (kind) => {
+  const { default: d } = await import('./catalog-data.js'), { playRound, seeded } = await import('./engine.js');
+  const start = (pool, i) => d.pools[pool].slice(0, i).reduce((a, r) => a + r[1], 0), T = (t) => ({ t, total: d.total });
+  if (kind === 'blackout') {
+    const { none, regular, super: sup } = d.modes.base.tiers, rows = d.pools['bonus-hidden'];
+    const b = rows.reduce((k, r, i) => (r[2] > rows[k][2] ? i : k), 0);
+    window.__tickets.push(T(none + regular + sup), T(0), T(start('bonus-hidden', b)));
+    return Math.min(d.cap, d.pools['entry-base-hidden'][0][2] + rows[b][2]);
+  }
+  if (kind === 'cap') {
+    const i = d.pools['bonus-super'].findIndex((r) => r[2] === d.cap);
+    window.__tickets.push(T(start('bonus-super', i)));
+    return d.cap;
+  }
+  const rows = d.pools['bonus-regular'];
+  const i = rows.findIndex((r) => playRound({ mode: 'ventbreak', rng: seeded(r[0]) }).events.some((e) => e.type === 'retrigger'));
+  window.__tickets.push(T(start('bonus-regular', i)));
+  return rows[i][2];
+}, kind);
+
+for (const [kind, mode, size, shows] of [
+  ['blackout', 'base', { width: 1920, height: 1080 }, ['blackout', 'bigwin-max']],
+  ['cap', 'overpressure', { width: 390, height: 844 }, ['bigwin-max']],
+  ['retrigger', 'ventbreak', { width: 1366, height: 768 }, ['banner']],
+]) {
+  test(`rare path, ${kind} (${size.width}×${size.height}): plays, shows ${shows.join(' and ')}, settles exactly, and the page never scrolls`, async () => {
+    const phone = size.width < size.height, page = await browser.newPage({ viewport: size, isMobile: phone, hasTouch: phone });
+    const errors = [];
+    page.on('pageerror', (e) => errors.push(e.message));
+    await page.addInitScript(([k, v]) => localStorage.setItem(k, v), [KEY, JSON.stringify({ introHidden: true, speed: 'turbo' })]);
+    await page.addInitScript(STEER);
+    await page.goto(srv.url + GAME);
+    await page.waitForFunction(() => window.cyberSkunk?.state.ready);
+    const value = await steer(page, kind);
+    if (mode === 'base') await control(page, 'play').click();
+    else { await control(page, 'buy').click(); await page.locator(`[data-pick=${mode}]`).click(); await page.locator('#confirm-ok').click(); }
+    await page.waitForTimeout(400);
+    await finish(page);
+    const [round] = await history(page), s = await state(page), seen = await page.evaluate(() => [...window.__seen]);
+    assert.equal(round.mode, mode);
+    assert.equal(round.win, value, 'paid the steered catalog value at a $1 bet');
+    assert.equal(s.balance, START - round.cost + round.win);
+    for (const x of shows) assert.ok(seen.includes(x), `${x} was shown (saw ${seen.join(', ')})`);
+    assert.equal(await page.evaluate(() => { const app = document.getElementById('app'); app.scrollTop = 120; return app.scrollTop; }), 0, 'the game area cannot scroll');
+    assert.deepEqual(errors, []);
+    await page.close();
+  });
+}
