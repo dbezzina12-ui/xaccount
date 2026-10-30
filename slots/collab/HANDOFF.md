@@ -4,6 +4,38 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 · Claude → ChatGPT + Dylan · Cyber Skunk math done: exactly 96% in every mode (CS-03)
+
+**Did:** the game now plays every round from weighted catalogs of real engine rounds: 110,159 seeds, each replayed before it is shown, and a mismatch is refused before anything is charged. `games/cyber-skunk/MATH.md` has every figure your STYLE gates ask for, all exact.
+
+| Mode | Cost | RTP | Hit rate | ≥ cost | Median | Max win |
+| --- | --- | --- | --- | --- | --- | --- |
+| Base | 1× | 96.000000% | 30.3% | 4.3% | 0× | 1 in 3,413,056 spins |
+| Signal Boost | 3× | 96.000000% | 30.9% | 4.1% | 0× | 1 in 421,687 |
+| Spray Job | 10× | 96.000000% | 71.7% | 20.2% | 0.4× | 1 in 3,413,047 |
+| Vent Break | 100× | 96.000000% | 100% | 23.4% | 19.1× | does not reach the cap |
+| Overpressure | 250× | 96.000000% | 99.99% | 19.0% | 31.2× | 1 in 800 buys |
+
+- **Natural bonuses (base):** Vent Break 1 in 223, Overpressure 1 in 4,272, Blackout Protocol 1 in 151,860.
+- **Signal Boost:** 1 in 50, 1 in 528 and 1 in 10,206. Its scatter chance went from 0.11 to 0.1125 so 3× holds at 96% without bending its spins.
+- **Blackout Protocol:** natural, averaging 730.7×, with the max 1 in 16,976 of them (your gate: at most 1 in 1,000).
+- **One design choice, flagged for Dylan:** naturally the base game would reach 25,000× only about once in 1.5 billion spins.
+  - **What I did:** I held Overpressure's 25,000× rounds at 1 in 800. That puts the base max at **1 in 3.4 million**; Zombify ships 1 in 2.29 million.
+  - **How to change it:** it is one number, `SHAPE.super.maxRate` in `tools/math/cyber-skunk-catalogs.mjs`.
+- **Also new:** `runtime/rig-preview.html`, the rig browser preview you asked for: clips, joints, posing each part within its range, and an extreme-pose sheet to paint against.
+
+**Files:** `tools/math/cyber-skunk-{pools,catalogs,caps,verify,report}.mjs`, `tools/math/weights.mjs`, `games/cyber-skunk/{MATH.md,math/summary.json,DESIGN.md}`, `runtime/{catalog.js,catalog-data.js,rules.js,app.js,rig-preview.html}`, `tests/catalog.test.mjs`.
+
+**Next for ChatGPT:** unchanged: the art drop under the ART_SPEC names, mascot layers first. Open `rig-preview.html` → Extreme poses to see the ranges each layer must survive.
+
+**Next for Claude:** the art prep tool, so your files go straight in; then presentation polish and browser QA at every STYLE size.
+
+**Questions for Dylan:** is a base max win of 1 in 3.4 million spins right, or do you want it nearer Zombify's 1 in 2.3 million? Nearer means Overpressure hits the max more often than 1 in 800 buys.
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-30 · Claude → ChatGPT · Cyber Skunk is playable on placeholders; your art wires in by name (CS-05, CS-06)
 
 **Did:** the full game runs: `games/cyber-skunk/runtime/index.html` (serve `slots/` and open it). Screens in `games/cyber-skunk/shots/` (desktop idle, spray, Vent Break, buy menu, 1366 laptop, phone flow).
