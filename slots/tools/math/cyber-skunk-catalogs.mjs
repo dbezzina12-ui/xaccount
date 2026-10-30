@@ -8,19 +8,21 @@
 //     the natural trigger rates of the mode's scatter chance (exact binomial);
 //     none -> a paid spin with fewer than 3 scatters (spin pool);
 //     a tier -> its trigger spin (entry pool, forced 3/4/5 scatters) and a bonus
-//     (bonus pool), paying min(25,000x, trigger + bonus).
-//   ventbreak / overpressure: a bonus from the regular / super pool.
+//     (the tier's natural bonus pool), paying min(25,000x, trigger + bonus).
+//   ventbreak / overpressure: a bonus from the regular / super buy pool.
+// A bought and a triggered bonus are the same rounds with the same average;
+// only how often they reach the cap differs (MAX-WIN ODDS below).
 //
 // Shaping (DESIGN.md "Math acceptance"):
 // - Each pool keeps its natural shape in quantile strata (one seed per
 //   stratum, weighted by the stratum's size) plus its top outcomes one by one.
 // - Bonus pools: a smooth log-space tilt w * exp(a*L + b*L^2), L = ln(1 + x),
 //   fitted so the buy returns exactly 96% with a fairer median; the 25,000x
-//   outcomes get an explicit rate (MAX_RATE) so the max is rare but real.
+//   outcomes get an explicit rate so the max is rare but real.
 // - No-bonus spin pools: tilted last so each mode returns exactly 96%.
 // Weights are whole tickets summing to 1e9 per pool and per tier table.
 //
-//   node tools/math/cyber-skunk-catalogs.mjs --pools DIR [--extra-caps FILE]
+//   node tools/math/cyber-skunk-catalogs.mjs --pools DIR [--extra-caps DIR]
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { TOTAL, integerWeights, exactAverage } from './weights.mjs';
@@ -32,15 +34,20 @@ const dir = arg('--pools'); if (!dir) throw Error('--pools DIR (from cyber-skunk
 
 // ---- design targets ---------------------------------------------------------
 const RTP = 0.96;
-// Per bonus: the exact mean (96% of the buy price), the tilt's curvature, and
-// how often the bonus reaches the 25,000x cap (null: its natural rate).
-// Overpressure's max rate sets the base game's (about 1 in 3.4 million spins):
-// naturally it reaches the cap 1 in 400,000, which would make the base game's
-// max about 1 in 1.7 billion.
+// MAX-WIN ODDS, set by Dylan (2026-10-30): the base game reaches the 25,000x
+// cap 1 in 1,000,000 spins; a bought Vent Break 1 in 200,000; a bought
+// Overpressure 1 in 50,000; Blackout Protocol 1 in 200, and every Blackout
+// pays at least 1,000x.
+// Per bonus: the exact mean (96% of the buy price; Blackout keeps its natural
+// shape), the tilt's curvature and the cap rate of a bought one. A triggered
+// Vent Break and Overpressure keep the same average and reach the cap more
+// often, both scaled by one factor solved so base play lands on BASE_MAX
+// (Blackout's own rate alone would put it near 1 in 30 million).
+const BASE_MAX = 1 / 1e6;
 const SHAPE = {
-  regular: { mean: RTP * MODES.ventbreak.cost * 100, curve: -0.05, maxRate: null },
-  super: { mean: RTP * MODES.overpressure.cost * 100, curve: -0.03, maxRate: 1 / 800 },
-  hidden: { mean: null, curve: 0, maxRate: null }, // never sold: natural shape and mean (STYLE gate: max at most 1 in 1,000)
+  regular: { mean: RTP * MODES.ventbreak.cost * 100, curve: -0.05, maxRate: 1 / 200000 },
+  super: { mean: RTP * MODES.overpressure.cost * 100, curve: -0.03, maxRate: 1 / 50000 },
+  hidden: { mean: null, curve: 0, maxRate: 1 / 200, min: 1000 * 100 }, // never sold
 };
 const TIER_SCATTERS = { regular: 3, super: 4, hidden: 5 };
 const SIZE = { bonus: { strata: 14000, top: 1500 }, spin: { strata: 14000, top: 800 }, entry: { strata: 3000, top: 200 } };
@@ -78,23 +85,31 @@ function shape(rows, { mean, curve }) {
   return { w: weights((lo + hi) / 2, curve), a: (lo + hi) / 2, b: curve };
 }
 
-// A bonus pool: shaped body, the cap at its own rate, then an exact average.
-function bonusPool(tier) {
-  const values = load(`bonus-${tier}`), extra = arg('--extra-caps') && existsSync(`${arg('--extra-caps')}/caps-${tier}.json`) ? JSON.parse(readFileSync(`${arg('--extra-caps')}/caps-${tier}.json`)) : [];
-  const { rows, n } = compress(values, SIZE.bonus);
+// A tier's rows, compressed once and shared by its buy and natural pools:
+// the pool's own capped rounds plus those found by cyber-skunk-caps.mjs.
+const bonusRowsCache = {};
+function bonusRows(tier) {
+  if (bonusRowsCache[tier]) return bonusRowsCache[tier];
+  const values = load(`bonus-${tier}`), min = SHAPE[tier].min ?? 0, extraDir = arg('--extra-caps');
+  const extra = extraDir && existsSync(`${extraDir}/caps-${tier}.json`) ? JSON.parse(readFileSync(`${extraDir}/caps-${tier}.json`)) : [];
+  const { rows, n } = compress(values, SIZE.bonus, (i) => values[i] >= min);
   const known = new Set(rows.map((r) => r[0]));
   for (const seed of extra) if (!known.has(seed)) rows.push([seed, CAP, 0]);
-  const caps = rows.filter((r) => r[1] >= CAP), body = rows.filter((r) => r[1] < CAP), s = SHAPE[tier];
-  const natural = meanOf(rows, rows.map((r) => r[2]));
+  return (bonusRowsCache[tier] = { rows, n, values });
+}
+// A bonus pool: shaped body, the cap at its own rate, then an exact average.
+// mean null keeps the natural shape (Blackout), the cap's share on top.
+function bonusPool(tier, s = SHAPE[tier], name = `bonus-${tier}`) {
+  const { rows, n } = bonusRows(tier);
+  const caps = s.maxRate > 0 ? rows.filter((r) => r[1] >= CAP) : [], body = rows.filter((r) => r[1] < CAP);
+  const natural = meanOf(rows, rows.map((r) => r[2])), capShare = caps.length ? s.maxRate : 0;
   // The body carries the rest of the mean once the cap's share is fixed.
-  const naturalCap = rows.reduce((a, r) => a + (r[1] >= CAP ? r[2] : 0), 0) / rows.reduce((a, r) => a + r[2], 0);
-  const capShare = caps.length ? s.maxRate ?? naturalCap : 0, target = s.mean ?? natural;
-  const bodyMean = (target - capShare * CAP) / (1 - capShare);
-  const fit = s.mean === null && !caps.length ? { w: body.map((r) => r[2]), a: 0, b: 0 } : shape(body, { mean: bodyMean, curve: s.curve });
+  const fit = s.mean === null ? { w: body.map((r) => r[2]), a: 0, b: 0 } : shape(body, { mean: (s.mean - capShare * CAP) / (1 - capShare), curve: s.curve });
   const bodyTotal = fit.w.reduce((a, b) => a + b, 0);
   const shares = [...fit.w.map((x) => (x / bodyTotal) * (1 - capShare)), ...caps.map(() => capShare / caps.length)];
-  const all = [...body, ...caps], w = exactAverage(all.map((r) => r[1]), integerWeights(shares), s.mean ?? Math.round(natural / 10) * 10);
-  return { name: `bonus-${tier}`, rows: all, w, n, natural, fit, caps: caps.length };
+  const all = [...body, ...caps], mean = s.mean ?? Math.round(meanOf(all, shares) / 10) * 10;
+  const w = exactAverage(all.map((r) => r[1]), integerWeights(shares), mean);
+  return { name, rows: all, w, n, natural, fit, caps: caps.length, maxRate: capShare };
 }
 
 // Exact expectation of min(CAP, e + b) for entry and bonus catalogs (weights over TOTAL each).
@@ -107,28 +122,63 @@ function cappedSum(entry, bonus) {
 // Natural trigger rates: rules.js triggerRates (exact binomial on 6 reels; 5 or 6 start Blackout).
 const tierRates = (mode) => triggerRates(MODES[mode].land);
 
-// ---- build ------------------------------------------------------------------
-const bonus = Object.fromEntries(['regular', 'super', 'hidden'].map((t) => [t, bonusPool(t)]));
-for (const [t, b] of Object.entries(bonus)) {
-  const m = meanOf(b.rows, b.w), capW = b.rows.reduce((a, r, i) => a + (r[1] >= CAP ? b.w[i] : 0), 0);
-  console.log(`${b.name}: ${b.rows.length} entries from ${b.n.toLocaleString('en-US')} bonuses (${b.caps} reach the cap) · natural ${(b.natural / 100).toFixed(2)}x -> ${(m / 100).toFixed(4)}x · median ${(quantile(b.rows, b.w, 0.5) / 100).toFixed(1)}x · cap ${capW ? `1 in ${Math.round(TOTAL / capW).toLocaleString('en-US')}` : 'never'} · tilt a=${b.fit.a.toFixed(4)} b=${b.fit.b.toFixed(4)}`);
+// Exact chance that min(CAP, e + b) reaches the cap, for entry and bonus catalogs.
+function capChance(entry, bonus) {
+  const b = bonus.rows.map((r, j) => [r[1], bonus.w[j]]).sort((x, y) => y[0] - x[0]);
+  let p = 0;
+  entry.rows.forEach((re, i) => { let s = 0; for (const [v, w] of b) { if (re[1] + v < CAP) break; s += w; } p += entry.w[i] * s; });
+  return p / TOTAL / TOTAL;
 }
-const modes = {}, pools = Object.fromEntries(Object.values(bonus).map((b) => [b.name, b])), seenEntries = new Map();
+
+// ---- build ------------------------------------------------------------------
+const pools = {}, seenEntries = new Map();
+const report = (b) => {
+  const m = meanOf(b.rows, b.w), capW = b.rows.reduce((a, r, i) => a + (r[1] >= CAP ? b.w[i] : 0), 0);
+  console.log(`${b.name}: ${b.rows.length} entries from ${b.n.toLocaleString('en-US')} bonuses (${b.caps} reach the cap) · natural ${(b.natural / 100).toFixed(2)}x -> ${(m / 100).toFixed(4)}x · median ${(quantile(b.rows, b.w, 0.5) / 100).toFixed(1)}x · min ${(Math.min(...b.rows.map((r) => r[1])) / 100).toFixed(1)}x · cap ${capW ? `1 in ${Math.round(TOTAL / capW).toLocaleString('en-US')}` : 'never'} · tilt a=${b.fit.a.toFixed(4)} b=${b.fit.b.toFixed(4)}`);
+};
+// Bought bonuses (and Blackout, which is never sold and has one pool).
+const buy = Object.fromEntries(['regular', 'super', 'hidden'].map((t) => [t, bonusPool(t)]));
+// Trigger-spin pools. Modes whose trigger spins are the same draws share one
+// pool (Signal Boost only changes the scatter chance).
+function entryPool(mode, t) {
+  const values = load(`entry-${mode}-${t}`), key = createHash('sha256').update(values).digest('hex');
+  let entry = seenEntries.get(key);
+  if (!entry) {
+    const e = compress(values, SIZE.entry);
+    entry = { name: `entry-${mode}-${t}`, rows: e.rows, n: e.n }; entry.w = integerWeights(entry.rows.map((r) => r[2]));
+    pools[entry.name] = entry; seenEntries.set(key, entry);
+  }
+  return entry;
+}
+// Triggered Vent Break and Overpressure: their buy cap rates times one factor,
+// solved so base play reaches the cap at BASE_MAX. A tier with no capped round
+// to draw on leaves the factor to the other.
+const baseTiers = integerWeights((() => { const r = tierRates('base'); return [1 - r.regular - r.super - r.hidden, r.regular, r.super, r.hidden]; })());
+const naturalPools = (k) => ({
+  regular: bonusPool('regular', { ...SHAPE.regular, maxRate: buy.regular.caps ? k * SHAPE.regular.maxRate : 0 }, 'bonus-regular-natural'),
+  super: bonusPool('super', { ...SHAPE.super, maxRate: k * SHAPE.super.maxRate * (buy.regular.caps ? 1 : 1 + (baseTiers[1] * SHAPE.regular.maxRate) / (baseTiers[2] * SHAPE.super.maxRate)) }, 'bonus-super-natural'),
+  hidden: buy.hidden,
+});
+const baseMax = (nat) => ['regular', 'super', 'hidden'].reduce((a, t, k) => a + (baseTiers[k + 1] / TOTAL) * capChance(entryPool('base', t), nat[t]), 0);
+let k = 30, triggered;
+for (let it = 0; it < 6; it++) {
+  triggered = naturalPools(k);
+  const T = triggered, m = baseMax(T), fixed = baseMax({ ...T, regular: { ...T.regular, w: T.regular.w.map((w, i) => (T.regular.rows[i][1] >= CAP ? 0 : w)) }, super: { ...T.super, w: T.super.w.map((w, i) => (T.super.rows[i][1] >= CAP ? 0 : w)) } });
+  console.log(`natural cap factor ${k.toFixed(4)}: base max 1 in ${Math.round(1 / m).toLocaleString('en-US')}`);
+  if (Math.abs(m / BASE_MAX - 1) < 2e-4) break;
+  k *= (BASE_MAX - fixed) / (m - fixed);
+}
+for (const b of [...Object.values(buy), triggered.regular, triggered.super]) { report(b); pools[b.name] = b; }
+
+const modes = {};
 for (const mode of ['base', 'enhanced', 'sprayjob']) {
   const cost = MODES[mode].cost * 100, rates = tierRates(mode), pB = rates.regular + rates.super + rates.hidden;
   const tierW = integerWeights([1 - pB, rates.regular, rates.super, rates.hidden]);
-  let fromBonus = 0; const entries = {};
+  let fromBonus = 0; const entries = {}, bonuses = {};
   for (const [k, t] of ['regular', 'super', 'hidden'].entries()) {
-    // Modes whose trigger spins are the same draws share one pool (Signal Boost only changes the scatter chance).
-    const values = load(`entry-${mode}-${t}`), key = createHash('sha256').update(values).digest('hex');
-    let entry = seenEntries.get(key);
-    if (!entry) {
-      const e = compress(values, SIZE.entry);
-      entry = { name: `entry-${mode}-${t}`, rows: e.rows, n: e.n }; entry.w = integerWeights(entry.rows.map((r) => r[2]));
-      pools[entry.name] = entry; seenEntries.set(key, entry);
-    }
-    entries[t] = entry.name;
-    fromBonus += (tierW[k + 1] / TOTAL) * cappedSum(entry, bonus[t]);
+    const entry = entryPool(mode, t);
+    entries[t] = entry.name; bonuses[t] = triggered[t].name;
+    fromBonus += (tierW[k + 1] / TOTAL) * cappedSum(entry, triggered[t]);
   }
   const spinValues = load(`spin-${mode}`), scatters = load(`spin-${mode}.scatters`, Int8Array, 'i8');
   const s = compress(spinValues, SIZE.spin, (i) => scatters[i] < 3);
@@ -141,14 +191,14 @@ for (const mode of ['base', 'enhanced', 'sprayjob']) {
   spin.w = exactAverage(spin.rows.map((r) => r[1]), integerWeights(wt(lo)), target); spin.theta = lo;
   pools[spin.name] = spin;
   const rtp = ((tierW[0] / TOTAL) * meanOf(spin.rows, spin.w) + fromBonus) / cost;
-  modes[mode] = { cost: MODES[mode].cost, tiers: { none: tierW[0], regular: tierW[1], super: tierW[2], hidden: tierW[3] }, entries };
+  modes[mode] = { cost: MODES[mode].cost, tiers: { none: tierW[0], regular: tierW[1], super: tierW[2], hidden: tierW[3] }, entries, bonuses };
   console.log(`${mode}: bonuses ${(fromBonus / cost * 100).toFixed(2)}% of the price · no-bonus spins ${(natural / 100).toFixed(4)}x -> ${(target / 100).toFixed(4)}x (theta ${lo.toFixed(4)}) · RTP ${(rtp * 100).toFixed(6)}%`);
 }
 modes.ventbreak = { cost: MODES.ventbreak.cost, pool: 'bonus-regular' };
 modes.overpressure = { cost: MODES.overpressure.cost, pool: 'bonus-super' };
 
 const catalog = {
-  version: 'cs-1', total: TOTAL, cap: CAP, scatters: TIER_SCATTERS, modes,
+  version: 'cs-2', total: TOTAL, cap: CAP, scatters: TIER_SCATTERS, modes,
   pools: Object.fromEntries(Object.entries(pools).map(([name, p]) => [name, p.rows.map((r, i) => [r[0], p.w[i], r[1]])])),
 };
 const out = new URL('catalog-data.js', RT);

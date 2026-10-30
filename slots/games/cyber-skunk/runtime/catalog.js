@@ -2,8 +2,9 @@
 // (catalog-data.js, built by tools/math/cyber-skunk-catalogs.mjs; MATH.md) and
 // replayed through the engine, which must reproduce the catalog's value.
 //   base / enhanced / sprayjob: a tier at the mode's natural trigger rates, then
-//     a no-bonus spin, or a trigger spin (forced 3/4/5 scatters) plus a bonus.
-//   ventbreak / overpressure: a bonus from the regular / super pool.
+//     a no-bonus spin, or a trigger spin (forced 3/4/5 scatters) plus a bonus
+//     from the tier's natural pool (modes[mode].bonuses).
+//   ventbreak / overpressure: a bonus from the regular / super buy pool.
 import data from './catalog-data.js';
 import { playRound, seeded } from './engine.js';
 
@@ -46,7 +47,7 @@ export function drawRound(mode, ticket = cryptoTicket) {
       const s = pick(`spin-${mode}`, ticket());
       round = playRound({ mode, rng: seeded(s.seed) }); expect = s.value; draw = { spin: s.seed };
     } else {
-      const e = pick(entryPool(mode, tier), ticket()), b = pick(`bonus-${tier}`, ticket());
+      const e = pick(entryPool(mode, tier), ticket()), b = pick(m.bonuses?.[tier] ?? `bonus-${tier}`, ticket());
       round = playRound({ mode, rng: seeded(e.seed), bonusRng: seeded(b.seed), triggerScatters: data.scatters[tier] });
       expect = Math.min(data.cap, e.value + b.value); draw = { entry: e.seed, bonus: b.seed, tier };
     }

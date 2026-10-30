@@ -32,12 +32,22 @@ test('every paid mode returns 96% of its cost; the report matches the shipped ca
   }
 });
 
-test('max-win gates: base about one in millions, Blackout at most 1 in 1,000', () => {
-  const base = summary.modes.base.maxOdds;
-  assert.ok(base < 1 / 1e6 && base > 1 / 1e7, `base max 1 in ${Math.round(1 / base)}`);
-  assert.ok(summary.bonuses.hidden.max <= 1 / 1000, 'Blackout max');
+test("max-win odds are Dylan's: base 1 in 1,000,000, bought Overpressure 1 in 50,000, Blackout 1 in 200 and at least 1,000x", () => {
+  const near = (p, target, label) => assert.ok(Math.abs(p / target - 1) < 0.01, `${label}: 1 in ${Math.round(1 / p)}`);
+  near(summary.modes.base.maxOdds, 1 / 1e6, 'base');
+  near(summary.bonuses.super.max, 1 / 50000, 'bought Overpressure');
+  near(summary.bonuses.hidden.max, 1 / 200, 'Blackout Protocol');
+  // A bought Vent Break caps 1 in 200,000 once capped rounds exist to draw (cyber-skunk-caps.mjs).
+  if (summary.bonuses.regular.max) near(summary.bonuses.regular.max, 1 / 200000, 'bought Vent Break');
+  assert.ok(data.pools['bonus-hidden'].every(([, , v]) => v >= 100000), 'every Blackout pays at least 1,000x');
   assert.ok(summary.bonuses.regular.zero === 0 || summary.bonuses.regular.zero < 0.01);
   for (const mode of ['base', 'enhanced', 'sprayjob']) assert.ok(summary.modes[mode].zero > 0.2, `${mode} has genuine losses`);
+});
+
+test('a triggered bonus averages the same as a bought one', () => {
+  const mean = (name) => Number(data.pools[name].reduce((a, [, w, v]) => a + BigInt(w) * BigInt(v), 0n)) / data.total;
+  for (const t of ['regular', 'super']) assert.equal(mean(data.modes.base.bonuses[t]), mean(`bonus-${t}`), t);
+  assert.equal(data.modes.enhanced.bonuses.super, data.modes.base.bonuses.super, 'every paid spin mode triggers the same bonus pools');
 });
 
 test('tier tables carry the natural trigger rates of rules.js', () => {
@@ -72,7 +82,7 @@ test('the game draws rounds from the catalogs and they replay exactly', () => {
     const tiers = data.modes.base.tiers, before = ['none', 'regular', 'super', 'hidden'].slice(0, ['none', 'regular', 'super', 'hidden'].indexOf(tier)).reduce((a, k) => a + tiers[k], 0);
     let first = true; const r = drawRound('base', () => (first ? ((first = false), before) : 0));
     assert.equal(r.tier, tier);
-    assert.equal(r.total, Math.min(CAP, pick(data.modes.base.entries[tier], 0).value + pick(`bonus-${tier}`, 0).value));
+    assert.equal(r.total, Math.min(CAP, pick(data.modes.base.entries[tier], 0).value + pick(data.modes.base.bonuses[tier], 0).value));
   }
 });
 

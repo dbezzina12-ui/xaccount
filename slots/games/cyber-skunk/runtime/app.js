@@ -621,7 +621,7 @@ function renderRules() {
   <h3>BONUSES</h3>
   <p><b>3 FS scatters: VENT BREAK.</b> ${BONUSES.regular.spins} free spins. Vents that land stay until the bonus ends, up to ${MAX_STICKY}.</p>
   <p><b>4 FS scatters: OVERPRESSURE.</b> ${BONUSES.super.spins} free spins with sticky vents and the <b>Reservoir</b> gauge: after each spray, the pressure gained is banked (up to ${MAX_RESERVOIR}), and every later spray starts at 1 + the Reservoir.</p>
-  <p><b>5 FS scatters: BLACKOUT PROTOCOL.</b> ${BONUSES.hidden.spins} free spins. The lights go out, 4 vents come online as one route and the Reservoir starts at ${BONUSES.hidden.reservoirStart}; then it plays as Overpressure. It cannot be bought.</p>
+  <p><b>5 FS scatters: BLACKOUT PROTOCOL.</b> ${BONUSES.hidden.spins} free spins. The lights go out, 4 vents come online as one route and the Reservoir starts at ${BONUSES.hidden.reservoirStart}; then it plays as Overpressure. It always pays at least 1,000× the base bet. It cannot be bought.</p>
   <p>${RETRIGGER.scatters} or more FS scatters during a bonus add +${RETRIGGER.spins} spins, up to ${MAX_SPINS} in total.</p>
   <h3>WAYS TO PLAY</h3>
   <table><tbody>${['base', 'enhanced', 'sprayjob', 'ventbreak', 'overpressure'].map((m) => `<tr><td>${m === 'base' ? 'BASE SPINS' : COPY[m].name}</td><td>${MODES[m].cost}× base bet${COPY[m]?.kind === 'feature' ? ' per spin' : ''}</td></tr>`).join('')}</tbody></table>

@@ -25,14 +25,16 @@ function convolve(entry, bonus) {
   for (const [i, p] of sparse(entry)) for (const [j, q] of sparse(bonus)) out[Math.min(cap, i + j)] += p * q;
   return out;
 }
-const bonusDists = Object.fromEntries(['regular', 'super', 'hidden'].map((t) => [t, poolDist(`bonus-${t}`)]));
+const distCache = {}, distOf = (name) => (distCache[name] ??= poolDist(name));
+// The bonus pool a mode draws a tier from: buys their own, natural triggers modes[mode].bonuses.
+const bonusPoolOf = (m, t) => m.bonuses?.[t] ?? `bonus-${t}`;
 const modes = {};
 for (const [mode, m] of Object.entries(data.modes)) {
   const parts = {};
-  if (m.pool) parts[m.pool === 'bonus-regular' ? 'regular' : 'super'] = { weight: 1, dist: bonusDists[m.pool === 'bonus-regular' ? 'regular' : 'super'] };
+  if (m.pool) parts[m.pool.split('-')[1]] = { weight: 1, dist: distOf(m.pool) };
   else {
     parts.none = { weight: m.tiers.none / TOTAL, dist: poolDist(`spin-${mode}`) };
-    for (const t of ['regular', 'super', 'hidden']) parts[t] = { weight: m.tiers[t] / TOTAL, dist: convolve(poolDist(m.entries[t]), bonusDists[t]) };
+    for (const t of ['regular', 'super', 'hidden']) parts[t] = { weight: m.tiers[t] / TOTAL, dist: convolve(poolDist(m.entries[t]), distOf(bonusPoolOf(m, t))) };
   }
   const dist = new Float64Array(BINS);
   for (const p of Object.values(parts)) p.dist.forEach((x, i) => { dist[i] += p.weight * x; });
@@ -57,7 +59,7 @@ function exactRtp(mode) {
   let num = BigInt(m.tiers.none) * sumPool(`spin-${mode}`) * T;
   // E[min(CAP, e + b)] = E[e] + E[b] - E[overflow]; only bonuses near the cap overflow.
   for (const t of ['regular', 'super', 'hidden']) {
-    const bonus = [...data.pools[`bonus-${t}`]].sort((a, b) => b[2] - a[2]), sb = sumPool(`bonus-${t}`);
+    const bonus = [...data.pools[bonusPoolOf(m, t)]].sort((a, b) => b[2] - a[2]), sb = sumPool(bonusPoolOf(m, t));
     let s = 0n;
     for (const [, we, ve] of data.pools[m.entries[t]]) {
       let over = 0n;
@@ -97,8 +99,9 @@ for (const [mode, M] of Object.entries(modes)) {
   summary.modes[mode] = s; rows.push([mode, s]);
   console.log(`${mode.padEnd(13)} RTP ${s.rtp} hit ${pct(s.hit)} >=cost ${pct(s.beatCost)} median ${s.median}x p99.9 ${s.p999}x max ${oneIn(s.maxOdds)}`);
 }
-// Each bonus on its own (what a trigger or a buy plays).
-const bonusRows = ['regular', 'super', 'hidden'].map((t) => { const d = bonusDists[t]; return [t, { mean: meanOf(d), median: quantile(d, 0.5), p90: quantile(d, 0.9), p99: quantile(d, 0.99), zero: d[0], max: d[BINS - 1], over1k: atLeast(d, 1000), over10k: atLeast(d, 10000) }]; });
+// Each bonus on its own: bought, and as base play triggers it.
+const BONUS_POOLS = [['regular', 'bonus-regular', 'bought'], ['regularNatural', data.modes.base.bonuses.regular, 'triggered'], ['super', 'bonus-super', 'bought'], ['superNatural', data.modes.base.bonuses.super, 'triggered'], ['hidden', 'bonus-hidden', 'triggered only']];
+const bonusRows = BONUS_POOLS.map(([key, name, how]) => { const d = distOf(name), t = name.split('-')[1]; return [key, { tier: t, how, mean: meanOf(d), median: quantile(d, 0.5), p90: quantile(d, 0.9), p99: quantile(d, 0.99), zero: d[0], min: (d.findIndex((p) => p > 0) * STEP) / 100, max: d[BINS - 1], over1k: atLeast(d, 1000), over10k: atLeast(d, 10000) }]; });
 summary.bonuses = Object.fromEntries(bonusRows);
 mkdirSync(new URL('math/', GAME), { recursive: true });
 writeFileSync(new URL('math/summary.json', GAME), JSON.stringify(summary, null, 1) + '\n');
@@ -140,12 +143,25 @@ The last column is the fraction of the RTP paid by rounds of 1,000x or more (the
 
 ## Each bonus on its own
 
-| Bonus | Spins | Average | Median | p90 | p99 | No win | 1,000x+ | 10,000x+ | Reaches the cap |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-${bonusRows.map(([t, b]) => `| ${BONUSES[t].title} | ${BONUSES[t].spins} | ${x(b.mean)} | ${x(b.median)} | ${x(b.p90)} | ${x(b.p99)} | ${share(b.zero)} | ${share(b.over1k)} | ${oneIn(b.over10k)} | ${oneIn(b.max)} |`).join('\n')}
+| Bonus | Spins | Average | Lowest | Median | p90 | p99 | No win | 1,000x+ | 10,000x+ | Reaches the cap |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+${bonusRows.map(([, b]) => `| ${BONUSES[b.tier].title} (${b.how}) | ${BONUSES[b.tier].spins} | ${x(b.mean)} | ${x(b.min)} | ${x(b.median)} | ${x(b.p90)} | ${x(b.p99)} | ${share(b.zero)} | ${share(b.over1k)} | ${oneIn(b.over10k)} | ${oneIn(b.max)} |`).join('\n')}
 
-- **Shared distribution:** the buys and natural triggers draw from the same bonus pool, so a bought Vent Break is distributed exactly like a triggered one. A natural round adds its trigger spin's pay, capped at 25,000x.
-- **Blackout Protocol's max:** about ${oneIn(summary.bonuses.hidden.max)} of its bonuses, inside the STYLE gate of at most 1 in 1,000.
+- **Bought and triggered:** the same rounds with the same average. A triggered Vent Break or Overpressure reaches the cap more often, which is what puts the base game's max at 1 in 1,000,000. A natural round adds its trigger spin's pay, capped at 25,000x.
+- **Blackout Protocol** pays at least 1,000x every time and reaches the cap 1 in 200.
+
+## Max-win odds (Dylan, 2026-10-30)
+
+| Target | Asked | Shipped |
+| --- | --- | --- |
+| Base game reaches 25,000x | 1 in 1,000,000 spins | ${oneIn(P('base').maxOdds)} |
+| Vent Break (bought) | 1 in 200,000 | ${oneIn(summary.bonuses.regular.max)} |
+| Overpressure (bought) | 1 in 50,000 | ${oneIn(summary.bonuses.super.max)} |
+| Blackout Protocol | 1 in 200 | ${oneIn(summary.bonuses.hidden.max)} |
+| Blackout Protocol minimum | 1,000x | ${x(summary.bonuses.hidden.min)} |
+| Signal Boost price | 3x the bet | ${MODES.enhanced.cost}x |${summary.bonuses.regular.max ? '' : `
+
+Vent Break reaching 25,000x is extremely rare in natural play: none in 2,000,000 bonuses (its best was 14,863x). Capped Vent Break rounds are being searched for (\`cyber-skunk-caps.mjs\`). Until some are found, the bought Vent Break cannot reach the cap, and the triggered Overpressure carries all of the base game's 1 in 1,000,000.`}
 
 ## Win bands (share of rounds)
 
@@ -174,10 +190,10 @@ ${rows.map(([m, s]) => { const t = s.sessions; return `| ${NAME[m]} | ${t.n.toLo
 - **Vent Break:** natural average 104.76x. A log-space tilt (curvature −0.05) brings it to exactly 96x and lifts the median from 16.8x to ${x(summary.bonuses.regular.median)}.
 - **Overpressure:** natural average 265.89x.
   - A tilt (curvature −0.03) brings it to exactly 240x.
-  - Its 25,000x rounds are held at 1 in 800, shared by ${data.pools['bonus-super'].filter((r) => r[2] >= CAP).length} different rounds: those of the pool plus a search of 20,000,000 more seeds (\`cyber-skunk-caps.mjs\`). Naturally the bonus reaches the cap only about 1 in 340,000, which would put the base game's max win near 1 in 1.5 billion spins.
-  - Dylan wants the base max at about one in a few million (Zombify ships 1 in 2.29 million), so the cap rate is a design choice: a single number in \`SHAPE.super.maxRate\`.
-- **Blackout Protocol:** its natural shape, average and cap rate, untouched.
-- **No-bonus spins:** each mode's are tilted last, so the whole mode returns exactly 96%. The tilts are tiny (θ under 0.011): Base ${x(0.4797)} → ${x(0.469)}, Signal Boost ${x(0.4537)} → ${x(0.4475)}, Spray Job ${x(9.3947)} → ${x(9.1299)} per spin.
+  - Its 25,000x rounds are ${data.pools['bonus-super'].filter((r) => r[2] >= CAP).length} different rounds: those of the pool plus a search of 20,000,000 more seeds (\`cyber-skunk-caps.mjs\`). Naturally the bonus reaches the cap only about 1 in 340,000.
+- **Cap rates** are design choices (\`SHAPE\`, \`BASE_MAX\`): the bought bonuses use Dylan's rates. The triggered pools scale the bought rates by one factor, solved so base play reaches the cap 1 in 1,000,000; the body of each pool is re-tilted so its average stays 96x or 240x.
+- **Blackout Protocol:** only its natural rounds of 1,000x or more (${data.pools['bonus-hidden'].length.toLocaleString('en-US')} entries from 433,234 such bonuses out of 2,000,000), in their natural shape, with the cap's share set to 1 in 200.
+- **No-bonus spins:** each mode's are tilted last, so the whole mode returns exactly 96%: Base ${x(0.4797)} → ${x(0.4569)} per spin (θ 0.019), Spray Job ${x(9.3947)} → ${x(9.1177)} (θ 0.011), Signal Boost ${x(0.4537)} → ${x(0.2631)} (θ 0.224). Signal Boost's bonuses pay 87% of its price (a richer Blackout Protocol, which it triggers 14.9 times as often), so its plain spins pay less.
 - **Signal Boost price:** at 3x it needs a scatter chance of 0.1125 per reel, raised from 0.11. At 0.11 it returned 91% at 3x, and reaching 96% would have meant lifting its spin pays by a third.
 
 **Money.** Every pay is a whole 0.1x of the base bet, and every base bet is a whole 10 cents, so every win is exact whole cents: bet × pay / 100. No rounding happens anywhere.
@@ -195,8 +211,8 @@ ${rows.map(([m, s]) => { const t = s.sessions; return `| ${NAME[m]} | ${t.n.toLo
 | 96.00% per paid mode, against the charged cost | ${rows.every(([, s]) => Math.abs(s.rtpFloat - 0.96) < 1e-9) ? 'Pass:' : 'FAIL:'} every mode ${rows.map(([, s]) => s.rtp).join(', ')} |
 | Exact support plus complete replay | Pass: exact weights, every entry replayed, 0 mismatches |
 | Max 25,000x, capped once per round | Pass: engine cap, tested in \`tests/engine.test.mjs\` |
-| Base max about one in millions | ${P('base').maxOdds > 1 / 1e7 && P('base').maxOdds < 1 / 1e6 ? 'Pass' : 'Check'}: ${oneIn(P('base').maxOdds)} base spins |
-| Hidden max no more often than 1 in 1,000 | ${summary.bonuses.hidden.max <= 1 / 1000 ? 'Pass' : 'FAIL'}: ${oneIn(summary.bonuses.hidden.max)} Blackout Protocols |
+| Base max 1 in 1,000,000 (Dylan) | ${Math.abs(P('base').maxOdds * 1e6 - 1) < 0.01 ? 'Pass' : 'FAIL'}: ${oneIn(P('base').maxOdds)} base spins |
+| Blackout Protocol at least 1,000x, max 1 in 200 (Dylan) | ${summary.bonuses.hidden.min >= 1000 && Math.abs(summary.bonuses.hidden.max * 200 - 1) < 0.01 ? 'Pass' : 'FAIL'}: lowest ${x(summary.bonuses.hidden.min)}, max ${oneIn(summary.bonuses.hidden.max)} |
 | Genuine losses and midrange wins | Pass: see the win bands; no outcome is scripted |
 | Integer money | Pass: whole cents, no rounding |
 | One shipping config | Pass: prices, rules and the confirmation read \`runtime/rules.js\` |
