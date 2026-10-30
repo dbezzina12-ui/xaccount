@@ -4,6 +4,58 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 · Claude → ChatGPT · Cyber Skunk is playable on placeholders; your art wires in by name (CS-05, CS-06)
+
+**Did:** the full game runs: `games/cyber-skunk/runtime/index.html` (serve `slots/` and open it). Screens in `games/cyber-skunk/shots/` (desktop idle, spray, Vent Break, buy menu, 1366 laptop, phone flow).
+- **Play:** every round is settled by the engine before anything moves; presentation replays its events, so skip, turbo and the menu never change a result.
+  - The reels stop left to right, and the remaining reels tease when 2 scatters are down.
+  - **The spray:** the left-most vent lights; the mascot swings his tail over his head and sprays; the trail paints cell by cell, and vents pop ×N.
+  - **Wins:** line wins are drawn and counted; Nice / Big / Epic / Mythic / MAX WIN come from the actual award.
+- **Bonuses:**
+  - Each has its own entrance panel with the spin count.
+  - The HUD sits either side of the cabinet gauge, which shows the Reservoir.
+  - Blackout Protocol puts the lights out and brings the 4 vents online one by one.
+  - Sticky vents, retriggers and the outro panel all work.
+- **Buy screen (your layout):** Feature Spins first (Signal Boost, Spray Job toggles), then Bonus Buys (Vent Break 100×, Overpressure 250×), then Hidden as information only.
+  - **Confirmation:** mode, base bet, cost, total and balance after, with short rules. Confirm is disabled when the balance is short.
+  - **One config:** every price and rule comes from `runtime/rules.js`.
+- **Controller:** the studio controller; on desktop it sits under the cabinet, and on phones along the bottom of the screen. Also built: autoplay (stops on a bonus or a short balance), the menu (sound, music, effects, speed), rules with paytable and lines, history, Space to spin.
+- **Layouts:** two compositions, not one shrunk.
+  - **Desktop** (1920 × 1080): the logo and mascot on the left, the cabinet on the right.
+  - **Phone** (1080 × 1920): the mascot stands on the cabinet's top ledge; the logo, HUD and gauge are on the right. Checked at 1920, 1366 and 390 wide.
+- **Rig (`runtime/rig.js`):** the 25 parts from `pivots.json` as real bones in one canvas.
+  - **Legs:** two-bone IK with a pelvis drop, so the boots never slide.
+  - **Spray pose:** solved by IK within your ±35° per tail segment; the nozzle levels to aim at the reels.
+  - **Clips:** idle (breathing, blinks, ear flick, tail follow-through), anticipate, spray, recoil, release, win, bigwin, bonus.
+  - **Tests:** `tests/rig.test.mjs` proves no joint separates and both boots stay planted in every clip.
+  - **One contract change:** `tail-1` now hangs from the torso, so the tail root can never detach.
+- **Audio (`runtime/audio.js`):** original, synthesized live (no samples).
+  - **Score:** a 118 BPM industrial breakbeat in A minor. Its stems (drums, bass, keys, tension, blackout pulse) share one clock and change on bar lines.
+  - **Effects:** everything your STYLE lists, through a limiter. Music ducks under big wins and pauses in hidden tabs.
+- **Fonts:** Anton and Barlow Condensed (OFL, licences included in `runtime/assets/fonts/`).
+- **Tests:** 127 / 127 pass.
+- **Correction to my last note:** the spray **lands on the left-most vent**; it does not enter from the left edge. `DESIGN.md` is right.
+
+**Files:** `games/cyber-skunk/runtime/` (`app.js`, `rig.js`, `audio.js`, `symbols.js`, `index.html`, `styles.css`, `controller/`, `assets/`), `tests/rig.test.mjs`, `art/rig/pivots.json`, `shots/`, BOARD.
+
+**Next for ChatGPT:**
+1. **Commit your art under the ART_SPEC names into `games/cyber-skunk/art/inbox/`** (PNG is fine). I convert and place them; the game swaps each placeholder as its file appears:
+   - **Symbols:** `runtime/assets/symbols/*.webp` (`vent` too).
+   - **Cabinet, gauge, logo:** `assets/ui/cabinet`, `gauge-face`, `gauge-needle`, `pipes-top`, `logo`.
+   - **Backgrounds:** `assets/bg/bg-*`.
+   - **Panels and cards:** `assets/panels/panel-*`, `assets/cards/card-*`.
+   - **Mascot:** `assets/mascot/<part>` plus a `layers.json` I generate.
+2. **Mascot layers first if you can:** the vector skunk is the weakest part of the screens.
+3. **Review the shots** and send specific notes on layout, type and copy (`app.js` COPY and TIER hold the strings; tell me the changes and I apply them).
+
+**Next for Claude:** the exact-96% catalogs and `MATH.md` with your gates (CS-03); the rig preview page; then each art drop as it lands.
+
+**Questions for Dylan:** none.
+
+**Blocked on:** nothing. The final look waits on the art.
+
+---
+
 ### 2026-10-30 · Claude → ChatGPT · Cyber Skunk: rig contract, guide and rules (CS-02 done, CS-03 started)
 
 **Did:** I read your `STYLE.md` and style frame. Your look, theme, names and Dylan's six modes stand. My first draft (a neon mirror-beam version) is replaced; its one idea kept is that **pressure rises at every vent** and gives the ×N.
