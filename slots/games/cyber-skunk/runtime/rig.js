@@ -28,21 +28,22 @@ const dist = ([x1, y1], [x2, y2]) => Math.hypot(x2 - x1, y2 - y1);
 // The tail's spray pose: CCD inverse kinematics on the 4 segments, each within
 // the ±35° ART_SPEC allows, bringing the nozzle above the goggles; the nozzle
 // itself then levels out to aim right, at the reels.
-const TAIL = ['tail-1', 'tail-2', 'tail-3', 'tail-4'];
+// The tail's segments, root first; the contract decides how many (rig v1: 4, v4.1: 3).
+let TAIL = ['tail-1', 'tail-2', 'tail-3', 'tail-4'];
 // At rest the tail is held a little closer behind the back (the tip behind the head);
 // a contract can set its own (rig v4's tail already curls close: none).
 let TUCK = [20, 0, 0, 0];
-export function solveTail(joints, target, limit = 35) {
-  const J = ['tail_root', 'tail_1', 'tail_2', 'tail_3', 'tail_tip'].map((k) => joints[k]);
+export function solveTail(joints, target, limit = 35, chain = ['tail_root', 'tail_1', 'tail_2', 'tail_3', 'tail_tip']) {
+  const J = chain.map((k) => joints[k]), n = J.length - 1;
   const seg = J.slice(1).map((p, k) => [p[0] - J[k][0], p[1] - J[k][1]]);
-  const fk = (a) => { const p = [J[0]]; let w = 0; for (let k = 0; k < 4; k++) { w += a[k]; const c = Math.cos(w), s = Math.sin(w), [x, y] = seg[k]; p.push([p[k][0] + x * c - y * s, p[k][1] + x * s + y * c]); } return p; };
-  const a = [0, 0, 0, 0], L = limit * DEG;
-  for (let it = 0; it < 200; it++) for (let k = 3; k >= 0; k--) {
-    const p = fk(a), d = angle(p[k], target) - angle(p[k], p[4]);
+  const fk = (a) => { const p = [J[0]]; let w = 0; for (let k = 0; k < n; k++) { w += a[k]; const c = Math.cos(w), s = Math.sin(w), [x, y] = seg[k]; p.push([p[k][0] + x * c - y * s, p[k][1] + x * s + y * c]); } return p; };
+  const a = new Array(n).fill(0), L = limit * DEG;
+  for (let it = 0; it < 200; it++) for (let k = n - 1; k >= 0; k--) {
+    const p = fk(a), d = angle(p[k], target) - angle(p[k], p[n]);
     a[k] = Math.max(-L, Math.min(L, a[k] + Math.atan2(Math.sin(d), Math.cos(d))));
   }
   const p = fk(a), sum = a.reduce((x, y) => x + y, 0);
-  return { angles: a.map((x) => x / DEG), nozzle: -sum / DEG, tip: p[4], error: dist(p[4], target) };
+  return { angles: a.map((x) => x / DEG), nozzle: -sum / DEG, tip: p[n], error: dist(p[n], target) };
 }
 
 // ---- Placeholder parts, drawn in place on the 1600 x 2000 canvas ----
@@ -157,6 +158,15 @@ function idle(t, P, amp = 1) {
   const b = t % 4.6, double = Math.floor(t / 4.6) % 3 === 2;
   P.eyelids = { alpha: b < 0.13 || (double && b > 0.26 && b < 0.38) ? 1 : 0 };
 }
+// The cheer for wins: a contract can name the arm that shows it (rig v4.1's
+// far arm would rise behind the head, so its near arm pumps). Returns false
+// when the contract has none and the clip keeps its own far-arm cheer.
+function cheer(P, rig, up, pump) {
+  const c = rig?.rig?.cheer;
+  if (!c) return false;
+  for (const [k, r] of Object.entries(c)) P[k] = { r: r * up + (k.endsWith('forearm') ? -12 * pump : k.endsWith('upper-arm') ? 6 * pump : 0) };
+  return true;
+}
 const CLIPS = {
   idle: { loop: true, fn: (t, P) => idle(t, P) },
   anticipate: { loop: true, fn(t, P) {
@@ -180,20 +190,22 @@ const CLIPS = {
     P.jaw = { r: 6 * swing };
     P.ear = { r: -10 * swing };
   } },
-  recoil: { length: 0.6, fn(t, P) { idle(t, P); const k = Math.sin(Math.min(1, t / 0.6) * Math.PI); P.torso = { r: -4 * k, y: 6 * k }; P.head.r -= 5 * k; P['tail-4'].r -= 10 * k; P.nozzle.r -= 14 * k; } },
+  recoil: { length: 0.6, fn(t, P) { idle(t, P); const k = Math.sin(Math.min(1, t / 0.6) * Math.PI); P.torso = { r: -4 * k, y: 6 * k }; P.head.r -= 5 * k; P[TAIL.at(-1)].r -= 10 * k; P.nozzle.r -= 14 * k; } },
   release: { length: 0.9, fn(t, P) { idle(t, P); const k = Math.sin(Math.min(1, t / 0.9) * Math.PI); P.head.r -= 6 * k; P.ear.r -= 18 * k; P.jaw = { r: 8 * k }; TAIL.forEach((p, n) => { P[p].r += [3, -6, -8, -10][n] * k; }); } },
-  win: { length: 1.5, fn(t, P) {
+  win: { length: 1.5, fn(t, P, rig) {
     idle(t, P);
     const up = ease(t / 0.3) * (1 - ease((t - 1.1) / 0.4)), pump = up * wave(t, 0.36);
-    P['far-upper-arm'] = { r: -95 * up + 8 * pump }; P['far-forearm'] = { r: -50 * up - 10 * pump }; P['far-hand'] = { r: -30 * up };
+    if (!cheer(P, rig, up, pump)) { P['far-upper-arm'] = { r: -95 * up + 8 * pump }; P['far-forearm'] = { r: -50 * up - 10 * pump }; P['far-hand'] = { r: -30 * up }; }
     P.head = { r: -5 * up + 3 * pump }; P.jaw = { r: 7 * up };
     P.torso = { r: -1.5 * up, y: -4 * up + 4 * pump };
   } },
-  bigwin: { length: 2.8, fn(t, P) {
+  bigwin: { length: 2.8, fn(t, P, rig) {
     idle(t, P);
     const up = ease(t / 0.35) * (1 - ease((t - 2.3) / 0.5)), pump = up * wave(t, 0.42);
-    P['far-upper-arm'] = { r: -120 * up + 10 * pump }; P['far-forearm'] = { r: -30 * up - 18 * pump }; P['far-hand'] = { r: -20 * up };
-    P['near-upper-arm'] = { r: 8 * up * wave(t, 0.42, 1) };
+    if (!cheer(P, rig, up * 1.15, pump * 1.5)) {
+      P['far-upper-arm'] = { r: -120 * up + 10 * pump }; P['far-forearm'] = { r: -30 * up - 18 * pump }; P['far-hand'] = { r: -20 * up };
+      P['near-upper-arm'] = { r: 8 * up * wave(t, 0.42, 1) };
+    }
     P.head = { r: -10 * up + 4 * pump }; P.jaw = { r: 11 * up }; P.ear = { r: -12 * up };
     TAIL.forEach((p, n) => { P[p].r += [-4, 8, 12, 16][n] * up * wave(t, 0.7, -n * 0.8); });
     P.torso = { r: -2 * up + pump, y: -6 * up + 6 * pump };
@@ -203,7 +215,7 @@ const CLIPS = {
     const k = ease(t / 0.5) * (1 - ease((t - 1.6) / 0.6));
     TAIL.forEach((p, n) => { P[p] = { r: lerp(P[p].r, rig.sprayPose.angles[n] * 0.85, k) }; });
     P.nozzle = { r: lerp(P.nozzle.r, rig.sprayPose.nozzle, k) };
-    P['far-upper-arm'] = { r: -100 * k }; P['far-forearm'] = { r: -60 * k + 10 * k * wave(t, 0.3) }; P['far-hand'] = { r: -25 * k };
+    if (!cheer(P, rig, k, k * wave(t, 0.3))) { P['far-upper-arm'] = { r: -100 * k }; P['far-forearm'] = { r: -60 * k + 10 * k * wave(t, 0.3) }; P['far-hand'] = { r: -25 * k }; }
     P.head = { r: -6 * k }; P.jaw = { r: 9 * k }; P.torso = { r: -2 * k, y: -6 * k };
   } },
 };
@@ -213,6 +225,7 @@ export const CLIP_NAMES = Object.keys(CLIPS);
 // order, the solved spray pose and the IK legs (rig v1 only: v4 is waist up).
 export function prepare(rig) {
   TUCK = rig.tuck ?? [20, 0, 0, 0];
+  TAIL = Object.keys(rig.parts).filter((k) => /^tail-\d+$/.test(k)).sort();
   const order = Object.entries(rig.parts).sort((a, b) => a[1].order - b[1].order).map(([k]) => k);
   const topo = [], seen = new Set();
   const visit = (k) => { if (seen.has(k)) return; const p = rig.parts[k].parent; if (p) visit(p); seen.add(k); topo.push(k); };
@@ -222,7 +235,7 @@ export function prepare(rig) {
     const cross = (knee[0] - hip[0]) * (ankle[1] - hip[1]) - (knee[1] - hip[1]) * (ankle[0] - hip[0]);
     return { side, hip, knee, ankle, l1: dist(hip, knee), l2: dist(knee, ankle), bend: Math.sign(cross) || 1 };
   });
-  return { rig, joints: rig.joints, order, topo, legs, sprayPose: solveTail(rig.joints, rig.sprayTarget ?? SPRAY_TARGET) };
+  return { rig, joints: rig.joints, order, topo, legs, sprayPose: solveTail(rig.joints, rig.sprayTarget ?? SPRAY_TARGET, 35, rig.tail) };
 }
 export const SPRAY_TARGET = [1240, 170]; // rig v1: above the goggles; the nozzle then levels to aim at the reels
 export { apply, CLIPS, PLACEHOLDER };
@@ -258,7 +271,7 @@ export class Skunk {
     this.scale = stageScale;
     const r = this.host.getBoundingClientRect(), dpr = Math.min(2, globalThis.devicePixelRatio || 1);
     const w = Math.max(1, Math.round(Math.min(1600, r.width * dpr))), h = Math.round((w * H) / W);
-    if (this.canvas.width !== w) { this.canvas.width = w; this.canvas.height = h; }
+    if (this.canvas.width !== w || this.canvas.height !== h) { this.canvas.width = w; this.canvas.height = h; } // a new canvas is already 300 wide
   }
   play(name) {
     if (!CLIPS[name] || (name === this.clip && CLIPS[name].loop)) return;

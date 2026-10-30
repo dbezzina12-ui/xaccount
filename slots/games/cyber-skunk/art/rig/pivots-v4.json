@@ -1,352 +1,334 @@
 {
  "version": 4,
+ "revision": "4.1",
  "canvas": [
   1600,
   2000
  ],
- "waist": 1110,
+ "waist": 1330,
+ "source": "art/source/mascot-compact-v4/registered (ChatGPT, 2026-10-30)",
  "joints": {
   "base": [
-   860,
-   1110
+   850,
+   1250
   ],
   "neck": [
-   875,
-   790
-  ],
-  "jaw": [
-   905,
-   742
-  ],
-  "ear": [
-   788,
-   545
-  ],
-  "goggles": [
-   960,
-   560
-  ],
-  "eyes": [
-   960,
-   665
-  ],
-  "near_shoulder": [
-   700,
-   850
-  ],
-  "near_elbow": [
-   560,
+   900,
    955
   ],
+  "ear": [
+   825,
+   545
+  ],
+  "far_ear": [
+   1092,
+   530
+  ],
+  "goggles": [
+   940,
+   600
+  ],
+  "eyes": [
+   920,
+   800
+  ],
+  "near_shoulder": [
+   705,
+   975
+  ],
+  "near_elbow": [
+   550,
+   1150
+  ],
   "near_wrist": [
-   640,
-   1045
+   695,
+   1263
   ],
   "far_shoulder": [
-   975,
-   925
+   1040,
+   1005
   ],
   "far_elbow": [
-   1005,
-   1015
+   1153,
+   1110
   ],
   "far_wrist": [
-   1118,
-   1060
+   1315,
+   1174
   ],
   "tail_root": [
-   650,
-   930
+   738,
+   1160
   ],
   "tail_1": [
-   470,
-   700
+   480,
+   955
   ],
   "tail_2": [
-   520,
-   420
-  ],
-  "tail_3": [
-   760,
-   265
+   600,
+   415
   ],
   "tail_tip": [
-   1085,
-   365
+   1190,
+   414
   ]
  },
  "parts": {
   "tail-1": {
    "pivot": [
-    650,
-    930
+    738,
+    1160
    ],
    "joint": "tail_root",
    "parent": "torso",
    "order": 1,
    "extent": [
-    330,
-    640,
-    720,
-    1010
+    350,
+    918,
+    850,
+    1332
    ],
-   "piece": "tail from behind the hips up to the first bend"
+   "file": "tail-1.png"
   },
   "tail-2": {
    "pivot": [
-    470,
-    700
+    480,
+    955
    ],
    "joint": "tail_1",
    "parent": "tail-1",
    "order": 2,
    "extent": [
-    330,
-    380,
-    620,
-    780
+    290,
+    375,
+    750,
+    1044
    ],
-   "piece": "tail up the left side"
+   "file": "tail-2.png"
   },
   "tail-3": {
    "pivot": [
-    520,
-    420
+    600,
+    415
    ],
    "joint": "tail_2",
    "parent": "tail-2",
    "order": 3,
    "extent": [
-    420,
-    190,
-    850,
-    520
+    488,
+    180,
+    1231,
+    570
    ],
-   "piece": "tail over the top"
-  },
-  "tail-4": {
-   "pivot": [
-    760,
-    265
-   ],
-   "joint": "tail_3",
-   "parent": "tail-3",
-   "order": 4,
-   "extent": [
-    690,
-    190,
-    1110,
-    470
-   ],
-   "piece": "tail tip, curling down to the nozzle"
+   "file": "tail-3.png"
   },
   "nozzle": {
    "pivot": [
-    1085,
-    365
+    1190,
+    414
    ],
    "joint": "tail_tip",
-   "parent": "tail-4",
-   "order": 5,
+   "parent": "tail-3",
+   "order": 4,
    "extent": [
-    1060,
-    300,
-    1240,
-    430
+    1160,
+    350,
+    1360,
+    480
    ],
-   "piece": "brass nozzle, pointing right"
+   "file": "nozzle.png"
   },
   "far-upper-arm": {
    "pivot": [
-    975,
-    925
+    1040,
+    1005
    ],
    "joint": "far_shoulder",
    "parent": "torso",
-   "order": 6,
+   "order": 5,
    "extent": [
-    930,
-    880,
-    1060,
-    1060
+    990,
+    937,
+    1200,
+    1133
    ],
-   "piece": "far upper arm, painted whole behind the chest"
+   "file": "far-upper-arm.png"
   },
   "far-forearm": {
    "pivot": [
-    1005,
-    1015
+    1153,
+    1110
    ],
    "joint": "far_elbow",
    "parent": "far-upper-arm",
-   "order": 7,
+   "order": 6,
    "extent": [
-    970,
-    960,
-    1160,
-    1130
+    1110,
+    1088,
+    1350,
+    1202
    ],
-   "piece": "far forearm and brass cuff"
+   "file": "far-forearm.png"
   },
   "far-hand": {
    "pivot": [
-    1118,
-    1060
+    1315,
+    1174
    ],
    "joint": "far_wrist",
    "parent": "far-forearm",
-   "order": 8,
+   "order": 7,
    "extent": [
-    1100,
-    980,
-    1310,
-    1130
+    1270,
+    1081,
+    1510,
+    1248
    ],
-   "piece": "far open hand"
+   "file": "far-hand.png"
   },
   "torso": {
    "pivot": [
-    860,
-    1110
+    850,
+    1250
    ],
    "joint": "base",
    "parent": null,
-   "order": 9,
+   "order": 8,
    "extent": [
-    630,
-    760,
-    1070,
-    1170
+    620,
+    842,
+    1100,
+    1358
    ],
-   "piece": "chest, vest and harness, down to the ledge"
-  },
-  "jaw": {
-   "pivot": [
-    905,
-    742
-   ],
-   "joint": "jaw",
-   "parent": "head",
-   "order": 10,
-   "extent": [
-    880,
-    720,
-    1060,
-    810
-   ],
-   "piece": "lower jaw and chin, with the mouth's inside painted above it"
+   "file": "torso.png"
   },
   "head": {
    "pivot": [
-    875,
-    790
+    900,
+    955
    ],
    "joint": "neck",
    "parent": "torso",
-   "order": 11,
+   "order": 9,
    "extent": [
-    660,
-    400,
-    1120,
-    820
+    661,
+    420,
+    1208,
+    1070
    ],
-   "piece": "head and cheek fur, the far ear, closed smiling mouth"
+   "file": "head.png"
+  },
+  "far-ear": {
+   "pivot": [
+    1092,
+    530
+   ],
+   "joint": "far_ear",
+   "parent": "head",
+   "order": 10,
+   "extent": [
+    1040,
+    419,
+    1160,
+    570
+   ],
+   "file": "far-ear.png"
   },
   "ear": {
    "pivot": [
-    788,
+    825,
     545
    ],
    "joint": "ear",
    "parent": "head",
+   "order": 11,
+   "extent": [
+    735,
+    370,
+    905,
+    590
+   ],
+   "file": "ear.png"
+  },
+  "goggles": {
+   "pivot": [
+    940,
+    600
+   ],
+   "joint": "goggles",
+   "parent": "head",
    "order": 12,
    "extent": [
-    740,
-    420,
-    815,
-    560
+    755,
+    528,
+    1175,
+    692
    ],
-   "piece": "near (left) ear"
+   "file": "goggles.png"
   },
   "eyelids": {
    "pivot": [
-    960,
-    665
+    920,
+    800
    ],
    "joint": "eyes",
    "parent": "head",
    "order": 13,
    "extent": [
-    840,
-    600,
-    1075,
-    725
+    858,
+    761,
+    1143,
+    864
    ],
-   "piece": "both upper eyelids, closed (the blink)"
-  },
-  "goggles": {
-   "pivot": [
-    960,
-    560
-   ],
-   "joint": "goggles",
-   "parent": "head",
-   "order": 14,
-   "extent": [
-    755,
-    465,
-    1130,
-    635
-   ],
-   "piece": "strap and both lenses"
+   "file": "eyelids.png"
   },
   "near-upper-arm": {
    "pivot": [
-    700,
-    850
+    705,
+    975
    ],
    "joint": "near_shoulder",
    "parent": "torso",
-   "order": 15,
+   "order": 14,
    "extent": [
-    520,
-    820,
-    740,
-    1000
+    505,
+    933,
+    745,
+    1207
    ],
-   "piece": "near upper arm and its brass band"
+   "file": "near-upper-arm.png"
   },
   "near-forearm": {
    "pivot": [
-    560,
-    955
+    550,
+    1150
    ],
    "joint": "near_elbow",
    "parent": "near-upper-arm",
-   "order": 16,
+   "order": 15,
    "extent": [
-    510,
-    920,
-    700,
-    1090
+    503,
+    1120,
+    736,
+    1310
    ],
-   "piece": "near forearm and brass cuff"
+   "file": "near-forearm.png"
   },
   "near-hand": {
    "pivot": [
-    640,
-    1045
+    695,
+    1263
    ],
    "joint": "near_wrist",
    "parent": "near-forearm",
-   "order": 17,
+   "order": 16,
    "extent": [
-    610,
-    990,
-    810,
-    1160
+    650,
+    1224,
+    890,
+    1425
    ],
-   "piece": "near fist"
+   "file": "near-hand.png"
   }
  },
  "overlap": 55,
@@ -354,22 +336,27 @@
   "tail_root",
   "tail_1",
   "tail_2",
-  "tail_3",
   "tail_tip"
  ],
  "sprayTarget": [
-  1180,
-  200
+  1250,
+  260
  ],
  "nozzleMouth": [
-  1232,
-  362
+  1352,
+  414
  ],
  "tuck": [
   0,
   0,
-  0,
   0
  ],
- "notes": "Waist up only, no legs. Every piece is painted whole and in place on the 1600 x 2000 canvas, including what the parts in front hide, with at least `overlap` px of paint past each joint on both pieces."
+ "cheer": {
+  "near-upper-arm": 100,
+  "near-forearm": -75,
+  "near-hand": -20,
+  "far-upper-arm": -25,
+  "far-forearm": -15
+ },
+ "notes": "Fitted to ChatGPT's 16 painted pieces as delivered: 3 tail segments, a separate far ear, no jaw yet (the grin is painted on the head)."
 }

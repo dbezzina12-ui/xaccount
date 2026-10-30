@@ -127,6 +127,7 @@ if __name__ == "__main__":
     ref = reference(sys.argv[1] if len(sys.argv) > 1 else None)
     assert ref.size == (1600, 2000), ref.size
     RIG.mkdir(parents=True, exist_ok=True)
-    (RIG / "pivots-v4.json").write_text(json.dumps(contract(), indent=1) + "\n")
+    # Superseded by rig v4.1 (tools/art/cyber-skunk-fit-v4.py writes pivots-v4.json).
+    (RIG / "pivots-v4.0-reference.json").write_text(json.dumps(contract(), indent=1) + "\n")
     guide(ref).save(RIG / "guide-v2.jpg", quality=88)
-    print(f"wrote {RIG / 'pivots-v4.json'} and {RIG / 'guide-v2.jpg'}")
+    print(f"wrote {RIG / 'pivots-v4.0-reference.json'} and {RIG / 'guide-v2.jpg'}")

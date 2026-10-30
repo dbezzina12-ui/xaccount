@@ -1,327 +1,362 @@
 {
+ "version": 4,
+ "revision": "4.1",
  "canvas": [
   1600,
   2000
  ],
- "baseline": 1880,
+ "waist": 1330,
+ "source": "art/source/mascot-compact-v4/registered (ChatGPT, 2026-10-30)",
  "joints": {
-  "pelvis": [
-   1006,
-   1001
+  "base": [
+   850,
+   1250
   ],
   "neck": [
-   991,
-   501
-  ],
-  "jaw": [
-   1044,
-   445
+   900,
+   955
   ],
   "ear": [
+   825,
+   545
+  ],
+  "far_ear": [
+   1092,
+   530
+  ],
+  "goggles": [
+   940,
+   600
+  ],
+  "eyes": [
    920,
-   179
-  ],
-  "near_shoulder": [
-   819,
-   582
-  ],
-  "near_elbow": [
-   680,
-   780
-  ],
-  "near_wrist": [
-   890,
-   938
-  ],
-  "far_shoulder": [
-   1079,
-   565
-  ],
-  "far_elbow": [
-   1190,
    800
   ],
-  "far_wrist": [
-   1262,
+  "near_shoulder": [
+   705,
    975
   ],
-  "near_hip": [
-   937,
-   1026
+  "near_elbow": [
+   550,
+   1150
   ],
-  "near_knee": [
-   723,
-   1440
+  "near_wrist": [
+   695,
+   1263
   ],
-  "near_ankle": [
-   628,
-   1698
+  "far_shoulder": [
+   1040,
+   1005
   ],
-  "far_hip": [
-   1100,
-   1043
+  "far_elbow": [
+   1153,
+   1110
   ],
-  "far_knee": [
-   1070,
-   1440
-  ],
-  "far_ankle": [
-   980,
-   1672
+  "far_wrist": [
+   1315,
+   1174
   ],
   "tail_root": [
-   883,
-   1108
+   738,
+   1160
   ],
   "tail_1": [
-   534,
-   1316
+   480,
+   955
   ],
   "tail_2": [
-   186,
-   865
-  ],
-  "tail_3": [
-   358,
-   372
+   600,
+   415
   ],
   "tail_tip": [
-   744,
-   398
+   1190,
+   414
   ]
  },
  "parts": {
   "tail-1": {
    "pivot": [
-    883,
-    1108
+    738,
+    1160
    ],
    "joint": "tail_root",
    "parent": "torso",
-   "order": 1
+   "order": 1,
+   "extent": [
+    350,
+    918,
+    850,
+    1332
+   ],
+   "file": "tail-1.png"
   },
   "tail-2": {
    "pivot": [
-    534,
-    1316
+    480,
+    955
    ],
    "joint": "tail_1",
    "parent": "tail-1",
-   "order": 2
+   "order": 2,
+   "extent": [
+    290,
+    375,
+    750,
+    1044
+   ],
+   "file": "tail-2.png"
   },
   "tail-3": {
    "pivot": [
-    186,
-    865
+    600,
+    415
    ],
    "joint": "tail_2",
    "parent": "tail-2",
-   "order": 3
-  },
-  "tail-4": {
-   "pivot": [
-    358,
-    372
+   "order": 3,
+   "extent": [
+    488,
+    180,
+    1231,
+    570
    ],
-   "joint": "tail_3",
-   "parent": "tail-3",
-   "order": 4
+   "file": "tail-3.png"
   },
   "nozzle": {
    "pivot": [
-    744,
-    398
+    1190,
+    414
    ],
    "joint": "tail_tip",
-   "parent": "tail-4",
-   "order": 5
+   "parent": "tail-3",
+   "order": 4,
+   "extent": [
+    1160,
+    350,
+    1360,
+    480
+   ],
+   "file": "nozzle.png"
   },
   "far-upper-arm": {
    "pivot": [
-    1079,
-    565
+    1040,
+    1005
    ],
    "joint": "far_shoulder",
    "parent": "torso",
-   "order": 6
+   "order": 5,
+   "extent": [
+    990,
+    937,
+    1200,
+    1133
+   ],
+   "file": "far-upper-arm.png"
   },
   "far-forearm": {
    "pivot": [
-    1190,
-    800
+    1153,
+    1110
    ],
    "joint": "far_elbow",
    "parent": "far-upper-arm",
-   "order": 7
+   "order": 6,
+   "extent": [
+    1110,
+    1088,
+    1350,
+    1202
+   ],
+   "file": "far-forearm.png"
   },
   "far-hand": {
    "pivot": [
-    1262,
-    975
+    1315,
+    1174
    ],
    "joint": "far_wrist",
    "parent": "far-forearm",
-   "order": 8
-  },
-  "far-thigh": {
-   "pivot": [
-    1100,
-    1043
+   "order": 7,
+   "extent": [
+    1270,
+    1081,
+    1510,
+    1248
    ],
-   "joint": "far_hip",
-   "parent": "torso",
-   "order": 9
-  },
-  "far-shin": {
-   "pivot": [
-    1070,
-    1440
-   ],
-   "joint": "far_knee",
-   "parent": "far-thigh",
-   "order": 10
-  },
-  "far-boot": {
-   "pivot": [
-    980,
-    1672
-   ],
-   "joint": "far_ankle",
-   "parent": "far-shin",
-   "order": 11
+   "file": "far-hand.png"
   },
   "torso": {
    "pivot": [
-    1006,
-    1001
+    850,
+    1250
    ],
-   "joint": "pelvis",
+   "joint": "base",
    "parent": null,
-   "order": 12
-  },
-  "near-thigh": {
-   "pivot": [
-    937,
-    1026
+   "order": 8,
+   "extent": [
+    620,
+    842,
+    1100,
+    1358
    ],
-   "joint": "near_hip",
-   "parent": "torso",
-   "order": 13
-  },
-  "near-shin": {
-   "pivot": [
-    723,
-    1440
-   ],
-   "joint": "near_knee",
-   "parent": "near-thigh",
-   "order": 14
-  },
-  "near-boot": {
-   "pivot": [
-    628,
-    1698
-   ],
-   "joint": "near_ankle",
-   "parent": "near-shin",
-   "order": 15
+   "file": "torso.png"
   },
   "head": {
    "pivot": [
-    991,
-    501
+    900,
+    955
    ],
    "joint": "neck",
    "parent": "torso",
-   "order": 16
+   "order": 9,
+   "extent": [
+    661,
+    420,
+    1208,
+    1070
+   ],
+   "file": "head.png"
+  },
+  "far-ear": {
+   "pivot": [
+    1092,
+    530
+   ],
+   "joint": "far_ear",
+   "parent": "head",
+   "order": 10,
+   "extent": [
+    1040,
+    419,
+    1160,
+    570
+   ],
+   "file": "far-ear.png"
   },
   "ear": {
    "pivot": [
-    920,
-    179
+    825,
+    545
    ],
    "joint": "ear",
    "parent": "head",
-   "order": 17
-  },
-  "jaw": {
-   "pivot": [
-    1044,
-    445
+   "order": 11,
+   "extent": [
+    735,
+    370,
+    905,
+    590
    ],
-   "joint": "jaw",
-   "parent": "head",
-   "order": 18
-  },
-  "eyelids": {
-   "pivot": [
-    991,
-    501
-   ],
-   "joint": "neck",
-   "parent": "head",
-   "order": 19
+   "file": "ear.png"
   },
   "goggles": {
    "pivot": [
-    991,
-    501
+    940,
+    600
    ],
-   "joint": "neck",
+   "joint": "goggles",
    "parent": "head",
-   "order": 20
+   "order": 12,
+   "extent": [
+    755,
+    528,
+    1175,
+    692
+   ],
+   "file": "goggles.png"
+  },
+  "eyelids": {
+   "pivot": [
+    920,
+    800
+   ],
+   "joint": "eyes",
+   "parent": "head",
+   "order": 13,
+   "extent": [
+    858,
+    761,
+    1143,
+    864
+   ],
+   "file": "eyelids.png"
   },
   "near-upper-arm": {
    "pivot": [
-    819,
-    582
+    705,
+    975
    ],
    "joint": "near_shoulder",
    "parent": "torso",
-   "order": 21
+   "order": 14,
+   "extent": [
+    505,
+    933,
+    745,
+    1207
+   ],
+   "file": "near-upper-arm.png"
   },
   "near-forearm": {
    "pivot": [
-    680,
-    780
+    550,
+    1150
    ],
    "joint": "near_elbow",
    "parent": "near-upper-arm",
-   "order": 22
+   "order": 15,
+   "extent": [
+    503,
+    1120,
+    736,
+    1310
+   ],
+   "file": "near-forearm.png"
   },
   "near-hand": {
    "pivot": [
-    890,
-    938
+    695,
+    1263
    ],
    "joint": "near_wrist",
    "parent": "near-forearm",
-   "order": 23
-  },
-  "near-cuff": {
-   "pivot": [
+   "order": 16,
+   "extent": [
+    650,
+    1224,
     890,
-    938
+    1425
    ],
-   "joint": "near_wrist",
-   "parent": "near-forearm",
-   "order": 24
-  },
-  "near-pauldron": {
-   "pivot": [
-    819,
-    582
-   ],
-   "joint": "near_shoulder",
-   "parent": "near-upper-arm",
-   "order": 25
+   "file": "near-hand.png"
   }
  },
- "sprayPose": {
-  "nozzle": [
-   1260,
-   300
-  ],
-  "aim": "right, toward the reels"
- }
+ "overlap": 55,
+ "tail": [
+  "tail_root",
+  "tail_1",
+  "tail_2",
+  "tail_tip"
+ ],
+ "sprayTarget": [
+  1250,
+  260
+ ],
+ "nozzleMouth": [
+  1352,
+  414
+ ],
+ "tuck": [
+  0,
+  0,
+  0
+ ],
+ "cheer": {
+  "near-upper-arm": 100,
+  "near-forearm": -75,
+  "near-hand": -20,
+  "far-upper-arm": -25,
+  "far-forearm": -15
+ },
+ "notes": "Fitted to ChatGPT's 16 painted pieces as delivered: 3 tail segments, a separate far ear, no jaw yet (the grin is painted on the head)."
 }

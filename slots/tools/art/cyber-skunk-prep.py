@@ -27,6 +27,8 @@ GAME = Path(__file__).resolve().parents[2] / "games" / "cyber-skunk"
 def _arg(flag, default):
     return Path(sys.argv[sys.argv.index(flag) + 1]).resolve() if flag in sys.argv else default
 ART, OUT = _arg("--art", GAME / "art"), _arg("--out", GAME / "runtime" / "assets")
+# --mascot DIR: take the mascot pieces from DIR (rig v4.1: ChatGPT's registered sources).
+MASCOT_DIR = _arg("--mascot", None)
 # Rig v4 (compact, waist up) when its contract exists; v1 otherwise.
 PIVOTS_FILE = GAME / "art" / "rig" / ("pivots-v4.json" if (GAME / "art" / "rig" / "pivots-v4.json").exists() else "pivots.json")
 PIVOTS = json.loads(PIVOTS_FILE.read_text())
@@ -143,7 +145,7 @@ def prep_asset(name, check, notes):
 
 
 def prep_mascot(check, notes):
-    found = {n: find(n) for n in LAYERS}
+    found = {n: (MASCOT_DIR / f"{n}.png") if MASCOT_DIR and (MASCOT_DIR / f"{n}.png").exists() else find(n) for n in LAYERS}
     boxes, status = {}, {}
     for name, src in found.items():
         if not src:

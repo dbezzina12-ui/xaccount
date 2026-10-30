@@ -59,11 +59,12 @@ test('tail segments stay inside their ±35° range in every clip', () => {
   }
 });
 
-test('rig v4 (compact, waist up): 17 pieces, every joint holds and the tail stays in range in every clip', () => {
+test('rig v4.1 (ChatGPT\'s pieces, waist up): every joint holds and the tail stays in range in every clip', () => {
   prepare(v4); // its own tail settings for the poses below
   const orders = Object.values(v4.parts).map((p) => p.order).sort((a, b) => a - b);
-  assert.deepEqual(orders, Array.from({ length: 17 }, (_, k) => k + 1));
+  assert.deepEqual(orders, Array.from({ length: orders.length }, (_, k) => k + 1));
   for (const [k, p] of Object.entries(v4.parts)) if (p.parent) assert.ok(v4.parts[p.parent], `${k} has a real parent`);
+  for (const j of v4.tail) assert.ok(v4.joints[j], `tail joint ${j}`);
   assert.equal(rig4.legs.length, 0, 'no legs');
   const { angles, error } = rig4.sprayPose;
   assert.ok(error < 2, `nozzle misses by ${error}px`);
@@ -75,7 +76,7 @@ test('rig v4 (compact, waist up): 17 pieces, every joint holds and the tail stay
       const a = apply(M[k], p.pivot), b = apply(M[p.parent], p.pivot);
       assert.ok(Math.hypot(a[0] - b[0], a[1] - b[1]) < 0.01, `${clip} t=${t.toFixed(2)}: ${k} leaves ${p.parent}`);
     }
-    for (const k of ['tail-1', 'tail-2', 'tail-3', 'tail-4']) assert.ok(Math.abs(P[k]?.r || 0) <= 35 + 1e-6, `${clip} t=${t.toFixed(2)}: ${k} at ${P[k]?.r}°`);
+    for (const k of Object.keys(v4.parts).filter((x) => x.startsWith('tail-'))) assert.ok(Math.abs(P[k]?.r || 0) <= 35 + 1e-6, `${clip} t=${t.toFixed(2)}: ${k} at ${P[k]?.r}°`);
   }
   prepare(contract); // the module's tail tuck back to v1's for the tests above
 });

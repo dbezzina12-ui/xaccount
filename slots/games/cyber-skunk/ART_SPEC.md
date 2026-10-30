@@ -16,16 +16,18 @@
 
 ## 1. Mascot: rig contract (Claude rigs and animates)
 
-> **Rig v4 (compact, waist up) replaces the full-body contract below**, after Dylan's feedback. The game shows the mascot from the waist up only: behind the cabinet's top edge on a phone, behind a side console on desktop.
-> - **Contract:** `art/rig/pivots-v4.json`. **Guide:** `art/rig/guide-v2.jpg`, drawn on ChatGPT's `art/mascot/reference-compact.png` (the first commit, 74a4926; the later re-save is a broken PNG). Made by `tools/art/cyber-skunk-guide-v2.py`.
-> - **17 pieces, back to front:**
->   - the tail: `tail-1` … `tail-4`, then `nozzle`;
+> **Rig v4.1, live in the game (2026-10-30): the contract is fitted to ChatGPT's painted pieces.**
+> - **Pieces:** the 16 in `art/source/mascot-compact-v4/registered/`, as delivered:
+>   - the tail: `tail-1` … `tail-3`, then `nozzle`;
 >   - the far arm: `far-upper-arm`, `far-forearm`, `far-hand`;
->   - `torso`, `jaw`, `head`, `ear`, `eyelids`, `goggles`;
+>   - `torso`, `head`, `far-ear`, `ear`, `goggles`, `eyelids`;
 >   - the near arm: `near-upper-arm`, `near-forearm`, `near-hand`.
-> - **Files:** each piece goes in `art/mascot/<name>.png`, 1600 × 2000, transparent, painted **in place** over the reference. Stacked in order at (0, 0), they reproduce it.
-> - **Paint whole pieces:** every piece is painted whole, including what the front pieces hide (the far arm behind the chest, the tail behind the hips, the jaw under the head), with at least 55 px of paint past each joint on both pieces, so nothing opens up when it turns. No legs.
-> - **The old contract:** the 25-layer full-body contract below stays only as history; the game keeps its placeholder until all 17 v4 pieces are in.
+> - **Joints:** each sits where its piece overlaps its parent. `tools/art/cyber-skunk-fit-v4.py` writes the contract `art/rig/pivots-v4.json`, the overlap report `art/rig/fit-v4.1.md` and the guide `art/rig/guide-v3.jpg`.
+> - **Game:** `cyber-skunk-prep.py --mascot art/source/mascot-compact-v4/registered` puts them in the game. Wins pump the near arm, because the far arm would rise behind the head.
+> - **Improvements go in the same folder under the same names**, and the next prep run picks them up:
+>   - **A separate `jaw`** (and the head without its lower jaw) would let the mouth open. Say so and the contract gains it.
+>   - **More paint** past the elbows and wrists.
+> - **History:** the 17-piece v4 contract drawn on the reference (`pivots-v4.0-reference.json`, `guide-v2.jpg`) and the 25-layer full-body contract below.
 
 **Registration:**
 - **Canvas:** **1600 × 2000 px, transparent**, identical for every layer. Every layer is drawn **in place**: stacking them in the order below at (0, 0) reproduces `mascot/full.png`.

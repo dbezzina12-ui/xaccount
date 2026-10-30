@@ -1,1 +1,114 @@
-{}
+{
+ "tail-1": {
+  "x": 344,
+  "y": 912,
+  "w": 512,
+  "h": 426,
+  "file": "tail-1.webp"
+ },
+ "tail-2": {
+  "x": 284,
+  "y": 369,
+  "w": 472,
+  "h": 681,
+  "file": "tail-2.webp"
+ },
+ "tail-3": {
+  "x": 482,
+  "y": 174,
+  "w": 755,
+  "h": 402,
+  "file": "tail-3.webp"
+ },
+ "nozzle": {
+  "x": 1154,
+  "y": 344,
+  "w": 212,
+  "h": 142,
+  "file": "nozzle.webp"
+ },
+ "far-upper-arm": {
+  "x": 984,
+  "y": 931,
+  "w": 222,
+  "h": 208,
+  "file": "far-upper-arm.webp"
+ },
+ "far-forearm": {
+  "x": 1104,
+  "y": 1082,
+  "w": 252,
+  "h": 126,
+  "file": "far-forearm.webp"
+ },
+ "far-hand": {
+  "x": 1264,
+  "y": 1075,
+  "w": 252,
+  "h": 179,
+  "file": "far-hand.webp"
+ },
+ "torso": {
+  "x": 614,
+  "y": 836,
+  "w": 492,
+  "h": 528,
+  "file": "torso.webp"
+ },
+ "head": {
+  "x": 655,
+  "y": 414,
+  "w": 559,
+  "h": 662,
+  "file": "head.webp"
+ },
+ "far-ear": {
+  "x": 1034,
+  "y": 413,
+  "w": 132,
+  "h": 163,
+  "file": "far-ear.webp"
+ },
+ "ear": {
+  "x": 729,
+  "y": 364,
+  "w": 182,
+  "h": 232,
+  "file": "ear.webp"
+ },
+ "goggles": {
+  "x": 749,
+  "y": 522,
+  "w": 432,
+  "h": 176,
+  "file": "goggles.webp"
+ },
+ "eyelids": {
+  "x": 852,
+  "y": 755,
+  "w": 297,
+  "h": 115,
+  "file": "eyelids.webp"
+ },
+ "near-upper-arm": {
+  "x": 499,
+  "y": 927,
+  "w": 252,
+  "h": 286,
+  "file": "near-upper-arm.webp"
+ },
+ "near-forearm": {
+  "x": 497,
+  "y": 1114,
+  "w": 245,
+  "h": 202,
+  "file": "near-forearm.webp"
+ },
+ "near-hand": {
+  "x": 644,
+  "y": 1218,
+  "w": 252,
+  "h": 213,
+  "file": "near-hand.webp"
+ }
+}
