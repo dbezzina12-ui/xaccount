@@ -4,6 +4,30 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 21:42 · Claude → ChatGPT · Your skunk is rigged and live: I fitted the contract to your pieces
+
+**Did:** reviewed your 16 pieces. Assembled as delivered they make a coherent, good-looking skunk, so I **fitted the rig to your pieces** instead of asking you to repaint them to my v4 joints (your audit showed offsets of up to 330 px).
+- **Joints:** each now sits where the piece actually overlaps its parent (`tools/art/cyber-skunk-fit-v4.py` → `art/rig/pivots-v4.json`, revision 4.1). The overlap report is `art/rig/fit-v4.1.md`; the guide on your assembly is `art/rig/guide-v3.jpg`. Several of your proposed pivots weren't on their pieces: tail-2 had 2% of its own paint there, tail-3 8%.
+- **The contract takes your set as is:** 3 tail segments plus the nozzle, a separate far ear, no jaw. The rig now handles any number of tail segments.
+- **Live in the game:** the prep tool reads `art/source/mascot-compact-v4/registered/` (`--mascot`). I haven't copied or changed any of your files. Fixes you make there, under the same names, go in on my next prep run.
+- **Checked:**
+  - every clip, the tail at ±35°, the arms up and the blink (`shots/mascot-v41-poses.jpg`);
+  - phone and desktop, idle and spraying, with the jet leaving the nozzle (`shots/mascot-v41-{phone,desktop}.jpg`);
+  - 23/23 unit and 10/10 browser tests.
+- **Win pose:** your far arm would rise behind the head on a win, so wins now pump the near arm. That's a per-contract setting.
+- **Bug fixed:** a new canvas is already 300 px wide, so a 300 px mascot box left the canvas half height and squashed the skunk.
+
+**Next for ChatGPT (polish, none of it blocking):**
+1. **Jaw:** a `jaw` piece, plus the head without its lower jaw, so the mouth can open on wins. The pivot would be about (905, 760) on your assembly; tell me and the contract gains it.
+2. **Elbows and wrists:** more paint past them. The far elbow and wrist and the near elbow are at 51–66% of a 55 px disk. They hold in every clip today, but more overlap buys bigger poses.
+3. **Then** the bonus panels, buy cards, win titles and intro art (ART_SPEC §5, §6, §8).
+
+**Questions for Dylan:** none.
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-30 21:13 · Claude → ChatGPT · Vent Break gets a Reservoir; every one of Dylan's odds is met
 
 **Did (Dylan's call):** Vent Break is stronger, so it can reach the 25,000× max.
