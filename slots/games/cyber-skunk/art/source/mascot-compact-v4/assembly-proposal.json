@@ -1,0 +1,378 @@
+{
+  "status": "16 split artworks; provisional placement and pivots require Claude fitting before activation",
+  "canvas": [
+    1600,
+    2000
+  ],
+  "mouth": "closed grin belongs to head; no separate talking jaw",
+  "parts": [
+    {
+      "name": "tail-1",
+      "file": "registered/tail-1.png",
+      "pivot": [
+        740,
+        1170
+      ],
+      "parent": "torso",
+      "order": 1,
+      "placementBox": [
+        350,
+        910,
+        500,
+        430
+      ],
+      "alphaBounds": [
+        350,
+        918,
+        850,
+        1332
+      ],
+      "sha256": "e8b22622396e7bb9ddc611749d9d627c4d2946f25f595b0a3cdbb91fff8da8ac"
+    },
+    {
+      "name": "tail-2",
+      "file": "registered/tail-2.png",
+      "pivot": [
+        480,
+        1030
+      ],
+      "parent": "tail-1",
+      "order": 2,
+      "placementBox": [
+        290,
+        360,
+        460,
+        700
+      ],
+      "alphaBounds": [
+        290,
+        375,
+        750,
+        1044
+      ],
+      "sha256": "59d8e72b7b74ab6b786e763f3fbbfdecc44b316d7be122787f3f608304166314"
+    },
+    {
+      "name": "tail-3",
+      "file": "registered/tail-3.png",
+      "pivot": [
+        475,
+        480
+      ],
+      "parent": "tail-2",
+      "order": 3,
+      "placementBox": [
+        460,
+        180,
+        800,
+        390
+      ],
+      "alphaBounds": [
+        488,
+        180,
+        1231,
+        570
+      ],
+      "sha256": "ddd3269760f9413316d6e280e1dca223e3925798cd2a784c247024111f6052ea"
+    },
+    {
+      "name": "nozzle",
+      "file": "registered/nozzle.png",
+      "pivot": [
+        1200,
+        360
+      ],
+      "parent": "tail-3",
+      "order": 4,
+      "placementBox": [
+        1160,
+        340,
+        200,
+        150
+      ],
+      "alphaBounds": [
+        1160,
+        350,
+        1360,
+        480
+      ],
+      "sha256": "542e3bb07e7879abb42f17fdc4a3623a9a4095e9f45c1d18b09aeca1094da063"
+    },
+    {
+      "name": "far-upper-arm",
+      "file": "registered/far-upper-arm.png",
+      "pivot": [
+        1045,
+        955
+      ],
+      "parent": "torso",
+      "order": 5,
+      "placementBox": [
+        990,
+        900,
+        210,
+        270
+      ],
+      "alphaBounds": [
+        990,
+        937,
+        1200,
+        1133
+      ],
+      "sha256": "e5067920bdbb0da35b9b84a6336feca703f8058b347d05a23a2ffa16220ae75f"
+    },
+    {
+      "name": "far-forearm",
+      "file": "registered/far-forearm.png",
+      "pivot": [
+        1120,
+        1110
+      ],
+      "parent": "far-upper-arm",
+      "order": 6,
+      "placementBox": [
+        1110,
+        1080,
+        240,
+        130
+      ],
+      "alphaBounds": [
+        1110,
+        1088,
+        1350,
+        1202
+      ],
+      "sha256": "78fd2e0665393bdf1e427b037e1b3f7dd4bdd71ec43d59f502ade49cc2e82a10"
+    },
+    {
+      "name": "far-hand",
+      "file": "registered/far-hand.png",
+      "pivot": [
+        1280,
+        1160
+      ],
+      "parent": "far-forearm",
+      "order": 7,
+      "placementBox": [
+        1270,
+        1060,
+        240,
+        210
+      ],
+      "alphaBounds": [
+        1270,
+        1081,
+        1510,
+        1248
+      ],
+      "sha256": "e75fb5fa20c85b504972c799b7ef29c19fe93e157d98d70849f13a0272f34e9b"
+    },
+    {
+      "name": "torso",
+      "file": "registered/torso.png",
+      "pivot": [
+        850,
+        1250
+      ],
+      "parent": null,
+      "order": 8,
+      "placementBox": [
+        620,
+        820,
+        480,
+        560
+      ],
+      "alphaBounds": [
+        620,
+        842,
+        1100,
+        1358
+      ],
+      "sha256": "4536b8dbb76758dc6f3a0d79c6a3ebaaf3826fe8c5e5c9b1177b3a54639eb15f"
+    },
+    {
+      "name": "head",
+      "file": "registered/head.png",
+      "pivot": [
+        900,
+        980
+      ],
+      "parent": "torso",
+      "order": 9,
+      "placementBox": [
+        655,
+        420,
+        560,
+        650
+      ],
+      "alphaBounds": [
+        661,
+        420,
+        1208,
+        1070
+      ],
+      "sha256": "25b8f717d927b9a5f6c719e5232d090f5364092151e7d52e365b0f5c31d7ecc0"
+    },
+    {
+      "name": "far-ear",
+      "file": "registered/far-ear.png",
+      "pivot": [
+        1100,
+        555
+      ],
+      "parent": "head",
+      "order": 10,
+      "placementBox": [
+        1040,
+        400,
+        120,
+        190
+      ],
+      "alphaBounds": [
+        1040,
+        419,
+        1160,
+        570
+      ],
+      "sha256": "e9bff481b76efd25045b95f947384c833ac6428f0b71f78fadfdb01a2fd1c703"
+    },
+    {
+      "name": "ear",
+      "file": "registered/ear.png",
+      "pivot": [
+        820,
+        550
+      ],
+      "parent": "head",
+      "order": 11,
+      "placementBox": [
+        735,
+        355,
+        170,
+        250
+      ],
+      "alphaBounds": [
+        735,
+        370,
+        905,
+        590
+      ],
+      "sha256": "6b119e490560c0883a0722594b022c2ce93beb996b78c0325eda0e4e570e9aa0"
+    },
+    {
+      "name": "goggles",
+      "file": "registered/goggles.png",
+      "pivot": [
+        920,
+        610
+      ],
+      "parent": "head",
+      "order": 12,
+      "placementBox": [
+        755,
+        510,
+        420,
+        200
+      ],
+      "alphaBounds": [
+        755,
+        528,
+        1175,
+        692
+      ],
+      "sha256": "87df1fe3d55c19f17a3c26272104ce10e7a171b8fdb8043dc721def46a6f48fd"
+    },
+    {
+      "name": "eyelids",
+      "file": "registered/eyelids.png",
+      "pivot": [
+        920,
+        805
+      ],
+      "parent": "head",
+      "order": 13,
+      "placementBox": [
+        858,
+        748,
+        285,
+        130
+      ],
+      "alphaBounds": [
+        858,
+        761,
+        1143,
+        864
+      ],
+      "sha256": "37273b88752e24c599266a43e858ee14b1e332956f4161241e15b7096dea3326"
+    },
+    {
+      "name": "near-upper-arm",
+      "file": "registered/near-upper-arm.png",
+      "pivot": [
+        695,
+        960
+      ],
+      "parent": "torso",
+      "order": 14,
+      "placementBox": [
+        505,
+        920,
+        240,
+        300
+      ],
+      "alphaBounds": [
+        505,
+        933,
+        745,
+        1207
+      ],
+      "sha256": "864eb73b00f3411a713bf7dd50ecdec949904bc2bd7498d3c0f3f8956dd43702"
+    },
+    {
+      "name": "near-forearm",
+      "file": "registered/near-forearm.png",
+      "pivot": [
+        520,
+        1145
+      ],
+      "parent": "near-upper-arm",
+      "order": 15,
+      "placementBox": [
+        480,
+        1120,
+        280,
+        190
+      ],
+      "alphaBounds": [
+        503,
+        1120,
+        736,
+        1310
+      ],
+      "sha256": "7668501de24342fcdc384f71455476c305289d101c4e5441d6003a9059d062d8"
+    },
+    {
+      "name": "near-hand",
+      "file": "registered/near-hand.png",
+      "pivot": [
+        690,
+        1250
+      ],
+      "parent": "near-forearm",
+      "order": 16,
+      "placementBox": [
+        650,
+        1220,
+        240,
+        210
+      ],
+      "alphaBounds": [
+        650,
+        1224,
+        890,
+        1425
+      ],
+      "sha256": "d1aab3e53a966b535743ee30d701f8ee4b7ef829e42572340e43e4e55e9231bf"
+    }
+  ]
+}

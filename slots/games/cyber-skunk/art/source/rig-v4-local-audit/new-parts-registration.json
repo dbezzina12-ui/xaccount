@@ -1,0 +1,60 @@
+[
+  {
+    "name": "tail-4",
+    "source": "tail-4-painted-source-v2.png",
+    "source_anchor": [
+      300,
+      300
+    ],
+    "target_anchor": [
+      760,
+      265
+    ],
+    "scale": 0.2462612494042564,
+    "rotation_degrees": 4.978990721262985,
+    "sha256": "37a3009cc75b801878a4d5565ae50c698d4a0335575760e33b94a3dcd82ceca8",
+    "alpha_bounds": [
+      685,
+      197,
+      1148,
+      423
+    ],
+    "file": "fitting-candidates/tail-4.png",
+    "proximal_joint": {
+      "pivot_alpha": 252,
+      "disk_coverage": 0.9999
+    },
+    "nozzle_joint": {
+      "pivot_alpha": 252,
+      "disk_coverage": 0.9962
+    },
+    "status": "local fitting candidate; seam and extreme-pose review required"
+  },
+  {
+    "name": "jaw",
+    "source": "jaw-painted-source.png",
+    "source_anchor": [
+      650,
+      360
+    ],
+    "target_anchor": [
+      905,
+      742
+    ],
+    "scale": 0.22,
+    "rotation_degrees": 0,
+    "sha256": "0e65428a7960321e7ce54a92f13777d600a3d00f0239b6e211ba25611d318487",
+    "alpha_bounds": [
+      866,
+      700,
+      1049,
+      822
+    ],
+    "file": "fitting-candidates/jaw.png",
+    "proximal_joint": {
+      "pivot_alpha": 253,
+      "disk_coverage": 0.5529
+    },
+    "status": "local fitting candidate; seam and extreme-pose review required"
+  }
+]
