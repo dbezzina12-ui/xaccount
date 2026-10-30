@@ -52,7 +52,7 @@ export const MODES = Object.freeze({
 
 // The bonuses. Only 5 scatters start Blackout Protocol; it is never sold.
 export const BONUSES = Object.freeze({
-  regular: { title: 'VENT BREAK', scatters: 3, spins: 12, sticky: true, reservoir: false, reservoirStart: 0, opening: false },
+  regular: { title: 'VENT BREAK', scatters: 3, spins: 12, sticky: true, reservoir: true, reservoirStart: 0, reservoirMax: 5, opening: false }, // a smaller Reservoir (Dylan, 2026-10-30: reach the 25,000x cap)
   super: { title: 'OVERPRESSURE', scatters: 4, spins: 10, sticky: true, reservoir: true, reservoirStart: 0, opening: false },
   hidden: { title: 'BLACKOUT PROTOCOL', scatters: 5, spins: 10, sticky: true, reservoir: true, reservoirStart: 3, opening: true },
 });

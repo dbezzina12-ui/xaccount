@@ -25,7 +25,7 @@ const BASE_RATES = triggerRates('base'), BOOST_RATES = triggerRates(MODES.enhanc
 const COPY = {
   enhanced: { name: 'SIGNAL BOOST', card: 'card-signal-boost', kind: 'feature', text: `FS scatters land more often: Vent Break about ${oneIn(BOOST_RATES.regular)} spins (${oneIn(BASE_RATES.regular)} in base), Overpressure ${oneIn(BOOST_RATES.super)} (${oneIn(BASE_RATES.super)}). Same pays and rules. Stays on until you switch it off.` },
   sprayjob: { name: 'SPRAY JOB', card: 'card-spray-job', kind: 'feature', text: 'Every spin lands a vent on reel 1 and at least 3 vents in all, so Cyber Skunk sprays on every spin. Stays on until you switch it off.' },
-  ventbreak: { name: 'VENT BREAK', card: 'card-vent-break', kind: 'buy', text: `${BONUSES.regular.spins} free spins. Every vent that lands stays until the bonus ends (up to ${MAX_STICKY}), so the route grows into a maze.` },
+  ventbreak: { name: 'VENT BREAK', card: 'card-vent-break', kind: 'buy', text: `${BONUSES.regular.spins} free spins. Every vent that lands stays (up to ${MAX_STICKY}), so the route grows into a maze, and a small Reservoir banks pressure up to ${BONUSES.regular.reservoirMax}.` },
   overpressure: { name: 'OVERPRESSURE', card: 'card-overpressure', kind: 'buy', text: `${BONUSES.super.spins} free spins with sticky vents and the Reservoir: each route banks its pressure gain, and every later route starts higher.` },
 };
 const TIER = {
@@ -619,7 +619,7 @@ function renderRules() {
   <p><span class="mini">${ventHTML(0)}</span> Elbow <b>vents</b> sit on top of symbols. When at least one lands, Cyber Skunk sprays the <b>left-most vent</b> (the top one on a tie). The spray follows each vent's outlet, whichever way it came in, and every vent adds <b>+1 pressure</b>, so the first vent shows ×2.</p>
   <p>Every cell the spray touches becomes <b>wild</b> for that spin; each vent becomes a <b>×N wild</b>, N being the pressure there. Scatters are never painted. The route ends at the edge of the reels, at a cell it has already touched, or after 24 steps. A winning line multiplies by the sum of its ×N vents (×2 and ×3 make ×5).</p>
   <h3>BONUSES</h3>
-  <p><b>3 FS scatters: VENT BREAK.</b> ${BONUSES.regular.spins} free spins. Vents that land stay until the bonus ends, up to ${MAX_STICKY}.</p>
+  <p><b>3 FS scatters: VENT BREAK.</b> ${BONUSES.regular.spins} free spins. Vents that land stay until the bonus ends, up to ${MAX_STICKY}, and the <b>Reservoir</b> gauge banks each spray's pressure gain up to ${BONUSES.regular.reservoirMax}: every later spray starts at 1 + the Reservoir.</p>
   <p><b>4 FS scatters: OVERPRESSURE.</b> ${BONUSES.super.spins} free spins with sticky vents and the <b>Reservoir</b> gauge: after each spray, the pressure gained is banked (up to ${MAX_RESERVOIR}), and every later spray starts at 1 + the Reservoir.</p>
   <p><b>5 FS scatters: BLACKOUT PROTOCOL.</b> ${BONUSES.hidden.spins} free spins. The lights go out, 4 vents come online as one route and the Reservoir starts at ${BONUSES.hidden.reservoirStart}; then it plays as Overpressure. It always pays at least 1,000× the base bet. It cannot be bought.</p>
   <p>${RETRIGGER.scatters} or more FS scatters during a bonus add +${RETRIGGER.spins} spins, up to ${MAX_SPINS} in total.</p>

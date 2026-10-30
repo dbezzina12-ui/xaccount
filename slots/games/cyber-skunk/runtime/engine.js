@@ -146,7 +146,7 @@ export function playRound({ mode = 'base', rng, bonusRng = rng, forceBonus = nul
       const r = spin('free', sticky, start, { spin: played, of: spins, tier, reservoir });
       for (let i = 0; i < r.landed.length; i++) if (r.landed[i].vent !== undefined && !sticky.has(i) && sticky.size < MAX_STICKY) sticky.set(i, r.landed[i].vent);
       if (b.reservoir && r.route) {
-        const before = reservoir; reservoir = Math.min(MAX_RESERVOIR, reservoir + (r.route.endPressure - r.route.startPressure));
+        const before = reservoir; reservoir = Math.min(b.reservoirMax ?? MAX_RESERVOIR, reservoir + (r.route.endPressure - r.route.startPressure));
         if (reservoir !== before) events.push({ type: 'reservoir', before, after: reservoir });
       }
       if (r.scatters >= RETRIGGER.scatters && spins < MAX_SPINS) {

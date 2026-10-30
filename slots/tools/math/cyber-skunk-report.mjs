@@ -187,7 +187,8 @@ ${rows.map(([m, s]) => { const t = s.sessions; return `| ${NAME[m]} | ${t.n.toLo
 **Catalog.** Each pool keeps its shape in 14,000 quantile strata, one seed per stratum weighted by its size (3,000 for trigger spins), plus its top outcomes one by one. The shipped catalog holds ${Object.values(data.pools).reduce((a, p) => a + p.length, 0).toLocaleString('en-US')} seeds.
 
 **Shaping.** The weights then bend each pool's natural shape. All of it is in \`tools/math/cyber-skunk-catalogs.mjs\`, \`SHAPE\`:
-- **Vent Break:** natural average 104.76x. A log-space tilt (curvature −0.05) brings it to exactly 96x and lifts the median from 16.8x to ${x(summary.bonuses.regular.median)}.
+- **Vent Break** (12 spins, sticky vents, a Reservoir up to 5): natural average 260.2x, median 36.9x. A log-space tilt (curvature −0.10) brings it to exactly 96x with a median of ${x(summary.bonuses.regular.median)}.
+  - Its 25,000x rounds are ${data.pools['bonus-regular'].filter((r) => r[2] >= CAP).length} different rounds: those of the pool plus a search of 20,000,000 more seeds. Naturally it reaches the cap about 1 in 1,000,000.
 - **Overpressure:** natural average 265.89x.
   - A tilt (curvature −0.03) brings it to exactly 240x.
   - Its 25,000x rounds are ${data.pools['bonus-super'].filter((r) => r[2] >= CAP).length} different rounds: those of the pool plus a search of 20,000,000 more seeds (\`cyber-skunk-caps.mjs\`). Naturally the bonus reaches the cap only about 1 in 340,000.

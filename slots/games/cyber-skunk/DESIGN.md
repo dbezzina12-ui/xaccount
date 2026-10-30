@@ -44,7 +44,7 @@
 | Base | Base Spins | 1× | Vents land now and then. 3 / 4 / 5 scatters start **Vent Break / Overpressure / Blackout Protocol**. |
 | Enhanced | **Signal Boost** | 3× per spin, on until switched off | Scatters land more often (0.1125 per reel, base 0.065): Vent Break 4.4×, Overpressure 8.1× and Blackout Protocol 14.9× as often (exact rates in `MATH.md`). Same rules. |
 | Feature Spins | **Spray Job** | 10× per spin, on until switched off | Every spin lands a vent on reel 1 and at least 3 vents in all, so the spray always fires from the first reel. Scatters work as normal. |
-| Regular bonus | **Vent Break** | buy 100× | 12 free spins. Every vent that lands **stays** until the bonus ends (up to 10), so the route grows into a maze. Pressure restarts at 1 each spin. |
+| Regular bonus | **Vent Break** | buy 100× | 12 free spins. Every vent that lands **stays** until the bonus ends (up to 10), so the route grows into a maze, and a **small Reservoir** banks each route's pressure gain **up to 5** (Overpressure's goes to 10). Added 2026-10-30 at Dylan's request, so Vent Break can reach the 25,000× cap. |
 | Super bonus | **Overpressure** | buy 250× | 10 free spins with sticky vents and a **Reservoir**: after each spin's route, its pressure gained (pressure − 1) is banked in the cabinet gauge (up to 10), and every later route starts at **1 + the Reservoir**. |
 | Hidden bonus | **Blackout Protocol** | not for sale | 10 free spins. It opens with the network activation: the lights go out, then 4 vents light up as one route and the Reservoir starts at 3. After that it plays as Overpressure. Only 5 scatters start it. |
 

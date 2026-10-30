@@ -7,13 +7,13 @@
 
 | Mode | Cost | RTP (exact) | Hit rate | Zero return | Returns at least the cost | Median | p90 | p99 | p99.9 | SD per cost | Reaches the 25,000x cap |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Base Spins | 1x | **96.000000%** | 30.18% | 69.82% | 4.25% | 0x | 0.3x | 26.9x | 117.4x | 30.94 | 1 in 999,999 |
-| Signal Boost | 3x | **96.000000%** | 29.25% | 70.75% | 3.28% | 0x | 0.3x | 33.8x | 526.2x | 28.66 | 1 in 120,358 |
-| Spray Job | 10x | **96.000000%** | 71.72% | 28.28% | 20.13% | 0.4x | 33.5x | 86.3x | 176.6x | 3.67 | 1 in 999,996 |
-| Vent Break (buy) | 100x | **96.000000%** | 100.00% | 0.00% | 23.40% | 19.1x | 274.4x | 948.4x | 1,899.4x | 2.01 | never |
+| Base Spins | 1x | **96.000000%** | 30.18% | 69.82% | 4.25% | 0x | 0.3x | 29.6x | 80.4x | 32.46 | 1 in 999,997 |
+| Signal Boost | 3x | **96.000000%** | 29.25% | 70.75% | 3.32% | 0x | 0.3x | 33.7x | 562.5x | 26.11 | 1 in 185,628 |
+| Spray Job | 10x | **96.000000%** | 71.72% | 28.28% | 20.21% | 0.4x | 33.5x | 86x | 163.9x | 3.80 | 1 in 999,993 |
+| Vent Break (buy) | 100x | **96.000000%** | 100.00% | 0.00% | 17.89% | 25.3x | 219.2x | 1,184.9x | 2,668.9x | 2.48 | 1 in 199,840 |
 | Overpressure (buy) | 250x | **96.000000%** | 99.99% | 0.01% | 21.50% | 35.5x | 702.8x | 2,704x | 5,170.3x | 2.26 | 1 in 49,998 |
 
-- **RTP** is measured against the full charged cost of each mode. It is the exact rational value of the catalogs, printed to 6 decimals; the largest difference from 96% is 4.1e-11 of the cost. Whole-ticket weights cannot always land on 96% to the last digit.
+- **RTP** is measured against the full charged cost of each mode. It is the exact rational value of the catalogs, printed to 6 decimals; the largest difference from 96% is 1.2e-11 of the cost. Whole-ticket weights cannot always land on 96% to the last digit.
 - **Max win** is 25,000x the base bet per round, counted once across the trigger spin, the bonus and every retrigger. Reaching it ends the round.
 - **Blackout Protocol** (Hidden) is never sold; it only starts naturally with 5 or more FS scatters.
 
@@ -32,10 +32,10 @@
 
 | Mode | No-bonus spins | Vent Break | Overpressure | Blackout Protocol | From rounds of 1,000x+ |
 | --- | --- | --- | --- | --- | --- |
-| Base Spins | 45.47% | 43.21% | 5.62% | 1.69% | 11.00% |
-| Signal Boost | 8.58% | 63.87% | 15.15% | 8.40% | 26.71% |
-| Spray Job | 90.75% | 4.51% | 0.57% | 0.17% | 1.11% |
-| Vent Break (buy) | — | 96.00% | — | — | 12.40% |
+| Base Spins | 45.47% | 43.21% | 5.62% | 1.69% | 16.26% |
+| Signal Boost | 8.58% | 63.87% | 15.15% | 8.40% | 33.60% |
+| Spray Job | 90.75% | 4.51% | 0.57% | 0.17% | 1.64% |
+| Vent Break (buy) | — | 96.00% | — | — | 23.19% |
 | Overpressure (buy) | — | — | 96.00% | — | 49.49% |
 
 The last column is the fraction of the RTP paid by rounds of 1,000x or more (the rare tail).
@@ -44,10 +44,10 @@ The last column is the fraction of the RTP paid by rounds of 1,000x or more (the
 
 | Bonus | Spins | Average | Lowest | Median | p90 | p99 | No win | 1,000x+ | 10,000x+ | Reaches the cap |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| VENT BREAK (bought) | 12 | 96x | 0.2x | 19.1x | 274.4x | 948.4x | never | 1 in 115 | 1 in 815,661 | never |
-| VENT BREAK (triggered) | 12 | 96x | 0.2x | 19.1x | 274.4x | 948.4x | never | 1 in 115 | 1 in 815,661 | never |
+| VENT BREAK (bought) | 12 | 96x | 0.2x | 25.3x | 219.2x | 1,184.9x | never | 1.44% | 1 in 133,103 | 1 in 199,840 |
+| VENT BREAK (triggered) | 12 | 96x | 0.2x | 24.7x | 204.6x | 1,150.6x | never | 1.34% | 1 in 5,542 | 1 in 5,611 |
 | OVERPRESSURE (bought) | 10 | 240x | 0x | 35.5x | 702.8x | 2,704x | 1 in 12,061 | 6.40% | 1 in 9,219 | 1 in 49,998 |
-| OVERPRESSURE (triggered) | 10 | 240x | 0x | 23.4x | 356.5x | 2,390.9x | 1 in 5,643 | 3.47% | 1 in 240 | 1 in 242 |
+| OVERPRESSURE (triggered) | 10 | 240x | 0x | 33x | 647.8x | 2,660.4x | 1 in 10,814 | 5.89% | 1 in 1,267 | 1 in 1,403 |
 | BLACKOUT PROTOCOL (triggered only) | 10 | 2,572x | 1,000x | 1,849.5x | 4,685.1x | 11,008.2x | never | 100.00% | 1 in 84 | 1 in 200 |
 
 - **Bought and triggered:** the same rounds with the same average. A triggered Vent Break or Overpressure reaches the cap more often, which is what puts the base game's max at 1 in 1,000,000. A natural round adds its trigger spin's pay, capped at 25,000x.
@@ -57,32 +57,30 @@ The last column is the fraction of the RTP paid by rounds of 1,000x or more (the
 
 | Target | Asked | Shipped |
 | --- | --- | --- |
-| Base game reaches 25,000x | 1 in 1,000,000 spins | 1 in 999,999 |
-| Vent Break (bought) | 1 in 200,000 | never |
+| Base game reaches 25,000x | 1 in 1,000,000 spins | 1 in 999,997 |
+| Vent Break (bought) | 1 in 200,000 | 1 in 199,840 |
 | Overpressure (bought) | 1 in 50,000 | 1 in 49,998 |
 | Blackout Protocol | 1 in 200 | 1 in 200 |
 | Blackout Protocol minimum | 1,000x | 1,000x |
 | Signal Boost price | 3x the bet | 3x |
-
-Vent Break reaching 25,000x is extremely rare in natural play: none in 2,000,000 bonuses (its best was 14,863x). Capped Vent Break rounds are being searched for (`cyber-skunk-caps.mjs`). Until some are found, the bought Vent Break cannot reach the cap, and the triggered Overpressure carries all of the base game's 1 in 1,000,000.
 
 ## Win bands (share of rounds)
 
 | Round pays | Base Spins | Signal Boost | Spray Job | Vent Break (buy) | Overpressure (buy) |
 | --- | --- | --- | --- | --- | --- |
 | No win | 69.82% | 70.75% | 28.28% | — | 1 in 12,061 |
-| 0.1x to under 1x | 25.93% | 24.48% | 36.06% | 1 in 1,003 | 1 in 771 |
-| 1x to under 2x | 1.31% | 1.10% | 8.66% | 1 in 139 | 1 in 310 |
-| 2x to under 5x | 1 in 102 | 1 in 114 | 4.77% | 9.28% | 2.62% |
-| 5x to under 10x | 1 in 199 | 1 in 143 | 2.10% | 21.02% | 9.76% |
-| 10x to under 20x | 1 in 258 | 1 in 166 | 1.29% | 19.81% | 20.91% |
-| 20x to under 50x | 1 in 110 | 1 in 134 | 14.30% | 15.71% | 23.60% |
-| 50x to under 100x | 1 in 1,750 | 1 in 451 | 4.02% | 9.96% | 10.39% |
-| 100x to under 250x | 1 in 1,750 | 1 in 384 | 1 in 221 | 12.25% | 10.74% |
-| 250x to under 1,000x | 1 in 2,066 | 1 in 449 | 1 in 1,709 | 10.28% | 15.10% |
-| 1,000x to under 5,000x | 1 in 19,266 | 1 in 3,137 | 1 in 19,064 | 1 in 116 | 6.29% |
-| 5,000x to under 25,000x | 1 in 1,292,744 | 1 in 107,598 | 1 in 1,290,031 | 1 in 30,051 | 1 in 885 |
-| 25,000x (max) | 1 in 999,999 | 1 in 120,358 | 1 in 999,996 | — | 1 in 49,998 |
+| 0.1x to under 1x | 25.93% | 24.48% | 36.06% | 1 in 2,632 | 1 in 771 |
+| 1x to under 2x | 1.31% | 1.09% | 8.66% | 1 in 799 | 1 in 310 |
+| 2x to under 5x | 1 in 106 | 1 in 137 | 4.74% | 1.69% | 2.62% |
+| 5x to under 10x | 1 in 222 | 1 in 211 | 2.06% | 9.78% | 9.76% |
+| 10x to under 20x | 1 in 236 | 1 in 131 | 1.31% | 27.99% | 20.91% |
+| 20x to under 50x | 1 in 102 | 1.05% | 14.37% | 31.33% | 23.60% |
+| 50x to under 100x | 1 in 1,602 | 1 in 406 | 4.04% | 11.16% | 10.39% |
+| 100x to under 250x | 1 in 2,393 | 1 in 516 | 1 in 228 | 8.99% | 10.74% |
+| 250x to under 1,000x | 1 in 2,849 | 1 in 596 | 1 in 2,229 | 7.46% | 15.10% |
+| 1,000x to under 5,000x | 1 in 12,698 | 1 in 2,169 | 1 in 12,590 | 1.43% | 6.29% |
+| 5,000x to under 25,000x | 1 in 1,030,430 | 1 in 93,801 | 1 in 1,027,967 | 1 in 19,064 | 1 in 885 |
+| 25,000x (max) | 1 in 999,997 | 1 in 185,628 | 1 in 999,993 | 1 in 199,840 | 1 in 49,998 |
 
 ## 100-round sessions (sampled)
 
@@ -90,10 +88,10 @@ Each session plays 100 rounds of one mode at a fixed bet; the figures are the se
 
 | Mode | Sessions sampled | Ends ahead | Loses half or more | p10 | Median | p90 | Mean |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Base Spins | 20,000 | 20.8% | 47.7% | 13% | 52% | 169% | 94.1% |
-| Signal Boost | 20,000 | 25.7% | 58.0% | 7% | 37% | 223% | 95.2% |
-| Spray Job | 20,000 | 38.0% | 1.0% | 68% | 93% | 125% | 96.0% |
-| Vent Break (buy) | 4,000 | 39.3% | 0.2% | 72% | 95% | 122% | 96.2% |
+| Base Spins | 20,000 | 20.2% | 46.5% | 13% | 53% | 148% | 94.2% |
+| Signal Boost | 20,000 | 21.8% | 61.9% | 8% | 35% | 225% | 95.9% |
+| Spray Job | 20,000 | 37.3% | 1.0% | 68% | 93% | 124% | 96.0% |
+| Vent Break (buy) | 4,000 | 39.4% | 0.5% | 67% | 94% | 129% | 96.2% |
 | Overpressure (buy) | 4,000 | 39.8% | 0.5% | 69% | 94% | 125% | 96.2% |
 
 ## How the catalogs are made
@@ -103,10 +101,11 @@ Each session plays 100 rounds of one mode at a fixed bet; the figures are the se
 - **Paid spins:** 4,000,000 per mode. A spin with 3 or more scatters is left out of the no-bonus pool; its tier is drawn separately.
 - **Trigger spins:** 300,000 per mode and tier, forced to 3, 4 or 5 scatters. Base Spins and Signal Boost share them, because the forced scatters make them the same draws.
 
-**Catalog.** Each pool keeps its shape in 14,000 quantile strata, one seed per stratum weighted by its size (3,000 for trigger spins), plus its top outcomes one by one. The shipped catalog holds 141,218 seeds.
+**Catalog.** Each pool keeps its shape in 14,000 quantile strata, one seed per stratum weighted by its size (3,000 for trigger spins), plus its top outcomes one by one. The shipped catalog holds 141,260 seeds.
 
 **Shaping.** The weights then bend each pool's natural shape. All of it is in `tools/math/cyber-skunk-catalogs.mjs`, `SHAPE`:
-- **Vent Break:** natural average 104.76x. A log-space tilt (curvature −0.05) brings it to exactly 96x and lifts the median from 16.8x to 19.1x.
+- **Vent Break** (12 spins, sticky vents, a Reservoir up to 5): natural average 260.2x, median 36.9x. A log-space tilt (curvature −0.10) brings it to exactly 96x with a median of 25.3x.
+  - Its 25,000x rounds are 23 different rounds: those of the pool plus a search of 20,000,000 more seeds. Naturally it reaches the cap about 1 in 1,000,000.
 - **Overpressure:** natural average 265.89x.
   - A tilt (curvature −0.03) brings it to exactly 240x.
   - Its 25,000x rounds are 64 different rounds: those of the pool plus a search of 20,000,000 more seeds (`cyber-skunk-caps.mjs`). Naturally the bonus reaches the cap only about 1 in 340,000.
@@ -119,9 +118,9 @@ Each session plays 100 rounds of one mode at a fixed bet; the figures are the se
 
 ## Verification
 
-- `node tools/math/cyber-skunk-verify.mjs` replays every one of the 141,218 catalog entries through the engine, plus 200,000 drawn rounds per paid mode, as the game draws them. It reports **0 mismatches**.
+- `node tools/math/cyber-skunk-verify.mjs` replays every one of the 141,260 catalog entries through the engine, plus 200,000 drawn rounds per paid mode, as the game draws them. It reports **0 mismatches**.
 - The game itself replays every round it draws and refuses one whose total differs from the catalog (`runtime/catalog.js`).
-- **Sources:** `engine.js` 3fd5f134dc3d0eb4, `rules.js` ca7ff388c389e7fa, `catalog-data.js` ffa8a0f06d63949e (SHA-256, first 16 hex digits).
+- **Sources:** `engine.js` 705d3761ef853682, `rules.js` d15281b6781f170d, `catalog-data.js` a2a7ed5bbdc996a3 (SHA-256, first 16 hex digits).
 
 ## STYLE.md gates
 
@@ -130,7 +129,7 @@ Each session plays 100 rounds of one mode at a fixed bet; the figures are the se
 | 96.00% per paid mode, against the charged cost | Pass: every mode 96.000000%, 96.000000%, 96.000000%, 96.000000%, 96.000000% |
 | Exact support plus complete replay | Pass: exact weights, every entry replayed, 0 mismatches |
 | Max 25,000x, capped once per round | Pass: engine cap, tested in `tests/engine.test.mjs` |
-| Base max 1 in 1,000,000 (Dylan) | Pass: 1 in 999,999 base spins |
+| Base max 1 in 1,000,000 (Dylan) | Pass: 1 in 999,997 base spins |
 | Blackout Protocol at least 1,000x, max 1 in 200 (Dylan) | Pass: lowest 1,000x, max 1 in 200 |
 | Genuine losses and midrange wins | Pass: see the win bands; no outcome is scripted |
 | Integer money | Pass: whole cents, no rounding |

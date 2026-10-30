@@ -86,7 +86,7 @@ test('bonus rules: sticky vents, Reservoir, retriggers and their caps', () => {
       if (before) for (const i of before) assert.ok(sticky.includes(i), 'a sticky vent stays');
       before = sticky;
     }
-    for (const e of r.events.filter((x) => x.type === 'reservoir')) { assert.ok(BONUSES[tier].reservoir); assert.ok(e.after <= MAX_RESERVOIR && e.after >= e.before); }
+    for (const e of r.events.filter((x) => x.type === 'reservoir')) { assert.ok(BONUSES[tier].reservoir); assert.ok(e.after <= (BONUSES[tier].reservoirMax ?? MAX_RESERVOIR) && e.after >= e.before); }
   }
 });
 

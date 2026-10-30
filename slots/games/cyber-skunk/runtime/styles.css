@@ -168,7 +168,7 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .gauge-needle{position:absolute;left:50%;top:50%;width:8px;height:74px;margin:-70px 0 0 -4px;border-radius:4px;background:linear-gradient(#c0392b,#5a1a12);transform-origin:50% 70px;transform:rotate(calc(-135deg + var(--p,0) * 27deg));transition:transform .8s cubic-bezier(.3,1.6,.5,1);box-shadow:0 2px 3px #000a}
 .app[data-art-gauge] .gauge-needle{width:200px;height:200px;margin:-100px 0 0 -100px;border-radius:0;background:var(--gauge-needle) center/100% no-repeat;box-shadow:none;transform-origin:50% 50%}
 .gauge-value{position:absolute;left:0;right:0;bottom:44px;text-align:center;font:900 28px/1 var(--title);color:#2b2116}
-.app:not([data-bonus=super]):not([data-bonus=hidden]) .gauge{filter:saturate(.6) brightness(.85)}
+.app:not([data-bonus]) .gauge{filter:saturate(.6) brightness(.85)} /* lit in every bonus: each has a Reservoir */
 
 .bonus-hud{position:absolute;display:grid;grid-template-columns:1fr 250px 1fr;align-items:stretch;font:700 30px/1 var(--font);letter-spacing:.06em;pointer-events:none}
 .bonus-hud > span{display:flex;gap:22px;justify-content:center;align-items:center;padding:12px 22px;border-radius:12px;background:#0b1013e6;border:2px solid var(--brass);white-space:nowrap}

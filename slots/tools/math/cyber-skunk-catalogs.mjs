@@ -45,7 +45,7 @@ const RTP = 0.96;
 // (Blackout's own rate alone would put it near 1 in 30 million).
 const BASE_MAX = 1 / 1e6;
 const SHAPE = {
-  regular: { mean: RTP * MODES.ventbreak.cost * 100, curve: -0.05, maxRate: 1 / 200000 },
+  regular: { mean: RTP * MODES.ventbreak.cost * 100, curve: -0.1, maxRate: 1 / 200000 },
   super: { mean: RTP * MODES.overpressure.cost * 100, curve: -0.03, maxRate: 1 / 50000 },
   hidden: { mean: null, curve: 0, maxRate: 1 / 200, min: 1000 * 100 }, // never sold
 };
