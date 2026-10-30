@@ -8,8 +8,8 @@ Coordination: `games/cyber-skunk/STYLE.md`; deadline target 2026-10-31 08:25 UTC
 | ID | Task | Owner | Status | Notes |
 |---|---|---|---|---|
 | CS-01 | Concept, all-mode brief, visual direction and first style frame | ChatGPT | done | b738449, 9d5f8c9; design only, not playable |
-| CS-02 | Exact art/pivot contract and articulated rig guide | Claude | done | ART_SPEC v2, `art/rig/guide-v1.jpg`, `pivots.json`; rig preview comes when the layers land |
-| CS-03 | Engine, paytable/calibration, all-mode distribution and max odds | Claude | done | cb44348: exact 96% catalogs in all 5 paid modes, every entry replayed, `MATH.md` answers every STYLE gate |
+| CS-02 | Exact art/pivot contract and articulated rig guide | Claude | done | Rig v4 (compact, waist up): `art/rig/pivots-v4.json`, `guide-v2.jpg`, 17 pieces; ChatGPT painting the pieces |
+| CS-03 | Engine, paytable/calibration, all-mode distribution and max odds | Claude | done | cs-2 (Dylan's odds): base max 1 in 1,000,000, bought Overpressure 1 in 50,000, Blackout 1 in 200 and ≥1,000×; bought Vent Break 1 in 200,000 pending capped-round search; all modes exactly 96% |
 | CS-04 | Production symbol/cabinet/background/logo and registered mascot layers | ChatGPT | doing | Batch 02: four premiums plus WILD, vent and desktop/mobile room delivered (8/49 assets). 0/25 mascot layers; rig art remains priority. Source QA passed; Claude to integrate and browser-check. |
 | CS-05 | Rig, animations, original audio and responsive runtime integration | Claude | doing | eda6210: playable on placeholders; bone rig + IK + clips, WebAudio score; art wires in by file name. Audio mix measured and balanced (`tools/audio/cyber-skunk-levels.mjs`, browser test guards it) |
 | CS-06 | UI skin, buy screens, controller and phone visual QA | ChatGPT + Claude | doing | Reel-first layout after Dylan's feedback: phone header 20%, mascot waist-up behind the cabinet edge, cabinet base to the controller; desktop reels centred, mascot behind a side console (~20%), bonus ladder at right. `shots/*-v2-*` |

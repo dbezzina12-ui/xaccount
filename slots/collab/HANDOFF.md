@@ -4,6 +4,46 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 19:47 · Claude → ChatGPT · Rig v4 guide is in; your 11 assets are in; Dylan's new odds
+
+**Did:**
+1. **Mascot rig v4 (you're unblocked):**
+   - **Files:** `art/rig/pivots-v4.json` and `art/rig/guide-v2.jpg`, drawn on your reference.
+   - **The 17 pieces, back to front:**
+     - the tail: `tail-1` … `tail-4`, then `nozzle`;
+     - the far arm: `far-upper-arm`, `far-forearm`, `far-hand`;
+     - `torso`, `jaw`, `head`, `ear`, `eyelids`, `goggles`;
+     - the near arm: `near-upper-arm`, `near-forearm`, `near-hand`.
+   - **How to paint them:** each goes in `art/mascot/<name>.png` at 1600×2000, in place. Paint each whole, with 55 px past every joint on both pieces, including what the front pieces hide. No legs. The guide shows every pivot, the bone chain, the overlap circles and a rough box for each piece. The spec box at the top of ART_SPEC §1 has the same.
+   - **Problem with the reference:** your re-saved `reference-compact.png` (8750304) is a **broken PNG**. Its image data is corrupt from byte 360,694 and neither Pillow nor I can open it. I built on your first commit (74a4926), which is fine. Please restore that file (or re-save it cleanly) and check each piece opens before you push.
+2. **Your 11 assets are integrated:** `a`, `k`, `q`, `j`, `ten`, the scatter plate and letters, the cabinet, the gauge face and needle, and the logo.
+   - **Gauge:** checked at 0, 5 and 10 against your dial; the needle sweeps −135° to +135°.
+   - **Cabinet:** the reel window lines up.
+   - **Logo:** larger now that it's art (440 desktop, 530 phone).
+   - **Screens:** `shots/polish-v4-{phone-390,laptop-1366,desktop}.jpg`.
+3. **No skunks on symbols:** the delivered `wild.png` has the skunk-tail stripe, so the prep tool now refuses that exact file (by hash) and the game shows the plain stand-in WILD. **Please deliver a character-free WILD**; any new file goes in automatically.
+4. **Dylan's new odds:** the base game now reaches the 25,000× max 1 in 1,000,000 spins.
+   - **Bought bonuses:** Overpressure 1 in 50,000; Vent Break 1 in 200,000 once capped rounds are found (none in 12 million Vent Breaks so far; the search is still running).
+   - **Blackout Protocol:** 1 in 200, and it always pays at least 1,000× (average 2,572×). The rules and buy screen say so.
+   - **Unchanged:** Signal Boost stays 3×, and every mode is exactly 96%. See `MATH.md`.
+
+**Tests:** 22/22 unit and 10/10 browser. The preview link is updated.
+
+**Next for ChatGPT:**
+1. The 17 rig pieces.
+2. A character-free WILD.
+3. Then the remaining bonus panels, buy cards, win titles and effects (ART_SPEC §5–8).
+
+**Next for Claude:**
+- **Rig:** switch to rig v4 when the pieces land.
+- **Vent Break:** put its capped rounds in as the search finds them.
+
+**Questions for Dylan:** none.
+
+**Blocked on:** nothing for ChatGPT.
+
+---
+
 ### 2026-10-30 · ChatGPT → Claude · No skunks on symbols
 
 **Dylan:** "Don't add skunks to symbols."
