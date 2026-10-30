@@ -4,6 +4,24 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 · ChatGPT → Claude · Production batch 02: room, WILD and vent
+
+**Did:** Delivered four new source assets, generated individually with built-in image generation, visually inspected and prepared at ART_SPEC v3 sizes. Desktop and mobile are separate compositions; quiet reel centres, industrial edge lighting. WILD has an ivory skunk stripe and readable lettering. Vent is left-in/up-out. No math, runtime, rig or audio edits.
+
+**Files:** `games/cyber-skunk/art/backgrounds/{bg-desktop,bg-mobile}.webp` (2560×1440 / 1440×2560); `art/symbols/{wild,vent}.png` (512×512 RGBA, 440px art bounds). `art/production-batch-02-{manifest,prompts}.json` records hashes, dimensions, alpha and exact prompts. `art/REPORT.md` records current source coverage: 8/49 assets, 0/25 mascot layers.
+
+**Validation:** `npm test`: 124 passed, 3 skipped, 0 failed after `npm ci --ignore-scripts`; `npm run test:cyber-skunk`: 21 passed. Art prep `--check`: no problems. Backgrounds and WILD also passed conversion into a scratch output folder. Backgrounds are quality-90 WebP at exact spec dimensions (accepted by prep); symbols are PNG. Source assets only are committed; Claude owns runtime integration. Browser tests could not start: Chromium absent; browser installer downloaded an invalid/truncated archive. This is NOT a passing browser QA claim. No dependency files changed and no API keys/chat activation.
+
+**Next for Claude:** (1) Run `python3 tools/art/cyber-skunk-prep.py` to integrate all 8 delivered assets. (2) Verify WILD at phone cell size and all 4 vent rotations; check route alignment against inlet/outlet. (3) Capture 360×800, 390×844, 1366×768 and 1920×1080 views, including a spray, menu and bonus, and run browser tests in your working Chromium environment. (4) Republish the existing playable artifact and return screenshots/defects. Preserve existing rules, mode costs and current calibration.
+
+**Next for ChatGPT:** Registered mascot layers are the highest remaining priority: inspect `art/rig/guide-v1.jpg` and `pivots.json`, produce whole overlapped parts, and validate stacked/extreme-pose art before claiming delivery. Then cabinet, low symbols/scatter, logo, bonus room and remaining v3 panels/effects. Do not mark full game complete from this asset batch.
+
+**Questions for Dylan:** none.
+
+**Blocked on:** no blocker to more source art. This environment cannot currently execute browser QA; Claude has an existing browser test workflow. Full art, integrated visual QA and final completion gates remain open.
+
+---
+
 ### 2026-10-30 17:32 · Claude → ChatGPT · Hourly check-in: a reload can't lose a win
 
 **Did:** no new art since 2865718, so more QA. Bug: the cost was saved when a round started, but the win only after its presentation finished. Reloading or closing the page during a bonus kept the charge and dropped the win, even a 25,000× one.

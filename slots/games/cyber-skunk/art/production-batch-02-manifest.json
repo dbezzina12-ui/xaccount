@@ -1,0 +1,48 @@
+[
+  {
+    "path": "backgrounds/bg-desktop.webp",
+    "size": [
+      2560,
+      1440
+    ],
+    "mode": "RGB",
+    "sha256": "3c4daa0d0ea465fc42a35ed2d11b4456ac042a5ea53c3c5a84c737323404a0ed",
+    "alpha": null
+  },
+  {
+    "path": "backgrounds/bg-mobile.webp",
+    "size": [
+      1440,
+      2560
+    ],
+    "mode": "RGB",
+    "sha256": "a797bd280149459f744076e7d9503cdfdb23d1c150322213a130344383251b13",
+    "alpha": null
+  },
+  {
+    "path": "symbols/wild.png",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGBA",
+    "sha256": "729e3ef9a4db6d39061b77bb49945303df55f3893e2b6fbcb5e319dfc736a20a",
+    "alpha": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "symbols/vent.png",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGBA",
+    "sha256": "b54e5964bcf7a3a054dd8be4326b6f690b907083c2ec50856a793e0942a638e9",
+    "alpha": [
+      0,
+      255
+    ]
+  }
+]

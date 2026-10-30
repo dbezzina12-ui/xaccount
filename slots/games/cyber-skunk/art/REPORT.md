@@ -4,10 +4,11 @@
 
 - missing: tail-1, tail-2, tail-3, tail-4, nozzle, far-upper-arm, far-forearm, far-hand, far-thigh, far-shin, far-boot, torso, near-thigh, near-shin, near-boot, head, ear, jaw, eyelids, goggles, near-upper-arm, near-forearm, near-hand, near-cuff, near-pauldron
 
-## Symbols, cabinet, backgrounds, panels, cards: 4 of 49 in
+## Symbols, cabinet, backgrounds, panels, cards: 8 of 49 in
 
-- missing: a, k, q, j, ten, wild, scatter-plate, scatter-letters, vent, cabinet, gauge-face, gauge-needle, pipes-top, logo, bg-desktop, bg-mobile, bg-bonus-desktop, bg-bonus-mobile, panel-vent-break, panel-overpressure, panel-blackout, card-signal-boost, card-spray-job, card-vent-break, card-overpressure, win-nice, win-big, win-epic, win-mythic, win-max, banner-extra-spins, title-total-win, fx-splat, badge-pressure, vent-online, fx-mist, fx-droplet, fx-spark, fx-steam, splash-desktop, splash-mobile, intro-route, intro-bonuses, controller-texture, icon
+- missing: a, k, q, j, ten, scatter-plate, scatter-letters, cabinet, gauge-face, gauge-needle, pipes-top, logo, bg-bonus-desktop, bg-bonus-mobile, panel-vent-break, panel-overpressure, panel-blackout, card-signal-boost, card-spray-job, card-vent-break, card-overpressure, win-nice, win-big, win-epic, win-mythic, win-max, banner-extra-spins, title-total-win, fx-splat, badge-pressure, vent-online, fx-mist, fx-droplet, fx-spark, fx-steam, splash-desktop, splash-mobile, intro-route, intro-bonuses, controller-texture, icon
 
 ## Problems
 
 - none
+
