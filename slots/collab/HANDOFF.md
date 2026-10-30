@@ -4,6 +4,23 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 · ChatGPT → Claude · CYBER SKUNK kickoff — action requested (CS-01)
+**Dylan's new authorization:** Build a complete new slot together within 24 hours, proper articulated mascot, AAA visual target, good mobile/desktop cabinet and controllers, full art/audio, correct math with rare max wins. Latest follow-up explicitly requires **Regular, Super, Hidden, Enhanced Spins AND Feature Spins**. Proceed autonomously; this new game is authorized despite the old Game 001 pause. Other games remain unchanged.
+**Did:** Committed production brief `games/cyber-skunk/STYLE.md` (b738449) and first style frame `games/cyber-skunk/art/inbox/cyber-skunk-style-v1.webp` (9d5f8c9). The frame is concept art, NOT a working game or ready rig. WebP 1536x1024, SHA-256 f57c9aa287bd82311890e3aace627b5fb3d60b96da48904948e0ca138d68145a.
+**Concept:** Backpressure — skunk spray routes through elbow vents, bounded paths turn symbols wild; bonus reservoirs store/release pressure on subsequent spins. Regular: Vent Break; Super: Overpressure; Hidden: Blackout Protocol; Enhanced: Signal Boost; Feature Spins: Spray Job. Names/rules are working design; full edge-case proposal and math acceptance gates in STYLE.md.
+**Next for Claude (start now, do not wait for another Dylan relay once you read this):**
+1. Read STYLE.md and create `games/cyber-skunk/ART_SPEC.md` FIRST: actual mascot layer canvas, stable pivots, occlusion overlap, draw order, exact cabinet/symbol sizes. Commit a joint guide and rig preview; leave an early pass-off so ChatGPT can generate correctly registered parts while you implement. You own rigging/animation, engine/math and audio; ChatGPT owns artwork/UI direction.
+2. Build authoritative pure round engine + tests and calibration for all required modes. Target 96% per actual paid cost; proposed 3x Enhanced/10x Feature/100x Regular/250x Super are provisional. Hidden naturally reachable, distinct opening, no forced max or minimum. Report distribution and cap odds per mode; exact support/replay or adequately qualified simulation, never label guessed odds as verified.
+3. Implement working responsive demo using the existing proven controller architecture without altering existing games; separate Feature Spins and Bonus Buys sections, shared cost config, proper balance/skip/auto behavior. Add original audio and rigorous loop handling.
+4. Keep checking this log on your side with Dylan's authorized scheduling. ChatGPT's hourly continuation is ACTIVE, first run scheduled one hour from kickoff; it will do actual pending work and pass back commits. A Git commit itself does not trigger either external session. Do NOT re-enable dormant embedded API chat or provision API keys.
+**Deadline target:** 2026-10-31 08:25 UTC (24h). Completion requires playable link, integrated assets/rig/audio, all modes, measured math and browser QA. Aim for first mechanic/art-contract response inside the first hour.
+**Next for ChatGPT:** Generate production layers/assets to your ART_SPEC, review rig extremes and phone screenshots, integrate visual polish, review math claims against report. Until contract arrives, independent non-rig art is available.
+**Validation this pass:** GitHub confirmed source/art commits; style frame visually reviewed, dimensions/hash recorded. No runtime or math exists yet, so no test-pass claim.
+**Questions for Dylan:** none.
+**Blocked on:** Claude's art/pivot contract for final registered mascot layers; other art can proceed.
+
+---
+
 ### 2026-10-29 · Claude → ChatGPT + Dylan · Zombify ready for Stake Engine (S-31)
 
 **Did:** Dylan asked to "get it ready for me to upload to Engine" (Stake Engine), with the full game.
