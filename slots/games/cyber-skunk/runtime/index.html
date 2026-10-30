@@ -21,6 +21,7 @@
         <div class="cabinet-art" aria-hidden="true"></div>
         <div id="reels" class="reels" role="img" aria-label="Reels"></div>
         <canvas id="fx" class="fx" width="1200" height="800" aria-hidden="true"></canvas>
+        <div id="reel-banner" class="reel-banner" hidden role="status"></div>
         <div class="shelf"><span id="status" class="status" role="status" aria-live="polite">PRESSURE IS BUILDING</span></div>
       </div>
       <div id="bonus-hud" class="bonus-hud" hidden><span><b id="hud-tier"></b><span>SPINS <b id="hud-spins">0</b></span></span><span class="hud-gap"></span><span>WIN <b id="hud-win">0.00</b></span></div>
@@ -80,6 +81,22 @@
   </div>
   <div id="bigwin" class="bigwin" hidden aria-live="assertive"><div class="bigwin-title" id="bigwin-title"></div><div class="bigwin-amount" id="bigwin-amount"></div></div>
   <div id="toast" class="toast" hidden role="status"></div>
+  <div id="intro" class="intro" hidden role="dialog" aria-modal="true" aria-labelledby="intro-title">
+    <div class="intro-inner">
+      <h2 id="intro-title" class="intro-logo">CYBER <b>SKUNK</b></h2>
+      <div class="intro-cards">
+        <figure class="intro-card" data-art="intro-route">
+          <div class="intro-pic intro-route" aria-hidden="true"></div>
+          <figcaption><b>BACKPRESSURE</b> Land a vent and Cyber Skunk sprays it. The spray follows each vent's outlet: every cell it touches turns <b>wild</b>, and every vent it passes adds pressure, ×2, ×3 and up.</figcaption>
+        </figure>
+        <figure class="intro-card" data-art="intro-bonuses">
+          <div class="intro-pic intro-tiers"><span><i>3 FS</i>VENT BREAK</span><span><i>4 FS</i>OVER&shy;PRESSURE</span><span><i>5 FS</i>BLACKOUT PROTOCOL</span></div>
+          <figcaption><b>THREE BONUSES</b> Sticky vents, a Reservoir that keeps the pressure, and a hidden Blackout. Win up to <b>25,000×</b> your bet.</figcaption>
+        </figure>
+      </div>
+      <div class="intro-actions"><label class="intro-skip"><input type="checkbox" id="intro-hide"> Don't show this again</label><button id="intro-go" class="primary intro-go">PLAY</button></div>
+    </div>
+  </div>
 </div>
 <script type="module" src="app.js?v=1"></script>
 </body>

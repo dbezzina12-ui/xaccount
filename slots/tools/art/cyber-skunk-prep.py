@@ -49,6 +49,27 @@ SPEC.update({
     "card-spray-job": ("cards", (720, 480), False, 85),
     "card-vent-break": ("cards", (720, 480), False, 85),
     "card-overpressure": ("cards", (720, 480), False, 85),
+    # v3: win titles, effects, intro, controller texture, icon
+    "win-nice": ("wins", (1600, 560), True, 90),
+    "win-big": ("wins", (1600, 560), True, 90),
+    "win-epic": ("wins", (1600, 560), True, 90),
+    "win-mythic": ("wins", (1600, 560), True, 90),
+    "win-max": ("wins", (1600, 560), True, 90),
+    "banner-extra-spins": ("wins", (1200, 360), True, 90),
+    "title-total-win": ("wins", (1200, 360), True, 90),
+    "fx-splat": ("fx", (512, 512), True, 88),
+    "badge-pressure": ("fx", (256, 160), True, 92),
+    "vent-online": ("fx", (512, 512), True, 88),
+    "fx-mist": ("fx", (256, 256), True, 85),
+    "fx-droplet": ("fx", (64, 64), True, 92),
+    "fx-spark": ("fx", (128, 128), True, 90),
+    "fx-steam": ("fx", (512, 512), True, 85),
+    "splash-desktop": ("ui", (1920, 1080), False, 82),
+    "splash-mobile": ("ui", (1080, 1920), False, 82),
+    "intro-route": ("ui", (900, 600), False, 88),
+    "intro-bonuses": ("ui", (900, 600), False, 88),
+    "controller-texture": ("ui", (512, 512), False, 85),
+    "icon": ("ui", (512, 512), False, 92),
 })
 LAYERS = list(PIVOTS["parts"].keys())
 CANVAS = tuple(PIVOTS["canvas"])

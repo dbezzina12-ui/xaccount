@@ -1,4 +1,4 @@
-# Cyber Skunk: art spec v2 (contract)
+# Cyber Skunk: art spec v3 (contract)
 
 > Spec by Claude; art by ChatGPT. **Follows ChatGPT's `STYLE.md` and style frame** (`art/inbox/cyber-skunk-style-v1.webp`): its palette, its mascot, its symbols and its cabinet language. The rules are in `DESIGN.md`.
 >
@@ -11,6 +11,8 @@
 3. **Cabinet and gauge (§3).**
 4. **Logo and backgrounds (§4).**
 5. **Bonus panels and buy cards (§5).**
+6. **Win titles and gameplay effects (§6, §7).** New in v3: the splat, the pressure tag and the win titles show on every spray and every big win.
+7. **Intro screen, controller texture and icon (§8).** New in v3.
 
 ## 1. Mascot: rig contract (Claude rigs and animates)
 
@@ -115,3 +117,45 @@
 | `card-overpressure.png` | 720 × 480 | Buy screen: Overpressure |
 
 The text on the panels and cards is art. Prices and counts stay live text, which Claude draws.
+
+## 6. Win titles and banners (folder `wins/`), new in v3
+
+Transparent wordmarks in the logo's industrial lettering. The amounts stay live text, which Claude draws under them.
+
+| File | Size | What |
+| --- | --- | --- |
+| `win-nice.png` | 1600 × 560 | "NICE WIN": ivory and brass, the calmest of the five |
+| `win-big.png` | 1600 × 560 | "BIG WIN": amber, a little heat |
+| `win-epic.png` | 1600 × 560 | "EPIC WIN": amber with cyan pressure light bleeding through cracks |
+| `win-mythic.png` | 1600 × 560 | "MYTHIC WIN": cyan-white, like the plasma canister |
+| `win-max.png` | 1600 × 560 | "MAX WIN": the gauge's red zone; it shows once in millions of spins |
+| `banner-extra-spins.png` | 1200 × 360 | "EXTRA SPINS" for a retrigger. The number (+4) is live text. |
+| `title-total-win.png` | 1200 × 360 | "TOTAL WIN" on the bonus-complete panel |
+
+**Escalation:** each tier is visibly bigger and hotter than the one before. All five share one letterform, so they read as a set.
+
+## 7. Gameplay effects (folder `fx/`), new in v3
+
+Transparent, centred, with soft edges and no background. Claude animates, scales and tints them; keep them restrained, so they never hide a symbol's identity.
+
+| File | Size | What, and how the game uses it |
+| --- | --- | --- |
+| `fx-splat.png` | 512 × 512 | Cyan-white skunk-spray splat. It sits **behind** the wild badge on every sprayed cell, so a painted cell is obvious at a glance. Keep its middle 300 px calm: the badge sits there. |
+| `badge-pressure.png` | 256 × 160 | Brass pressure tag (riveted plate, small gauge tick). The live "×2", "×5" number sits on it, in a vent cell's corner. |
+| `vent-online.png` | 512 × 512 | Cyan glow ring around a vent that is live: sticky in a bonus, or lit in the Blackout opening. Draw a ring, not a disc; the vent shows through. |
+| `fx-mist.png` | 256 × 256 | A soft cyan mist puff (spray particles). |
+| `fx-droplet.png` | 64 × 64 | One droplet, cyan-white with a highlight (the jet's droplets). |
+| `fx-spark.png` | 128 × 128 | A brass four-point spark (vent hits, the pressure going up). |
+| `fx-steam.png` | 512 × 512 | A white steam burst from a valve (the Reservoir releasing at the gauge). |
+
+## 8. Intro screen, controller texture and icon (folder `ui/`), new in v3
+
+| File | Size | What |
+| --- | --- | --- |
+| `splash-desktop.png` | 1920 × 1080 | The opening screen, behind the intro: the hall, the skunk mid-spray, the cabinet glowing. Keep the **lower 40 % calm**; the intro cards and Play button sit there. |
+| `splash-mobile.png` | 1080 × 1920 | The same, portrait. Keep the lower 45 % calm. |
+| `intro-route.png` | 900 × 600 | Intro card 1, "BACKPRESSURE": a spray line running through two elbow vents on a small 4 × 3 board, cells it touches painted wild, the vents tagged ×2 and ×3. A diagram, so a phone player gets it in two seconds. |
+| `intro-bonuses.png` | 900 × 600 | Intro card 2: three plates, for VENT BREAK, OVERPRESSURE and BLACKOUT PROTOCOL, with 3, 4 and 5 FS scatters under them. The plates carry no text; Claude labels them live. |
+| `controller-texture.png` | 512 × 512 | **Seamless** tile: graphite brushed steel with faint brass rivets, for the phone controller's buttons and plate. Low contrast, so icons stay readable. |
+| `icon.png` | 512 × 512 | App and tab icon: the skunk's head with the amber goggles, on graphite, readable at 32 px. |
+

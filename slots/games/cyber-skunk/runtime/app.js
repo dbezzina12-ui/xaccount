@@ -44,12 +44,12 @@ const state = {
   bet: STAKES.includes(saved?.bet) ? saved.bet : 100,
   feature: null, // 'enhanced' | 'sprayjob' while a persistent mode is on
   speed: ['normal', 'quick', 'turbo'].includes(saved?.speed) ? saved.speed : 'normal',
-  muted: !!saved?.muted, music: level(saved?.music, 60), effects: level(saved?.effects, 80),
+  muted: !!saved?.muted, music: level(saved?.music, 60), effects: level(saved?.effects, 80), introHidden: !!saved?.introHidden,
   history: Array.isArray(saved?.history) ? saved.history.slice(0, 30) : [],
   busy: false, ready: false, auto: 0, skip: false, win: 0, debit: 0, tier: null,
 };
 function persist() {
-  try { localStorage.setItem(KEY, JSON.stringify({ balance: state.balance, bet: state.bet, speed: state.speed, muted: state.muted, music: state.music, effects: state.effects, history: state.history })); } catch { /* storage is optional */ }
+  try { localStorage.setItem(KEY, JSON.stringify({ balance: state.balance, bet: state.bet, speed: state.speed, muted: state.muted, music: state.music, effects: state.effects, history: state.history, introHidden: state.introHidden })); } catch { /* storage is optional */ }
 }
 
 const audio = new GameAudio();
@@ -177,7 +177,9 @@ function drawFx() {
   for (const p of particles) {
     p.x += p.vx; p.y += p.vy; p.vy += 0.05; p.life -= 1;
     fx.globalAlpha = Math.max(0, p.life / p.max) * 0.85;
-    fx.fillStyle = p.color; fx.beginPath(); fx.arc(p.x, p.y, p.r * (1.6 - p.life / p.max), 0, Math.PI * 2); fx.fill();
+    const size = p.r * (1.6 - p.life / p.max);
+    if (p.sprite?.complete) { fx.save(); fx.translate(p.x, p.y); fx.rotate(p.spin + p.life * 0.05); fx.drawImage(p.sprite, -size * 3, -size * 3, size * 6, size * 6); fx.restore(); }
+    else { fx.fillStyle = p.color; fx.beginPath(); fx.arc(p.x, p.y, size, 0, Math.PI * 2); fx.fill(); }
   }
   fx.globalAlpha = 1;
   effects.particles = particles.filter((p) => p.life > 0);
@@ -190,7 +192,7 @@ function burst(x, y, n = 18, color = '#9ff0ea') {
   if (reduced.matches) n = Math.ceil(n / 3);
   for (let k = 0; k < n; k++) {
     const a = Math.random() * Math.PI * 2, v = 1 + Math.random() * 4;
-    effects.particles.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 1, r: 4 + Math.random() * 8, life: 26 + Math.random() * 20, max: 46, color });
+    effects.particles.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 1, r: 4 + Math.random() * 8, life: 26 + Math.random() * 20, max: 46, color, sprite: color === '#eda83c' ? fxSprites.spark : fxSprites.mist, spin: Math.random() * 6 });
   }
   kick();
 }
@@ -229,7 +231,10 @@ async function sprayJet(i) {
       }
       jg.shadowBlur = 0;
       if (!reduced.matches && head < 1) for (let k = 0; k < 3; k++) { const [px, py] = point(head * Math.random()); drops.push({ x: px, y: py, vx: (Math.random() - 0.5) * 3, vy: Math.random() * 2, life: 30 }); }
-      for (const d of drops) { d.x += d.vx; d.y += d.vy; d.vy += 0.12; d.life--; jg.globalAlpha = Math.max(0, d.life / 30) * 0.8; jg.fillStyle = '#bff7f2'; jg.beginPath(); jg.arc(d.x, d.y, 3, 0, Math.PI * 2); jg.fill(); }
+      for (const d of drops) {
+        d.x += d.vx; d.y += d.vy; d.vy += 0.12; d.life--; jg.globalAlpha = Math.max(0, d.life / 30) * 0.8;
+        if (fxSprites.droplet?.complete) jg.drawImage(fxSprites.droplet, d.x - 9, d.y - 9, 18, 18); else { jg.fillStyle = '#bff7f2'; jg.beginPath(); jg.arc(d.x, d.y, 3, 0, Math.PI * 2); jg.fill(); }
+      }
       jg.globalAlpha = 1;
       if (t < grow + hold && !state.skip) requestAnimationFrame(frame); else { jg.clearRect(0, 0, jet.width, jet.height); resolve(); }
       if (head >= 1 && !frame.hit) { frame.hit = true; const [ex, ey] = center(i); burst(ex, ey, 30); effects.flash = 0.18; kick(); }
@@ -305,9 +310,10 @@ async function countTo(target, ms) {
 const paintWin = () => { controller.update({ win: money(state.win) }); if (state.tier) $('hud-win').textContent = money(state.win); };
 
 // ---- Bonuses ----
-function panel({ kicker, title, text, button = 'CONTINUE', tier }) {
+function panel({ kicker, title, text, html = null, button = 'CONTINUE', tier }) {
   const el = $('bonus-panel');
-  $('bonus-panel-kicker').textContent = kicker; $('bonus-panel-title').textContent = title; $('bonus-panel-text').textContent = text;
+  $('bonus-panel-kicker').textContent = kicker; $('bonus-panel-title').textContent = title;
+  if (html) $('bonus-panel-text').innerHTML = html; else $('bonus-panel-text').textContent = text;
   $('bonus-panel-go').textContent = button; el.dataset.tier = tier || ''; el.hidden = false;
   $('bonus-panel-go').focus({ preventScroll: true });
   return new Promise((resolve) => {
@@ -345,15 +351,30 @@ async function blackout(e) {
   }
   delete app.dataset.blackout;
   effects.flash = 0.5; kick();
-  audio.play('release'); audio.music('hidden'); skunk.play('release'); gauge(e.reservoir); status(`RESERVOIR ${e.reservoir}`);
+  audio.play('release'); audio.music('hidden'); skunk.play('release'); steam(); gauge(e.reservoir); status(`RESERVOIR ${e.reservoir}`);
   await wait(600);
 }
 async function bonusEnd(e) {
   audio.music('base');
   await wait(400);
-  await panel({ kicker: `${e.played} SPINS PLAYED`, title: `${BONUSES[e.tier].title} COMPLETE`, text: `TOTAL WIN ${money(payOf(e.total))}`, tier: e.tier });
+  const total = money(payOf(e.total)), titleArt = artImg('title-total-win', 'Total win');
+  await panel({ kicker: `${e.played} SPINS PLAYED`, title: `${BONUSES[e.tier].title} COMPLETE`, text: `TOTAL WIN ${total}`, html: titleArt ? `${titleArt}<b class="panel-amount">${total}</b>` : null, tier: e.tier });
   delete app.dataset.bonus; $('bonus-hud').hidden = true; state.tier = null; gauge(0);
   setBoard(board.map((c) => ({ s: c.s })));
+}
+
+// A banner over the reels (EXTRA SPINS): the art when it exists, the live number under it.
+async function banner(text) {
+  const el = $('reel-banner');
+  el.innerHTML = `${artImg('banner-extra-spins', 'Extra spins') || '<span class="banner-word">EXTRA SPINS</span>'}<b>${text}</b>`;
+  el.hidden = false; el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+  await wait(1300);
+  el.hidden = true;
+}
+// Steam from the gauge's valve when the Reservoir changes.
+function steam() {
+  const el = document.createElement('i'); el.className = 'steam';
+  document.querySelector('.gauge').append(el); setTimeout(() => el.remove(), 1400);
 }
 
 // The big-win celebration, from the round's actual award and the cap.
@@ -361,7 +382,8 @@ async function celebrate(total, capped) {
   const x = total / 100, tier = capped ? 'MAX WIN' : WIN_TIERS.find(([min]) => x >= min)?.[1];
   if (!tier) return;
   const el = $('bigwin'), amount = payOf(total);
-  $('bigwin-title').textContent = tier; $('bigwin-amount').textContent = money(0); el.hidden = false;
+  $('bigwin-title').innerHTML = artImg(`win-${tier.split(' ')[0].toLowerCase()}`, tier) || tier;
+  el.dataset.tier = tier.split(' ')[0].toLowerCase(); $('bigwin-amount').textContent = money(0); el.hidden = false;
   audio.duck(true); audio.play(capped ? 'max' : 'bigwin', { tier }); skunk.play('bigwin');
   const dur = (capped ? 5200 : x >= 500 ? 4200 : x >= 100 ? 3200 : x >= 25 ? 2400 : 1600) * pace(), t0 = performance.now();
   while (!state.skip && performance.now() - t0 < dur) {
@@ -417,8 +439,8 @@ async function present(result, mode) {
     else if (e.type === 'wins') { await showWins(e); state.win = payOf(e.total); paintWin(); if (e.tier) await wait(350); }
     else if (e.type === 'bonusStart') await bonusStart(e);
     else if (e.type === 'blackout') await blackout(e);
-    else if (e.type === 'reservoir') { gauge(e.after); audio.play('gauge'); skunk.play('release'); status(`RESERVOIR ${e.before} → ${e.after}`); await wait(500); }
-    else if (e.type === 'retrigger') { audio.play('retrigger'); toast(`+${e.add} FREE SPINS`); status(`RETRIGGER +${e.add}`); hud(Number($('hud-spins').textContent.split('/')[0]), e.spins); await wait(900); }
+    else if (e.type === 'reservoir') { gauge(e.after); steam(); audio.play('gauge'); skunk.play('release'); status(`RESERVOIR ${e.before} → ${e.after}`); await wait(500); }
+    else if (e.type === 'retrigger') { audio.play('retrigger'); status(`RETRIGGER +${e.add}`); hud(Number($('hud-spins').textContent.split('/')[0]), e.spins); await banner(`+${e.add}`); }
     else if (e.type === 'bonusEnd') await bonusEnd(e);
     else if (e.type === 'roundEnd') await celebrate(e.total, e.capped);
   }
@@ -555,7 +577,7 @@ function renderHistory() {
 // ---- Keyboard: Space or Enter spins, unless a control or dialog has focus ----
 addEventListener('keydown', (ev) => {
   if (ev.code !== 'Space' && ev.code !== 'Enter') return;
-  if (document.querySelector('dialog[open]') || !$('bonus-panel').hidden) return;
+  if (document.querySelector('dialog[open]') || !$('bonus-panel').hidden || !$('intro').hidden) return;
   if (ev.composedPath().some((n) => n instanceof HTMLElement && /^(BUTTON|INPUT|SELECT|TEXTAREA|A)$/.test(n.tagName))) return;
   ev.preventDefault(); act('play');
 });
@@ -563,7 +585,13 @@ document.addEventListener('visibilitychange', () => audio.suspend(document.hidde
 
 // ---- Art: ChatGPT's files when present, placeholders until then ----
 const exists = (url) => new Promise((resolve) => { const img = new Image(); img.onload = () => resolve(true); img.onerror = () => resolve(false); img.src = url; });
-const cardArt = new Map();
+const cardArt = new Map(), extraArt = new Map(), fxSprites = {};
+// ART_SPEC v3 (§6-§8): each file switches its feature on when it exists; until then the current look stays.
+const EXTRA = {
+  'win-nice': 'wins', 'win-big': 'wins', 'win-epic': 'wins', 'win-mythic': 'wins', 'win-max': 'wins', 'banner-extra-spins': 'wins', 'title-total-win': 'wins',
+  'fx-splat': 'fx', 'badge-pressure': 'fx', 'vent-online': 'fx', 'fx-mist': 'fx', 'fx-droplet': 'fx', 'fx-spark': 'fx', 'fx-steam': 'fx',
+  'splash-desktop': 'ui', 'splash-mobile': 'ui', 'intro-route': 'ui', 'intro-bonuses': 'ui', 'controller-texture': 'ui', icon: 'ui',
+};
 async function loadUI() {
   const ui = {
     cabinet: 'assets/ui/cabinet.webp', 'gauge-face': 'assets/ui/gauge-face.webp', 'gauge-needle': 'assets/ui/gauge-needle.webp', 'pipes-top': 'assets/ui/pipes-top.webp', logo: 'assets/ui/logo.webp',
@@ -577,7 +605,14 @@ async function loadUI() {
   for (const k of ['bg-desktop', 'bg-mobile', 'bg-bonus-desktop', 'bg-bonus-mobile']) if (found[k]) { app.dataset.artBg = ''; app.style.setProperty(`--${k}`, `url(${found[k]})`); }
   await Promise.all(Object.values(COPY).map(async ({ card: name }) => { const url = `assets/cards/${name}.webp`; if (await exists(url)) cardArt.set(name, url); }));
   await Promise.all(Object.values(TIER).map(async ({ panel: name }) => { const url = `assets/panels/${name}.webp`; if (await exists(url)) app.style.setProperty(`--${name}`, `url(${url})`); }));
+  await Promise.all(Object.entries(EXTRA).map(async ([name, dir]) => { const url = `assets/${dir}/${name}.webp`; if (await exists(url)) extraArt.set(name, url); }));
+  for (const name of ['fx-splat', 'badge-pressure', 'vent-online', 'fx-steam', 'splash-desktop', 'splash-mobile']) if (extraArt.has(name)) { app.dataset[`art${name.replace(/(^|-)(\w)/g, (_, __, c) => c.toUpperCase())}`] = ''; app.style.setProperty(`--${name}`, `url(${extraArt.get(name)})`); }
+  for (const [name, key] of [['fx-mist', 'mist'], ['fx-droplet', 'droplet'], ['fx-spark', 'spark']]) if (extraArt.has(name)) { const img = new Image(); img.src = extraArt.get(name); fxSprites[key] = img; }
+  if (extraArt.has('controller-texture')) $('controller').style.setProperty('--controller-mobile-texture', `url("${new URL(extraArt.get('controller-texture'), location.href).href}")`);
+  if (extraArt.has('icon')) document.head.insertAdjacentHTML('beforeend', `<link rel="icon" href="${extraArt.get('icon')}">`);
+  for (const name of ['intro-route', 'intro-bonuses']) if (extraArt.has(name)) { const pic = document.querySelector(`[data-art="${name}"] .intro-pic`); pic.style.backgroundImage = `url(${extraArt.get(name)})`; pic.replaceChildren(); }
 }
+const artImg = (name, alt) => (extraArt.has(name) ? `<img src="${extraArt.get(name)}" alt="${alt}">` : '');
 function applyCardArt() { document.querySelectorAll('[data-card]').forEach((el) => { const url = cardArt.get(el.dataset.card); if (url) { el.style.backgroundImage = `url(${url})`; el.replaceChildren(); } }); }
 
 // ---- Boot ----
@@ -590,6 +625,30 @@ async function boot() {
   fit();
   state.ready = true; update();
   audio.music('base');
+  introRoute();
+  if (!saved?.introHidden) showIntro();
+}
+// The intro's route diagram from the game's own symbols, until intro-route art exists:
+// a vent (x2) sprays right through a wild into a second vent (x3), which turns it up.
+function introRoute() {
+  const pic = document.querySelector('[data-art="intro-route"] .intro-pic');
+  if (!pic.classList.contains('intro-route')) return;
+  const grid = [['A', 'Q', 'K', 'J'], ['T', 'K', 'Q', 'A'], ['J', 'H2', 'T', 'Q']];
+  const vents = { '1,0': [1, 2], '1,2': [0, 3] }, painted = new Set(['1,0', '1,1', '1,2', '0,2']);
+  pic.innerHTML = grid.map((row, r) => row.map((s, c) => {
+    const key = `${r},${c}`, v = vents[key];
+    return `<i class="mini${painted.has(key) ? ' wild' : ''}">${symbolHTML(painted.has(key) ? 'W' : s)}${v ? ventHTML(v[0]) + `<b>×${v[1]}</b>` : ''}</i>`;
+  }).join('')).join('') + '<svg viewBox="0 0 400 300" preserveAspectRatio="none"><polyline points="10,150 250,150 250,0" /></svg>';
+}
+// The intro: what Backpressure is and the three bonuses, before the first spin.
+// Its Play button is also the gesture that lets the browser start the audio.
+function showIntro() {
+  const el = $('intro'); el.hidden = false; $('intro-go').focus({ preventScroll: true });
+  $('intro-go').onclick = () => {
+    el.hidden = true; void audio.unlock();
+    if ($('intro-hide').checked) { state.introHidden = true; persist(); }
+    $('controller').shadowRoot?.querySelector('[data-action=play]')?.focus({ preventScroll: true });
+  };
 }
 boot();
 // For browser tests: a read-only view of the session. Nothing here forces outcomes.

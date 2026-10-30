@@ -21,6 +21,7 @@ async function open({ width, height, session = null }) {
   if (session) await page.addInitScript(([k, v]) => localStorage.setItem(k, v), [KEY, JSON.stringify(session)]);
   await page.goto(srv.url + GAME);
   await page.waitForFunction(() => window.cyberSkunk?.state.ready);
+  if (await page.locator('#intro').isVisible()) await page.locator('#intro-go').click();
   return { page, errors };
 }
 const state = (page) => page.evaluate(() => window.cyberSkunk.state);
@@ -89,6 +90,21 @@ test('buy screen: Feature Spins first, Bonus Buys second, Hidden as information;
   await page.locator('#confirm-cancel').click();
   assert.equal((await state(page)).balance, 5000, 'cancel charges nothing');
   assert.deepEqual(errors, []);
+  await page.close();
+});
+
+test('the intro shows before the first spin, and "Don\'t show this again" sticks', async () => {
+  const page = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  await page.goto(srv.url + GAME);
+  await page.waitForSelector('#intro:not([hidden])');
+  const go = await page.locator('#intro-go').boundingBox();
+  assert.ok(go && go.y + go.height <= 844, 'Play is on screen without scrolling');
+  await page.locator('#intro-hide').check();
+  await page.locator('#intro-go').click();
+  assert.ok(await page.locator('#intro').isHidden());
+  await page.reload();
+  await page.waitForFunction(() => window.cyberSkunk?.state.ready);
+  assert.ok(await page.locator('#intro').isHidden(), 'stays hidden after a reload');
   await page.close();
 });
 
