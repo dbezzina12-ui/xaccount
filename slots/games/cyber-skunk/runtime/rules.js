@@ -34,7 +34,7 @@ const BASE_SYMBOLS = symbols({ H1: 5, H2: 6, H3: 7, H4: 8, A: 10, K: 10, Q: 11, 
 const FREE_SYMBOLS = symbols({ H1: 6, H2: 7, H3: 8, H4: 9, A: 10, K: 10, Q: 10, J: 10, T: 10, W: 3 });
 const LAND = Object.freeze({
   base: { symbols: BASE_SYMBOLS, scatter: 0.065, vent: 0.0045, minVents: 0, reelOneVent: false },
-  enhanced: { symbols: BASE_SYMBOLS, scatter: 0.11, vent: 0.0045, minVents: 0, reelOneVent: false },
+  enhanced: { symbols: BASE_SYMBOLS, scatter: 0.1125, vent: 0.0045, minVents: 0, reelOneVent: false }, // 96% at 3x without reshaping its spins
   // Spray Job: a vent on reel 1 and at least 3 in all, every spin.
   sprayjob: { symbols: BASE_SYMBOLS, scatter: 0.065, vent: 0.0045, minVents: 3, reelOneVent: true },
   free: { symbols: FREE_SYMBOLS, scatter: 0.05, vent: 0.045, minVents: 0, reelOneVent: false },
@@ -57,4 +57,10 @@ export const BONUSES = Object.freeze({
   hidden: { title: 'BLACKOUT PROTOCOL', scatters: 5, spins: 10, sticky: true, reservoir: true, reservoirStart: 3, opening: true },
 });
 export const RETRIGGER = Object.freeze({ scatters: 3, spins: 4 });
+// The natural trigger rates of a way of landing: exact binomial chances of 3,
+// 4 and 5+ scatters on 6 reels (at most one scatter per reel).
+export function triggerRates(kind) {
+  const p = LAND[kind].scatter, C = [1, 6, 15, 20, 15, 6, 1], P = (k) => C[k] * p ** k * (1 - p) ** (6 - k);
+  return { regular: P(3), super: P(4), hidden: P(5) + P(6) };
+}
 export const bonusFor = (scatters) => (scatters >= 5 ? 'hidden' : scatters === 4 ? 'super' : scatters === 3 ? 'regular' : null);

@@ -2,7 +2,8 @@
 // anything moves (playRound returns its total and every event); this file only
 // presents those events, so skip, turbo and frame timing never change a result.
 import { playRound, seeded, at } from './engine.js';
-import { REELS, ROWS, CELLS, LINES, PAYTABLE, NAMES, MODES, BONUSES, CAP, RETRIGGER, MAX_SPINS, MAX_STICKY, MAX_RESERVOIR } from './rules.js';
+import { drawRound, CATALOG_VERSION } from './catalog.js';
+import { REELS, ROWS, CELLS, LINES, PAYTABLE, NAMES, MODES, BONUSES, CAP, RETRIGGER, MAX_SPINS, MAX_STICKY, MAX_RESERVOIR, triggerRates } from './rules.js';
 import { loadArt, symbolHTML, ventHTML } from './symbols.js';
 import { mountController } from './controller/controller.js';
 import { GameAudio } from './audio.js';
@@ -18,9 +19,11 @@ const payOf = (hundredths) => Math.round((state.bet * hundredths) / 100); // eng
 const xOf = (hundredths) => `${(hundredths / 100).toLocaleString('en-US', { maximumFractionDigits: 1 })}×`;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 
-// What each paid mode is, in the buy menu's words. Prices come from MODES.
+// What each paid mode is, in the buy menu's words. Prices and rates come from rules.js.
+const oneIn = (p) => `1 in ${Math.round(1 / p).toLocaleString('en-US')}`;
+const BASE_RATES = triggerRates('base'), BOOST_RATES = triggerRates(MODES.enhanced.land);
 const COPY = {
-  enhanced: { name: 'SIGNAL BOOST', card: 'card-signal-boost', kind: 'feature', text: 'FS scatters land more often, so all three bonuses come about four times as often. Same pays and rules. Stays on until you switch it off.' },
+  enhanced: { name: 'SIGNAL BOOST', card: 'card-signal-boost', kind: 'feature', text: `FS scatters land more often: Vent Break about ${oneIn(BOOST_RATES.regular)} spins (${oneIn(BASE_RATES.regular)} in base), Overpressure ${oneIn(BOOST_RATES.super)} (${oneIn(BASE_RATES.super)}). Same pays and rules. Stays on until you switch it off.` },
   sprayjob: { name: 'SPRAY JOB', card: 'card-spray-job', kind: 'feature', text: 'Every spin lands a vent on reel 1 and at least 3 vents in all, so Cyber Skunk sprays on every spin. Stays on until you switch it off.' },
   ventbreak: { name: 'VENT BREAK', card: 'card-vent-break', kind: 'buy', text: `${BONUSES.regular.spins} free spins. Every vent that lands stays until the bonus ends (up to ${MAX_STICKY}), so the route grows into a maze.` },
   overpressure: { name: 'OVERPRESSURE', card: 'card-overpressure', kind: 'buy', text: `${BONUSES.super.spins} free spins with sticky vents and the Reservoir: each route banks its pressure gain, and every later route starts higher.` },
@@ -340,14 +343,17 @@ async function celebrate(total, capped) {
 }
 
 // ---- A round ----
-const freshSeed = () => crypto.getRandomValues(new Uint32Array(1))[0];
 async function play(mode = state.feature || 'base') {
   if (state.busy || !state.ready) return;
   const cost = state.bet * MODES[mode].cost;
   if (cost > state.balance) { state.auto = 0; update(); toast(`Not enough credits: this play costs ${money(cost)}.`); return; }
+  // The round is drawn and replayed before any credits move; a replay that
+  // disagrees with the catalog is refused and costs nothing.
+  let result;
+  try { result = drawRound(mode); } catch (err) { console.error(err); state.auto = 0; update(); toast('That round could not be verified, so it was not played. Nothing was charged.'); return; }
+  const seed = result.draw;
   state.busy = true; state.skip = false; state.win = 0; state.debit = cost;
   state.balance -= cost; persist();
-  const seed = freshSeed(), result = playRound({ mode, rng: seeded(seed) });
   update(); app.dataset.busy = '';
   try { await present(result, mode); } catch (err) { console.error(err); }
   finally {
@@ -506,7 +512,8 @@ function renderRules() {
   <h3>WAYS TO PLAY</h3>
   <table><tbody>${['base', 'enhanced', 'sprayjob', 'ventbreak', 'overpressure'].map((m) => `<tr><td>${m === 'base' ? 'BASE SPINS' : COPY[m].name}</td><td>${MODES[m].cost}× base bet${COPY[m]?.kind === 'feature' ? ' per spin' : ''}</td></tr>`).join('')}</tbody></table>
   <p>Maximum win: <b>${(CAP / 100).toLocaleString('en-US')}×</b> the base bet per round, including bonuses. Reaching it ends the round.</p>
-  <p class="note">Preview build: the return is being calibrated to 96.00% in every mode (games/cyber-skunk/MATH.md). Free play only: credits have no cash value. Malfunction voids all pays and plays.</p>
+  <p>The theoretical return to player is <b>96.00%</b> in every way to play, measured against what that play costs. Every round is drawn from the game's weighted outcome catalogs (${CATALOG_VERSION}, games/cyber-skunk/MATH.md) and replayed in full before it is shown.</p>
+  <p class="note">Free play only: credits have no cash value. Malfunction voids all pays and plays.</p>
   <h3>LINES</h3><div class="lines">${LINES.map(lineSVG).join('')}</div>`;
 }
 function renderHistory() {

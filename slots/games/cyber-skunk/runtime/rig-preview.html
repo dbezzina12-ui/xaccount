@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cyber Skunk · rig preview</title>
+<style>
+  @font-face{font-family:'Barlow Condensed';src:url(assets/fonts/BarlowCondensed-SemiBold.ttf)}
+  :root{color-scheme:dark;--amber:#eda83c;--brass:#ad7840}
+  body{margin:0;background:#101820;color:#efe5cf;font:16px/1.4 'Barlow Condensed',Arial,sans-serif;display:grid;grid-template-columns:minmax(0,1fr) 360px;height:100vh}
+  main{display:grid;place-items:center;background:repeating-conic-gradient(#141c21 0 25%,#11181c 0 50%) 0 0/40px 40px;overflow:hidden}
+  #stage{position:relative;width:min(100%,calc((100vh - 40px) * .8));aspect-ratio:4/5}
+  aside{overflow:auto;padding:16px 18px;border-left:2px solid var(--brass);background:#0d1316}
+  h1{font-size:26px;margin:0 0 4px}h2{font-size:15px;letter-spacing:.2em;color:var(--amber);margin:18px 0 8px}
+  p{margin:0 0 8px;color:#c9bfa8}
+  .row{display:flex;flex-wrap:wrap;gap:6px}
+  button{font:inherit;color:inherit;background:#1b2329;border:2px solid #3a4448;border-radius:8px;padding:6px 10px;cursor:pointer}
+  button[aria-pressed=true]{border-color:var(--amber);color:var(--amber)}
+  label.part{display:grid;grid-template-columns:24px 120px 1fr 44px;gap:6px;align-items:center;font-size:14px}
+  label.part span:first-child{color:#8d8370;text-align:right}
+  input[type=range]{accent-color:var(--amber)}
+  #sheet{display:none;position:fixed;inset:0;background:#101820;overflow:auto;padding:20px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;z-index:5}
+  #sheet.open{display:grid}
+  #sheet figure{margin:0;background:#141c21;border:2px solid #3a4448;border-radius:10px;padding:8px}
+  #sheet canvas{width:100%;display:block}
+  #sheet figcaption{font-size:14px;color:#c9bfa8;padding-top:6px}
+</style>
+</head>
+<body>
+<main><div id="stage"></div></main>
+<aside>
+  <h1>Cyber Skunk rig</h1>
+  <p>25 parts from <code>assets/mascot/pivots.json</code>, drawn back to front. The legs are two-bone IK: the boots stay planted whatever the torso does. Vector placeholders show until the painted layers are in <code>assets/mascot/</code>.</p>
+  <h2>CLIPS</h2><div class="row" id="clips"></div>
+  <h2>VIEW</h2><div class="row"><button id="joints" aria-pressed="false">Joints</button><button id="manual" aria-pressed="false">Pose by hand</button><button id="extremes">Extreme poses</button></div>
+  <h2>PARTS · DRAW ORDER · USABLE RANGE</h2><div id="parts"></div>
+</aside>
+<div id="sheet" role="dialog" aria-label="Extreme poses"></div>
+<script type="module">
+import { Skunk, CLIP_NAMES } from './rig.js';
+const $ = (id) => document.getElementById(id);
+const skunk = new Skunk($('stage'));
+// Usable ranges in degrees (ART_SPEC §1: tail segments look right at ±35°).
+const RANGE = { 'tail-1': [-35, 35], 'tail-2': [-35, 35], 'tail-3': [-35, 35], 'tail-4': [-35, 35], nozzle: [-60, 60], torso: [-8, 8], head: [-15, 15], ear: [-25, 20], jaw: [0, 14], eyelids: [0, 0], goggles: [-6, 6],
+  'far-upper-arm': [-125, 30], 'far-forearm': [-70, 40], 'far-hand': [-35, 35], 'near-upper-arm': [-20, 20], 'near-forearm': [-20, 20], 'near-hand': [-15, 15], 'near-cuff': [0, 0], 'near-pauldron': [0, 0],
+  'far-thigh': [0, 0], 'far-shin': [0, 0], 'far-boot': [0, 0], 'near-thigh': [0, 0], 'near-shin': [0, 0], 'near-boot': [0, 0] };
+const IK = new Set(['far-thigh', 'far-shin', 'far-boot', 'near-thigh', 'near-shin', 'near-boot']);
+await skunk.load('assets/mascot/');
+const manual = {};
+$('clips').innerHTML = CLIP_NAMES.map((c) => `<button data-clip="${c}" aria-pressed="${c === 'idle'}">${c}</button>`).join('');
+$('clips').onclick = (e) => { const c = e.target.dataset.clip; if (!c) return; skunk.manual = null; $('manual').setAttribute('aria-pressed', 'false'); skunk.play(c); document.querySelectorAll('[data-clip]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.clip === c))); };
+$('joints').onclick = () => { skunk.showJoints = !skunk.showJoints; $('joints').setAttribute('aria-pressed', String(skunk.showJoints)); };
+$('manual').onclick = () => { const on = !skunk.manual; skunk.manual = on ? manual : null; $('manual').setAttribute('aria-pressed', String(on)); };
+$('parts').innerHTML = skunk.order.map((k, i) => {
+  const [lo, hi] = RANGE[k] || [0, 0], fixed = lo === hi;
+  return `<label class="part"><span>${i + 1}</span><span>${k}${IK.has(k) ? ' (IK)' : ''}</span><input type="range" data-part="${k}" min="${lo}" max="${hi}" value="0" step="1"${fixed ? ' disabled' : ''}><output>${fixed ? (IK.has(k) ? 'IK' : 'fixed') : '0°'}</output></label>`;
+}).join('');
+$('parts').oninput = (e) => {
+  const k = e.target.dataset.part; if (!k) return;
+  manual[k] = { r: Number(e.target.value) }; e.target.nextElementSibling.textContent = `${e.target.value}°`;
+  if (!skunk.manual) $('manual').click();
+};
+// A sheet of extreme poses, rendered by the same rig: the art must hold up in all of them.
+const EXTREMES = [
+  ['Rest pose (the art as painted)', {}],
+  ['Spray: tail over the head, nozzle aimed right', () => skunk.pose('spray', 0.9)],
+  ['Big win: far arm up, jaw open', () => skunk.pose('bigwin', 0.7)],
+  ['Anticipation crouch', () => skunk.pose('anticipate', 0.6)],
+  ['Tail all +35°', { 'tail-1': { r: 35 }, 'tail-2': { r: 35 }, 'tail-3': { r: 35 }, 'tail-4': { r: 35 } }],
+  ['Tail all −35°', { 'tail-1': { r: -35 }, 'tail-2': { r: -35 }, 'tail-3': { r: -35 }, 'tail-4': { r: -35 } }],
+  ['Torso −8°, head +15° (feet stay planted)', { torso: { r: -8, y: -20 }, head: { r: 15 } }],
+  ['Torso +8°, head −15°, jaw open', { torso: { r: 8, y: 20 }, head: { r: -15 }, jaw: { r: 14 } }],
+  ['Far arm raised (−120° / −30° / −20°); past −125° it folds behind the head', { 'far-upper-arm': { r: -120 }, 'far-forearm': { r: -30 }, 'far-hand': { r: -20 } }],
+  ['Far arm limits: +30° / +40° / +35°', { 'far-upper-arm': { r: 30 }, 'far-forearm': { r: 40 }, 'far-hand': { r: 35 } }],
+  ['Near arm ±20° (gauntlet, pauldron, cuff)', { 'near-upper-arm': { r: 20 }, 'near-forearm': { r: -20 } }],
+  ['Blink (eyelids layer)', { eyelids: { alpha: 1 }, ear: { r: -25 } }],
+];
+$('extremes').onclick = () => {
+  const sheet = $('sheet'); sheet.innerHTML = ''; sheet.classList.add('open');
+  for (const [name, pose] of EXTREMES) {
+    const fig = document.createElement('figure'), host = document.createElement('div');
+    host.style.cssText = 'position:relative;aspect-ratio:4/5'; fig.append(host); sheet.append(fig);
+    const view = new Skunk(host); Object.assign(view, { rig: skunk.rig, joints: skunk.joints, order: skunk.order, topo: skunk.topo, legs: skunk.legs, sprayPose: skunk.sprayPose, images: skunk.images, layers: skunk.layers });
+    view.resize(); view.showJoints = true; view.draw(typeof pose === 'function' ? pose() : pose);
+    fig.insertAdjacentHTML('beforeend', `<figcaption>${name}</figcaption>`);
+  }
+  sheet.insertAdjacentHTML('afterbegin', '<button style="position:fixed;right:20px;top:20px;z-index:6" onclick="this.parentElement.classList.remove(\'open\')">Close</button>');
+};
+skunk.resize();
+addEventListener('resize', () => skunk.resize());
+window.rigPreview = { skunk };
+</script>
+</body>
+</html>
