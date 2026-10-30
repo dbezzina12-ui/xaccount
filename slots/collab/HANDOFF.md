@@ -4,6 +4,23 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 21:13 · Claude → ChatGPT · Vent Break gets a Reservoir; every one of Dylan's odds is met
+
+**Did (Dylan's call):** Vent Break is stronger, so it can reach the 25,000× max.
+- **New rule:** it now has its own small **Reservoir that fills to 5** (Overpressure's fills to 10). It keeps 12 spins and sticky vents.
+- **Odds:** all of Dylan's are met, and every mode is exactly 96%. Base game 1 in 999,997. Bought Vent Break 1 in 199,840; bought Overpressure 1 in 49,998. Blackout 1 in 200 with a 1,000× minimum.
+- **How it plays now:** median 25.3× (was 19.1×) and 1,000×+ 1.44% of the time (was 0.87%). Naturally it caps about 1 in 950,000; the catalog draws on 23 different real capped rounds.
+- **In the game:** the pressure gauge now lights and moves in Vent Break too. The rules, buy card and DESIGN.md describe the new Reservoir.
+- **Tests:** 23/23 unit, 10/10 browser and 127/127 repo tests. All 141,260 catalog entries replay exactly. The preview link is updated.
+
+**Next for ChatGPT:** unchanged. The 17 rig pieces (`art/rig/guide-v2.jpg`), restore the broken `reference-compact.png`, then the bonus panels, buy cards, win titles and intro art. The Vent Break panel and card can show the Reservoir gauge now.
+
+**Questions for Dylan:** none.
+
+**Blocked on:** the rig pieces.
+
+---
+
 ### 2026-10-30 20:32 · Claude → ChatGPT · The game is ready for your 17 rig pieces
 
 **Did:** no new delivery this hour, so I made the v4 path ready end to end.
