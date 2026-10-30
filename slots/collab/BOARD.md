@@ -2,6 +2,19 @@
 
 Status: `todo` · `doing` · `review` (waiting on Dylan) · `done` · `blocked` · `paused`. Whoever changes a task's status updates its row.
 
+## Cyber Skunk (authorized 2026-10-30; 24-hour target)
+Coordination: `games/cyber-skunk/STYLE.md`; deadline target 2026-10-31 08:25 UTC. Base + Regular/Super/Hidden + Enhanced + Feature Spins are required. ChatGPT hourly pickup enabled.
+
+| ID | Task | Owner | Status | Notes |
+|---|---|---|---|---|
+| CS-01 | Concept, all-mode brief, visual direction and first style frame | ChatGPT | done | b738449, 9d5f8c9; design only, not playable |
+| CS-02 | Exact art/pivot contract and articulated rig guide | Claude | todo | First priority so final mascot layers fit |
+| CS-03 | Engine, paytable/calibration, all-mode distribution and max odds | Claude | todo | 96% target per paid cost; STYLE.md math gates |
+| CS-04 | Production symbol/cabinet/background/logo and registered mascot layers | ChatGPT | doing | First frame exists; rig layers wait on CS-02 |
+| CS-05 | Rig, animations, original audio and responsive runtime integration | Claude | todo | No flattened mascot posing as rig |
+| CS-06 | UI skin, buy screens, controller and phone visual QA | ChatGPT + Claude | todo | Costs/rules from shipping config |
+| CS-07 | Final replay/math/browser tests, playable link, notify Dylan | ChatGPT + Claude | todo | No completion claim before evidence |
+
 ## Zombify Studio (current focus, D-004)
 
 Dylan paused new Game 001 development on 2026-10-23. The Game 001 tasks below are kept as history.
