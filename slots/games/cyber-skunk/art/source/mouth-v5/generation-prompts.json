@@ -1,0 +1,26 @@
+{
+  "tool": "built-in image_gen",
+  "purpose": "registered head/jaw source correction; not runtime activation",
+  "steps": [
+    {
+      "name": "jawCorrectionPrompt",
+      "prompt": "Edit this isolated cartoon skunk lower-jaw source. Preserve the ivory chin, lower-lip grin, right-facing orientation and painted style on the RIGHT half exactly. On the LEFT, dramatically enlarge the hidden charcoal-black hinge backing into a COMPLETE ROUND OPAQUE DISC, diameter about 60% of the entire piece width. The hinge disc is plain smoothly shaded black fur, no hollow, no transparent notch, no thin neck; its center is near the left quarter of the piece. The ivory lower jaw extends toward the right from the disc. The full opaque circular backing must sit BEHIND the ivory jaw and extend above AND below its hinge equally, so it can rotate 20 degrees without exposing a gap. No eyes, nose, upper muzzle, ears, head, body or extra parts. One separate complete jaw layer only. Transparent exterior, generous 10% clear margins, no background or shadow. This is hidden joint artwork for an articulated game puppet, not a standalone face."
+    },
+    {
+      "name": "headCorrectionPrompt",
+      "prompt": "Edit the isolated skunk head into an UPPER HEAD animation layer that will be placed IN FRONT OF a separate moving jaw. Preserve the exact same identity, angle, eyes, sly eyebrows, hair crest, cheek fur, ivory forehead stripe and black nose. REMOVE the lower chin and the curved smiling mouth line. Under the black nose retain only the UPPER ivory muzzle with a clean shallow curved underside: this is the overlapping upper lip. Below that upper lip must be TRANSPARENT where the moving ivory lower jaw will appear. At the rear-left under the cheek, retain a short thick opaque charcoal neck cap extending down, to attach to the torso; remove the original long ivory throat/beard. No lower jaw or chin baked into this image. No ears or goggles added. Output only this ONE head part with transparent exterior and broad generous margins, same painted 2.5D game style. This is a puppet part with its lower jaw removed, not a smiling complete face. No illustration of mechanisms, no labels, no guides."
+    },
+    {
+      "name": "jawInteriorPrompt",
+      "prompt": "Edit this ONE lower jaw animation layer. Keep the ivory chin, smile/lip shape, large round black hinge disc and pose unchanged. Add opaque very dark charcoal/plum MOUTH INTERIOR BEHIND THE JAW: extend a broad solid painted backing from the hinge ALL THE WAY TO THE RIGHTMOST TIP of the ivory jaw, rising roughly one chin-height ABOVE the ivory lip. It should form one continuous dark rounded upper-right lobe behind the ivory chin, like the dark inside of an open mouth with no teeth or tongue. This backing will be hidden by the separate upper head at rest; it MUST extend far above the lower lip to prevent seeing the transparent background when the jaw swings down 16 degrees. Do not add any nose, upper muzzle, eyes or head. Preserve transparent exterior and generous margins. This is hidden interior paint, not a second face. Keep the original large opaque hinge disc and entire jaw in the frame."
+    },
+    {
+      "name": "neckCorrectionPrompt",
+      "prompt": "Precise local edit of this upper-head animation part. Preserve the complete head, eyes, hair, nose, upper lip, mouth opening, scale and placement. ONLY enlarge the short charcoal rear-neck cap underneath the LEFT cheek: add a smoothly painted full round black-fur hidden joint pad centered approximately at pixel (557,1027) on this 1121x1403 canvas, radius about 125px. Paint it behind the existing head. It must be solid and opaque throughout the circular hinge region, with no notch or crescent. Its rightmost edge should stop near x682, well left of the ivory upper muzzle, so it DOES NOT fill the mouth opening beneath the nose. Round bottom extends to about y1152. This hidden pad fits inside the torso collar; no long ivory throat or beard. Keep the rest of the image and transparent canvas unchanged. No jaw/chin, no new face, no text."
+    },
+    {
+      "name": "neckFinalPrompt",
+      "prompt": "Use case: precise-object-edit. Edit this existing upper-head PNG ONLY by adding a MUCH LARGER hidden neck backing. Preserve the current face, upper muzzle, eyes, nose, stripe, hair, exact location and scale. Transparent canvas. On this 1121x1403 canvas, add an opaque round black-fur patch centered x557 y1027, radius160. It MUST extend down to y1187 and right to x717, with fully opaque interior including EVERY pixel in x447..667 y917..1137. It merges into the rear cheek at left. This is intentional oversized hidden overlap for a puppet neck, not a visible new body. The mouth cavity farther right of x720 remains transparent, no lower jaw, no chin, no smile, no teeth. Do not make the patch smaller or move the head up. Full alpha coverage inside the round backing is the one critical change. Keep 1121x1403 canvas registration."
+    }
+  ]
+}

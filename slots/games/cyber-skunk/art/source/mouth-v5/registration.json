@@ -1,0 +1,205 @@
+{
+  "parts": [
+    {
+      "name": "head",
+      "scale": 0.5,
+      "source_anchor": [
+        727,
+        777
+      ],
+      "target_anchor": [
+        960,
+        665
+      ],
+      "file": "registered/head.png",
+      "canvas": [
+        1600,
+        2000
+      ],
+      "bounds": [
+        596,
+        315,
+        1143,
+        946
+      ],
+      "v4_pivot": [
+        875,
+        790
+      ],
+      "pivot_alpha": 252,
+      "joint_disk_coverage": 0.95526,
+      "sha256": "7326979cff59fce35c243a24eb2618ca4f0d6e4515bb653c31655dfa71119599"
+    },
+    {
+      "name": "jaw",
+      "scale": 0.18,
+      "source_anchor": [
+        600,
+        430
+      ],
+      "target_anchor": [
+        905,
+        742
+      ],
+      "file": "registered/jaw.png",
+      "canvas": [
+        1600,
+        2000
+      ],
+      "bounds": [
+        839,
+        668,
+        1079,
+        814
+      ],
+      "v4_pivot": [
+        905,
+        742
+      ],
+      "pivot_alpha": 253,
+      "joint_disk_coverage": 1.0,
+      "sha256": "367bf20a89074cd6475c632f9f3647ee0f7c3e5885978e9222d2ccd384a19ced"
+    }
+  ],
+  "review_angles_degrees": [
+    0,
+    8,
+    16,
+    -8
+  ],
+  "mouth_alpha_samples": [
+    {
+      "angle": 0,
+      "samples": [
+        {
+          "point": [
+            1020,
+            745
+          ],
+          "alpha": 255
+        },
+        {
+          "point": [
+            1020,
+            755
+          ],
+          "alpha": 253
+        },
+        {
+          "point": [
+            1030,
+            750
+          ],
+          "alpha": 255
+        },
+        {
+          "point": [
+            1040,
+            760
+          ],
+          "alpha": 253
+        }
+      ]
+    },
+    {
+      "angle": 8,
+      "samples": [
+        {
+          "point": [
+            1020,
+            745
+          ],
+          "alpha": 255
+        },
+        {
+          "point": [
+            1020,
+            755
+          ],
+          "alpha": 253
+        },
+        {
+          "point": [
+            1030,
+            750
+          ],
+          "alpha": 255
+        },
+        {
+          "point": [
+            1040,
+            760
+          ],
+          "alpha": 253
+        }
+      ]
+    },
+    {
+      "angle": 16,
+      "samples": [
+        {
+          "point": [
+            1020,
+            745
+          ],
+          "alpha": 252
+        },
+        {
+          "point": [
+            1020,
+            755
+          ],
+          "alpha": 253
+        },
+        {
+          "point": [
+            1030,
+            750
+          ],
+          "alpha": 255
+        },
+        {
+          "point": [
+            1040,
+            760
+          ],
+          "alpha": 253
+        }
+      ]
+    },
+    {
+      "angle": -8,
+      "samples": [
+        {
+          "point": [
+            1020,
+            745
+          ],
+          "alpha": 255
+        },
+        {
+          "point": [
+            1020,
+            755
+          ],
+          "alpha": 253
+        },
+        {
+          "point": [
+            1030,
+            750
+          ],
+          "alpha": 255
+        },
+        {
+          "point": [
+            1040,
+            760
+          ],
+          "alpha": 253
+        }
+      ]
+    }
+  ],
+  "status": "source pair for Claude fitting; not active runtime art"
+}
