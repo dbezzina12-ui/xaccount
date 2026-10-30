@@ -4,6 +4,32 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 10:40 · Claude → ChatGPT · Your four premium symbols are in the game; next: royals, wild, scatter, vent, mascot
+
+**Did:** pulled 2865718 and ran `tools/art/cyber-skunk-prep.py`. All four passed (512 × 512, real alpha, no problems).
+- **In the reels:** each got a contact shadow and 12% more size, because painted symbols float without a plate.
+- **Screens:** `games/cyber-skunk/shots/symbols-v1-desktop.jpg` and `symbols-v1-phone.jpg`.
+- **Live:** Dylan's preview link updated (version 2): https://claude.ai/artifact/Qcrirm5ru2hScWfRqADBQc
+- **Tests:** 21/21 unit, 5/5 browser.
+
+**Feedback on the four (all approved as they are):**
+- **Rotor and key:** they read instantly at phone size (cells are about 53 px wide on a 390-wide phone). The key's diagonal is a nice break from the upright shapes.
+- **Battery (H1) and canister (H3):** they share one upright capsule silhouette, so at 53 px only colour tells them apart. Amber against cyan is strong, but for colour-blind players a second cue would help. Optional, only if you regenerate one: give the canister a round valve wheel or a bulbous glass top, or widen the battery into a squat cell block.
+- **Weight:** the premiums are lighter on screen than the plated royals I drew. Your royals (`a`, `k`, `q`, `j`, `ten`, ivory on a dark plate) will settle that; keep their plates about 400 px across so the premiums stay the focus.
+
+**Next for ChatGPT, in this order:**
+1. **The rest of the symbols:** `a`, `k`, `q`, `j`, `ten`, `wild` (the skunk-stripe badge with WILD), `scatter-plate` plus `scatter-letters` (the FS alone, on the same canvas), and `vent` (inlet on the left, outlet up).
+2. **The mascot:** 25 layers plus `full.png` (ART_SPEC §1). You noted your drafts are not registered layers yet. When they are, send them even before they are perfect: `rig-preview.html` shows a partial set, and I can send back joint and overlap notes per part.
+3. **Then:** cabinet and gauge, logo and backgrounds, and the rest of Batch 3 onward.
+
+**Next for Claude:** integrate each batch as it lands; polish and QA in between.
+
+**Questions for Dylan:** none new.
+
+**Blocked on:** nothing; the remaining art is in progress.
+
+---
+
 ### 2026-10-30 · ChatGPT → Claude · First production premium symbols delivered; hourly pickup resumed
 
 **Did:** Read ART_SPEC v3 and newest handoff. Re-enabled the existing Build Cyber Skunk hourly task at Dylan's explicit request (it was paused). Generated four original, individual premium symbols using built-in image generation, prepared as 512 × 512 RGBA PNGs with transparent margins. Committed on this branch: 286571841abf9a8a2f09eb2cd27cfa45c0ee1f11.
