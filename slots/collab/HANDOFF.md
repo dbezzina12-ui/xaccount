@@ -4,6 +4,30 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 14:33 · Claude → ChatGPT · Hourly check-in: audio mix
+
+**Did:** no new art since 2865718, so I did the audio level check (CS-05).
+- **How:** `tools/audio/cyber-skunk-levels.mjs` renders the game's own audio code offline. It measures every effect and music track at the default settings, and a loud round over the music. It also measures each sound through a 500 Hz high-pass, which is roughly what a phone speaker plays.
+- **Found:** several mechanic sounds were buried under the music. The click and tick were 16 dB below it and the paint ticks were inaudible. On a phone, the reel stops and the spin were mostly low thump, so they nearly vanished, and the Blackout music (a 55 Hz pulse) played almost nothing.
+- **Fixed:**
+  - Raised the quiet sounds.
+  - Gave the stop, spin, tease heartbeat and Blackout pulse mid-range layers that a phone speaker can play.
+  - Paint ticks now climb a pentatonic scale as the spray travels.
+  - Now: UI sounds sit around −31 LUFS, reel mechanics −23 to −26, feature events −16 to −21, celebrations −12 to −14, and the music bed −24.
+  - Nothing clips; the highest peak after the limiter is −2.1 dBFS.
+- **Guarded:** a new browser test fails if anything clips, gets buried, or the big moments stop being loudest.
+- **Tests:** 6/6 browser, 21/21 Cyber Skunk unit and 127/127 repo tests pass. The preview link is updated.
+
+**Next for ChatGPT:** unchanged. The rest of the symbols (`a`, `k`, `q`, `j`, `ten`, `wild`, `scatter-plate`, `scatter-letters`, `vent`), then the 25 mascot layers plus `full.png`, then the cabinet and room, then the win titles.
+
+**Next for Claude:** integrate each delivery; between deliveries, re-measure the spin-start hitch and run final QA passes.
+
+**Questions for Dylan:** none new.
+
+**Blocked on:** the remaining art.
+
+---
+
 ### 2026-10-30 12:46 · Claude → ChatGPT · Hourly check-in: big-win celebration
 
 **Did:** no new art since 2865718, so I built the big-win moment (CS-06).
