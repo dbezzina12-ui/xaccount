@@ -1,6 +1,6 @@
 # Cyber Skunk: rules v1 (Claude's math contract)
 
-> Merged on 2026-10-30.
+> Merged on 2026-10-30, then calibrated the same day (`tools/math/cyber-skunk-sim.mjs`). The spray now lands on the first vent rather than entering from the left edge; only vents carry ×N; and Vent Break has 12 spins. The first versions paid many times the target.
 > - **From ChatGPT** (`STYLE.md` and the style frame): the theme, look, names and Dylan's six modes.
 > - **Made exact here:** the route rules the math needs.
 > - **From Claude's first draft:** pressure that rises at every vent.
@@ -17,7 +17,7 @@
 **Symbols:**
 - **H1 battery, H2 rotor, H3 canister, H4 key:** high pays.
 - **L1–L5 A, K, Q, J, 10:** low pays.
-- **W, the skunk-stripe wild:** substitutes for every paying symbol. A line of wilds alone pays as H1.
+- **W, the skunk-stripe wild:** substitutes for every paying symbol. The first real symbol on a line decides what it pays; a line of six wilds pays as H1.
 - **S, the FS scatter:** lands at most once per reel and pays nothing on lines.
 - **Pays:** every pay is a whole 0.1× of the base bet, and every multiplier is whole, so every win is a whole 0.1×. The final paytable is set by the calibration in `MATH.md`.
 
@@ -27,15 +27,15 @@
 - **When the spray fires.** If at least one vent is on the board after the reels stop, Cyber Skunk swings his tail over his shoulder and sprays.
 
 **The route:**
-1. The route enters from the **left edge**, on the row of the **left-most vent** (the top one, if two share a reel), and moves right.
-2. It moves one cell at a time. **A vent sends it out through its outlet, whichever side it came in**, and adds **+1 pressure**. Pressure starts at 1.
-3. Every cell the route touches becomes **wild for this spin**, carrying the pressure at that moment. A vent cell carries the pressure just raised. Pressure 1 is a plain wild; pressure 2 and up shows **×N**.
+1. The spray lands on the **left-most vent** (the top one, if two share a reel).
+2. The route moves one cell at a time. **A vent sends it out through its outlet, whichever side it came in**, and adds **+1 pressure**. Pressure starts at 1, so the first vent shows ×2.
+3. Every cell the route touches becomes a **wild for this spin**. **Each vent it passes becomes a ×N wild**, N being the pressure just raised; the trail between vents paints plain wilds.
 4. **Scatters** are touched but stay scatters: they never become wild.
 5. The route ends when it would leave the board, enter a cell it has already touched, or take its 24th step. A route never loops and never branches.
 
 **Evaluation:**
 - The route resolves completely before evaluation: the transformed board is evaluated once, and scatters are counted once, on the landed board.
-- **Line multiplier:** the sum of the ×N wilds in a winning line (×2 + ×3 = ×5). A winning line with no ×N wild pays ×1.
+- **Line multiplier:** the sum of the ×N vents in a winning line (×2 + ×3 = ×5). A winning line with no ×N vent pays ×1.
 
 ## Modes
 
@@ -43,8 +43,8 @@
 | --- | --- | --- | --- |
 | Base | Base Spins | 1× | Vents land now and then. 3 / 4 / 5 scatters start **Vent Break / Overpressure / Blackout Protocol**. |
 | Enhanced | **Signal Boost** | 3× per spin, on until switched off | Scatters land more often, so the bonuses come about 3–4 times as often (the measured figure is in `MATH.md`). Same rules. |
-| Feature Spins | **Spray Job** | 10× per spin, on until switched off | Every spin lands at least 2 vents, so the spray always fires. Scatters work as normal. |
-| Regular bonus | **Vent Break** | buy 100× | 10 free spins. Every vent that lands **stays** until the bonus ends (up to 12), so the route grows into a maze. Pressure restarts at 1 each spin. |
+| Feature Spins | **Spray Job** | 10× per spin, on until switched off | Every spin lands a vent on reel 1 and at least 3 vents in all, so the spray always fires from the first reel. Scatters work as normal. |
+| Regular bonus | **Vent Break** | buy 100× | 12 free spins. Every vent that lands **stays** until the bonus ends (up to 10), so the route grows into a maze. Pressure restarts at 1 each spin. |
 | Super bonus | **Overpressure** | buy 250× | 10 free spins with sticky vents and a **Reservoir**: after each spin's route, its pressure gained (pressure − 1) is banked in the cabinet gauge (up to 10), and every later route starts at **1 + the Reservoir**. |
 | Hidden bonus | **Blackout Protocol** | not for sale | 10 free spins. It opens with the network activation: the lights go out, then 4 vents light up as one route and the Reservoir starts at 3. After that it plays as Overpressure. Only 5 scatters start it. |
 

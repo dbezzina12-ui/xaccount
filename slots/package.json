@@ -14,7 +14,8 @@
     "test:studio-browser": "node --test --test-concurrency=1 tests/browser/*.e2e.mjs",
     "studio:hosting": "node tools/studio/hosting.mjs",
     "test:nightfall": "node --test games/nightfall/tests/*.test.mjs",
-    "stake:zombify": "node tools/stake/build-zombify.mjs"
+    "stake:zombify": "node tools/stake/build-zombify.mjs",
+    "test:cyber-skunk": "node --test games/cyber-skunk/tests/*.test.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.135.0"
