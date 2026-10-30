@@ -1,0 +1,126 @@
+/* Mobile scene controls with a tactile lunar-stone action plate. */
+:host{width:100%;max-width:none;padding:3px max(10px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));background:linear-gradient(#07101800,#07101838 48%,#070d148f)}
+.controller[data-layout=mobile]{--moon-rock:var(--controller-mobile-texture,url('./assets/moon-rock-v89.png'));--action-light:var(--controller-accent);--action-tint:#b4781b70;--play-size:clamp(92px,29cqw,120px);--plate-border:5px}
+.controller[data-layout=mobile][data-feature-active=true]{--action-light:var(--feature-color);--action-tint:color-mix(in srgb,var(--feature-color) 64%,transparent)}
+.controller[data-layout=mobile] .deck{display:grid;grid-template-areas:"buy transport ." "tools-left . tools-right" "readouts readouts readouts";grid-template-columns:68px minmax(0,1fr) 68px;grid-template-rows:calc(var(--play-size) + 8px) 40px 44px;gap:2px 4px;min-height:0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;align-items:center}
+.controller[data-layout=mobile] .money-row{grid-area:readouts;display:grid;grid-template-areas:"balance bet win";grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:6px;width:100%;min-width:0}
+.controller[data-layout=mobile] .money{height:44px;min-height:44px;padding:2px 4px;gap:4px;border:0;background:none;text-align:left;align-items:flex-start}
+.controller[data-layout=mobile] .money>span{font-size:10px;letter-spacing:.08em;color:#c6d0ca}
+.controller[data-layout=mobile] .money strong{font-size:clamp(11px,calc(166cqw / var(--digits,8)),21px);letter-spacing:0}
+.controller[data-layout=mobile] .win{align-items:flex-end;text-align:right}.controller[data-layout=mobile] .win strong{color:#ffeaa7}
+.controller[data-layout=mobile] .bet{position:relative;padding-inline:5px;background:none;border:0;border-radius:0;text-align:center;align-items:center}
+.controller[data-layout=mobile] .bet::after{content:'';position:absolute;right:calc(50% - 22px);top:7px;width:4px;height:4px;border-right:1.5px solid #b6cfdd;border-bottom:1.5px solid #b6cfdd;transform:rotate(45deg)}
+.controller[data-layout=mobile] .bet:enabled:hover{background:#ffffff0a}
+.controller[data-layout=mobile] .utility-left,.controller[data-layout=mobile] .utility-right{display:grid;grid-template-columns:40px 40px;gap:4px;width:84px;height:40px}
+.controller[data-layout=mobile] .utility-left{grid-area:tools-left;justify-self:start}
+.controller[data-layout=mobile] .utility-right{grid-area:tools-right;justify-self:end}
+.controller[data-layout=mobile] .utility{grid-area:auto;position:relative;right:auto;bottom:auto;width:40px;height:40px;border:1px solid #d7e6d82b;border-radius:50%;background:#07182145;color:#f3ebcd}
+.controller[data-layout=mobile] .mobile-shortcut{display:grid}
+.controller[data-layout=mobile] .utility:enabled:hover{background:#142a3980}
+.controller[data-layout=mobile] .utility svg{width:23px;height:23px;stroke-width:2}
+.controller[data-layout=mobile] .settings svg{stroke-width:2.7}
+.controller[data-layout=mobile] .turbo[aria-pressed=true]{background:#f5bc5130;color:#ffcf6e;border-color:#f5bc5180}
+.controller[data-layout=mobile] .sound[data-muted=true]{color:#9faeae}
+.controller[data-layout=mobile] .sound[data-muted=true] .sound-slash{display:block}
+.controller[data-layout=mobile] .play-controls{grid-area:transport;position:relative;left:auto;bottom:auto;transform:none;display:grid;grid-template-columns:minmax(44px,1fr) var(--play-size) minmax(44px,1fr);grid-template-rows:calc(var(--play-size) - 16px);align-items:center;justify-items:center;justify-self:center;align-self:center;margin:0;padding:0 8px;width:clamp(214px,64cqw,292px);max-width:calc(100cqw - 40px);height:calc(var(--play-size) - 6px);border:5px solid transparent;border-radius:70px;background:none;box-shadow:none;isolation:isolate}
+/* Fade only the stone plate and rim; button faces and icons stay crisp. */
+.controller[data-layout=mobile] .play-controls::before{content:"";position:absolute;inset:calc(-1 * var(--plate-border,5px));z-index:-1;pointer-events:none;border:var(--plate-border,5px) solid #a3b9b5;border-radius:inherit;opacity:.76;background:linear-gradient(180deg,#050907a6,#020504d1),var(--moon-rock) center / 292px auto;box-shadow:0 0 0 2px #060c13,inset 0 1px 0 1px #d4e2e77a,inset 0 -2px 0 1px #0a101bcc,0 4px 9px #0008}
+.controller[data-layout=mobile] .bet-steps{display:contents}
+.controller[data-layout=mobile] .bet-step{width:44px;height:44px;border-radius:50%;background:linear-gradient(180deg,#17222d7a,#050b12c9),var(--moon-rock) center / 150px auto;border:1px solid #a5b3b9;color:#fff6db;box-shadow:0 0 0 2px #111a20,inset 0 1px 1px #e7f1e947,0 2px 3px #0008}
+.controller[data-layout=mobile] .bet-steps .minus{grid-area:1 / 1}
+.controller[data-layout=mobile] .bet-steps .plus{grid-area:1 / 3;border-bottom:1px solid #a5b3b9}
+.controller[data-layout=mobile] .bet-step svg{width:25px;height:25px;stroke-width:3.4;filter:drop-shadow(0 1px 1px #0008)}
+.controller[data-layout=mobile] .bet-step:enabled:hover{filter:brightness(1.18)}
+.controller[data-layout=mobile] .play-button{grid-area:1 / 2;position:relative;isolation:isolate;width:var(--play-size);max-width:none;height:var(--play-size);aspect-ratio:1;margin:0;border:4px solid #aab8bccc;background:linear-gradient(145deg,#67788799,#1d2c3855 46%,#60737c99);color:#fff3c7;box-shadow:0 0 0 3px #0a111880,0 3px 6px #0007}
+.controller[data-layout=mobile] .play-button::before{content:'';position:absolute;inset:3px;z-index:-1;border:2px solid var(--action-light);border-radius:50%;opacity:.72;background:linear-gradient(180deg,#0c15212b,#070e156e),linear-gradient(var(--action-tint),var(--action-tint)),var(--moon-rock) center / 176px auto;box-shadow:inset 0 2px 5px #fff4,inset 0 -3px 7px #0008}
+.controller[data-layout=mobile] .play-button svg{width:64%;max-width:72%;height:64%;grid-area:1 / 1;filter:drop-shadow(0 2px 1px #0007)}
+.controller[data-layout=mobile] .play-button .play-icon{translate:-2px 0}
+.controller[data-layout=mobile] .play-button:enabled:hover{filter:brightness(1.12)}
+.controller[data-layout=mobile][data-feature-active=true] .play-button{background:color-mix(in srgb,var(--feature-color) 55%,#17292e);border-color:var(--feature-color);color:#10211d;box-shadow:0 0 0 3px #0a1118,0 3px 6px #0009}
+.controller[data-layout=mobile][data-feature-active=true] .play-button::before{opacity:1;background:linear-gradient(145deg,color-mix(in srgb,var(--feature-color) 92%,transparent),color-mix(in srgb,var(--feature-color) 72%,transparent)),var(--moon-rock) center / 176px auto}
+.controller[data-layout=mobile][data-feature-active=true] .play-button svg{filter:drop-shadow(0 1px 0 #ffffff33)}
+.controller[data-layout=mobile][data-feature-active=true] .bet>span,.controller[data-layout=mobile][data-feature-active=true] .bet strong,.controller[data-layout=mobile][data-feature-active=true] .win strong{color:var(--feature-color)}
+.controller[data-layout=mobile] .buy-button{grid-area:buy;position:relative;left:auto;top:auto;bottom:auto;transform:none;align-self:start;justify-self:center;margin-top:5px;width:66px;height:66px;font-size:13px;line-height:1.05;border-width:3px;box-shadow:0 0 0 2px #ffce57,inset 0 0 0 2px #eaa62e}
+.controller[data-layout=mobile] .buy-button b{font-size:16px}
+.controller[data-layout=mobile] .buy-button[data-active=true]{box-shadow:0 0 0 2px var(--feature-color),inset 0 0 0 2px #ffffff60}
+.controller[data-layout=mobile] .buy-button[data-active=true] b{font-size:12px}
+.controller[data-layout=mobile] .auto[aria-pressed=true]{color:#ffcf6e;border-color:#f5bc5180}
+.controller[data-layout=mobile] .auto svg{stroke-width:1.9;stroke-linecap:round}
+.controller[data-layout=mobile] .auto #remaining{bottom:-4px;font-size:9px;min-width:16px;padding:1px 3px}
+.controller[data-layout=mobile] .feature-banner{bottom:calc(100% + 8px)}
+@media(max-width:360px){
+ .controller[data-layout=mobile] .deck{grid-template-columns:60px minmax(0,1fr) 60px}
+ .controller[data-layout=mobile] .buy-button{width:56px;height:56px;font-size:11px;margin-top:8px}
+ .controller[data-layout=mobile] .buy-button b{font-size:14px}
+ .controller[data-layout=mobile] .buy-button[data-active=true] b{font-size:10px}
+}
+@media(orientation:landscape){
+ :host{padding-top:3px;padding-bottom:max(5px,env(safe-area-inset-bottom))}
+ .controller[data-layout=mobile] .deck{grid-template-areas:"buy settings balance win bet transport auto";grid-template-columns:58px 40px minmax(0,1fr) minmax(0,.7fr) minmax(0,.8fr) 140px 44px;grid-template-rows:62px;padding:0;gap:0 5px}
+ .controller[data-layout=mobile] .money-row,.controller[data-layout=mobile] .utility-left,.controller[data-layout=mobile] .utility-right{display:contents}
+ .controller[data-layout=mobile] .mobile-shortcut{display:none}
+ .controller[data-layout=mobile] .settings{grid-area:settings}.controller[data-layout=mobile] .auto{grid-area:auto}
+ .controller[data-layout=mobile] .play-controls{grid-template-columns:40px 52px 40px;grid-template-rows:54px;width:140px;height:60px;padding:0 1px;margin:0;align-self:center;border-width:3px;--plate-border:3px}
+ .controller[data-layout=mobile] .play-button{width:52px;height:52px;border-width:1px}
+ .controller[data-layout=mobile] .play-button svg{width:32px;height:32px}
+ .controller[data-layout=mobile] .bet-step{width:36px;height:44px;border-radius:22px}
+ .controller[data-layout=mobile] .buy-button{grid-area:buy;width:48px;height:48px;align-self:center;margin:0;font-size:10px}
+ .controller[data-layout=mobile] .buy-button b{font-size:13px}
+ .controller[data-layout=mobile] .buy-button[data-active=true] b{font-size:9px}
+ .controller[data-layout=mobile] .money{padding-inline:5px}
+ .controller[data-layout=mobile] .money strong{font-size:clamp(10px,calc(160cqw / var(--digits,8)),17px)}
+}
+
+/* Only the purchase button gets the new GG branding. */
+.controller[data-layout=mobile] .buy-button{isolation:isolate;overflow:hidden;padding:5px;border:1px solid #7ddc6170;border-radius:6px;background:linear-gradient(145deg,#229a3d,#10742e 62%,#075626);box-shadow:inset 0 1px #c2ffc52b,0 2px 5px #02080766;color:#fff;letter-spacing:-.02em}
+.controller[data-layout=mobile] .buy-brand{position:absolute;inset:-17%;width:134%;height:134%;object-fit:contain;mix-blend-mode:screen;opacity:.22;z-index:-1;pointer-events:none}
+.controller[data-layout=mobile] #buyLabel{position:relative;pointer-events:none;text-shadow:0 1px 2px #04341599}
+.controller[data-layout=mobile] .buy-button[data-active=true]{background:linear-gradient(145deg,#243b32,#10251e);border-color:var(--feature-color);color:var(--feature-color);box-shadow:inset 0 1px #ffffff20}
+.controller[data-layout=mobile] .buy-button[data-active=true] .buy-brand{opacity:.11}
+.controller[data-layout=mobile] .buy-button[data-active=true] #buyLabel{font-size:12px;letter-spacing:-.045em;white-space:nowrap;text-shadow:0 1px 2px #0008}
+@media(max-width:360px){.controller[data-layout=mobile] .buy-button[data-active=true] #buyLabel{font-size:10px}}
+@media(orientation:landscape){.controller[data-layout=mobile] .buy-button[data-active=true] #buyLabel{font-size:9px}}
+
+/* Mobile v3.3: open controls keep the character visible behind the action row. */
+:host{background:linear-gradient(transparent 56%,#07101855);padding-top:0;padding-bottom:max(5px,env(safe-area-inset-bottom))}
+.controller[data-layout=mobile]{--play-size:72px;--plate-border:0px}
+.controller[data-layout=mobile] .deck{grid-template-rows:76px 44px 38px;row-gap:0;column-gap:4px}
+.controller[data-layout=mobile] .play-controls{grid-template-columns:44px var(--play-size) 44px;grid-template-rows:var(--play-size);width:168px;max-width:none;height:var(--play-size);gap:4px;margin:0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;isolation:auto}
+.controller[data-layout=mobile] .play-controls::before{content:none}
+.controller[data-layout=mobile] .play-button{width:var(--play-size);height:var(--play-size);margin:0;border:2px solid #d2e5e080;background:linear-gradient(145deg,#30404dcc,#101c29b3);box-shadow:0 2px 7px #0005;color:#fff8dc}
+.controller[data-layout=mobile] .play-button::before{inset:4px;border-width:1px;opacity:.8;background:linear-gradient(145deg,var(--action-tint),#07142155);box-shadow:inset 0 1px 3px #ffffff20}
+.controller[data-layout=mobile] .play-button svg{width:53%;height:53%;filter:drop-shadow(0 1px 1px #0006)}
+.controller[data-layout=mobile] .bet-step{width:44px;height:44px;border:1px solid #d4e3e552;border-radius:50%;background:#0a192e70;box-shadow:none;color:#fff9e6}
+.controller[data-layout=mobile] .bet-steps .plus{border-bottom:1px solid #d4e3e552}
+.controller[data-layout=mobile] .bet-step svg{width:21px;height:21px;stroke-width:2.5;filter:none}
+.controller[data-layout=mobile] .buy-button{width:56px;height:54px;align-self:center;margin:0;padding:4px;font-size:11px;border-radius:8px}
+.controller[data-layout=mobile] .buy-button b{font-size:14px}
+.controller[data-layout=mobile] .buy-button[data-active=true] #buyLabel{font-size:10px}
+.controller[data-layout=mobile] .utility-left,.controller[data-layout=mobile] .utility-right{grid-template-columns:44px 44px;width:88px;height:44px;gap:0}
+.controller[data-layout=mobile] .utility{width:44px;height:44px;border-color:transparent;background:none}
+.controller[data-layout=mobile] .utility svg{width:22px;height:22px}
+.controller[data-layout=mobile] .money{height:38px;min-height:38px;padding-block:1px;gap:3px}
+.controller[data-layout=mobile] .money>span{font-size:9px}
+.controller[data-layout=mobile] .money strong{font-size:clamp(11px,calc(166cqw / var(--digits,8)),19px)}
+.controller[data-layout=mobile] .bet::after{top:5px}
+.controller[data-layout=mobile][data-feature-active=true] .play-button{box-shadow:0 2px 7px #0005}
+@media(max-width:360px){.controller[data-layout=mobile]{--play-size:68px}.controller[data-layout=mobile] .deck{grid-template-columns:56px minmax(0,1fr) 56px;grid-template-rows:72px 44px 38px}.controller[data-layout=mobile] .play-controls{width:164px}.controller[data-layout=mobile] .buy-button{width:50px;height:50px;font-size:10px}.controller[data-layout=mobile] .buy-button b{font-size:13px}}
+@media(orientation:landscape){
+ :host{padding-block:3px}
+ .controller[data-layout=mobile]{--play-size:52px}
+ .controller[data-layout=mobile] .deck{grid-template-rows:58px;column-gap:5px}
+ .controller[data-layout=mobile] .play-controls{grid-template-columns:40px 52px 40px;width:140px;gap:4px;height:52px;grid-template-rows:52px}
+ .controller[data-layout=mobile] .bet-step{width:40px;height:44px}
+ .controller[data-layout=mobile] .buy-button{width:48px;height:48px;font-size:10px}
+ .controller[data-layout=mobile] .buy-button b{font-size:13px}
+ .controller[data-layout=mobile] .utility-left,.controller[data-layout=mobile] .utility-right{display:contents}
+ .controller[data-layout=mobile] .money{height:44px}
+}
+
+/* Leave a full band of street for the portrait mascot above the controls.
+   Utility buttons retain their 44px hit areas within the compact middle row. */
+@media(orientation:portrait){
+ .controller[data-layout=mobile] .deck{grid-template-rows:72px 30px 34px}
+ .controller[data-layout=mobile] .money{height:34px;min-height:34px;gap:2px}
+ .controller[data-layout=mobile] .utility-left,.controller[data-layout=mobile] .utility-right{height:44px;align-self:center}
+}

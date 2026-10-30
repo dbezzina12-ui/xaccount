@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101820">
+<title>Cyber Skunk · Gamboligy Games</title>
+<link rel="stylesheet" href="styles.css?v=1">
+</head>
+<body>
+<div id="app" class="app" data-layout="desktop">
+  <div class="backdrop" aria-hidden="true"><div class="hall"></div><div class="fans"><i></i><i></i><i></i></div><div class="grill"></div><div class="blackout"></div></div>
+  <div id="stage" class="stage">
+    <div class="logo" aria-label="Cyber Skunk"><span class="logo-text">CYBER<b>SKUNK</b></span></div>
+    <div id="mascot" class="mascot" aria-hidden="true"></div>
+    <div id="machine" class="machine">
+      <div class="gauge" aria-hidden="true"><div class="gauge-face"><i></i></div><div id="gauge-needle" class="gauge-needle"></div><span id="gauge-value" class="gauge-value">0</span></div>
+      <div id="cabinet" class="cabinet">
+        <div class="pipes" aria-hidden="true"></div>
+        <div class="cabinet-art" aria-hidden="true"></div>
+        <div id="reels" class="reels" role="img" aria-label="Reels"></div>
+        <canvas id="fx" class="fx" width="1200" height="800" aria-hidden="true"></canvas>
+        <div class="shelf"><span id="status" class="status" role="status" aria-live="polite">PRESSURE IS BUILDING</span></div>
+      </div>
+      <div id="bonus-hud" class="bonus-hud" hidden><span><b id="hud-tier"></b><span>SPINS <b id="hud-spins">0</b></span></span><span class="hud-gap"></span><span>WIN <b id="hud-win">0.00</b></span></div>
+      <footer id="controller" class="controller-host" aria-label="Game controller"></footer>
+    </div>
+  </div>
+
+  <dialog id="buy-menu" class="panel buy-menu" aria-labelledby="buy-title">
+    <button class="close" data-close="buy-menu" aria-label="Close">×</button>
+    <h2 id="buy-title">CHOOSE YOUR PLAY</h2>
+    <p class="buy-bet">Base bet <b id="buy-bet">1.00</b> <span class="bet-steps"><button data-bet="-1" aria-label="Lower bet">−</button><button data-bet="1" aria-label="Raise bet">+</button></span></p>
+    <section><h3>FEATURE SPINS</h3><div class="cards" id="feature-cards"></div></section>
+    <section><h3>BONUS BUYS</h3><div class="cards" id="bonus-cards"></div></section>
+    <section class="hidden-tier"><h3>HIDDEN</h3><div class="card info"><div class="card-art art-blackout"></div><div class="card-body"><h4>BLACKOUT PROTOCOL</h4><p>Land 5 FS scatters in one spin. The lights go out, a 4-vent route lights up and the Reservoir starts at 3. Not for sale.</p></div></div></section>
+  </dialog>
+
+  <dialog id="confirm" class="panel confirm" aria-labelledby="confirm-title">
+    <h2 id="confirm-title">CONFIRM</h2>
+    <dl><dt>Base bet</dt><dd id="confirm-bet"></dd><dt>Cost</dt><dd id="confirm-cost"></dd><dt>Total</dt><dd id="confirm-total"></dd><dt>Balance after</dt><dd id="confirm-balance"></dd></dl>
+    <p id="confirm-rules" class="confirm-rules"></p>
+    <div class="confirm-actions"><button id="confirm-cancel" class="secondary">CANCEL</button><button id="confirm-ok" class="primary">CONFIRM</button></div>
+  </dialog>
+
+  <dialog id="bet-picker" class="panel bet-picker" aria-labelledby="bet-title">
+    <button class="close" data-close="bet-picker" aria-label="Close">×</button>
+    <h2 id="bet-title">BASE BET</h2><div id="bet-options" class="bet-options"></div>
+  </dialog>
+
+  <dialog id="autoplay" class="panel autoplay" aria-labelledby="auto-title">
+    <button class="close" data-close="autoplay" aria-label="Close">×</button>
+    <h2 id="auto-title">AUTOPLAY</h2><div id="auto-options" class="auto-options"></div>
+    <p class="note">Autoplay stops at a bonus, when your balance runs short, and when you stop it.</p>
+  </dialog>
+
+  <dialog id="menu" class="panel menu" aria-labelledby="menu-title">
+    <button class="close" data-close="menu" aria-label="Close">×</button>
+    <h2 id="menu-title">MENU</h2>
+    <label class="setting">Sound<input id="menu-sound" type="checkbox"></label>
+    <label class="setting">Music<input id="menu-music" type="range" min="0" max="100" value="60"></label>
+    <label class="setting">Effects<input id="menu-effects" type="range" min="0" max="100" value="80"></label>
+    <label class="setting">Spin speed<select id="menu-speed"><option value="normal">Normal</option><option value="quick">Quick</option><option value="turbo">Turbo</option></select></label>
+    <div class="menu-links"><button id="menu-rules">Game rules &amp; paytable</button><button id="menu-history">History</button><button id="menu-reset">Reset free-play credits</button></div>
+  </dialog>
+
+  <dialog id="rules" class="panel rules" aria-labelledby="rules-title">
+    <button class="close" data-close="rules" aria-label="Close">×</button>
+    <h2 id="rules-title">GAME RULES</h2><div id="rules-body"></div>
+  </dialog>
+
+  <dialog id="history" class="panel history" aria-labelledby="history-title">
+    <button class="close" data-close="history" aria-label="Close">×</button>
+    <h2 id="history-title">HISTORY</h2><div id="history-rows"></div>
+  </dialog>
+
+  <div id="bonus-panel" class="bonus-panel" hidden role="dialog" aria-modal="true" aria-labelledby="bonus-panel-title">
+    <div class="bonus-panel-inner"><span class="kicker" id="bonus-panel-kicker"></span><h2 id="bonus-panel-title"></h2><p id="bonus-panel-text"></p><button id="bonus-panel-go" class="primary">CONTINUE</button></div>
+  </div>
+  <div id="bigwin" class="bigwin" hidden aria-live="assertive"><div class="bigwin-title" id="bigwin-title"></div><div class="bigwin-amount" id="bigwin-amount"></div></div>
+  <div id="toast" class="toast" hidden role="status"></div>
+</div>
+<script type="module" src="app.js?v=1"></script>
+</body>
+</html>

@@ -97,7 +97,7 @@
     1108
    ],
    "joint": "tail_root",
-   "parent": null,
+   "parent": "torso",
    "order": 1
   },
   "tail-2": {

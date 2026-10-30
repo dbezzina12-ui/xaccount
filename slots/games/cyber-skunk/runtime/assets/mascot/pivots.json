@@ -1,0 +1,327 @@
+{
+ "canvas": [
+  1600,
+  2000
+ ],
+ "baseline": 1880,
+ "joints": {
+  "pelvis": [
+   1006,
+   1001
+  ],
+  "neck": [
+   991,
+   501
+  ],
+  "jaw": [
+   1044,
+   445
+  ],
+  "ear": [
+   920,
+   179
+  ],
+  "near_shoulder": [
+   819,
+   582
+  ],
+  "near_elbow": [
+   680,
+   780
+  ],
+  "near_wrist": [
+   890,
+   938
+  ],
+  "far_shoulder": [
+   1079,
+   565
+  ],
+  "far_elbow": [
+   1190,
+   800
+  ],
+  "far_wrist": [
+   1262,
+   975
+  ],
+  "near_hip": [
+   937,
+   1026
+  ],
+  "near_knee": [
+   723,
+   1440
+  ],
+  "near_ankle": [
+   628,
+   1698
+  ],
+  "far_hip": [
+   1100,
+   1043
+  ],
+  "far_knee": [
+   1070,
+   1440
+  ],
+  "far_ankle": [
+   980,
+   1672
+  ],
+  "tail_root": [
+   883,
+   1108
+  ],
+  "tail_1": [
+   534,
+   1316
+  ],
+  "tail_2": [
+   186,
+   865
+  ],
+  "tail_3": [
+   358,
+   372
+  ],
+  "tail_tip": [
+   744,
+   398
+  ]
+ },
+ "parts": {
+  "tail-1": {
+   "pivot": [
+    883,
+    1108
+   ],
+   "joint": "tail_root",
+   "parent": "torso",
+   "order": 1
+  },
+  "tail-2": {
+   "pivot": [
+    534,
+    1316
+   ],
+   "joint": "tail_1",
+   "parent": "tail-1",
+   "order": 2
+  },
+  "tail-3": {
+   "pivot": [
+    186,
+    865
+   ],
+   "joint": "tail_2",
+   "parent": "tail-2",
+   "order": 3
+  },
+  "tail-4": {
+   "pivot": [
+    358,
+    372
+   ],
+   "joint": "tail_3",
+   "parent": "tail-3",
+   "order": 4
+  },
+  "nozzle": {
+   "pivot": [
+    744,
+    398
+   ],
+   "joint": "tail_tip",
+   "parent": "tail-4",
+   "order": 5
+  },
+  "far-upper-arm": {
+   "pivot": [
+    1079,
+    565
+   ],
+   "joint": "far_shoulder",
+   "parent": "torso",
+   "order": 6
+  },
+  "far-forearm": {
+   "pivot": [
+    1190,
+    800
+   ],
+   "joint": "far_elbow",
+   "parent": "far-upper-arm",
+   "order": 7
+  },
+  "far-hand": {
+   "pivot": [
+    1262,
+    975
+   ],
+   "joint": "far_wrist",
+   "parent": "far-forearm",
+   "order": 8
+  },
+  "far-thigh": {
+   "pivot": [
+    1100,
+    1043
+   ],
+   "joint": "far_hip",
+   "parent": "torso",
+   "order": 9
+  },
+  "far-shin": {
+   "pivot": [
+    1070,
+    1440
+   ],
+   "joint": "far_knee",
+   "parent": "far-thigh",
+   "order": 10
+  },
+  "far-boot": {
+   "pivot": [
+    980,
+    1672
+   ],
+   "joint": "far_ankle",
+   "parent": "far-shin",
+   "order": 11
+  },
+  "torso": {
+   "pivot": [
+    1006,
+    1001
+   ],
+   "joint": "pelvis",
+   "parent": null,
+   "order": 12
+  },
+  "near-thigh": {
+   "pivot": [
+    937,
+    1026
+   ],
+   "joint": "near_hip",
+   "parent": "torso",
+   "order": 13
+  },
+  "near-shin": {
+   "pivot": [
+    723,
+    1440
+   ],
+   "joint": "near_knee",
+   "parent": "near-thigh",
+   "order": 14
+  },
+  "near-boot": {
+   "pivot": [
+    628,
+    1698
+   ],
+   "joint": "near_ankle",
+   "parent": "near-shin",
+   "order": 15
+  },
+  "head": {
+   "pivot": [
+    991,
+    501
+   ],
+   "joint": "neck",
+   "parent": "torso",
+   "order": 16
+  },
+  "ear": {
+   "pivot": [
+    920,
+    179
+   ],
+   "joint": "ear",
+   "parent": "head",
+   "order": 17
+  },
+  "jaw": {
+   "pivot": [
+    1044,
+    445
+   ],
+   "joint": "jaw",
+   "parent": "head",
+   "order": 18
+  },
+  "eyelids": {
+   "pivot": [
+    991,
+    501
+   ],
+   "joint": "neck",
+   "parent": "head",
+   "order": 19
+  },
+  "goggles": {
+   "pivot": [
+    991,
+    501
+   ],
+   "joint": "neck",
+   "parent": "head",
+   "order": 20
+  },
+  "near-upper-arm": {
+   "pivot": [
+    819,
+    582
+   ],
+   "joint": "near_shoulder",
+   "parent": "torso",
+   "order": 21
+  },
+  "near-forearm": {
+   "pivot": [
+    680,
+    780
+   ],
+   "joint": "near_elbow",
+   "parent": "near-upper-arm",
+   "order": 22
+  },
+  "near-hand": {
+   "pivot": [
+    890,
+    938
+   ],
+   "joint": "near_wrist",
+   "parent": "near-forearm",
+   "order": 23
+  },
+  "near-cuff": {
+   "pivot": [
+    890,
+    938
+   ],
+   "joint": "near_wrist",
+   "parent": "near-forearm",
+   "order": 24
+  },
+  "near-pauldron": {
+   "pivot": [
+    819,
+    582
+   ],
+   "joint": "near_shoulder",
+   "parent": "near-upper-arm",
+   "order": 25
+  }
+ },
+ "sprayPose": {
+  "nozzle": [
+   1260,
+   300
+  ],
+  "aim": "right, toward the reels"
+ }
+}
