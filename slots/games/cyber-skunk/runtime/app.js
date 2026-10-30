@@ -86,6 +86,8 @@ function fit() {
   const s = Math.min(w / W, (h - reserve) / H);
   const x = (w - W * s) / 2, y = (h - reserve - H * s) / 2;
   stage.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
+  state.scale = s;
+  if (jet.width !== W || jet.height !== H) { jet.width = W; jet.height = H; }
   skunk.resize(s);
 }
 addEventListener('resize', () => requestAnimationFrame(fit));
@@ -205,6 +207,37 @@ async function wait(ms, { always = false } = {}) {
   }
 }
 
+// ---- The jet: from the skunk's nozzle, over the cabinet, onto the first vent ----
+const jet = $('jet'), jg = jet.getContext('2d');
+// A point on screen to stage design pixels.
+function toStage(cx, cy) { const r = stage.getBoundingClientRect(); return [(cx - r.left) / state.scale, (cy - r.top) / state.scale]; }
+async function sprayJet(i) {
+  const tip = skunk.nozzle(), box = $('mascot').getBoundingClientRect(), cell = cellEl(i)?.getBoundingClientRect();
+  if (!tip || !cell || pace() === 0) return;
+  const [x0, y0] = toStage(box.left + tip[0] * box.width, box.top + tip[1] * box.height), [x1, y1] = toStage(cell.left + cell.width / 2, cell.top + cell.height / 2);
+  const cx = (x0 + x1) / 2, cy = Math.min(y0, y1) - 220; // an arc over the cabinet's top
+  const point = (t) => [(1 - t) ** 2 * x0 + 2 * (1 - t) * t * cx + t * t * x1, (1 - t) ** 2 * y0 + 2 * (1 - t) * t * cy + t * t * y1];
+  const grow = 260 * pace(), hold = 420 * pace(), t0 = performance.now(), drops = [];
+  await new Promise((resolve) => {
+    const frame = () => {
+      const t = performance.now() - t0, head = Math.min(1, t / grow), fade = t > grow ? Math.max(0, 1 - (t - grow) / hold) : 1, tail = t > grow ? Math.min(head, (t - grow) / hold) : 0;
+      jg.clearRect(0, 0, jet.width, jet.height);
+      jg.lineCap = 'round';
+      for (const [width, color, blur] of [[34, '#68c8c333', 0], [14, '#9ff0ea', 26], [4, '#ffffffdd', 0]]) {
+        jg.beginPath(); for (let k = 0; k <= 32; k++) { const u = tail + (head - tail) * (k / 32), [px, py] = point(u); k ? jg.lineTo(px, py) : jg.moveTo(px, py); }
+        jg.strokeStyle = color; jg.lineWidth = width * (0.6 + 0.4 * fade); jg.shadowColor = '#68c8c3'; jg.shadowBlur = blur; jg.stroke();
+      }
+      jg.shadowBlur = 0;
+      if (!reduced.matches && head < 1) for (let k = 0; k < 3; k++) { const [px, py] = point(head * Math.random()); drops.push({ x: px, y: py, vx: (Math.random() - 0.5) * 3, vy: Math.random() * 2, life: 30 }); }
+      for (const d of drops) { d.x += d.vx; d.y += d.vy; d.vy += 0.12; d.life--; jg.globalAlpha = Math.max(0, d.life / 30) * 0.8; jg.fillStyle = '#bff7f2'; jg.beginPath(); jg.arc(d.x, d.y, 3, 0, Math.PI * 2); jg.fill(); }
+      jg.globalAlpha = 1;
+      if (t < grow + hold && !state.skip) requestAnimationFrame(frame); else { jg.clearRect(0, 0, jet.width, jet.height); resolve(); }
+      if (head >= 1 && !frame.hit) { frame.hit = true; const [ex, ey] = center(i); burst(ex, ey, 30); effects.flash = 0.18; kick(); }
+    };
+    requestAnimationFrame(frame);
+  });
+}
+
 // ---- The spray: route cue, mascot spray, cell-by-cell trail ----
 async function showSpray(e) {
   const entry = e.path[0];
@@ -213,13 +246,11 @@ async function showSpray(e) {
   audio.play('charge');
   if (pace() > 0) await skunk.spray(); // resolves when the nozzle releases
   audio.play('spray');
-  const [ex, ey] = center(entry.i);
-  effects.trail = [[ex - 160, -60], [ex, ey]]; kick();
-  burst(ex, ey, 24);
+  await sprayJet(entry.i);
+  effects.trail = [center(entry.i)]; kick();
   const stepMs = 150;
   for (const step of e.path) {
-    const [x, y] = center(step.i);
-    if (effects.trail.length > 2 || step !== entry) effects.trail.push([x, y]);
+    if (step !== entry) effects.trail.push(center(step.i));
     paintCell(step.i, step.vent ? step.pressure : 1, step.vent);
     if (step.vent) { audio.play('vent', { pressure: step.pressure }); burst(x, y, 16, '#eda83c'); status(`PRESSURE ×${step.pressure}`); }
     else audio.play('paint', { k: e.path.indexOf(step) });

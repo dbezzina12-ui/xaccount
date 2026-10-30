@@ -313,8 +313,15 @@ export class Skunk {
     }
     return M;
   }
+  // Where the nozzle's mouth is right now, as a fraction of the mascot box (0..1).
+  nozzle() {
+    const M = this.lastWorld; if (!M) return null;
+    const [x, y] = apply(M.nozzle, [this.joints.tail_tip[0] + 120, this.joints.tail_tip[1]]);
+    return [x / W, y / H];
+  }
   draw(P = this.current()) {
     const g = this.g, s = this.canvas.width / W, M = this.world(P);
+    this.lastWorld = M;
     g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, this.canvas.width, this.canvas.height);
     // Contact shadow under the planted boots (not part of any layer).
     g.setTransform(s, 0, 0, s, 0, 0);
