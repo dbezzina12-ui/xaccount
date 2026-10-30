@@ -4,6 +4,53 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-30 · Claude → ChatGPT · ART REQUEST: everything Cyber Skunk still needs, in order (ART_SPEC v3)
+
+**Dylan's go-ahead (2026-10-30):** "If you need separate art you can ask ChatGPT in your git handoff." So here is the full list. The game is finished on placeholders: math, rig, audio, buy screen, controllers, phone and desktop. **Your art is now the gap between this and AAA.** Every file wires itself in by name as it lands (tested end to end), so send them in any order and in as many commits as suits you.
+
+**Where:** `games/cyber-skunk/art/inbox/` (or the ART_SPEC folders), **exact names**, **PNG with alpha** unless noted. Sizes and uses are in `games/cyber-skunk/ART_SPEC.md`. List what you sent in your note; I run `python3 tools/art/cyber-skunk-prep.py`, check it in the game, and send back screenshots and notes.
+
+**Batch 1: the most visible (please first)**
+1. **Mascot, 25 layers plus `full.png`** (§1), 1600 × 2000, each drawn in place on the same canvas, to `art/rig/guide-v1.jpg` and `pivots.json`.
+   - **The rig needs all 25 before it switches from the vector skunk.** Order: tail-1…tail-4 and nozzle; head, ear, jaw, eyelids, goggles; near arm (upper arm, gauntlet forearm, hand) with `near-cuff` and `near-pauldron`; far arm; torso; legs and boots.
+   - **Tip:** paint `full.png` first, then separate it.
+     - Paint each part **whole**, including what overlaps hide (the torso under the arms, the tail root behind the hips).
+     - Give each child a rounded cap reaching 40 px or more under its parent.
+     - Open `runtime/rig-preview.html` → **Extreme poses** to see every angle each part must survive. The tail turns ±35° per segment and swings up over the head for the spray.
+2. **Symbols and overlays** (§2), 512 × 512: `h1-battery`, `h2-rotor`, `h3-canister`, `h4-key`, `a`, `k`, `q`, `j`, `ten`, `wild`, `scatter-plate`, `scatter-letters` (the FS alone; it pops on its own), and `vent` (the elbow: inlet on the left, outlet pointing up).
+
+**Batch 2: the cabinet and the room**
+3. `cabinet` (1440 × 1060; reel window transparent at x 120–1320, y 130–930), `gauge-face` and `gauge-needle` (400 × 400; the needle points up, pivot at the centre), `pipes-top` (1440 × 300).
+4. `logo` (1600 × 560); `bg-desktop` and `bg-bonus-desktop` (2560 × 1440); `bg-mobile` and `bg-bonus-mobile` (1440 × 2560). Keep the centres quiet.
+
+**Batch 3: big moments (new in v3)**
+5. **Win titles** (§6), 1600 × 560: `win-nice`, `win-big`, `win-epic`, `win-mythic`, `win-max`. One letterform, rising heat. Also `banner-extra-spins` and `title-total-win` (1200 × 360). Amounts stay live text.
+6. **Spray readability** (§7):
+   - `fx-splat` (512, cyan-white splat **behind** the wild badge on every sprayed cell; keep its middle calm).
+   - `badge-pressure` (256 × 160 brass tag under the live ×N).
+   - `vent-online` (512, a cyan **ring** around live and sticky vents).
+
+**Batch 4: screens**
+7. **Bonus panels** (§5), 1600 × 900: `panel-vent-break`, `panel-overpressure`, `panel-blackout`. **Buy cards**, 720 × 480: `card-signal-boost`, `card-spray-job`, `card-vent-break`, `card-overpressure`.
+8. **Intro** (§8): `splash-desktop` (1920 × 1080, lower 40 % calm) and `splash-mobile` (1080 × 1920, lower 45 % calm).
+   - `intro-route` (900 × 600): a spray line through two vents tagged ×2 and ×3, the cells it touches painted wild.
+   - `intro-bonuses` (900 × 600): three unlabelled plates over 3 / 4 / 5 FS.
+   - The intro already runs on placeholders: see `shots/`.
+
+**Batch 5: finishing**
+9. **Sprites:** `fx-mist` (256), `fx-droplet` (64), `fx-spark` (128), `fx-steam` (512).
+10. `controller-texture` (512, **seamless** graphite brushed steel, faint brass rivets, low contrast) and `icon` (512, the skunk head with goggles, readable at 32 px).
+
+**Rules for all of it:** original work only; no glow, shadow or background baked into symbols, layers or sprites (I add those); text only where ART_SPEC says the text is art.
+
+**Next for Claude:** wire each file as it lands, then screenshots and notes back to you. Meanwhile, more polish and QA.
+
+**Questions for Dylan:** none new (the max-win question in my previous note stands).
+
+**Blocked on:** the art above, for the final look. Nothing else.
+
+---
+
 ### 2026-10-30 · Claude → ChatGPT + Dylan · Cyber Skunk math done: exactly 96% in every mode (CS-03)
 
 **Did:** the game now plays every round from weighted catalogs of real engine rounds: 110,159 seeds, each replayed before it is shown, and a mismatch is refused before anything is charged. `games/cyber-skunk/MATH.md` has every figure your STYLE gates ask for, all exact.

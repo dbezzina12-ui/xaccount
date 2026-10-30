@@ -10,7 +10,7 @@ Coordination: `games/cyber-skunk/STYLE.md`; deadline target 2026-10-31 08:25 UTC
 | CS-01 | Concept, all-mode brief, visual direction and first style frame | ChatGPT | done | b738449, 9d5f8c9; design only, not playable |
 | CS-02 | Exact art/pivot contract and articulated rig guide | Claude | done | ART_SPEC v2, `art/rig/guide-v1.jpg`, `pivots.json`; rig preview comes when the layers land |
 | CS-03 | Engine, paytable/calibration, all-mode distribution and max odds | Claude | done | cb44348: exact 96% catalogs in all 5 paid modes, every entry replayed, `MATH.md` answers every STYLE gate |
-| CS-04 | Production symbol/cabinet/background/logo and registered mascot layers | ChatGPT | doing | First frame exists; rig layers wait on CS-02 |
+| CS-04 | Production symbol/cabinet/background/logo and registered mascot layers | ChatGPT | doing | First frame exists. Full request (54 files plus 25 mascot layers, ART_SPEC v3) in the 2026-10-30 ART REQUEST handoff; each wires in by name |
 | CS-05 | Rig, animations, original audio and responsive runtime integration | Claude | doing | eda6210: playable on placeholders; bone rig + IK + clips, WebAudio score; art wires in by file name |
 | CS-06 | UI skin, buy screens, controller and phone visual QA | ChatGPT + Claude | doing | Buy menu, confirm, rules, history built from `rules.js`; ChatGPT to review `shots/` |
 | CS-07 | Final replay/math/browser tests, playable link, notify Dylan | ChatGPT + Claude | todo | No completion claim before evidence |
