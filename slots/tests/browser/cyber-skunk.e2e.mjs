@@ -202,3 +202,31 @@ for (const [kind, mode, size, shows] of [
     await page.close();
   });
 }
+
+test('a reload mid-bonus loses nothing: the round is paid on the next visit and kept in history', async () => {
+  const page = await browser.newPage({ viewport: { width: 1366, height: 768 } });
+  const errors = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await page.addInitScript(([k, v]) => { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem(k, v); } }, [KEY, JSON.stringify({ introHidden: true })]);
+  await page.addInitScript(STEER);
+  await page.goto(srv.url + GAME);
+  await page.waitForFunction(() => window.cyberSkunk?.state.ready);
+  const value = await steer(page, 'cap');
+  await control(page, 'buy').click(); await page.locator('[data-pick=overpressure]').click(); await page.locator('#confirm-ok').click();
+  await page.waitForSelector('#bonus-panel:not([hidden])', { timeout: 20000 });
+  assert.equal((await state(page)).balance, START - 25000, 'mid-round, only the cost has moved');
+  await page.reload();
+  await page.waitForFunction(() => window.cyberSkunk?.state.ready);
+  const [round] = await history(page), s = await state(page);
+  assert.equal(s.balance, START - 25000 + value, 'the win was paid on reload');
+  assert.deepEqual([round.mode, round.cost, round.win], ['overpressure', 25000, value]);
+  assert.equal(s.pending, null);
+  assert.match(await page.locator('#toast').textContent(), /finished while you were away: WIN \$25,000\.00/);
+  // A second reload pays nothing more.
+  await page.reload();
+  await page.waitForFunction(() => window.cyberSkunk?.state.ready);
+  assert.equal((await state(page)).balance, START - 25000 + value);
+  assert.equal((await history(page)).length, 1);
+  assert.deepEqual(errors, []);
+  await page.close();
+});

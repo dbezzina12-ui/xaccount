@@ -47,10 +47,14 @@ const state = {
   muted: !!saved?.muted, music: level(saved?.music, 60), effects: level(saved?.effects, 80), introHidden: !!saved?.introHidden,
   history: Array.isArray(saved?.history) ? saved.history.slice(0, 30) : [],
   busy: false, ready: false, auto: 0, skip: false, win: 0, debit: 0, tier: null,
+  pending: null, // the round being shown: already decided, saved so a reload cannot lose its win
 };
 function persist() {
-  try { localStorage.setItem(KEY, JSON.stringify({ balance: state.balance, bet: state.bet, speed: state.speed, muted: state.muted, music: state.music, effects: state.effects, history: state.history, introHidden: state.introHidden })); } catch { /* storage is optional */ }
+  try { localStorage.setItem(KEY, JSON.stringify({ balance: state.balance, bet: state.bet, speed: state.speed, muted: state.muted, music: state.music, effects: state.effects, history: state.history, introHidden: state.introHidden, pending: state.pending })); } catch { /* storage is optional */ }
 }
+// A round the page closed on mid-presentation is paid on the next visit.
+const resumed = saved?.pending && Number.isSafeInteger(saved.pending.win) && saved.pending.win >= 0 ? saved.pending : null;
+if (resumed) { state.balance += resumed.win; state.history.unshift(resumed); state.history.length = Math.min(state.history.length, 30); persist(); }
 
 const audio = new GameAudio();
 audio.setMuted(state.muted); audio.setLevels(state.music / 100, state.effects / 100);
@@ -455,19 +459,20 @@ async function play(mode = state.feature || 'base') {
   // disagrees with the catalog is refused and costs nothing.
   let result;
   try { result = drawRound(mode); } catch (err) { console.error(err); state.auto = 0; update(); toast('That round could not be verified, so it was not played. Nothing was charged.'); return; }
-  const seed = result.draw;
   state.busy = true; state.skip = false; state.win = 0; state.debit = cost;
-  state.balance -= cost; persist();
+  state.balance -= cost;
+  state.pending = { t: Date.now(), mode, bet: state.bet, cost, win: payOf(result.total), tier: result.tier, seed: result.draw };
+  persist();
   update(); app.dataset.busy = '';
   try { await present(result, mode); } catch (err) { console.error(err); }
   finally {
     // Settlement is the engine's total, whatever the presentation did.
-    const won = payOf(result.total), skipped = state.skip;
+    const won = state.pending.win, skipped = state.skip;
     state.balance += won; state.win = won; state.busy = false; state.skip = false;
     delete app.dataset.busy; delete app.dataset.bonus; delete app.dataset.blackout;
     $('bonus-panel').hidden = true; $('bigwin').hidden = true; $('bonus-hud').hidden = true; state.tier = null; gauge(0); clearFx();
     audio.duck(false); audio.music('base');
-    state.history.unshift({ t: Date.now(), mode, bet: state.bet, cost, win: won, tier: result.tier, seed });
+    state.history.unshift(state.pending); state.pending = null;
     state.history.length = Math.min(state.history.length, 30);
     if (result.natural && state.auto) { state.auto = 0; toast('Autoplay stopped: bonus triggered.'); }
     persist(); update();
@@ -678,6 +683,7 @@ async function boot() {
   void fillerStrip(STRIP).then((url) => { if (url) { $('reels').style.setProperty('--filler', `url("${url}")`); stripReady = true; } });
   introRoute();
   if (!saved?.introHidden) showIntro();
+  if (resumed) toast(`Your last round finished while you were away: ${resumed.win ? `WIN ${money(resumed.win)}` : 'no win'}.`);
 }
 // The intro's route diagram from the game's own symbols, until intro-route art exists:
 // a vent (x2) sprays right through a wild into a second vent (x3), which turns it up.
