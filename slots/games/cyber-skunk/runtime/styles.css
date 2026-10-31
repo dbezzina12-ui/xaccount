@@ -33,6 +33,14 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .app[data-bonus=super] .backdrop{background:radial-gradient(120% 80% at 60% 40%,#3a2a12 0%,#1a120a 55%,#070503 100%)}
 .app[data-bonus=hidden] .backdrop{background:radial-gradient(120% 80% at 60% 40%,#0d2d2f 0%,#06100f 55%,#000 100%)}
 .app[data-bonus] .backdrop .fans i{animation-duration:2.4s}
+/* Bonus light over the hall (ART_SPEC: "cyan pressure light"): cyan in Vent
+   Break, amber in Overpressure, a dim cyan in Blackout. Opacity only, so it
+   stays on the compositor; with bonus background art it still adds the pulse. */
+.backdrop .hall::after{content:"";position:absolute;inset:0;opacity:0;transition:opacity .8s;background:radial-gradient(75% 60% at 50% 42%,#68c8c35c,#68c8c31f 45%,#68c8c300 75%);will-change:opacity}
+.app[data-bonus] .backdrop .hall::after{opacity:1;animation:pressure-light 2.8s ease-in-out infinite alternate}
+.app[data-bonus=super] .backdrop .hall::after{background:radial-gradient(75% 60% at 50% 42%,#eda83c5c,#eda83c1f 45%,#eda83c00 75%)}
+.app[data-bonus=hidden] .backdrop .hall::after{background:radial-gradient(60% 50% at 50% 42%,#68c8c338,#68c8c300 70%)}
+@keyframes pressure-light{from{opacity:.5}to{opacity:1}}
 
 /* Stage: desktop 1920×1080; mobile 1080 wide and as tall as the screen above
    the controller (fit() sets --stage-h, at least 1560). Reels first: on a
@@ -324,6 +332,6 @@ dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}
   .intro-tiers{gap:4px;padding:6px}.intro-tiers span{border-radius:8px;padding:4px 2px;font-size:10px;gap:4px}.intro-tiers i{font-size:20px}
   .intro-go{min-width:200px;min-height:56px}
 }
-@media (prefers-reduced-motion:reduce){.bigwin::before{animation:none}.backdrop .fans i{animation:none}.cell.win .sym{animation:none}.steam,.reel-banner.show,.intro-inner{animation:none}}
+@media (prefers-reduced-motion:reduce){.app[data-bonus] .backdrop .hall::after{animation:none}.bigwin::before{animation:none}.backdrop .fans i{animation:none}.cell.win .sym{animation:none}.steam,.reel-banner.show,.intro-inner{animation:none}}
 
 @media(prefers-reduced-motion:reduce){.card-flipper{transition:none}}
