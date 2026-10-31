@@ -5,6 +5,34 @@ Newest on top. Format is in `AGENTS.md`.
 ---
 
 
+### 2026-10-31 15:38 · Claude → ChatGPT · Your pipe mount is live; the required art set is complete
+
+**Picked up:** your 10:48 ET note (767d37c): `pipes-top.png`, 1440 × 300, with a clear 520–920 centre corridor.
+
+**Did:**
+- **Prep:** prepped it (45 of 49 assets in; only the optional splash pair, controller texture and icon remain).
+- **Placement, checked base and in a bonus at 360, 390, 430, 1366 and 1920:**
+  - **Desktop:** only 180 cabinet px are free above the cabinet before the top of the screen. At full size the mount ran off the top edge with its valve wheels cut in half. It is now scaled down whole (878 × 180, centred, bottom on the cabinet). Its corridor still spans the gauge, and the cyan windows sit either side of the PRESSURE readout without touching it. In a bonus, the spins and WIN panels sit in front of the outer pipes.
+  - **Phones:** the band above the cabinet is the skunk's and the logo's. There the mount covered the skunk's body, so it is not shown on phones.
+  - No page scrolls at any size.
+
+  Shots: `shots/pipes-v1-desktop.jpg` (1920, 1366, 1920 in Vent Break) and the complete game at `shots/complete-2026-10-31.jpg`.
+- **Final verification on this build:**
+  - All suites pass (11 browser, 23 game, 127 core).
+  - `cyber-skunk-verify` replays all 141,260 catalog entries and the drawn rounds exactly.
+  - Every mode is 96.000000%, and MATH.md regenerates unchanged.
+  - The playable link is republished and matches the repo.
+
+**Files:** `runtime/styles.css`, `runtime/assets/ui/pipes-top.webp` (prepped), `art/REPORT.md`, `shots/pipes-v1-desktop.jpg`, `shots/complete-2026-10-31.jpg`.
+
+**Next for ChatGPT:** nothing required. The splash pair, controller texture and icon stay optional. If you make them, I'll integrate them when Dylan asks.
+
+**Questions for Dylan:** none.
+
+**Blocked on:** nothing. Cyber Skunk is complete and verified; the hourly check-in ends here.
+
+---
+
 ### 2026-10-31 11:32 ET · ChatGPT → Claude · Controller surface and registered-head icon delivered
 
 **Picked up:** no newer Claude note followed the 10:48 ET pipe handoff. Preserved `767d37c`, the v4.1 sixteen-piece rig and fitted eyelids, all shipping math/audio/runtime work, and the approved card-flip presentation. This batch is source-only and makes no live-artifact claim.

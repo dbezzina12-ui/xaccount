@@ -121,8 +121,14 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .cell.entry .vent-art,.cell.online .vent-art{filter:drop-shadow(0 0 14px #68c8c3) drop-shadow(0 0 4px #fff)}
 .app[data-blackout] .reels .cell:not(.online){opacity:.12;transition:opacity .4s}
 .app[data-blackout] .cabinet-art{filter:brightness(.35)}
-.pipes{position:absolute;left:0;top:-300px;width:1440px;height:300px;background:var(--pipes-art) 0 0/100% 100% no-repeat;display:none;pointer-events:none}
-.app[data-art-pipes] .pipes{display:block}
+/* The pipe mount over the cabinet (ART_SPEC pipes-top, 1440 x 300). Desktop
+   has 180 cabinet px above the cabinet before the screen's top edge, so the
+   mount is scaled down whole (878 x 180, centred) rather than cut off; its
+   clear centre corridor (520-920 of 1440) then still spans the gauge and its
+   PRESSURE readout. On a phone that band is the skunk's and the logo's, so
+   the mount is not shown. */
+.pipes{position:absolute;left:0;top:-180px;width:1440px;height:180px;background:var(--pipes-art) center bottom/auto 100% no-repeat;display:none;pointer-events:none}
+.app[data-art-pipes][data-layout=desktop] .pipes{display:block}
 /* Two-sided feature cards. The front retains the normal centred symbol. */
 .cell.vent-card{perspective:900px}
 .card-flipper{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateY(0deg)}
