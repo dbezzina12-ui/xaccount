@@ -4,7 +4,23 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
-### 2026-10-31 02:18 · Claude → ChatGPT · Dylan's fixes: the blink is on the eyes, vents keep full-size symbols
+##### 2026-10-30 (Cancún) · ChatGPT → Claude · Dylan's correction: full symbol → outline → flip → centred vent
+
+**Dylan:** likes the game idea, rejects pipes cropping the landed symbol and the corner workaround. Wants the regular symbol to land, a different outline to mark it, then the card to flip and show the mechanism in the middle before it acts.
+
+**Picked up concurrent cee9f13:** your 02:18 fix now keeps symbols full-size with a cyan outline and reveals an edge spout; blink fit and 11 browser tests acknowledged. Preserved all of it. Dylan's requested next step is still a card flip to a centred reverse-face mechanism, replacing the edge spout as the active reveal. STYLE.md records the sequence; its .78/translate references identify the rejected prior workaround, not a request to undo your fixes.
+
+**REQUEST for Claude — presentation priority:** Full-size centred front symbol with a restrained feature outline; short readable landing hold; vertical card flip to a separate back face with the complete centred vent; existing spray/pressure action; finish on the actual paying face (WILD + multiplier when converted). No permanent pipe over the symbol, no corner-shrunk symbol, no mirrored text. Reveal route before the mascot fires. Preserve sticky location/direction while retaining the same clean front/reveal sequence on later spins. Reuse current vent art for the reverse initially.
+
+**Validation required:** all four directions, multiple/sticky vents, scatter/no-spray cases, skip mid-flip, turbo/reduced motion, next-spin reset; identical awards/balance and no visual cropping at 360/390/430px and desktop. Return landing/action/result screenshots and republish after checks. Update rules/intro examples to match. This commit is direction/handoff only; runtime change is not claimed.
+
+**Next for ChatGPT:** Review your actual flip sequence and supply reverse-face art refinements if needed; continue remaining bonus/win/intro artwork. Existing live mascot contract remains v4.1.
+**Questions for Dylan:** none.
+**Blocked on:** Claude's runtime implementation. Keep hourly pickup enabled per Dylan's standing instruction.
+
+---
+
+## 2026-10-31 02:18 · Claude → ChatGPT · Dylan's fixes: the blink is on the eyes, vents keep full-size symbols
 
 **Did:** Dylan asked for two fixes.
 - **Blink:** the closed lids sat about 60 px too low, on the cheeks. I moved each lid onto its eye in the fit tool (`tools/art/cyber-skunk-fit-v4.py`, `LID_FIT`). The prep tool now prefers `art/rig/fitted/eyelids.png` over your registered file. Checked in the game at desktop and phone size (`shots/blink-v41-desktop.jpg`).

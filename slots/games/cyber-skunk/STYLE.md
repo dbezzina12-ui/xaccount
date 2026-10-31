@@ -1,5 +1,20 @@
 # Cyber Skunk — production brief v1
 
+## Superseding vent presentation — Dylan, 2026-10-30 (Cancún)
+
+Dylan rejects pipes overlapping/cropping normal symbols and the workaround that shrinks/repositions symbols into a corner. Preserve the game mechanic; change its visual sequence to a two-sided symbol card.
+
+1. **Land:** every card shows its normal symbol at the ordinary centred size, fully contained. A vent-bearing card has a distinct restrained cyan outline; a sticky vent also keeps an unambiguous latched-border treatment. No pipe artwork on the front, no diagonal symbol translation, and no vent-specific symbol scaling.
+2. **Reveal:** after landing is readable, outlined cards flip around their vertical centre to a reverse face containing one complete centred pipe/vent mechanism. Keep the card footprint fixed and contain the mechanism with clear margins in every outlet rotation. Use separate front/back layers; hide the backface so neither symbol nor lettering appears mirrored. Starting timing: about 150–200 ms landing hold and a 250–320 ms flip, tuned by Claude for pace. Reveal the available route before the mascot fires; do not force a long serial flip for every cell.
+3. **Act:** the spray follows the existing authoritative route. The centred mechanism turns/redirects the spray and shows its real pressure when hit. Route connections may animate over the grid during the action but must not permanently cover symbol artwork. Vent direction stays consistent with the actual route, not a new random flip result.
+4. **Resolve:** show the authoritative final paying face before win evaluation is presented: a full readable WILD plus live multiplier for converted vent cells, ordinary symbols for untouched/unconverted cells. Do not flip a converted WILD back to its original symbol during award display. Sticky location/direction persist in game state and the border remains identifiable; on subsequent landings, show the newly landed front and repeat the reveal as appropriate.
+
+Implementation targets for Claude: replace the `.cell:has(> .vent-art) .sym{scale:.78}` and direction-specific `translate` treatment in runtime/styles.css; replace simultaneous front-symbol plus vent-overlay markup in app.js cellHTML with explicit visual faces/state. Reuse the existing isolated vent artwork on the reverse first; request art changes from ChatGPT only if it cannot fit cleanly. Rules/intro examples must describe outlined cards revealing vents, rather than pipes permanently on top of symbols.
+
+This is presentation only: symbol IDs, route, awards, sticky state, costs and RNG remain unchanged. Skip/turbo must resolve to exactly the same final face, multiplier, balance and route outcome. Reduced motion uses an immediate face change or short fade. Verify all four vent rotations, several simultaneous/sticky vents, scatter handling, no-spray rounds, next-spin reset, mid-flip skip and phone widths 360/390/430 plus desktop. Capture landing, reverse/action and award frames to prove symbols and mechanisms are complete and centred. This supersedes older overlay/corner-placement art directions.
+
+
+
 ## Explicit symbol restriction — Dylan, 2026-10-30
 Do not add skunks to any reel symbols. No skunk characters, faces, silhouettes or tails on low symbols, premiums, WILD or FS. The rejected generated skunk-on-A draft is not a production asset and must never be integrated. Keep A/K/Q/J/10 plain and readable, premiums as industrial objects, FS as plain letters. Use a character-free industrial WILD badge; remove the earlier skunk-stripe motif requirement. The mascot is a separate animated character outside the reels.
 
