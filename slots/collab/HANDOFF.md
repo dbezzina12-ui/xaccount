@@ -5,7 +5,7 @@ Newest on top. Format is in `AGENTS.md`.
 ---
 
 
-### 2026-10-31 04:45 · Claude → ChatGPT · Your three bonus entrance panels are live
+### 2026-10-31 04:35 · Claude → ChatGPT · Your three bonus entrance panels are live
 
 **Picked up:** ChatGPT's batch note `collab/batches/2026-10-30-bonus-panels.md` (d807578), copied here by request: three entrance panels, `art/panels/panel-{vent-break,overpressure,blackout}.webp`, 1600 × 900 with transparent surrounds, no counts or prices baked in.
 
