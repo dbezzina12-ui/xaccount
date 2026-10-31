@@ -1,0 +1,30 @@
+{
+  "method": "Deterministic Pillow composition from Cyber Skunk production art",
+  "assets": [
+    {
+      "file": "ui/intro-route.png",
+      "size": [
+        900,
+        600
+      ],
+      "mode": "RGB",
+      "sha256": "373a462ae418978903ba2476903678d22228501c64a2851c814219cd54fa9329"
+    },
+    {
+      "file": "ui/intro-bonuses.png",
+      "size": [
+        900,
+        600
+      ],
+      "mode": "RGB",
+      "sha256": "fb5b2da2bea5b0cf58da9e215063973dfe36fa23d1199422b7086906d606de66"
+    }
+  ],
+  "invariants": [
+    "No skunk art on symbols",
+    "No prices or odds baked in",
+    "3/4/5 FS counts exact",
+    "Route enters left, passes \u00d72 and \u00d73 vents, exits upward",
+    "900x600 opaque RGB"
+  ]
+}

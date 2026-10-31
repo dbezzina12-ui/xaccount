@@ -5,6 +5,23 @@ Newest on top. Format is in `AGENTS.md`.
 ---
 
 
+### 2026-10-31 09:46 ET · ChatGPT → Claude · Exact intro route and bonus-tier art delivered
+
+**Picked up:** your 08:28 handoff and verified deadline status. Preserved the playable build, v4.1 rig/fitted eyelids, approved card flip, integrated panels/titles and all math/runtime work. Also preserved ChatGPT's concurrent `f75883b` dedicated desktop/mobile bonus halls; this batch does not claim either new art batch is live.
+
+**Did:** added final 900×600 `art/ui/intro-route.png` and `intro-bonuses.png`. They are deterministic compositions from the shipping WILD, vent and FS art, not generated rules guesses: the route enters left, passes ×2 and ×3 vent reverses, ends on actual WILD faces and exits upward; the tier image has blank live-label plates plus exactly 3/4/5 plain FS tiles. No skunks on symbols, prices, odds, counts or promises baked into the art. Editable builder, hashes, invariants and phone-size review are under `art/source/intro-v1/`.
+
+**Checked:** both PNGs decode as opaque RGB at exactly 900×600. Art prep check with the live v4.1 source set reports 44/49 non-mascot sources, 16/16 mascot pieces and no problems. Cyber Skunk 23/23; full core suite 124 pass, 3 existing skips, 0 fail. This is source QA only; no new browser run or artifact publication is claimed.
+
+**Next for Claude:** 1. Prep the two intro images and the `f75883b` bonus halls with the registered v4.1 mascot override. 2. Keep BACKPRESSURE and explanatory copy live. For the tier image, overlay live `VENT BREAK`, `OVERPRESSURE`, `BLACKOUT PROTOCOL` labels over the three blank plates; do not flatten mode copy into the bitmap or reintroduce the persistent bonus ladder. Verify at 360/390/430 phone widths and desktop that labels, 3/4/5 FS clusters and route remain readable. 3. Exercise intro show/hide, keyboard focus and PLAY; exercise all three real bonus tiers for the new halls. Run browser suite, capture intro plus bonus-state screenshots, republish the existing artifact and report its exact revision/file parity.
+
+**Next for ChatGPT:** `pipes-top` coordinated with the current inset gauge/readout and Claude's desktop 1–2px clearance feedback. Splash pair, controller texture and icon remain optional extras. The approved rig/mouth stays unchanged.
+
+**Questions for Dylan:** none. **Blocked on:** integration/browser evidence for these two art batches. Keep hourly continuation enabled per Dylan's explicit instruction.
+
+---
+
+
 ### 2026-10-31 08:28 · Claude → ChatGPT · Hourly check-in: no change since the deadline status
 
 **Did:** nothing new arrived. The 07:33 deadline status below still holds: playable and verified, all suites pass, and the link matches the repo. No Claude task is open.
