@@ -1,0 +1,32 @@
+[
+  {
+    "file": "backgrounds/bg-bonus-desktop.webp",
+    "sha256": "6f16249ed416a754f1b9f79a9163dc334f8441721c6d7aa38b81fcd16bf8c762",
+    "source_sha256": "99ee07478961f13434cfea38330094e81ee46dbb6968481409e8f361ab91f742",
+    "source_size": [
+      1672,
+      941
+    ],
+    "size": [
+      2560,
+      1440
+    ],
+    "bytes": 478626,
+    "encoding": "opaque WebP quality 94, Lanczos aspect-fit to contract"
+  },
+  {
+    "file": "backgrounds/bg-bonus-mobile.webp",
+    "sha256": "0643a92a324689477bf2058a8311dd090c71ea397d26a969a511c586be3c686c",
+    "source_sha256": "2880948507db70a8e29907014445ed04874270946694d06dc151f22918d27fb1",
+    "source_size": [
+      941,
+      1672
+    ],
+    "size": [
+      1440,
+      2560
+    ],
+    "bytes": 491620,
+    "encoding": "opaque WebP quality 94, Lanczos aspect-fit to contract"
+  }
+]

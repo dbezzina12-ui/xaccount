@@ -1,0 +1,10 @@
+[
+  {
+    "mode": "desktop",
+    "prompt": "Repaint the supplied empty industrial vent hall as the BONUS state for Cyber Skunk, staying recognizably the same room and camera angle. Original polished hand-painted cartoon game environment; broad silhouettes, confident inked edges and two or three deliberate value planes per surface, not photographic textures. Simplify tiny pipes, rivets, grime, haze and floor reflections. Matte navy graphite, warm muted brass joints, restrained cyan pressure light behind the active fan blades. Indicate rotation via subtle trailing edge arcs on one fan only; no motion blur over the room. Neutral mid-dark wall where the live game is overlaid. No UI, cabinet, gauges, characters, logos, letters, labels, numbers or symbols. Opaque full bleed environment. Landscape 16:9 composition. Fan bank stays at far left; right two thirds quiet wall, no high contrast details at screen centre. Floor below bottom fifth. Preserve depth and avoid a busy floor."
+  },
+  {
+    "mode": "mobile",
+    "prompt": "Repaint the supplied empty industrial vent hall as the BONUS state for Cyber Skunk, staying recognizably the same room and camera angle. Original polished hand-painted cartoon game environment; broad silhouettes, confident inked edges and two or three deliberate value planes per surface, not photographic textures. Simplify tiny pipes, rivets, grime, haze and floor reflections. Matte navy graphite, warm muted brass joints, restrained cyan pressure light behind the active fan blades. Indicate rotation via subtle trailing edge arcs on one fan only; no motion blur over the room. Neutral mid-dark wall where the live game is overlaid. No UI, cabinet, gauges, characters, logos, letters, labels, numbers or symbols. Opaque full bleed environment. Portrait 9:16 composition. One active fan and a hint of catwalk upper left, centered middle two thirds mostly quiet graphite wall, floor grate only in bottom tenth. Broad framing pipes at far corners; no pipe crossing the central playing area."
+  }
+]
