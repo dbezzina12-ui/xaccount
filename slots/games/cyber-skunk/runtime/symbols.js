@@ -16,8 +16,9 @@ const PLACEHOLDER = {
   W: svg(`<rect x="8" y="14" width="84" height="72" rx="14" fill="#101418" stroke="#efe5cf" stroke-width="4"/><path d="M22 74 C34 48 40 30 50 18 C60 30 66 48 78 74 Z" fill="#efe5cf"/><path d="M38 74 C44 54 46 40 50 30 C54 40 56 54 62 74 Z" fill="#101418"/><text x="50" y="68" font-family="Anton, Impact, 'Arial Black', sans-serif" font-size="24" text-anchor="middle" fill="#eda83c" stroke="#0b1014" stroke-width="3" paint-order="stroke">WILD</text>`),
   S: svg(`<rect x="10" y="12" width="80" height="76" rx="8" fill="#2a2116" stroke="#ad7840" stroke-width="6"/><rect x="18" y="20" width="64" height="60" rx="4" fill="#15110b" stroke="#eda83c55" stroke-width="2"/><text x="50" y="64" font-family="Anton, Impact, 'Arial Black', sans-serif" font-size="40" text-anchor="middle" fill="#efe5cf" stroke="#0b1014" stroke-width="3" paint-order="stroke">FS</text>`),
 };
-// The vent overlay: inlet on the left, outlet pointing up (rotated per outlet).
-export const VENT_SVG = svg(`<path d="M6 60 H38 Q58 60 58 40 V6" fill="none" stroke="#0b1014" stroke-width="30" stroke-linecap="butt"/><path d="M6 60 H38 Q58 60 58 40 V6" fill="none" stroke="#8d6638" stroke-width="22"/><path d="M6 56 H38 Q54 56 54 40 V6" fill="none" stroke="#d9a35d" stroke-width="5" opacity=".7"/><rect x="40" y="2" width="36" height="10" rx="3" fill="#ad7840" stroke="#0b1014" stroke-width="3"/><rect x="2" y="44" width="10" height="32" rx="3" fill="#ad7840" stroke="#0b1014" stroke-width="3"/><ellipse cx="58" cy="7" rx="12" ry="3.5" fill="#68c8c3"/>`);
+// The vent's spout: a straight nozzle, opening at the top, base at the bottom
+// (256 x 320, as vent-spout.webp). ventHTML turns it toward the outlet.
+export const SPOUT_SVG = `<svg viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="17" y="30" width="46" height="62" fill="#8b8f8f" stroke="#0b1014" stroke-width="3"/><rect x="24" y="34" width="8" height="54" fill="#d5d8d6" opacity=".55"/><rect x="11" y="84" width="58" height="14" rx="3" fill="#ad7840" stroke="#0b1014" stroke-width="3"/><rect x="7" y="12" width="66" height="24" rx="5" fill="#ad7840" stroke="#0b1014" stroke-width="3"/><ellipse cx="40" cy="13" rx="29" ry="8" fill="#68c8c3" stroke="#0b1014" stroke-width="3"/></svg>`;
 
 const available = new Map();
 // Checks once which art files exist, so placeholders fill only the gaps.
@@ -29,8 +30,8 @@ export async function loadArt(base = 'assets/symbols/') {
   }));
   const letters = `${base}scatter-letters.webp`;
   if (await new Promise((resolve) => { const img = new Image(); img.onload = () => resolve(true); img.onerror = () => resolve(false); img.src = letters; })) available.set('S-letters', letters);
-  const vent = `${base}vent.webp`;
-  if (await new Promise((resolve) => { const img = new Image(); img.onload = () => resolve(true); img.onerror = () => resolve(false); img.src = vent; })) available.set('vent', vent);
+  const spout = `${base}vent-spout.webp`;
+  if (await new Promise((resolve) => { const img = new Image(); img.onload = () => resolve(true); img.onerror = () => resolve(false); img.src = spout; })) available.set('spout', spout);
   return available.size;
 }
 export function symbolHTML(id) {
@@ -89,8 +90,10 @@ async function symbolArt(id) {
   await img.decode();
   return { img, texts, painted };
 }
+// A vent on a symbol: the symbol keeps its size and gets an outline
+// (styles.css), and the spout stands on the outlet edge, pointing out:
+// dir 0 up, 1 right, 2 down, 3 left. In a reel it pops out once the reel lands.
 export function ventHTML(dir) {
-  const rotate = [0, 90, 180, 270][dir];
-  const body = available.has('vent') ? `<img src="${available.get('vent')}" alt="" draggable="false">` : VENT_SVG;
-  return `<span class="vent-art" data-dir="${dir}" style="--turn:${rotate}deg">${body}</span>`;
+  const body = available.has('spout') ? `<img src="${available.get('spout')}" alt="" draggable="false">` : SPOUT_SVG;
+  return `<span class="vent-art" data-dir="${dir}" style="--turn:${[0, 90, 180, 270][dir]}deg"><span class="spout">${body}</span></span>`;
 }

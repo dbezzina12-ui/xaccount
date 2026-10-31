@@ -35,6 +35,29 @@ JOINT_OF = {
     "near-upper-arm": "near_shoulder", "near-forearm": "near_elbow", "near-hand": "near_wrist",
 }
 OVERLAP = 55
+# Pieces painted off their mark, moved onto it (sources untouched; the fitted
+# copies go to art/rig/fitted/, which cyber-skunk-prep.py prefers). Eyelids:
+# each lid shape is moved onto its eye; as delivered both sat on the cheek.
+# (lid centre in the source, where it goes: the eye opening's centre)
+LID_FIT = [((933, 802), (955, 749)), ((1095, 835), (1128, 789))]
+
+
+def fit_eyelids():
+    """Each lid blob moved by its own offset onto its eye."""
+    src = np.array(Image.open(SRC / "registered" / "eyelids.png").convert("RGBA"))
+    solid = src[:, :, 3] >= 8
+    out = np.zeros_like(src)
+    h, w = solid.shape
+    for (cx, cy), (tx, ty) in LID_FIT:
+        # the blob: every lid pixel nearer this lid's centre than the other's
+        others = [c for c, _ in LID_FIT if c != (cx, cy)]
+        yy, xx = np.mgrid[0:h, 0:w]
+        mine = solid & ((xx - cx) ** 2 + (yy - cy) ** 2 < min((xx - ox) ** 2 + (yy - oy) ** 2 for ox, oy in others))
+        dx, dy = tx - cx, ty - cy
+        ys, xs = np.nonzero(mine)
+        out[ys + dy, xs + dx] = src[ys, xs]
+    (RIG / "fitted").mkdir(exist_ok=True)
+    Image.fromarray(out).save(RIG / "fitted" / "eyelids.png")
 
 
 def main():
@@ -90,6 +113,7 @@ def main():
         d.ellipse([x - 9, y - 9, x + 9, y + 9], fill=(237, 168, 60, 255), outline=(0, 0, 0, 255), width=2)
         d.text((x + 14, y - 30), f"{q['order']} {name}", fill=(255, 255, 255), font=font, stroke_width=3, stroke_fill=(0, 0, 0))
     im.save(RIG / "guide-v3.jpg", quality=88)
+    fit_eyelids()
     print("\n".join(lines[6:]))
 
 

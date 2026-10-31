@@ -84,10 +84,10 @@
   "file": "goggles.webp"
  },
  "eyelids": {
-  "x": 852,
-  "y": 755,
-  "w": 297,
-  "h": 115,
+  "x": 874,
+  "y": 702,
+  "w": 308,
+  "h": 122,
   "file": "eyelids.webp"
  },
  "near-upper-arm": {

@@ -78,6 +78,34 @@ for (const [label, size] of [['desktop', { width: 1366, height: 768 }], ['phone'
   });
 }
 
+test('vents: full-size outlined symbols, spouts hidden while a reel spins in and out once it lands', async () => {
+  const { page, errors } = await open({ width: 390, height: 844 });
+  await control(page, 'buy').click();
+  await page.locator('[data-pick=sprayjob]').click();
+  await page.locator('#confirm-ok').click();
+  await control(page, 'play').click();
+  await page.waitForFunction(() => document.querySelector('#reels .reel.spinning'));
+  const spinning = await page.evaluate(() => [...document.querySelectorAll('#reels .reel.spinning .cell[data-i]')].map((el) => el.classList.contains('landed')));
+  assert.ok(spinning.length && spinning.every((l) => !l), 'cells still spinning in show no spout');
+  await finish(page);
+  await page.waitForTimeout(500);
+  const vents = await page.evaluate(() => ({
+    cells: document.querySelectorAll('#reels .cell').length,
+    landed: document.querySelectorAll('#reels .cell[data-i].landed').length,
+    spouts: [...document.querySelectorAll('#reels .cell .vent-art .spout')].map((el) => { const cs = getComputedStyle(el); return { opacity: cs.opacity, scale: cs.scale }; }),
+    outlines: [...document.querySelectorAll('#reels .cell:not(.win) .vent-art')].map((v) => getComputedStyle(v.parentElement.querySelector('.sym > *')).filter),
+    symbols: [...document.querySelectorAll('#reels .cell .vent-art')].map((v) => { const cs = getComputedStyle(v.parentElement.querySelector('.sym')); return `${cs.scale} ${cs.translate}`; }),
+  }));
+  assert.equal(vents.cells, 24, 'each strip is trimmed back to its 4 landed cells');
+  assert.equal(vents.landed, 24);
+  assert.ok(vents.spouts.length >= 3, 'Spray Job lands at least 3 vents');
+  for (const s of vents.spouts) assert.deepEqual(s, { opacity: '1', scale: 'none' });
+  for (const f of vents.outlines) assert.match(f, /rgb\(104, 200, 195\)/, 'a vent symbol has the cyan outline');
+  for (const t of vents.symbols) assert.equal(t, 'none none', 'a vent symbol keeps its full size and place');
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
 test('buy screen: Feature Spins first, Bonus Buys second, Hidden as information; short balance disables confirm', async () => {
   const { page, errors } = await open({ width: 1366, height: 768, session: { balance: 5000, bet: 100 } });
   await control(page, 'buy').click();

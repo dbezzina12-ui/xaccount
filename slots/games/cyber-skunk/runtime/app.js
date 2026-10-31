@@ -114,7 +114,8 @@ let stripReady = false;
 const fillerHTML = (n) => (stripReady
   ? `<div class="filler" style="height:${n * 200}px;background-position:0 ${-200 * Math.floor(Math.random() * STRIP.length)}px"></div>`
   : Array.from({ length: n }, () => cellHTML(filler())).join(''));
-const cellHTML = (c, i = -1) => `<div class="cell${c.sticky ? ' sticky' : ''}"${i >= 0 ? ` data-i="${i}"` : ''}><span class="sym">${symbolHTML(c.s)}</span>${c.vent !== undefined ? ventHTML(c.vent) : ''}</div>`;
+// A landed cell shows its vent's spout (styles.css); a cell still spinning in does not.
+const cellHTML = (c, i = -1, landed = true) => `<div class="cell${c.sticky ? ' sticky' : ''}${landed ? ' landed' : ''}"${i >= 0 ? ` data-i="${i}"` : ''}><span class="sym">${symbolHTML(c.s)}</span>${c.vent !== undefined ? ventHTML(c.vent) : ''}</div>`;
 function buildReels() {
   for (let reel = 0; reel < REELS; reel++) {
     const el = document.createElement('div'), strip = document.createElement('div');
@@ -123,9 +124,9 @@ function buildReels() {
   }
 }
 const column = (cells, reel) => Array.from({ length: ROWS }, (_, row) => cells[at(row, reel)]);
-function setBoard(cells) {
+function setBoard(cells, landed = true) {
   board = cells;
-  reels.forEach(({ strip }, reel) => { strip.getAnimations().forEach((a) => a.cancel()); strip.style.transform = ''; strip.innerHTML = column(cells, reel).map((c, row) => cellHTML(c, at(row, reel))).join(''); });
+  reels.forEach(({ strip }, reel) => { strip.getAnimations().forEach((a) => a.cancel()); strip.style.transform = ''; strip.innerHTML = column(cells, reel).map((c, row) => cellHTML(c, at(row, reel), landed)).join(''); });
 }
 const cellEl = (i) => $('reels').querySelector(`.cell[data-i="${i}"]`);
 const running = new Set();
@@ -143,7 +144,7 @@ async function spinTo(cells, { canTrigger }) {
     const dur = speed === 0 ? 0 : (520 + reel * 150) * speed + (tease ? 1100 * Math.max(speed, 0.6) : 0);
     const old = column(board.length ? board : cells, reel), next = column(cells, reel);
     const extra = Math.max(3, Math.round(dur / perCell));
-    strip.innerHTML = [...next.map((c, row) => cellHTML(c, at(row, reel))), fillerHTML(extra), ...old.map((c) => cellHTML(c))].join('');
+    strip.innerHTML = [...next.map((c, row) => cellHTML(c, at(row, reel), false)), fillerHTML(extra), ...old.map((c) => cellHTML(c))].join('');
     const dist = (ROWS + extra) * 200;
     if (!dur) return { reel, tease, done: Promise.resolve() };
     el.classList.add('spinning'); if (tease) el.classList.add('tease');
@@ -161,13 +162,20 @@ async function spinTo(cells, { canTrigger }) {
     if (tease && !teased) { teased = true; audio.play('tease'); skunk.play('anticipate'); status('ONE MORE…'); }
     await done;
     reels[reel].el.classList.remove('spinning', 'tease');
+    // The reel is down: its vents' spouts pop out.
+    reels[reel].strip.querySelectorAll('.cell[data-i]').forEach((el) => el.classList.add('landed'));
     const sc = column(cells, reel).some((c) => c.s === 'S');
     audio.play(sc ? 'scatter' : 'stop', { index: sc ? scatters.indexOf(reel) : reel });
     if (sc) column(cells, reel).forEach((c, row) => { if (c.s === 'S') cellEl(at(row, reel))?.classList.add('scatter-hit'); });
     if (column(cells, reel).some((c) => c.vent !== undefined && !c.sticky)) audio.play('vent-land');
   }
   if (teased) audio.play(scatters.length >= 3 ? 'tease-hit' : 'tease-miss');
-  setBoard(cells);
+  // Keep the landed cells (so spouts finish popping) and drop the rest of each strip.
+  board = cells;
+  for (const { strip } of reels) {
+    strip.getAnimations().forEach((a) => a.cancel()); strip.style.transform = '';
+    while (strip.children.length > ROWS) strip.lastElementChild.remove();
+  }
 }
 
 // ---- Effects canvas (the reel window, 1200 x 800) ----
@@ -359,9 +367,9 @@ async function blackout(e) {
   await wait(900);
   const cells = board.length ? board.map((c) => ({ s: c.s })) : Array.from({ length: CELLS }, filler);
   for (const v of e.vents) cells[v.i] = { ...cells[v.i], vent: v.dir, sticky: true };
-  setBoard(cells);
+  setBoard(cells, false);
   for (const v of e.vents) {
-    const el = cellEl(v.i); el?.classList.add('online');
+    const el = cellEl(v.i); el?.classList.add('online', 'landed');
     audio.play('vent', { pressure: 2 + e.vents.indexOf(v) }); burst(...center(v.i), 14);
     await wait(420);
   }
@@ -616,7 +624,7 @@ function renderRules() {
   <h3>PAYTABLE</h3><table><thead><tr><th>Symbol</th><th>3</th><th>4</th><th>5</th><th>6</th></tr></thead><tbody>${rows}</tbody></table>
   <p><span class="mini">${symbolHTML('W')}</span> <b>Wild</b> substitutes for every paying symbol. The first real symbol on a line decides the pay; six wilds pay as the Battery. <span class="mini">${symbolHTML('S')}</span> <b>FS scatters</b> pay nothing on lines; they start the bonuses.</p>
   <h3>BACKPRESSURE</h3>
-  <p><span class="mini">${ventHTML(0)}</span> Elbow <b>vents</b> sit on top of symbols. When at least one lands, Cyber Skunk sprays the <b>left-most vent</b> (the top one on a tie). The spray follows each vent's outlet, whichever way it came in, and every vent adds <b>+1 pressure</b>, so the first vent shows ×2.</p>
+  <p><span class="mini">${symbolHTML('A')}${ventHTML(0)}</span> A <b>vent</b> is a symbol with a cyan outline; when its reel lands, a spout shows its outlet. When at least one lands, Cyber Skunk sprays the <b>left-most vent</b> (the top one on a tie). The spray follows each vent's outlet, whichever way it came in, and every vent adds <b>+1 pressure</b>, so the first vent shows ×2.</p>
   <p>Every cell the spray touches becomes <b>wild</b> for that spin; each vent becomes a <b>×N wild</b>, N being the pressure there. Scatters are never painted. The route ends at the edge of the reels, at a cell it has already touched, or after 24 steps. A winning line multiplies by the sum of its ×N vents (×2 and ×3 make ×5).</p>
   <h3>BONUSES</h3>
   <p><b>3 FS scatters: VENT BREAK.</b> ${BONUSES.regular.spins} free spins. Vents that land stay until the bonus ends, up to ${MAX_STICKY}, and the <b>Reservoir</b> gauge banks each spray's pressure gain up to ${BONUSES.regular.reservoirMax}: every later spray starts at 1 + the Reservoir.</p>

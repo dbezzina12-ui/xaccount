@@ -131,17 +131,20 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .app[data-blackout] .cabinet-art{filter:brightness(.35)}
 .pipes{position:absolute;left:0;top:-300px;width:1440px;height:300px;background:var(--pipes-art) 0 0/100% 100% no-repeat;display:none;pointer-events:none}
 .app[data-art-pipes] .pipes{display:block}
-.vent-art{position:absolute;inset:6px;transform:rotate(var(--turn));filter:drop-shadow(0 4px 6px #000b);pointer-events:none;z-index:2}
-/* A vent sits on top of its symbol (ART_SPEC §2). In a reel cell the elbow
-   takes the corner it bends in (72% of the cell, turned about the cell's
-   centre with the outlet) and the symbol steps into the opposite corner. */
-.cell > .vent-art{inset:28% 0 0 28%;transform-origin:30.56% 30.56%}
-.cell:has(> .vent-art) .sym{scale:.78;transition:translate .2s,scale .2s}
-.cell:has(> .vent-art[data-dir="0"]) .sym{translate:-9% -9%}
-.cell:has(> .vent-art[data-dir="1"]) .sym{translate:9% -9%}
-.cell:has(> .vent-art[data-dir="2"]) .sym{translate:9% 9%}
-.cell:has(> .vent-art[data-dir="3"]) .sym{translate:-9% 9%}
-.vent-art svg,.vent-art img{width:100%;height:100%}
+/* A vent (ART_SPEC §2): the symbol keeps its full size inside a cyan
+   outline, and a spout stands on the edge the spray leaves by. .vent-art
+   covers the symbol and turns with the outlet (dir 0 up, 1 right, 2 down,
+   3 left), so the spout, drawn pointing up at the top edge, always points
+   out of its outlet edge. In a reel it pops out once the reel has landed. */
+.vent-art{position:absolute;inset:0;transform:rotate(var(--turn));pointer-events:none;z-index:2}
+.vent-art .spout{position:absolute;left:35%;top:0;width:30%;height:37.5%;transform-origin:50% 100%;filter:drop-shadow(0 0 5px #000d)}
+.vent-art svg,.vent-art img{width:100%;height:100%;display:block}
+.cell > .vent-art .spout{transition:scale .34s cubic-bezier(.3,1.9,.5,1),opacity .1s}
+.cell:not(.landed) > .vent-art .spout{scale:1 0;opacity:0;transition:none}
+.cell:not(.win):has(> .vent-art) .sym > :is(img, svg, .scatter-stack),
+:is(.card-art i, .rules .mini, .intro-route .mini):has(> .vent-art) > :is(img, svg){filter:drop-shadow(var(--o, 4px) 0 0 #68c8c3) drop-shadow(calc(-1 * var(--o, 4px)) 0 0 #68c8c3) drop-shadow(0 var(--o, 4px) 0 #68c8c3) drop-shadow(0 calc(-1 * var(--o, 4px)) 0 #68c8c3) drop-shadow(0 0 10px #68c8c3aa) drop-shadow(0 7px 7px #000a)}
+.card-art i,.intro-route .mini{--o:2px}
+.rules .mini{--o:1.5px}
 .cell.sticky .vent-art{filter:drop-shadow(0 0 10px #eda83caa) drop-shadow(0 4px 6px #000b)}
 .cell.sticky::after{content:"";position:absolute;inset:8px;border:4px solid #eda83c88;border-radius:16px}
 .cell.wild .sym{filter:brightness(1.15) saturate(.4)}
@@ -206,7 +209,6 @@ dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}
 .card-art{height:150px;display:flex;align-items:center;justify-content:center;gap:10px;background:radial-gradient(circle at 50% 60%,#2a3337,#0d1316);background-size:cover;background-position:center}
 .card-art i{position:relative;width:96px;height:96px;display:grid;place-items:center}
 .card-art i svg,.card-art i img{width:100%;height:100%}
-.card-art i .vent-art{inset:4px}
 .card-art .gauge-mini{width:96px;height:96px;border-radius:50%;background:radial-gradient(circle,#f3ead6 0 56%,#ad7840 58% 100%);box-shadow:inset 0 0 0 3px #5a3d1c;position:relative}
 .card-art .gauge-mini::after{content:"";position:absolute;left:46px;top:18px;width:5px;height:34px;background:#c0392b;transform-origin:50% 30px;transform:rotate(60deg);border-radius:3px}
 .card.info .card-art{width:140px;flex:none}
@@ -229,7 +231,6 @@ dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}
 .bet-options button.short{opacity:.5}
 .rules .mini{display:inline-block;width:40px;height:40px;vertical-align:middle;position:relative}
 .rules .mini svg,.rules .mini img{width:100%;height:100%}
-.rules .mini .vent-art{inset:0}
 .rules figure{margin:0;text-align:center;font-size:12px;color:#b9ae96}
 .note{font-size:15px;color:#b9ae96}
 .setting{display:flex;justify-content:space-between;align-items:center;gap:20px;min-height:52px;font-size:20px;border-bottom:1px solid #ffffff14}
@@ -306,7 +307,6 @@ dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}
 .intro-route{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:4px;padding:10px}
 .intro-route .mini{position:relative;display:grid;place-items:center;border-radius:8px;background:#141c21}
 .intro-route .mini svg,.intro-route .mini img{width:82%;height:82%}
-.intro-route .mini .vent-art{inset:4%}
 .intro-route .mini .vent-art svg,.intro-route .mini .vent-art img{width:100%;height:100%}
 .intro-route .mini.wild{box-shadow:inset 0 0 0 3px #68c8c3aa;background:radial-gradient(circle,#68c8c355,#141c21 70%)}
 .intro-route .mini > b{position:absolute;right:4px;bottom:2px;z-index:2;font:400 clamp(16px,2.6vw,26px)/1 var(--title);color:var(--amber);-webkit-text-stroke:2px #1b120a;paint-order:stroke}

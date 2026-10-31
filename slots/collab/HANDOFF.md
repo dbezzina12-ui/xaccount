@@ -4,6 +4,26 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-31 02:18 · Claude → ChatGPT · Dylan's fixes: the blink is on the eyes, vents keep full-size symbols
+
+**Did:** Dylan asked for two fixes.
+- **Blink:** the closed lids sat about 60 px too low, on the cheeks. I moved each lid onto its eye in the fit tool (`tools/art/cyber-skunk-fit-v4.py`, `LID_FIT`). The prep tool now prefers `art/rig/fitted/eyelids.png` over your registered file. Checked in the game at desktop and phone size (`shots/blink-v41-desktop.jpg`).
+- **Vents:** a vent no longer shrinks its symbol. The symbol keeps its full size inside a cyan outline. When its reel lands, a spout pops out of the outlet edge (up, right, down or left), pointing the way the spray leaves (`shots/vents-v3-phone.jpg`, `shots/vents-v3-landing.jpg`). While a reel is still spinning in, its spouts stay hidden. In the Blackout opening, each spout pops as its vent comes online. The spout is cut from the outlet end of your `vent.png` for now. The rules text now describes the new look.
+- A new browser test covers it. All suites pass: 23 game, 127 core, 11 browser.
+
+**Files:** `runtime/{app.js,styles.css,symbols.js}`, `runtime/assets/symbols/vent-spout.webp` (derived), `runtime/assets/mascot/eyelids.webp`, `art/rig/fitted/eyelids.png`, `tools/art/cyber-skunk-{fit-v4,prep}.py`, `ART_SPEC.md` (new optional `vent-spout.png`), `tests/browser/cyber-skunk.e2e.mjs`.
+
+**Next for ChatGPT:**
+1. Optional, small: `vent-spout.png`, 256 × 320, transparent. A straight brass and steel nozzle, opening at the top with the cyan glow, base at the bottom edge (ART_SPEC §2). It must read at 40 px. The cut-down elbow works until then.
+2. In your eyelids source, the lids sit about 60 px below the eyes (near eye at about 955,749, far eye at about 1128,789 on the 1600 × 2000 canvas). If you repaint them, draw them on the eyes. The fitted copy covers it meanwhile.
+3. Unchanged: the bonus entry panels, the win, retrigger and total titles, the intro art, and the bonus backgrounds and pipes.
+
+**Questions for Dylan:** none.
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-31 01:28 · Claude → ChatGPT · Hourly check-in: the preview link matches the repo
 
 **Did:** no new delivery. I checked the playable link against the repo file by file: all 68 runtime files are published at the repo's sizes. The only difference, the rig preview page, is now updated too. Your 16 skunk pieces, 4 buy cards, 7 effects, symbols, cabinet, gauge, logo and backgrounds are all live there.

@@ -96,6 +96,7 @@
 | `scatter-plate.png` | S: the plate behind the big **FS** |
 | `scatter-letters.png` | S: the **FS** lettering alone, crisp, on the same canvas (it animates separately) |
 | `vent.png` | **The elbow vent overlay** (not a symbol: it sits on top of one). A brass and steel elbow pipe, **inlet on the left edge, outlet pointing up**, with a cyan glow inside the mouth. Claude rotates it for the other three outlets and draws the steam. It must read at 120 px. |
+| `vent-spout.png` (256 × 320, optional) | **The spout a vent shows once its reel lands** (Dylan, 2026-10-31: a vent symbol keeps its full size with a cyan outline, and a spout pops out of the edge the spray leaves by). A straight brass and steel nozzle, **opening at the top with the cyan glow, base at the bottom edge**, transparent. Claude turns it to the outlet and sizes it to 30% of the cell, so it must read at 40 px. Until it is delivered, the prep tool cuts it from the outlet end of `vent.png`. |
 
 ## 3. Cabinet and gauge (folder `cabinet/`)
 
