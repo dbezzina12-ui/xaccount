@@ -120,7 +120,9 @@
 /* Leave a full band of street for the portrait mascot above the controls.
    Utility buttons retain their 44px hit areas within the compact middle row. */
 @media(orientation:portrait){
- .controller[data-layout=mobile] .deck{grid-template-rows:72px 30px 34px}
- .controller[data-layout=mobile] .money{height:34px;min-height:34px;gap:2px}
+ /* BET is itself an enabled picker, so the readout row must retain the same
+    44px minimum target as the adjacent circular controls. */
+ .controller[data-layout=mobile] .deck{grid-template-rows:72px 30px 44px}
+ .controller[data-layout=mobile] .money{height:44px;min-height:44px;gap:2px}
  .controller[data-layout=mobile] .utility-left,.controller[data-layout=mobile] .utility-right{height:44px;align-self:center}
 }

@@ -1,5 +1,5 @@
 // Gamboligy Controller v2 — presentation only; games own play and settlement.
-export const CONTROLLER_VERSION='3.3.0';
+export const CONTROLLER_VERSION='3.3.1';
 export const MOBILE_LAYOUT_QUERY='(max-width:760px), (pointer:coarse) and (hover:none)';
 const svg=(body,cls='')=>`<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${body}</svg>`;
 const icons={
@@ -47,7 +47,7 @@ export function mountController(host,{onAction=()=>{},initial={},layoutTargets=n
  if(host.shadowRoot)throw Error('Controller is already mounted');
  const root=host.attachShadow({mode:'open'});
  const mobile=!!layoutMedia?.matches;
- root.innerHTML=`<link id="desktopStyles" rel="stylesheet" href="${new URL('./controller.css?v=3.2.2',import.meta.url).href}" media="${mobile?'not all':'all'}"><link id="mobileBaseStyles" rel="stylesheet" href="${new URL('./controller-mobile-base.css?v=3.2.2',import.meta.url).href}" media="${mobile?'all':'not all'}"><link id="mobileStyles" rel="stylesheet" href="${new URL('./controller-mobile.css?v=mobile-scene-123',import.meta.url).href}" media="${mobile?'all':'not all'}">${controllerMarkup()}`;
+ root.innerHTML=`<link id="desktopStyles" rel="stylesheet" href="${new URL('./controller.css?v=3.2.2',import.meta.url).href}" media="${mobile?'not all':'all'}"><link id="mobileBaseStyles" rel="stylesheet" href="${new URL('./controller-mobile-base.css?v=3.2.2',import.meta.url).href}" media="${mobile?'all':'not all'}"><link id="mobileStyles" rel="stylesheet" href="${new URL('./controller-mobile.css?v=mobile-scene-124',import.meta.url).href}" media="${mobile?'all':'not all'}">${controllerMarkup()}`;
  const element=id=>root.getElementById(id),surface=root.querySelector('.controller');
  let state={...defaults,...initial};
  // Move the original controls between layout regions; never remount round state.
