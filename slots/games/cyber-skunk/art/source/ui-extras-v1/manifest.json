@@ -1,0 +1,55 @@
+{
+  "files": {
+    "ui/controller-texture.png": {
+      "size": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "sha256": "763dd1e3e2cc70f0a3bbe5ddaaba6c71aa8c7a9efaa965b053479e23603c24ec",
+      "checks": {
+        "rgb_opaque": true,
+        "low_channel_ranges": [
+          81,
+          68,
+          43
+        ],
+        "max_wrap_delta_x": 1,
+        "max_wrap_delta_y": 1,
+        "mean_rgb": [
+          31.02,
+          41.78,
+          47.52
+        ],
+        "faint_brass_rivets": true
+      }
+    },
+    "ui/icon.png": {
+      "size": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "sha256": "4b70bd820811978dfd53b534d52f4934fd5e32bd9629fb97ee8aabf6cc15a84c",
+      "checks": {
+        "rgb_opaque": true,
+        "registered_pieces": [
+          "far-ear",
+          "head",
+          "ear",
+          "goggles"
+        ],
+        "source_canvas": [
+          1600,
+          2000
+        ],
+        "readability_review_size": [
+          32,
+          32
+        ],
+        "no_reel_symbol_or_runtime_copy": true
+      }
+    }
+  },
+  "method": "Original deterministic Pillow composition from approved registered v4.1 art; no generated image."
+}

@@ -5,6 +5,23 @@ Newest on top. Format is in `AGENTS.md`.
 ---
 
 
+### 2026-10-31 11:32 ET · ChatGPT → Claude · Controller surface and registered-head icon delivered
+
+**Picked up:** no newer Claude note followed the 10:48 ET pipe handoff. Preserved `767d37c`, the v4.1 sixteen-piece rig and fitted eyelids, all shipping math/audio/runtime work, and the approved card-flip presentation. This batch is source-only and makes no live-artifact claim.
+
+**Did:** added the two optional ART_SPEC §8 UI inputs: `art/ui/controller-texture.png` is an exact 512×512 opaque, mathematically periodic graphite brushed-steel tile with faint brass rivets; `art/ui/icon.png` is an exact 512×512 opaque app/tab icon composited from the registered v4.1 `far-ear`, `head`, `ear` and `goggles` pieces. The icon is separate from the character-free reel symbols. Deterministic builder, wrapped-seam and 32px reviews, checks and hashes are under `art/source/ui-extras-v1/`. No rig layer, pivot, symbol, price, outcome or math file changed.
+
+**Checked:** two rebuilds produced identical PNG hashes. The tile's maximum wrap delta is 1 channel level on both axes and its mean RGB is 31/42/48; both shipping-quality WebP conversions decode as 512×512 RGB. Prep with the registered v4.1 override reports 47/49 sources, 16/16 mascot pieces and no problems; only the optional splash pair is absent. Cyber Skunk is 23/23. The serial shared suite ran 100 pass/3 existing skips; three chat/dispatch files failed to load only because this fresh clone has no installed `@anthropic-ai/sdk`, not from an assertion. No browser or artifact-publication claim is made here.
+
+**Next for Claude:** 1. Prep `pipes-top`, `controller-texture` and `icon` together with `--mascot art/source/mascot-compact-v4/registered`. 2. Run the already-requested pipe/gauge placement matrix, then check the texture on the real phone controller at 360×800, 390×844 and 430×932: labels/icons must remain high-contrast, Play/Stop and circular Auto must remain obvious, and all primary targets remain at least 44px. Check the icon at 32px and as the tab favicon. 3. Run the 11 browser tests plus game/core suites, capture concrete phone/desktop screenshots, package and republish the existing private artifact, then verify its served-file/hash parity with the integration commit. Keep the optional splash fallback if the pair remains absent.
+
+**Next for ChatGPT:** review Claude's concrete pipe/controller/icon screenshots and correct only the owned source assets if needed. The splash pair is the only remaining ART_SPEC source, and remains optional.
+
+**Questions for Dylan:** none. **Blocked on:** Claude's prep/browser evidence and artifact republish for `767d37c` plus this batch. Keep hourly continuation enabled per Dylan's explicit instruction.
+
+---
+
+
 ### 2026-10-31 10:48 ET · ChatGPT → Claude · Final required source: exact top-pipe mount
 
 **Picked up:** your 13:48 handoff (`7159240`). The intro diagrams and bonus halls are live; all three mode names fit the authored plates, all suites passed and the artifact was republished. Preserved that runtime, the approved card flip, v4.1 rig/fitted eyelids and every math/audio file.
