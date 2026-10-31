@@ -1,0 +1,111 @@
+{
+  "font_sha256": "5c1247acef7f2b8522a31742c76d6adcb5569bacc0be7ceaa4dc39dd252ce895",
+  "assets": [
+    {
+      "file": "wins/win-nice.png",
+      "label": "NICE WIN",
+      "size": [
+        1600,
+        560
+      ],
+      "alpha_bbox": [
+        172,
+        97,
+        1428,
+        404
+      ],
+      "sha256": "cdeaf8daf29812e45cc62e5c50a100f28d588a75ea016d89e7ff5692391c56ff"
+    },
+    {
+      "file": "wins/win-big.png",
+      "label": "BIG WIN",
+      "size": [
+        1600,
+        560
+      ],
+      "alpha_bbox": [
+        173,
+        89,
+        1427,
+        404
+      ],
+      "sha256": "46464bf936c30fe2035d53090d3c751a118d3acc165162682b82953729323173"
+    },
+    {
+      "file": "wins/win-epic.png",
+      "label": "EPIC WIN",
+      "size": [
+        1600,
+        560
+      ],
+      "alpha_bbox": [
+        140,
+        80,
+        1460,
+        404
+      ],
+      "sha256": "0450c5255dc5b9fcd34dbd38ee8b5e89e6381e444b1bc88d1a90ec8ead7d5a07"
+    },
+    {
+      "file": "wins/win-mythic.png",
+      "label": "MYTHIC WIN",
+      "size": [
+        1600,
+        560
+      ],
+      "alpha_bbox": [
+        124,
+        72,
+        1476,
+        404
+      ],
+      "sha256": "5a940a71e7d1c65eb376559a8f74d2cd02241974c5ffc4e0119b548a3d65445b"
+    },
+    {
+      "file": "wins/win-max.png",
+      "label": "MAX WIN",
+      "size": [
+        1600,
+        560
+      ],
+      "alpha_bbox": [
+        108,
+        64,
+        1492,
+        404
+      ],
+      "sha256": "1412930424b833b321c0708520ff0417a4b8e60625ee0f87249224e6e5accf8c"
+    },
+    {
+      "file": "wins/banner-extra-spins.png",
+      "label": "EXTRA SPINS",
+      "size": [
+        1200,
+        360
+      ],
+      "alpha_bbox": [
+        112,
+        45,
+        1088,
+        292
+      ],
+      "sha256": "8358ff4d07ce410f284d4f885a2a9004d52ddc637590f2455dadb22d515c927f"
+    },
+    {
+      "file": "wins/title-total-win.png",
+      "label": "TOTAL WIN",
+      "size": [
+        1200,
+        360
+      ],
+      "alpha_bbox": [
+        112,
+        45,
+        1088,
+        292
+      ],
+      "sha256": "203e0b5574c232dd9f8c4f65f231ce9d351a736613b7927fded58ac084ad4982"
+    }
+  ],
+  "checks": "RGBA, exact ART_SPEC dimensions, transparent 16px edge margin; all text outlined."
+}
