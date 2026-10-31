@@ -82,7 +82,7 @@ let toastTimer = 0;
 function toast(text) { const t = $('toast'); t.textContent = text; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 3200); }
 
 // ---- Layout: one design size per layout, scaled as a whole. ----
-const MOBILE_MIN_H = 1560; // header 480 + cabinet 892 + the shortest console
+const MOBILE_MIN_H = 1590; // header 480 + cabinet 892 + room for the pressure console
 function fit() {
   const w = innerWidth, h = innerHeight, layout = h > w * 1.05 ? 'mobile' : 'desktop';
   app.dataset.layout = layout;

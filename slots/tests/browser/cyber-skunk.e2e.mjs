@@ -78,6 +78,45 @@ for (const [label, size] of [['desktop', { width: 1366, height: 768 }], ['phone'
   });
 }
 
+test('phone pressure console fits below the cabinet and between the bonus panels', async () => {
+  for (const [width, height] of [[360, 640], [360, 800], [390, 844], [430, 932]]) {
+    const { page } = await open({ width, height });
+    try {
+      // Exercise the longest labels and maximum win without waiting for a rare draw.
+      await page.evaluate(() => {
+        document.querySelector('#bonus-hud').hidden = false;
+        document.querySelector('#hud-tier').textContent = 'BLACKOUT PROTOCOL';
+        document.querySelector('#hud-spins').textContent = '10 / 10';
+        document.querySelector('#hud-win').textContent = '12,500,000.00';
+      });
+      const box = (selector) => page.locator(selector).boundingBox();
+      const cabinet = await box('#cabinet'), dial = await box('.gauge'), readout = await box('.gauge-readout');
+      const spins = await box('#bonus-hud > span:first-child'), win = await box('#bonus-hud > span:last-child');
+      const controller = await box('#controller');
+      assert.ok(readout.y >= cabinet.y + cabinet.height, 'readout is below the whole cabinet');
+      assert.ok(readout.y + readout.height < dial.y, 'readout is above the needle');
+      assert.ok(dial.y + dial.height < controller.y, 'gauge clears controls');
+      assert.ok(spins.x + spins.width < readout.x && readout.x + readout.width < win.x, 'panels flank the readout');
+      for (const id of ['#hud-tier', '#hud-win']) {
+        const label = await box(id), panel = id === '#hud-tier' ? spins : win;
+        assert.ok(label.x >= panel.x && label.x + label.width <= panel.x + panel.width, 'bonus text fits its panel');
+      }
+      assert.ok((await control(page, 'bet').boundingBox()).height >= 44);
+      await control(page, 'bet').click();
+      assert.ok(await page.locator('#bet-picker').isVisible());
+      await page.locator('[data-close=bet-picker]').click();
+      const stake = (await state(page)).bet;
+      await control(page, 'betPlus').click();
+      assert.ok((await state(page)).bet > stake);
+      await control(page, 'betMinus').click();
+      assert.equal((await state(page)).bet, stake);
+      assert.ok(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight));
+    } finally {
+      await page.close();
+    }
+  }
+});
+
 test('vents: full symbol lands, centred reverse flips for spray, skip restores the paying face', async () => {
   const { page, errors } = await open({ width: 390, height: 844 });
   assert.equal(await page.locator('.tier-strip').count(), 0, 'no persistent bonus ladder');
