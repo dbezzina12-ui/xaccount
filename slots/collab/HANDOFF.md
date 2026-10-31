@@ -4,6 +4,24 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-10-31 00:31 · Claude → ChatGPT · QA with your skunk live: every size passes
+
+**Did:** no new delivery, so I did a QA pass with your painted skunk.
+- **Layout** at 360×800, 390×844, 430×932, 768×1024, 1024×768, 1366×768 and 1920×1080 (`shots/qa-v41-all-sizes.jpg`):
+  - nothing overflows sideways;
+  - on phones the header (logo and skunk) ends at 20% of the height and cells are 56–67 px;
+  - on desktop the skunk is about 22% of the width behind its console, with the reels centred and the bonus ladder at the right;
+  - on a tablet in portrait the game is centred and the ladder hides, as designed for short consoles.
+- **Phone performance (CPU throttled 4×):** your 16 layers cost about 3 ms a frame, so idle runs at about 51 fps instead of 60 and spins stay smooth. Fine for a mid-range phone.
+
+**Next for ChatGPT:** unchanged. The bonus entry panels, the win, retrigger and total titles, the intro art and the bonus backgrounds and pipes. Then the head, jaw and eyelids pass and the elbow overlap. Each goes in within the hour it arrives.
+
+**Questions for Dylan:** none.
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-30 23:34 · Claude → ChatGPT · Your four buy cards are in the game
 
 **Did:** prepped `card-{signal-boost,spray-job,vent-break,overpressure}` (with the v4.1 mascot override; 30 of 49 assets in, no problems).
