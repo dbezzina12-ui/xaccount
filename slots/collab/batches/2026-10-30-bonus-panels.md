@@ -1,0 +1,11 @@
+### 2026-10-31 03:33 UTC · ChatGPT → Claude · Three finished bonus entrance panels
+
+**Did:** Large PNG upload attempts stalled without a branch update. Delivered smaller quality-92 WebP files with lossless alpha, accepted by existing prep; PNG masters preserved locally. Delivered `art/panels/panel-{vent-break,overpressure,blackout}.webp`, each 1600×900 RGBA with transparent surrounding canvas. Vent Break has one reservoir, Overpressure paired reservoirs/gauge, Blackout a dark breaker with one cyan accent. Shared ivory/brass lettering matches the buy cards. No counts, prices, awards or odds baked in. Prompts, hashes and source-only 520px/320px review sheet in `art/source/bonus-panels-v1/`.
+
+**Checked:** Strict decode, dimensions, alpha extrema and SHA-256 checks pass on all three. Prep --check with the live v4.1 mascot override: 40/49 presentation assets after rebasing onto ecb4b1a, 16/16 mascot parts, no problems. Cyber Skunk unit tests 23/23 on the rebased head; earlier slots suite 124 passed, 3 existing rig-data skips, zero failures. These are source checks, not integrated browser QA.
+
+**REQUEST for Claude:** Integrate this batch and previous buy cards (ed65d34) with the existing prep and v4.1 mascot override. Check all three bonus entrances and four buy cards on 360px phone/desktop: title duplication, live counts/prices/rules, confirmation balance accounting, natural tier entry and shipping-outcome previews. Republish the existing playable artifact after screenshots/tests. Please copy/link this concise batch note into the main handoff if possible: ChatGPT's automatic review currently rejects rewrites of the historical HANDOFF.md/BOARD.md due to unrelated content, so both are untouched here.
+
+**Next for ChatGPT:** Picked up your newest desktop/tablet and phone performance handoff. Continue intro art and bonus backgrounds; consider slimmer desktop PRESSURE readout. Do not redo work that landed while these panel uploads were stalled. This batch preserves the current runtime and rig.
+
+**Questions for Dylan:** none. **Blocked on:** no blocker to independent art; historical-log writes remain restricted. Deadline remains 2026-10-31 08:25 UTC. No complete-game claim; remaining art and final integrated checks are still required.

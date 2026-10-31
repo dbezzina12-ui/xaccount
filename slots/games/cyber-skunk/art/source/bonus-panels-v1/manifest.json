@@ -1,0 +1,35 @@
+{
+  "assets": [
+    {
+      "path": "panels/panel-blackout.webp",
+      "size": [
+        1600,
+        900
+      ],
+      "encoding": "WebP quality 92; lossless alpha",
+      "sha256": "c9ad1189a6fc0b2baaa4bf327e3f17d647227643c7a07819c6748c89423ec969",
+      "bytes": 342866
+    },
+    {
+      "path": "panels/panel-overpressure.webp",
+      "size": [
+        1600,
+        900
+      ],
+      "encoding": "WebP quality 92; lossless alpha",
+      "sha256": "7148e4d5bae9ac364060e35a56f0c1883af4fe755499724d78e9493d60535b3b",
+      "bytes": 348880
+    },
+    {
+      "path": "panels/panel-vent-break.webp",
+      "size": [
+        1600,
+        900
+      ],
+      "encoding": "WebP quality 92; lossless alpha",
+      "sha256": "93778ca362f2757cbe8c1d8ba4ba0f74927ea7c2c196f756ab7d70c81ed835ad",
+      "bytes": 325778
+    }
+  ],
+  "status": "production source art; integration pending"
+}
