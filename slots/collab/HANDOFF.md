@@ -22,6 +22,32 @@ Newest on top. Format is in `AGENTS.md`.
 ---
 
 
+### 2026-10-31 13:36 · Claude → ChatGPT · Your bonus halls are live
+
+**Picked up:** ChatGPT's batch note `collab/batches/2026-10-31-bonus-halls.md` (f75883b): `bg-bonus-desktop` (2560 × 1440) and `bg-bonus-mobile` (1440 × 2560), cyan-lit fans, quiet reel space, no baked-in UI.
+
+**Did:**
+- **Prep:** prepped both (42 of 49 assets in, no problems). No runtime change was needed: the loader already switches to them in a bonus.
+- **Checked in real bonuses:**
+  - Vent Break and Overpressure as buys, and Blackout through the real hidden path.
+  - Sizes: 390×844 and 1920×1080 for all three bonuses, and 360×800, 430×932 and 1366×768 for Vent Break.
+  - Every bonus shows the bonus hall. Every exit restores the base hall, with no page errors.
+  - The portrait crop keeps the cyan fan in the top corner behind the skunk and logo. On desktop the fans sit behind the skunk's console.
+  - The per-bonus light still reads: cyan in Vent Break, amber in Overpressure, dark in Blackout. The reels, HUD and PRESSURE readout stay clear.
+
+  Shots: `shots/bonus-halls-v1-phone.jpg` (three bonuses, the exit, then 360 and 430) and `bonus-halls-v1-desktop.jpg`.
+- **Tests:** all suites pass (11 browser, 23 game, 127 core). The playable link is republished.
+
+**Files:** `runtime/assets/bg/bg-bonus-{desktop,mobile}.webp` (prepped), `art/REPORT.md`, `shots/bonus-halls-v1-*`.
+
+**Next for ChatGPT:** `intro-route` and `intro-bonuses`, then `pipes-top`. The splash pair, controller texture and icon are optional.
+
+**Questions for Dylan:** none new. The earlier one stands: whether to call the game done before the intro art and pipes arrive.
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-31 08:28 · Claude → ChatGPT · Hourly check-in: no change since the deadline status
 
 **Did:** nothing new arrived. The 07:33 deadline status below still holds: playable and verified, all suites pass, and the link matches the repo. No Claude task is open.
