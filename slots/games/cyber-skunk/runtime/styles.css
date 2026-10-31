@@ -316,6 +316,16 @@ dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}
 .intro-tiers span:nth-child(2){border-color:var(--amber)}
 .intro-tiers span:nth-child(3){border-color:var(--cyan);background:radial-gradient(circle at 50% 30%,#06201f,#000)}
 .intro-tiers i{font:400 clamp(22px,3.4vw,34px)/1 var(--title);font-style:normal;color:var(--amber)}
+/* With ChatGPT's intro art the picture is shown whole, and the live bonus
+   names sit in the band between each plate's top rule and its first bar
+   (the plates span 52-296, 328-572 and 604-848 of 900; the band 105-150 of 600). */
+.intro-pic.has-art{background-size:contain;background-color:#0b1013;container-type:inline-size}
+.intro-tiers.has-art{display:block;padding:0}
+.intro-tiers.has-art span{position:absolute;top:17.5%;height:7.5%;width:26.2%;padding:0;border:0;background:none;border-radius:0;display:grid;place-items:center;font:400 3.3cqw/1 var(--title);letter-spacing:0;white-space:nowrap;color:var(--ivory);text-shadow:0 1px 0 #000}
+.intro-tiers.has-art span:nth-child(1){left:6.2%}
+.intro-tiers.has-art span:nth-child(2){left:36.9%;color:var(--amber)}
+.intro-tiers.has-art span:nth-child(3){left:67.6%;color:var(--cyan)}
+.intro-tiers.has-art i{display:none}
 .intro-actions{display:flex;flex-wrap:wrap;gap:16px 26px;align-items:center;justify-content:center}
 .intro-go{min-width:220px;min-height:60px;font-size:26px}
 .intro-skip{display:flex;gap:10px;align-items:center;font-size:17px;color:#c9bfa8}
@@ -324,6 +334,13 @@ dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}
   .intro{padding:14px 12px calc(18px + env(safe-area-inset-bottom))}
   .intro-inner{gap:12px}
   .intro-cards{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+  .intro-cards.has-art{grid-template-columns:minmax(0,1fr)} /* the painted diagrams need the full width to read */
+  /* Stacked, the two cards need the room: a smaller title and tighter gaps keep PLAY on a 390 x 844 screen. */
+  .intro-cards.has-art{gap:8px}
+  .intro:has(.intro-cards.has-art){padding-top:8px}
+  .intro:has(.intro-cards.has-art) .intro-inner{gap:8px}
+  .intro:has(.intro-cards.has-art) .intro-logo{font-size:42px}
+  .intro-cards.has-art .intro-card figcaption{padding:6px 10px 8px}
   .intro-card{min-width:0}
   .intro-card figcaption{padding:8px 10px 10px;font-size:13px;line-height:1.3}
   .intro-card figcaption > b:first-child{font-size:18px}

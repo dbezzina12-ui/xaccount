@@ -708,7 +708,14 @@ async function loadUI() {
   for (const [name, key] of [['fx-mist', 'mist'], ['fx-droplet', 'droplet'], ['fx-spark', 'spark']]) if (extraArt.has(name)) { const img = new Image(); img.src = extraArt.get(name); fxSprites[key] = img; }
   if (extraArt.has('controller-texture')) $('controller').style.setProperty('--controller-mobile-texture', `url("${new URL(extraArt.get('controller-texture'), location.href).href}")`);
   if (extraArt.has('icon')) document.head.insertAdjacentHTML('beforeend', `<link rel="icon" href="${extraArt.get('icon')}">`);
-  for (const name of ['intro-route', 'intro-bonuses']) if (extraArt.has(name)) { const pic = document.querySelector(`[data-art="${name}"] .intro-pic`); pic.style.backgroundImage = `url(${extraArt.get(name)})`; pic.replaceChildren(); }
+  // Intro art: the route diagram replaces the built one; the bonus picture keeps
+  // the live bonus names, laid over its three blank plates (styles.css).
+  for (const name of ['intro-route', 'intro-bonuses']) if (extraArt.has(name)) {
+    const pic = document.querySelector(`[data-art="${name}"] .intro-pic`);
+    pic.style.backgroundImage = `url(${extraArt.get(name)})`; pic.classList.add('has-art');
+    if (name === 'intro-route') pic.replaceChildren();
+  }
+  if (extraArt.has('intro-route') && extraArt.has('intro-bonuses')) document.querySelector('.intro-cards').classList.add('has-art');
 }
 const artImg = (name, alt) => (extraArt.has(name) ? `<img src="${extraArt.get(name)}" alt="${alt}">` : '');
 // Card art carries its own painted title: the card shows the art whole and keeps
@@ -735,7 +742,7 @@ async function boot() {
 // a vent (x2) sprays right through a wild into a second vent (x3), which turns it up.
 function introRoute() {
   const pic = document.querySelector('[data-art="intro-route"] .intro-pic');
-  if (!pic.classList.contains('intro-route')) return;
+  if (!pic.classList.contains('intro-route') || pic.classList.contains('has-art')) return;
   const grid = [['A', 'Q', 'K', 'J'], ['T', 'K', 'Q', 'A'], ['J', 'H2', 'T', 'Q']];
   const vents = { '1,0': [1, 2], '1,2': [0, 3] }, painted = new Set(['1,0', '1,1', '1,2', '0,2']);
   pic.innerHTML = grid.map((row, r) => row.map((s, c) => {

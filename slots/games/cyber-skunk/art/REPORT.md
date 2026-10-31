@@ -4,9 +4,9 @@
 
 - missing: none
 
-## Symbols, cabinet, backgrounds, panels, cards: 42 of 49 in
+## Symbols, cabinet, backgrounds, panels, cards: 44 of 49 in
 
-- missing: pipes-top, splash-desktop, splash-mobile, intro-route, intro-bonuses, controller-texture, icon
+- missing: pipes-top, splash-desktop, splash-mobile, controller-texture, icon
 
 ## Problems
 
