@@ -1,0 +1,16 @@
+{
+  "file": "cabinet/pipes-top.png",
+  "size": [
+    1440,
+    300
+  ],
+  "sha256": "bc372bda0f8df9594e37f02b655f86064b68af853c84f537a3f5da124e093379",
+  "source_sha256": "62eca1888884df170b8859ca462f1e65e12e058759e5fd131d3495726cc057e6",
+  "checks": {
+    "rgba": true,
+    "transparent_400px_gauge_corridor_x520_920": true,
+    "top_edge_transparent": true,
+    "separate_live_gauge_and_readout": true
+  },
+  "method": "Original deterministic SVG; Inkscape PNG export. No generated image."
+}

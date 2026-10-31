@@ -1,0 +1,114 @@
+"""Build the exact transparent top-pipe mount for Cyber Skunk.
+
+The centre x=520..920 stays fully transparent for the separate live gauge and
+PRESSURE readout. Broad vector shapes keep it readable after cabinet scaling.
+"""
+from pathlib import Path
+import hashlib
+import json
+import subprocess
+from PIL import Image, ImageDraw
+
+SRC = Path(__file__).resolve().parent
+ART = SRC.parents[1]
+OUT = ART / "cabinet"
+OUT.mkdir(exist_ok=True)
+
+W, H = 1440, 300
+defs = """
+<linearGradient id="pipe" x1="0" y1="0" x2="0" y2="1">
+  <stop stop-color="#68757a"/><stop offset=".18" stop-color="#334147"/>
+  <stop offset=".58" stop-color="#1b272d"/><stop offset="1" stop-color="#0d151a"/>
+</linearGradient>
+<linearGradient id="brass" x1="0" y1="0" x2="0" y2="1">
+  <stop stop-color="#edcf8e"/><stop offset=".24" stop-color="#bc8445"/>
+  <stop offset=".72" stop-color="#71451f"/><stop offset="1" stop-color="#c18a4a"/>
+</linearGradient>
+<linearGradient id="plate" x1="0" y1="0" x2="0" y2="1">
+  <stop stop-color="#4a585d"/><stop offset=".5" stop-color="#202b30"/>
+  <stop offset="1" stop-color="#10191e"/>
+</linearGradient>
+<radialGradient id="cyan">
+  <stop stop-color="#e0fffa"/><stop offset=".35" stop-color="#68c8c3"/>
+  <stop offset="1" stop-color="#17484b"/>
+</radialGradient>
+"""
+
+# A single authored left assembly; the right one is a clean mirror. The outer
+# bottom feet disappear behind cabinet.png, joining the art without a seam.
+left = """
+<g id="left">
+  <path d="M58 300V188Q58 158 88 158H176V88Q176 48 216 48H486"
+        fill="none" stroke="#071015" stroke-width="92" stroke-linecap="butt" stroke-linejoin="round"/>
+  <path d="M58 300V188Q58 158 88 158H176V88Q176 48 216 48H486"
+        fill="none" stroke="url(#pipe)" stroke-width="76" stroke-linecap="butt" stroke-linejoin="round"/>
+  <path d="M65 300V190Q65 168 90 168H184V91Q184 58 218 58H486"
+        fill="none" stroke="#9aa4a6" stroke-opacity=".22" stroke-width="8" stroke-linecap="butt"/>
+
+  <!-- Broad collars at cabinet join, riser and inner outlet. -->
+  <g fill="url(#brass)" stroke="#3b2513" stroke-width="6">
+    <path d="M16 268H100V300H16Z"/><path d="M132 126H218V188H132Z"/>
+    <path d="M426 10H478L504 36V82L478 108H426Z"/>
+  </g>
+  <path d="M438 23H472L491 42V76L472 95H438Z" fill="#152329" stroke="#d0a35e" stroke-width="4"/>
+  <ellipse cx="463" cy="59" rx="22" ry="16" fill="url(#cyan)" stroke="#0b1519" stroke-width="6"/>
+
+  <!-- One readable valve; restrained detail, no micro-pipe clutter. -->
+  <g transform="translate(270 158)" stroke-linecap="round">
+    <circle r="48" fill="#172228" stroke="#0a1014" stroke-width="9"/>
+    <circle r="39" fill="none" stroke="url(#brass)" stroke-width="12"/>
+    <path d="M-27-27L27 27M27-27L-27 27M-39 0H39M0-39V39" stroke="#9c6d36" stroke-width="9"/>
+    <circle r="14" fill="url(#brass)" stroke="#4b2f18" stroke-width="5"/>
+  </g>
+
+  <!-- Cabinet-top foot with the same beveled language as the frame. -->
+  <path d="M14 252H424L454 280V300H14Z" fill="url(#plate)" stroke="#071015" stroke-width="8"/>
+  <path d="M34 268H404L420 282H34Z" fill="none" stroke="#8b9a9b" stroke-opacity=".55" stroke-width="4"/>
+  <path d="M80 276H360" stroke="#ad7840" stroke-width="7"/>
+  <circle cx="42" cy="278" r="8" fill="#111a1f" stroke="#a77a43" stroke-width="4"/>
+  <circle cx="398" cy="278" r="8" fill="#111a1f" stroke="#a77a43" stroke-width="4"/>
+</g>
+"""
+
+svg = f'''<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="{W}" height="{H}" viewBox="0 0 {W} {H}">
+<defs>{defs}{left}</defs>
+<use xlink:href="#left"/>
+<use xlink:href="#left" transform="translate({W} 0) scale(-1 1)"/>
+</svg>'''
+
+source = SRC / "pipes-top.svg"
+dest = OUT / "pipes-top.png"
+source.write_text(svg)
+subprocess.run(["inkscape", str(source), "--export-filename=" + str(dest)], check=True,
+               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+im = Image.open(dest).convert("RGBA")
+assert im.size == (W, H)
+alpha = im.getchannel("A")
+assert alpha.getextrema() == (0, 255)
+assert alpha.crop((520, 0, 920, 300)).getextrema() == (0, 0)
+assert alpha.crop((0, 0, W, 1)).getextrema() == (0, 0)
+
+# Review both native and scaled cabinet display; the checker overlay proves the
+# 400px centre corridor without modifying the production PNG.
+review = Image.new("RGB", (1460, 700), "#101820")
+review.paste(im, (10, 30), im)
+scaled = im.resize((1100, 229), Image.Resampling.LANCZOS)
+review.paste(scaled, (180, 410), scaled)
+d = ImageDraw.Draw(review)
+d.rectangle((530, 30, 930, 330), outline="#68c8c3", width=3)
+d.text((540, 340), "400px live gauge/readout corridor (transparent)", fill="#A8E8DF")
+review.save(SRC / "review.jpg", quality=90)
+
+manifest = {
+  "file": str(dest.relative_to(ART)), "size": [W, H],
+  "sha256": hashlib.sha256(dest.read_bytes()).hexdigest(),
+  "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+  "checks": {
+    "rgba": True, "transparent_400px_gauge_corridor_x520_920": True,
+    "top_edge_transparent": True, "separate_live_gauge_and_readout": True
+  },
+  "method": "Original deterministic SVG; Inkscape PNG export. No generated image."
+}
+(SRC / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+print(json.dumps(manifest, indent=2))

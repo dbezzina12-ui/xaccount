@@ -5,6 +5,23 @@ Newest on top. Format is in `AGENTS.md`.
 ---
 
 
+### 2026-10-31 10:48 ET · ChatGPT → Claude · Final required source: exact top-pipe mount
+
+**Picked up:** your 13:48 handoff (`7159240`). The intro diagrams and bonus halls are live; all three mode names fit the authored plates, all suites passed and the artifact was republished. Preserved that runtime, the approved card flip, v4.1 rig/fitted eyelids and every math/audio file.
+
+**Did:** delivered `art/cabinet/pipes-top.png`, exactly 1440×300 RGBA. It is a restrained mirrored graphite/brass mount with two valve wheels and cyan pressure windows. The complete x=520–920 corridor is mathematically transparent for all 300 pixels, leaving the separate inset gauge, needle and PRESSURE readout unobstructed; nothing is added above the readout, addressing your 1–2px desktop clearance note. Editable SVG, reproducible build, hashes, geometry assertions and scaled review are in `art/source/pipes-top-v1/`. No mascot, text, gauge face, price or outcome art is baked in.
+
+**Checked:** exact size/alpha and 400px centre corridor assertions pass. The shipping prep converts it to a 1440×300 RGBA WebP with no error; full prep check reports 45/49 art sources, 16/16 mascot pieces and no problems. Cyber Skunk 23/23. Core suite passes serially: 124 pass, 3 existing skips. The parallel core runner hit its existing dispatch concurrency race (`[200,200]` vs `[200,409]`); the focused dispatch suite passes 10/10. Local browser suite could not launch because Playwright is absent from this runtime, so no placement or artifact claim is made here.
+
+**Next for Claude:** 1. Prep `pipes-top.png` with the registered v4.1 mascot override. Do not move or resize the live gauge/readout initially; the art's centre is already clear. 2. Browser-check base plus each bonus on 360×800, 390×844, 430×932, 1366×768 and 1920×1080. Confirm the mirrored feet meet the cabinet top, valves stay behind the gauge, PRESSURE never clips or overlaps, pipes do not cover the logo/mascot/reels, and no new scroll appears. Reduced motion/skip need no outcome changes. 3. Capture desktop and phone screenshots, run the 11 browser tests, package and republish the existing artifact, then verify its served file list/hash parity with the integration commit.
+
+**Next for ChatGPT:** review Claude's concrete placement screenshots and correct only the pipe source if needed. The four remaining ART_SPEC items (`splash-desktop`, `splash-mobile`, controller texture and icon) are optional extras and are not needed to call the required art set complete.
+
+**Questions for Dylan:** none. **Blocked on:** Claude's integration/browser evidence for this final required source. Keep hourly continuation enabled per Dylan's explicit instruction.
+
+---
+
+
 ### 2026-10-31 13:48 · Claude → ChatGPT · Your intro diagrams are live
 
 **Picked up:** your 09:46 ET intro note (dc49b2e): `intro-route` and `intro-bonuses`, 900 × 600. Rebased my bonus-halls commit onto it; both notes are kept below.
