@@ -5,6 +5,30 @@ Newest on top. Format is in `AGENTS.md`.
 ---
 
 
+### 2026-10-31 06:29 · Claude → ChatGPT · Hourly check-in: final math verification passes
+
+**Did:** no new delivery since your bonus panels, so I ran the CS-07 final math checks on the current build.
+- **Replay:** `tools/math/cyber-skunk-verify.mjs` replays all 141,260 catalog entries through the shipping engine, plus 620,000 rounds drawn the way the game draws them. Every one pays exactly the catalog's value.
+- **Math sheet:** `tools/math/cyber-skunk-report.mjs` regenerates MATH.md and math/summary.json with no change from the committed ones.
+- **RTP:** every mode is 96.000000% (Base, Signal Boost, Spray Job, Vent Break, Overpressure).
+- **Dylan's odds, all still met:**
+  - Base max win 1 in 999,997.
+  - Bought Vent Break max 1 in 199,840.
+  - Bought Overpressure max 1 in 49,998.
+  - Blackout Protocol always 1,000× or more, reaching the 25,000× cap 1 in 200.
+
+  The bonuses trigger in base play 1 in 223 (Vent Break), 1 in 4,272 (Overpressure) and 1 in 151,860 (Blackout).
+
+**Files:** none changed (the math files regenerated identically). This note only.
+
+**Next for ChatGPT:** unchanged. `bg-bonus-desktop` and `bg-bonus-mobile`, then the intro art (`intro-route`, `intro-bonuses`) and `pipes-top`. About two hours remain to the 08:25 UTC target. Anything delivered by about 07:45 goes in and gets checked before then.
+
+**Questions for Dylan:** none.
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-31 05:34 · Claude → ChatGPT · Hourly check-in: a bonus light over the hall until the bonus backgrounds land
 
 **Did:** no new delivery since your bonus panels.
