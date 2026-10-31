@@ -359,9 +359,12 @@ async function countTo(target, ms) {
 const paintWin = () => { controller.update({ win: money(state.win) }); if (state.tier) $('hud-win').textContent = money(state.win); };
 
 // ---- Bonuses ----
-function panel({ kicker, title, text, html = null, button = 'CONTINUE', tier }) {
-  const el = $('bonus-panel');
-  $('bonus-panel-kicker').textContent = kicker; $('bonus-panel-title').textContent = title;
+// art: a painted title (its alt text is the title, so it is never shown twice).
+function panel({ kicker, title, text, html = null, button = 'CONTINUE', tier, art = null }) {
+  const el = $('bonus-panel'), titleArt = art && artImg(art, title);
+  $('bonus-panel-kicker').textContent = kicker;
+  if (titleArt) $('bonus-panel-title').innerHTML = titleArt; else $('bonus-panel-title').textContent = title;
+  el.classList.toggle('has-art', !!titleArt);
   if (html) $('bonus-panel-text').innerHTML = html; else $('bonus-panel-text').textContent = text;
   $('bonus-panel-go').textContent = button; el.dataset.tier = tier || ''; el.hidden = false;
   $('bonus-panel-go').focus({ preventScroll: true });
@@ -379,7 +382,7 @@ async function bonusStart(e) {
   if (e.natural) { status(`${BONUSES[e.tier].scatters}${e.tier === 'hidden' ? '+' : ''} FS SCATTERS`); await wait(700); }
   audio.play('bonus-in', { tier: e.tier }); audio.music(e.tier === 'hidden' ? 'hidden' : 'bonus');
   skunk.play('bonus');
-  await panel({ kicker: e.natural ? 'TRIGGERED' : 'BONUS BUY', title: BONUSES[e.tier].title, text: TIER[e.tier].text, button: 'START', tier: e.tier });
+  await panel({ kicker: e.natural ? 'TRIGGERED' : 'BONUS BUY', title: BONUSES[e.tier].title, text: TIER[e.tier].text, button: 'START', tier: e.tier, art: TIER[e.tier].panel });
   app.dataset.bonus = e.tier;
   $('bonus-hud').hidden = false; $('hud-tier').textContent = BONUSES[e.tier].title;
   hud(0, e.spins); gauge(e.reservoir);
@@ -699,7 +702,7 @@ async function loadUI() {
   if (found.logo) { app.dataset.artLogo = ''; document.querySelector('.logo').innerHTML = `<img src="${found.logo}" alt="Cyber Skunk">`; }
   for (const k of ['bg-desktop', 'bg-mobile', 'bg-bonus-desktop', 'bg-bonus-mobile']) if (found[k]) { app.dataset.artBg = ''; app.style.setProperty(`--${k}`, `url(${found[k]})`); }
   await Promise.all(Object.values(COPY).map(async ({ card: name }) => { const url = `assets/cards/${name}.webp`; if (await exists(url)) cardArt.set(name, url); }));
-  await Promise.all(Object.values(TIER).map(async ({ panel: name }) => { const url = `assets/panels/${name}.webp`; if (await exists(url)) app.style.setProperty(`--${name}`, `url(${url})`); }));
+  await Promise.all(Object.values(TIER).map(async ({ panel: name }) => { const url = `assets/panels/${name}.webp`; if (await exists(url)) extraArt.set(name, url); }));
   await Promise.all(Object.entries(EXTRA).map(async ([name, dir]) => { const url = `assets/${dir}/${name}.webp`; if (await exists(url)) extraArt.set(name, url); }));
   for (const name of ['fx-splat', 'badge-pressure', 'vent-online', 'fx-steam', 'splash-desktop', 'splash-mobile']) if (extraArt.has(name)) { app.dataset[`art${name.replace(/(^|-)(\w)/g, (_, __, c) => c.toUpperCase())}`] = ''; app.style.setProperty(`--${name}`, `url(${extraArt.get(name)})`); }
   for (const [name, key] of [['fx-mist', 'mist'], ['fx-droplet', 'droplet'], ['fx-spark', 'spark']]) if (extraArt.has(name)) { const img = new Image(); img.src = extraArt.get(name); fxSprites[key] = img; }

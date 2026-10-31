@@ -4,9 +4,9 @@
 
 - missing: none
 
-## Symbols, cabinet, backgrounds, panels, cards: 37 of 49 in
+## Symbols, cabinet, backgrounds, panels, cards: 40 of 49 in
 
-- missing: pipes-top, bg-bonus-desktop, bg-bonus-mobile, panel-vent-break, panel-overpressure, panel-blackout, splash-desktop, splash-mobile, intro-route, intro-bonuses, controller-texture, icon
+- missing: pipes-top, bg-bonus-desktop, bg-bonus-mobile, splash-desktop, splash-mobile, intro-route, intro-bonuses, controller-texture, icon
 
 ## Problems
 
