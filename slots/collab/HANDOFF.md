@@ -5,6 +5,40 @@ Newest on top. Format is in `AGENTS.md`.
 ---
 
 
+### 2026-10-31 03:17 · Claude → ChatGPT · Your card flip passes review; the seven win titles are live
+
+**Did:**
+- **Your card flip (0ca118b):** reviewed and kept as built. The full browser suite passes in my environment: 11 browser, 23 game, 127 core. Checked in real rounds:
+  - Spray Job on a phone: land, outlined front, flip to the centred vent, jet, ×N on the hit vent, paint, flip back to WILD ×N, then wins.
+  - The reveal at 360 and 430 phone widths.
+  - Vent Break on desktop: brass sticky vents next to cyan new ones.
+  - Reduced motion: an instant face swap.
+
+  My own parallel flip (built at the same time from your 4ca5629 handoff) is not used.
+- **Win titles:** prepped all seven (37 of 49 assets in, no problems). The runtime already wired them. Shown in real catalog rounds steered by ticket, never forced previews:
+  - NICE, BIG, EPIC and MYTHIC at 10×, 25×, 100× and 500×.
+  - MAX at the 25,000× cap.
+  - EXTRA SPINS on a Vent Break retrigger.
+  - TOTAL WIN at bonus end.
+
+  Each title shows once, with its alt text and the live amount under it. Shots: `shots/wins-v1-tiers-phone.jpg`, `wins-v1-retrigger-total-phone.jpg`, `wins-v1-desktop.jpg`.
+- **Fixes found while checking them:**
+  - TOTAL WIN rendered at its natural 1200 px on phones and ran off the screen (the CSS targeted a class the element lacks). It is now sized to the panel.
+  - The panel keeps a 14 px margin on a 360 px phone.
+  - The EXTRA SPINS backdrop now darkens the board behind it, so the +N reads.
+- **Phone spacing:** without the bonus ladder, tall phones had an empty band in the console. That spare height is now split: half above the logo and skunk, half in the console (`shots/layout-v3-phones.jpg`). Short phones are unchanged.
+- **Cleanup:** removed the obsolete `vent-spout` asset and its prep step. ART_SPEC now describes `vent.png` as the card's reverse face.
+
+**Files:** `runtime/app.js`, `runtime/styles.css`, `runtime/assets/wins/*` (prepped), `tools/art/cyber-skunk-prep.py`, `ART_SPEC.md`, `art/REPORT.md`, `shots/wins-v1-*`, `shots/layout-v3-phones.jpg`.
+
+**Next for ChatGPT:** the three bonus entry panels (`panel-vent-break`, `panel-overpressure`, `panel-blackout`), the intro art and the bonus backgrounds. Those are the last missing pieces Dylan will see in normal play.
+
+**Questions for Dylan:** none.
+
+**Blocked on:** nothing.
+
+---
+
 ## 2026-10-31 · ChatGPT → Claude · Implemented Dylan's card flip, plain FS and inset gauge
 
 **Did:** Dylan explicitly said “you do that part instead,” overriding the earlier art-only split for this presentation batch. Implemented the normal full-size symbol → cyan outline → 180 ms hold → 300 ms paced flip → centred complete vent on reverse → existing spray → real WILD/multiplier face. Separate backfaces prevent mirrored symbols. Skip joins the existing animation finish set; reduced motion swaps immediately; final cleanup always restores fronts. All four directions reuse the existing complete vent art; the optional edge-spout repaint is now obsolete. FS is only ivory lettering, no box/plate, and its fallback is identical. Repainted the pressure dial as editable graphite/brass SVG on a cabinet mount and moved its number above it. Removed the persistent bonus ladder; buy/intro/rules/active feature HUD remain. No math, payout, RNG, rig or audio changes. Fitted eyelids stay untouched. Removed the obsolete skunk motif from WILD's vector fallback too.

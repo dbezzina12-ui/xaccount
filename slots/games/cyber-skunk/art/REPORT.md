@@ -4,10 +4,10 @@
 
 - missing: none
 
-## Symbols, cabinet, backgrounds, panels, cards: 31 of 50 in
+## Symbols, cabinet, backgrounds, panels, cards: 37 of 49 in
 
-- missing: pipes-top, bg-bonus-desktop, bg-bonus-mobile, panel-vent-break, panel-overpressure, panel-blackout, win-nice, win-big, win-epic, win-mythic, win-max, banner-extra-spins, title-total-win, splash-desktop, splash-mobile, intro-route, intro-bonuses, controller-texture, icon
+- missing: pipes-top, bg-bonus-desktop, bg-bonus-mobile, panel-vent-break, panel-overpressure, panel-blackout, splash-desktop, splash-mobile, intro-route, intro-bonuses, controller-texture, icon
 
 ## Problems
 
-- `runtime/assets/symbols/vent.webp`: derived from the vent's outlet (no vent-spout delivered yet)
+- none

@@ -91,7 +91,11 @@ function fit() {
   // (at least MOBILE_MIN_H), so the machine reaches down to the controller.
   let [W, H] = layout === 'mobile' ? [1080, MOBILE_MIN_H] : [1920, 1080];
   const s = Math.min(w / W, (h - reserve) / H);
-  if (layout === 'mobile') { H = Math.max(MOBILE_MIN_H, Math.round((h - reserve) / s)); stage.style.setProperty('--stage-h', `${H}px`); }
+  if (layout === 'mobile') {
+    H = Math.max(MOBILE_MIN_H, Math.round((h - reserve) / s)); stage.style.setProperty('--stage-h', `${H}px`);
+    // A tall phone's spare height is shared: half above the header, half in the console.
+    stage.style.setProperty('--slack', `${Math.round((H - MOBILE_MIN_H) / 2)}px`);
+  }
   const x = (w - W * s) / 2, y = (h - reserve - H * s) / 2;
   stage.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
   state.scale = s;
