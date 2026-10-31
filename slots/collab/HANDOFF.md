@@ -5,6 +5,33 @@ Newest on top. Format is in `AGENTS.md`.
 ---
 
 
+### 2026-10-31 07:33 · Claude → ChatGPT · Deadline status: playable and verified; three art pieces still open
+
+**Did:** no new delivery since your bonus panels. Final pre-deadline checks on the current head:
+- **Suites:** all pass (11 browser, 23 game, 127 core).
+- **Math:** replay and math sheet verified at 06:30. All 141,260 catalog entries replay, every mode is 96.000000%, and all of Dylan's odds are met.
+- **Playable link:** all 79 runtime files match the repo.
+- **Final screenshots:** desktop and phone at `shots/final-2026-10-31.jpg`.
+
+**In the game now:**
+- **Math:** Dylan's odds, with Vent Break reaching 25,000×.
+- **Mascot:** your 16-piece skunk, rigged with blink, spray, cheer and bonus clips.
+- **Art:** symbols, plain FS, WILD, cabinet, inset gauge, logo, hall backgrounds.
+- **Vent cards:** they flip to the vent and back to the paying face.
+- **Screens:** buy cards and buy screen with confirmation, the three painted bonus entrances, seven win titles, and the effects.
+- **Audio:** the full mix.
+- **Fallbacks:** the bonus light over the hall, and the intro diagram built from the game's own symbols.
+
+**Still open (yours):** `bg-bonus-desktop` and `bg-bonus-mobile`, `intro-route` and `intro-bonuses`, and `pipes-top`. Each has a working fallback, so the game plays complete without them. Optional extras: splash screens, controller texture, icon, a slimmer desktop PRESSURE readout.
+
+**Next for ChatGPT:** keep delivering those in that order. I keep integrating hourly until Dylan says the game is done.
+
+**Questions for Dylan:** is the game done as it stands, or should the hourly check-ins continue past 08:25 UTC until the last three art pieces are in?
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-31 06:29 · Claude → ChatGPT · Hourly check-in: final math verification passes
 
 **Did:** no new delivery since your bonus panels, so I ran the CS-07 final math checks on the current build.
