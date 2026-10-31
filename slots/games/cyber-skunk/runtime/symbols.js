@@ -13,32 +13,26 @@ const PLACEHOLDER = {
   H3: svg(`<rect x="28" y="10" width="44" height="10" rx="3" fill="#8b8f8f"/><rect x="24" y="18" width="52" height="66" rx="9" fill="#1d2b2c" stroke="#a9b0ae" stroke-width="5"/><rect x="32" y="26" width="36" height="50" rx="6" fill="#68c8c3"/><path d="M52 30 40 52h9l-6 20 15-26h-9z" fill="#e6fffd" opacity=".9"/><rect x="28" y="84" width="44" height="8" rx="3" fill="#8b8f8f"/>`),
   H4: svg(`<circle cx="34" cy="38" r="20" fill="#ad7840" stroke="#5a3a17" stroke-width="4"/><circle cx="34" cy="38" r="9" fill="#68c8c3" stroke="#0b1014" stroke-width="2"/><rect x="48" y="34" width="40" height="9" rx="3" fill="#ad7840" stroke="#5a3a17" stroke-width="3"/><rect x="70" y="42" width="6" height="14" fill="#ad7840" stroke="#5a3a17" stroke-width="2"/><rect x="80" y="42" width="6" height="10" fill="#ad7840" stroke="#5a3a17" stroke-width="2"/>`),
   A: letter('A'), K: letter('K'), Q: letter('Q'), J: letter('J'), T: letter('10', 46),
-  W: svg(`<rect x="8" y="14" width="84" height="72" rx="14" fill="#101418" stroke="#efe5cf" stroke-width="4"/><path d="M22 74 C34 48 40 30 50 18 C60 30 66 48 78 74 Z" fill="#efe5cf"/><path d="M38 74 C44 54 46 40 50 30 C54 40 56 54 62 74 Z" fill="#101418"/><text x="50" y="68" font-family="Anton, Impact, 'Arial Black', sans-serif" font-size="24" text-anchor="middle" fill="#eda83c" stroke="#0b1014" stroke-width="3" paint-order="stroke">WILD</text>`),
-  S: svg(`<rect x="10" y="12" width="80" height="76" rx="8" fill="#2a2116" stroke="#ad7840" stroke-width="6"/><rect x="18" y="20" width="64" height="60" rx="4" fill="#15110b" stroke="#eda83c55" stroke-width="2"/><text x="50" y="64" font-family="Anton, Impact, 'Arial Black', sans-serif" font-size="40" text-anchor="middle" fill="#efe5cf" stroke="#0b1014" stroke-width="3" paint-order="stroke">FS</text>`),
+  W: svg(`${plate()}<text x="50" y="61" font-family="Anton, Impact, 'Arial Black', sans-serif" font-size="30" text-anchor="middle" fill="#efe5cf" stroke="#0b1014" stroke-width="2" paint-order="stroke">WILD</text>`),
+  S: svg(`<text class="scatter-letters" x="50" y="71" font-family="Anton, Impact, 'Arial Black', sans-serif" font-size="66" text-anchor="middle" fill="#efe5cf" stroke="#101820" stroke-width="2" paint-order="stroke">FS</text>`),
 };
-// The vent's spout: a straight nozzle, opening at the top, base at the bottom
-// (256 x 320, as vent-spout.webp). ventHTML turns it toward the outlet.
-export const SPOUT_SVG = `<svg viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="17" y="30" width="46" height="62" fill="#8b8f8f" stroke="#0b1014" stroke-width="3"/><rect x="24" y="34" width="8" height="54" fill="#d5d8d6" opacity=".55"/><rect x="11" y="84" width="58" height="14" rx="3" fill="#ad7840" stroke="#0b1014" stroke-width="3"/><rect x="7" y="12" width="66" height="24" rx="5" fill="#ad7840" stroke="#0b1014" stroke-width="3"/><ellipse cx="40" cy="13" rx="29" ry="8" fill="#68c8c3" stroke="#0b1014" stroke-width="3"/></svg>`;
-
 const available = new Map();
 // Checks once which art files exist, so placeholders fill only the gaps.
 export async function loadArt(base = 'assets/symbols/') {
-  await Promise.all(Object.entries(ART).map(async ([id, file]) => {
+  await Promise.all(Object.entries(ART).filter(([id]) => id !== 'S').map(async ([id, file]) => {
     const url = `${base}${file}.webp`;
     const ok = await new Promise((resolve) => { const img = new Image(); img.onload = () => resolve(true); img.onerror = () => resolve(false); img.src = url; });
     if (ok) available.set(id, url);
   }));
-  const letters = `${base}scatter-letters.webp`;
-  if (await new Promise((resolve) => { const img = new Image(); img.onload = () => resolve(true); img.onerror = () => resolve(false); img.src = letters; })) available.set('S-letters', letters);
-  const spout = `${base}vent-spout.webp`;
-  if (await new Promise((resolve) => { const img = new Image(); img.onload = () => resolve(true); img.onerror = () => resolve(false); img.src = spout; })) available.set('spout', spout);
+  const vent = `${base}vent.webp`;
+  if (await new Promise((resolve) => { const img = new Image(); img.onload = () => resolve(true); img.onerror = () => resolve(false); img.src = vent; })) available.set('vent', vent);
   return available.size;
 }
 export function symbolHTML(id) {
+  // Dylan: FS is only lettering, never a plate, frame or box.
+  if (id === 'S') return PLACEHOLDER.S;
   if (!available.has(id)) return PLACEHOLDER[id] || '';
-  const img = `<img src="${available.get(id)}" alt="" draggable="false">`;
-  // The FS lettering is its own layer over the plate, so it can animate apart.
-  return id === 'S' && available.has('S-letters') ? `<span class="scatter-stack">${img}<img class="scatter-letters" src="${available.get('S-letters')}" alt="" draggable="false"></span>` : img;
+  return `<img src="${available.get(id)}" alt="" draggable="false">`;
 }
 // The spinning filler as one image: the symbols drawn once, top to bottom,
 // into a strip of 200 px cells, so a spinning reel moves one element instead
@@ -75,7 +69,7 @@ export async function fillerStrip(ids, k = 1.5) {
 // its <text> (an SVG drawn as an image cannot use the page's fonts), with the
 // text returned to be drawn on the canvas.
 async function symbolArt(id) {
-  const painted = available.has(id), texts = [];
+  const painted = id !== 'S' && available.has(id), texts = [];
   let src = available.get(id);
   if (!painted) {
     const markup = (PLACEHOLDER[id] || svg('')).replace(/<text ([^>]*)>([^<]*)<\/text>/g, (_, attrs, text) => {
@@ -90,10 +84,8 @@ async function symbolArt(id) {
   await img.decode();
   return { img, texts, painted };
 }
-// A vent on a symbol: the symbol keeps its size and gets an outline
-// (styles.css), and the spout stands on the outlet edge, pointing out:
-// dir 0 up, 1 right, 2 down, 3 left. In a reel it pops out once the reel lands.
+// The complete mechanism lives on the reverse of a card; never over its symbol.
 export function ventHTML(dir) {
-  const body = available.has('spout') ? `<img src="${available.get('spout')}" alt="" draggable="false">` : SPOUT_SVG;
-  return `<span class="vent-art" data-dir="${dir}" style="--turn:${[0, 90, 180, 270][dir]}deg"><span class="spout">${body}</span></span>`;
+  const body = available.has('vent') ? `<img src="${available.get('vent')}" alt="" draggable="false">` : `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M12 65H45Q65 65 65 45V12" fill="none" stroke="#ad7840" stroke-width="22"/><path d="M12 61H45Q61 61 61 45V12" fill="none" stroke="#e6c88f" stroke-width="4"/><ellipse cx="65" cy="12" rx="11" ry="4" fill="#68c8c3"/></svg>`;
+  return `<span class="vent-art" data-dir="${dir}" style="--turn:${[0, 90, 180, 270][dir]}deg">${body}</span>`;
 }

@@ -24,7 +24,7 @@ const body = html.slice(html.indexOf('<body>') + 6, html.indexOf('</body>')).rep
 writeFileSync(join(out, 'cyber-skunk.html'), `<!-- Cyber Skunk, published from games/cyber-skunk/runtime/index.html (wrapper tags left to the artifact skeleton). -->\n${head.trim()}\n<style>:root{color-scheme:dark}html,body{background:#101820}</style>\n${body.trim()}\n`);
 
 // Everything the game loads: code, styles, data, fonts and art (not docs or licences).
-const SHIP = new Set(['.js', '.css', '.json', '.html', '.png', '.webp', '.jpg', '.ttf']), TYPES = { '.ttf': 'font/ttf' };
+const SHIP = new Set(['.js', '.css', '.json', '.html', '.svg', '.png', '.webp', '.jpg', '.ttf']), TYPES = { '.ttf': 'font/ttf', '.svg': 'image/svg+xml' };
 const files = {};
 (function walk(dir) {
   for (const name of readdirSync(dir)) {

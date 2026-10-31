@@ -1,5 +1,9 @@
 # Cyber Skunk — production brief v1
 
+## Implemented presentation correction — 2026-10-31
+
+Dylan explicitly assigned this implementation to ChatGPT. The two-sided cards below are now in the runtime: 180 ms landing hold, 300 ms paced flip, complete centred existing vent artwork on reverse, then actual final paying face. Skip and reduced motion settle immediately. FS is plain live ivory lettering with no plate/box/extra artwork, including fallback. The pressure number is above a smaller graphite dial on a cabinet mount. Remove the persistent bonus ladder; keep bonus information in the buy menu, intro/rules and active bonus HUD. Do not reintroduce edge-spout overlays. The fitted v4.1 blink stays unchanged.
+
 ## Superseding vent presentation — Dylan, 2026-10-30 (Cancún)
 
 Dylan rejects pipes overlapping/cropping normal symbols and the workaround that shrinks/repositions symbols into a corner. Preserve the game mechanic; change its visual sequence to a two-sided symbol card.
@@ -9,7 +13,7 @@ Dylan rejects pipes overlapping/cropping normal symbols and the workaround that 
 3. **Act:** the spray follows the existing authoritative route. The centred mechanism turns/redirects the spray and shows its real pressure when hit. Route connections may animate over the grid during the action but must not permanently cover symbol artwork. Vent direction stays consistent with the actual route, not a new random flip result.
 4. **Resolve:** show the authoritative final paying face before win evaluation is presented: a full readable WILD plus live multiplier for converted vent cells, ordinary symbols for untouched/unconverted cells. Do not flip a converted WILD back to its original symbol during award display. Sticky location/direction persist in game state and the border remains identifiable; on subsequent landings, show the newly landed front and repeat the reveal as appropriate.
 
-Implementation targets for Claude: replace the `.cell:has(> .vent-art) .sym{scale:.78}` and direction-specific `translate` treatment in runtime/styles.css; replace simultaneous front-symbol plus vent-overlay markup in app.js cellHTML with explicit visual faces/state. Reuse the existing isolated vent artwork on the reverse first; request art changes from ChatGPT only if it cannot fit cleanly. Rules/intro examples must describe outlined cards revealing vents, rather than pipes permanently on top of symbols.
+Implementation: runtime cellHTML uses explicit front/back faces; CSS keeps the full symbol on its front and the complete existing isolated vent artwork on its reverse. Rules/intro describe the flip. Claude reviews and republishes this ChatGPT implementation; do not restore edge-spout/corner overlays.
 
 This is presentation only: symbol IDs, route, awards, sticky state, costs and RNG remain unchanged. Skip/turbo must resolve to exactly the same final face, multiplier, balance and route outcome. Reduced motion uses an immediate face change or short fade. Verify all four vent rotations, several simultaneous/sticky vents, scatter handling, no-spray rounds, next-spin reset, mid-flip skip and phone widths 360/390/430 plus desktop. Capture landing, reverse/action and award frames to prove symbols and mechanisms are complete and centred. This supersedes older overlay/corner-placement art directions.
 
@@ -80,7 +84,7 @@ Palette: midnight #101820, graphite #252D31, ivory #EFE5CF, brass #AD7840, amber
 75% restrained dark neutral area. Light comes from utility fixtures; no rainbow bloom, toxic-green wash, cluttered city billboards or saturated full-screen particles.
 Mascot: adult black/ivory skunk saboteur, huge stripe tail, sly expression, amber welding goggles, cropped charcoal utility jacket, brass mechanical shoulder fittings, one industrial gauntlet, boots grounded on floor grill. Stylized painted dimensional art; coherent silhouette at phone scale.
 Cabinet: front-on parallel rectangular edges, strong bevel, matte graphite body, brass inner lip, gauge outside symbol rectangle. Do not stretch decorative corner radii or bitmap art to different aspect ratios. Use separate rails/corners (nine-slice) or a clean scalable frame.
-Symbols: H1 amber battery, H2 ventilation rotor, H3 cyan plasma canister, H4 circuit key. L1-L5 A,K,Q,J,10 in clean ivory. W skunk stripe badge; S large plain FS. Keep the FS lettering as a separate crisp layer.
+Symbols: H1 amber battery, H2 ventilation rotor, H3 cyan plasma canister, H4 circuit key. L1-L5 A,K,Q,J,10 in clean ivory. W character-free industrial badge; S large plain FS. Keep the FS lettering as a separate crisp layer.
 Style frame is 1536x1024 and is NOT evidence of exact gameplay or working controls. Build all text/controls dynamically. Do not crop the frame into final symbol assets.
 
 ## Asset and rig contract

@@ -76,21 +76,6 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .app[data-layout=mobile] .machine-base{display:block;position:absolute;z-index:-1;left:44px;right:44px;top:860px;bottom:0;border-radius:0 0 30px 30px;
   background:repeating-linear-gradient(90deg,#0000 0 160px,#ffffff07 160px 163px),linear-gradient(180deg,#20272b,#151b1e 45%,#0c1013);box-shadow:0 30px 80px #000c,inset 0 -3px 0 #050708,inset 3px 0 0 #2a3236,inset -3px 0 0 #2a3236}
 .app[data-layout=mobile] .machine-base::before{content:"";position:absolute;left:70px;right:70px;top:70px;height:10px;border-radius:5px;background:var(--amber);box-shadow:0 0 24px #eda83c,0 0 6px #fff4;opacity:.75}
-/* The bonus ladder: which scatter count opens which bonus. Right of the reels
-   on desktop; in the console on a phone, where the bonus header replaces it
-   during a bonus and a short phone drops it. */
-.tier-strip{position:absolute;z-index:6;display:grid;gap:18px;pointer-events:none}
-.tier-strip > span{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:18px;padding:14px 22px;border-radius:16px;background:linear-gradient(#141b1fe8,#0b1013e8);border:2px solid #ad784099;box-shadow:0 10px 24px #0008}
-.tier-strip i{font:400 34px/1 var(--title);font-style:normal;color:var(--ivory);padding:10px 12px;border-radius:10px;background:#2a2116;border:3px solid var(--brass);white-space:nowrap}
-.tier-strip b{font:400 30px/1 var(--title);letter-spacing:.04em;color:var(--amber)}
-.tier-strip .hidden-tier b{color:var(--cyan)}
-.app[data-layout=desktop] .tier-strip{left:1545px;width:345px;top:300px}
-/* centred in the console between its light strip (1442) and its pipe (90 from the bottom) */
-.app[data-layout=mobile] .tier-strip{left:60px;right:60px;top:calc((1442px + var(--stage-h) - 90px) / 2 - 80px);grid-template-columns:repeat(3,1fr);gap:16px}
-.app[data-layout=mobile] .tier-strip > span{grid-template-columns:1fr;justify-items:center;text-align:center;gap:14px;padding:20px 8px}
-.app[data-layout=mobile] .tier-strip i{font-size:46px}
-.app[data-layout=mobile] .tier-strip b{font-size:36px}
-.app[data-layout=mobile][data-bonus] .tier-strip,.app[data-layout=mobile][data-short] .tier-strip{display:none}
 .app[data-layout=mobile] .machine-base::after{content:"";position:absolute;left:36px;right:36px;bottom:34px;height:44px;border-radius:22px;background:linear-gradient(#5b6569,#2a3235 45%,#14191c);box-shadow:inset 0 2px 0 #8a9599,0 6px 14px #000a}
 
 /* The cabinet: drawn at its art size (1440×1060) and scaled to the machine. */
@@ -117,8 +102,6 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 /* Painted symbols (ART_SPEC §2) carry no shadow of their own: the reels add it, and a little size. */
 .sym > img{transform:scale(1.12);filter:drop-shadow(0 7px 7px #000c) drop-shadow(0 0 1px #000)}
 .cell.win .sym > img{filter:drop-shadow(0 0 14px #eda83c) drop-shadow(0 7px 7px #000c)}
-.scatter-stack{position:relative;display:block;width:100%;height:100%}
-.scatter-stack img{position:absolute;inset:0}
 .cell.scatter-hit .scatter-letters{animation:letters-pop .7s ease-out}
 @keyframes letters-pop{40%{transform:scale(1.18) rotate(-4deg);filter:drop-shadow(0 0 16px #eda83c)}}
 .reel.spinning .strip{filter:blur(5px) brightness(.85)}
@@ -131,22 +114,22 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .app[data-blackout] .cabinet-art{filter:brightness(.35)}
 .pipes{position:absolute;left:0;top:-300px;width:1440px;height:300px;background:var(--pipes-art) 0 0/100% 100% no-repeat;display:none;pointer-events:none}
 .app[data-art-pipes] .pipes{display:block}
-/* A vent (ART_SPEC §2): the symbol keeps its full size inside a cyan
-   outline, and a spout stands on the edge the spray leaves by. .vent-art
-   covers the symbol and turns with the outlet (dir 0 up, 1 right, 2 down,
-   3 left), so the spout, drawn pointing up at the top edge, always points
-   out of its outlet edge. In a reel it pops out once the reel has landed. */
-.vent-art{position:absolute;inset:0;transform:rotate(var(--turn));pointer-events:none;z-index:2}
-.vent-art .spout{position:absolute;left:35%;top:0;width:30%;height:37.5%;transform-origin:50% 100%;filter:drop-shadow(0 0 5px #000d)}
-.vent-art svg,.vent-art img{width:100%;height:100%;display:block}
-.cell > .vent-art .spout{transition:scale .34s cubic-bezier(.3,1.9,.5,1),opacity .1s}
-.cell:not(.landed) > .vent-art .spout{scale:1 0;opacity:0;transition:none}
-.cell:not(.win):has(> .vent-art) .sym > :is(img, svg, .scatter-stack),
-:is(.card-art i, .rules .mini, .intro-route .mini):has(> .vent-art) > :is(img, svg){filter:drop-shadow(var(--o, 4px) 0 0 #68c8c3) drop-shadow(calc(-1 * var(--o, 4px)) 0 0 #68c8c3) drop-shadow(0 var(--o, 4px) 0 #68c8c3) drop-shadow(0 calc(-1 * var(--o, 4px)) 0 #68c8c3) drop-shadow(0 0 10px #68c8c3aa) drop-shadow(0 7px 7px #000a)}
-.card-art i,.intro-route .mini{--o:2px}
-.rules .mini{--o:1.5px}
-.cell.sticky .vent-art{filter:drop-shadow(0 0 10px #eda83caa) drop-shadow(0 4px 6px #000b)}
-.cell.sticky::after{content:"";position:absolute;inset:8px;border:4px solid #eda83c88;border-radius:16px}
+/* Two-sided feature cards. The front retains the normal centred symbol. */
+.cell.vent-card{perspective:900px}
+.card-flipper{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateY(0deg)}
+.cell.reverse .card-flipper{transform:rotateY(180deg)}
+.card-front,.card-back{position:absolute;inset:0;display:grid;place-items:center;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.card-front{transform:rotateY(0deg)}
+.card-back{transform:rotateY(180deg);border-radius:14px;background:radial-gradient(circle at 50% 42%,#344247,#19252b 68%);box-shadow:inset 0 0 0 8px #10191e,inset 0 0 0 11px #55706e}
+.vent-art{position:absolute;inset:14%;transform:rotate(var(--turn));pointer-events:none;filter:drop-shadow(0 5px 5px #0009)}
+.vent-art svg,.vent-art img{width:100%;height:100%;object-fit:contain;display:block}
+.vent-card.landed::after{content:"";position:absolute;inset:5px;border:4px solid #68c8c3aa;border-radius:15px;pointer-events:none;box-shadow:inset 0 0 10px #68c8c320}
+.vent-card.sticky::after{border-color:#cca566;box-shadow:inset 0 0 0 4px #101820,0 0 8px #cca56640}
+.cell:not(.landed)::after{visibility:hidden}
+.cell.reverse.wild::before{visibility:hidden}
+.card-art i,.rules .mini,.intro-route .mini{overflow:hidden}
+:is(.card-art i,.rules .mini,.intro-route .mini):has(> .vent-art)>:is(img,svg){visibility:hidden}
+:is(.card-art i,.rules .mini,.intro-route .mini)>.vent-art{inset:14%}
 .cell.wild .sym{filter:brightness(1.15) saturate(.4)}
 .cell.wild::before{content:"";position:absolute;inset:4px;border-radius:14px;background:radial-gradient(circle at 50% 50%,#68c8c366,#68c8c31c 60%,#0000 75%);box-shadow:inset 0 0 0 4px #68c8c3aa}
 .cell .badge{position:absolute;right:10px;bottom:8px;z-index:3;font:900 44px/1 var(--title);color:var(--amber);-webkit-text-stroke:3px #1b120a;paint-order:stroke;text-shadow:0 0 18px #eda83c}
@@ -161,16 +144,20 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .status{font:700 var(--status-size,40px)/1 var(--font);letter-spacing:.08em;color:var(--ivory);text-align:center;text-shadow:0 0 12px #eda83c55;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;padding:0 20px}
 
 /* The Reservoir gauge on top of the cabinet (gauge-*.webp when present). */
-.gauge{position:absolute;z-index:7;width:200px;height:200px;left:50%;transform:translateX(-50%)}
-.app[data-layout=desktop] .gauge{top:-112px}
-.app[data-layout=mobile] .gauge{top:-124px}
+.gauge{position:absolute;z-index:7;width:160px;height:160px;left:50%;transform:translateX(-50%)}
+.app[data-layout=desktop] .gauge{top:-90px}
+.app[data-layout=mobile] .gauge{top:-88px}
+.gauge::before{content:"";position:absolute;left:-24px;right:-24px;top:78px;bottom:-12px;border-radius:24px 24px 10px 10px;background:linear-gradient(#39464a,#202a2e 55%,#141d22);border:3px solid #4c595b;box-shadow:inset 0 2px 0 #87908a55,0 6px 8px #0008}
+.gauge::after{content:"";position:absolute;left:-9px;right:-9px;bottom:4px;height:7px;background:radial-gradient(circle,#8b948e 0 3px,#182127 4px 6px,#0000 7px) left/14px 14px repeat-x;opacity:.55}
 .gauge-face{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,#f3ead6 0 58%,#c9b48b 59% 62%,#2b2116 63% 70%,#ad7840 71% 100%);box-shadow:0 10px 30px #000c,inset 0 0 0 3px #5a3d1c}
 .gauge-face i{position:absolute;inset:26px;border-radius:50%;background:conic-gradient(from 225deg,#0000 0 189deg,#c0392b 189deg 270deg,#0000 270deg);-webkit-mask:radial-gradient(circle,#0000 60%,#000 61%);mask:radial-gradient(circle,#0000 60%,#000 61%)}
 .app[data-art-gauge] .gauge-face{background:var(--gauge-face) center/100% no-repeat;box-shadow:none}
 .app[data-art-gauge] .gauge-face i{display:none}
 .gauge-needle{position:absolute;left:50%;top:50%;width:8px;height:74px;margin:-70px 0 0 -4px;border-radius:4px;background:linear-gradient(#c0392b,#5a1a12);transform-origin:50% 70px;transform:rotate(calc(-135deg + var(--p,0) * 27deg));transition:transform .8s cubic-bezier(.3,1.6,.5,1);box-shadow:0 2px 3px #000a}
-.app[data-art-gauge] .gauge-needle{width:200px;height:200px;margin:-100px 0 0 -100px;border-radius:0;background:var(--gauge-needle) center/100% no-repeat;box-shadow:none;transform-origin:50% 50%}
-.gauge-value{position:absolute;left:0;right:0;bottom:44px;text-align:center;font:900 28px/1 var(--title);color:#2b2116}
+.app[data-art-gauge] .gauge-needle{width:100%;height:100%;left:0;top:0;margin:0;border-radius:0;background:var(--gauge-needle) center/100% no-repeat;box-shadow:none;transform-origin:50% 50%}
+.gauge-readout{position:absolute;left:-12px;right:-12px;bottom:calc(100% + 6px);display:flex;align-items:baseline;justify-content:center;gap:10px;padding:6px 10px;background:linear-gradient(#263238,#152027);border:2px solid #55625e;border-radius:7px;box-shadow:inset 0 1px 0 #a7b3a833,0 3px 5px #0006}
+.gauge-label{font:700 18px/1 var(--font);letter-spacing:.12em;color:#b7c1b9}
+.gauge-value{font:400 28px/1 var(--title);color:var(--ivory);font-variant-numeric:tabular-nums;min-width:1.3em;text-align:center}
 .app:not([data-bonus]) .gauge{filter:saturate(.6) brightness(.85)} /* lit in every bonus: each has a Reservoir */
 
 .bonus-hud{position:absolute;display:grid;grid-template-columns:1fr 250px 1fr;align-items:stretch;font:700 30px/1 var(--font);letter-spacing:.06em;pointer-events:none}
@@ -265,7 +252,7 @@ dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}
 .cell .sym{position:relative;z-index:1}
 .app[data-art-fx-splat] .cell.wild::before{background:var(--fx-splat) center/100% no-repeat;box-shadow:inset 0 0 0 3px #68c8c366;z-index:2;pointer-events:none} /* the splat sits over the symbol: its centre is see-through */
 .app[data-art-badge-pressure] .cell .badge{background:var(--badge-pressure) center/contain no-repeat;padding:20px 22px 16px 30px;right:2px;bottom:2px;color:#2b1606;-webkit-text-stroke:0;text-shadow:0 1px 0 #f6d79a}
-.app[data-art-vent-online] .cell.sticky:not(.win)::after,.app[data-art-vent-online] .cell.online:not(.win)::after{border:0;border-radius:0;inset:-6px;background:var(--vent-online) center/100% no-repeat}
+.app[data-art-vent-online] .cell.online:not(.win)::after{border-color:var(--cyan);box-shadow:0 0 12px #68c8c355}
 .steam{position:absolute;left:50%;top:-30%;width:150%;height:150%;margin-left:-75%;pointer-events:none;background:radial-gradient(circle,#ffffffcc 0,#ffffff55 30%,#fff0 65%);animation:steam 1.3s ease-out forwards}
 .app[data-art-fx-steam] .steam{background:var(--fx-steam) center/contain no-repeat}
 @keyframes steam{from{transform:translateY(20px) scale(.3);opacity:.95}to{transform:translateY(-90px) scale(1.4);opacity:0}}
@@ -334,3 +321,5 @@ dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}
   .intro-go{min-width:200px;min-height:56px}
 }
 @media (prefers-reduced-motion:reduce){.bigwin::before{animation:none}.backdrop .fans i{animation:none}.cell.win .sym{animation:none}.steam,.reel-banner.show,.intro-inner{animation:none}}
+
+@media(prefers-reduced-motion:reduce){.card-flipper{transition:none}}

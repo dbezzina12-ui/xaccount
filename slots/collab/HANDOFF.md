@@ -4,6 +4,24 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+
+## 2026-10-31 · ChatGPT → Claude · Implemented Dylan's card flip, plain FS and inset gauge
+
+**Did:** Dylan explicitly said “you do that part instead,” overriding the earlier art-only split for this presentation batch. Implemented the normal full-size symbol → cyan outline → 180 ms hold → 300 ms paced flip → centred complete vent on reverse → existing spray → real WILD/multiplier face. Separate backfaces prevent mirrored symbols. Skip joins the existing animation finish set; reduced motion swaps immediately; final cleanup always restores fronts. All four directions reuse the existing complete vent art; the optional edge-spout repaint is now obsolete. FS is only ivory lettering, no box/plate, and its fallback is identical. Repainted the pressure dial as editable graphite/brass SVG on a cabinet mount and moved its number above it. Removed the persistent bonus ladder; buy/intro/rules/active feature HUD remain. No math, payout, RNG, rig or audio changes. Fitted eyelids stay untouched. Removed the obsolete skunk motif from WILD's vector fallback too.
+
+**Files:** `games/cyber-skunk/runtime/{app.js,symbols.js,styles.css,index.html}`, `runtime/assets/ui/gauge-face-inset.svg`, source `art/source/presentation-v6/`, `tests/browser/cyber-skunk.e2e.mjs`; artifact packer now includes SVG with `image/svg+xml`. Scoped ownership exception recorded in `AGENTS.md`.
+
+**Validation:** core 124 passed / 3 existing skips (127 total); Cyber Skunk 23/23. Managed Chrome review: desktop and phone layouts (360/390/430 widths), complete reverse mechanism, return to paying faces, plain FS in rules, number above dial, ladder absent. Manually pressed Stop with three cards visibly on reverse: zero reverse cards after settlement and controls re-enabled. Browser regression updated for flip/skip, containment, plain FS and gauge placement. Full Node browser suite cannot start in this environment: Chromium executable is absent; do not report that suite as passed. No browser install attempted under managed-preview workflow.
+
+**Picked up:** concurrent `27af3a1` win-title batch preserved. Read `collab/batches/2026-10-31-win-titles.md`; those seven PNGs still need prep/integration. They are not claimed live by this commit.
+
+**Next for Claude:** 1. Run `node --test tests/browser/cyber-skunk.e2e.mjs`, including sticky/bonus paths, turbo/reduced-motion and skip during flip; review this implementation rather than rebuilding the rejected overlay. 2. Integrate the seven win titles via existing prep. 3. Package with `node tools/cyber-skunk-artifact.mjs <output>` and republish the existing private artifact, then leave the exact revision and QA result. The playable artifact has NOT been updated by ChatGPT in this batch; only Claude has that publishing surface.
+**Next for ChatGPT:** continue bonus-entry/intro art and review concrete Claude feedback. Keep hourly GitHub pickup enabled; current task was verified enabled and its latest run delivered the title batch.
+**Questions for Dylan:** none.
+**Blocked on:** full browser-suite validation and existing-artifact publication in Claude's environment.
+
+---
+
 ##### 2026-10-30 (Cancún) · ChatGPT → Claude · Dylan's correction: full symbol → outline → flip → centred vent
 
 **Dylan:** likes the game idea, rejects pipes cropping the landed symbol and the corner workaround. Wants the regular symbol to land, a different outline to mark it, then the card to flip and show the mechanism in the middle before it acts.

@@ -78,30 +78,41 @@ for (const [label, size] of [['desktop', { width: 1366, height: 768 }], ['phone'
   });
 }
 
-test('vents: full-size outlined symbols, spouts hidden while a reel spins in and out once it lands', async () => {
+test('vents: full symbol lands, centred reverse flips for spray, skip restores the paying face', async () => {
   const { page, errors } = await open({ width: 390, height: 844 });
+  assert.equal(await page.locator('.tier-strip').count(), 0, 'no persistent bonus ladder');
+  const dial = await page.locator('.gauge').boundingBox();
+  const readout = await page.locator('.gauge-readout').boundingBox();
+  assert.ok(readout.y + readout.height < dial.y, 'pressure number sits above the dial');
   await control(page, 'buy').click();
   await page.locator('[data-pick=sprayjob]').click();
   await page.locator('#confirm-ok').click();
   await control(page, 'play').click();
   await page.waitForFunction(() => document.querySelector('#reels .reel.spinning'));
-  const spinning = await page.evaluate(() => [...document.querySelectorAll('#reels .reel.spinning .cell[data-i]')].map((el) => el.classList.contains('landed')));
-  assert.ok(spinning.length && spinning.every((l) => !l), 'cells still spinning in show no spout');
-  await finish(page);
-  await page.waitForTimeout(500);
-  const vents = await page.evaluate(() => ({
-    cells: document.querySelectorAll('#reels .cell').length,
-    landed: document.querySelectorAll('#reels .cell[data-i].landed').length,
-    spouts: [...document.querySelectorAll('#reels .cell .vent-art .spout')].map((el) => { const cs = getComputedStyle(el); return { opacity: cs.opacity, scale: cs.scale }; }),
-    outlines: [...document.querySelectorAll('#reels .cell:not(.win) .vent-art')].map((v) => getComputedStyle(v.parentElement.querySelector('.sym > *')).filter),
-    symbols: [...document.querySelectorAll('#reels .cell .vent-art')].map((v) => { const cs = getComputedStyle(v.parentElement.querySelector('.sym')); return `${cs.scale} ${cs.translate}`; }),
+  assert.equal(await page.locator('#reels .reel.spinning .reverse').count(), 0, 'spinning cards show their normal face');
+  await page.waitForSelector('#reels .vent-card.reverse');
+  const reverse = await page.locator('#reels .vent-card.reverse').evaluateAll((cards) => cards.map((card) => {
+    const front = card.querySelector('.card-front'), back = card.querySelector('.card-back');
+    const c = card.getBoundingClientRect(), v = back.querySelector('.vent-art').getBoundingClientRect();
+    const symbol = getComputedStyle(front.querySelector('.sym'));
+    return { separate: !!front.querySelector('.sym') && !front.querySelector('.vent-art'), hiddenBack: getComputedStyle(back).backfaceVisibility,
+      fullSize: symbol.scale === 'none' && symbol.translate === 'none',
+      contained: v.left >= c.left && v.right <= c.right && v.top >= c.top && v.bottom <= c.bottom };
   }));
-  assert.equal(vents.cells, 24, 'each strip is trimmed back to its 4 landed cells');
-  assert.equal(vents.landed, 24);
-  assert.ok(vents.spouts.length >= 3, 'Spray Job lands at least 3 vents');
-  for (const s of vents.spouts) assert.deepEqual(s, { opacity: '1', scale: 'none' });
-  for (const f of vents.outlines) assert.match(f, /rgb\(104, 200, 195\)/, 'a vent symbol has the cyan outline');
-  for (const t of vents.symbols) assert.equal(t, 'none none', 'a vent symbol keeps its full size and place');
+  assert.ok(reverse.length >= 3, 'Spray Job flips at least three vents');
+  for (const c of reverse) assert.deepEqual(c, { separate: true, hiddenBack: 'hidden', fullSize: true, contained: true });
+  await finish(page); // skip while reverse is visible, then check the settled result
+  assert.equal(await page.locator('#reels .cell').count(), 24);
+  assert.equal(await page.locator('#reels .cell[data-i].landed').count(), 24);
+  assert.equal(await page.locator('#reels .reverse').count(), 0, 'no card is stranded on its reverse');
+  assert.ok(await page.locator('#reels .wild .sym').count() > 0, 'sprayed cards expose their WILD face');
+  const rounds = await history(page), s = await state(page);
+  assert.equal(s.balance, START - rounds[0].cost + rounds[0].win, 'skip preserves accounting');
+  await control(page, 'settings').click();
+  await page.locator('#menu-rules').click();
+  const fs = page.locator('#rules .scatter-letters');
+  assert.equal(await fs.textContent(), 'FS');
+  assert.equal(await fs.evaluate((el) => el.parentElement.querySelectorAll('rect,path,image,img').length), 0, 'FS is only lettering, with no plate');
   assert.deepEqual(errors, []);
   await page.close();
 });

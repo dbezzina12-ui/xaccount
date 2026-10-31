@@ -76,3 +76,7 @@ Dylan cancelled API activation. Do not create or configure provider keys or back
 ## Presentation polish override — 2026-10-24
 
 Dylan directly authorized ChatGPT to polish Zombify's look, smoothness and tease animation, then prepare Claude's follow-up. This permits presentation, animation timing, runtime launch/layout fixes and associated tests on the Codex branch. Outcome selection, awards, odds and math files remain unchanged.
+
+## Cyber Skunk presentation override — 2026-10-31
+
+Dylan directly asked ChatGPT to implement the symbol-card flip and adjust FS, pressure-gauge art/readout, and the always-visible bonus ladder. This scoped exception permits the presentation runtime, associated packaging and regression tests in this batch. Math, outcome selection, payouts, rig coordinates and audio remain Claude's. Preserve the fitted v4.1 eyelids. Claude reviews the final browser suite and publishes the existing playable artifact.

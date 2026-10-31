@@ -92,7 +92,6 @@ function fit() {
   let [W, H] = layout === 'mobile' ? [1080, MOBILE_MIN_H] : [1920, 1080];
   const s = Math.min(w / W, (h - reserve) / H);
   if (layout === 'mobile') { H = Math.max(MOBILE_MIN_H, Math.round((h - reserve) / s)); stage.style.setProperty('--stage-h', `${H}px`); }
-  app.toggleAttribute('data-short', layout === 'mobile' && H < 1640); // no room for the bonus ladder in the console
   const x = (w - W * s) / 2, y = (h - reserve - H * s) / 2;
   stage.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
   state.scale = s;
@@ -114,8 +113,27 @@ let stripReady = false;
 const fillerHTML = (n) => (stripReady
   ? `<div class="filler" style="height:${n * 200}px;background-position:0 ${-200 * Math.floor(Math.random() * STRIP.length)}px"></div>`
   : Array.from({ length: n }, () => cellHTML(filler())).join(''));
-// A landed cell shows its vent's spout (styles.css); a cell still spinning in does not.
-const cellHTML = (c, i = -1, landed = true) => `<div class="cell${c.sticky ? ' sticky' : ''}${landed ? ' landed' : ''}"${i >= 0 ? ` data-i="${i}"` : ''}><span class="sym">${symbolHTML(c.s)}</span>${c.vent !== undefined ? ventHTML(c.vent) : ''}</div>`;
+// A feature card lands on its full symbol face; the mechanism has its own reverse.
+const cellHTML = (c, i = -1, landed = true) => {
+  const front = `<span class="sym">${symbolHTML(c.s)}</span>`;
+  const faces = c.vent === undefined ? front : `<span class="card-flipper"><span class="card-front">${front}</span><span class="card-back" aria-hidden="true">${ventHTML(c.vent)}</span></span>`;
+  return `<div class="cell${c.vent !== undefined ? ' vent-card' : ''}${c.sticky ? ' sticky' : ''}${landed ? ' landed' : ''}"${i >= 0 ? ` data-i="${i}"` : ''}>${faces}</div>`;
+};
+// WAAPI animations join the same skip set as the reels. The CSS class records
+// the settled face, so finishing/cancelling an animation cannot strand a card.
+async function flipCards(reverse, cells = [...$('reels').querySelectorAll('.vent-card[data-i]')]) {
+  const turns = cells.filter((el) => el.classList.contains('reverse') !== reverse).map(async (el) => {
+    el.classList.toggle('reverse', reverse);
+    const face = el.querySelector('.card-flipper');
+    const dur = state.skip || reduced.matches ? 0 : 300 * pace();
+    if (!face || !dur) return;
+    const anim = face.animate([{ transform: `rotateY(${reverse ? 0 : 180}deg)` }, { transform: `rotateY(${reverse ? 180 : 0}deg)` }], { duration: dur, easing: 'cubic-bezier(.4,0,.2,1)' });
+    running.add(anim);
+    try { await anim.finished; } catch { /* a new board may cancel the visual */ }
+    finally { running.delete(anim); }
+  });
+  await Promise.all(turns);
+}
 function buildReels() {
   for (let reel = 0; reel < REELS; reel++) {
     const el = document.createElement('div'), strip = document.createElement('div');
@@ -162,7 +180,7 @@ async function spinTo(cells, { canTrigger }) {
     if (tease && !teased) { teased = true; audio.play('tease'); skunk.play('anticipate'); status('ONE MORE…'); }
     await done;
     reels[reel].el.classList.remove('spinning', 'tease');
-    // The reel is down: its vents' spouts pop out.
+    // The reel is down: show the feature outline, keeping the symbol face intact.
     reels[reel].strip.querySelectorAll('.cell[data-i]').forEach((el) => el.classList.add('landed'));
     const sc = column(cells, reel).some((c) => c.s === 'S');
     audio.play(sc ? 'scatter' : 'stop', { index: sc ? scatters.indexOf(reel) : reel });
@@ -170,7 +188,7 @@ async function spinTo(cells, { canTrigger }) {
     if (column(cells, reel).some((c) => c.vent !== undefined && !c.sticky)) audio.play('vent-land');
   }
   if (teased) audio.play(scatters.length >= 3 ? 'tease-hit' : 'tease-miss');
-  // Keep the landed cells (so spouts finish popping) and drop the rest of each strip.
+  // Keep landed cards and trim away the temporary spinning strip.
   board = cells;
   for (const { strip } of reels) {
     strip.getAnimations().forEach((a) => a.cancel()); strip.style.transform = '';
@@ -269,6 +287,8 @@ async function sprayJet(i) {
 
 // ---- The spray: route cue, mascot spray, cell-by-cell trail ----
 async function showSpray(e) {
+  await wait(180);
+  await flipCards(true);
   const entry = e.path[0];
   status(e.startPressure > 1 ? `RESERVOIR PRESSURE ${e.startPressure}` : 'VENT ONLINE');
   cellEl(entry.i)?.classList.add('entry');
@@ -289,6 +309,7 @@ async function showSpray(e) {
   skunk.play('recoil');
   await wait(260);
   effects.trail = []; kick();
+  await flipCards(false); // reveal the real WILD / unchanged scatter faces before awards
 }
 // A touched cell turns wild; a vent shows its xN. Scatters stay scatters.
 function paintCell(i, multi, vent) {
@@ -370,6 +391,7 @@ async function blackout(e) {
   setBoard(cells, false);
   for (const v of e.vents) {
     const el = cellEl(v.i); el?.classList.add('online', 'landed');
+    if (el) await flipCards(true, [el]);
     audio.play('vent', { pressure: 2 + e.vents.indexOf(v) }); burst(...center(v.i), 14);
     await wait(420);
   }
@@ -484,6 +506,7 @@ async function play(mode = state.feature || 'base') {
     state.balance += won; state.win = won; state.busy = false; state.skip = false;
     delete app.dataset.busy; delete app.dataset.bonus; delete app.dataset.blackout;
     $('bonus-panel').hidden = true; $('bigwin').hidden = true; $('bonus-hud').hidden = true; state.tier = null; gauge(0); clearFx();
+    $('reels').querySelectorAll('.reverse').forEach((el) => el.classList.remove('reverse'));
     audio.duck(false); audio.music('base');
     state.history.unshift(state.pending); state.pending = null;
     state.history.length = Math.min(state.history.length, 30);
@@ -624,7 +647,7 @@ function renderRules() {
   <h3>PAYTABLE</h3><table><thead><tr><th>Symbol</th><th>3</th><th>4</th><th>5</th><th>6</th></tr></thead><tbody>${rows}</tbody></table>
   <p><span class="mini">${symbolHTML('W')}</span> <b>Wild</b> substitutes for every paying symbol. The first real symbol on a line decides the pay; six wilds pay as the Battery. <span class="mini">${symbolHTML('S')}</span> <b>FS scatters</b> pay nothing on lines; they start the bonuses.</p>
   <h3>BACKPRESSURE</h3>
-  <p><span class="mini">${symbolHTML('A')}${ventHTML(0)}</span> A <b>vent</b> is a symbol with a cyan outline; when its reel lands, a spout shows its outlet. When at least one lands, Cyber Skunk sprays the <b>left-most vent</b> (the top one on a tie). The spray follows each vent's outlet, whichever way it came in, and every vent adds <b>+1 pressure</b>, so the first vent shows ×2.</p>
+  <p><span class="mini">${symbolHTML('A')}${ventHTML(0)}</span> A <b>vent</b> is a symbol with a cyan outline; after it lands, the card flips to show a centred vent on its reverse. When at least one lands, Cyber Skunk sprays the <b>left-most vent</b> (the top one on a tie). The spray follows each vent's outlet, whichever way it came in, and every vent adds <b>+1 pressure</b>, so the first vent shows ×2.</p>
   <p>Every cell the spray touches becomes <b>wild</b> for that spin; each vent becomes a <b>×N wild</b>, N being the pressure there. Scatters are never painted. The route ends at the edge of the reels, at a cell it has already touched, or after 24 steps. A winning line multiplies by the sum of its ×N vents (×2 and ×3 make ×5).</p>
   <h3>BONUSES</h3>
   <p><b>3 FS scatters: VENT BREAK.</b> ${BONUSES.regular.spins} free spins. Vents that land stay until the bonus ends, up to ${MAX_STICKY}, and the <b>Reservoir</b> gauge banks each spray's pressure gain up to ${BONUSES.regular.reservoirMax}: every later spray starts at 1 + the Reservoir.</p>
@@ -662,7 +685,7 @@ const EXTRA = {
 };
 async function loadUI() {
   const ui = {
-    cabinet: 'assets/ui/cabinet.webp', 'gauge-face': 'assets/ui/gauge-face.webp', 'gauge-needle': 'assets/ui/gauge-needle.webp', 'pipes-top': 'assets/ui/pipes-top.webp', logo: 'assets/ui/logo.webp',
+    cabinet: 'assets/ui/cabinet.webp', 'gauge-face': 'assets/ui/gauge-face-inset.svg', 'gauge-needle': 'assets/ui/gauge-needle.webp', 'pipes-top': 'assets/ui/pipes-top.webp', logo: 'assets/ui/logo.webp',
     'bg-desktop': 'assets/bg/bg-desktop.webp', 'bg-mobile': 'assets/bg/bg-mobile.webp', 'bg-bonus-desktop': 'assets/bg/bg-bonus-desktop.webp', 'bg-bonus-mobile': 'assets/bg/bg-bonus-mobile.webp',
   };
   const found = Object.fromEntries(await Promise.all(Object.entries(ui).map(async ([k, url]) => [k, (await exists(url)) ? url : null])));
