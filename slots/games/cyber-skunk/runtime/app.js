@@ -8,7 +8,7 @@ import { loadArt, symbolHTML, ventHTML, fillerStrip } from './symbols.js?v=7';
 import { mountController } from './controller/controller.js';
 import { GameAudio } from './audio.js';
 import { mountDemos } from './guide-demo.js?v=4';
-import { Skunk } from './rig.js';
+import { Skunk } from './rig.js?v=nozzle-ray-1';
 
 const $ = (id) => document.getElementById(id);
 const app = $('app'), stage = $('stage');
@@ -286,33 +286,80 @@ async function wait(ms, { always = false } = {}) {
 
 // ---- The jet: from the skunk's nozzle, over the cabinet, onto the first vent ----
 const jet = $('jet'), jg = jet.getContext('2d');
-// A point on screen to stage design pixels.
-function toStage(cx, cy) { const r = stage.getBoundingClientRect(); return [(cx - r.left) / state.scale, (cy - r.top) / state.scale]; }
 async function sprayJet(i) {
-  const tip = skunk.nozzle(), box = $('mascot').getBoundingClientRect(), cell = cellEl(i)?.getBoundingClientRect();
-  if (!tip || !cell || pace() === 0) return;
-  const [x0, y0] = toStage(box.right - tip[0] * box.width, box.top + tip[1] * box.height), [x1, y1] = toStage(cell.left + cell.width / 2, cell.top + cell.height / 2);
-  const cx = (x0 + x1) / 2, cy = Math.min(y0, y1) - 220; // an arc over the cabinet's top
-  const point = (t) => [(1 - t) ** 2 * x0 + 2 * (1 - t) * t * cx + t * t * x1, (1 - t) ** 2 * y0 + 2 * (1 - t) * t * cy + t * t * y1];
-  const grow = 260 * pace(), hold = 420 * pace(), t0 = performance.now(), drops = [];
-  await new Promise((resolve) => {
-    const frame = () => {
-      const t = performance.now() - t0, head = Math.min(1, t / grow), fade = t > grow ? Math.max(0, 1 - (t - grow) / hold) : 1, tail = t > grow ? Math.min(head, (t - grow) / hold) : 0;
+  const target = cellEl(i), speed = pace();
+  if (!target || !skunk.nozzle() || !speed) return;
+
+  const start = performance.now();
+  const flight = 220, emission = 290, splashLife = 150;
+  const segments = 28;
+  await new Promise(resolve => {
+    const frame = now => {
       jg.clearRect(0, 0, jet.width, jet.height);
-      jg.lineCap = 'round';
-      for (const [width, color, blur] of [[34, '#68c8c333', 0], [14, '#9ff0ea', 26], [4, '#ffffffdd', 0]]) {
-        jg.beginPath(); for (let k = 0; k <= 32; k++) { const u = tail + (head - tail) * (k / 32), [px, py] = point(u); k ? jg.lineTo(px, py) : jg.moveTo(px, py); }
-        jg.strokeStyle = color; jg.lineWidth = width * (0.6 + 0.4 * fade); jg.shadowColor = '#68c8c3'; jg.shadowBlur = blur; jg.stroke();
+      const time = (now - start) / speed;
+      if (state.skip || time >= emission + flight + splashLife) { resolve(); return; }
+
+      const box = $('mascot').getBoundingClientRect(), cell = target.getBoundingClientRect();
+      const stageBox = stage.getBoundingClientRect();
+      const local = ([x, y]) => [(box.right - x * box.width - stageBox.left) / state.scale,
+                                 (box.top + y * box.height - stageBox.top) / state.scale];
+      const mouth = local(skunk.nozzle()), collar = local(skunk.nozzle(0));
+      const end = [(cell.left + cell.width / 2 - stageBox.left) / state.scale,
+                   (cell.top + cell.height / 2 - stageBox.top) / state.scale];
+      const dx = end[0] - mouth[0], dy = end[1] - mouth[1];
+      const barrel = Math.hypot(mouth[0] - collar[0], mouth[1] - collar[1]) || 1;
+      const reach = Math.min(200, Math.hypot(dx, dy) * 0.34);
+      const lead = [mouth[0] + reach * (mouth[0] - collar[0]) / barrel,
+                    mouth[1] + reach * (mouth[1] - collar[1]) / barrel];
+      const bend = [end[0] - dx * 0.26, end[1] - Math.min(170, Math.abs(dx) * 0.14 + Math.max(0, dy) * 0.35)];
+      const head = Math.min(1, time / flight), tail = Math.max(0, (time - emission) / flight);
+      const phase = time * 0.019;
+
+      if (tail < head) {
+        const upper = [], lower = [], glints = [];
+        for (let n = 0; n <= segments; n++) {
+          const u = tail + (head - tail) * n / segments, v = 1 - u;
+          const x = v*v*v*mouth[0] + 3*v*v*u*lead[0] + 3*v*u*u*bend[0] + u*u*u*end[0];
+          const y = v*v*v*mouth[1] + 3*v*v*u*lead[1] + 3*v*u*u*bend[1] + u*u*u*end[1];
+          const tx = v*v*(lead[0]-mouth[0]) + 2*v*u*(bend[0]-lead[0]) + u*u*(end[0]-bend[0]);
+          const ty = v*v*(lead[1]-mouth[1]) + 2*v*u*(bend[1]-lead[1]) + u*u*(end[1]-bend[1]);
+          const len = Math.hypot(tx, ty) || 1, nx = -ty/len, ny = tx/len;
+          const width = 2.5 + u * (2.8 + 1.4 * Math.sin(u*33 - phase));
+          const ripple = u*u * 1.6 * Math.sin(u*43 - phase);
+          upper.push([x + nx*(ripple+width), y + ny*(ripple+width)]);
+          lower.push([x + nx*(ripple-width), y + ny*(ripple-width)]);
+          glints.push([x + nx*(ripple+width*0.56), y + ny*(ripple+width*0.56)]);
+        }
+        jg.beginPath();
+        jg.moveTo(...upper[0]);
+        for (const p of upper.slice(1)) jg.lineTo(...p);
+        for (let n = segments; n >= 0; n--) jg.lineTo(...lower[n]);
+        jg.closePath(); jg.fillStyle = 'rgba(155,165,153,0.38)'; jg.fill();
+        jg.lineCap = 'round';
+        for (let n = 1; n <= segments; n++) {
+          const u = tail + (head - tail) * n / segments;
+          const light = 0.14 + 0.59 * (0.5 + 0.5 * Math.sin(u*32 - phase)) ** 2;
+          jg.strokeStyle = 'rgba(255,246,221,' + light + ')';
+          jg.lineWidth = 1.5 + u;
+          jg.beginPath(); jg.moveTo(...glints[n-1]); jg.lineTo(...glints[n]); jg.stroke();
+        }
       }
-      jg.shadowBlur = 0;
-      if (!reduced.matches && head < 1) for (let k = 0; k < 3; k++) { const [px, py] = point(head * Math.random()); drops.push({ x: px, y: py, vx: (Math.random() - 0.5) * 3, vy: Math.random() * 2, life: 30 }); }
-      for (const d of drops) {
-        d.x += d.vx; d.y += d.vy; d.vy += 0.12; d.life--; jg.globalAlpha = Math.max(0, d.life / 30) * 0.8;
-        if (fxSprites.droplet?.complete) jg.drawImage(fxSprites.droplet, d.x - 9, d.y - 9, 18, 18); else { jg.fillStyle = '#bff7f2'; jg.beginPath(); jg.arc(d.x, d.y, 3, 0, Math.PI * 2); jg.fill(); }
+
+      // Each bead is born at impact, travels out, then falls with gravity.
+      if (time >= flight && !reduced.matches) {
+        for (let n = 0; n < 30; n++) {
+          const age = (time - flight - n * emission / 30) / splashLife;
+          if (age < 0 || age >= 1) continue;
+          const angle = Math.PI * (1.05 + 0.9 * ((n * 0.618034) % 1));
+          const length = (14 + (n * 13 % 29)) * age;
+          const x = end[0] + length * Math.cos(angle), y = end[1] + length * Math.sin(angle) + 19*age*age;
+          jg.beginPath(); jg.moveTo(x, y);
+          jg.lineTo(x + 3*Math.cos(angle), y + 3*Math.sin(angle) + 3*age);
+          jg.lineWidth = 1.5 + (n % 3) * 0.55;
+          jg.strokeStyle = 'rgba(245,241,226,' + (0.7 * (1-age)) + ')'; jg.stroke();
+        }
       }
-      jg.globalAlpha = 1;
-      if (t < grow + hold && !state.skip) requestAnimationFrame(frame); else { jg.clearRect(0, 0, jet.width, jet.height); resolve(); }
-      if (head >= 1 && !frame.hit) { frame.hit = true; const [ex, ey] = center(i); burst(ex, ey, 30); effects.flash = 0.18; kick(); }
+      requestAnimationFrame(frame);
     };
     requestAnimationFrame(frame);
   });
