@@ -162,11 +162,13 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 
 /* The desk instrument and lower phone rail share one live reservoir meter. */
 .gauge{position:absolute;z-index:7;width:160px;height:160px;left:50%;transform:translateX(-50%)}
-/* The dial centre and brass nameplate are painted into the desk's front apron. */
-.app[data-layout=desktop] .gauge{left:23.2%;top:34.65%;width:8.6%;height:auto;aspect-ratio:1;transform:translate(-50%,-50%)}
-.app[data-layout=desktop] .gauge-readout{position:absolute;left:126%;top:45%;width:555%;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;gap:8px;color:#f3e5c1;text-shadow:0 1px 2px #151714}
-.app[data-layout=desktop] .gauge-label{font:800 17px/1 var(--font);letter-spacing:.075em;color:#dbc7a6}
-.app[data-layout=desktop] .gauge-value{font:400 22px/1 var(--title);font-variant-numeric:tabular-nums}
+/* The mounting flange overlaps the side casting. The pivot is registered to the painted scale. */
+.app[data-layout=desktop] .gauge{left:calc(100% - 38px);top:35%;width:435px;height:auto;aspect-ratio:1402/1122;transform:none;background:url(assets/ui/cabinet-manometer.webp) center/contain no-repeat;pointer-events:none;filter:drop-shadow(3px 6px 4px #10101099)}
+.app[data-layout=desktop] .gauge-needle{inset:auto;left:60.2%;top:47.3%;width:74%;aspect-ratio:1;translate:-50% -50%;transform:rotate(calc(-115deg + var(--p,0) * 23deg))}
+.app[data-layout=desktop] .gauge-readout{left:60.2%;top:62.5%;transform:translate(-50%,-18%);display:flex;flex-direction:column-reverse;align-items:center;gap:2px;color:#24201b;text-shadow:0 1px #fff6}
+.app[data-layout=desktop] .gauge-label{font:800 27px/1 var(--font);letter-spacing:.06em}
+.app[data-layout=desktop] .gauge-value{font:400 64px/.9 var(--title);font-variant-numeric:tabular-nums}
+.desk-pointer{position:absolute;z-index:5;left:23.2%;top:34.65%;width:8.6%;aspect-ratio:1;translate:-50% -50%;background:url(assets/ui/gauge-needle.webp) center/contain no-repeat;transform:rotate(calc(-123deg + var(--p,0) * 24.6deg))}
 .gauge-readout{position:absolute}
 /* The reservoir sits in the lower cabinet lip. The same face appears in the phone guide. */
 .rail-demo,.meter-bands{display:none}

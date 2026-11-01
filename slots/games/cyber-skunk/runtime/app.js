@@ -89,8 +89,6 @@ const MOBILE_MIN_H = 1590; // header 480 + cabinet 892 + room for the pressure c
 function fit() {
   const w = innerWidth, h = innerHeight, layout = h > w * 1.05 ? 'mobile' : 'desktop';
   app.dataset.layout = layout;
-  const meter = $('pressure-meter'), mount = layout === 'mobile' ? $('cabinet') : $('pressure-bench');
-  if (meter.parentElement !== mount) mount.appendChild(meter);
   const host = $('controller'), reserve = host.parentElement === app ? host.getBoundingClientRect().height : 0;
   // A phone's stage is 1080 wide and as tall as the room above the controller
   // (at least MOBILE_MIN_H), so the machine reaches down to the controller.
@@ -439,7 +437,7 @@ async function bonusStart(e, result, mode) {
 const hud = (spin, of) => { $('hud-spins').textContent = `${spin} / ${of}`; $('hud-win').textContent = money(state.win); };
 function gauge(value) {
   const meter = $('pressure-meter');
-  meter.style.setProperty('--p', value);
+  stage.style.setProperty('--p', value);
   meter.setAttribute('aria-valuenow', value);
   $('gauge-value').textContent = value;
 }
