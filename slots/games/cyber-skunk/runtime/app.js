@@ -4,10 +4,10 @@
 import { playRound, drawBoard, lineWins, seeded, at } from './engine.js';
 import { drawRound, CATALOG_VERSION } from './catalog.js?v=7';
 import { REELS, ROWS, CELLS, LINES, PAYTABLE, NAMES, PLAY_OPTIONS, BONUSES, MYSTERY_TIERS, MYSTERY, mysteryShare, CAP, RETRIGGER, MAX_SPINS, MAX_STICKY, MAX_RESERVOIR, triggerRates } from './rules.js?v=7';
-import { loadArt, symbolHTML, ventHTML, fillerStrip } from './symbols.js?v=5';
+import { loadArt, symbolHTML, ventHTML, fillerStrip } from './symbols.js?v=6';
 import { mountController } from './controller/controller.js';
 import { GameAudio } from './audio.js';
-import { mountDemos } from './guide-demo.js?v=2';
+import { mountDemos } from './guide-demo.js?v=3';
 import { Skunk } from './rig.js';
 
 const $ = (id) => document.getElementById(id);
@@ -839,7 +839,7 @@ const EXTRA = {
 };
 async function loadUI() {
   const ui = {
-    cabinet: 'assets/ui/cabinet.webp?v=2', logo: 'assets/ui/logo-stacked.webp',
+    cabinet: 'assets/ui/cabinet.webp?v=2', logo: 'assets/ui/logo-badge.webp',
     'bg-desktop': 'assets/bg/bg-desktop.webp', 'bg-mobile': 'assets/bg/bg-mobile.webp', 'bg-bonus-desktop': 'assets/bg/bg-bonus-desktop.webp', 'bg-bonus-mobile': 'assets/bg/bg-bonus-mobile.webp',
   };
   const found = Object.fromEntries(await Promise.all(Object.entries(ui).map(async ([k, url]) => [k, (await exists(url)) ? url : null])));

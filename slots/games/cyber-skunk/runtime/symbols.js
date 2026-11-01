@@ -2,7 +2,7 @@
 // ART_SPEC §2) when it is present, and these vector placeholders until then,
 // drawn in the style frame's palette.
 export const PALETTE = Object.freeze({ midnight: '#101820', graphite: '#252d31', ivory: '#efe5cf', brass: '#ad7840', amber: '#eda83c', cyan: '#68c8c3' });
-export const ART = Object.freeze({ H1: 'h1-battery', H2: 'h2-rotor', H3: 'h3-canister', H4: 'h4-key', A: 'a', K: 'k', Q: 'q', J: 'j', T: 'ten', W: 'wild', S: 'fs-violet' });
+export const ART = Object.freeze({ H1: 'h1-battery', H2: 'h2-rotor', H3: 'h3-canister', H4: 'h4-key', A: 'a', K: 'k', Q: 'q', J: 'j', T: 'ten', W: 'wild-w', S: 'fs-violet' });
 
 const svg = (body) => `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${body}</svg>`;
 const letter = (t, size = 56) => svg(`<text x="50" y="${50 + size * 0.35}" font-family="Anton, Impact, 'Arial Black', sans-serif" font-size="${size}" text-anchor="middle" fill="#efe5cf" stroke="#0b1014" stroke-width="3" paint-order="stroke">${t}</text>`);
@@ -12,7 +12,7 @@ const PLACEHOLDER = {
   H3: svg(`<rect x="28" y="10" width="44" height="10" rx="3" fill="#8b8f8f"/><rect x="24" y="18" width="52" height="66" rx="9" fill="#1d2b2c" stroke="#a9b0ae" stroke-width="5"/><rect x="32" y="26" width="36" height="50" rx="6" fill="#68c8c3"/><path d="M52 30 40 52h9l-6 20 15-26h-9z" fill="#e6fffd" opacity=".9"/><rect x="28" y="84" width="44" height="8" rx="3" fill="#8b8f8f"/>`),
   H4: svg(`<circle cx="34" cy="38" r="20" fill="#ad7840" stroke="#5a3a17" stroke-width="4"/><circle cx="34" cy="38" r="9" fill="#68c8c3" stroke="#0b1014" stroke-width="2"/><rect x="48" y="34" width="40" height="9" rx="3" fill="#ad7840" stroke="#5a3a17" stroke-width="3"/><rect x="70" y="42" width="6" height="14" fill="#ad7840" stroke="#5a3a17" stroke-width="2"/><rect x="80" y="42" width="6" height="10" fill="#ad7840" stroke="#5a3a17" stroke-width="2"/>`),
   A: letter('A'), K: letter('K'), Q: letter('Q'), J: letter('J'), T: letter('10', 46),
-  W: svg(`<text x="50" y="61" font-family="Anton, Impact, 'Arial Black', sans-serif" font-size="30" text-anchor="middle" fill="#efe5cf" stroke="#0b1014" stroke-width="2" paint-order="stroke">WILD</text>`),
+  W: letter('W', 70),
   S: svg(`<text class="scatter-letters" x="50" y="71" font-family="Anton, Impact, 'Arial Black', sans-serif" font-size="66" text-anchor="middle" fill="#efe5cf" stroke="#101820" stroke-width="2" paint-order="stroke">FS</text>`),
 };
 const available = new Map();
