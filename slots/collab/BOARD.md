@@ -6,6 +6,7 @@ Status: `todo` · `doing` · `review` (waiting on Dylan) · `done` · `blocked` 
 
 | ID | Task | Owner | Status | Notes |
 |---|---|---|---|---|
+| RB-02 | Simplify the reel scenery | ChatGPT | done | Responsive apiary silhouette with dusk lighting in bonuses, verified on desktop and phone. |
 | RB-01 | Persistent multiplier cell colours | ChatGPT | done | Seven shades from 2× to 128×, anchored to the grid during reel travel. Verified on a phone layout. |
 
 ## Cyber Skunk (authorized 2026-10-30; 24-hour target)

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+  <title>Apiary yard at dusk</title>
+  <view id="portrait" viewBox="1600 0 450 900" preserveAspectRatio="xMidYMid slice"/>
+  <defs>
+    <!-- One old pressure hive, drawn in broad plates like the foreground hive symbol. -->
+    <g id="vat">
+      <path fill="#202528" d="M23 324v-44l-10-21 4-33 9-13-4-12 11-46 18-18 5-42 15-11 7-33 24-7 6-13h16V19h-7v-6h25v6h-7v12h13l6 13 23 7 8 33 16 11 4 42 19 18 11 46-4 12 9 13 4 33-11 22v43z"/>
+      <path fill="#343738" d="m71 84 7-33 25-7h50l24 7 6 31-16-13H87z"/>
+      <path fill="#2e3334" d="m55 134 3-38 18-12h108l15 11 4 38-13-10H67z"/>
+      <path fill="#383b3a" d="m36 157 16-16h153l18 16-17-7H55z"/>
+      <path fill="#2b2f31" d="m32 169 26-9h142l22 9 8 31-25-10H58l-33 11z"/>
+      <path fill="#373a38" d="m22 225 14-12h183l12 11-27-4H49z"/>
+      <path fill="#181e20" d="m52 274 13-34 17-10h61l19 11 13 33v50H52z"/>
+      <path fill="#2b3030" d="m66 271 10-25 9-5h53l12 7 9 23-16-17H82z"/>
+      <path fill="#8d6e48" d="M83 246h22v3H83z"/>
+      <path fill="#292d2d" d="M176 242h35l8 8h-43z"/>
+    </g>
+    <g id="shed">
+      <path fill="#252a2c" d="M0 132v-31L71 66l14 4 35-16h10V38h10v13l40-22 80 26V11h13v49l45 14v58z"/>
+      <path d="m119 59 60-27 88 29" fill="none" stroke="#454744" stroke-width="2"/>
+      <path fill="#424541" d="M175 72h36v4h-36z"/>
+    </g>
+    <clipPath id="wide"><path d="M0 0h1600v900H0z"/></clipPath>
+    <clipPath id="narrow"><path d="M0 0h450v900H0z"/></clipPath>
+  </defs>
+  <g clip-path="url(#wide)">
+    <!-- Partial sun and long ridges leave the cabinet's middle register quiet. -->
+    <circle cx="274" cy="460" r="73" fill="#bc9671" opacity=".15"/>
+    <path fill="#424848" d="m0 497 77-11 65-9 50 8 72-17 57 5 65-20 80 9 67-13 73 5 139-24 74 11 74-9 90 5 87-25 55 9 80-26 54 14 110-14 89 13 102-6v498H0z"/>
+    <path fill="#363c3d" d="m0 525 112-17 114 11 102-16 112 7 133-12 88 12 157-21 108 6 146-8 86 11 115-35 79 10 147-30 101 9v450H0z"/>
+    <g transform="translate(1267 434) scale(1.07)"><use href="#shed"/></g>
+    <path fill="#2c3233" d="m0 566 226-3 79 8 129-5 208 6 154-7 195 7 160-13 206 1 243-21v365H0z"/>
+    <g transform="translate(90 347) scale(.93)"><use href="#vat"/></g>
+    <path fill="#202627" d="m0 639 170-6 86 5 26 8 240-5 216 8 174-5 194 7 224-14 130 3 140-10v270H0z"/>
+    <path fill="#1c2123" d="m0 757 339-37 177 3 176-15 258 2 262-19 388-9v219H0z"/>
+    <path d="m0 757 339-37 177 3" fill="none" stroke="#353937" stroke-width="2"/>
+  </g>
+  <g transform="translate(1600)" clip-path="url(#narrow)">
+    <circle cx="383" cy="210" r="52" fill="#bc9671" opacity=".13"/>
+    <path fill="#424848" d="m0 240 50-11 48 5 71-18 25 3 48-13 62 7 37-12 37 5 72-18v716H0z"/>
+    <path fill="#363c3d" d="m0 258 82-13 79 9 93-16 73 3 123-21v684H0z"/>
+    <g transform="translate(360 126) scale(.49)"><use href="#vat"/></g>
+    <path fill="#2c3233" d="m0 296 86-5 91 7 105-13 99 5 69-9v619H0z"/>
+    <path fill="#202627" d="m0 462 139-5 81 5 230-17v455H0z"/>
+    <path fill="#1c2123" d="m0 730 166-22 106 4 178-18v206H0z"/>
+  </g>
+</svg>

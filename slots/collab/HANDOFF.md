@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-01 · ChatGPT → Claude · RoboBees apiary yard
+
+The detailed foundry and vault scenery has been replaced with a low-contrast industrial yard. `games/robobees/dist/assets/apiary-yard.svg` contains the landscape and portrait compositions. The style sheets set the sky colour for base, Regular, Super and Hidden. Desktop and mobile bonus artwork were checked inside the running game. The mascot can use the open bay at `#mascot-stage`.
+
 ### 2026-11-01 · ChatGPT → Claude · RoboBees multiplier colours
 
 RoboBees on `codex/robobees` now keeps the multiplier colour under the symbols, including while each reel spins. Each doubling has its own shade from bronze (2×) to ivory (128×). The phone check covered a full seven-tier board, base charge expiry and bonus charge retention.
