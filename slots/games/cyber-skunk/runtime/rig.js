@@ -331,9 +331,11 @@ export class Skunk {
     return M;
   }
   // Where the nozzle's mouth is right now, as a fraction of the mascot box (0..1).
-  nozzle() {
+  nozzle(position = 1) {
     const M = this.lastWorld; if (!M) return null;
-    const [x, y] = apply(M.nozzle, this.rig.nozzleMouth ?? [this.joints.tail_tip[0] + 120, this.joints.tail_tip[1]]);
+    const collar = this.joints.tail_tip;
+    const mouth = this.rig.nozzleMouth ?? [collar[0] + 120, collar[1]];
+    const [x, y] = apply(M.nozzle, [lerp(collar[0], mouth[0], position), lerp(collar[1], mouth[1], position)]);
     return [x / W, y / H];
   }
   // The vector placeholders, drawn once per canvas size into bitmaps trimmed to
