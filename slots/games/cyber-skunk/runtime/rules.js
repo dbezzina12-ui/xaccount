@@ -50,7 +50,12 @@ export const MODES = Object.freeze({
   overpressure: { title: 'Overpressure', cost: 250, buy: 'super' },
 });
 
-// The bonuses. Only 5 scatters start Blackout Protocol; it is never sold.
+export const PLAY_OPTIONS = Object.freeze({ ...MODES, mystery: { title: 'Mystery Buy', cost: 400 } });
+// Weights are per 10,000 Mystery tickets. Each outcome reuses its verified bonus pool.
+export const MYSTERY_TIERS = Object.freeze([
+  { tier: 'regular', weight: 4575 }, { tier: 'super', weight: 4525 }, { tier: 'hidden', weight: 900 },
+]);
+// Blackout can be triggered naturally or selected by Mystery Buy.
 export const BONUSES = Object.freeze({
   regular: { title: 'VENT BREAK', scatters: 3, spins: 12, sticky: true, reservoir: true, reservoirStart: 0, reservoirMax: 5, opening: false }, // a smaller Reservoir (Dylan, 2026-10-30: reach the 25,000x cap)
   super: { title: 'OVERPRESSURE', scatters: 4, spins: 10, sticky: true, reservoir: true, reservoirStart: 0, opening: false },

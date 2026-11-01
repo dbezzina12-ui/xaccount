@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="264" height="226" viewBox="0 0 264 226">
+  <defs>
+    <linearGradient id="case" x2=".18" y2="1">
+      <stop stop-color="#526067"/><stop offset=".28" stop-color="#303b40"/><stop offset=".8" stop-color="#182127"/><stop offset="1" stop-color="#10181c"/>
+    </linearGradient>
+    <linearGradient id="lip" x2="0" y2="1">
+      <stop stop-color="#929c96"/><stop offset=".16" stop-color="#525f63"/><stop offset=".72" stop-color="#344147"/><stop offset="1" stop-color="#202b30"/>
+    </linearGradient>
+  </defs>
+  <!-- Flush flange, recessed shoulders and a single enamel window below the dial. -->
+  <path d="M5 2H259V26L235 49L221 140L242 161V201L216 224H48L22 201V161L43 140L29 49L5 26Z" fill="url(#case)" stroke="#0c1215" stroke-width="5"/>
+  <path d="M7 1H257V20L247 31H17L7 20Z" fill="url(#lip)" stroke="#1a252a" stroke-width="3"/>
+  <path d="M14 5H250" stroke="#a4ada1" stroke-width="3"/>
+  <path d="M22 31H57L70 44M242 31H207L194 44" fill="none" stroke="#b19059" stroke-width="4"/>
+  <path d="M26 197L50 217H214L238 197" fill="none" stroke="#58676a" stroke-width="3"/>
+  <g fill="#202a2e" stroke="#778380" stroke-width="2">
+    <circle cx="28" cy="16" r="6"/><circle cx="236" cy="16" r="6"/>
+  </g>
+  <path d="m24 18 8-4m200 4 8-4" stroke="#0c1318" stroke-width="2"/>
+</svg>

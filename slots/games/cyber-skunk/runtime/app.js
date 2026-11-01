@@ -1,12 +1,13 @@
 // Cyber Skunk: the playable game. The engine settles each round before
 // anything moves (playRound returns its total and every event); this file only
 // presents those events, so skip, turbo and frame timing never change a result.
-import { playRound, seeded, at } from './engine.js';
-import { drawRound, CATALOG_VERSION } from './catalog.js';
-import { REELS, ROWS, CELLS, LINES, PAYTABLE, NAMES, MODES, BONUSES, CAP, RETRIGGER, MAX_SPINS, MAX_STICKY, MAX_RESERVOIR, triggerRates } from './rules.js';
-import { loadArt, symbolHTML, ventHTML, fillerStrip } from './symbols.js';
+import { playRound, drawBoard, lineWins, seeded, at } from './engine.js';
+import { drawRound, CATALOG_VERSION } from './catalog.js?v=6';
+import { REELS, ROWS, CELLS, LINES, PAYTABLE, NAMES, PLAY_OPTIONS, BONUSES, MYSTERY_TIERS, CAP, RETRIGGER, MAX_SPINS, MAX_STICKY, MAX_RESERVOIR, triggerRates } from './rules.js?v=6';
+import { loadArt, symbolHTML, ventHTML, fillerStrip } from './symbols.js?v=4';
 import { mountController } from './controller/controller.js';
 import { GameAudio } from './audio.js';
+import { mountDemos } from './guide-demo.js';
 import { Skunk } from './rig.js';
 
 const $ = (id) => document.getElementById(id);
@@ -21,20 +22,22 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 
 // What each paid mode is, in the buy menu's words. Prices and rates come from rules.js.
 const oneIn = (p) => `1 in ${Math.round(1 / p).toLocaleString('en-US')}`;
-const BASE_RATES = triggerRates('base'), BOOST_RATES = triggerRates(MODES.enhanced.land);
+const BASE_RATES = triggerRates('base'), BOOST_RATES = triggerRates(PLAY_OPTIONS.enhanced.land);
 const COPY = {
-  enhanced: { name: 'SIGNAL BOOST', card: 'card-signal-boost', kind: 'feature', text: `FS scatters land more often: Vent Break about ${oneIn(BOOST_RATES.regular)} spins (${oneIn(BASE_RATES.regular)} in base), Overpressure ${oneIn(BOOST_RATES.super)} (${oneIn(BASE_RATES.super)}). Same pays and rules. Stays on until you switch it off.` },
-  sprayjob: { name: 'SPRAY JOB', card: 'card-spray-job', kind: 'feature', text: 'Every spin lands a vent on reel 1 and at least 3 vents in all, so Cyber Skunk sprays on every spin. Stays on until you switch it off.' },
-  ventbreak: { name: 'VENT BREAK', card: 'card-vent-break', kind: 'buy', text: `${BONUSES.regular.spins} free spins. Every vent that lands stays (up to ${MAX_STICKY}), so the route grows into a maze, and a small Reservoir banks pressure up to ${BONUSES.regular.reservoirMax}.` },
-  overpressure: { name: 'OVERPRESSURE', card: 'card-overpressure', kind: 'buy', text: `${BONUSES.super.spins} free spins with sticky vents and the Reservoir: each route banks its pressure gain, and every later route starts higher.` },
+  enhanced: { name: 'SIGNAL BOOST', kind: 'feature', text: `FS scatters land more often: Vent Break about ${oneIn(BOOST_RATES.regular)} spins (${oneIn(BASE_RATES.regular)} in base), Overpressure ${oneIn(BOOST_RATES.super)} (${oneIn(BASE_RATES.super)}). Same pays and rules. Stays on until you switch it off.` },
+  sprayjob: { name: 'SPRAY JOB', kind: 'feature', text: 'Every spin lands a vent on reel 1 and at least 3 vents in all, so Cyber Skunk sprays on every spin. Stays on until you switch it off.' },
+  ventbreak: { name: 'VENT BREAK', kind: 'buy', text: `${BONUSES.regular.spins} free spins. Every vent that lands stays (up to ${MAX_STICKY}), so the route grows into a maze, and a small Reservoir banks pressure up to ${BONUSES.regular.reservoirMax}.` },
+  overpressure: { name: 'OVERPRESSURE', kind: 'buy', text: `${BONUSES.super.spins} free spins with sticky vents and the Reservoir: each route banks its pressure gain, and every later route starts higher.` },
+  mystery: { name: 'MYSTERY BUY', kind: 'buy', text: 'One purchase reveals one bonus: ' + MYSTERY_TIERS.map(({tier, weight}) => BONUSES[tier].title + ' ' + weight / 100 + '%').join(', ') + '.' },
 };
 const TIER = {
-  regular: { panel: 'panel-vent-break', text: `${BONUSES.regular.spins} FREE SPINS · STICKY VENTS` },
-  super: { panel: 'panel-overpressure', text: `${BONUSES.super.spins} FREE SPINS · STICKY VENTS · RESERVOIR` },
-  hidden: { panel: 'panel-blackout', text: `${BONUSES.hidden.spins} FREE SPINS · 4-VENT OPENING · RESERVOIR STARTS AT ${BONUSES.hidden.reservoirStart}` },
+  regular: { panel: 'panel-vent-break', text: 'Vents stay on the reels. Each spray banks pressure for the next one, up to 5.' },
+  super: { panel: 'panel-overpressure', text: 'Vents stay on the reels. Each spray banks pressure for the next one, up to 10.' },
+  hidden: { panel: 'panel-blackout', text: 'Start with four locked vents and 3 pressure already banked. Each new vent stays on the reels.' },
 };
 // Win tiers from the round's actual award, in base bets (STYLE.md).
 const WIN_TIERS = [[500, 'MYTHIC WIN'], [100, 'EPIC WIN'], [25, 'BIG WIN'], [10, 'NICE WIN']];
+const winTitle = paid => paid >= CAP ? 'MAX WIN' : WIN_TIERS.find(([min]) => paid >= min * 100)?.[1];
 
 let saved = null;
 try { saved = JSON.parse(localStorage.getItem(KEY)); } catch { /* a private window starts fresh */ }
@@ -44,13 +47,13 @@ const state = {
   bet: STAKES.includes(saved?.bet) ? saved.bet : 100,
   feature: null, // 'enhanced' | 'sprayjob' while a persistent mode is on
   speed: ['normal', 'quick', 'turbo'].includes(saved?.speed) ? saved.speed : 'normal',
-  muted: !!saved?.muted, music: level(saved?.music, 60), effects: level(saved?.effects, 80), introHidden: !!saved?.introHidden,
+  muted: !!saved?.muted, music: level(saved?.music, 60), effects: level(saved?.effects, 80),
   history: Array.isArray(saved?.history) ? saved.history.slice(0, 30) : [],
   busy: false, ready: false, auto: 0, skip: false, win: 0, debit: 0, tier: null,
   pending: null, // the round being shown: already decided, saved so a reload cannot lose its win
 };
 function persist() {
-  try { localStorage.setItem(KEY, JSON.stringify({ balance: state.balance, bet: state.bet, speed: state.speed, muted: state.muted, music: state.music, effects: state.effects, history: state.history, introHidden: state.introHidden, pending: state.pending })); } catch { /* storage is optional */ }
+  try { localStorage.setItem(KEY, JSON.stringify({ balance: state.balance, bet: state.bet, speed: state.speed, muted: state.muted, music: state.music, effects: state.effects, history: state.history, pending: state.pending })); } catch { /* storage is optional */ }
 }
 // A round the page closed on mid-presentation is paid on the next visit.
 const resumed = saved?.pending && Number.isSafeInteger(saved.pending.win) && saved.pending.win >= 0 ? saved.pending : null;
@@ -66,7 +69,7 @@ const controller = mountController($('controller'), {
   onAction: act,
 });
 function update() {
-  const cost = state.bet * MODES[state.feature || 'base'].cost;
+  const cost = state.bet * PLAY_OPTIONS[state.feature || 'base'].cost;
   controller.update({
     ready: state.ready, busy: state.busy, autoActive: state.auto > 0, remaining: state.auto,
     balance: money(state.balance), bet: money(cost), win: money(state.win),
@@ -75,7 +78,7 @@ function update() {
     canDecrease: !state.busy && STAKES.indexOf(state.bet) > 0, canIncrease: !state.busy && STAKES.indexOf(state.bet) < STAKES.length - 1,
   });
   app.dataset.feature = state.feature || '';
-  if (!state.busy) status(state.feature ? `${COPY[state.feature].name} ON · ${MODES[state.feature].cost}× PER SPIN` : 'PRESSURE IS BUILDING');
+  if (!state.busy) status(state.feature ? `${COPY[state.feature].name} ON · ${PLAY_OPTIONS[state.feature].cost}× PER SPIN` : 'PRESSURE IS BUILDING');
 }
 const status = (text) => { $('status').textContent = text; };
 let toastTimer = 0;
@@ -86,6 +89,8 @@ const MOBILE_MIN_H = 1590; // header 480 + cabinet 892 + room for the pressure c
 function fit() {
   const w = innerWidth, h = innerHeight, layout = h > w * 1.05 ? 'mobile' : 'desktop';
   app.dataset.layout = layout;
+  const meter = $('pressure-meter'), mount = layout === 'mobile' ? $('cabinet') : $('machine');
+  if (meter.parentElement !== mount) mount.appendChild(meter);
   const host = $('controller'), reserve = host.parentElement === app ? host.getBoundingClientRect().height : 0;
   // A phone's stage is 1080 wide and as tall as the room above the controller
   // (at least MOBILE_MIN_H), so the machine reaches down to the controller.
@@ -121,7 +126,7 @@ const fillerHTML = (n) => (stripReady
 const cellHTML = (c, i = -1, landed = true) => {
   const front = `<span class="sym">${symbolHTML(c.s)}</span>`;
   const faces = c.vent === undefined ? front : `<span class="card-flipper"><span class="card-front">${front}</span><span class="card-back" aria-hidden="true">${ventHTML(c.vent)}</span></span>`;
-  return `<div class="cell${c.vent !== undefined ? ' vent-card' : ''}${c.sticky ? ' sticky' : ''}${landed ? ' landed' : ''}"${i >= 0 ? ` data-i="${i}"` : ''}>${faces}</div>`;
+  return `<div class="cell${c.s === 'S' ? ' scatter-cell' : ''}${c.vent !== undefined ? ' vent-card' : ''}${c.sticky ? ' sticky' : ''}${landed ? ' landed' : ''}"${i >= 0 ? ` data-i="${i}"` : ''}>${faces}</div>`;
 };
 // WAAPI animations join the same skip set as the reels. The CSS class records
 // the settled face, so finishing/cancelling an animation cannot strand a card.
@@ -147,23 +152,38 @@ function buildReels() {
 }
 const column = (cells, reel) => Array.from({ length: ROWS }, (_, row) => cells[at(row, reel)]);
 function setBoard(cells, landed = true) {
+  $('fs-faces').replaceChildren();
   board = cells;
   reels.forEach(({ strip }, reel) => { strip.getAnimations().forEach((a) => a.cancel()); strip.style.transform = ''; strip.innerHTML = column(cells, reel).map((c, row) => cellHTML(c, at(row, reel), landed)).join(''); });
+  if (landed) cells.forEach((c, i) => { if (c.s === 'S') raiseScatter(i, false); });
 }
 const cellEl = (i) => $('reels').querySelector(`.cell[data-i="${i}"]`);
+// Put landed scatters on the cabinet glass, above all six clipped reel strips.
+function raiseScatter(i, pulse) {
+  const face = document.createElement('span');
+  face.className = pulse ? 'fs-raised fs-arrival' : 'fs-raised';
+  face.dataset.cell = i;
+  face.style.left = ((i % REELS + .5) * 200) + 'px';
+  face.style.top = ((Math.floor(i / REELS) + .5) * 200) + 'px';
+  face.innerHTML = symbolHTML('S');
+  $('fs-faces').append(face);
+  cellEl(i).classList.add('fs-raised-source');
+}
 const running = new Set();
 const pace = () => (state.skip ? 0 : state.speed === 'turbo' || reduced.matches ? 0.35 : state.speed === 'quick' ? 0.65 : 1);
 
 // Spins every reel to the landed board. Reels stop left to right; with two
 // scatters down and a bonus still possible, the remaining reels tease longer.
-async function spinTo(cells, { canTrigger }) {
+async function spinTo(cells, { canTrigger, entry = false }) {
+  $('fs-faces').replaceChildren();
   audio.play('spin');
   const speed = pace(), perCell = 55, scatters = [];
   let seen = 0;
   const stops = reels.map(({ el, strip }, reel) => {
     const tease = canTrigger && seen >= 2 && speed > 0;
     if (column(cells, reel).some((c) => c.s === 'S')) scatters.push(reel), seen++;
-    const dur = speed === 0 ? 0 : (520 + reel * 150) * speed + (tease ? 1100 * Math.max(speed, 0.6) : 0);
+    const anticipation = tease ? (entry ? 550 + reel * 240 : 1100) * Math.max(speed, 0.6) : 0;
+    const dur = speed === 0 ? 0 : (520 + reel * 150) * speed + anticipation;
     const old = column(board.length ? board : cells, reel), next = column(cells, reel);
     const extra = Math.max(3, Math.round(dur / perCell));
     strip.innerHTML = [...next.map((c, row) => cellHTML(c, at(row, reel), false)), fillerHTML(extra), ...old.map((c) => cellHTML(c))].join('');
@@ -188,7 +208,7 @@ async function spinTo(cells, { canTrigger }) {
     reels[reel].strip.querySelectorAll('.cell[data-i]').forEach((el) => el.classList.add('landed'));
     const sc = column(cells, reel).some((c) => c.s === 'S');
     audio.play(sc ? 'scatter' : 'stop', { index: sc ? scatters.indexOf(reel) : reel });
-    if (sc) column(cells, reel).forEach((c, row) => { if (c.s === 'S') cellEl(at(row, reel))?.classList.add('scatter-hit'); });
+    if (sc) column(cells, reel).forEach((c, row) => { if (c.s === 'S') raiseScatter(at(row, reel), true); });
     if (column(cells, reel).some((c) => c.vent !== undefined && !c.sticky)) audio.play('vent-land');
   }
   if (teased) audio.play(scatters.length >= 3 ? 'tease-hit' : 'tease-miss');
@@ -336,14 +356,22 @@ async function showWins(e) {
   kick();
   for (let i = 0; i < CELLS; i++) cellEl(i)?.classList.add(hit.has(i) ? 'win' : 'dim');
   const amount = payOf(e.paid);
-  audio.play(e.paid >= 1000 ? 'win-big' : 'win', { size: e.paid });
-  if (e.paid >= 500) skunk.play('win');
+  const title = winTitle(e.paid);
   const best = e.wins.reduce((a, b) => (b.amount > a.amount ? b : a));
   status(e.wins.length === 1 ? `${best.count} × ${NAMES[best.symbol].toUpperCase()}${best.multi > 1 ? ` ×${best.multi}` : ''} · ${money(amount)}` : `${e.wins.length} LINES · ${money(amount)}`);
-  await countTo(state.win + amount, Math.min(1400, 400 + e.paid));
-  await wait(e.wins.length > 1 ? 900 : 650);
+  const counter = countTo(payOf(e.total), Math.min(1400, 400 + e.paid));
+  if (title) {
+    const context = e.tier ? 'FREE SPIN ' + e.spin + ' OF ' + e.of : 'LINE WIN';
+    await Promise.all([counter, celebrate(e.paid, title, context)]);
+  } else {
+    $('line-award').textContent = money(amount); $('line-award').hidden = false;
+    audio.play('win', { size:e.paid });
+    if (e.paid >= 500) skunk.play('win');
+    await counter;
+    await wait(e.wins.length > 1 ? 900 : 650);
+  }
   for (let i = 0; i < CELLS; i++) cellEl(i)?.classList.remove('win', 'dim');
-  effects.lines = []; kick();
+  $('line-award').hidden = true; effects.lines = []; kick();
 }
 // Counts the visible win up to a value; skip jumps straight there.
 async function countTo(target, ms) {
@@ -359,36 +387,62 @@ async function countTo(target, ms) {
 const paintWin = () => { controller.update({ win: money(state.win) }); if (state.tier) $('hud-win').textContent = money(state.win); };
 
 // ---- Bonuses ----
-// art: a painted title (its alt text is the title, so it is never shown twice).
-function panel({ kicker, title, text, html = null, button = 'CONTINUE', tier, art = null }) {
-  const el = $('bonus-panel'), titleArt = art && artImg(art, title);
-  $('bonus-panel-kicker').textContent = kicker;
-  if (titleArt) $('bonus-panel-title').innerHTML = titleArt; else $('bonus-panel-title').textContent = title;
-  el.classList.toggle('has-art', !!titleArt);
-  if (html) $('bonus-panel-text').innerHTML = html; else $('bonus-panel-text').textContent = text;
-  $('bonus-panel-go').textContent = button; el.dataset.tier = tier || ''; el.hidden = false;
-  $('bonus-panel-go').focus({ preventScroll: true });
-  return new Promise((resolve) => {
-    let done = false;
-    const finish = () => { if (done) return; done = true; el.hidden = true; $('bonus-panel-go').onclick = null; panelSkip = null; audio.play('click'); resolve(); };
-    $('bonus-panel-go').onclick = finish;
-    panelSkip = finish;
-    if (state.skip || state.auto) setTimeout(finish, state.skip ? 250 : 2600);
-  });
-}
-let panelSkip = null;
-async function bonusStart(e) {
-  state.tier = e.tier;
-  if (e.natural) { status(`${BONUSES[e.tier].scatters}${e.tier === 'hidden' ? '+' : ''} FS SCATTERS`); await wait(700); }
-  audio.play('bonus-in', { tier: e.tier }); audio.music(e.tier === 'hidden' ? 'hidden' : 'bonus');
-  skunk.play('bonus');
-  await panel({ kicker: e.natural ? 'TRIGGERED' : 'BONUS BUY', title: BONUSES[e.tier].title, text: TIER[e.tier].text, button: 'START', tier: e.tier, art: TIER[e.tier].panel });
-  app.dataset.bonus = e.tier;
-  $('bonus-hud').hidden = false; $('hud-tier').textContent = BONUSES[e.tier].title;
-  hud(0, e.spins); gauge(e.reservoir);
+// The doors carry the briefing. Opening them resumes the same round.
+async function bonusStart(e, result, mode) {
+  const tier = BONUSES[e.tier], presentation = TIER[e.tier];
+  if (!e.natural) await spinInBonus(e.tier, result.draw?.bonus ?? 811, mode);
+  status(board.filter(cell => cell.s === 'S').length + ' FS · ' + tier.title);
+  await wait(900);
+
+  const door = $('buy-stinger'), panel = $('bonus-panel'), start = $('bonus-panel-go');
+  const closeTime = reduced.matches ? 0 : 460, openTime = reduced.matches ? 0 : 520;
+  door.dataset.phase = 'ready';
+  door.style.setProperty('--close-time', closeTime * pace() + 'ms');
+  door.oncancel = event => event.preventDefault();
+  door.showModal();
+  try {
+    door.getBoundingClientRect();
+    door.dataset.phase = 'closing';
+    await wait(closeTime);
+    door.dataset.phase = 'sealed';
+    audio.play('stop');
+
+    state.tier = e.tier;
+    app.dataset.bonus = e.tier;
+    $('bonus-hud').hidden = false;
+    $('hud-tier').textContent = tier.title;
+    hud(0, e.spins); gauge(e.reservoir);
+    audio.play('bonus-in', { tier:e.tier }); audio.music(e.tier === 'hidden' ? 'hidden' : 'bonus');
+    skunk.play('bonus');
+
+    const titleArt = artImg(presentation.panel, tier.title);
+    $('bonus-panel-title').innerHTML = titleArt || tier.title;
+    $('bonus-panel-kicker').textContent = 'preview' in app.dataset ? 'FREE PREVIEW' : e.natural ? 'BONUS TRIGGERED' : mode === 'mystery' ? 'MYSTERY BUY REVEALS' : 'BONUS UNLOCKED';
+    $('bonus-panel-award').textContent = e.spins + ' FREE SPINS';
+    $('bonus-panel-text').textContent = presentation.text;
+    panel.classList.toggle('has-art', !!titleArt);
+    panel.dataset.tier = e.tier;
+    panel.hidden = false;
+    start.focus({preventScroll:true});
+    await new Promise(resolve => { start.onclick = resolve; });
+    state.skip = false; // Stopping the trigger spin must not fast-forward the free spins.
+    door.style.setProperty('--open-time', openTime * pace() + 'ms');
+    panel.hidden = true;
+    door.dataset.phase = 'opening';
+    audio.play('release');
+    await wait(openTime);
+  } finally {
+    start.onclick = null; panel.hidden = true;
+    door.close(); door.oncancel = null;
+  }
 }
 const hud = (spin, of) => { $('hud-spins').textContent = `${spin} / ${of}`; $('hud-win').textContent = money(state.win); };
-function gauge(value) { app.style.setProperty('--p', value); $('gauge-value').textContent = value; }
+function gauge(value) {
+  const meter = $('pressure-meter');
+  meter.style.setProperty('--p', value);
+  meter.setAttribute('aria-valuenow', value);
+  $('gauge-value').textContent = value;
+}
 async function blackout(e) {
   app.dataset.blackout = '';
   audio.music('blackout'); audio.play('blackout'); status('BLACKOUT PROTOCOL');
@@ -407,11 +461,9 @@ async function blackout(e) {
   audio.play('release'); audio.music('hidden'); skunk.play('release'); steam(); gauge(e.reservoir); status(`RESERVOIR ${e.reservoir}`);
   await wait(600);
 }
-async function bonusEnd(e) {
+async function bonusEnd() {
   audio.music('base');
   await wait(400);
-  const total = money(payOf(e.total)), titleArt = artImg('title-total-win', 'Total win');
-  await panel({ kicker: `${e.played} SPINS PLAYED`, title: `${BONUSES[e.tier].title} COMPLETE`, text: `TOTAL WIN ${total}`, html: titleArt ? `${titleArt}<b class="panel-amount">${total}</b>` : null, tier: e.tier });
   delete app.dataset.bonus; $('bonus-hud').hidden = true; state.tier = null; gauge(0);
   setBoard(board.map((c) => ({ s: c.s })));
 }
@@ -430,72 +482,48 @@ function steam() {
   document.querySelector('.gauge').append(el); setTimeout(() => el.remove(), 1400);
 }
 
-// The big-win celebration, from the round's actual award and the cap.
-async function celebrate(total, capped) {
-  const x = total / 100, tier = capped ? 'MAX WIN' : WIN_TIERS.find(([min]) => x >= min)?.[1];
-  if (!tier) return;
-  const el = $('bigwin'), amount = payOf(total), key = tier.split(' ')[0].toLowerCase(), level = ['nice', 'big', 'epic', 'mythic', 'max'].indexOf(key);
-  $('bigwin-title').innerHTML = artImg(`win-${key}`, tier) || tier;
+// Display the award supplied by the caller, independently of the running win meter.
+async function celebrate(total, title, context, summary = false) {
+  const x = total / 100, capped = title === 'MAX WIN';
+  const el = $('bigwin'), amount = payOf(total);
+  const key = title.split(' ')[0].toLowerCase();
+  el.dataset.scope = summary ? 'bonus-total' : 'spin';
+  $('win-context').textContent = context;
+  $('win-basis').textContent = xOf(total) + ' BASE BET';
+  $('bigwin-title').textContent = title;
+  $('bigwin-title').dataset.title = title;
   el.dataset.tier = key; $('bigwin-amount').textContent = money(0); el.hidden = false;
-  audio.duck(true); audio.play(capped ? 'max' : 'bigwin', { tier }); skunk.play('bigwin');
-  if (level >= 2 && !reduced.matches) { stage.classList.remove('shake'); void stage.offsetWidth; stage.classList.add('shake'); }
-  const stop = fountain(level);
+  let dismissed = false;
+  $('win-dismiss').onclick = () => { dismissed = true; };
+  audio.duck(true); audio.play(capped ? 'max' : 'bigwin'); skunk.play('bigwin');
   const dur = (capped ? 5200 : x >= 500 ? 4200 : x >= 100 ? 3200 : x >= 25 ? 2400 : 1600) * pace(), t0 = performance.now();
-  while (!state.skip && performance.now() - t0 < dur) {
+  while (!dismissed && !state.skip && performance.now() - t0 < dur) {
     const k = (performance.now() - t0) / dur;
     $('bigwin-amount').textContent = money(Math.round(amount * (1 - (1 - k) ** 2)));
     await new Promise((r) => requestAnimationFrame(r));
   }
   $('bigwin-amount').textContent = money(amount);
-  await wait(1100);
-  stop(); stage.classList.remove('shake');
+  const until = performance.now() + Math.max(1150, 1500 * pace());
+  while (!dismissed && (summary || !state.skip) && performance.now() < until) await new Promise(resolve => requestAnimationFrame(resolve));
+  $('win-dismiss').onclick = null;
   el.hidden = true; audio.duck(false);
 }
-// The big-win fountain: brass nuts, amber sparks and spray droplets thrown up
-// from the cabinet, more for each tier. Its own screen-sized canvas sits in the
-// big-win overlay, above the darkening and behind the title.
-function fountain(level) {
-  if (reduced.matches) return () => {};
-  const canvas = $('bigwin-fx'), dpr = Math.min(2, devicePixelRatio || 1), W = innerWidth, H = innerHeight;
-  canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
-  const g = canvas.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0);
-  const box = $('cabinet').getBoundingClientRect(), cx = box.left + box.width / 2, cy = box.top + box.height * 0.6;
-  const u = H / 1080, size = Math.min(1.2, Math.max(0.6, state.scale * 1.4)), rate = [2, 4, 6, 9, 12][level], bits = [];
-  let running = true, last = performance.now();
-  const spawn = () => {
-    for (let k = 0; k < rate; k++) {
-      const kind = Math.random(), a = -Math.PI / 2 + (Math.random() - 0.5) * 1.2, v = (17 + Math.random() * 13) * u;
-      bits.push({ x: cx + (Math.random() - 0.5) * box.width * 0.4, y: cy, vx: Math.cos(a) * v, vy: Math.sin(a) * v, r: (kind < 0.45 ? 12 + Math.random() * 9 : 4 + Math.random() * 5) * size, spin: Math.random() * 6, vs: (Math.random() - 0.5) * 0.4, type: kind < 0.45 ? 'nut' : kind < 0.8 ? 'spark' : 'drop' });
-    }
-  };
-  const nut = (b) => {
-    g.save(); g.translate(b.x, b.y); g.rotate(b.spin);
-    g.beginPath(); for (let i = 0; i < 6; i++) { const t = (i / 6) * Math.PI * 2; g.lineTo(Math.cos(t) * b.r, Math.sin(t) * b.r); } g.closePath();
-    const grad = g.createLinearGradient(-b.r, -b.r, b.r, b.r); grad.addColorStop(0, '#f3c77a'); grad.addColorStop(0.5, '#ad7840'); grad.addColorStop(1, '#5a3a17');
-    g.fillStyle = grad; g.fill(); g.lineWidth = 1.5; g.strokeStyle = '#2b1a0a'; g.stroke();
-    g.beginPath(); g.arc(0, 0, b.r * 0.42, 0, Math.PI * 2); g.fillStyle = '#1b120a'; g.fill();
-    g.restore();
-  };
-  const frame = (now) => {
-    const dt = Math.min(2, (now - last) / 16.7); last = now;
-    g.clearRect(0, 0, W, H);
-    if (running) spawn();
-    for (const b of bits) {
-      b.vy += 0.55 * u * dt; b.x += b.vx * dt; b.y += b.vy * dt; b.spin += b.vs * dt;
-      if (b.type === 'nut') nut(b);
-      else { g.globalAlpha = b.type === 'spark' ? 0.95 : 0.8; g.fillStyle = b.type === 'spark' ? '#ffd27a' : '#bff7f2'; g.beginPath(); g.arc(b.x, b.y, b.r, 0, Math.PI * 2); g.fill(); g.globalAlpha = 1; }
-    }
-    for (let i = bits.length - 1; i >= 0; i--) if (bits[i].y > H + 60) bits.splice(i, 1);
-    if (running || bits.length) requestAnimationFrame(frame); else g.clearRect(0, 0, W, H);
-  };
-  requestAnimationFrame(frame);
-  return () => { running = false; };
+
+// An entry reveal illustrates the already-purchased tier. It never awards a paid spin.
+async function spinInBonus(tier, bonusSeed, mode) {
+  const count = BONUSES[tier].scatters;
+  const rng = seeded(bonusSeed ^ 0x53ac77);
+  let cells;
+  do { cells = drawBoard('base', rng, new Map(), count).map(({s}) => ({s})); }
+  while (lineWins(cells).length);
+  status(mode === 'mystery' ? 'MYSTERY BUY · WATCH THE SCATTERS' : 'WATCH THE SCATTERS');
+  await spinTo(cells, {canTrigger:true, entry:true});
 }
 
 // ---- A round ----
 async function play(mode = state.feature || 'base') {
   if (state.busy || !state.ready) return;
-  const cost = state.bet * MODES[mode].cost;
+  const cost = state.bet * PLAY_OPTIONS[mode].cost;
   if (cost > state.balance) { state.auto = 0; update(); toast(`Not enough credits: this play costs ${money(cost)}.`); return; }
   // The round is drawn and replayed before any credits move; a replay that
   // disagrees with the catalog is refused and costs nothing.
@@ -527,20 +555,39 @@ async function play(mode = state.feature || 'base') {
     update();
   }
 }
+async function freePreview(tier) {
+  if (state.busy) return;
+  const savedBoard = board.slice(), lastWin = state.win;
+  const round = playRound({rng:seeded(811), ...(tier === 'sprayjob' ? {mode:tier, triggerScatters:0} : {forceBonus:tier})});
+  state.busy = true; state.skip = false; state.win = 0;
+  app.dataset.preview = ''; app.dataset.busy = ''; update();
+  try { await present(round); }
+  finally {
+    delete app.dataset.preview; delete app.dataset.busy; delete app.dataset.bonus; delete app.dataset.blackout;
+    state.busy = state.skip = false; state.tier = null; state.win = lastWin;
+    $('bonus-panel').hidden = $('bonus-hud').hidden = $('bigwin').hidden = true;
+    gauge(0); clearFx(); setBoard(savedBoard); skunk.play('idle'); audio.duck(false); audio.music('base');
+    update(); openBuy('preview');
+  }
+}
 async function present(result, mode) {
   clearFx();
+  let completedBonus;
   for (const e of result.events) {
     if (e.type === 'reveal') {
       if (e.tier) { hud(e.spin, e.of); status(`FREE SPIN ${e.spin} OF ${e.of}`); }
       await spinTo(e.board, { canTrigger: true });
     } else if (e.type === 'spray') await showSpray(e);
     else if (e.type === 'wins') { await showWins(e); state.win = payOf(e.total); paintWin(); if (e.tier) await wait(350); }
-    else if (e.type === 'bonusStart') await bonusStart(e);
+    else if (e.type === 'bonusStart') await bonusStart(e, result, mode);
     else if (e.type === 'blackout') await blackout(e);
     else if (e.type === 'reservoir') { gauge(e.after); steam(); audio.play('gauge'); skunk.play('release'); status(`RESERVOIR ${e.before} → ${e.after}`); await wait(500); }
     else if (e.type === 'retrigger') { audio.play('retrigger'); status(`RETRIGGER +${e.add}`); hud(Number($('hud-spins').textContent.split('/')[0]), e.spins); await banner(`+${e.add}`); }
-    else if (e.type === 'bonusEnd') await bonusEnd(e);
-    else if (e.type === 'roundEnd') await celebrate(e.total, e.capped);
+    else if (e.type === 'bonusEnd') { completedBonus = e; await bonusEnd(); }
+    else if (e.type === 'roundEnd' && completedBonus) {
+      const context = BONUSES[completedBonus.tier].title + '  /  ' + completedBonus.played + ' FREE SPINS  /  TOTAL';
+      await celebrate(e.total, winTitle(e.total) || 'TOTAL WIN', context, true);
+    }
   }
 }
 
@@ -551,7 +598,7 @@ function act(action) {
   if (action === 'sound') { setMuted(!state.muted); return; }
   if (action === 'turbo') { state.speed = state.speed === 'turbo' ? 'normal' : 'turbo'; $('menu-speed').value = state.speed; persist(); update(); return; }
   if (action === 'play') {
-    if (state.busy) { state.skip = true; running.forEach((a) => a.finish()); panelSkip?.(); return; }
+    if (state.busy) { state.skip = true; running.forEach((a) => a.finish()); return; }
     audio.play('click'); void play(); return;
   }
   if (action === 'auto') { if (state.auto) { state.auto = 0; update(); toast('Autoplay stops after this round.'); } else if (!state.busy) open('autoplay'); return; }
@@ -566,40 +613,135 @@ function setMuted(m) { state.muted = m; audio.setMuted(m); $('menu-sound').check
 const open = (id) => { const d = $(id); if (!d.open) d.showModal(); };
 
 // ---- Buy menu and confirmation ----
-function card(mode) {
-  const c = COPY[mode], m = MODES[mode], total = state.bet * m.cost, active = state.feature === mode;
-  const label = c.kind === 'feature' ? (active ? 'ON · SWITCH OFF' : 'ACTIVATE') : 'BUY';
-  return `<article class="card${active ? ' active' : ''}" data-mode="${mode}"><div class="card-art" data-card="${c.card}">${VIGNETTE[mode]()}</div><div class="card-body"><h4>${c.name}</h4><p>${c.text}</p>
-    <div class="price"><span>${m.cost}× base bet${c.kind === 'feature' ? ' per spin' : ''}</span><b>${money(total)}</b></div>
-    <button class="primary" data-pick="${mode}"${!active && total > state.balance ? ' disabled' : ''}>${label}</button></div></article>`;
+const shopPanels = {ventbreak:'vent-break', overpressure:'overpressure', blackout:'blackout'};
+function shopIllustration(mode) {
+  const title = COPY[mode]?.name || 'BLACKOUT PROTOCOL';
+  const panel = shopPanels[mode];
+  if (panel) return `<svg viewBox="0 0 640 360" class="shop-sign" aria-hidden="true"><image width="640" height="360" href="assets/panels/panel-${panel}.webp"/></svg>`;
+  // Use the same cast sign as the other bonuses. The fitting sits behind its top flange.
+  const fitting = mode === 'sprayjob'
+    ? '<svg x="173" y="-31" width="309" height="228" viewBox="25 15 206 154"><use href="assets/cards/dispatch-art.svg#sprayjob"/></svg>'
+    : `<image x="211" y="-5" width="218" height="204" href="assets/symbols/${mode === 'mystery' ? 'h4-key' : 'h1-battery'}.webp"/>`;
+  return `<svg viewBox="0 0 640 360" class="shop-sign" aria-hidden="true">
+    ${fitting}
+    <image width="640" height="360" href="assets/panels/panel-vent-break.webp" clip-path="url(#shop-cast-sign)"/>
+    <path fill="url(#shop-enamel)" d="M40 176H600L603 187 596 208v46l10 11-4 26H42l-7-7 6-23-3-47-7-19Z"/>
+    <g font-family="Anton, Impact, sans-serif" font-size="104" text-anchor="middle" textLength="519" stroke-linejoin="round" paint-order="stroke">
+      <text x="320" y="281" textLength="519" lengthAdjust="spacingAndGlyphs" fill="#5a4028" stroke="#100e0c" stroke-width="8">${title}</text>
+      <text x="320" y="276" textLength="519" lengthAdjust="spacingAndGlyphs" fill="url(#shop-letter)" stroke="#c59656" stroke-width="3">${title}</text>
+    </g></svg>`;
 }
-// Card vignettes from the symbols, shown until ChatGPT's card art lands.
-const VIGNETTE = {
-  enhanced: () => ['S', 'S', 'S'].map((id) => `<i>${symbolHTML(id)}</i>`).join(''),
-  sprayjob: () => `<i>${symbolHTML('A')}${ventHTML(0)}</i><i>${symbolHTML('W')}</i><i>${symbolHTML('Q')}${ventHTML(1)}</i>`,
-  ventbreak: () => [0, 1, 2].map((d) => `<i>${symbolHTML(['K', 'H3', 'J'][d])}${ventHTML(d)}</i>`).join(''),
-  overpressure: () => `<i>${symbolHTML('H1')}${ventHTML(1)}</i><b class="gauge-mini"></b><i>${symbolHTML('H2')}${ventHTML(2)}</i>`,
-};
+const passSeries = {ventbreak:'01', overpressure:'02', mystery:'03'};
+
+function bonusTicket(mode, edition, detail, award) {
+  const cost = PLAY_OPTIONS[mode].cost, total = state.bet * cost;
+  return `<article class="offer pass" data-mode="${mode}">
+    <div class="pass-body">
+      <small class="pass-issuer">Vent Hall <i>/</i> Maintenance pass</small>
+      <div class="pass-info"><small>${edition}</small><h3>${COPY[mode].name}</h3>
+        ${award ? '<strong>'+award.spins+' free spins</strong>' : ''}${detail}</div>
+      <div class="pass-serial"><i aria-hidden="true"></i><span>VH &nbsp;/&nbsp; SERIES ${passSeries[mode]}</span></div>
+    </div>
+    <button class="pass-stub" data-pick="${mode}" aria-label="Buy ${COPY[mode].name} for ${money(total)}"${total > state.balance ? ' disabled' : ''}>
+      <small>Admit one</small><span class="stub-price">${money(total)}<small>${cost}× base bet</small></span>
+      <b>Buy bonus <i aria-hidden="true">›</i></b>
+    </button></article>`;
+}
+
+function card(mode) {
+  const c = COPY[mode], m = PLAY_OPTIONS[mode], total = state.bet * m.cost, active = state.feature === mode;
+  const feature = c.kind === 'feature';
+  const edition = {ventbreak:'Regular bonus', overpressure:'Super bonus', mystery:'Mystery bonus', enhanced:'Scatter boost', sprayjob:'Guaranteed spray'};
+  const brief = {
+    enhanced:'More chances to land free spins on every spin.',
+    sprayjob:'A guaranteed spray with at least three vents on every spin.',
+    ventbreak:'Sticky vents bank up to 5 pressure.',
+    overpressure:'Sticky vents bank up to 10 pressure.',
+  };
+  const bonus = mode === 'ventbreak' ? BONUSES.regular : mode === 'overpressure' ? BONUSES.super : null;
+  const detail = mode === 'mystery'
+    ? '<div class="odds">' + MYSTERY_TIERS.map(({tier,weight}) => '<span><b>' + weight / 100 + '%</b>' + ({regular:'Regular',super:'Super',hidden:'Hidden'})[tier] + '</span>').join('') + '</div>'
+    : `<p>${brief[mode]}</p>`;
+  if (!feature) return bonusTicket(mode, edition[mode], detail, bonus);
+  const label = active ? 'Disable' : 'Activate';
+  return `<article class="offer" data-mode="${mode}">
+    <div class="offer-main">
+      <h3 class="offer-art"><span class="shop-sr">${c.name}</span>${shopIllustration(mode)}</h3>
+      <div class="offer-details"><small class="edition">${edition[mode]}</small><div class="offer-copy"><strong>${bonus ? bonus.spins + ' free spins' : mode === 'mystery' ? 'One mystery reveal' : 'Every spin'}</strong>${detail}</div></div>
+    </div><button class="offer-cta" data-pick="${mode}" aria-label="${label} ${c.name}, ${money(total)}"${!active && total > state.balance ? ' disabled' : ''}>
+      <span class="offer-price">${money(total)} <small>${m.cost}× base bet</small></span><span class="cta-verb">${label} <i aria-hidden="true">›</i></span></button></article>`;
+}
 function renderBuy() {
   $('buy-bet').textContent = money(state.bet);
+  document.querySelector('[data-bet="-1"]').disabled = state.bet === STAKES[0];
+  document.querySelector('[data-bet="1"]').disabled = state.bet === STAKES.at(-1);
   $('feature-cards').innerHTML = ['enhanced', 'sprayjob'].map(card).join('');
-  $('bonus-cards').innerHTML = ['ventbreak', 'overpressure'].map(card).join('');
-  applyCardArt();
+  $('bonus-cards').innerHTML = ['ventbreak', 'overpressure', 'mystery'].map(card).join('');
+  $('preview-options').innerHTML = [['sprayjob','sprayjob','Spray Job'],['regular','ventbreak','Vent Break'],['super','overpressure','Overpressure'],['hidden','blackout','Blackout Protocol']].map(([tier, mode, title]) =>
+    `<button class="demo-offer" data-preview="${tier}" data-mode="${mode}"><span class="demo-art">${shopIllustration(mode)}</span><span class="shop-sr">${title}</span><b>Play preview <i aria-hidden="true">›</i></b></button>`).join('');
 }
-function openBuy() { renderBuy(); open('buy-menu'); }
+function chooseBuyView(view) {
+  document.querySelectorAll('[data-view]').forEach(button => {
+    const selected = button.dataset.view === view;
+    $(button.getAttribute('aria-controls')).hidden = !selected;
+    button.setAttribute('aria-pressed', String(selected));
+  });
+  document.querySelector('.shop-options').scrollTop = 0;
+}
+function openBuy(view = 'bonus') { renderBuy(); chooseBuyView(view); open('buy-menu'); }
+// Keep the stub attached until the cut reaches the bottom of the perforation.
+async function tearStub(button) {
+  const pass = button.closest('.pass');
+  if (reduced.matches) return;
+  pass.classList.add('tearing');
+  const pull = button.animate([
+    {transform:'translate(0) rotate(0)', offset:0},
+    {transform:'translate(2px,-1px) rotate(2deg)', offset:0.42},
+    {transform:'translate(9px,0) rotate(6deg)', opacity:1, offset:0.64},
+    {transform:'translate(30px,10px) rotate(12deg)', opacity:0},
+  ], {duration:540, easing:'ease-in-out', fill:'forwards'});
+  try { await pull.finished; } catch { /* A closing dialog can cancel the animation. */ }
+}
+
 $('buy-menu').addEventListener('click', async (ev) => {
+  const menu = $('buy-menu');
+  if ($('confirm').open || menu.querySelector('.pass.tearing')) return;
+  const preview = ev.target.closest('[data-preview]');
+  if (preview) { $('buy-menu').close(); await freePreview(preview.dataset.preview); return; }
+  const category = ev.target.closest('[data-view]');
+  if (category) { chooseBuyView(category.dataset.view); return; }
   const step = ev.target.closest('[data-bet]');
   if (step) { setBet(STAKES[Math.min(STAKES.length - 1, Math.max(0, STAKES.indexOf(state.bet) + Number(step.dataset.bet)))]); return; }
   const pick = ev.target.closest('[data-pick]')?.dataset.pick;
   if (!pick) return;
   if (state.feature === pick) { state.feature = null; update(); renderBuy(); toast(`${COPY[pick].name} off · base spins`); return; }
-  $('buy-menu').close();
-  if (!(await confirmPlay(pick))) { openBuy(); return; }
-  if (COPY[pick].kind === 'feature') { state.feature = pick; update(); audio.play('buy'); toast(`${COPY[pick].name} on · ${money(state.bet * MODES[pick].cost)} per spin`); }
-  else { audio.play('buy'); void play(pick); }
+  const stub = ev.target.closest('.pass-stub');
+  if (stub) {
+    await tearStub(stub);
+    if (!menu.open || !stub.isConnected) return;
+  }
+  const scroll = menu.querySelector('.shop-options').scrollTop;
+  if (!stub) menu.close();
+  if (!(await confirmPlay(pick))) {
+    openBuy(stub ? 'bonus' : 'feature');
+    menu.querySelector('.shop-options').scrollTop = scroll;
+    menu.querySelector('[data-pick="' + pick + '"]').focus({preventScroll:true});
+    return;
+  }
+  if (stub) menu.close();
+  if (COPY[pick].kind === 'feature') { state.feature = pick; update(); audio.play('buy'); toast(`${COPY[pick].name} on · ${money(state.bet * PLAY_OPTIONS[pick].cost)} per spin`); }
+  else {
+    audio.play('buy');
+    await play(pick);
+  }
 });
 function confirmPlay(mode) {
-  const m = MODES[mode], total = state.bet * m.cost, enough = total <= state.balance;
+  const m = PLAY_OPTIONS[mode], total = state.bet * m.cost, enough = total <= state.balance;
+  $('confirm').dataset.mode = mode;
+  $('confirm-kind').textContent = COPY[mode].kind === 'feature' ? 'FEATURE SPINS · EVERY SPIN' : 'ONE-TIME BONUS BUY';
+  const isPass = COPY[mode].kind === 'buy';
+  $('confirm').classList.toggle('pass-receipt', isPass);
+  $('confirm-symbols').innerHTML = isPass ? '' : shopIllustration(mode);
   $('confirm-title').textContent = COPY[mode].name;
   $('confirm-bet').textContent = money(state.bet);
   $('confirm-cost').textContent = `${m.cost}×${COPY[mode].kind === 'feature' ? ' per spin' : ''}`;
@@ -607,10 +749,16 @@ function confirmPlay(mode) {
   $('confirm-balance').textContent = enough ? money(state.balance - total) : 'Not enough credits';
   $('confirm-rules').textContent = COPY[mode].text;
   $('confirm-ok').disabled = !enough;
-  $('confirm-ok').textContent = COPY[mode].kind === 'feature' ? 'ACTIVATE' : `BUY ${money(total)}`;
+  $('confirm-ok').textContent = isPass ? `CONFIRM ${money(total)}` : 'ACTIVATE';
+  if (isPass) $('confirm-kind').textContent = 'CONFIRM BONUS BUY  /  STUB '+passSeries[mode];
   open('confirm');
+  $('confirm-cancel').focus({preventScroll:true});
   return new Promise((resolve) => {
-    const done = (yes) => { $('confirm').close(); $('confirm-ok').onclick = $('confirm-cancel').onclick = null; $('confirm').onclose = null; resolve(yes); };
+    const done = (yes) => {
+      $('confirm-ok').onclick = $('confirm-cancel').onclick = $('confirm').onclose = null;
+      $('confirm').close();
+      resolve(yes);
+    };
     $('confirm-ok').onclick = () => done(true);
     $('confirm-cancel').onclick = () => done(false);
     $('confirm').onclose = () => resolve(false);
@@ -619,7 +767,7 @@ function confirmPlay(mode) {
 
 // ---- Bets, autoplay, menu, rules, history ----
 function openBets() {
-  const per = MODES[state.feature || 'base'].cost;
+  const per = PLAY_OPTIONS[state.feature || 'base'].cost;
   $('bet-options').innerHTML = STAKES.map((s) => `<button data-stake="${s}" aria-pressed="${s === state.bet}"${s * per > state.balance && s !== state.bet ? ' class="short"' : ''}>${money(s)}${per > 1 ? `<small>${money(s * per)} / spin</small>` : ''}</button>`).join('');
   open('bet-picker');
   $('bet-options').querySelector('[aria-pressed=true]')?.scrollIntoView({ block: 'nearest' });
@@ -659,10 +807,11 @@ function renderRules() {
   <h3>BONUSES</h3>
   <p><b>3 FS scatters: VENT BREAK.</b> ${BONUSES.regular.spins} free spins. Vents that land stay until the bonus ends, up to ${MAX_STICKY}, and the <b>Reservoir</b> gauge banks each spray's pressure gain up to ${BONUSES.regular.reservoirMax}: every later spray starts at 1 + the Reservoir.</p>
   <p><b>4 FS scatters: OVERPRESSURE.</b> ${BONUSES.super.spins} free spins with sticky vents and the <b>Reservoir</b> gauge: after each spray, the pressure gained is banked (up to ${MAX_RESERVOIR}), and every later spray starts at 1 + the Reservoir.</p>
-  <p><b>5 FS scatters: BLACKOUT PROTOCOL.</b> ${BONUSES.hidden.spins} free spins. The lights go out, 4 vents come online as one route and the Reservoir starts at ${BONUSES.hidden.reservoirStart}; then it plays as Overpressure. It always pays at least 1,000× the base bet. It cannot be bought.</p>
+  <p><b>5 FS scatters: BLACKOUT PROTOCOL.</b> ${BONUSES.hidden.spins} free spins. The lights go out, 4 vents come online as one route and the Reservoir starts at ${BONUSES.hidden.reservoirStart}; then it plays as Overpressure. It always pays at least 1,000× the base bet. Mystery Buy can also reveal it.</p>
   <p>${RETRIGGER.scatters} or more FS scatters during a bonus add +${RETRIGGER.spins} spins, up to ${MAX_SPINS} in total.</p>
+  <p><b>MYSTERY BUY · 400×.</b> ${COPY.mystery.text}</p>
   <h3>WAYS TO PLAY</h3>
-  <table><tbody>${['base', 'enhanced', 'sprayjob', 'ventbreak', 'overpressure'].map((m) => `<tr><td>${m === 'base' ? 'BASE SPINS' : COPY[m].name}</td><td>${MODES[m].cost}× base bet${COPY[m]?.kind === 'feature' ? ' per spin' : ''}</td></tr>`).join('')}</tbody></table>
+  <table><tbody>${['base', 'enhanced', 'sprayjob', 'ventbreak', 'overpressure', 'mystery'].map((m) => `<tr><td>${m === 'base' ? 'BASE SPINS' : COPY[m].name}</td><td>${PLAY_OPTIONS[m].cost}× base bet${COPY[m]?.kind === 'feature' ? ' per spin' : ''}</td></tr>`).join('')}</tbody></table>
   <p>Maximum win: <b>${(CAP / 100).toLocaleString('en-US')}×</b> the base bet per round, including bonuses. Reaching it ends the round.</p>
   <p>The theoretical return to player is <b>96.00%</b> in every way to play, measured against what that play costs. Every round is drawn from the game's weighted outcome catalogs (${CATALOG_VERSION}, games/cyber-skunk/MATH.md) and replayed in full before it is shown.</p>
   <p class="note">Free play only: credits have no cash value. Malfunction voids all pays and plays.</p>
@@ -675,7 +824,7 @@ function renderHistory() {
 // ---- Keyboard: Space or Enter spins, unless a control or dialog has focus ----
 addEventListener('keydown', (ev) => {
   if (ev.code !== 'Space' && ev.code !== 'Enter') return;
-  if (document.querySelector('dialog[open]') || !$('bonus-panel').hidden || !$('intro').hidden) return;
+  if (!$('bigwin').hidden || document.querySelector('dialog[open]') || !$('bonus-panel').hidden || !$('intro').hidden) return;
   if (ev.composedPath().some((n) => n instanceof HTMLElement && /^(BUTTON|INPUT|SELECT|TEXTAREA|A)$/.test(n.tagName))) return;
   ev.preventDefault(); act('play');
 });
@@ -683,12 +832,12 @@ document.addEventListener('visibilitychange', () => audio.suspend(document.hidde
 
 // ---- Art: ChatGPT's files when present, placeholders until then ----
 const exists = (url) => new Promise((resolve) => { const img = new Image(); img.onload = () => resolve(true); img.onerror = () => resolve(false); img.src = url; });
-const cardArt = new Map(), extraArt = new Map(), fxSprites = {};
+const extraArt = new Map(), fxSprites = {};
 // ART_SPEC v3 (§6-§8): each file switches its feature on when it exists; until then the current look stays.
 const EXTRA = {
-  'win-nice': 'wins', 'win-big': 'wins', 'win-epic': 'wins', 'win-mythic': 'wins', 'win-max': 'wins', 'banner-extra-spins': 'wins', 'title-total-win': 'wins',
+  'banner-extra-spins': 'wins',
   'fx-splat': 'fx', 'badge-pressure': 'fx', 'vent-online': 'fx', 'fx-mist': 'fx', 'fx-droplet': 'fx', 'fx-spark': 'fx', 'fx-steam': 'fx',
-  'splash-desktop': 'ui', 'splash-mobile': 'ui', 'intro-route': 'ui', 'intro-bonuses': 'ui', 'controller-texture': 'ui', icon: 'ui',
+  'controller-texture': 'ui', icon: 'ui',
 };
 async function loadUI() {
   const ui = {
@@ -701,65 +850,89 @@ async function loadUI() {
   if (found['pipes-top']) { app.dataset.artPipes = ''; app.style.setProperty('--pipes-art', `url(${found['pipes-top']})`); }
   if (found.logo) { app.dataset.artLogo = ''; document.querySelector('.logo').innerHTML = `<img src="${found.logo}" alt="Cyber Skunk">`; }
   for (const k of ['bg-desktop', 'bg-mobile', 'bg-bonus-desktop', 'bg-bonus-mobile']) if (found[k]) { app.dataset.artBg = ''; app.style.setProperty(`--${k}`, `url(${found[k]})`); }
-  await Promise.all(Object.values(COPY).map(async ({ card: name }) => { const url = `assets/cards/${name}.webp`; if (await exists(url)) cardArt.set(name, url); }));
   await Promise.all(Object.values(TIER).map(async ({ panel: name }) => { const url = `assets/panels/${name}.webp`; if (await exists(url)) extraArt.set(name, url); }));
   await Promise.all(Object.entries(EXTRA).map(async ([name, dir]) => { const url = `assets/${dir}/${name}.webp`; if (await exists(url)) extraArt.set(name, url); }));
-  for (const name of ['fx-splat', 'badge-pressure', 'vent-online', 'fx-steam', 'splash-desktop', 'splash-mobile']) if (extraArt.has(name)) { app.dataset[`art${name.replace(/(^|-)(\w)/g, (_, __, c) => c.toUpperCase())}`] = ''; app.style.setProperty(`--${name}`, `url(${extraArt.get(name)})`); }
+  for (const name of ['fx-splat', 'badge-pressure', 'vent-online', 'fx-steam']) if (extraArt.has(name)) { app.dataset[`art${name.replace(/(^|-)(\w)/g, (_, __, c) => c.toUpperCase())}`] = ''; app.style.setProperty(`--${name}`, `url(${extraArt.get(name)})`); }
   for (const [name, key] of [['fx-mist', 'mist'], ['fx-droplet', 'droplet'], ['fx-spark', 'spark']]) if (extraArt.has(name)) { const img = new Image(); img.src = extraArt.get(name); fxSprites[key] = img; }
   if (extraArt.has('controller-texture')) $('controller').style.setProperty('--controller-mobile-texture', `url("${new URL(extraArt.get('controller-texture'), location.href).href}")`);
   if (extraArt.has('icon')) document.head.insertAdjacentHTML('beforeend', `<link rel="icon" href="${extraArt.get('icon')}">`);
-  // Intro art: the route diagram replaces the built one; the bonus picture keeps
-  // the live bonus names, laid over its three blank plates (styles.css).
-  for (const name of ['intro-route', 'intro-bonuses']) if (extraArt.has(name)) {
-    const pic = document.querySelector(`[data-art="${name}"] .intro-pic`);
-    pic.style.backgroundImage = `url(${extraArt.get(name)})`; pic.classList.add('has-art');
-    if (name === 'intro-route') pic.replaceChildren();
-  }
-  if (extraArt.has('intro-route') && extraArt.has('intro-bonuses')) document.querySelector('.intro-cards').classList.add('has-art');
+
 }
 const artImg = (name, alt) => (extraArt.has(name) ? `<img src="${extraArt.get(name)}" alt="${alt}">` : '');
-// Card art carries its own painted title: the card shows the art whole and keeps
-// its text title for screen readers only.
-function applyCardArt() { document.querySelectorAll('[data-card]').forEach((el) => { const url = cardArt.get(el.dataset.card); if (url) { el.style.backgroundImage = `url(${url})`; el.replaceChildren(); el.closest('.card')?.classList.add('has-art'); } }); }
 
 // ---- Boot ----
-async function boot() {
+export async function boot() {
+  const progress = $('load-progress');
+  const firstPaint = new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, reduced.matches ? 1800 : 3950)));
+  const report = task => task.then(() => {
+    progress.value++;
+    $('guide-loading').textContent = 'Preparing game · ' + Math.round(100 * progress.value / progress.max) + '%';
+  });
   buildReels();
   fit();
-  await Promise.all([loadArt('assets/symbols/'), loadUI(), skunk.load('assets/mascot/')]);
+  const assets = Promise.all([report(loadArt('assets/symbols/')), report(loadUI()), report(skunk.load('assets/mascot/')), report(document.fonts.ready)]);
+  const ident = firstPaint.then(() => {
+    if (!$('load-retry').hidden) return;
+    demos = mountDemos(cards);
+    app.inert = false;
+    showIntro();
+    $('loading-screen').hidden = true;
+  });
+  await Promise.all([assets, ident]);
   app.dataset.rig = skunk.rig.version ?? 1; // rig v4 (waist up) has its own placement
   const first = playRound({ mode: 'base', rng: seeded(20261030) }).events.find((e) => e.type === 'reveal').board.map((c) => ({ s: c.s }));
   setBoard(first);
   fit();
+  $('intro-go').disabled = false;
+  $('guide-loading').hidden = true;
+  $('intro-go').focus({preventScroll:true});
   state.ready = true; update();
   audio.music('base');
   void fillerStrip(STRIP).then((url) => { if (url) { $('reels').style.setProperty('--filler', `url("${url}")`); stripReady = true; } });
-  introRoute();
-  if (!saved?.introHidden) showIntro();
   if (resumed) toast(`Your last round finished while you were away: ${resumed.win ? `WIN ${money(resumed.win)}` : 'no win'}.`);
 }
-// The intro's route diagram from the game's own symbols, until intro-route art exists:
-// a vent (x2) sprays right through a wild into a second vent (x3), which turns it up.
-function introRoute() {
-  const pic = document.querySelector('[data-art="intro-route"] .intro-pic');
-  if (!pic.classList.contains('intro-route') || pic.classList.contains('has-art')) return;
-  const grid = [['A', 'Q', 'K', 'J'], ['T', 'K', 'Q', 'A'], ['J', 'H2', 'T', 'Q']];
-  const vents = { '1,0': [1, 2], '1,2': [0, 3] }, painted = new Set(['1,0', '1,1', '1,2', '0,2']);
-  pic.innerHTML = grid.map((row, r) => row.map((s, c) => {
-    const key = `${r},${c}`, v = vents[key];
-    return `<i class="mini${painted.has(key) ? ' wild' : ''}">${symbolHTML(painted.has(key) ? 'W' : s)}${v ? ventHTML(v[0]) + `<b>×${v[1]}</b>` : ''}</i>`;
-  }).join('')).join('') + '<svg viewBox="0 0 400 300" preserveAspectRatio="none"><polyline points="10,150 250,150 250,0" /></svg>';
+// Wide screens show the full guide. Phones page through the same three articles.
+const cards = [...document.querySelectorAll('.intro-card')];
+const dots = [...document.querySelectorAll('.guide-dots button')];
+let guidePage = 0, demos;
+function selectFeature(index) {
+  guidePage = (index + cards.length) % cards.length;
+  cards.forEach((card, i) => {
+    card.toggleAttribute('data-current', i === guidePage);
+    if (i === guidePage) dots[i].setAttribute('aria-current', 'step');
+    else dots[i].removeAttribute('aria-current');
+  });
+  $('guide-announcement').textContent = `${guidePage + 1} of ${cards.length}: ${cards[guidePage].querySelector('h3').textContent}`;
 }
-// The intro: what Backpressure is and the three bonuses, before the first spin.
-// Its Play button is also the gesture that lets the browser start the audio.
+dots.forEach((dot, i) => dot.onclick = () => selectFeature(i));
+$('guide-prev').onclick = () => selectFeature(guidePage - 1);
+$('guide-next').onclick = () => selectFeature(guidePage + 1);
+let touchStart;
+$('feature-deck').addEventListener('touchstart', (e) => { touchStart = e.touches[0]; }, { passive: true });
+$('feature-deck').addEventListener('touchend', (e) => {
+  if (!touchStart || !matchMedia('(max-width:759px)').matches) return;
+  const dx = e.changedTouches[0].clientX - touchStart.clientX;
+  if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(e.changedTouches[0].clientY - touchStart.clientY)) selectFeature(guidePage + (dx < 0 ? 1 : -1));
+  touchStart = null;
+}, { passive: true });
+$('intro').addEventListener('keydown', (e) => {
+  if (matchMedia('(max-width:759px)').matches && ['ArrowLeft', 'ArrowRight'].includes(e.key)) {
+    e.preventDefault(); selectFeature(guidePage + (e.key === 'ArrowRight' ? 1 : -1));
+  }
+});
 function showIntro() {
-  const el = $('intro'); el.hidden = false; $('intro-go').focus({ preventScroll: true });
-  $('intro-go').onclick = () => {
-    el.hidden = true; void audio.unlock();
-    if ($('intro-hide').checked) { state.introHidden = true; persist(); }
-    $('controller').shadowRoot?.querySelector('[data-action=play]')?.focus({ preventScroll: true });
-  };
+  selectFeature(0);
+  demos.start();
+  $('stage').inert = $('controller').inert = true;
+  $('intro').hidden = false;
+  ($('intro-go').disabled ? $('intro') : $('intro-go')).focus({ preventScroll: true });
 }
-boot();
+$('menu-guide').onclick = () => { $('menu').close(); showIntro(); };
+$('intro-go').onclick = () => {
+  $('intro').hidden = true;
+  $('stage').inert = $('controller').inert = false;
+  demos.stop(); void audio.unlock();
+  $('controller').shadowRoot?.querySelector('[data-action=play]')?.focus({ preventScroll: true });
+};
 // For browser tests: a read-only view of the session. Nothing here forces outcomes.
 window.cyberSkunk = { get state() { return { ...state, history: undefined }; }, version: 1 };

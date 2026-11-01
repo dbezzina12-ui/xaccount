@@ -48,6 +48,7 @@ for (const [label, size] of [['desktop', { width: 1366, height: 768 }], ['phone'
     await finish(page);
     // Spray Job on, one spin, off again.
     await control(page, 'buy').click();
+    await page.locator('[data-view=feature]').click();
     await page.locator('[data-pick=sprayjob]').click();
     await page.locator('#confirm-ok').click();
     assert.equal((await state(page)).feature, 'sprayjob');
@@ -90,13 +91,14 @@ test('phone pressure console fits below the cabinet and between the bonus panels
         document.querySelector('#hud-win').textContent = '12,500,000.00';
       });
       const box = (selector) => page.locator(selector).boundingBox();
-      const cabinet = await box('#cabinet'), dial = await box('.gauge'), readout = await box('.gauge-readout');
+      const cabinet = await box('#cabinet'), dial = await box('.gauge'), readout = await box('#pressure-meter .gauge-readout');
       const spins = await box('#bonus-hud > span:first-child'), win = await box('#bonus-hud > span:last-child');
       const controller = await box('#controller');
-      assert.ok(readout.y >= cabinet.y + cabinet.height, 'readout is below the whole cabinet');
-      assert.ok(readout.y + readout.height < dial.y, 'readout is above the needle');
-      assert.ok(dial.y + dial.height < controller.y, 'gauge clears controls');
-      assert.ok(spins.x + spins.width < readout.x && readout.x + readout.width < win.x, 'panels flank the readout');
+      assert.equal(await page.locator('#cabinet > #pressure-meter').count(), 1);
+      assert.ok(Math.abs(dial.y - (cabinet.y + cabinet.height)) < 1, 'dial is flush with cabinet bottom');
+      assert.ok(readout.y >= dial.y && readout.y + readout.height < dial.y + dial.height, 'readout fits inside rail housing');
+      assert.ok(dial.y + dial.height < controller.y, 'entire gauge clears controls');
+      assert.ok(spins.x + spins.width < dial.x && dial.x + dial.width < win.x, 'panels flank the readout');
       for (const id of ['#hud-tier', '#hud-win']) {
         const label = await box(id), panel = id === '#hud-tier' ? spins : win;
         assert.ok(label.x >= panel.x && label.x + label.width <= panel.x + panel.width, 'bonus text fits its panel');
@@ -120,10 +122,8 @@ test('phone pressure console fits below the cabinet and between the bonus panels
 test('vents: full symbol lands, centred reverse flips for spray, skip restores the paying face', async () => {
   const { page, errors } = await open({ width: 390, height: 844 });
   assert.equal(await page.locator('.tier-strip').count(), 0, 'no persistent bonus ladder');
-  const dial = await page.locator('.gauge').boundingBox();
-  const readout = await page.locator('.gauge-readout').boundingBox();
-  assert.ok(readout.y + readout.height < dial.y, 'pressure number sits above the dial');
   await control(page, 'buy').click();
+  await page.locator('[data-view=feature]').click();
   await page.locator('[data-pick=sprayjob]').click();
   await page.locator('#confirm-ok').click();
   await control(page, 'play').click();
@@ -150,8 +150,8 @@ test('vents: full symbol lands, centred reverse flips for spray, skip restores t
   await control(page, 'settings').click();
   await page.locator('#menu-rules').click();
   const fs = page.locator('#rules .scatter-letters');
-  assert.equal(await fs.textContent(), 'FS');
-  assert.equal(await fs.evaluate((el) => el.parentElement.querySelectorAll('rect,path,image,img').length), 0, 'FS is only lettering, with no plate');
+  assert.equal(await fs.getAttribute('alt'), 'FS');
+  assert.ok(await fs.evaluate((el) => el.currentSrc.endsWith('/fs-violet.webp') && el.naturalWidth === 512));
   assert.deepEqual(errors, []);
   await page.close();
 });
@@ -159,13 +159,15 @@ test('vents: full symbol lands, centred reverse flips for spray, skip restores t
 test('buy screen: Feature Spins first, Bonus Buys second, Hidden as information; short balance disables confirm', async () => {
   const { page, errors } = await open({ width: 1366, height: 768, session: { balance: 5000, bet: 100 } });
   await control(page, 'buy').click();
-  const sections = await page.locator('#buy-menu h3').allTextContents();
-  assert.deepEqual(sections, ['FEATURE SPINS', 'BONUS BUYS', 'HIDDEN']);
+  assert.ok(await page.locator('#bonus-section').isVisible());
+  assert.ok(await page.locator('#feature-section').isHidden());
   assert.deepEqual(await page.locator('#feature-cards [data-pick]').evaluateAll((b) => b.map((x) => x.dataset.pick)), ['enhanced', 'sprayjob']);
-  assert.deepEqual(await page.locator('#bonus-cards [data-pick]').evaluateAll((b) => b.map((x) => x.dataset.pick)), ['ventbreak', 'overpressure']);
+  assert.deepEqual(await page.locator('#bonus-cards [data-pick]').evaluateAll((b) => b.map((x) => x.dataset.pick)), ['ventbreak', 'overpressure', 'mystery']);
+  assert.ok(await page.locator('[data-pick=mystery]').isDisabled());
   assert.equal(await page.locator('.hidden-tier [data-pick]').count(), 0, 'Blackout Protocol is not for sale');
   // $50 cannot pay for a $250 Overpressure: the card and the confirmation both refuse.
   assert.ok(await page.locator('[data-pick=overpressure]').isDisabled());
+  await page.locator('[data-view=feature]').click();
   await page.locator('[data-pick=sprayjob]').click();
   assert.equal(await page.locator('#confirm-total').textContent(), '$10.00');
   assert.ok(await page.locator('#confirm-ok').isEnabled(), '$10 Spray Job is affordable');
@@ -175,21 +177,47 @@ test('buy screen: Feature Spins first, Bonus Buys second, Hidden as information;
   await page.close();
 });
 
-test('the intro shows before the first spin, and "Don\'t show this again" sticks', async () => {
+test('the intro shows before the first spin, and returns on reload', async () => {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   await page.goto(srv.url + GAME);
   await page.waitForSelector('#intro:not([hidden])');
   const go = await page.locator('#intro-go').boundingBox();
   assert.ok(go && go.y + go.height <= 844, 'Play is on screen without scrolling');
-  await page.locator('#intro-hide').check();
+  assert.equal(await page.locator('.guide-board:visible i').count(),24);
   await page.locator('#intro-go').click();
   assert.ok(await page.locator('#intro').isHidden());
   await page.reload();
   await page.waitForFunction(() => window.cyberSkunk?.state.ready);
-  assert.ok(await page.locator('#intro').isHidden(), 'stays hidden after a reload');
+  assert.ok(await page.locator('#intro').isVisible(), 'guide returns after reload');
   await page.close();
 });
 
+test('the feature guide pages on phones and can be reopened from the menu', async () => {
+  for (const [width, height] of [[360, 640], [390, 844], [430, 932], [1366, 768]]) {
+    const page = await browser.newPage({ viewport: { width, height }, hasTouch: width < 760 });
+    try {
+      await page.goto(srv.url + GAME + '?intro=1');
+      await page.waitForSelector('#intro:not([hidden])');
+      const visible = page.locator('.intro-card:visible');
+      assert.equal(await visible.count(), width < 760 ? 1 : 3);
+      const enter = await page.locator('#intro-go').boundingBox();
+      assert.ok(enter.y + enter.height <= height);
+      if (width === 390) await page.screenshot({ path: '/tmp/cyber-skunk-feature-guide.png', animations: 'disabled' });
+      if (width < 760) {
+        await page.locator('#guide-next').click();
+        assert.equal(await visible.locator('h3').textContent(), 'Backpressure');
+        await page.locator('#guide-next').press('ArrowRight');
+        assert.equal(await visible.locator('h3').textContent(), 'The Reservoir');
+        await page.locator('.guide-dots button').first().click();
+        assert.equal(await visible.locator('h3').textContent(), 'Free Spins');
+      }
+      await page.locator('#intro-go').click();
+      await control(page, 'settings').click();
+      await page.locator('#menu-guide').click();
+      assert.ok(await page.locator('#intro').isVisible());
+    } finally { await page.close(); }
+  }
+});
 test('the rules show the shipping prices and 96% RTP', async () => {
   const { page } = await open({ width: 1366, height: 768 });
   await control(page, 'settings').click();
@@ -254,6 +282,86 @@ const steer = (page, kind) => page.evaluate(async (kind) => {
   return rows[i][2];
 }, kind);
 
+for (const [width,height] of [[360,640],[390,844],[430,932],[1366,768]]) test(`natural FS trigger fits at rest and during its landing pulse (${width}×${height})`, async () => {
+  const page = await browser.newPage({viewport:{width,height},isMobile:width<760,hasTouch:width<760});
+  try {
+    await page.addInitScript(STEER);
+    await page.goto(srv.url + GAME);
+    await page.locator('#intro-go').click();
+    await steer(page, 'blackout');
+    await control(page, 'play').click();
+    await page.waitForFunction(() => document.querySelectorAll('#fs-faces .fs-raised').length >= 5);
+    const visible = await page.locator('#fs-faces .fs-raised').evaluateAll(faces => faces.every(face => {
+      const cell = document.querySelector('.cell[data-i="' + face.dataset.cell + '"]'), img = face.querySelector('img');
+      const tile = cell.getBoundingClientRect(), box = face.getBoundingClientRect();
+      return img.complete && img.naturalWidth === 512 && getComputedStyle(cell.querySelector('.sym')).visibility === 'hidden'
+        && box.width > tile.width && Math.abs((box.left+box.width/2)-(tile.left+tile.width/2)) < 2;
+    }));
+    assert.ok(visible);
+    if (width === 390) await page.screenshot({path:'/tmp/fs-raised-verified.png'});
+  } finally { await page.close(); }
+});
+test('loading precedes the guide, category buttons switch, and Mystery settles once', async () => {
+  const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+  try {
+    await page.addInitScript(STEER);
+    let resume;
+    const gate=new Promise(resolve => {resume=resolve});
+    await page.route('**/app.js?v=*',async route=>{await gate;await route.continue();});
+    await page.goto(srv.url+GAME,{waitUntil:'domcontentloaded'});
+    await page.locator('#loading-screen').waitFor();
+    assert.ok(await page.locator('#app').evaluate(app=>app.inert));
+    await page.screenshot({path:'/tmp/cyber-real-loading.png'});
+    resume();
+    await page.locator('#intro-go').click();
+    assert.ok(await page.locator('#loading-screen').isHidden());
+    await control(page,'buy').click();
+    await page.locator('[data-view=feature]').click();
+    assert.ok(await page.locator('[data-pick=sprayjob]').isVisible());
+    assert.ok(await page.locator('[data-pick=mystery]').isHidden());
+    await page.locator('[data-view=bonus]').click();
+    await page.screenshot({path:'/tmp/cyber-real-buy.png'});
+    await page.locator('[data-pick=mystery]').click();
+    await page.locator('#confirm[open]').waitFor();
+    assert.equal(await page.locator('#confirm-total').textContent(),'$400.00');
+    await page.locator('#confirm-cancel').click();
+    assert.ok(await page.locator('[data-pick=mystery]').isVisible());
+    assert.equal((await state(page)).balance,START);
+    await page.locator('[data-pick=mystery]').click();
+    await page.evaluate(()=>window.__tickets.push({t:950000000,total:1000000000},{t:0,total:1000000000}));
+    await page.locator('#confirm-ok').click();
+    await page.locator('#bonus-panel-go').waitFor();
+    assert.equal(await page.locator('#bonus-panel-title img').getAttribute('alt'),'BLACKOUT PROTOCOL');
+    assert.equal(await page.locator('#bonus-panel-kicker').textContent(),'MYSTERY BUY REVEALS');
+    assert.equal((await state(page)).balance,START-40000);
+    await page.reload();
+    await page.waitForFunction(()=>window.cyberSkunk?.state.ready);
+    const [round]=await history(page);
+    assert.equal(round.mode,'mystery');assert.equal(round.tier,'hidden');assert.equal(round.cost,40000);
+    assert.equal((await state(page)).balance,START-40000+round.win);
+    await page.reload();await page.waitForFunction(()=>window.cyberSkunk?.state.ready);
+    assert.equal((await history(page)).length,1);
+  } finally {await page.close();}
+});
+test('Mystery purchase finishes through the controller and credits the exact win', async () => {
+  const {page,errors}=await open({width:1366,height:768,session:{speed:'turbo',introHidden:true}});
+  try {
+    await control(page,'buy').click();await page.locator('[data-pick=mystery]').click();
+    await page.locator('#confirm-ok').click();await page.locator('#bonus-panel-go').waitFor();
+    await finish(page);const [round]=await history(page);
+    assert.equal(round.mode,'mystery');assert.equal(round.cost,40000);assert.ok(round.seed.tier===round.tier);
+    assert.equal((await state(page)).balance,START-round.cost+round.win);
+    assert.deepEqual(errors,[]);
+  } finally {await page.close();}
+});
+test('failed startup offers a working reload', async () => {
+  const page=await browser.newPage({viewport:{width:1366,height:768}});
+  try {
+    await page.route('**/app.js?v=*',r=>r.abort());await page.goto(srv.url+GAME);
+    await page.locator('#load-retry').waitFor(); await page.unroute('**/app.js?v=*');
+    await page.locator('#load-retry').click();await page.locator('#intro-go').waitFor();assert.ok(await page.locator('#loading-screen').isHidden());
+  } finally {await page.close();}
+});
 for (const [kind, mode, size, shows] of [
   ['blackout', 'base', { width: 1920, height: 1080 }, ['blackout', 'bigwin-max']],
   ['cap', 'overpressure', { width: 390, height: 844 }, ['bigwin-max']],
@@ -267,6 +375,7 @@ for (const [kind, mode, size, shows] of [
     await page.addInitScript(STEER);
     await page.goto(srv.url + GAME);
     await page.waitForFunction(() => window.cyberSkunk?.state.ready);
+    await page.locator('#intro-go').click();
     const value = await steer(page, kind);
     if (mode === 'base') await control(page, 'play').click();
     else { await control(page, 'buy').click(); await page.locator(`[data-pick=${mode}]`).click(); await page.locator('#confirm-ok').click(); }
@@ -291,6 +400,7 @@ test('a reload mid-bonus loses nothing: the round is paid on the next visit and 
   await page.addInitScript(STEER);
   await page.goto(srv.url + GAME);
   await page.waitForFunction(() => window.cyberSkunk?.state.ready);
+  await page.locator('#intro-go').click();
   const value = await steer(page, 'cap');
   await control(page, 'buy').click(); await page.locator('[data-pick=overpressure]').click(); await page.locator('#confirm-ok').click();
   await page.waitForSelector('#bonus-panel:not([hidden])', { timeout: 20000 });
@@ -309,4 +419,170 @@ test('a reload mid-bonus loses nothing: the round is paid on the next visit and 
   assert.equal((await history(page)).length, 1);
   assert.deepEqual(errors, []);
   await page.close();
+});
+
+test('Zombify shop sections and free previews preserve credits and history', async () => {
+  for (const size of [{width:390,height:844},{width:1366,height:768}]) {
+    const {page, errors} = await open({...size, session:{speed:'turbo'}});
+    try {
+      await control(page,'buy').click();
+      await page.screenshot({path:'/tmp/cyber-shop-'+size.width+'.png'});
+      await page.locator('[data-view=preview]').click();
+      await page.locator('[data-preview=hidden]').click();
+      await page.locator('#bonus-panel-go').waitFor();
+      assert.equal(await page.locator('#bonus-panel-kicker').textContent(),'FREE PREVIEW');
+      await finish(page);
+      assert.equal((await state(page)).balance,START);
+      assert.equal((await state(page)).pending,null);
+      assert.ok(await page.locator('#buy-menu').isVisible());
+      assert.equal(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)).history?.length||0,KEY),0);
+      assert.deepEqual(errors,[]);
+    } finally { await page.close(); }
+  }
+});
+test('studio ident advances to a gated guide on slow loads', async () => {
+  const page = await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+  let release;
+  const gate = new Promise(resolve=>{release=resolve});
+  try {
+    await page.route('**/assets/symbols/a.webp', async route=>{await gate;await route.continue();});
+    await page.goto(srv.url+GAME,{waitUntil:'domcontentloaded'});
+    await page.locator('.studio-monogram').waitFor();
+    assert.equal(await page.locator('#loading-screen canvas, #studio-mascot').count(),0);
+    await page.waitForTimeout(3200);
+    await page.screenshot({path:'/tmp/cyber-studio-ident.png'});
+    await page.locator('#intro:not([hidden])').waitFor();
+    assert.ok(await page.locator('#intro-go').isDisabled());
+    assert.ok(await page.locator('#guide-loading').isVisible());
+    release();
+    await page.locator('#intro-go').click();
+    assert.ok(await page.locator('#intro').isHidden());
+  } finally {release();await page.close();}
+});
+test('polished shop and single unboxed bonus result on phones and desktop', async () => {
+  for (const [width,height] of [[360,640],[1366,768]]) {
+    const {page,errors}=await open({width,height,session:{speed:'turbo'}});
+    try {
+      await control(page,'buy').click();
+      const shots='/tmp/';
+      await page.screenshot({path:shots+'dispatch-shop-'+width+'.png'});
+      assert.equal(await page.locator('.offer:visible').count(),3);
+      assert.equal(await page.locator('.shop-options').evaluate(e=>e.scrollWidth>e.clientWidth+1),false);
+      await page.locator('[data-view=feature]').click();
+      assert.equal(await page.locator('.offer:visible').count(),2);
+      await page.locator('[data-view=bonus]').click();
+      await page.locator('[data-pick=overpressure]').click();
+      await page.locator('#confirm-cancel').click();
+      assert.equal((await state(page)).balance,START);
+      await page.addInitScript(STEER);
+      await page.reload();await page.locator('#intro-go').click();
+      const expected=await steer(page,'cap');
+      await control(page,'buy').click();
+      await page.locator('[data-pick=overpressure]').click();
+      await page.locator('#confirm-ok').click();
+      await page.locator('#bonus-panel-go').click();
+      const skipToWin=setInterval(()=>page.evaluate(()=>{
+        if(window.cyberSkunk.state.busy && document.getElementById('bigwin').hidden)
+          document.getElementById('controller').shadowRoot.querySelector('[data-action=play]').click();
+      }).catch(()=>{}),100);
+      try {
+        await page.locator('#bigwin[data-scope="bonus-total"]:not([hidden])').waitFor({timeout:90000});
+        assert.equal(await page.locator('#bigwin-title').textContent(),'MAX WIN');
+        assert.equal(await page.locator('#bigwin-title img').count(),0);
+        const win=await page.locator('#bigwin').boundingBox(), reels=await page.locator('#reels').boundingBox();
+        assert.ok(['x','y','width','height'].every(k=>Math.abs(win[k]-reels[k])<1));
+        assert.ok(await control(page,'play').isVisible());
+        await page.waitForTimeout(280);
+        await page.screenshot({path:shots+'dispatch-win-'+width+'.png'});
+      } finally {clearInterval(skipToWin);}
+      await page.waitForFunction(()=>!window.cyberSkunk.state.busy);
+      assert.equal((await state(page)).balance,START-25000+expected);
+      assert.deepEqual(errors,[]);
+    } finally {await page.close();}
+  }
+});
+
+test('scatter landing precedes the held bonus briefing on every entry path', async () => {
+  const cases = [
+    ['ventbreak',null,3,'VENT BREAK'], ['overpressure',null,4,'OVERPRESSURE'],
+    ['mystery',0,3,'VENT BREAK'], ['mystery',500000000,4,'OVERPRESSURE'],
+    ['mystery',950000000,5,'BLACKOUT PROTOCOL'], ['base',null,5,'BLACKOUT PROTOCOL'],
+  ];
+  for (const [mode,ticket,count,title] of cases) {
+    const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+    try {
+      await page.addInitScript(STEER);
+      await page.goto(srv.url+GAME);
+      await page.locator('#intro-go').click();
+      if (mode === 'base') {
+        await steer(page,'blackout');
+        await control(page,'play').click();
+      } else {
+        await control(page,'buy').click();
+        await page.locator('[data-pick='+mode+']').click();
+        if (ticket !== null) await page.evaluate(t=>window.__tickets.push({t,total:1000000000},{t:0,total:1000000000}),ticket);
+        await page.locator('#confirm-ok').click();
+      }
+      await page.locator('#reels .spinning').first().waitFor();
+      assert.ok(await page.locator('#buy-stinger').isHidden());
+      await page.waitForFunction(n=>document.querySelectorAll('#fs-faces .fs-raised').length===n && !document.querySelector('#reels .spinning'),count);
+      assert.ok(await page.locator('#bonus-panel').isHidden());
+      await page.locator('#buy-stinger[open][data-phase=sealed] #bonus-panel-go').waitFor();
+      assert.equal(await page.locator('#bonus-panel-title img').getAttribute('alt'),title);
+      assert.equal(await page.locator('#bonus-panel-award').textContent(),(count===3?'12':'10')+' FREE SPINS');
+      await page.waitForTimeout(650);
+      assert.equal(await page.locator('#buy-stinger').getAttribute('data-phase'),'sealed');
+      await page.locator('#bonus-panel-go').click();
+      await page.locator('#buy-stinger').waitFor({state:'hidden'});
+      assert.ok(await page.locator('#bonus-hud').isVisible());
+    } finally {await page.close();}
+  }
+});
+
+test('tier popups use each spin payout on the winning board, and the bonus has a separate total', async () => {
+  for (const bonus of [false, true]) {
+    const page = await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+    try {
+      await page.addInitScript(STEER);
+      await page.addInitScript(k=>localStorage.setItem(k,JSON.stringify({speed:'turbo'})),KEY);
+      await page.goto(srv.url+GAME); await page.locator('#intro-go').click();
+      const expected = await page.evaluate(async bonus => {
+        const {default:d} = await import('./catalog-data.js');
+        const {playRound,seeded} = await import('./engine.js');
+        const pool = d.pools[bonus?'bonus-regular':'spin-base'];
+        // This bought round has small wins between Nice, Big, Epic and Mythic spins.
+        const i = pool.findIndex(([seed,,paid])=> bonus ? seed===1057196 : paid>=2500 && paid<10000);
+        if (i<0) throw Error('Missing test round');
+        const [seed,,total] = pool[i];
+        const queue = t=>window.__tickets.push({t,total:d.total});
+        if (!bonus) queue(0);
+        queue(pool.slice(0,i).reduce((s,row)=>s+row[1],0));
+        const round = playRound(bonus ? {mode:'ventbreak',rng:seeded(seed)} : {mode:'base',rng:seeded(seed)});
+        const tier = p=>p>=50000?'MYTHIC WIN':p>=10000?'EPIC WIN':p>=2500?'BIG WIN':'NICE WIN';
+        const basis = p=>(p/100).toLocaleString('en-US',{maximumFractionDigits:1})+'× BASE BET';
+        window.winLog=[];
+        const el=document.getElementById('bigwin');
+        new MutationObserver(()=>{
+          if (el.hidden) return;
+          window.winLog.push([el.dataset.scope,document.getElementById('bigwin-title').textContent,
+            document.getElementById('win-basis').textContent,document.getElementById('win-context').textContent,
+            !!document.querySelector('#reels .cell.win')]);
+        }).observe(el,{attributes:true,attributeFilter:['hidden']});
+        return { total, popups:round.events.filter(e=>e.type==='wins'&&e.paid>=1000).map(e=>[
+          'spin',tier(e.paid),basis(e.paid),bonus?'FREE SPIN '+e.spin+' OF '+e.of:'LINE WIN',true]) };
+      },bonus);
+      if(bonus) {
+        await control(page,'buy').click();await page.locator('[data-pick=ventbreak]').click();await page.locator('#confirm-ok').click();await page.locator('#bonus-panel-go').click();
+        await page.locator('#bigwin[data-tier=epic][data-scope=spin]:visible').waitFor({timeout:100000});
+        await page.waitForFunction(()=>document.getElementById('bigwin-amount').textContent==='$106.60');
+      } else await control(page,'play').click();
+      await page.waitForFunction(()=>!window.cyberSkunk.state.busy,null,{timeout:100000});
+      const log=await page.evaluate(()=>window.winLog);
+      assert.deepEqual(log.filter(x=>x[0]==='spin'),expected.popups);
+      assert.equal(log.filter(x=>x[0]==='bonus-total').length,bonus?1:0);
+      if(bonus) assert.equal(log.at(-1)[0],'bonus-total');
+      assert.equal((await history(page))[0].win,expected.total);
+      assert.equal((await state(page)).balance,START-(bonus?10000:100)+expected.total);
+    } finally {await page.close();}
+  }
 });

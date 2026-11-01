@@ -5,10 +5,23 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#101820">
 <title>Cyber Skunk · Gamboligy Games</title>
-<link rel="stylesheet" href="styles.css?v=2">
+<link rel="stylesheet" href="styles.css?v=9">
+<link rel="stylesheet" href="entry-shop.css?v=8">
+<link rel="preload" href="assets/studio-gg-diagonal.png" as="image">
+<link rel="preload" href="assets/ui/airlock.svg" as="image" fetchpriority="low">
 </head>
 <body>
-<div id="app" class="app" data-layout="desktop">
+<div id="loading-screen" class="loading-screen" role="status" aria-live="polite">
+  <div class="studio-identity ident-ready" aria-label="Gamboligy Games">
+    <div class="studio-monogram" aria-hidden="true"><span class="gg-piece gg-first"></span><span class="gg-piece gg-second"></span></div>
+    <div class="studio-wordmark" aria-hidden="true"><div class="studio-main"><b>GAM</b>BOLIGY</div><div class="studio-sub"><span class="studio-gam">GAM</span><span class="studio-es">ES</span></div></div>
+  </div>
+  <div class="load-console"><h1 id="load-title">Preparing game</h1>
+    <progress id="load-progress" max="4" value="0" aria-label="Game loading progress"></progress>
+    <button id="load-retry" class="secondary" hidden>RETRY LOADING</button>
+  </div>
+</div>
+<div id="app" class="app" data-layout="desktop" inert>
   <div class="backdrop" aria-hidden="true"><div class="hall"></div><div class="fans"><i></i><i></i><i></i></div><div class="grill"></div><div class="blackout"></div></div>
   <div id="stage" class="stage">
     <div class="logo" aria-label="Cyber Skunk"><span class="logo-text">CYBER<b>SKUNK</b></span></div>
@@ -16,12 +29,19 @@
     <div class="mascot-ledge" aria-hidden="true"></div>
     <canvas id="jet" class="jet" aria-hidden="true"></canvas>
     <div id="machine" class="machine">
-      <div class="gauge" aria-hidden="true"><div class="gauge-face"><i></i></div><div id="gauge-needle" class="gauge-needle"></div><div class="gauge-readout"><span class="gauge-label">PRESSURE</span><span id="gauge-value" class="gauge-value">0</span></div></div>
+      <div id="pressure-meter" class="gauge pressure-module" role="meter" aria-label="Reservoir pressure" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"><div class="gauge-face"><i></i></div><div id="gauge-needle" class="gauge-needle"></div><div class="gauge-readout"><span class="gauge-label">PRESSURE</span><span id="gauge-value" class="gauge-value">0</span></div><span class="meter-bands" aria-hidden="true"></span></div>
       <div id="cabinet" class="cabinet">
         <div class="pipes" aria-hidden="true"></div>
         <div class="cabinet-art" aria-hidden="true"></div>
         <div id="reels" class="reels" role="img" aria-label="Reels"></div>
+        <div id="fs-faces" class="fs-faces" aria-hidden="true"></div>
         <canvas id="fx" class="fx" width="1200" height="800" aria-hidden="true"></canvas>
+        <div id="bigwin" class="bigwin" hidden role="group" aria-labelledby="bigwin-title">
+          <div class="win-composition"><span class="win-kicker" id="win-context"></span><h2 class="bigwin-title" id="bigwin-title"></h2>
+            <div class="bigwin-amount" id="bigwin-amount"></div><div class="win-basis" id="win-basis"></div></div>
+          <button id="win-dismiss" type="button" aria-label="Finish win celebration"></button>
+        </div>
+        <div id="line-award" class="line-award" hidden aria-hidden="true"></div>
         <div id="reel-banner" class="reel-banner" hidden role="status"></div>
         <div class="shelf"><span id="status" class="status" role="status" aria-live="polite">PRESSURE IS BUILDING</span></div>
       </div>
@@ -31,20 +51,38 @@
     </div>
   </div>
 
+  <dialog id="buy-stinger" class="buy-stinger" aria-labelledby="bonus-panel-title" aria-describedby="bonus-panel-award bonus-panel-text">
+    <i class="airlock-leaf" aria-hidden="true"></i><i class="airlock-leaf right" aria-hidden="true"></i>
+    <div id="bonus-panel" class="bonus-panel" hidden>
+      <div class="bonus-panel-inner"><span class="kicker" id="bonus-panel-kicker"></span>
+        <h2 id="bonus-panel-title">Bonus</h2><strong id="bonus-panel-award"></strong>
+        <p id="bonus-panel-text"></p><button id="bonus-panel-go" class="primary">START FREE SPINS</button></div>
+    </div>
+  </dialog>
+  <svg width="0" height="0" class="shop-defs" aria-hidden="true" focusable="false"><defs>
+    <clipPath id="shop-cast-sign"><path d="M8 177 43 136h62l13 9h96l17-14h173l19 14h101l15-11h58l33 39v30l-9 11v38l10 12v26l-29 30H430l-13 9H219l-14-12h-53l-8 7H34L8 293Z"/></clipPath>
+    <linearGradient id="shop-letter" x2="0" y2="1"><stop stop-color="#fff1d1"/><stop offset=".45" stop-color="#edddbd"/><stop offset="1" stop-color="#baa27e"/></linearGradient>
+    <linearGradient id="shop-enamel" x2=".7" y2="1"><stop stop-color="#342f29"/><stop offset=".55" stop-color="#25211f"/><stop offset="1" stop-color="#14191a"/></linearGradient>
+  </defs></svg>
   <dialog id="buy-menu" class="panel buy-menu" aria-labelledby="buy-title">
-    <button class="close" data-close="buy-menu" aria-label="Close">×</button>
-    <h2 id="buy-title">CHOOSE YOUR PLAY</h2>
-    <p class="buy-bet">Base bet <b id="buy-bet">1.00</b> <span class="bet-steps"><button data-bet="-1" aria-label="Lower bet">−</button><button data-bet="1" aria-label="Raise bet">+</button></span></p>
-    <section><h3>FEATURE SPINS</h3><div class="cards" id="feature-cards"></div></section>
-    <section><h3>BONUS BUYS</h3><div class="cards" id="bonus-cards"></div></section>
-    <section class="hidden-tier"><h3>HIDDEN</h3><div class="card info"><div class="card-art art-blackout"></div><div class="card-body"><h4>BLACKOUT PROTOCOL</h4><p>Land 5 FS scatters in one spin. The lights go out, a 4-vent route lights up and the Reservoir starts at 3. Always pays at least 1,000×. Not for sale.</p></div></div></section>
+    <div class="shop-wrap">
+      <header class="shop-head"><div><small>CYBER SKUNK &nbsp; / &nbsp; VENT HALL</small><h2 id="buy-title">Feature shop</h2></div>
+        <div class="buy-bet"><button data-bet="-1" aria-label="Lower bet">−</button><div><small>BASE BET</small><b id="buy-bet">$1.00</b></div><button data-bet="1" aria-label="Raise bet">+</button></div>
+        <button class="close" data-close="buy-menu" aria-label="Close shop">×</button>
+      </header>
+      <nav class="buy-switch" aria-label="Shop sections"><button data-view="bonus" aria-controls="bonus-section">Bonus Buys</button><button data-view="feature" aria-controls="feature-section">Feature Spins</button><button data-view="preview" aria-controls="preview-section">Free Previews</button></nav>
+      <div class="shop-options">
+        <section id="bonus-section" aria-label="Bonus buys"><p>Choose your bonus.</p><div class="cards" id="bonus-cards"></div></section>
+        <section id="feature-section" hidden aria-label="Feature spins"><p>Activate a feature for every spin.</p><div class="cards" id="feature-cards"></div></section>
+        <section id="preview-section" hidden aria-label="Free previews"><p>Try a feature for free.</p><div id="preview-options"></div></section>
+      </div></div>
   </dialog>
 
   <dialog id="confirm" class="panel confirm" aria-labelledby="confirm-title">
-    <h2 id="confirm-title">CONFIRM</h2>
+    <small id="confirm-kind"></small><h2 id="confirm-title">CONFIRM</h2><div id="confirm-symbols" aria-hidden="true"></div>
     <dl><dt>Base bet</dt><dd id="confirm-bet"></dd><dt>Cost</dt><dd id="confirm-cost"></dd><dt>Total</dt><dd id="confirm-total"></dd><dt>Balance after</dt><dd id="confirm-balance"></dd></dl>
     <p id="confirm-rules" class="confirm-rules"></p>
-    <div class="confirm-actions"><button id="confirm-cancel" class="secondary">CANCEL</button><button id="confirm-ok" class="primary">CONFIRM</button></div>
+    <div class="confirm-actions"><button id="confirm-cancel" class="secondary">BACK TO OPTIONS</button><button id="confirm-ok" class="primary">CONFIRM</button></div>
   </dialog>
 
   <dialog id="bet-picker" class="panel bet-picker" aria-labelledby="bet-title">
@@ -65,7 +103,7 @@
     <label class="setting">Music<input id="menu-music" type="range" min="0" max="100" value="60"></label>
     <label class="setting">Effects<input id="menu-effects" type="range" min="0" max="100" value="80"></label>
     <label class="setting">Spin speed<select id="menu-speed"><option value="normal">Normal</option><option value="quick">Quick</option><option value="turbo">Turbo</option></select></label>
-    <div class="menu-links"><button id="menu-rules">Game rules &amp; paytable</button><button id="menu-history">History</button><button id="menu-reset">Reset free-play credits</button></div>
+    <div class="menu-links"><button id="menu-rules">Game rules &amp; paytable</button><button id="menu-guide">Feature guide</button><button id="menu-history">History</button><button id="menu-reset">Reset free-play credits</button></div>
   </dialog>
 
   <dialog id="rules" class="panel rules" aria-labelledby="rules-title">
@@ -78,28 +116,36 @@
     <h2 id="history-title">HISTORY</h2><div id="history-rows"></div>
   </dialog>
 
-  <div id="bonus-panel" class="bonus-panel" hidden role="dialog" aria-modal="true" aria-labelledby="bonus-panel-title">
-    <div class="bonus-panel-inner"><span class="kicker" id="bonus-panel-kicker"></span><h2 id="bonus-panel-title"></h2><p id="bonus-panel-text"></p><button id="bonus-panel-go" class="primary">CONTINUE</button></div>
-  </div>
-  <div id="bigwin" class="bigwin" hidden aria-live="assertive"><canvas id="bigwin-fx" class="bigwin-fx" aria-hidden="true"></canvas><div class="bigwin-title" id="bigwin-title"></div><div class="bigwin-amount" id="bigwin-amount"></div></div>
   <div id="toast" class="toast" hidden role="status"></div>
-  <div id="intro" class="intro" hidden role="dialog" aria-modal="true" aria-labelledby="intro-title">
+  <div id="intro" class="intro" hidden tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="intro-title">
     <div class="intro-inner">
-      <h2 id="intro-title" class="intro-logo">CYBER <b>SKUNK</b></h2>
-      <div class="intro-cards">
-        <figure class="intro-card" data-art="intro-route">
-          <div class="intro-pic intro-route" aria-hidden="true"></div>
-          <figcaption><b>BACKPRESSURE</b> An outlined symbol flips to reveal a vent. Cyber Skunk sprays it. The spray follows each vent's outlet: every cell it touches turns <b>wild</b>, and every vent it passes adds pressure, ×2, ×3 and up.</figcaption>
-        </figure>
-        <figure class="intro-card" data-art="intro-bonuses">
-          <div class="intro-pic intro-tiers"><span><i>3 FS</i>VENT BREAK</span><span><i>4 FS</i>OVER&shy;PRESSURE</span><span><i>5 FS</i>BLACKOUT PROTOCOL</span></div>
-          <figcaption><b>THREE BONUSES</b> Sticky vents, a Reservoir that keeps the pressure, and a hidden Blackout. Win up to <b>25,000×</b> your bet.</figcaption>
-        </figure>
+      <h2 id="intro-title"><img class="intro-mark" src="assets/ui/logo.webp" alt="Cyber Skunk"></h2>
+      <div class="intro-cards" id="feature-deck">
+        <article class="intro-card" data-current>
+          <div class="guide-scene"><div class="guide-board" role="img" aria-label="FS scatters landing across the reels"></div><div class="scene-bar"><b class="demo-caption"></b><button class="demo-toggle" aria-label="Pause FS scatters landing across the reels demonstration">Pause</button></div></div>
+          <div class="feature-copy"><span class="feature-index">01 / SCATTERS</span><h3>Free Spins</h3>
+          <p>Land 3 FS for Vent Break, 4 for Overpressure, or 5 for the hidden Blackout Protocol.</p></div>
+        </article>
+        <article class="intro-card">
+          <div class="guide-scene"><div class="guide-board" role="img" aria-label="A spray route turns symbols wild"></div><div class="scene-bar"><b class="demo-caption"></b><button class="demo-toggle" aria-label="Pause A spray route turns symbols wild demonstration">Pause</button></div></div>
+          <div class="feature-copy"><span class="feature-index">02 / WILDS</span><h3>Backpressure</h3>
+          <p>The skunk sprays a vent. Every symbol in the spray’s path turns wild. Each vent it crosses raises the multiplier.</p></div>
+        </article>
+        <article class="intro-card">
+          <div class="guide-scene"><div class="guide-board" role="img" aria-label="Pressure carries into the next spray"></div><div class="scene-bar"><b class="demo-caption"></b><button class="demo-toggle" aria-label="Pause Pressure carries into the next spray demonstration">Pause</button></div></div>
+          <div class="feature-copy"><span class="feature-index">03 / PRESSURE</span><h3>The Reservoir</h3>
+          <p>During free spins, the gauge banks pressure from each spray. The next spray starts with that extra pressure.</p></div>
+        </article>
       </div>
-      <div class="intro-actions"><label class="intro-skip"><input type="checkbox" id="intro-hide"> Don't show this again</label><button id="intro-go" class="primary intro-go">PLAY</button></div>
+      <nav class="guide-nav" aria-label="Feature pages"><button id="guide-prev" type="button" aria-label="Previous feature">‹</button>
+        <div class="guide-dots"><button aria-label="Free Spins" aria-current="step"></button><button aria-label="Backpressure"></button><button aria-label="The Reservoir"></button></div>
+        <button id="guide-next" type="button" aria-label="Next feature">›</button></nav>
+      <span id="guide-announcement" class="sr-only" role="status"></span>
+      <span id="guide-loading" role="status">Preparing game</span><button disabled id="intro-go" class="primary intro-go"><span class="desktop-cta">CLICK TO CONTINUE</span><span class="phone-cta">TAP TO PLAY</span></button>
+      <div class="guide-foot">3 FS · 12 VENT BREAK SPINS &nbsp; / &nbsp; 4 FS · 10 OVERPRESSURE &nbsp; / &nbsp; 5+ FS · 10 BLACKOUT</div>
     </div>
   </div>
 </div>
-<script type="module" src="app.js?v=2"></script>
+<script type="module" src="launch.js?v=8"></script>
 </body>
 </html>

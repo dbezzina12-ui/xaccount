@@ -2,7 +2,7 @@
 // ART_SPEC §2) when it is present, and these vector placeholders until then,
 // drawn in the style frame's palette.
 export const PALETTE = Object.freeze({ midnight: '#101820', graphite: '#252d31', ivory: '#efe5cf', brass: '#ad7840', amber: '#eda83c', cyan: '#68c8c3' });
-export const ART = Object.freeze({ H1: 'h1-battery', H2: 'h2-rotor', H3: 'h3-canister', H4: 'h4-key', A: 'a', K: 'k', Q: 'q', J: 'j', T: 'ten', W: 'wild', S: 'scatter-plate' });
+export const ART = Object.freeze({ H1: 'h1-battery', H2: 'h2-rotor', H3: 'h3-canister', H4: 'h4-key', A: 'a', K: 'k', Q: 'q', J: 'j', T: 'ten', W: 'wild', S: 'fs-violet' });
 
 const svg = (body) => `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${body}</svg>`;
 const plate = (fill = '#1b2329') => `<rect x="9" y="9" width="82" height="82" rx="10" fill="${fill}" stroke="#0b1014" stroke-width="3"/><rect x="13" y="13" width="74" height="74" rx="7" fill="none" stroke="#ad784066" stroke-width="2"/>`;
@@ -19,7 +19,7 @@ const PLACEHOLDER = {
 const available = new Map();
 // Checks once which art files exist, so placeholders fill only the gaps.
 export async function loadArt(base = 'assets/symbols/') {
-  await Promise.all(Object.entries(ART).filter(([id]) => id !== 'S').map(async ([id, file]) => {
+  await Promise.all(Object.entries(ART).map(async ([id, file]) => {
     const url = `${base}${file}.webp`;
     const ok = await new Promise((resolve) => { const img = new Image(); img.onload = () => resolve(true); img.onerror = () => resolve(false); img.src = url; });
     if (ok) available.set(id, url);
@@ -29,10 +29,8 @@ export async function loadArt(base = 'assets/symbols/') {
   return available.size;
 }
 export function symbolHTML(id) {
-  // Dylan: FS is only lettering, never a plate, frame or box.
-  if (id === 'S') return PLACEHOLDER.S;
   if (!available.has(id)) return PLACEHOLDER[id] || '';
-  return `<img src="${available.get(id)}" alt="" draggable="false">`;
+  return `<img src="${available.get(id)}" ${id === 'S' ? 'class="scatter-letters" alt="FS"' : 'alt=""'} draggable="false">`;
 }
 // The spinning filler as one image: the symbols drawn once, top to bottom,
 // into a strip of 200 px cells, so a spinning reel moves one element instead
@@ -69,7 +67,7 @@ export async function fillerStrip(ids, k = 1.5) {
 // its <text> (an SVG drawn as an image cannot use the page's fonts), with the
 // text returned to be drawn on the canvas.
 async function symbolArt(id) {
-  const painted = id !== 'S' && available.has(id), texts = [];
+  const painted = available.has(id), texts = [];
   let src = available.get(id);
   if (!painted) {
     const markup = (PLACEHOLDER[id] || svg('')).replace(/<text ([^>]*)>([^<]*)<\/text>/g, (_, attrs, text) => {
