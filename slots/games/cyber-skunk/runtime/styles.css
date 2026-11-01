@@ -68,10 +68,15 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
    of the 1600 x 2000 canvas): about a third of a phone's width with the tail
    curl at the left edge; about 21% on desktop, ending just short of the cabinet. */
 .app[data-rig="4"][data-layout=mobile] .mascot{left:-139px;top:64px;width:528px;height:660px}
-.app[data-rig="4"][data-layout=desktop] .mascot{left:-139px;top:246px;width:576px;height:720px}
+.app[data-rig="4"][data-layout=desktop] .mascot{left:-73px;top:320px;width:488px;height:610px}
+.app[data-rig="4"][data-layout=desktop] .mascot::before{content:"";position:absolute;z-index:-1;left:37.8%;top:62%;width:32.4%;aspect-ratio:778/897;background:url(assets/ui/operator-boots.webp) center/contain no-repeat;filter:brightness(.72)}
 .mascot-ledge{display:none;position:absolute;z-index:4;pointer-events:none}
-.app[data-layout=desktop] .mascot-ledge{display:block;left:12px;top:645px;width:318px;aspect-ratio:1484/836;background:url(assets/ui/pressure-bench.webp) center/contain no-repeat}
-.app[data-rig="4"][data-layout=desktop] .mascot-ledge{top:687px}
+.app[data-layout=desktop] .mascot-ledge{display:block;left:57px;top:650px;width:320px;aspect-ratio:1453/846;z-index:auto}
+/* Paws cross the work surface. The front apron still covers the waist seam. */
+.app[data-layout=desktop] .mascot-ledge::before,.app[data-layout=desktop] .mascot-ledge::after{content:"";position:absolute;inset:0;background:url(assets/ui/operator-desk.webp) center/contain no-repeat}
+.app[data-layout=desktop] .mascot-ledge::before{z-index:2;filter:drop-shadow(1px 4px 2px #100d0a99)}
+.app[data-layout=desktop] .mascot-ledge::after{z-index:4;clip-path:polygon(0 14%,16% 14%,22% 24%,42% 24%,43% 14%,84% 14%,87% 25%,100% 18%,100% 100%,0 100%)}
+.app[data-rig="4"][data-layout=desktop] .mascot-ledge{top:685px}
 .machine{position:absolute;z-index:5}
 .jet{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9}
 .app[data-layout=desktop] .machine{left:410px;top:140px;width:1100px}
@@ -157,11 +162,11 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 
 /* The desk instrument and lower phone rail share one live reservoir meter. */
 .gauge{position:absolute;z-index:7;width:160px;height:160px;left:50%;transform:translateX(-50%)}
-/* Artwork registration: dial pivot (355,329) on a 1484 × 836 apron. */
-.app[data-layout=desktop] .gauge{left:23.92%;top:39.35%;width:19.68%;height:auto;aspect-ratio:1;transform:translate(-50%,-50%)}
-.app[data-layout=desktop] .gauge-readout{position:absolute;left:134%;top:55%;width:215%;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;gap:8px;color:#f3e5c1;text-shadow:0 2px 2px #151714}
-.app[data-layout=desktop] .gauge-label{font:800 19px/1 var(--font);letter-spacing:.055em;color:#d4c2a0}
-.app[data-layout=desktop] .gauge-value{font:400 28px/1 var(--title);font-variant-numeric:tabular-nums}
+/* The dial centre and brass nameplate are painted into the desk's front apron. */
+.app[data-layout=desktop] .gauge{left:23.2%;top:34.65%;width:8.6%;height:auto;aspect-ratio:1;transform:translate(-50%,-50%)}
+.app[data-layout=desktop] .gauge-readout{position:absolute;left:126%;top:45%;width:555%;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;gap:8px;color:#f3e5c1;text-shadow:0 1px 2px #151714}
+.app[data-layout=desktop] .gauge-label{font:800 17px/1 var(--font);letter-spacing:.075em;color:#dbc7a6}
+.app[data-layout=desktop] .gauge-value{font:400 22px/1 var(--title);font-variant-numeric:tabular-nums}
 .gauge-readout{position:absolute}
 /* The reservoir sits in the lower cabinet lip. The same face appears in the phone guide. */
 .rail-demo,.meter-bands{display:none}
