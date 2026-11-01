@@ -841,7 +841,7 @@ const EXTRA = {
 };
 async function loadUI() {
   const ui = {
-    cabinet: 'assets/ui/cabinet.webp', 'gauge-face': 'assets/ui/gauge-face-inset.svg', 'gauge-needle': 'assets/ui/gauge-needle.webp', 'pipes-top': 'assets/ui/pipes-top.webp', logo: 'assets/ui/logo.webp',
+    cabinet: 'assets/ui/cabinet.webp', 'gauge-face': 'assets/ui/gauge-face-inset.svg', 'gauge-needle': 'assets/ui/gauge-needle.webp', 'pipes-top': 'assets/ui/pipes-top.webp', logo: 'assets/ui/logo.webp?v=2',
     'bg-desktop': 'assets/bg/bg-desktop.webp', 'bg-mobile': 'assets/bg/bg-mobile.webp', 'bg-bonus-desktop': 'assets/bg/bg-bonus-desktop.webp', 'bg-bonus-mobile': 'assets/bg/bg-bonus-mobile.webp',
   };
   const found = Object.fromEntries(await Promise.all(Object.entries(ui).map(async ([k, url]) => [k, (await exists(url)) ? url : null])));
