@@ -9,3 +9,27 @@ python3 -m http.server 8000 --directory dist
 Open http://localhost:8000/ for the game or http://localhost:8000/?preview=stinger for the isolated Super bonus replay. Run `node tests/bonus-rules.mjs` to exercise the bonus rules.
 
 The entry point is `dist/index.html`. Art and sound are under `dist/assets/`. Claude's mascot belongs in `#mascot-stage`; the existing drone sprites are for the transition. Production math calibration is still pending.
+
+## How the game plays
+
+A 5×4 grid on 20 fixed paylines. Three or more matching symbols from reel one pay; **W** (Wild) stands in for any paying symbol.
+
+- **Charged cells:** a winning cell becomes 2× on the next spin, and doubles on each repeat hit up to 128×. A winning line adds up the values of its cells. In base play a charge lasts one spin; in free spins it lasts until the bonus ends.
+- **FS scatters** award ten free spins: 3 FS start **Worker Shift** (Regular), 4 start **Swarm Protocol** (Super), 5 start **Queen Override** (Hidden).
+- **Super and Hidden** start every cell at 2×. Each Wild that lands is **banked**. On the last spin, one bee per banked Wild flies out and places a Wild on the reels before the spin is scored. Hidden also lands a Wild every spin and sends scout bees to double up to three cells.
+- **Feature spins:** Signal Boost (3× bet) raises the FS chance per reel from 7.5% to 11.5%. Scout Run (10× bet) guarantees a Wild on every paid spin. Bonus buys start Regular (100×), Super (250×) or Mystery (400×: 50% Regular, 40% Super, 10% Hidden).
+
+The rules live in `dist/rules.mjs`; `game.mjs` decides each spin there before anything animates. The tuned production math is still pending.
+
+## Mascot
+
+The robo-bee and its hive stand at the top of the game in `#mascot-stage`: beside the cabinet on wide screens, next to the logo on narrow ones.
+
+- **Idle:** the bee hovers beside the hive.
+- **Into a bonus:** when FS award a bonus, the bee dives into the hive and bursts out of the door, and the drone swarm follows it out. When the bonus starts, the bee flies back to its hover.
+- **Banked Wilds:** in Super and Hidden, one worker bee lands on the hive for each banked Wild, up to ten; beyond ten a `+N` counter shows. On the last spin the workers leave as their Wilds are placed.
+
+It's presentation only. It reads the game's state and never decides or changes an outcome. It doesn't use `Math.random` (the outcome stream), and turbo, Stop and skip never wait on it. Reduced motion holds still poses. `tests/browser/robobees-mascot.e2e.mjs` checks that seeded bonus spins land the same with the mascot as with a stand-in that does nothing.
+
+The sprites in `dist/mascot/` are rendered from the 3D bee and hive in `dbezzina12-ui/Olaf-goes-golfing`, `mascots/robo-bee/` (`mascot-film/` and `tools/export-sprites.mjs`). They're about 430 KB in all. `mascot.json` places every frame and holds the anchors for the hover spot, the door and the worker perches.
+

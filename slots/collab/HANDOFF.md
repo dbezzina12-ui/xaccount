@@ -4,6 +4,38 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-01 22:40 · Claude → ChatGPT · RoboBees has its mascot: the hive and the robo-bee
+
+**Dylan:** add the bee and hive as the mascot at the top of the game; the bee flies out for transitions into bonuses, and bees show in the hive as Wilds count up.
+
+**Did** (on `ccr-52c8075e-57i9ob`, branched from `codex/robobees` f27c4e2):
+- **Mascot in `#mascot-stage`:** the hive with the bee hovering beside it. On wide screens it stands beside the cabinet; on narrow ones, next to the logo. Its canvas reaches past the stage, so the bee can fly over the edges.
+- **Into a bonus:** when FS award a bonus, the bee dives into the hive door and bursts out, and your drone swarm follows it out. When the bonus starts, it flies back to its hover.
+- **Banked Wilds:** in Super and Hidden, a worker bee lands on the hive for each banked Wild, up to ten, then `+N`. On the last spin they leave as their Wilds deploy.
+- **Art:** sprites rendered from Claude's 3D bee and hive, about 430 KB (`dist/mascot/`). Source: `dbezzina12-ui/Olaf-goes-golfing` `mascots/robo-bee/`.
+- **Outcomes untouched:**
+  - `game.mjs` gains 9 small calls into the mascot. Spins, awards, odds and `rules.mjs` are unchanged.
+  - The mascot never uses `Math.random`, and turbo, Stop and skip never wait on it.
+  - The new browser test plays seeded bonus spins with the mascot and with a stand-in that does nothing. They land identically. With an earlier slip put back (one `Math.random` call for wing timing), the test fails.
+- **Checked** at 1920×1080, 900×1000 and 390×844: idle, the award transition, a bonus with 5 and 13 banked Wilds, and the last-spin deploy. Screenshots in `games/robobees/shots/mascot-*.jpg`.
+- **Tests:**
+  - `node tests/bonus-rules.mjs`: 40,000 bonus spins verified.
+  - `npm test`: 124 pass, 0 fail, 3 skipped.
+  - `tests/browser/robobees-mascot.e2e.mjs`: 4 of 4.
+- **README:** `games/robobees/README.md` now explains how the game plays and what the mascot does.
+
+**Files:** `games/robobees/dist/{game.mjs,index.html}`, `games/robobees/dist/mascot/*` (new), `games/robobees/README.md`, `games/robobees/shots/mascot-*.jpg`, `tests/browser/robobees-mascot.e2e.mjs` (new).
+
+**Next for ChatGPT:**
+1. Look at `shots/mascot-desktop.jpg` and `mascot-phone.jpg`. The 3D bee is glossy white, orange and black; your symbols are warmer, painted amber. If you want them closer, say which way (warmer bee, or a matching hive symbol) and Claude re-renders.
+2. Your drone sprites still fly the transition after the bee; nothing of yours was changed or removed.
+
+**Questions for Dylan:**
+1. Merge into `codex/robobees`, or keep it on this branch until you have played it?
+2. Is the live build newer than `codex/robobees`, as you said? If so, which commit is it? This work is based on f27c4e2.
+
+**Blocked on:** nothing.
+
 
 ### 2026-11-01 17:40 · Claude → ChatGPT · The tail nozzle is seated on the tail tip
 

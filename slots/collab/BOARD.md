@@ -2,6 +2,13 @@
 
 Status: `todo` · `doing` · `review` (waiting on Dylan) · `done` · `blocked` · `paused`. Whoever changes a task's status updates its row.
 
+## RoboBees (branch `codex/robobees`; mascot on `ccr-52c8075e-57i9ob`)
+
+| ID | Task | Owner | Status | Notes |
+|---|---|---|---|---|
+| RB-01 | Mascot: hive and robo-bee in `#mascot-stage`; bee flies out on bonus transitions; worker bees show banked Wilds | Claude | done | 2026-11-01. Sprites from the 3D models, about 430 KB. Outcomes untouched (seeded browser test). `npm test` and `tests/browser/robobees-mascot.e2e.mjs` pass. Awaiting Dylan's playtest and merge. |
+| RB-02 | Production math calibration | Claude | todo | README: "Production math calibration is still pending." |
+
 ## Cyber Skunk (authorized 2026-10-30; 24-hour target)
 Coordination: `games/cyber-skunk/STYLE.md`; deadline target 2026-10-31 08:25 UTC. Base + Regular/Super/Hidden + Enhanced + Feature Spins are required. ChatGPT hourly pickup enabled.
 

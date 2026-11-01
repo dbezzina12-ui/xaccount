@@ -1,4 +1,5 @@
 import {playStinger} from './drone-stinger.mjs?v=12';
+import {mountMascot} from './mascot/mascot.mjs?v=4';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
 import {rollReels,symbolClass,symbolUrl} from './reels.mjs?v=10';
@@ -6,6 +7,8 @@ import {buys,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=7';
 const $=id=>document.getElementById(id);
 const grid=$('board'),modal=$('menu'),intro=$('bonus-intro'),cabinet=grid.closest('.cab');
 const playStage=$('play-stage');
+// Claude's hive and bee: presentation only, it follows the state below and never waits the game.
+const mascot=mountMascot($('mascot-stage'));
 const desc={regular:'Wilds can land on any reel. Winning cells keep their multipliers and double on repeat hits.',super:'Every cell starts at 2×. Each Wild you collect sends a bee to place a Wild on the last spin.',hidden:'Start at 2× everywhere. Each spin lands a Wild and bees boost up to three cells. Banked Wilds return on spin ten.'};
 const sample=['hive','K','nectar','stinger','Q','A','rotor','W','beacon','10','stinger','J','hive','K','nectar','10','beacon','Q','rotor','FS'];
 const stakes=[10,20,40,60,80,100,150,200,300,400,500,750,1000,1500,2000,3000,4000,5000,7500,10000,15000,20000,25000,30000,40000,50000];
@@ -40,6 +43,7 @@ function labels(){
  const bonus=state.mode!=='base';
  $('mode').textContent=(bonus?modes[state.mode]:features[featureMode]?.label??modes.base).toUpperCase();
  $('meter').textContent=bonus?(state.mode==='regular'?'':state.bank+' WILDS  ·  ')+state.left+' SPINS LEFT':'20 PAYLINES';
+ mascot.setTurbo(turbo);
  controller.update({ready:true,busy,holding:bonus&&!busy,continuing:!!pending&&!busy,autoActive:autoplay.active,
   remaining:autoplay.remaining,muted:mute,turbo,balance:money(balance),bet:money(bonus?bet:spinCost()),win:money(win),buyActive:!!featureMode&&!bonus,
   canIncrease:bet<stakes.at(-1),canDecrease:bet>stakes[0],featureColor:bonus?'#ffa344':null});
@@ -80,6 +84,7 @@ async function feature(mode){
   document.body.dataset.scene=mode;draw(face,state.spots);
   cabinet.classList.remove('tease-zoom');document.body.classList.remove('present-award');
  });
+ mascot.arrive();
  playStage.inert=false;
  controller.element('play').focus({preventScroll:true});
  $('notice').textContent=mode==='regular'?'Worker Shift · Ten free spins.':modes[mode]+' · All 20 cells start at 2×.';
@@ -113,6 +118,8 @@ async function showAward(){
  $('award-rules').textContent=desc[mode];
  intro.dataset.tier=mode;
  playStage.inert=true;
+ // The bee dives into the hive first; the swarm follows it out.
+ await mascot.depart();
  await flyAcross(false,()=>document.body.classList.add('present-award'));
  intro.inert=false;$('start-feature').focus({preventScroll:true});
 }
@@ -134,15 +141,17 @@ async function play(){
   await swarm(result.boosts,i=>cell(i,result.landing[i],result.active));
   await showCellValues(result.boosts);
  }
- if(result.drops.length){await swarm(result.drops,i=>cell(i,'W',result.active));await wait(180)}
+ // The banked bees leave the hive as their Wilds deploy.
+ if(result.drops.length){mascot.setBank(0);await swarm(result.drops,i=>cell(i,'W',result.active));await wait(180)}
  face=result.board;draw(face,result.active,result.hit);if(result.amount){tone(660,.19);await wait(340)}
  state=result.state;draw(face,state.spots,result.hit);balance+=award;win=award;
+ mascot.setBank(state.mode==='base'?0:state.bank);
  if(result.hit.length){labels();await showCellValues(result.hit)}
  const charge=result.hit.length?' · '+result.hit.length+' cells charged':'';
  $('notice').textContent=result.amount?result.wins.length+' winning '+(result.wins.length===1?'line':'lines')+charge:'No connection this spin.';
  if(state.bank>oldBank)$('notice').textContent+=' +'+(state.bank-oldBank)+' Wild'+(state.bank-oldBank>1?'s':'')+' banked.';
  if(result.trigger){autoplay.stop();pending=result.trigger;$('notice').textContent=modes[pending]+' unlocked · Press play to enter.'}
- if(state.mode!=='base'&&state.left===0){$('notice').textContent=modes[state.mode]+' complete · '+state.total.toFixed(2)+'× total';await wait(500);document.body.dataset.scene='base';state=previous??start();previous=null;draw(face,state.spots)}
+ if(state.mode!=='base'&&state.left===0){$('notice').textContent=modes[state.mode]+' complete · '+state.total.toFixed(2)+'× total';await wait(500);document.body.dataset.scene='base';state=previous??start();previous=null;draw(face,state.spots);mascot.setBank(0)}
  checkpoint=null;save();
  if(!bonus&&autoplay.active)autoplay.finishRound(play,turbo?180:500);
  lock(false);if(pending)showAward();else scheduleBonus();
@@ -234,6 +243,7 @@ document.addEventListener('keydown',e=>{
 });
 document.body.dataset.scene=state.mode;
 draw(face,state.spots);labels();scheduleBonus();
+mascot.setBank(state.mode==='base'?0:state.bank,{animate:false});
 if(pending){$('notice').textContent=modes[pending]+' unlocked · Press play to enter.';showAward()}
 
 if(preview){
