@@ -3,7 +3,7 @@
 // presents those events, so skip, turbo and frame timing never change a result.
 import { playRound, drawBoard, lineWins, seeded, at } from './engine.js';
 import { drawRound, CATALOG_VERSION } from './catalog.js?v=7';
-import { REELS, ROWS, CELLS, LINES, PAYTABLE, NAMES, PLAY_OPTIONS, BONUSES, MYSTERY_TIERS, MYSTERY, mysteryShare, CAP, RETRIGGER, MAX_SPINS, MAX_STICKY, MAX_RESERVOIR, triggerRates } from './rules.js?v=7';
+import { REELS, ROWS, CELLS, LINES, PAYTABLE, NAMES, PLAY_OPTIONS, BONUSES, MYSTERY_TIERS, MYSTERY, mysteryShare, CAP, RETRIGGER, MAX_SPINS, MAX_STICKY, MAX_RESERVOIR } from './rules.js?v=7';
 import { loadArt, symbolHTML, ventHTML, fillerStrip } from './symbols.js?v=7';
 import { mountController } from './controller/controller.js';
 import { GameAudio } from './audio.js';
@@ -22,9 +22,10 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 
 // What each paid mode is, in the buy menu's words. Prices and rates come from rules.js.
 const oneIn = (p) => `1 in ${Math.round(1 / p).toLocaleString('en-US')}`;
-const BASE_RATES = triggerRates('base'), BOOST_RATES = triggerRates(PLAY_OPTIONS.enhanced.land);
+const baseChance = freeSpinsChance('base'), boostChance = freeSpinsChance('enhanced');
+const boostMultiplier = (boostChance / baseChance).toFixed(2);
 const COPY = {
-  enhanced: { name: 'SIGNAL BOOST', kind: 'feature', text: `FS scatters land more often: Vent Break about ${oneIn(BOOST_RATES.regular)} spins (${oneIn(BASE_RATES.regular)} in base), Overpressure ${oneIn(BOOST_RATES.super)} (${oneIn(BASE_RATES.super)}). Same pays and rules. Stays on until you switch it off.` },
+  enhanced: { name: 'SIGNAL BOOST', kind: 'feature', text: `About ${oneIn(boostChance)} boosted spins triggers free spins, compared with ${oneIn(baseChance)} base spins.` },
   sprayjob: { name: 'SPRAY JOB', kind: 'feature', text: 'Every spin lands a vent on reel 1 and at least 3 vents in all, so Cyber Skunk sprays on every spin. Stays on until you switch it off.' },
   ventbreak: { name: 'VENT BREAK', kind: 'buy', text: `${BONUSES.regular.spins} free spins. Every vent that lands stays (up to ${MAX_STICKY}), so the route grows into a maze, and a small Reservoir banks pressure up to ${BONUSES.regular.reservoirMax}.` },
   overpressure: { name: 'OVERPRESSURE', kind: 'buy', text: `${BONUSES.super.spins} free spins with sticky vents and the Reservoir: each route banks its pressure gain, and every later route starts higher.` },
@@ -648,7 +649,7 @@ function card(mode) {
   const feature = c.kind === 'feature';
   const edition = {ventbreak:'Regular bonus', overpressure:'Super bonus', mystery:'Mystery bonus', enhanced:'Scatter boost', sprayjob:'Guaranteed spray'};
   const brief = {
-    enhanced:'More chances to land free spins on every spin.',
+    enhanced:COPY.enhanced.text,
     sprayjob:'A guaranteed spray with at least three vents on every spin.',
     ventbreak:'Sticky vents bank up to 5 pressure.',
     overpressure:'Sticky vents bank up to 10 pressure.',
@@ -662,7 +663,7 @@ function card(mode) {
   return `<article class="offer" data-mode="${mode}">
     <div class="offer-main">
       <h3 class="offer-art"><span class="shop-sr">${c.name}</span>${shopIllustration(mode)}</h3>
-      <div class="offer-details"><small class="edition">${edition[mode]}</small><div class="offer-copy"><strong>${bonus ? bonus.spins + ' free spins' : mode === 'mystery' ? 'One mystery reveal' : 'Every spin'}</strong>${detail}</div></div>
+      <div class="offer-details"><small class="edition">${edition[mode]}</small><div class="offer-copy"><strong>${mode === 'enhanced' ? boostMultiplier + '× bonus chance' : 'Every spin'}</strong>${detail}</div></div>
     </div><button class="offer-cta" data-pick="${mode}" aria-label="${label} ${c.name}, ${money(total)}"${!active && total > state.balance ? ' disabled' : ''}>
       <span class="offer-price">${money(total)} <small>${m.cost}× base bet</small></span><span class="cta-verb">${label} <i aria-hidden="true">›</i></span></button></article>`;
 }
@@ -710,42 +711,42 @@ $('buy-menu').addEventListener('click', async (ev) => {
   const pick = ev.target.closest('[data-pick]')?.dataset.pick;
   if (!pick) return;
   if (state.feature === pick) { state.feature = null; update(); renderBuy(); toast(`${COPY[pick].name} off · base spins`); return; }
-  const stub = ev.target.closest('.pass-stub');
-  if (stub) {
-    await tearStub(stub);
-    if (!menu.open || !stub.isConnected) return;
+  if (state.busy || state.auto || state.bet * PLAY_OPTIONS[pick].cost > state.balance) return;
+  if (COPY[pick].kind === 'feature') {
+    state.feature = pick;
+    menu.close();
+    update();
+    audio.play('buy');
+    toast(`${COPY[pick].name} on · ${money(state.bet * PLAY_OPTIONS[pick].cost)} per spin`);
+    return;
   }
+  const stub = ev.target.closest('.pass-stub');
+  if (!stub) return;
+  await tearStub(stub);
+  if (!menu.open || !stub.isConnected) return;
   const scroll = menu.querySelector('.shop-options').scrollTop;
-  if (!stub) menu.close();
-  if (!(await confirmPlay(pick))) {
-    openBuy(stub ? 'bonus' : 'feature');
+  if (!(await confirmBonusBuy(pick))) {
+    openBuy('bonus');
     menu.querySelector('.shop-options').scrollTop = scroll;
     menu.querySelector('[data-pick="' + pick + '"]').focus({preventScroll:true});
     return;
   }
-  if (stub) menu.close();
-  if (COPY[pick].kind === 'feature') { state.feature = pick; update(); audio.play('buy'); toast(`${COPY[pick].name} on · ${money(state.bet * PLAY_OPTIONS[pick].cost)} per spin`); }
-  else {
-    audio.play('buy');
-    await play(pick);
-  }
+  menu.close();
+  audio.play('buy');
+  await play(pick);
 });
-function confirmPlay(mode) {
+function confirmBonusBuy(mode) {
   const m = PLAY_OPTIONS[mode], total = state.bet * m.cost, enough = total <= state.balance;
   $('confirm').dataset.mode = mode;
-  $('confirm-kind').textContent = COPY[mode].kind === 'feature' ? 'FEATURE SPINS · EVERY SPIN' : 'ONE-TIME BONUS BUY';
-  const isPass = COPY[mode].kind === 'buy';
-  $('confirm').classList.toggle('pass-receipt', isPass);
-  $('confirm-symbols').innerHTML = isPass ? '' : shopIllustration(mode);
+  $('confirm-kind').textContent = 'CONFIRM BONUS BUY  /  STUB '+passSeries[mode];
   $('confirm-title').textContent = COPY[mode].name;
   $('confirm-bet').textContent = money(state.bet);
-  $('confirm-cost').textContent = `${m.cost}×${COPY[mode].kind === 'feature' ? ' per spin' : ''}`;
+  $('confirm-cost').textContent = `${m.cost}×`;
   $('confirm-total').textContent = money(total);
   $('confirm-balance').textContent = enough ? money(state.balance - total) : 'Not enough credits';
   $('confirm-rules').textContent = COPY[mode].text;
   $('confirm-ok').disabled = !enough;
-  $('confirm-ok').textContent = isPass ? `CONFIRM ${money(total)}` : 'ACTIVATE';
-  if (isPass) $('confirm-kind').textContent = 'CONFIRM BONUS BUY  /  STUB '+passSeries[mode];
+  $('confirm-ok').textContent = `CONFIRM ${money(total)}`;
   open('confirm');
   $('confirm-cancel').focus({preventScroll:true});
   return new Promise((resolve) => {
@@ -806,6 +807,7 @@ function renderRules() {
   <p>${RETRIGGER.scatters} or more FS scatters during a bonus add +${RETRIGGER.spins} spins, up to ${MAX_SPINS} in total.</p>
   <p><b>MYSTERY BUY · 400×.</b> ${COPY.mystery.text}</p>
   <h3>WAYS TO PLAY</h3>
+  <p><b>SIGNAL BOOST · ${boostMultiplier}× bonus chance.</b> ${COPY.enhanced.text}</p>
   <table><tbody>${['base', 'enhanced', 'sprayjob', 'ventbreak', 'overpressure', 'mystery'].map((m) => `<tr><td>${m === 'base' ? 'BASE SPINS' : COPY[m].name}</td><td>${PLAY_OPTIONS[m].cost}× base bet${COPY[m]?.kind === 'feature' ? ' per spin' : ''}</td></tr>`).join('')}</tbody></table>
   <p>Maximum win: <b>${(CAP / 100).toLocaleString('en-US')}×</b> the base bet per round, including bonuses. Reaching it ends the round.</p>
   <p>The theoretical return to player is <b>96.00%</b> in every way to play, measured against what that play costs. Every round is drawn from the game's weighted outcome catalogs (${CATALOG_VERSION}, games/cyber-skunk/MATH.md) and replayed in full before it is shown.</p>

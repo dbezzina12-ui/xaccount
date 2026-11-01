@@ -1,6 +1,6 @@
 const retry = document.getElementById('load-retry');
 retry.onclick = () => location.reload();
-import('./app.js?v=20').then(({ boot }) => boot()).catch(error => {
+import('./app.js?v=21').then(({ boot }) => boot()).catch(error => {
   console.error('Cyber Skunk could not start', error);
   // Keep Retry accessible even when a late asset fails after the guide appears.
   document.getElementById('intro').hidden = true;

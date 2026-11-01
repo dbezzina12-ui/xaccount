@@ -50,7 +50,7 @@ for (const [label, size] of [['desktop', { width: 1366, height: 768 }], ['phone'
     await control(page, 'buy').click();
     await page.locator('[data-view=feature]').click();
     await page.locator('[data-pick=sprayjob]').click();
-    await page.locator('#confirm-ok').click();
+    assert.ok(await page.locator('#confirm').isHidden());
     assert.equal((await state(page)).feature, 'sprayjob');
     await control(page, 'play').click();
     await page.waitForTimeout(400);
@@ -126,7 +126,7 @@ test('vents: full symbol lands, centred reverse flips for spray, skip restores t
   await control(page, 'buy').click();
   await page.locator('[data-view=feature]').click();
   await page.locator('[data-pick=sprayjob]').click();
-  await page.locator('#confirm-ok').click();
+  assert.ok(await page.locator('#confirm').isHidden());
   await control(page, 'play').click();
   await page.waitForFunction(() => document.querySelector('#reels .reel.spinning'));
   assert.equal(await page.locator('#reels .reel.spinning .reverse').count(), 0, 'spinning cards show their normal face');
@@ -169,11 +169,20 @@ test('buy screen: Feature Spins first, Bonus Buys second, Hidden as information;
   // $50 cannot pay for a $250 Overpressure: the card and the confirmation both refuse.
   assert.ok(await page.locator('[data-pick=overpressure]').isDisabled());
   await page.locator('[data-view=feature]').click();
-  await page.locator('[data-pick=sprayjob]').click();
-  assert.equal(await page.locator('#confirm-total').textContent(), '$10.00');
-  assert.ok(await page.locator('#confirm-ok').isEnabled(), '$10 Spray Job is affordable');
-  await page.locator('#confirm-cancel').click();
-  assert.equal((await state(page)).balance, 5000, 'cancel charges nothing');
+  assert.match(await page.locator('[data-mode=enhanced].offer').innerText(), /4\.63× bonus chance/i);
+  for (const mode of ['enhanced', 'sprayjob']) {
+    await page.locator('[data-pick='+mode+']').click();
+    assert.ok(await page.locator('#confirm').isHidden());
+    assert.ok(await page.locator('#buy-menu').isHidden());
+    assert.equal((await state(page)).feature, mode);
+    assert.equal((await state(page)).balance, 5000, 'activation charges nothing');
+    await control(page, 'buy').click();
+    assert.equal((await state(page)).feature, null);
+    if (mode === 'enhanced') {
+      await control(page, 'buy').click();
+      await page.locator('[data-view=feature]').click();
+    }
+  }
   assert.deepEqual(errors, []);
   await page.close();
 });

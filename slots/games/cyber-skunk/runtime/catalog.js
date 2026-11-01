@@ -69,4 +69,9 @@ export function drawRound(mode, ticket = cryptoTicket) {
   if (round.total !== expect) throw Error(`Catalog replay mismatch in ${mode}: ${JSON.stringify(draw)} paid ${round.total}, expected ${expect}`);
   return { ...round, draw };
 }
+// The paid-spin draw uses these integer tickets to select the starting bonus tier.
+export function freeSpinsChance(mode) {
+  const { regular, super: superBonus, hidden } = data.modes[mode].tiers;
+  return (regular + superBonus + hidden) / data.total;
+}
 export const CATALOG_VERSION = data.version;
