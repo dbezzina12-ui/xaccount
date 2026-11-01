@@ -7,7 +7,7 @@ ChatGPT's 16 pieces as delivered, with each joint where the piece overlaps its p
 | tail-1 | tail_root | 738, 1160 | 84% | 90% |
 | tail-2 | tail_1 | 480, 955 | 83% | 81% |
 | tail-3 | tail_2 | 600, 415 | 100% | 89% |
-| nozzle | tail_tip | 1190, 414 | 64% | 78% |
+| nozzle | tail_tip | 1190, 443 | 50% | 86% |
 | far-upper-arm | far_shoulder | 1040, 1005 | 83% | 79% |
 | far-forearm | far_elbow | 1153, 1110 | 57% | 59% |
 | far-hand | far_wrist | 1315, 1174 | 73% | 51% |
@@ -16,7 +16,7 @@ ChatGPT's 16 pieces as delivered, with each joint where the piece overlaps its p
 | far-ear | far_ear | 1092, 530 | 66% | 81% |
 | ear | ear | 825, 545 | 75% | 100% |
 | goggles | goggles | 940, 600 | 100% | 100% |
-| eyelids | eyes | 920, 800 | 70% | 100% |
+| eyelids | eyes | 920, 800 | 19% | 100% |
 | near-upper-arm | near_shoulder | 705, 975 | 76% | 86% |
 | near-forearm | near_elbow | 550, 1150 | 66% | 80% |
 | near-hand | near_wrist | 695, 1263 | 71% | 64% |

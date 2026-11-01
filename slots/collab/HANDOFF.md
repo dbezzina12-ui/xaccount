@@ -5,6 +5,44 @@ Newest on top. Format is in `AGENTS.md`.
 ---
 
 
+### 2026-11-01 17:40 · Claude → ChatGPT · The tail nozzle is seated on the tail tip
+
+**Dylan:** "her tail's spout looks like it's just floating there, copy pasted into it. Can we make it look like it's actually part of her tail."
+
+**Why it looked pasted:**
+- The nozzle's axis sat 26 px above the tail's centre line. So the fur bulged out below the collar, and the collar stood proud above it.
+- The nozzle's back stub was drawn on top of the fur, as if stuck on.
+- Its joint was at the top of the tip, so the recoil tipped it off the fur.
+
+**Did:**
+- **Fitted nozzle:** the fit tool (`tools/art/cyber-skunk-fit-v4.py`, `fit_nozzle`) writes `art/rig/fitted/nozzle.png`. Prep uses it instead of your source, the same way it uses the fitted eyelids. The fit:
+  - removes the stub behind the collar's rear rim (the rim's arc is fitted to your outline, so the cut follows it);
+  - moves the nozzle 8 px left and 26 px down, onto the centre line, so the collar closes round the tip like a cuff;
+  - adds a soft shadow on the fur where it goes into the collar.
+- **Contract:** in `pivots-v4.json`:
+  - `tail_tip` moves to (1190, 443), the centre of the rear rim;
+  - `nozzleMouth` moves to (1331, 453), the centre of the opening (it was 12 px high before);
+  - the nozzle's extent is updated.
+  
+  Spray IK re-solves: the nozzle levels at 18.8°.
+- **Checked:**
+  - Rest, idle, spray, bonus and recoil poses (`shots/nozzle-seat-v41.jpg`, before and after).
+  - In the game at 1920×1080 and 390×844, including the jet leaving the mouth (`shots/nozzle-seat-game.jpg`).
+- **Other assets:** the prep run would also have re-encoded your later cabinet, symbols and logo from older sources. I restored yours; only the mascot files changed.
+- **Tests:** 27 game, 25 browser. In the core suite, 126 pass; `dispatch.test.mjs` "concurrent writers" failed once under load, then passed 3 of 3 alone (timing, not this change). The playable link is republished.
+
+**Files:** `tools/art/cyber-skunk-fit-v4.py`, `art/rig/{pivots-v4.json,fit-v4.1.md,guide-v3.jpg,fitted/nozzle.png}`, `runtime/assets/mascot/{nozzle.webp,layers.json,pivots.json,pivots-v4.json}`, `ART_SPEC.md`, `shots/nozzle-seat-*`.
+
+**Next for ChatGPT:**
+- Optional: repaint `nozzle.png` already on its mark: collar centred on y ≈ 441, rear rim at x ≈ 1185, no stub. You could add a few fur tufts lapping over the rim's back edge; painted, they would sell the join better than I can by code. Say so and I retire the fitted copy.
+- When you run prep yourself, keep your cabinet, symbols and logo: the prep tool still re-encodes them from the older sources.
+
+**Questions for Dylan:** CS-08 (Signal Boost) is still waiting on his choice; see the note below.
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-11-01 16:05 · Claude → ChatGPT · Mystery Buy is 90% Overpressure / 10% Blackout at 500x; game start fixed
 
 **Dylan chose:** Blackout 1 in 10 at a 500x price, so Overpressure keeps today's strength.
