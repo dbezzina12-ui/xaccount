@@ -88,3 +88,32 @@ body:not([data-scene=base]) .cell.show-value .multi{opacity:1}
 .preview-ready #controller{visibility:hidden}
 .preview-ready .machine{position:relative}
 .preview-ready #preview-stinger{position:absolute;z-index:5;bottom:24px;left:50%;transform:translateX(-50%);white-space:nowrap}
+/* Two cabinet instruments, each with a fixed register so the label stays put. */
+#bonus-hud{display:grid;grid-template-columns:1.15fr 1fr;gap:6px;padding:2px 1px 6px}
+#bonus-hud[hidden],#wild-dock[hidden]{display:none}
+#bonus-hud:has(#wild-dock[hidden]){grid-template-columns:1fr}
+.instrument{position:relative;isolation:isolate;display:flex;align-items:center;gap:clamp(5px,1vw,12px);min-height:53px;padding:4px 10px;
+ border-radius:8px;border:1px solid #161914;background:linear-gradient(150deg,#45473c,#242820 80%);box-shadow:inset 0 1px #c1b9a16e,inset 0 -2px #141611;overflow:hidden}
+.instrument::after{content:"";height:2px;position:absolute;bottom:1px;left:10px;right:10px;background:repeating-linear-gradient(90deg,#cc9659 0 5px,transparent 5px 8px);opacity:.45}
+.instrument-label{display:grid;gap:2px;color:#fbefda}.instrument-label small{font:850 clamp(10px,1.2vw,14px)/1 system-ui;letter-spacing:.065em;white-space:nowrap}
+.instrument-label span{color:#b9b7a3;font:700 clamp(7px,.85vw,9px)/1.1 ui-monospace,monospace;letter-spacing:.11em}
+.instrument output{margin-left:auto;display:grid;place-items:center;width:2.15ch;min-width:36px;padding:3px 4px 4px;border:1px solid #131410;border-radius:5px;
+ background:#191c17;color:#ffb460;box-shadow:inset 0 2px 4px #080a08,0 1px #81775e;font:850 clamp(22px,2.6vw,32px)/1 ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.spins{border-left:4px solid #d8c6a2}.spins output{color:#f4e8cd}
+.hive-icon{position:relative;width:clamp(32px,4.2vw,49px);aspect-ratio:1;flex:none}.hive-icon img{width:100%;height:100%;object-fit:contain}.hive-icon i{position:absolute;width:12%;height:8%;background:#160f0a;left:46%;top:77%;border-radius:2px}
+.hive-active .hive-icon i{background:#ffd282;box-shadow:0 0 6px 2px #ff931f}
+#charge-key{display:flex;gap:12px;align-items:center;justify-content:center;margin:4px 0 2px;color:#ffcc8c}
+#charge-map{display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(4,1fr);gap:2px}
+#charge-map i{display:grid;place-items:center;min-width:15px;height:12px;background:#35372f;border:1px solid #77745c;border-radius:2px;font:900 9px/1 ui-monospace,monospace}
+#charge-map i.lit{color:#211c14;background:#f1a94f;border-color:#ffce8a}
+.present-award #charge-map i.lit{animation:plate-on .3s ease-out backwards;animation-delay:calc(var(--reel)*55ms)}
+@keyframes plate-on{from{opacity:.25;transform:translateY(2px)}}
+#charge-caption{max-width:15ch;font:750 12px/1.22 system-ui;text-align:left}
+#board.priming>.cell img{opacity:.06}
+body:not([data-scene=base]) #board.priming .multi{opacity:1;animation:charge-settle .32s ease-out both;animation-delay:calc(var(--reel)*55ms)}
+@keyframes charge-settle{from{transform:scale(.83);opacity:.15}to{transform:none;opacity:1}}
+.cell.wild-landing img{animation:wild-settle .28s cubic-bezier(.18,.78,.22,1)}
+@keyframes wild-settle{from{transform:scale(.74);opacity:.4}65%{transform:scale(1.05)}to{transform:none;opacity:1}}
+@media(max-width:600px){.instrument{padding:3px 6px;min-height:44px;gap:5px}.instrument output{font-size:22px;min-width:29px}.instrument-label small{font-size:10px}.instrument-label span{font-size:7px}}
+@media(max-height:690px) and (orientation:portrait){body:not([data-scene=base]) .top,body:not([data-scene=base]) #mascot-stage{min-height:55px;height:55px}body:not([data-scene=base]) #board{aspect-ratio:1.52}}
+@media(prefers-reduced-motion:reduce){#board.priming .cell .multi,.cell.wild-landing img,.present-award #charge-map i.lit{animation:none!important}}
