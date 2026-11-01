@@ -1,0 +1,4 @@
+:host{--controller-accent:#ffaa54}
+.controller[data-layout=desktop] .deck{background:linear-gradient(155deg,#34332feb,#161816f5);border-color:#92857680}
+.controller[data-layout] .buy-button{background:linear-gradient(145deg,#eb8b3a,#a94811 64%,#853a12);border-color:#d79c6d;box-shadow:inset 0 1px #ffe1a84d}
+.controller .utility[aria-pressed=true]{color:#ffb165}

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530 93" role="img" aria-labelledby="title">
+ <title id="title">RoboBees</title>
+ <defs>
+  <linearGradient id="ceramic" x2=".13" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#fffeef"/><stop offset=".56" stop-color="#f2ecdd"/><stop offset="1" stop-color="#d2c7b5"/></linearGradient>
+  <linearGradient id="enamel" x2=".17" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#ffbc57"/><stop offset=".38" stop-color="#ff9933"/><stop offset="1" stop-color="#ec661d"/></linearGradient>
+  <path id="r" fill-rule="evenodd" d="M0 64V0h40l12 12v18l-11 10 16 24H35L21 43h-3v21Zm18-49v14h16l2-2V17l-2-2Z"/>
+  <path id="o" fill-rule="evenodd" d="M13 0h28l13 13v38L41 64H13L0 51V13Zm8 16-4 4v24l4 4h12l4-4V20l-4-4Z"/>
+  <path id="b" fill-rule="evenodd" d="M0 64V0h38l13 12v14l-6 6 8 7v13L41 64Zm17-50v12h15l3-3v-6l-3-3Zm0 25v11h17l3-3v-5l-3-3Z"/>
+  <path id="e" d="M0 0h51l-6 15H18v10h25l-5 13H18v11h33l-6 15H0Z"/>
+  <path id="s" d="M12 0h41l-6 15H20l-3 3v5l3 2h18l12 11v15L37 64H0l6-15h25l3-3v-4l-3-3H13L0 28V12Z"/>
+  <g id="robo"><use href="#r"/><use href="#o" x="60"/><use href="#b" x="119"/><use href="#o" x="177"/></g>
+  <g id="bees"><use href="#b" x="241"/><use href="#e" x="300"/><use href="#e" x="353"/><use href="#s" x="406"/></g>
+  <g id="type"><use href="#robo"/><use href="#bees"/></g>
+ </defs>
+ <g transform="translate(46 9) skewX(-11)" stroke-linejoin="round">
+  <use href="#type" transform="translate(1 6)" fill="#302720" stroke="#171713" stroke-width="7"/>
+  <use href="#type" transform="translate(.5 3)" fill="#514034" stroke="#27231e" stroke-width="3"/>
+  <use href="#robo" fill="url(#ceramic)" stroke="#fff2d5" stroke-width=".9"/>
+  <use href="#bees" fill="url(#enamel)" stroke="#ffd390" stroke-width=".9"/>
+  <!-- Opposing cuts echo the rotor blades and the terminal stinger. -->
+  <path d="M-26 7H-5v6h-27Zm-7 12h28v5h-33Z" fill="#ef943d" stroke="#27231e" stroke-width="1.1"/>
+  <path d="m239 74 7-5h81l-5 5zm88 0 7-5h18l-6 5zm25 0 7-5h9l-6 5z" fill="#ff9a39"/>
+ </g>
+</svg>

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 222" role="img" aria-label="Winged industrial worker bee, drawn in three inks">
+<style>
+.far{transform-origin:229px 117px;animation:far 1.8s ease-in-out infinite alternate}.near{transform-origin:211px 123px;animation:near 1.8s ease-in-out infinite alternate}
+@keyframes far{to{transform:rotate(6deg)}}@keyframes near{to{transform:rotate(-5deg)}}
+@media(prefers-reduced-motion:reduce){.far,.near{animation:none}}
+</style>
+<defs>
+ <pattern id="dots" patternUnits="userSpaceOnUse" width="6" height="6"><circle cx="1" cy="1" r="1.25" fill="#171916"/></pattern>
+ <pattern id="grille" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(20)"><path d="M0 0v6" stroke="#eee5cc" stroke-width="2"/></pattern>
+ <clipPath id="abdomen"><path d="M234 114q38-25 94-10l46 11-34 27q-44 26-95 2Z"/></clipPath>
+</defs>
+<g transform="rotate(-8 220 125)" stroke="#171916" stroke-linecap="round" stroke-linejoin="round">
+ <!-- Blast lines keep the machine pointed into the frame. -->
+ <path d="m340 96 53-5m-44 49 51-8m-26-26 42-6" fill="none" stroke="#e99846" stroke-width="3"/>
+ <g class="far"><path d="M222 121 244 44 275 6l7 5-1 43-29 60Z" fill="#a49b83" stroke-width="5"/><path d="m235 108 29-60 10-26-2 34-20 46Z" fill="#e8dfc5" stroke-width="2"/></g>
+ <!-- Paired skids and folded legs. -->
+ <g fill="none"><path d="m184 149-9 24-27 11m69-30 11 22-15 11m45-42 13 19-6 14" stroke="#daceaf" stroke-width="8"/><path d="m184 149-9 24-27 11m69-30 11 22-15 11m45-42 13 19-6 14" stroke-width="4"/></g>
+ <path d="M234 114q38-25 94-10l46 11-34 27q-44 26-95 2Z" fill="#fa9b36" stroke="#efe5ce" stroke-width="9"/>
+ <g clip-path="url(#abdomen)"><path d="M260 87q16 37-3 75m38-75q17 41-5 72m39-68q12 30-9 62" fill="none" stroke-width="14"/><path d="M244 141q56 10 116-22l-14 44-100 6Z" fill="url(#dots)" stroke="none"/></g>
+ <path d="m351 132 40-13-23-4Z" fill="#171916" stroke-width="3"/>
+ <path d="m159 121 28-25 42 0 28 17-3 24-25 21-43-2-26-18Z" fill="#efdcb8" stroke-width="5"/>
+ <path d="m185 108 33-4 23 10-10 8-41 1Z" fill="#ff9b35" stroke-width="3"/>
+ <path d="m194 137 34-5-9 15-24 2Z" fill="url(#grille)" stroke-width="4"/>
+ <g class="near"><path d="m212 120-42-37-35-62 5-9 24 6 46 39 27 54-8 12Z" fill="#f2e9d2" stroke-width="5"/>
+ <path d="m148 24 37 56 29 30m-31-34 16-13m-16 13-13 3m29-16 19 28" fill="none" stroke-width="3"/>
+ <path d="m148 20 15 3 40 35-8 7Z" fill="#faa23f" stroke="none"/></g>
+ <circle cx="216" cy="120" r="14" fill="#171916" stroke="#f2e9d2" stroke-width="4"/><circle cx="216" cy="120" r="6" fill="#eb9639" stroke="none"/>
+ <!-- The visor is broad enough to read on a phone. -->
+ <path d="m109 108 25-20 33 2 20 15-1 33-19 25-33 2-26-14-9-22Z" fill="#f2e7cf" stroke-width="6"/>
+ <path d="m107 127 28-18 30-3-2 25-24 19-27-2Z" fill="#121514" stroke-width="4"/>
+ <path d="m115 130 24-14 16-2-3 6-31 15Z" fill="#f79432" stroke="none"/>
+ <path d="m104 136-10 11 13 7 12-6" fill="#f39835" stroke-width="3"/>
+ <path d="m120 104-18-28-18-7m54 22-8-28-13-9" fill="none" stroke="#ecdfbe" stroke-width="7"/>
+ <path d="m121 103-18-28-18-7m54 22-8-28-13-9" fill="none" stroke-width="3"/>
+ <path d="m87 63-10 3 4 6 10-1Zm34-13-8-2-3 6 7 4Z" fill="#fa9a35" stroke-width="2"/>
+ <path d="m144 157 13-1m-10-3 13-1" stroke-width="2" fill="none"/>
+ <path d="m73 130-35 6m38 6-18 4" stroke="#f4e6c8" stroke-width="2.5"/>
+</g></svg>
