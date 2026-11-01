@@ -1,7 +1,7 @@
 import {playStinger,flyHiveBees} from './drone-stinger.mjs?v=13';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
-import {rollReels,symbolClass,symbolUrl} from './reels.mjs?v=10';
+import {rollReels,symbolClass,symbolUrl} from './reels.mjs?v=14';
 import {buys,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=7';
 const $=id=>document.getElementById(id);
 const grid=$('board'),modal=$('menu'),intro=$('bonus-intro'),cabinet=grid.closest('.cab');
@@ -41,6 +41,7 @@ const cells=Array.from({length:20},(_,i)=>{
 });
 function cell(i,id,spots,hit=false){
  const c=cells[i],m=spots[i];c.className='cell '+symbolClass(id)+(m?' charged':'')+(hit?' hit':'');
+ c.dataset.multi=m;
  c.firstChild.src=symbolUrl(id);c.firstChild.alt=id;c.lastChild.className='multi';c.lastChild.textContent=m?m+'×':'';c.lastChild.hidden=!m;c.lastChild.toggleAttribute('data-long',m>=100);
 }
 function draw(board,spots,hits=[]){cells.forEach((_,i)=>cell(i,board[i],spots,hits.includes(i)))}
@@ -145,7 +146,7 @@ async function showAward(){
   const square=document.createElement('i');
   square.style.setProperty('--reel',i%5);
   square.textContent=v?'2×':i>=5&&i<=7?'2×':'';
-  square.classList.toggle('lit',!!square.textContent);return square;
+  if(square.textContent){square.classList.add('lit');square.dataset.multi=2}return square;
  }));
  $('charge-caption').textContent=mode==='regular'?'First win on a cell charges it to 2×':'Starting board · 20 cells at 2×';
  intro.dataset.tier=mode;
@@ -243,7 +244,7 @@ async function buy(id){
  face=entry.board;draw(face,state.spots);checkpoint=null;save();lock(false);
  $('notice').textContent=modes[pending]+' unlocked · Press play to enter.';showAward();
 }
-function showRules(){$('content').innerHTML='<h2>Field manual</h2><p>Land three or more matching symbols from reel one on any of 20 fixed paylines. W substitutes for paying symbols. FS scatters trigger Regular, Super or Hidden with 3, 4 or 5 respectively. Signal Boost costs 3× the base bet per spin and increases the scatter chance per reel from 7.5% to 11.5%. Scout Run costs 10× and guarantees at least one Wild per paid spin. Both modes pay wins on the base bet.</p><p>Winning cells become 2× on the next spin. Repeat hits double up to 128×. Add the active cell values along each winning line. Shared cells level up once per spin.</p><p>In base play a charge lasts through the next spin. During free spins it persists until the bonus ends. Super and Hidden start with 2× on every cell. Hidden guarantees a Wild every spin and sends bees to double up to three cells before scoring. Free spins advance automatically. Stop finishes only the spin in progress.</p><small>PLAY-MONEY MECHANICS BUILD · UNTUNED RETURNS</small>';modal.showModal()};
+function showRules(){$('content').innerHTML='<h2>Field manual</h2><p>Land three or more matching symbols from reel one on any of 20 fixed paylines. W substitutes for paying symbols. FS scatters trigger Regular, Super or Hidden with 3, 4 or 5 respectively. Signal Boost costs 3× the base bet per spin and increases the scatter chance per reel from 7.5% to 11.5%. Scout Run costs 10× and guarantees at least one Wild per paid spin. Both modes pay wins on the base bet.</p><p>Winning cells become 2× on the next spin. Repeat hits double up to 128×. Add the active cell values along each winning line. Shared cells level up once per spin. Brighter cells hold higher multipliers.</p><ul class="multi-key" aria-label="Cell multiplier colours">'+[2,4,8,16,32,64,128].map(n=>'<li data-multi="'+n+'">'+n+'×</li>').join('')+'</ul><p>In base play a charge lasts through the next spin. During free spins it persists until the bonus ends. Super and Hidden start with 2× on every cell. Hidden guarantees a Wild every spin and sends bees to double up to three cells before scoring. Free spins advance automatically. Stop finishes only the spin in progress.</p><small>PLAY-MONEY MECHANICS BUILD · UNTUNED RETURNS</small>';modal.showModal()};
 modal.querySelector('.close').onclick=()=>modal.close();
 function setBet(value){
  if(busy||pending||autoplay.active||state.mode!=='base'||!stakes.includes(value))return;

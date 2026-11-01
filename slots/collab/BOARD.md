@@ -2,6 +2,12 @@
 
 Status: `todo` · `doing` · `review` (waiting on Dylan) · `done` · `blocked` · `paused`. Whoever changes a task's status updates its row.
 
+## RoboBees
+
+| ID | Task | Owner | Status | Notes |
+|---|---|---|---|---|
+| RB-01 | Persistent multiplier cell colours | ChatGPT | done | Seven shades from 2× to 128×, anchored to the grid during reel travel. Verified on a phone layout. |
+
 ## Cyber Skunk (authorized 2026-10-30; 24-hour target)
 Coordination: `games/cyber-skunk/STYLE.md`; deadline target 2026-10-31 08:25 UTC. Base + Regular/Super/Hidden + Enhanced + Feature Spins are required. ChatGPT hourly pickup enabled.
 

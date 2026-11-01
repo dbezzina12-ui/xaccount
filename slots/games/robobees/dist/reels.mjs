@@ -26,6 +26,8 @@ export async function rollReels({cells,before,after,spots,place,turbo,reduced,sk
   const view=document.createElement('div'),strip=document.createElement('div');
   view.className='reel-viewport';strip.className='reel-strip';view.append(strip);board.append(view);
   view.style.gridColumn=(col+1)+' / span 1';view.style.gridRow='1 / span 4';
+  // Only the symbols travel. Keep each multiplier bed in its own board position.
+  for(const row of rows)cells[idx(row)].classList.add('rolling');
   for(const id of ids){
    const tile=document.createElement('div'),img=new Image();
    tile.className='cell '+symbolClass(id);img.src=symbolUrl(id);img.alt='';tile.append(img);strip.append(tile);
@@ -47,7 +49,10 @@ export async function rollReels({cells,before,after,spots,place,turbo,reduced,sk
   for(const p of plans){
    if(p.done){settled++;continue}
    if(skip()||!p.motion||p.motion.playState==='finished'){
-    for(let row=0;row<4;row++){const i=row*5+p.col;place(i,after[i],spots)}
+    for(let row=0;row<4;row++){
+     const i=row*5+p.col;
+     cells[i].classList.remove('rolling');place(i,after[i],spots);
+    }
     p.motion?.cancel();p.view.remove();p.done=true;land(p.col,after.filter((id,i)=>i%5===p.col&&id==='FS').length);settled++;continue;
    }
    if(p.tease&&!p.notified&&plans[p.col-1]?.done){
