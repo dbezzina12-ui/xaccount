@@ -52,28 +52,22 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .logo-text{display:block;font-family:var(--title);color:var(--ivory);letter-spacing:.01em;line-height:.9;text-shadow:0 4px 0 #2b2116,0 8px 22px #000c;-webkit-text-stroke:2px #1b140c}
 .logo-text b{display:block;font-weight:400;color:var(--amber);text-shadow:0 4px 0 #5a3410,0 8px 22px #000c,0 0 30px #eda83c55}
 .logo img{display:block;width:100%;filter:url(#wordmark-ink) drop-shadow(0 3px 2px #101715)}
-.app[data-layout=desktop] .logo{left:48px;top:40px;width:380px}
-.app[data-art-logo][data-layout=desktop] .logo{left:36px;top:46px;width:500px}
+.app[data-layout=desktop] .logo{left:28px;top:335px;width:358px}
 .app[data-layout=desktop] .logo-text{font-size:96px}
-.app[data-layout=mobile] .logo{right:44px;top:56px;width:440px;text-align:right}
-.app[data-art-logo][data-layout=mobile] .logo{right:24px;top:var(--cabinet-top);width:650px;translate:0 calc(var(--slack, 0px) - 100% - 14px)}
+.app[data-layout=mobile] .logo{left:40px;top:var(--cabinet-top);width:535px;translate:0 calc(var(--slack, 0px) - 100% - 12px)}
 .app[data-layout=mobile] .logo-text{font-size:112px}
-.mascot{position:absolute;z-index:3;pointer-events:none}
+.mascot{position:absolute;z-index:3;pointer-events:none;transform:scaleX(-1)}
 .mascot-canvas{display:block;width:100%;height:100%}
-/* The mascot shows from the waist up: behind the side console on desktop,
-   behind the cabinet's top edge on a phone (its tail curl runs off the left). */
-.app[data-layout=desktop] .mascot{left:-23px;top:326px;width:512px;height:640px}
-.app[data-layout=mobile] .mascot{left:-186px;top:71px;width:640px;height:800px}
-/* Rig v4.1 (ChatGPT's pieces: x 290-1510, tail top y 180, shown down to y 1290
-   of the 1600 x 2000 canvas): about a third of a phone's width with the tail
-   curl at the left edge; about 21% on desktop, ending just short of the cabinet. */
-.app[data-rig="4"][data-layout=mobile] .mascot{left:-139px;top:64px;width:528px;height:660px}
-.app[data-rig="4"][data-layout=desktop] .mascot{left:-73px;top:320px;width:488px;height:610px}
+/* Mirror the operator at the right of the stage, facing the entry vent. */
+.app[data-layout=desktop] .mascot{right:-23px;top:326px;width:512px;height:640px}
+.app[data-layout=mobile] .mascot{right:-106px;top:71px;width:640px;height:800px}
+.app[data-rig="4"][data-layout=mobile] .mascot{right:-58px;top:64px;width:528px;height:660px}
+.app[data-rig="4"][data-layout=desktop] .mascot{right:-73px;top:320px;width:488px;height:610px}
 .app[data-rig="4"][data-layout=desktop] .mascot::before{content:"";position:absolute;z-index:-1;left:37.8%;top:62%;width:32.4%;aspect-ratio:778/897;background:url(assets/ui/operator-boots.webp) center/contain no-repeat;filter:brightness(.72)}
 .mascot-ledge{display:none;position:absolute;z-index:4;pointer-events:none}
-.app[data-layout=desktop] .mascot-ledge{display:block;left:57px;top:650px;width:320px;aspect-ratio:1453/846;z-index:auto}
+.app[data-layout=desktop] .mascot-ledge{display:block;right:57px;top:650px;width:320px;aspect-ratio:1453/846;z-index:auto}
 /* Paws cross the work surface. The front apron still covers the waist seam. */
-.app[data-layout=desktop] .mascot-ledge::before,.app[data-layout=desktop] .mascot-ledge::after{content:"";position:absolute;inset:0;background:url(assets/ui/operator-desk.webp) center/contain no-repeat}
+.app[data-layout=desktop] .mascot-ledge::before,.app[data-layout=desktop] .mascot-ledge::after{content:"";position:absolute;inset:0;background:url(assets/ui/operator-desk.webp) center/contain no-repeat;transform:scaleX(-1)}
 .app[data-layout=desktop] .mascot-ledge::before{z-index:2;filter:drop-shadow(1px 4px 2px #100d0a99)}
 .app[data-layout=desktop] .mascot-ledge::after{z-index:4;clip-path:polygon(0 14%,16% 14%,22% 24%,42% 24%,43% 14%,84% 14%,87% 25%,100% 18%,100% 100%,0 100%)}
 .app[data-rig="4"][data-layout=desktop] .mascot-ledge{top:685px}
@@ -81,12 +75,11 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .jet{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9}
 .app[data-layout=desktop] .machine{left:410px;top:140px;width:1100px}
 .app[data-layout=mobile] .machine{left:-66px;top:calc(var(--cabinet-top) + var(--slack, 0px));width:1212px;bottom:0}
-.app[data-layout=mobile] :is(.logo, .mascot){translate:0 var(--slack, 0px)}
+.app[data-layout=mobile] .mascot{translate:0 var(--slack, 0px)}
 /* A phone's machine runs down to the controller: a console under the reels. */
 .machine-base{display:none}
 .app[data-layout=mobile] .machine-base{display:block;position:absolute;z-index:-1;left:44px;right:44px;top:860px;bottom:0;border-radius:0 0 30px 30px;
   background:repeating-linear-gradient(90deg,#0000 0 160px,#ffffff07 160px 163px),linear-gradient(180deg,#20272b,#151b1e 45%,#0c1013);box-shadow:0 30px 80px #000c,inset 0 -3px 0 #050708,inset 3px 0 0 #2a3236,inset -3px 0 0 #2a3236}
-.app[data-layout=mobile] .machine-base::before{content:"";position:absolute;left:70px;right:70px;top:70px;height:10px;border-radius:5px;background:var(--amber);box-shadow:0 0 24px #eda83c,0 0 6px #fff4;opacity:.75}
 .app[data-layout=mobile] .machine-base::after{content:"";position:absolute;left:36px;right:36px;bottom:34px;height:44px;border-radius:22px;background:linear-gradient(#5b6569,#2a3235 45%,#14191c);box-shadow:inset 0 2px 0 #8a9599,0 6px 14px #000a}
 
 /* The cabinet: drawn at its art size (1440×1060) and scaled to the machine. */
@@ -157,34 +150,15 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 
 .fx{position:absolute;left:120px;top:130px;width:1200px;height:800px;pointer-events:none;z-index:6}
 .shelf:has(.status:empty){visibility:hidden}
-.shelf{position:absolute;left:150px;right:150px;top:952px;height:84px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(#0b1013,#141b1f);box-shadow:inset 0 2px 8px #000,0 1px 0 #ffffff14}
+.shelf{position:absolute;left:150px;right:150px;top:24px;height:76px;z-index:2;display:grid;place-items:center;border-radius:14px;background:linear-gradient(#0b1013,#141b1f);box-shadow:inset 0 2px 8px #000,0 1px 0 #ffffff14}
 .status{font:700 var(--status-size,40px)/1 var(--font);letter-spacing:.08em;color:var(--ivory);text-align:center;text-shadow:0 0 12px #eda83c55;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;padding:0 20px}
 
-/* The desk instrument and lower phone rail share one live reservoir meter. */
-.gauge{position:absolute;z-index:7;width:160px;height:160px;left:50%;transform:translateX(-50%)}
-/* The mounting flange overlaps the side casting. The pivot is registered to the painted scale. */
-.app[data-layout=desktop] .gauge{left:calc(100% - 38px);top:35%;width:435px;height:auto;aspect-ratio:1402/1122;transform:none;background:url(assets/ui/cabinet-manometer.webp) center/contain no-repeat;pointer-events:none;filter:drop-shadow(3px 6px 4px #10101099)}
-.app[data-layout=desktop] .gauge-needle{inset:auto;left:60.2%;top:47.3%;width:74%;aspect-ratio:1;translate:-50% -50%;transform:rotate(calc(-115deg + var(--p,0) * 23deg))}
-.app[data-layout=desktop] .gauge-readout{left:60.2%;top:62.5%;transform:translate(-50%,-18%);display:flex;flex-direction:column-reverse;align-items:center;gap:2px;color:#24201b;text-shadow:0 1px #fff6}
-.app[data-layout=desktop] .gauge-label{font:800 27px/1 var(--font);letter-spacing:.06em}
-.app[data-layout=desktop] .gauge-value{font:400 64px/.9 var(--title);font-variant-numeric:tabular-nums}
-.desk-pointer{position:absolute;z-index:5;left:23.2%;top:34.65%;width:8.6%;aspect-ratio:1;translate:-50% -50%;background:url(assets/ui/gauge-needle.webp) center/contain no-repeat;transform:rotate(calc(-123deg + var(--p,0) * 24.6deg))}
-.gauge-readout{position:absolute}
-/* The reservoir sits in the lower cabinet lip. The same face appears in the phone guide. */
-.rail-demo,.meter-bands{display:none}
-.app[data-layout=mobile] .gauge{top:100%;pointer-events:none}
-.app[data-layout=mobile] .pressure-module{width:400px;height:146px;background:url(assets/ui/pressure-rail.svg) center/100% 100% no-repeat}
-.app[data-layout=mobile] .gauge::before,.app[data-layout=mobile] .gauge::after,
-.app[data-layout=mobile] .gauge-needle{display:none}
-.app[data-layout=mobile] .pressure-module .gauge-readout{inset:35px 55px auto;display:flex;height:56px;align-items:center;justify-content:space-between;border:0;border-radius:0;padding:0;background:none;box-shadow:none}
-.app[data-layout=mobile] .pressure-module .gauge-label{font-size:39px;letter-spacing:.07em;color:#c4cec5}
-.app[data-layout=mobile] .pressure-module .gauge-value{font:400 55px/1 var(--title);text-align:right;color:#f5cb81}
-.app[data-layout=mobile] .meter-bands{display:block;position:absolute;inset:98px 55px auto;height:14px;background:#334347;mask-image:repeating-linear-gradient(to right,#000 0 8%,transparent 8% 10%)}
-.meter-bands::after{content:"";display:block;width:calc(var(--p,0) * 10%);height:100%;background:#edbb70;transition:width .3s ease-out}
-.app[data-layout=mobile] .reservoir-art{grid-template-columns:minmax(0,1fr)}
-.app[data-layout=mobile] .reservoir-art .demo-dial{display:none}
-.app[data-layout=mobile] .rail-demo{display:block;position:relative;transform:scale(.7);--p:3;filter:drop-shadow(0 7px 7px #0009)}
-.gauge-needle{position:absolute;inset:0;background:url(assets/ui/gauge-needle.webp) center/contain no-repeat;transform-origin:center;transform:rotate(calc(-123deg + var(--p,0) * 24.6deg));transition:transform .65s ease-out}
+/* The instrument is seated in the bottom casting on both layouts. The lit
+   glass repeats at the same pitch as the ten dark lenses in the painted plate. */
+.gauge{position:absolute;z-index:7;left:50%;bottom:8px;transform:translateX(-50%);width:1148px;aspect-ratio:835/80;background:url(assets/ui/pressure-strip.webp) center/100% 100% no-repeat;pointer-events:none}
+.meter-bands{position:absolute;left:26.826%;top:22.5%;width:50.299%;height:55%;background:url(assets/ui/pressure-lamp.webp) left center/10% 100% repeat-x;clip-path:inset(0 calc(100% - var(--p,0) * 10%) 0 0);transition:clip-path .35s ease-out}
+.gauge-readout{position:absolute;left:83.85%;width:9.1%;top:9%;height:83%;display:grid;place-items:center}
+.gauge-value{font:400 74px/1 var(--title);color:#f3cf8c;text-shadow:0 2px 2px #000;font-variant-numeric:tabular-nums}
 .bonus-hud{position:absolute;display:grid;grid-template-columns:1fr 250px 1fr;align-items:stretch;font:700 30px/1 var(--font);letter-spacing:.06em;pointer-events:none}
 .bonus-hud > span{display:flex;gap:22px;justify-content:center;align-items:center;padding:12px 22px;border-radius:12px;background:#0b1013e6;border:2px solid var(--brass);white-space:nowrap}
 .bonus-hud > span:first-child{flex-direction:column;gap:6px}
@@ -192,7 +166,7 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .bonus-hud .hud-gap{visibility:hidden}
 .bonus-hud b{color:var(--amber)}
 .app[data-layout=desktop] .bonus-hud{left:30px;right:30px;top:-112px}
-.app[data-layout=mobile] .bonus-hud{left:120px;right:120px;top:calc(1060px * .8417 + 40px);grid-template-columns:minmax(0,1fr) 360px minmax(0,1fr);font-size:34px}
+.app[data-layout=mobile] .bonus-hud{left:120px;right:120px;top:calc(1060px * .8417 + 16px);grid-template-columns:minmax(0,1fr) 56px minmax(0,1fr);font-size:34px}
 .app[data-layout=mobile] .bonus-hud > span{gap:5px;padding:9px 6px}
 .app[data-layout=mobile] .bonus-hud > span:last-child{flex-direction:column}
 /* The controller lives under the cabinet (desktop) or along the bottom of the
@@ -280,7 +254,7 @@ dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}
 .app[data-art-vent-online] .cell.online:not(.win)::after{border-color:var(--cyan);box-shadow:0 0 12px #68c8c355}
 .steam{position:absolute;left:50%;top:-30%;width:150%;height:150%;margin-left:-75%;pointer-events:none;background:radial-gradient(circle,#ffffffcc 0,#ffffff55 30%,#fff0 65%);animation:steam 1.3s ease-out forwards}
 .app[data-art-fx-steam] .steam{background:var(--fx-steam) center/contain no-repeat}
-.app[data-layout=mobile] .steam{left:80%;top:50%;width:22%;height:65%;margin:0;animation-name:vent-side}
+.gauge .steam{left:88%;top:-50%;width:11%;height:150%;margin:0;animation-name:vent-side}
 @keyframes vent-side{from{transform:translate(0,0) scale(.3);opacity:.85}to{transform:translate(48px,20px) scale(1.1);opacity:0}}
 @keyframes steam{from{transform:translateY(20px) scale(.3);opacity:.95}to{transform:translateY(-90px) scale(1.4);opacity:0}}
 .reel-banner{position:absolute;left:50%;top:50%;z-index:12;width:max-content;transform:translate(-50%,-50%);display:grid;place-items:center;gap:6px;text-align:center;pointer-events:none}
@@ -302,7 +276,6 @@ dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}
 
 @media(prefers-reduced-motion:reduce){.card-flipper{transition:none}}
 
-@media (prefers-reduced-motion:reduce){.gauge-needle{transition:none}}
 
 /* A feature showcase built out of the same hall, vent and dial as the game. */
 .intro{position:fixed;inset:0;z-index:70;display:flex;overflow-y:auto;overscroll-behavior:contain;isolation:isolate;padding:clamp(14px,3vh,34px) max(18px,4vw) max(18px,env(safe-area-inset-bottom));background:linear-gradient(180deg,#060c1199,#09111990 47%,#060d12ee),url(assets/bg/bg-desktop.webp) center/cover no-repeat}
@@ -356,7 +329,7 @@ dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}
 }
 @media(prefers-reduced-motion:reduce){.demo-dial .demo-needle,.intro-inner{animation:none}.demo-dial .demo-needle{transform:rotate(27deg)}}
 
-@media(prefers-reduced-motion:reduce){.fs-arrival > :first-child{animation:none}.meter-bands::after{transition:none}}
+@media(prefers-reduced-motion:reduce){.fs-arrival > :first-child{animation:none}.meter-bands{transition:none}}
 
 /* The illustrated loading screen is in the initial HTML, before game modules load. */
 .loading-screen{position:fixed;inset:0;z-index:110;background:#0c1519;isolation:isolate;color:var(--ivory);display:grid;place-items:end center}

@@ -280,7 +280,7 @@ function toStage(cx, cy) { const r = stage.getBoundingClientRect(); return [(cx 
 async function sprayJet(i) {
   const tip = skunk.nozzle(), box = $('mascot').getBoundingClientRect(), cell = cellEl(i)?.getBoundingClientRect();
   if (!tip || !cell || pace() === 0) return;
-  const [x0, y0] = toStage(box.left + tip[0] * box.width, box.top + tip[1] * box.height), [x1, y1] = toStage(cell.left + cell.width / 2, cell.top + cell.height / 2);
+  const [x0, y0] = toStage(box.right - tip[0] * box.width, box.top + tip[1] * box.height), [x1, y1] = toStage(cell.left + cell.width / 2, cell.top + cell.height / 2);
   const cx = (x0 + x1) / 2, cy = Math.min(y0, y1) - 220; // an arc over the cabinet's top
   const point = (t) => [(1 - t) ** 2 * x0 + 2 * (1 - t) * t * cx + t * t * x1, (1 - t) ** 2 * y0 + 2 * (1 - t) * t * cy + t * t * y1];
   const grow = 260 * pace(), hold = 420 * pace(), t0 = performance.now(), drops = [];
@@ -437,7 +437,7 @@ async function bonusStart(e, result, mode) {
 const hud = (spin, of) => { $('hud-spins').textContent = `${spin} / ${of}`; $('hud-win').textContent = money(state.win); };
 function gauge(value) {
   const meter = $('pressure-meter');
-  stage.style.setProperty('--p', value);
+  meter.style.setProperty('--p', value);
   meter.setAttribute('aria-valuenow', value);
   $('gauge-value').textContent = value;
 }
@@ -839,7 +839,7 @@ const EXTRA = {
 };
 async function loadUI() {
   const ui = {
-    cabinet: 'assets/ui/cabinet.webp?v=2', logo: 'assets/ui/logo.webp?v=2',
+    cabinet: 'assets/ui/cabinet.webp?v=2', logo: 'assets/ui/logo-stacked.webp',
     'bg-desktop': 'assets/bg/bg-desktop.webp', 'bg-mobile': 'assets/bg/bg-mobile.webp', 'bg-bonus-desktop': 'assets/bg/bg-bonus-desktop.webp', 'bg-bonus-mobile': 'assets/bg/bg-bonus-mobile.webp',
   };
   const found = Object.fromEntries(await Promise.all(Object.entries(ui).map(async ([k, url]) => [k, (await exists(url)) ? url : null])));

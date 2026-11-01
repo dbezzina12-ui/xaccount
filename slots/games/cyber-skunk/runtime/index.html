@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#101820">
 <title>Cyber Skunk · Gamboligy Games</title>
-<link rel="stylesheet" href="styles.css?v=15">
+<link rel="stylesheet" href="styles.css?v=16">
 <link rel="stylesheet" href="entry-shop.css?v=8">
 <link rel="preload" href="assets/studio-gg-diagonal.png" as="image">
 <link rel="preload" href="assets/ui/airlock.svg" as="image" fetchpriority="low">
@@ -26,11 +26,11 @@
   <div id="stage" class="stage">
     <div class="logo" aria-label="Cyber Skunk"><span class="logo-text">CYBER<b>SKUNK</b></span></div>
     <div id="mascot" class="mascot" aria-hidden="true"></div>
-    <div id="pressure-bench" class="mascot-ledge" aria-hidden="true"><i class="desk-pointer"></i></div>
+    <div id="pressure-bench" class="mascot-ledge" aria-hidden="true"></div>
     <canvas id="jet" class="jet" aria-hidden="true"></canvas>
     <div id="machine" class="machine">
       <div id="cabinet" class="cabinet">
-        <div id="pressure-meter" class="gauge pressure-module" role="meter" aria-label="Reservoir pressure" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"><div id="gauge-needle" class="gauge-needle"></div><div class="gauge-readout"><span class="gauge-label">PRESSURE</span><span id="gauge-value" class="gauge-value">0</span></div><span class="meter-bands" aria-hidden="true"></span></div>
+        <div id="pressure-meter" class="gauge pressure-module" role="meter" aria-label="Reservoir pressure" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"><div class="gauge-readout"><span id="gauge-value" class="gauge-value">0</span></div><span class="meter-bands" aria-hidden="true"></span></div>
         <div class="cabinet-art" aria-hidden="true"></div>
         <div id="reels" class="reels" role="img" aria-label="Reels"></div>
         <div id="fs-faces" class="fs-faces" aria-hidden="true"></div>
@@ -148,6 +148,6 @@
     </div>
   </div>
 </div>
-<script type="module" src="launch.js?v=12"></script>
+<script type="module" src="launch.js?v=13"></script>
 </body>
 </html>

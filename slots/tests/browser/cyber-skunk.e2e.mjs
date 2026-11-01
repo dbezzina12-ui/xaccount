@@ -79,7 +79,7 @@ for (const [label, size] of [['desktop', { width: 1366, height: 768 }], ['phone'
   });
 }
 
-test('phone pressure console fits below the cabinet and between the bonus panels', async () => {
+test('phone pressure strip fits the lower casting above the bonus panels', async () => {
   for (const [width, height] of [[360, 640], [360, 800], [390, 844], [430, 932]]) {
     const { page } = await open({ width, height });
     try {
@@ -95,10 +95,11 @@ test('phone pressure console fits below the cabinet and between the bonus panels
       const spins = await box('#bonus-hud > span:first-child'), win = await box('#bonus-hud > span:last-child');
       const controller = await box('#controller');
       assert.equal(await page.locator('#cabinet > #pressure-meter').count(), 1);
-      assert.ok(Math.abs(dial.y - (cabinet.y + cabinet.height)) < 1, 'dial is flush with cabinet bottom');
+      const reels = await box('#reels');
+      assert.ok(dial.y >= reels.y + reels.height && dial.y + dial.height <= cabinet.y + cabinet.height, 'strip sits in the lower casting');
       assert.ok(readout.y >= dial.y && readout.y + readout.height < dial.y + dial.height, 'readout fits inside rail housing');
       assert.ok(dial.y + dial.height < controller.y, 'entire gauge clears controls');
-      assert.ok(spins.x + spins.width < dial.x && dial.x + dial.width < win.x, 'panels flank the readout');
+      assert.ok(Math.min(spins.y, win.y) > dial.y + dial.height, 'bonus panels clear the pressure strip');
       for (const id of ['#hud-tier', '#hud-win']) {
         const label = await box(id), panel = id === '#hud-tier' ? spins : win;
         assert.ok(label.x >= panel.x && label.x + label.width <= panel.x + panel.width, 'bonus text fits its panel');
