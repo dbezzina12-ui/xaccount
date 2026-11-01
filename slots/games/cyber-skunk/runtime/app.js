@@ -4,10 +4,10 @@
 import { playRound, drawBoard, lineWins, seeded, at } from './engine.js';
 import { drawRound, CATALOG_VERSION } from './catalog.js?v=7';
 import { REELS, ROWS, CELLS, LINES, PAYTABLE, NAMES, PLAY_OPTIONS, BONUSES, MYSTERY_TIERS, MYSTERY, mysteryShare, CAP, RETRIGGER, MAX_SPINS, MAX_STICKY, MAX_RESERVOIR, triggerRates } from './rules.js?v=7';
-import { loadArt, symbolHTML, ventHTML, fillerStrip } from './symbols.js?v=4';
+import { loadArt, symbolHTML, ventHTML, fillerStrip } from './symbols.js?v=5';
 import { mountController } from './controller/controller.js';
 import { GameAudio } from './audio.js';
-import { mountDemos } from './guide-demo.js';
+import { mountDemos } from './guide-demo.js?v=2';
 import { Skunk } from './rig.js';
 
 const $ = (id) => document.getElementById(id);
@@ -78,7 +78,7 @@ function update() {
     canDecrease: !state.busy && STAKES.indexOf(state.bet) > 0, canIncrease: !state.busy && STAKES.indexOf(state.bet) < STAKES.length - 1,
   });
   app.dataset.feature = state.feature || '';
-  if (!state.busy) status(state.feature ? `${COPY[state.feature].name} ON · ${PLAY_OPTIONS[state.feature].cost}× PER SPIN` : 'PRESSURE IS BUILDING');
+  if (!state.busy) status(state.feature ? `${COPY[state.feature].name} ON · ${PLAY_OPTIONS[state.feature].cost}× PER SPIN` : '');
 }
 const status = (text) => { $('status').textContent = text; };
 let toastTimer = 0;
@@ -621,7 +621,7 @@ function shopIllustration(mode) {
   // Use the same cast sign as the other bonuses. The fitting sits behind its top flange.
   const fitting = mode === 'sprayjob'
     ? '<svg x="173" y="-31" width="309" height="228" viewBox="25 15 206 154"><use href="assets/cards/dispatch-art.svg#sprayjob"/></svg>'
-    : `<image x="211" y="-5" width="218" height="204" href="assets/symbols/${mode === 'mystery' ? 'h4-key' : 'h1-battery'}.webp"/>`;
+    : `<image x="211" y="-5" width="218" height="204" href="assets/symbols/${mode === 'mystery' ? 'h4-key' : 'h1-battery'}.webp?v=2"/>`;
   return `<svg viewBox="0 0 640 360" class="shop-sign" aria-hidden="true">
     ${fitting}
     <image width="640" height="360" href="assets/panels/panel-vent-break.webp" clip-path="url(#shop-cast-sign)"/>
@@ -841,7 +841,7 @@ const EXTRA = {
 };
 async function loadUI() {
   const ui = {
-    cabinet: 'assets/ui/cabinet.webp', 'gauge-face': 'assets/ui/gauge-face-inset.svg', 'gauge-needle': 'assets/ui/gauge-needle.webp', 'pipes-top': 'assets/ui/pipes-top.webp', logo: 'assets/ui/logo.webp?v=2',
+    cabinet: 'assets/ui/cabinet.webp?v=2', 'gauge-face': 'assets/ui/gauge-face-inset.svg', 'gauge-needle': 'assets/ui/gauge-needle.webp', 'pipes-top': 'assets/ui/pipes-top.webp', logo: 'assets/ui/logo.webp?v=2',
     'bg-desktop': 'assets/bg/bg-desktop.webp', 'bg-mobile': 'assets/bg/bg-mobile.webp', 'bg-bonus-desktop': 'assets/bg/bg-bonus-desktop.webp', 'bg-bonus-mobile': 'assets/bg/bg-bonus-mobile.webp',
   };
   const found = Object.fromEntries(await Promise.all(Object.entries(ui).map(async ([k, url]) => [k, (await exists(url)) ? url : null])));

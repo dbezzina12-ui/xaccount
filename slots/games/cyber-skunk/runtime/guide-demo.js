@@ -1,5 +1,5 @@
 import { drawBoard, seeded, sprayRoute, paint } from './engine.js';
-import { symbolHTML } from './symbols.js?v=4';
+import { symbolHTML } from './symbols.js?v=5';
 
 // Each frame uses the production symbol and route rules. Only the guide's examples are seeded.
 export function mountDemos(cards) {

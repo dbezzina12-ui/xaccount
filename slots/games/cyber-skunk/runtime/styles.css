@@ -97,7 +97,9 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .cabinet-art::after{content:"";position:absolute;inset:200px 26px auto 26px;height:540px;background:
   linear-gradient(var(--amber),var(--amber)) left/22px 100% no-repeat,linear-gradient(var(--amber),var(--amber)) right/22px 100% no-repeat;opacity:.55;filter:blur(1px);
   -webkit-mask:repeating-linear-gradient(#000 0 30px,#0000 30px 40px);mask:repeating-linear-gradient(#000 0 30px,#0000 30px 40px)}
-.app[data-art-cabinet] .cabinet-art{background:var(--cabinet-art) 0 0/100% 100% no-repeat;box-shadow:none;border-radius:0}
+/* Preserve the painted aperture, fitting the side rails inside the mobile viewport. */
+.app[data-art-cabinet] .cabinet-art{background:none;box-shadow:none;border-radius:0;border:solid transparent;border-width:0;border-image:var(--cabinet-art) 168 144 155 144 / 130px 120px stretch}
+.app[data-art-cabinet][data-layout=mobile] .cabinet-art{inset-inline:69px;border-image-width:130px 51px}
 .app[data-art-cabinet] .cabinet-art::before,.app[data-art-cabinet] .cabinet-art::after{display:none}
 .reels{position:absolute;left:120px;top:130px;width:1200px;height:800px;display:grid;grid-template-columns:repeat(6,200px);overflow:hidden;border-radius:8px;background:#0c1216}
 .reel{position:relative;height:800px;overflow:hidden;border-right:2px solid #000a;background:linear-gradient(90deg,#141c21,#0f161a 50%,#141c21)}
@@ -161,6 +163,7 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .cell.dim{opacity:.45;transition:opacity .25s}
 
 .fx{position:absolute;left:120px;top:130px;width:1200px;height:800px;pointer-events:none;z-index:6}
+.shelf:has(.status:empty){visibility:hidden}
 .shelf{position:absolute;left:150px;right:150px;top:952px;height:84px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(#0b1013,#141b1f);box-shadow:inset 0 2px 8px #000,0 1px 0 #ffffff14}
 .status{font:700 var(--status-size,40px)/1 var(--font);letter-spacing:.08em;color:var(--ivory);text-align:center;text-shadow:0 0 12px #eda83c55;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;padding:0 20px}
 
