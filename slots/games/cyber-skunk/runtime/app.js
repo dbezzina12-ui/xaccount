@@ -4,10 +4,10 @@
 import { playRound, drawBoard, lineWins, seeded, at } from './engine.js';
 import { drawRound, CATALOG_VERSION } from './catalog.js?v=7';
 import { REELS, ROWS, CELLS, LINES, PAYTABLE, NAMES, PLAY_OPTIONS, BONUSES, MYSTERY_TIERS, MYSTERY, mysteryShare, CAP, RETRIGGER, MAX_SPINS, MAX_STICKY, MAX_RESERVOIR, triggerRates } from './rules.js?v=7';
-import { loadArt, symbolHTML, ventHTML, fillerStrip } from './symbols.js?v=6';
+import { loadArt, symbolHTML, ventHTML, fillerStrip } from './symbols.js?v=7';
 import { mountController } from './controller/controller.js';
 import { GameAudio } from './audio.js';
-import { mountDemos } from './guide-demo.js?v=3';
+import { mountDemos } from './guide-demo.js?v=4';
 import { Skunk } from './rig.js';
 
 const $ = (id) => document.getElementById(id);
@@ -30,6 +30,7 @@ const COPY = {
   overpressure: { name: 'OVERPRESSURE', kind: 'buy', text: `${BONUSES.super.spins} free spins with sticky vents and the Reservoir: each route banks its pressure gain, and every later route starts higher.` },
   mystery: { name: 'MYSTERY BUY', kind: 'buy', text: 'One purchase reveals one bonus: ' + MYSTERY_TIERS.map(({tier, weight}) => BONUSES[tier].title + ' ' + mysteryShare(weight).toFixed(2) + '%').join(' or ') + `. Every Mystery Buy pays at least ${MYSTERY.floor / 100}×; a Blackout always pays at least 1,000×.` },
 };
+const featureBadges = {sprayjob:'assets/cards/spray-job-badge.webp', enhanced:'assets/cards/signal-boost-badge.webp'};
 const TIER = {
   regular: { panel: 'panel-vent-break', text: 'Vents stay on the reels. Each spray banks pressure for the next one, up to 5.' },
   super: { panel: 'panel-overpressure', text: 'Vents stay on the reels. Each spray banks pressure for the next one, up to 10.' },
@@ -78,9 +79,18 @@ function update() {
     canDecrease: !state.busy && STAKES.indexOf(state.bet) > 0, canIncrease: !state.busy && STAKES.indexOf(state.bet) < STAKES.length - 1,
   });
   app.dataset.feature = state.feature || '';
-  if (!state.busy) status(state.feature ? `${COPY[state.feature].name} ON · ${PLAY_OPTIONS[state.feature].cost}× PER SPIN` : '');
+  if (!state.busy) status(state.feature ? `ON · ${PLAY_OPTIONS[state.feature].cost}× PER SPIN` : '', state.feature);
 }
-const status = (text) => { $('status').textContent = text; };
+function status(text, feature) {
+  const target = $('status');
+  target.textContent = text;
+  if (feature) {
+    const badge = new Image();
+    badge.src = featureBadges[feature];
+    badge.alt = COPY[feature].name;
+    target.prepend(badge);
+  }
+}
 let toastTimer = 0;
 function toast(text) { const t = $('toast'); t.textContent = text; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 3200); }
 
@@ -613,21 +623,8 @@ const open = (id) => { const d = $(id); if (!d.open) d.showModal(); };
 // ---- Buy menu and confirmation ----
 const shopPanels = {ventbreak:'vent-break', overpressure:'overpressure', blackout:'blackout'};
 function shopIllustration(mode) {
-  const title = COPY[mode]?.name || 'BLACKOUT PROTOCOL';
-  const panel = shopPanels[mode];
-  if (panel) return `<svg viewBox="0 0 640 360" class="shop-sign" aria-hidden="true"><image width="640" height="360" href="assets/panels/panel-${panel}.webp"/></svg>`;
-  // Use the same cast sign as the other bonuses. The fitting sits behind its top flange.
-  const fitting = mode === 'sprayjob'
-    ? '<svg x="173" y="-31" width="309" height="228" viewBox="25 15 206 154"><use href="assets/cards/dispatch-art.svg#sprayjob"/></svg>'
-    : `<image x="211" y="-5" width="218" height="204" href="assets/symbols/${mode === 'mystery' ? 'h4-key' : 'h1-battery'}.webp?v=2"/>`;
-  return `<svg viewBox="0 0 640 360" class="shop-sign" aria-hidden="true">
-    ${fitting}
-    <image width="640" height="360" href="assets/panels/panel-vent-break.webp" clip-path="url(#shop-cast-sign)"/>
-    <path fill="url(#shop-enamel)" d="M40 176H600L603 187 596 208v46l10 11-4 26H42l-7-7 6-23-3-47-7-19Z"/>
-    <g font-family="Anton, Impact, sans-serif" font-size="104" text-anchor="middle" textLength="519" stroke-linejoin="round" paint-order="stroke">
-      <text x="320" y="281" textLength="519" lengthAdjust="spacingAndGlyphs" fill="#5a4028" stroke="#100e0c" stroke-width="8">${title}</text>
-      <text x="320" y="276" textLength="519" lengthAdjust="spacingAndGlyphs" fill="url(#shop-letter)" stroke="#c59656" stroke-width="3">${title}</text>
-    </g></svg>`;
+  const src = featureBadges[mode] || `assets/panels/panel-${shopPanels[mode]}.webp`;
+  return `<img class="shop-sign" src="${src}" alt="" draggable="false">`;
 }
 const passSeries = {ventbreak:'01', overpressure:'02', mystery:'03'};
 

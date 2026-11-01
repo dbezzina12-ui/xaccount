@@ -152,7 +152,7 @@ test('vents: full symbol lands, centred reverse flips for spray, skip restores t
   await page.locator('#menu-rules').click();
   const fs = page.locator('#rules .scatter-letters');
   assert.equal(await fs.getAttribute('alt'), 'FS');
-  assert.ok(await fs.evaluate((el) => el.currentSrc.endsWith('/fs-violet.webp') && el.naturalWidth === 512));
+  assert.ok(await fs.evaluate((el) => el.currentSrc.endsWith('/fs-amethyst.webp') && el.naturalWidth === 512));
   assert.deepEqual(errors, []);
   await page.close();
 });

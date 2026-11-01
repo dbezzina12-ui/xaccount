@@ -2,7 +2,7 @@
 // ART_SPEC §2) when it is present, and these vector placeholders until then,
 // drawn in the style frame's palette.
 export const PALETTE = Object.freeze({ midnight: '#101820', graphite: '#252d31', ivory: '#efe5cf', brass: '#ad7840', amber: '#eda83c', cyan: '#68c8c3' });
-export const ART = Object.freeze({ H1: 'h1-battery', H2: 'h2-rotor', H3: 'h3-canister', H4: 'h4-key', A: 'a', K: 'k', Q: 'q', J: 'j', T: 'ten', W: 'wild-w', S: 'fs-violet' });
+export const ART = Object.freeze({ H1: 'h1-battery', H2: 'h2-rotor', H3: 'h3-canister', H4: 'h4-key', A: 'a', K: 'k', Q: 'q', J: 'j', T: 'ten', W: 'wild-w', S: 'fs-amethyst' });
 
 const svg = (body) => `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${body}</svg>`;
 const letter = (t, size = 56) => svg(`<text x="50" y="${50 + size * 0.35}" font-family="Anton, Impact, 'Arial Black', sans-serif" font-size="${size}" text-anchor="middle" fill="#efe5cf" stroke="#0b1014" stroke-width="3" paint-order="stroke">${t}</text>`);
