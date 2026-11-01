@@ -5,7 +5,7 @@ import { playRound, drawBoard, lineWins, seeded, at } from './engine.js';
 import { drawRound, freeSpinsChance, CATALOG_VERSION } from './catalog.js?v=8';
 import { REELS, ROWS, CELLS, LINES, PAYTABLE, NAMES, PLAY_OPTIONS, BONUSES, MYSTERY_TIERS, MYSTERY, mysteryShare, CAP, RETRIGGER, MAX_SPINS, MAX_STICKY, MAX_RESERVOIR } from './rules.js?v=8';
 import { loadArt, symbolHTML, ventHTML, fillerStrip } from './symbols.js?v=7';
-import { mountController } from './controller/controller.js';
+import { mountController } from './controller/controller.js?v=mobile-spin-2';
 import { GameAudio } from './audio.js';
 import { mountDemos } from './guide-demo.js?v=4';
 import { Skunk } from './rig.js?v=nozzle-ray-1';
@@ -644,7 +644,11 @@ async function present(result, mode) {
   let completedBonus;
   for (const e of result.events) {
     if (e.type === 'reveal') {
-      if (e.tier) { hud(e.spin, e.of); status(`FREE SPIN ${e.spin} OF ${e.of}`); }
+      if (e.tier) {
+        state.skip = false;
+        hud(e.spin, e.of);
+        status(`FREE SPIN ${e.spin} OF ${e.of}`);
+      }
       await spinTo(e.board, { canTrigger: true });
     } else if (e.type === 'spray') await showSpray(e);
     else if (e.type === 'wins') { await showWins(e); state.win = payOf(e.total); paintWin(); if (e.tier) await wait(350); }
@@ -652,7 +656,11 @@ async function present(result, mode) {
     else if (e.type === 'blackout') await blackout(e);
     else if (e.type === 'reservoir') { gauge(e.after); steam(); audio.play('gauge'); skunk.play('release'); status(`RESERVOIR ${e.before} → ${e.after}`); await wait(500); }
     else if (e.type === 'retrigger') { audio.play('retrigger'); status(`RETRIGGER +${e.add}`); hud(Number($('hud-spins').textContent.split('/')[0]), e.spins); await banner(`+${e.add}`); }
-    else if (e.type === 'bonusEnd') { completedBonus = e; await bonusEnd(); }
+    else if (e.type === 'bonusEnd') {
+      state.skip = false;
+      completedBonus = e;
+      await bonusEnd();
+    }
     else if (e.type === 'roundEnd' && completedBonus) {
       const context = BONUSES[completedBonus.tier].title + '  /  ' + completedBonus.played + ' FREE SPINS  /  TOTAL';
       await celebrate(e.total, winTitle(e.total) || 'TOTAL WIN', context, true);
