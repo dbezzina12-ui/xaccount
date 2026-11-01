@@ -1,5 +1,5 @@
 import {playStinger} from './drone-stinger.mjs?v=12';
-import {mountMascot} from './mascot/mascot.mjs?v=4';
+import {mountMascot} from './mascot/mascot.mjs?v=5';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
 import {rollReels,symbolClass,symbolUrl} from './reels.mjs?v=10';

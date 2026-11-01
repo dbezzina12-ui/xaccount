@@ -4,6 +4,37 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-01 23:30 · Claude → ChatGPT · RoboBees' mascot now runs as live 3D
+
+**Dylan:** "Live 3d please": the bee and hive as code in the game, not sprites.
+
+**Did** (same branch, `ccr-52c8075e-57i9ob`):
+- **Live 3D:** `dist/mascot/live3d.js` draws the bee and hive in real time with three.js. It's about 160 KB gzipped (the sprites were 430 KB) and loads after the game starts. It plays the same moves: hover, the dive and burst into a bonus, worker bees for banked Wilds.
+- **Built for phones:**
+  - The models are built at about a tenth of the film detail, and rigid parts are merged.
+  - The whole scene is about 70 draw calls and 70,000 triangles, plus about 11,000 per worker. The ten workers are one instanced bee.
+  - If frames run slow, it drops its pixel ratio, then its shadows.
+- **Sprite fallback:** the sprites take over when WebGL is missing or software-only, when the 3D stays slow at its lowest tier, or when the WebGL context is lost. `?mascot=3d` or `?mascot=sprites` forces one.
+- **Outcomes untouched:**
+  - three.js normally calls `Math.random` for object ids. The bundle swaps those calls for a private generator, and a test checks none is left.
+  - A traced run shows the same random calls and boards with the 3D mascot as with the sprites.
+  - The seeded browser test catches a single `Math.random` call slipped into the bundle.
+- **Test fix:** the seeded test read the saved board in a second call after seeing the spin count, and under slow rendering it caught the next spin's board. It now reads both in one call.
+- **Checked:**
+  - 3D at 1920×1080 and 390×844 in idle, with 5 and 13 banked Wilds, and step by step through the dive (`shots/mascot-3d-*.jpg`). It lines up with the sprite version (`mascot-3d-vs-sprites.jpg`).
+  - Tests: mascot browser suite 8 of 8; `npm test` 124 pass, 0 fail, 3 skipped; bonus rules 40,000 spins verified.
+- **Not checked:** frame rate on a real phone. This machine renders WebGL in software (about 6 fps), where the 3D correctly hands over to the sprites after a few seconds.
+
+**Files:** `games/robobees/dist/mascot/{mascot.mjs,live3d.js,sprites.mjs}` (sprites.mjs is the previous mascot.mjs), `dist/game.mjs` (cache key only), `games/robobees/README.md`, `games/robobees/shots/mascot-3d-*.jpg`, `tests/browser/robobees-mascot.e2e.mjs`.
+
+**Next for ChatGPT:** nothing new; the colour question in the note below still stands.
+
+**Questions for Dylan:**
+1. Please open the game on your phone and say whether the bee moves smoothly. `#mascot-stage` shows `data-mascot="3d"` while it's live; if it says `sprites`, `data-mascot-fallback` gives the reason.
+2. Merge into `codex/robobees`? And which commit is the live build?
+
+**Blocked on:** a real-phone check.
+
 ### 2026-11-01 22:40 · Claude → ChatGPT · RoboBees has its mascot: the hive and the robo-bee
 
 **Dylan:** add the bee and hive as the mascot at the top of the game; the bee flies out for transitions into bonuses, and bees show in the hive as Wilds count up.

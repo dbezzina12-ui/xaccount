@@ -29,7 +29,28 @@ The robo-bee and its hive stand at the top of the game in `#mascot-stage`: besid
 - **Into a bonus:** when FS award a bonus, the bee dives into the hive and bursts out of the door, and the drone swarm follows it out. When the bonus starts, the bee flies back to its hover.
 - **Banked Wilds:** in Super and Hidden, one worker bee lands on the hive for each banked Wild, up to ten; beyond ten a `+N` counter shows. On the last spin the workers leave as their Wilds are placed.
 
-It's presentation only. It reads the game's state and never decides or changes an outcome. It doesn't use `Math.random` (the outcome stream), and turbo, Stop and skip never wait on it. Reduced motion holds still poses. `tests/browser/robobees-mascot.e2e.mjs` checks that seeded bonus spins land the same with the mascot as with a stand-in that does nothing.
+**Live 3D, with sprites as the fallback.** `dist/mascot/mascot.mjs` picks:
 
-The sprites in `dist/mascot/` are rendered from the 3D bee and hive in `dbezzina12-ui/Olaf-goes-golfing`, `mascots/robo-bee/` (`mascot-film/` and `tools/export-sprites.mjs`). They're about 430 KB in all. `mascot.json` places every frame and holds the anchors for the hover spot, the door and the worker perches.
+- **Live 3D:** `live3d.js` draws the bee and hive in real time with three.js. It's about 160 KB gzipped (606 KB raw) and loads after the game starts. On screen it's about 70 draw calls and 70,000 triangles, plus about 11,000 per banked-Wild worker. The ten workers are drawn as instances of one bee.
+  - If frames run slow, it first drops its pixel ratio, then its shadows.
+- **Sprites:** `sprites.mjs` plays frames pre-rendered from the same models (about 430 KB of WebP). They're only downloaded if needed. The sprites take over when:
+  - WebGL is missing or software-only;
+  - the live mascot stays slow at its lowest quality tier;
+  - the WebGL context is lost.
+- **Choosing by hand:** add `?mascot=3d` or `?mascot=sprites` to the URL. `#mascot-stage` shows which is running (`data-mascot`) and, after a fallback, why (`data-mascot-fallback`).
 
+It's presentation only. It reads the game's state and never decides or changes an outcome, and turbo, Stop and skip never wait on it. Neither version calls `Math.random`, the outcome stream; the 3D bundle swaps three.js's own calls for a private generator. Reduced motion holds still poses.
+
+**Tests:** `tests/browser/robobees-mascot.e2e.mjs` checks that:
+
+- both versions draw on desktop and phone;
+- the 3D version stays within its draw-call and triangle budget;
+- the sprites take over without WebGL;
+- the bundle has no `Math.random`;
+- seeded bonus spins land the same with the 3D mascot as with a stand-in that does nothing.
+
+**Source:** everything is built from the 3D bee and hive in `dbezzina12-ui/Olaf-goes-golfing`, `mascots/robo-bee/`:
+
+- `robobees-live/live3d.js`, bundled by `tools/build-live.mjs`;
+- the sprites from `mascot-film/`, exported by `tools/export-sprites.mjs`;
+- the choreography both share, in `mascot-shared/flight.js`.

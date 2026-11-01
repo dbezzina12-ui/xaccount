@@ -1,12 +1,16 @@
-// RoboBees' hive-and-bee mascot in #mascot-stage. It must draw on desktop and phone, let the bonus award transition
-// finish, and never touch an outcome: the same seeded spins land the same boards and balances with the mascot as with
-// a stand-in that does nothing.
+// RoboBees' hive-and-bee mascot in #mascot-stage: live 3D (mascot/live3d.js) with the sprites (mascot/sprites.mjs) as
+// fallback. Both must draw on desktop and phone, the fallback must take over without WebGL, the bonus award transition
+// must finish, and the mascot must never touch an outcome: the same seeded spins land the same boards and balances with
+// it as with a stand-in that does nothing. ?mascot=3d forces the live mascot (this machine renders WebGL in software,
+// which the live mascot otherwise hands over to the sprites as too slow).
 //
 //   npm run test:studio-browser
 
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { serve, chromium } from '../../tools/lib/browser.mjs';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { serve, chromium, ROOT } from '../../tools/lib/browser.mjs';
 
 const GAME = 'games/robobees/dist/';
 const KEY = 'robobees-playtest-controller-v1';
@@ -35,17 +39,31 @@ after(async () => {
   srv?.close();
 });
 
-async function open(viewport, { query = '', standIn = false, seeded = false } = {}) {
+async function open(viewport, { query = '', standIn = false, seeded = false, noWebGL = false } = {}) {
   const page = await browser.newPage({ viewport, deviceScaleFactor: 1 });
   const errors = [];
   page.on('pageerror', (e) => errors.push(e.message));
   if (standIn) await page.route('**/mascot/mascot.mjs*', (r) => r.fulfill({ contentType: 'text/javascript', body: STAND_IN }));
   if (seeded) await page.addInitScript(SEEDED, KEY);
+  if (noWebGL)
+    await page.addInitScript(() => {
+      const get = HTMLCanvasElement.prototype.getContext;
+      HTMLCanvasElement.prototype.getContext = function (type, ...a) {
+        return /webgl/.test(type) ? null : get.call(this, type, ...a);
+      };
+    });
   await page.goto(`${srv.url}${GAME}${query}`);
   return { page, errors };
 }
 
-// Opaque pixels the mascot's canvas has drawn inside the stage's own box.
+const mode = (page) => page.waitForFunction(() => document.getElementById('mascot-stage').dataset.mascot, null, { timeout: 20000 }).then((h) => h.jsonValue());
+// The live mascot's own count of the canvas pixels it covers, with its draw calls and triangles.
+const probe3d = (page) =>
+  page.waitForFunction(() => {
+    const p = document.getElementById('mascot-stage').mascotProbe?.();
+    return p && p.covered > 500 && p;
+  }, null, { timeout: 30000 }).then((h) => h.jsonValue());
+// Opaque pixels the sprite canvas has drawn inside the stage's own box.
 const drawn = (page) =>
   page.waitForFunction(() => {
     const stage = document.getElementById('mascot-stage');
@@ -60,17 +78,42 @@ const drawn = (page) =>
   }, null, { timeout: 15000 });
 
 for (const [name, viewport] of [['desktop', { width: 1920, height: 1080 }], ['phone', { width: 390, height: 844 }]]) {
-  test(`the hive and bee draw in the mascot stage (${name})`, async () => {
-    const { page, errors } = await open(viewport);
+  test(`the live 3D hive and bee draw in the mascot stage within budget (${name})`, async () => {
+    const { page, errors } = await open(viewport, { query: '?mascot=3d' });
+    assert.equal(await mode(page), '3d');
+    const p = await probe3d(page);
+    assert.ok(p.calls <= 80, `${p.calls} draw calls`);
+    assert.ok(p.tris <= 90000, `${p.tris} triangles`);
+    assert.deepEqual(errors, []);
+    await page.close();
+  });
+  test(`the sprite fallback draws in the mascot stage (${name})`, async () => {
+    const { page, errors } = await open(viewport, { query: '?mascot=sprites' });
+    assert.equal(await mode(page), 'sprites');
     assert.ok(await (await drawn(page)).jsonValue());
     assert.deepEqual(errors, []);
     await page.close();
   });
 }
 
+test('without WebGL the sprites take over and say why', async () => {
+  const { page, errors } = await open({ width: 1280, height: 900 }, { noWebGL: true });
+  assert.equal(await mode(page), 'sprites');
+  assert.ok(await page.evaluate(() => document.getElementById('mascot-stage').dataset.mascotFallback));
+  assert.ok(await (await drawn(page)).jsonValue());
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
+test('the live bundle never calls Math.random, the outcome stream', () => {
+  const js = readFileSync(join(ROOT, 'games/robobees/dist/mascot/live3d.js'), 'utf8');
+  assert.ok(js.length > 100000);
+  assert.doesNotMatch(js, /Math\.random/);
+});
+
 test('the bonus award transition finishes with the bee diving and bursting first', async () => {
-  const { page, errors } = await open({ width: 1920, height: 1080 }, { query: '?preview=stinger' });
-  await drawn(page);
+  const { page, errors } = await open({ width: 1920, height: 1080 }, { query: '?preview=stinger&mascot=3d' });
+  await probe3d(page);
   await page.click('#preview-stinger');
   await page.waitForFunction(() => document.body.classList.contains('present-award') && !document.getElementById('bonus-intro').inert, null, { timeout: 20000 });
   assert.deepEqual(errors, []);
@@ -79,13 +122,16 @@ test('the bonus award transition finishes with the bee diving and bursting first
 
 test('seeded bonus spins land the same with the mascot as with a stand-in that does nothing', async () => {
   const play = async (standIn) => {
-    const { page, errors } = await open({ width: 1280, height: 900 }, { standIn, seeded: true });
+    const { page, errors } = await open({ width: 1280, height: 900 }, { query: '?mascot=3d', standIn, seeded: true });
     await page.waitForFunction(() => document.getElementById('board').children.length === 20);
     const after = [];
+    // read each spin's save in the same check that sees it, before the next spin can replace it
     for (let left = 9; left >= 6; left--) {
-      await page.waitForFunction(([k, l]) => JSON.parse(localStorage.getItem(k)).state.left === l, [KEY, left], { timeout: 30000 });
-      const s = JSON.parse(await page.evaluate((k) => localStorage.getItem(k), KEY));
-      after.push({ face: s.face, balance: s.balance, bank: s.state.bank, spots: s.state.spots });
+      const seen = await page.waitForFunction(([k, l]) => {
+        const s = JSON.parse(localStorage.getItem(k));
+        return s.state.left === l && { face: s.face, balance: s.balance, bank: s.state.bank, spots: s.state.spots };
+      }, [KEY, left], { timeout: 30000, polling: 25 });
+      after.push(await seen.jsonValue());
     }
     await page.close();
     return { after, errors };

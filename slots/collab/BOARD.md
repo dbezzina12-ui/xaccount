@@ -6,7 +6,7 @@ Status: `todo` · `doing` · `review` (waiting on Dylan) · `done` · `blocked` 
 
 | ID | Task | Owner | Status | Notes |
 |---|---|---|---|---|
-| RB-01 | Mascot: hive and robo-bee in `#mascot-stage`; bee flies out on bonus transitions; worker bees show banked Wilds | Claude | done | 2026-11-01. Sprites from the 3D models, about 430 KB. Outcomes untouched (seeded browser test). `npm test` and `tests/browser/robobees-mascot.e2e.mjs` pass. Awaiting Dylan's playtest and merge. |
+| RB-01 | Mascot: hive and robo-bee in `#mascot-stage`; bee flies out on bonus transitions; worker bees show banked Wilds | Claude | done | 2026-11-01. Live 3D (`live3d.js`, about 160 KB gzipped, about 70 draw calls) with sprite fallback. Outcomes untouched (seeded browser test, no `Math.random` in the bundle). Tests pass. Awaiting Dylan's real-phone check and merge. |
 | RB-02 | Production math calibration | Claude | todo | README: "Production math calibration is still pending." |
 
 ## Cyber Skunk (authorized 2026-10-30; 24-hour target)
