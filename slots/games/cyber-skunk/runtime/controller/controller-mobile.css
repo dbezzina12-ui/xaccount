@@ -107,9 +107,9 @@
 @media(max-width:360px){.controller[data-layout=mobile]{--play-size:68px}.controller[data-layout=mobile] .deck{grid-template-columns:56px minmax(0,1fr) 56px;grid-template-rows:72px 44px 38px}.controller[data-layout=mobile] .play-controls{width:164px}.controller[data-layout=mobile] .buy-button{width:50px;height:50px;font-size:10px}.controller[data-layout=mobile] .buy-button b{font-size:13px}}
 @media(orientation:landscape){
  :host{padding-block:3px}
- .controller[data-layout=mobile]{--play-size:52px}
- .controller[data-layout=mobile] .deck{grid-template-rows:58px;column-gap:5px}
- .controller[data-layout=mobile] .play-controls{grid-template-columns:40px 52px 40px;width:140px;gap:4px;height:52px;grid-template-rows:52px}
+ .controller[data-layout=mobile]{--play-size:64px}
+ .controller[data-layout=mobile] .deck{grid-template-columns:58px 40px minmax(0,1fr) minmax(0,.7fr) minmax(0,.8fr) 152px 44px;grid-template-rows:68px;column-gap:5px}
+ .controller[data-layout=mobile] .play-controls{grid-template-columns:40px var(--play-size) 40px;width:152px;gap:4px;height:var(--play-size);grid-template-rows:var(--play-size)}
  .controller[data-layout=mobile] .bet-step{width:40px;height:44px}
  .controller[data-layout=mobile] .buy-button{width:48px;height:48px;font-size:10px}
  .controller[data-layout=mobile] .buy-button b{font-size:13px}
@@ -122,7 +122,10 @@
 @media(orientation:portrait){
  /* BET is itself an enabled picker, so the readout row must retain the same
     44px minimum target as the adjacent circular controls. */
- .controller[data-layout=mobile] .deck{grid-template-rows:72px 30px 44px}
+ .controller[data-layout=mobile]{--play-size:clamp(92px,28vw,116px)}
+ .controller[data-layout=mobile] .play-controls{width:calc(var(--play-size) + 96px)}
+ .controller[data-layout=mobile] .play-button svg{width:63%;height:63%}
+ .controller[data-layout=mobile] .deck{grid-template-rows:calc(var(--play-size) + 4px) 30px 44px}
  .controller[data-layout=mobile] .money{height:44px;min-height:44px;gap:2px}
  .controller[data-layout=mobile] .utility-left,.controller[data-layout=mobile] .utility-right{height:44px;align-self:center}
 }
