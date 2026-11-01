@@ -5,6 +5,40 @@ Newest on top. Format is in `AGENTS.md`.
 ---
 
 
+### 2026-11-01 01:29 · Claude → ChatGPT · Mystery Buy rebalanced: Overpressure or Blackout, 40x floor, exactly 96%
+
+**Picked up:** df331b0 (Vent Hall sync, ticket shop, Mystery Buy at 400x, per-spin win tiers). Your Mystery already drew from the catalogs: every Blackout came from the 1,000x+ pool (checked over 200,000 draws: minimum 1,000x). But 45.75% of buys were Vent Break (median 25x on a 400x buy), and Overpressure's own median is 35.6x. That is Dylan's "$18–30 on a $400 purchase".
+
+**Dylan chose:** Overpressure or Blackout only, with a 40x floor.
+
+**Did:**
+- **New pool:** `tools/math/cyber-skunk-mystery.mjs` builds `mystery-super`. It takes the bought Overpressure's rounds of 40x or more (8,016 of 15,559) and weights those over 500x at 17.8%, so the buy averages exactly 96%. No existing pool or mode changed: every other mode's figures are identical.
+- **Tiers:** `rules.js MYSTERY_TIERS` is Overpressure 938,250,429 and Blackout 61,749,571 tickets out of 1,000,000,000 (Blackout 36/583, about 1 in 16). `catalog.js` draws the tier from a whole ticket.
+- **Mystery now:**
+  - RTP 96.000000%.
+  - Median 142.7x, up from 35.6x.
+  - 19% of buys pay back 400x or more.
+  - Max 25,000x about 1 in 3,145 buys.
+  - Never under 40x, and a Blackout never under 1,000x.
+  - MATH.md has a Mystery row and an "Overpressure (in Mystery)" row.
+- **Copy:** the card and rules show 93.83% / 6.17% (`mysteryShare`). The rules add "Every Mystery Buy pays at least 40×; a Blackout always pays at least 1,000×." Module versions are bumped (rules/catalog v7, app v14, launch v9) so open tabs refetch.
+- **Tests:**
+  - `mystery.test.mjs` checks: no Vent Break, tickets cover the total, 96% to a billionth of the cost, the 40x and 1,000x floors, and both tier ends replay.
+  - Your scatter-briefing browser test now checks Mystery tickets on both sides of the Overpressure/Blackout boundary.
+  - `cyber-skunk-verify` replays all 149,276 catalog entries and 10,000 Mystery draws.
+  - All suites pass: 27 game, 127 core, 25 browser.
+  - A steered Mystery to the smallest Blackout paid exactly 1,000x.
+
+**Files:** `tools/math/cyber-skunk-{mystery,report,verify}.mjs`, `runtime/{rules,catalog,app,launch}.js`, `runtime/index.html`, `runtime/catalog-data.js`, `MATH.md`, `math/summary.json`, `tests/mystery.test.mjs`, `tests/catalog.test.mjs`, `tests/browser/cyber-skunk.e2e.mjs`, `shots/mystery-v2-*`.
+
+**Next for ChatGPT:** keep `MYSTERY_TIERS` as it is. If the card should say "Overpressure / Blackout" instead of "Super / Hidden", or show the 40x floor, that is your copy to change.
+
+**Questions for Dylan:** none.
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-10-31 12:26 ET · ChatGPT → Claude · Restore the 44px BET target on phones
 
 **Picked up:** your 15:38 and 15:46 handoffs (`3a06d33`, `a0f501f`). I reviewed the concrete complete-build, pipe, controller and icon screenshots. The new art reads cleanly, all required art is integrated, the artifact is republished, and your full math/browser verification is recorded below. I did not change any art, outcome, price, rig, animation or audio file.

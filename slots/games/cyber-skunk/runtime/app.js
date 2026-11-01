@@ -2,8 +2,8 @@
 // anything moves (playRound returns its total and every event); this file only
 // presents those events, so skip, turbo and frame timing never change a result.
 import { playRound, drawBoard, lineWins, seeded, at } from './engine.js';
-import { drawRound, CATALOG_VERSION } from './catalog.js?v=6';
-import { REELS, ROWS, CELLS, LINES, PAYTABLE, NAMES, PLAY_OPTIONS, BONUSES, MYSTERY_TIERS, CAP, RETRIGGER, MAX_SPINS, MAX_STICKY, MAX_RESERVOIR, triggerRates } from './rules.js?v=6';
+import { drawRound, CATALOG_VERSION } from './catalog.js?v=7';
+import { REELS, ROWS, CELLS, LINES, PAYTABLE, NAMES, PLAY_OPTIONS, BONUSES, MYSTERY_TIERS, MYSTERY, mysteryShare, CAP, RETRIGGER, MAX_SPINS, MAX_STICKY, MAX_RESERVOIR, triggerRates } from './rules.js?v=7';
 import { loadArt, symbolHTML, ventHTML, fillerStrip } from './symbols.js?v=4';
 import { mountController } from './controller/controller.js';
 import { GameAudio } from './audio.js';
@@ -28,7 +28,7 @@ const COPY = {
   sprayjob: { name: 'SPRAY JOB', kind: 'feature', text: 'Every spin lands a vent on reel 1 and at least 3 vents in all, so Cyber Skunk sprays on every spin. Stays on until you switch it off.' },
   ventbreak: { name: 'VENT BREAK', kind: 'buy', text: `${BONUSES.regular.spins} free spins. Every vent that lands stays (up to ${MAX_STICKY}), so the route grows into a maze, and a small Reservoir banks pressure up to ${BONUSES.regular.reservoirMax}.` },
   overpressure: { name: 'OVERPRESSURE', kind: 'buy', text: `${BONUSES.super.spins} free spins with sticky vents and the Reservoir: each route banks its pressure gain, and every later route starts higher.` },
-  mystery: { name: 'MYSTERY BUY', kind: 'buy', text: 'One purchase reveals one bonus: ' + MYSTERY_TIERS.map(({tier, weight}) => BONUSES[tier].title + ' ' + weight / 100 + '%').join(', ') + '.' },
+  mystery: { name: 'MYSTERY BUY', kind: 'buy', text: 'One purchase reveals one bonus: ' + MYSTERY_TIERS.map(({tier, weight}) => BONUSES[tier].title + ' ' + mysteryShare(weight).toFixed(2) + '%').join(' or ') + `. Every Mystery Buy pays at least ${MYSTERY.floor / 100}×; a Blackout always pays at least 1,000×.` },
 };
 const TIER = {
   regular: { panel: 'panel-vent-break', text: 'Vents stay on the reels. Each spray banks pressure for the next one, up to 5.' },
@@ -660,7 +660,7 @@ function card(mode) {
   };
   const bonus = mode === 'ventbreak' ? BONUSES.regular : mode === 'overpressure' ? BONUSES.super : null;
   const detail = mode === 'mystery'
-    ? '<div class="odds">' + MYSTERY_TIERS.map(({tier,weight}) => '<span><b>' + weight / 100 + '%</b>' + ({regular:'Regular',super:'Super',hidden:'Hidden'})[tier] + '</span>').join('') + '</div>'
+    ? '<div class="odds">' + MYSTERY_TIERS.map(({tier,weight}) => '<span><b>' + mysteryShare(weight).toFixed(2) + '%</b>' + ({regular:'Regular',super:'Super',hidden:'Hidden'})[tier] + '</span>').join('') + '</div>'
     : `<p>${brief[mode]}</p>`;
   if (!feature) return bonusTicket(mode, edition[mode], detail, bonus);
   const label = active ? 'Disable' : 'Activate';

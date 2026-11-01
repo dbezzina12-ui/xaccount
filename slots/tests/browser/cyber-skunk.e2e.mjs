@@ -505,8 +505,9 @@ test('polished shop and single unboxed bonus result on phones and desktop', asyn
 test('scatter landing precedes the held bonus briefing on every entry path', async () => {
   const cases = [
     ['ventbreak',null,3,'VENT BREAK'], ['overpressure',null,4,'OVERPRESSURE'],
-    ['mystery',0,3,'VENT BREAK'], ['mystery',500000000,4,'OVERPRESSURE'],
-    ['mystery',950000000,5,'BLACKOUT PROTOCOL'], ['base',null,5,'BLACKOUT PROTOCOL'],
+    // Mystery: Overpressure for tickets below 938,250,429 (rules.js MYSTERY_TIERS), Blackout above; never Vent Break.
+    ['mystery',0,4,'OVERPRESSURE'], ['mystery',938250428,4,'OVERPRESSURE'],
+    ['mystery',938250429,5,'BLACKOUT PROTOCOL'], ['base',null,5,'BLACKOUT PROTOCOL'],
   ];
   for (const [mode,ticket,count,title] of cases) {
     const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});

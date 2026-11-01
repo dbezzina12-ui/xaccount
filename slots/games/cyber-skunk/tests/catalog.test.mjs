@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs';
 import data from '../runtime/catalog-data.js';
 import { drawRound, pick } from '../runtime/catalog.js';
 import { playRound, seeded } from '../runtime/engine.js';
-import { CAP, MODES, triggerRates } from '../runtime/rules.js';
+import { CAP, MODES, PLAY_OPTIONS, triggerRates } from '../runtime/rules.js';
 
 const summary = JSON.parse(readFileSync(new URL('../math/summary.json', import.meta.url)));
 
@@ -23,7 +23,7 @@ test('every paid mode returns 96% of its cost; the report matches the shipped ca
   for (const [mode, s] of Object.entries(summary.modes)) {
     assert.equal(s.rtp, '96.000000%', mode);
     assert.ok(Math.abs(s.rtpDeviation) < 1e-8, `${mode} deviates ${s.rtpDeviation}`);
-    assert.equal(s.cost, MODES[mode].cost, `${mode} price`);
+    assert.equal(s.cost, PLAY_OPTIONS[mode].cost, `${mode} price`);
   }
   // The ticket-weighted means of the buys, exactly.
   for (const [mode, pool] of [['ventbreak', 'bonus-regular'], ['overpressure', 'bonus-super']]) {
@@ -62,7 +62,7 @@ test('a sample of every pool replays exactly through the engine', () => {
     const [kind, mode, tier] = name.split('-');
     for (let k = 0; k < rows.length; k += Math.ceil(rows.length / 60)) {
       const [seed, , value] = rows[k];
-      const paid = kind === 'bonus' ? playRound({ rng: seeded(seed), forceBonus: mode }).total
+      const paid = kind === 'bonus' || kind === 'mystery' ? playRound({ rng: seeded(seed), forceBonus: mode }).total // mystery-super: Overpressure rounds
         : kind === 'spin' ? playRound({ mode, rng: seeded(seed) }).total
           : playRound({ mode, rng: seeded(seed), bonusRng: seeded(1), triggerScatters: data.scatters[tier] }).events.find((e) => e.type === 'wins').paid;
       assert.equal(paid, value, `${name} seed ${seed}`);

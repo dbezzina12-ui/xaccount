@@ -32,6 +32,7 @@ const modes = {};
 for (const [mode, m] of Object.entries(data.modes)) {
   const parts = {};
   if (m.pool) parts[m.pool.split('-')[1]] = { weight: 1, dist: distOf(m.pool) };
+  else if (m.pools) for (const [t, name] of Object.entries(m.pools)) parts[t] = { weight: m.tiers[t] / TOTAL, dist: distOf(name) }; // Mystery: one pool per tier
   else {
     parts.none = { weight: m.tiers.none / TOTAL, dist: poolDist(`spin-${mode}`) };
     for (const t of ['regular', 'super', 'hidden']) parts[t] = { weight: m.tiers[t] / TOTAL, dist: convolve(poolDist(m.entries[t]), distOf(bonusPoolOf(m, t))) };
@@ -55,6 +56,7 @@ function band(d, [a, b]) { let s = 0; d.forEach((p, i) => { const x = (i * STEP)
 function exactRtp(mode) {
   const m = data.modes[mode], T = BigInt(TOTAL), sumPool = (name) => data.pools[name].reduce((a, [, w, v]) => a + BigInt(w) * BigInt(v), 0n);
   if (m.pool) return { num: sumPool(m.pool), den: T * BigInt(m.cost * 100) };
+  if (m.pools) return { num: Object.entries(m.pools).reduce((a, [t, name]) => a + BigInt(m.tiers[t]) * sumPool(name), 0n), den: T * T * BigInt(m.cost * 100) };
   // Natural: sum over tiers of P(tier) * E[min(CAP, e + b)] with integer weights: denominator T^3.
   let num = BigInt(m.tiers.none) * sumPool(`spin-${mode}`) * T;
   // E[min(CAP, e + b)] = E[e] + E[b] - E[overflow]; only bonuses near the cap overflow.
@@ -88,19 +90,19 @@ function sessions(d, cost, n = 20000, rounds = 100) {
   return { n, ahead: out.filter((x) => x >= 1).length / n, lostHalf: out.filter((x) => x <= 0.5).length / n, p10: q(0.1), median: q(0.5), p90: q(0.9), mean: out.reduce((a, b) => a + b, 0) / n };
 }
 
-const NAME = { base: 'Base Spins', enhanced: 'Signal Boost', sprayjob: 'Spray Job', ventbreak: 'Vent Break (buy)', overpressure: 'Overpressure (buy)' };
+const NAME = { base: 'Base Spins', enhanced: 'Signal Boost', sprayjob: 'Spray Job', ventbreak: 'Vent Break (buy)', overpressure: 'Overpressure (buy)', mystery: 'Mystery Buy' };
 const rows = [], summary = { version: data.version, sources: { 'engine.js': hash('engine.js'), 'rules.js': hash('rules.js'), 'catalog-data.js': hash('catalog-data.js') }, modes: {} };
 for (const [mode, M] of Object.entries(modes)) {
   const d = M.dist, mean = meanOf(d), sd = Math.sqrt(d.reduce((a, p, i) => a + p * ((i * STEP) / 100 - mean) ** 2, 0)), rtp = exactRtp(mode);
   const byPart = Object.fromEntries(Object.entries(M.parts).map(([k, p]) => [k, (p.weight * meanOf(p.dist)) / M.cost]));
   const tail = atLeast(d, 1000) ? d.reduce((a, p, i) => a + ((i * STEP) / 100 >= 1000 ? (p * i * STEP) / 100 : 0), 0) / M.cost : 0;
   const s = { cost: M.cost, rtp: fmtFrac(rtp), rtpDeviation: deviation(rtp), rtpFloat: mean / M.cost, hit: 1 - d[0], zero: d[0], beatCost: atLeast(d, M.cost), median: quantile(d, 0.5), p90: quantile(d, 0.9), p99: quantile(d, 0.99), p999: quantile(d, 0.999), sdPerCost: sd / M.cost, max: CAP / 100, maxOdds: d[BINS - 1], byPart, tailShare: tail, bands: BANDS.map((b) => band(d, b)), sessions: sessions(d, M.cost, mode === 'ventbreak' || mode === 'overpressure' ? 4000 : 20000) };
-  if (data.modes[mode].tiers) s.rates = Object.fromEntries(['regular', 'super', 'hidden'].map((t) => [t, data.modes[mode].tiers[t] / TOTAL]));
+  if (data.modes[mode].entries) s.rates = Object.fromEntries(['regular', 'super', 'hidden'].map((t) => [t, data.modes[mode].tiers[t] / TOTAL]));
   summary.modes[mode] = s; rows.push([mode, s]);
   console.log(`${mode.padEnd(13)} RTP ${s.rtp} hit ${pct(s.hit)} >=cost ${pct(s.beatCost)} median ${s.median}x p99.9 ${s.p999}x max ${oneIn(s.maxOdds)}`);
 }
 // Each bonus on its own: bought, and as base play triggers it.
-const BONUS_POOLS = [['regular', 'bonus-regular', 'bought'], ['regularNatural', data.modes.base.bonuses.regular, 'triggered'], ['super', 'bonus-super', 'bought'], ['superNatural', data.modes.base.bonuses.super, 'triggered'], ['hidden', 'bonus-hidden', 'triggered only']];
+const BONUS_POOLS = [['regular', 'bonus-regular', 'bought'], ['regularNatural', data.modes.base.bonuses.regular, 'triggered'], ['super', 'bonus-super', 'bought'], ['superNatural', data.modes.base.bonuses.super, 'triggered'], ['hidden', 'bonus-hidden', 'triggered or in Mystery'], ['superMystery', 'mystery-super', 'in Mystery']];
 const bonusRows = BONUS_POOLS.map(([key, name, how]) => { const d = distOf(name), t = name.split('-')[1]; return [key, { tier: t, how, mean: meanOf(d), median: quantile(d, 0.5), p90: quantile(d, 0.9), p99: quantile(d, 0.99), zero: d[0], min: (d.findIndex((p) => p > 0) * STEP) / 100, max: d[BINS - 1], over1k: atLeast(d, 1000), over10k: atLeast(d, 10000) }]; });
 summary.bonuses = Object.fromEntries(bonusRows);
 mkdirSync(new URL('math/', GAME), { recursive: true });
@@ -122,7 +124,8 @@ ${rows.map(([m, s]) => `| ${NAME[m]} | ${s.cost}x | **${s.rtp}** | ${pct(s.hit)}
 
 - **RTP** is measured against the full charged cost of each mode. It is the exact rational value of the catalogs, printed to 6 decimals; the largest difference from 96% is ${Math.max(...rows.map(([, s]) => Math.abs(s.rtpDeviation))).toExponential(1)} of the cost. Whole-ticket weights cannot always land on 96% to the last digit.
 - **Max win** is 25,000x the base bet per round, counted once across the trigger spin, the bonus and every retrigger. Reaching it ends the round.
-- **Blackout Protocol** (Hidden) is never sold; it only starts naturally with 5 or more FS scatters.
+- **Blackout Protocol** (Hidden) starts naturally with 5 or more FS scatters, or as ${pct(data.modes.mystery.tiers.hidden / TOTAL)} of Mystery Buys; it is never sold on its own.
+- **Mystery Buy** reveals Overpressure (${pct(data.modes.mystery.tiers.super / TOTAL)}) or Blackout Protocol (${pct(data.modes.mystery.tiers.hidden / TOTAL)}), never Vent Break, and pays at least ${x(data.modes.mystery.floor / 100)}. Its Overpressure comes from its own pool (\`tools/math/cyber-skunk-mystery.mjs\`): the bought Overpressure's rounds of 40x or more, those over ${x(data.modes.mystery.bigOver / 100)} at ${pct(data.modes.mystery.bigOverWeight)} of their weight, so the whole buy returns 96%. Its Blackout is the same pool as a natural one: always 1,000x or more.
 
 ## Natural bonus rates
 
@@ -148,7 +151,8 @@ The last column is the fraction of the RTP paid by rounds of 1,000x or more (the
 ${bonusRows.map(([, b]) => `| ${BONUSES[b.tier].title} (${b.how}) | ${BONUSES[b.tier].spins} | ${x(b.mean)} | ${x(b.min)} | ${x(b.median)} | ${x(b.p90)} | ${x(b.p99)} | ${share(b.zero)} | ${share(b.over1k)} | ${oneIn(b.over10k)} | ${oneIn(b.max)} |`).join('\n')}
 
 - **Bought and triggered:** the same rounds with the same average. A triggered Vent Break or Overpressure reaches the cap more often, which is what puts the base game's max at 1 in 1,000,000. A natural round adds its trigger spin's pay, capped at 25,000x.
-- **Blackout Protocol** pays at least 1,000x every time and reaches the cap 1 in 200.
+- **Blackout Protocol** pays at least 1,000x every time and reaches the cap 1 in 200, triggered or revealed by Mystery.
+- **Overpressure (in Mystery)** never pays under 40x; the bought Overpressure keeps its own full range.
 
 ## Max-win odds (Dylan, 2026-10-30)
 

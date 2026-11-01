@@ -17,7 +17,7 @@ for (const [name, rows] of Object.entries(data.pools)) {
   for (const [seed, weight, value] of rows) {
     if (!(Number.isInteger(weight) && weight >= 1)) fail(`${name} ${seed}: weight ${weight}`);
     let paid;
-    if (kind === 'bonus') paid = playRound({ rng: seeded(seed), forceBonus: mode }).total;
+    if (kind === 'bonus' || kind === 'mystery') paid = playRound({ rng: seeded(seed), forceBonus: mode }).total; // mystery-super: Overpressure rounds
     else if (kind === 'spin') { const r = playRound({ mode, rng: seeded(seed) }); if (r.tier) fail(`${name} ${seed}: a no-bonus spin triggers ${r.tier}`); paid = r.total; }
     else paid = playRound({ mode, rng: seeded(seed), bonusRng: seeded(1), triggerScatters: data.scatters[tier] }).events.find((e) => e.type === 'wins').paid;
     if (paid !== value) fail(`${name} seed ${seed}: engine pays ${paid}, catalog says ${value}`);
@@ -33,7 +33,7 @@ for (const [mode, m] of Object.entries(data.modes)) if (m.tiers && Object.values
 const draws = Number(arg('--draws', 2e5));
 let rnd = 7; const ticket = () => { rnd = (rnd * 48271) % 2147483647; return Math.floor((rnd / 2147483647) * data.total); };
 for (const mode of Object.keys(data.modes)) {
-  const n = mode === 'ventbreak' || mode === 'overpressure' ? draws / 20 : draws;
+  const n = ['ventbreak', 'overpressure', 'mystery'].includes(mode) ? draws / 20 : draws;
   for (let k = 0; k < n; k++) { try { drawRound(mode, ticket); } catch (e) { fail(e.message); } }
   console.log(`${mode.padEnd(13)} ${n.toLocaleString('en-US')} drawn rounds replayed`);
 }

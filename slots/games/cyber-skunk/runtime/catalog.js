@@ -5,7 +5,7 @@
 //     a no-bonus spin, or a trigger spin (forced 3/4/5 scatters) plus a bonus
 //     from the tier's natural pool (modes[mode].bonuses).
 //   ventbreak / overpressure: a bonus from the regular / super buy pool.
-import { MYSTERY_TIERS } from './rules.js?v=6';
+import { MYSTERY_TIERS } from './rules.js?v=7';
 import data from './catalog-data.js';
 import { playRound, seeded } from './engine.js';
 
@@ -36,10 +36,10 @@ export const entryPool = (mode, tier) => data.modes[mode].entries?.[tier] ?? `en
 // Draws and replays one round of a mode. ticket(total) supplies the draws.
 export function drawRound(mode, ticket = cryptoTicket) {
   if (mode === 'mystery') {
-    let roll = Math.floor(ticket() / (data.total / 10000));
-    for (const { tier, weight } of MYSTERY_TIERS) {
+    let roll = ticket(); // the tier weights are whole tickets out of data.total
+    for (const { tier, pool, weight } of MYSTERY_TIERS) {
       if (roll < weight) {
-        const bonus = pick('bonus-' + tier, ticket());
+        const bonus = pick(pool, ticket());
         const round = playRound({rng: seeded(bonus.seed), forceBonus: tier});
         if (round.total !== bonus.value) throw Error('Mystery bonus replay mismatch');
         return {...round, mode, draw: {tier, bonus: bonus.seed}};

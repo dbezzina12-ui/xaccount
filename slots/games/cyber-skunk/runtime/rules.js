@@ -51,10 +51,17 @@ export const MODES = Object.freeze({
 });
 
 export const PLAY_OPTIONS = Object.freeze({ ...MODES, mystery: { title: 'Mystery Buy', cost: 400 } });
-// Weights are per 10,000 Mystery tickets. Each outcome reuses its verified bonus pool.
+// Mystery Buy (Dylan, 2026-11-01): Overpressure or Blackout Protocol, never
+// Vent Break, and never under 40x. Weights are tickets out of the catalogs'
+// 1,000,000,000; Blackout's 36/583 of them makes 96% at 400x. Overpressure
+// draws from mystery-super (tools/math/cyber-skunk-mystery.mjs): the bought
+// pool's rounds of 40x or more, those over 500x made rarer to pay for it.
+export const MYSTERY_TICKETS = 1_000_000_000;
+export const MYSTERY = Object.freeze({ floor: 4000, bigOver: 50000 });
 export const MYSTERY_TIERS = Object.freeze([
-  { tier: 'regular', weight: 4575 }, { tier: 'super', weight: 4525 }, { tier: 'hidden', weight: 900 },
+  { tier: 'super', pool: 'mystery-super', weight: 938_250_429 }, { tier: 'hidden', pool: 'bonus-hidden', weight: 61_749_571 },
 ]);
+export const mysteryShare = (weight) => (weight / MYSTERY_TICKETS) * 100; // percent
 // Blackout can be triggered naturally or selected by Mystery Buy.
 export const BONUSES = Object.freeze({
   regular: { title: 'VENT BREAK', scatters: 3, spins: 12, sticky: true, reservoir: true, reservoirStart: 0, reservoirMax: 5, opening: false }, // a smaller Reservoir (Dylan, 2026-10-30: reach the 25,000x cap)
