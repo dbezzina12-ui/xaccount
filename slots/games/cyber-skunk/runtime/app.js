@@ -183,34 +183,47 @@ const pace = () => (state.skip ? 0 : state.speed === 'turbo' || reduced.matches 
 
 // Spins every reel to the landed board. Reels stop left to right; with two
 // scatters down and a bonus still possible, the remaining reels tease longer.
-async function spinTo(cells, { canTrigger, entry = false }) {
+async function spinTo(cells, { canTrigger }) {
   $('fs-faces').replaceChildren();
   audio.play('spin');
   const speed = pace(), perCell = 55, scatters = [];
-  let seen = 0;
+  let seen = 0, landingTime = 0, teasedReels = 0;
   const stops = reels.map(({ el, strip }, reel) => {
     const tease = canTrigger && seen >= 2 && speed > 0;
     if (column(cells, reel).some((c) => c.s === 'S')) scatters.push(reel), seen++;
-    const anticipation = tease ? (entry ? 550 + reel * 240 : 1100) * Math.max(speed, 0.6) : 0;
-    const dur = speed === 0 ? 0 : (520 + reel * 150) * speed + anticipation;
+    // All strips start together. Accumulate gaps so each landing has its own beat.
+    if (tease) {
+      const gap = teasedReels === 0 ? 1750 : 1150;
+      landingTime += gap * speed;
+      teasedReels++;
+    } else {
+      landingTime = (520 + reel * 150) * speed;
+    }
+    const dur = landingTime;
     const old = column(board.length ? board : cells, reel), next = column(cells, reel);
     const extra = Math.max(3, Math.round(dur / perCell));
     strip.innerHTML = [...next.map((c, row) => cellHTML(c, at(row, reel), false)), fillerHTML(extra), ...old.map((c) => cellHTML(c))].join('');
     const dist = (ROWS + extra) * 200;
     if (!dur) return { reel, tease, done: Promise.resolve() };
-    el.classList.add('spinning'); if (tease) el.classList.add('tease');
-    const anim = strip.animate([
+    el.classList.add('spinning');
+    const frames = tease ? [
+      { transform: `translateY(${-dist}px)`, easing: 'linear' },
+      { transform: 'translateY(-800px)', offset: 1 - 470 * speed / dur, easing: 'cubic-bezier(.15,.55,.35,1)' },
+      { transform: 'translateY(12px)', offset: 1 - 70 * speed / dur, easing: 'ease-out' },
+      { transform: 'translateY(0)' },
+    ] : [
       { transform: `translateY(${-dist}px)`, easing: 'cubic-bezier(.35,0,.65,1)' },
       { transform: 'translateY(18px)', offset: 0.93, easing: 'ease-out' },
       { transform: 'translateY(0)' },
-    ], { duration: dur, fill: 'forwards' });
+    ];
+    const anim = strip.animate(frames, { duration: dur, fill: 'forwards' });
     running.add(anim);
-    setTimeout(() => el.classList.remove('spinning'), dur * 0.82);
     return { reel, tease, done: anim.finished.catch(() => {}).then(() => running.delete(anim)) };
   });
   let teased = false;
   for (const { reel, tease, done } of stops) {
-    if (tease && !teased) { teased = true; audio.play('tease'); skunk.play('anticipate'); status('ONE MORE…'); }
+    if (tease && !state.skip && !reduced.matches) reels[reel].el.classList.add('tease');
+    if (tease && !teased && !state.skip) { teased = true; audio.play('tease'); skunk.play('anticipate'); status('ONE MORE…'); }
     await done;
     reels[reel].el.classList.remove('spinning', 'tease');
     // The reel is down: show the feature outline, keeping the symbol face intact.
@@ -573,7 +586,7 @@ async function spinInBonus(tier, bonusSeed, mode) {
   do { cells = drawBoard('base', rng, new Map(), count).map(({s}) => ({s})); }
   while (lineWins(cells).length);
   status(mode === 'mystery' ? 'MYSTERY BUY · WATCH THE SCATTERS' : 'WATCH THE SCATTERS');
-  await spinTo(cells, {canTrigger:true, entry:true});
+  await spinTo(cells, {canTrigger:true});
 }
 
 // ---- A round ----
