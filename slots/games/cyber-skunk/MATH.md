@@ -12,12 +12,12 @@
 | Spray Job | 10x | **96.000000%** | 71.72% | 28.28% | 20.21% | 0.4x | 33.5x | 86x | 163.9x | 3.80 | 1 in 999,993 |
 | Vent Break (buy) | 100x | **96.000000%** | 100.00% | 0.00% | 17.89% | 25.3x | 219.2x | 1,184.9x | 2,668.9x | 2.48 | 1 in 199,840 |
 | Overpressure (buy) | 250x | **96.000000%** | 99.99% | 0.01% | 21.50% | 35.5x | 702.8x | 2,704x | 5,170.3x | 2.26 | 1 in 49,998 |
-| Mystery Buy | 400x | **96.000000%** | 100.00% | 0.00% | 18.99% | 142.7x | 828.1x | 4,002.8x | 8,987.7x | 2.26 | 1 in 3,145 |
+| Mystery Buy | 500x | **96.000000%** | 100.00% | 0.00% | 16.66% | 154.8x | 1,281x | 4,819.9x | 11,248.1x | 2.21 | 1 in 1,962 |
 
 - **RTP** is measured against the full charged cost of each mode. It is the exact rational value of the catalogs, printed to 6 decimals; the largest difference from 96% is 1.2e-11 of the cost. Whole-ticket weights cannot always land on 96% to the last digit.
 - **Max win** is 25,000x the base bet per round, counted once across the trigger spin, the bonus and every retrigger. Reaching it ends the round.
-- **Blackout Protocol** (Hidden) starts naturally with 5 or more FS scatters, or as 6.17% of Mystery Buys; it is never sold on its own.
-- **Mystery Buy** reveals Overpressure (93.83%) or Blackout Protocol (6.17%), never Vent Break, and pays at least 40x. Its Overpressure comes from its own pool (`tools/math/cyber-skunk-mystery.mjs`): the bought Overpressure's rounds of 40x or more, those over 500x at 17.80% of their weight, so the whole buy returns 96%. Its Blackout is the same pool as a natural one: always 1,000x or more.
+- **Blackout Protocol** (Hidden) starts naturally with 5 or more FS scatters, or as 10.00% of Mystery Buys; it is never sold on its own.
+- **Mystery Buy** reveals Overpressure (90.00%) or Blackout Protocol (10.00%), never Vent Break, and pays at least 40x. Its Overpressure comes from its own pool (`tools/math/cyber-skunk-mystery.mjs`): the bought Overpressure's rounds of 40x or more, those over 500x at 19.72% of their weight, so the whole buy returns 96%. Its Blackout is the same pool as a natural one: always 1,000x or more.
 
 ## Natural bonus rates
 
@@ -39,7 +39,7 @@
 | Spray Job | 90.75% | 4.51% | 0.57% | 0.17% | 1.64% |
 | Vent Break (buy) | — | 96.00% | — | — | 23.19% |
 | Overpressure (buy) | — | — | 96.00% | — | 49.49% |
-| Mystery Buy | — | — | 56.30% | 39.70% | 54.03% |
+| Mystery Buy | — | — | 44.56% | 51.44% | 63.53% |
 
 The last column is the fraction of the RTP paid by rounds of 1,000x or more (the rare tail).
 
@@ -52,7 +52,7 @@ The last column is the fraction of the RTP paid by rounds of 1,000x or more (the
 | OVERPRESSURE (bought) | 10 | 240x | 0x | 35.5x | 702.8x | 2,704x | 1 in 12,061 | 6.40% | 1 in 9,219 | 1 in 49,998 |
 | OVERPRESSURE (triggered) | 10 | 240x | 0x | 33x | 647.8x | 2,660.4x | 1 in 10,814 | 5.89% | 1 in 1,267 | 1 in 1,403 |
 | BLACKOUT PROTOCOL (triggered or in Mystery) | 10 | 2,572x | 1,000x | 1,849.5x | 4,685.1x | 11,008.2x | never | 100.00% | 1 in 84 | 1 in 200 |
-| OVERPRESSURE (in Mystery) | 10 | 240x | 40x | 128.2x | 449.5x | 2,045.9x | never | 3.16% | 1 in 18,666 | 1 in 101,102 |
+| OVERPRESSURE (in Mystery) | 10 | 247.56x | 40x | 129.7x | 459.2x | 2,138.6x | never | 3.48% | 1 in 16,981 | 1 in 92,157 |
 
 - **Bought and triggered:** the same rounds with the same average. A triggered Vent Break or Overpressure reaches the cap more often, which is what puts the base game's max at 1 in 1,000,000. A natural round adds its trigger spin's pay, capped at 25,000x.
 - **Blackout Protocol** pays at least 1,000x every time and reaches the cap 1 in 200, triggered or revealed by Mystery.
@@ -79,13 +79,13 @@ The last column is the fraction of the RTP paid by rounds of 1,000x or more (the
 | 2x to under 5x | 1 in 106 | 1 in 137 | 4.74% | 1.69% | 2.62% | — |
 | 5x to under 10x | 1 in 222 | 1 in 211 | 2.06% | 9.78% | 9.76% | — |
 | 10x to under 20x | 1 in 236 | 1 in 131 | 1.31% | 27.99% | 20.91% | — |
-| 20x to under 50x | 1 in 102 | 1.05% | 14.37% | 31.33% | 23.60% | 12.02% |
-| 50x to under 100x | 1 in 1,602 | 1 in 406 | 4.04% | 11.16% | 10.39% | 27.04% |
-| 100x to under 250x | 1 in 2,393 | 1 in 516 | 1 in 228 | 8.99% | 10.74% | 27.95% |
-| 250x to under 1,000x | 1 in 2,849 | 1 in 596 | 1 in 2,229 | 7.46% | 15.10% | 23.85% |
-| 1,000x to under 5,000x | 1 in 12,698 | 1 in 2,169 | 1 in 12,590 | 1.43% | 6.29% | 8.56% |
-| 5,000x to under 25,000x | 1 in 1,030,430 | 1 in 93,801 | 1 in 1,027,967 | 1 in 19,064 | 1 in 885 | 1 in 183 |
-| 25,000x (max) | 1 in 999,997 | 1 in 185,628 | 1 in 999,993 | 1 in 199,840 | 1 in 49,998 | 1 in 3,145 |
+| 20x to under 50x | 1 in 102 | 1.05% | 14.37% | 31.33% | 23.60% | 11.45% |
+| 50x to under 100x | 1 in 1,602 | 1 in 406 | 4.04% | 11.16% | 10.39% | 25.75% |
+| 100x to under 250x | 1 in 2,393 | 1 in 516 | 1 in 228 | 8.99% | 10.74% | 26.62% |
+| 250x to under 1,000x | 1 in 2,849 | 1 in 596 | 1 in 2,229 | 7.46% | 15.10% | 23.05% |
+| 1,000x to under 5,000x | 1 in 12,698 | 1 in 2,169 | 1 in 12,590 | 1.43% | 6.29% | 12.22% |
+| 5,000x to under 25,000x | 1 in 1,030,430 | 1 in 93,801 | 1 in 1,027,967 | 1 in 19,064 | 1 in 885 | 1 in 117 |
+| 25,000x (max) | 1 in 999,997 | 1 in 185,628 | 1 in 999,993 | 1 in 199,840 | 1 in 49,998 | 1 in 1,962 |
 
 ## 100-round sessions (sampled)
 
@@ -98,7 +98,7 @@ Each session plays 100 rounds of one mode at a fixed bet; the figures are the se
 | Spray Job | 20,000 | 37.3% | 1.0% | 68% | 93% | 124% | 96.0% |
 | Vent Break (buy) | 4,000 | 39.4% | 0.5% | 67% | 94% | 129% | 96.2% |
 | Overpressure (buy) | 4,000 | 39.8% | 0.5% | 69% | 94% | 125% | 96.2% |
-| Mystery Buy | 20,000 | 36.7% | 0.1% | 71% | 93% | 125% | 96.1% |
+| Mystery Buy | 20,000 | 37.1% | 0.2% | 71% | 93% | 125% | 96.1% |
 
 ## How the catalogs are made
 
@@ -126,7 +126,7 @@ Each session plays 100 rounds of one mode at a fixed bet; the figures are the se
 
 - `node tools/math/cyber-skunk-verify.mjs` replays every one of the 149,276 catalog entries through the engine, plus 200,000 drawn rounds per paid mode, as the game draws them. It reports **0 mismatches**.
 - The game itself replays every round it draws and refuses one whose total differs from the catalog (`runtime/catalog.js`).
-- **Sources:** `engine.js` 705d3761ef853682, `rules.js` 94a4641c50e63f9d, `catalog-data.js` ca3ee69a586d8bd9 (SHA-256, first 16 hex digits).
+- **Sources:** `engine.js` 705d3761ef853682, `rules.js` fa4d3b433eea63dc, `catalog-data.js` 409df50c64d574c8 (SHA-256, first 16 hex digits).
 
 ## STYLE.md gates
 

@@ -2,8 +2,8 @@
 // anything moves (playRound returns its total and every event); this file only
 // presents those events, so skip, turbo and frame timing never change a result.
 import { playRound, drawBoard, lineWins, seeded, at } from './engine.js';
-import { drawRound, CATALOG_VERSION } from './catalog.js?v=7';
-import { REELS, ROWS, CELLS, LINES, PAYTABLE, NAMES, PLAY_OPTIONS, BONUSES, MYSTERY_TIERS, MYSTERY, mysteryShare, CAP, RETRIGGER, MAX_SPINS, MAX_STICKY, MAX_RESERVOIR } from './rules.js?v=7';
+import { drawRound, freeSpinsChance, CATALOG_VERSION } from './catalog.js?v=8';
+import { REELS, ROWS, CELLS, LINES, PAYTABLE, NAMES, PLAY_OPTIONS, BONUSES, MYSTERY_TIERS, MYSTERY, mysteryShare, CAP, RETRIGGER, MAX_SPINS, MAX_STICKY, MAX_RESERVOIR } from './rules.js?v=8';
 import { loadArt, symbolHTML, ventHTML, fillerStrip } from './symbols.js?v=7';
 import { mountController } from './controller/controller.js';
 import { GameAudio } from './audio.js';
@@ -805,7 +805,7 @@ function renderRules() {
   <p><b>4 FS scatters: OVERPRESSURE.</b> ${BONUSES.super.spins} free spins with sticky vents and the <b>Reservoir</b> gauge: after each spray, the pressure gained is banked (up to ${MAX_RESERVOIR}), and every later spray starts at 1 + the Reservoir.</p>
   <p><b>5 FS scatters: BLACKOUT PROTOCOL.</b> ${BONUSES.hidden.spins} free spins. The lights go out, 4 vents come online as one route and the Reservoir starts at ${BONUSES.hidden.reservoirStart}; then it plays as Overpressure. It always pays at least 1,000× the base bet. Mystery Buy can also reveal it.</p>
   <p>${RETRIGGER.scatters} or more FS scatters during a bonus add +${RETRIGGER.spins} spins, up to ${MAX_SPINS} in total.</p>
-  <p><b>MYSTERY BUY · 400×.</b> ${COPY.mystery.text}</p>
+  <p><b>MYSTERY BUY · ${PLAY_OPTIONS.mystery.cost}×.</b> ${COPY.mystery.text}</p>
   <h3>WAYS TO PLAY</h3>
   <p><b>SIGNAL BOOST · ${boostMultiplier}× bonus chance.</b> ${COPY.enhanced.text}</p>
   <table><tbody>${['base', 'enhanced', 'sprayjob', 'ventbreak', 'overpressure', 'mystery'].map((m) => `<tr><td>${m === 'base' ? 'BASE SPINS' : COPY[m].name}</td><td>${PLAY_OPTIONS[m].cost}× base bet${COPY[m]?.kind === 'feature' ? ' per spin' : ''}</td></tr>`).join('')}</tbody></table>

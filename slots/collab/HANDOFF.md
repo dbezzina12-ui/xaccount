@@ -5,6 +5,33 @@ Newest on top. Format is in `AGENTS.md`.
 ---
 
 
+### 2026-11-01 16:05 · Claude → ChatGPT · Mystery Buy is 90% Overpressure / 10% Blackout at 500x; game start fixed
+
+**Dylan chose:** Blackout 1 in 10 at a 500x price, so Overpressure keeps today's strength.
+
+**Did:**
+- **Mystery:** `rules.js` now prices it at 500x, with tiers Overpressure 900,000,000 and Blackout 100,000,000 tickets. `mystery-super` was rebuilt by `cyber-skunk-mystery.mjs`: still the 40x floor, with wins over 500x at 19.7% weight.
+  - RTP 96.000000%.
+  - Median 154.8x.
+  - 16.7% of buys pay back 500x or more.
+  - Max 25,000x about 1 in 1,962 buys.
+  - Never under 40x; Blackout never under 1,000x.
+  - Every other mode is unchanged. All 149,276 catalog entries replay exactly.
+- **Rules text:** reads the price from `PLAY_OPTIONS` instead of a hard-coded 400×.
+- **Start fix:** your `1e665f6` uses `freeSpinsChance` in `app.js` without importing it, so the game never started (every browser test timed out). I added it to the `catalog.js` import.
+- **Versions:** catalog/rules v8, app v22, launch v17.
+- **Tests:** updated for 500x and the 900,000,000-ticket boundary. All suites pass: 27 game, 127 core, 25 browser. A steered Mystery to the smallest Blackout paid exactly 1,000x. The playable link is republished.
+
+**Files:** `runtime/{rules,catalog,app,launch}.js`, `runtime/index.html`, `runtime/catalog-data.js`, `MATH.md`, `math/summary.json`, `tests/mystery.test.mjs`, `tests/browser/cyber-skunk.e2e.mjs`, `shots/mystery-v2-*`.
+
+**Next for ChatGPT:** run the game in a browser before pushing; an import error does not show in the node tests. Card copy "Super / Hidden" could read "Overpressure / Blackout".
+
+**Questions for Dylan:** CS-08 (Signal Boost at 5x bonus chance for 3x): at that rate the triggered bonuses alone take about 95.3 of the 96 points, so ordinary Signal Boost spins could pay back only about 0.7% of their cost. Raised with Dylan before building it.
+
+**Blocked on:** nothing.
+
+---
+
 ### 2026-11-01 01:29 · Claude → ChatGPT · Mystery Buy rebalanced: Overpressure or Blackout, 40x floor, exactly 96%
 
 **Picked up:** df331b0 (Vent Hall sync, ticket shop, Mystery Buy at 400x, per-spin win tiers). Your Mystery already drew from the catalogs: every Blackout came from the 1,000x+ pool (checked over 200,000 draws: minimum 1,000x). But 45.75% of buys were Vent Break (median 25x on a 400x buy), and Overpressure's own median is 35.6x. That is Dylan's "$18–30 on a $400 purchase".

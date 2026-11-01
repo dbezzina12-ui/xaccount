@@ -333,7 +333,7 @@ test('loading precedes the guide, category buttons switch, and Mystery settles o
     await page.screenshot({path:'/tmp/cyber-real-buy.png'});
     await page.locator('[data-pick=mystery]').click();
     await page.locator('#confirm[open]').waitFor();
-    assert.equal(await page.locator('#confirm-total').textContent(),'$400.00');
+    assert.equal(await page.locator('#confirm-total').textContent(),'$500.00');
     await page.locator('#confirm-cancel').click();
     assert.ok(await page.locator('[data-pick=mystery]').isVisible());
     assert.equal((await state(page)).balance,START);
@@ -343,12 +343,12 @@ test('loading precedes the guide, category buttons switch, and Mystery settles o
     await page.locator('#bonus-panel-go').waitFor();
     assert.equal(await page.locator('#bonus-panel-title img').getAttribute('alt'),'BLACKOUT PROTOCOL');
     assert.equal(await page.locator('#bonus-panel-kicker').textContent(),'MYSTERY BUY REVEALS');
-    assert.equal((await state(page)).balance,START-40000);
+    assert.equal((await state(page)).balance,START-50000);
     await page.reload();
     await page.waitForFunction(()=>window.cyberSkunk?.state.ready);
     const [round]=await history(page);
-    assert.equal(round.mode,'mystery');assert.equal(round.tier,'hidden');assert.equal(round.cost,40000);
-    assert.equal((await state(page)).balance,START-40000+round.win);
+    assert.equal(round.mode,'mystery');assert.equal(round.tier,'hidden');assert.equal(round.cost,50000);
+    assert.equal((await state(page)).balance,START-50000+round.win);
     await page.reload();await page.waitForFunction(()=>window.cyberSkunk?.state.ready);
     assert.equal((await history(page)).length,1);
   } finally {await page.close();}
@@ -359,7 +359,7 @@ test('Mystery purchase finishes through the controller and credits the exact win
     await control(page,'buy').click();await page.locator('[data-pick=mystery]').click();
     await page.locator('#confirm-ok').click();await page.locator('#bonus-panel-go').waitFor();
     await finish(page);const [round]=await history(page);
-    assert.equal(round.mode,'mystery');assert.equal(round.cost,40000);assert.ok(round.seed.tier===round.tier);
+    assert.equal(round.mode,'mystery');assert.equal(round.cost,50000);assert.ok(round.seed.tier===round.tier);
     assert.equal((await state(page)).balance,START-round.cost+round.win);
     assert.deepEqual(errors,[]);
   } finally {await page.close();}
@@ -515,9 +515,9 @@ test('polished shop and single unboxed bonus result on phones and desktop', asyn
 test('scatter landing precedes the held bonus briefing on every entry path', async () => {
   const cases = [
     ['ventbreak',null,3,'VENT BREAK'], ['overpressure',null,4,'OVERPRESSURE'],
-    // Mystery: Overpressure for tickets below 938,250,429 (rules.js MYSTERY_TIERS), Blackout above; never Vent Break.
-    ['mystery',0,4,'OVERPRESSURE'], ['mystery',938250428,4,'OVERPRESSURE'],
-    ['mystery',938250429,5,'BLACKOUT PROTOCOL'], ['base',null,5,'BLACKOUT PROTOCOL'],
+    // Mystery: Overpressure for tickets below 900,000,000 (rules.js MYSTERY_TIERS), Blackout above; never Vent Break.
+    ['mystery',0,4,'OVERPRESSURE'], ['mystery',899999999,4,'OVERPRESSURE'],
+    ['mystery',900000000,5,'BLACKOUT PROTOCOL'], ['base',null,5,'BLACKOUT PROTOCOL'],
   ];
   for (const [mode,ticket,count,title] of cases) {
     const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});

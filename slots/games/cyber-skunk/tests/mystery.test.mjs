@@ -6,17 +6,17 @@ import { MYSTERY, MYSTERY_TIERS, MYSTERY_TICKETS, PLAY_OPTIONS } from '../runtim
 
 const sum = (rows) => rows.reduce((a, [, w, v]) => a + BigInt(w) * BigInt(v), 0n);
 
-test('Mystery reveals Overpressure or Blackout only, its weights covering every ticket', () => {
-  assert.deepEqual(MYSTERY_TIERS.map((t) => t.tier), ['super', 'hidden']);
+test('Mystery reveals Overpressure or Blackout only, 90% / 10% of every ticket', () => {
+  assert.deepEqual(MYSTERY_TIERS.map((t) => [t.tier, t.weight / data.total]), [['super', 0.9], ['hidden', 0.1]]);
   assert.equal(MYSTERY_TICKETS, data.total);
   assert.equal(MYSTERY_TIERS.reduce((a, t) => a + t.weight, 0), data.total);
   for (const { pool } of MYSTERY_TIERS) assert.equal(data.pools[pool].reduce((a, r) => a + r[1], 0), data.total);
   assert.deepEqual(data.modes.mystery.tiers, Object.fromEntries(MYSTERY_TIERS.map((t) => [t.tier, t.weight])));
 });
 
-test('Mystery returns 96% of its 400x price, to a billionth of the cost', () => {
+test('Mystery returns 96% of its 500x price, to a billionth of the cost', () => {
   const { cost } = PLAY_OPTIONS.mystery, T = BigInt(data.total);
-  assert.equal(cost, 400);
+  assert.equal(cost, 500);
   const got = MYSTERY_TIERS.reduce((a, { pool, weight }) => a + BigInt(weight) * sum(data.pools[pool]), 0n);
   const want = T * T * BigInt(cost) * 96n; // hundredths: 96% of cost x 100
   const off = Number(got - want) / Number(T * T * BigInt(cost) * 100n);
