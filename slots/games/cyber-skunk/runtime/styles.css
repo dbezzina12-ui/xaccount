@@ -69,12 +69,9 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
    curl at the left edge; about 21% on desktop, ending just short of the cabinet. */
 .app[data-rig="4"][data-layout=mobile] .mascot{left:-139px;top:64px;width:528px;height:660px}
 .app[data-rig="4"][data-layout=desktop] .mascot{left:-139px;top:246px;width:576px;height:720px}
-.app[data-rig="4"][data-layout=desktop] .mascot-ledge{top:700px}
 .mascot-ledge{display:none;position:absolute;z-index:4;pointer-events:none}
-.app[data-layout=desktop] .mascot-ledge{display:block;left:-30px;width:470px;top:650px;bottom:0;border-radius:0 26px 0 0;
-  background:linear-gradient(180deg,#3a4448 0,#20272b 18px,#161c1f 60%,#0c1013);box-shadow:0 -10px 40px #000a,inset 0 3px 0 #6c787c,inset -3px 0 0 #2a3236}
-.app[data-layout=desktop] .mascot-ledge::before{content:"";position:absolute;left:40px;right:30px;top:0;height:14px;border-radius:0 8px 0 0;background:linear-gradient(#d9a35d,var(--brass) 50%,#5a3d1c);box-shadow:0 2px 0 #0b0f11}
-.app[data-layout=desktop] .mascot-ledge::after{content:"";position:absolute;left:60px;right:60px;top:52px;height:8px;border-radius:4px;background:var(--amber);box-shadow:0 0 22px #eda83c,0 0 5px #fff4;opacity:.75}
+.app[data-layout=desktop] .mascot-ledge{display:block;left:12px;top:645px;width:318px;aspect-ratio:1484/836;background:url(assets/ui/pressure-bench.webp) center/contain no-repeat}
+.app[data-rig="4"][data-layout=desktop] .mascot-ledge{top:687px}
 .machine{position:absolute;z-index:5}
 .jet{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9}
 .app[data-layout=desktop] .machine{left:410px;top:140px;width:1100px}
@@ -131,15 +128,6 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .cell.entry .vent-art,.cell.online .vent-art{filter:drop-shadow(0 0 14px #68c8c3) drop-shadow(0 0 4px #fff)}
 .app[data-blackout] .reels .cell:not(.online){opacity:.12;transition:opacity .4s}
 .app[data-blackout] .cabinet-art{filter:brightness(.35)}
-/* The pipe mount over the cabinet (ART_SPEC pipes-top, 1440 x 300). Desktop
-   has 180 cabinet px above the cabinet before the screen's top edge, so the
-   mount is scaled down whole (878 x 180, centred) rather than cut off; its
-   clear centre corridor (520-920 of 1440) then still spans the gauge and its
-   PRESSURE readout. On a phone that band is the skunk's and the logo's, so
-   the mount is not shown. */
-.pipes{position:absolute;left:0;top:-180px;width:1440px;height:180px;background:var(--pipes-art) center bottom/auto 100% no-repeat;display:none;pointer-events:none}
-.app[data-art-pipes][data-layout=desktop] .pipes{display:block}
-/* Two-sided feature cards. The front retains the normal centred symbol. */
 .cell.vent-card{perspective:900px}
 .card-flipper{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateY(0deg)}
 .cell.reverse .card-flipper{transform:rotateY(180deg)}
@@ -167,15 +155,20 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .shelf{position:absolute;left:150px;right:150px;top:952px;height:84px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(#0b1013,#141b1f);box-shadow:inset 0 2px 8px #000,0 1px 0 #ffffff14}
 .status{font:700 var(--status-size,40px)/1 var(--font);letter-spacing:.08em;color:var(--ivory);text-align:center;text-shadow:0 0 12px #eda83c55;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;padding:0 20px}
 
-/* The Reservoir is mounted above the desktop cabinet and on the lower phone console. */
+/* The desk instrument and lower phone rail share one live reservoir meter. */
 .gauge{position:absolute;z-index:7;width:160px;height:160px;left:50%;transform:translateX(-50%)}
-.app[data-layout=desktop] .gauge{top:-90px}
+/* Artwork registration: dial pivot (355,329) on a 1484 × 836 apron. */
+.app[data-layout=desktop] .gauge{left:23.92%;top:39.35%;width:19.68%;height:auto;aspect-ratio:1;transform:translate(-50%,-50%)}
+.app[data-layout=desktop] .gauge-readout{position:absolute;left:134%;top:55%;width:215%;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;gap:8px;color:#f3e5c1;text-shadow:0 2px 2px #151714}
+.app[data-layout=desktop] .gauge-label{font:800 19px/1 var(--font);letter-spacing:.055em;color:#d4c2a0}
+.app[data-layout=desktop] .gauge-value{font:400 28px/1 var(--title);font-variant-numeric:tabular-nums}
+.gauge-readout{position:absolute}
 /* The reservoir sits in the lower cabinet lip. The same face appears in the phone guide. */
 .rail-demo,.meter-bands{display:none}
 .app[data-layout=mobile] .gauge{top:100%;pointer-events:none}
 .app[data-layout=mobile] .pressure-module{width:400px;height:146px;background:url(assets/ui/pressure-rail.svg) center/100% 100% no-repeat}
 .app[data-layout=mobile] .gauge::before,.app[data-layout=mobile] .gauge::after,
-.app[data-layout=mobile] .gauge-face,.app[data-layout=mobile] .gauge-needle{display:none}
+.app[data-layout=mobile] .gauge-needle{display:none}
 .app[data-layout=mobile] .pressure-module .gauge-readout{inset:35px 55px auto;display:flex;height:56px;align-items:center;justify-content:space-between;border:0;border-radius:0;padding:0;background:none;box-shadow:none}
 .app[data-layout=mobile] .pressure-module .gauge-label{font-size:39px;letter-spacing:.07em;color:#c4cec5}
 .app[data-layout=mobile] .pressure-module .gauge-value{font:400 55px/1 var(--title);text-align:right;color:#f5cb81}
@@ -184,20 +177,7 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .app[data-layout=mobile] .reservoir-art{grid-template-columns:minmax(0,1fr)}
 .app[data-layout=mobile] .reservoir-art .demo-dial{display:none}
 .app[data-layout=mobile] .rail-demo{display:block;position:relative;transform:scale(.7);--p:3;filter:drop-shadow(0 7px 7px #0009)}
-.gauge::before{content:"";position:absolute;left:-24px;right:-24px;top:78px;bottom:-12px;border-radius:24px 24px 10px 10px;background:linear-gradient(#39464a,#202a2e 55%,#141d22);border:3px solid #4c595b;box-shadow:inset 0 2px 0 #87908a55,0 6px 8px #0008}
-.gauge::after{content:"";position:absolute;left:-9px;right:-9px;bottom:4px;height:7px;background:radial-gradient(circle,#8b948e 0 3px,#182127 4px 6px,#0000 7px) left/14px 14px repeat-x;opacity:.55}
-.gauge-face{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,#f3ead6 0 58%,#c9b48b 59% 62%,#2b2116 63% 70%,#ad7840 71% 100%);box-shadow:0 10px 30px #000c,inset 0 0 0 3px #5a3d1c}
-.gauge-face i{position:absolute;inset:26px;border-radius:50%;background:conic-gradient(from 225deg,#0000 0 189deg,#c0392b 189deg 270deg,#0000 270deg);-webkit-mask:radial-gradient(circle,#0000 60%,#000 61%);mask:radial-gradient(circle,#0000 60%,#000 61%)}
-.app[data-art-gauge] .gauge-face{background:var(--gauge-face) center/100% no-repeat;box-shadow:none}
-.app[data-art-gauge] .gauge-face i{display:none}
-.gauge-needle{position:absolute;left:50%;top:50%;width:8px;height:74px;margin:-70px 0 0 -4px;border-radius:4px;background:linear-gradient(#c0392b,#5a1a12);transform-origin:50% 70px;transform:rotate(calc(-135deg + var(--p,0) * 27deg));transition:transform .8s cubic-bezier(.3,1.6,.5,1);box-shadow:0 2px 3px #000a}
-.app[data-art-gauge] .gauge-needle{width:100%;height:100%;left:0;top:0;margin:0;border-radius:0;background:var(--gauge-needle) center/100% no-repeat;box-shadow:none;transform-origin:50% 50%}
-.gauge-readout{position:absolute;left:-12px;right:-12px;bottom:calc(100% + 6px);display:flex;align-items:baseline;justify-content:center;gap:10px;padding:6px 10px;background:linear-gradient(#263238,#152027);border:2px solid #55625e;border-radius:7px;box-shadow:inset 0 1px 0 #a7b3a833,0 3px 5px #0006}
-.gauge-label{font:700 18px/1 var(--font);letter-spacing:.12em;color:#b7c1b9}
-.gauge-value{font:400 28px/1 var(--title);color:var(--ivory);font-variant-numeric:tabular-nums;min-width:1.3em;text-align:center}
-.app:not([data-bonus]) .gauge{filter:saturate(.6) brightness(.85)} /* lit in every bonus: each has a Reservoir */
-.app[data-layout=mobile]:not([data-bonus]) .gauge{filter:none}
-
+.gauge-needle{position:absolute;inset:0;background:url(assets/ui/gauge-needle.webp) center/contain no-repeat;transform-origin:center;transform:rotate(calc(-123deg + var(--p,0) * 24.6deg));transition:transform .65s ease-out}
 .bonus-hud{position:absolute;display:grid;grid-template-columns:1fr 250px 1fr;align-items:stretch;font:700 30px/1 var(--font);letter-spacing:.06em;pointer-events:none}
 .bonus-hud > span{display:flex;gap:22px;justify-content:center;align-items:center;padding:12px 22px;border-radius:12px;background:#0b1013e6;border:2px solid var(--brass);white-space:nowrap}
 .bonus-hud > span:first-child{flex-direction:column;gap:6px}

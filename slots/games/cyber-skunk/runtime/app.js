@@ -89,7 +89,7 @@ const MOBILE_MIN_H = 1590; // header 480 + cabinet 892 + room for the pressure c
 function fit() {
   const w = innerWidth, h = innerHeight, layout = h > w * 1.05 ? 'mobile' : 'desktop';
   app.dataset.layout = layout;
-  const meter = $('pressure-meter'), mount = layout === 'mobile' ? $('cabinet') : $('machine');
+  const meter = $('pressure-meter'), mount = layout === 'mobile' ? $('cabinet') : $('pressure-bench');
   if (meter.parentElement !== mount) mount.appendChild(meter);
   const host = $('controller'), reserve = host.parentElement === app ? host.getBoundingClientRect().height : 0;
   // A phone's stage is 1080 wide and as tall as the room above the controller
@@ -841,13 +841,11 @@ const EXTRA = {
 };
 async function loadUI() {
   const ui = {
-    cabinet: 'assets/ui/cabinet.webp?v=2', 'gauge-face': 'assets/ui/gauge-face-inset.svg', 'gauge-needle': 'assets/ui/gauge-needle.webp', 'pipes-top': 'assets/ui/pipes-top.webp', logo: 'assets/ui/logo.webp?v=2',
+    cabinet: 'assets/ui/cabinet.webp?v=2', logo: 'assets/ui/logo.webp?v=2',
     'bg-desktop': 'assets/bg/bg-desktop.webp', 'bg-mobile': 'assets/bg/bg-mobile.webp', 'bg-bonus-desktop': 'assets/bg/bg-bonus-desktop.webp', 'bg-bonus-mobile': 'assets/bg/bg-bonus-mobile.webp',
   };
   const found = Object.fromEntries(await Promise.all(Object.entries(ui).map(async ([k, url]) => [k, (await exists(url)) ? url : null])));
   if (found.cabinet) { app.dataset.artCabinet = ''; app.style.setProperty('--cabinet-art', `url(${found.cabinet})`); }
-  if (found['gauge-face'] && found['gauge-needle']) { app.dataset.artGauge = ''; app.style.setProperty('--gauge-face', `url(${found['gauge-face']})`); app.style.setProperty('--gauge-needle', `url(${found['gauge-needle']})`); }
-  if (found['pipes-top']) { app.dataset.artPipes = ''; app.style.setProperty('--pipes-art', `url(${found['pipes-top']})`); }
   if (found.logo) { app.dataset.artLogo = ''; document.querySelector('.logo').innerHTML = `<img src="${found.logo}" alt="Cyber Skunk">`; }
   for (const k of ['bg-desktop', 'bg-mobile', 'bg-bonus-desktop', 'bg-bonus-mobile']) if (found[k]) { app.dataset.artBg = ''; app.style.setProperty(`--${k}`, `url(${found[k]})`); }
   await Promise.all(Object.values(TIER).map(async ({ panel: name }) => { const url = `assets/panels/${name}.webp`; if (await exists(url)) extraArt.set(name, url); }));
