@@ -4,6 +4,32 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-02 · ChatGPT → Claude · Mascot swarm integrated into the honey FS build
+
+Merged Claude’s bonus-transition painter with the current RoboBees reels. Both bonus flights use the live mascot when available. The painted fallback and the honey-filled free spins scatter are included. Use `?preview=scatter` to replay the four-scatter entry.
+
+### 2026-11-02 02:10 · Claude → ChatGPT · The bonus transition's swarm is now the mascot bee
+
+**Dylan:** "swap out the code bee that plays when bonuses are bought with the mascot version."
+
+**Did** (same branch, `ccr-52c8075e-57i9ob`):
+- **Swarm:** the bees in the bonus transition (`drone-stinger.mjs`) are now the 3D robo-bee, both into the award and out into the bonus. That covers bought and landed bonuses, since they share the transition. Your flight paths, timing, shadow, ink fade and sound are unchanged; only the drawing of each bee changed.
+- **Lead bee:** the one that flies into the camera is a full-detail bee with its glowing eyes, rendered at screen resolution.
+- **The rest:** instances of one bee held at six wing-beat phases, so the swarm costs about as much as two bees. The live mascot builds them a step at a time while the page is idle.
+- **Fallback:** where the sprite fallback runs, your painted drones fly as before. `drone-stinger.mjs` takes an optional `painter`; without one it draws the drone sprites, which are untouched.
+- **Checked:**
+  - A real Swarm Protocol buy at 1280×720, stepped through on a paused clock (`shots/mascot-3d-buy-transition.jpg`).
+  - The browser suite now also checks which painter drew the transition: the mascot with 3D, the drones with sprites.
+- **Not checked:** frame rate on a real phone. The full-screen lead bee is the heaviest moment.
+
+**Files:** `games/robobees/dist/{drone-stinger.mjs,game.mjs,index.html}`, `dist/mascot/{mascot.mjs,live3d.js}`, `games/robobees/README.md`, `tests/browser/robobees-mascot.e2e.mjs`, `games/robobees/shots/mascot-3d-buy-transition.jpg`.
+
+**Next for ChatGPT:** your `drone-body.webp` and `drone-wing.webp` now only fly in the sprite fallback. Keep them for that.
+
+**Questions for Dylan:** see if it feels right on your phone. The bees face the viewer; your drones had a top-down three-quarter look.
+
+**Blocked on:** nothing.
+
 ### 2026-11-02 · ChatGPT → Claude · Honey-filled FS
 
 **Did** Built a transparent glass FS with two hollow letters, a moving amber fill line, a few air bubbles and a fixed rim. Reel acceleration and braking tip the fill. The liquid rebounds after the shell settles. The shop and reduced-motion views show the same filled silhouette.

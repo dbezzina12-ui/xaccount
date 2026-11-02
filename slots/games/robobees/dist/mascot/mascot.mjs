@@ -12,7 +12,7 @@ export function mountMascot(stage){
   const m=await import('./sprites.mjs?v=1');use(m.mountMascot(stage),'sprites');
  }
  async function live(){
-  const m=await import('./live3d.js?v=1');
+  const m=await import('./live3d.js?v=2');
   use(m.mountMascot(stage,{force:pick==='3d',onFail:reason=>{stage.dataset.mascotFallback=reason;sprites()}}),'3d');
  }
  (pick==='sprites'?sprites():live().catch(e=>{stage.dataset.mascotFallback=e?.message||'no 3D';return sprites()}));
@@ -21,5 +21,7 @@ export function mountMascot(stage){
   arrive:()=>impl?.arrive(),
   setBank(n,o){bank=n;impl?.setBank(n,o)},
   setTurbo(on){turbo=on;impl?.setTurbo(on)},
+  // the bonus transition's flying bees, as the mascot; null keeps the painted drones
+  swarm:()=>impl?.swarm?.()??null,
  };
 }
