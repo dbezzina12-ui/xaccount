@@ -1,4 +1,13 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#181a1b"><title>RoboBees · Gamboligy Games</title><link rel="stylesheet" href="game.css?v=18.2"><link rel="stylesheet" href="studio-shop.css"><link rel="stylesheet" href="presentation.css?v=18.1"></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#181a1b"><title>RoboBees · Gamboligy Games</title><link rel="stylesheet" href="game.css?v=18.2"><link rel="stylesheet" href="studio-shop.css"><link rel="stylesheet" href="presentation.css?v=19"></head><body>
+<svg width="0" height="0" style="position:absolute;pointer-events:none" aria-hidden="true" focusable="false">
+ <defs>
+  <!-- Each RGB row sums to one, preserving the original neutral metal and shadows. -->
+  <filter id="enamel-nectar" color-interpolation-filters="sRGB"><feColorMatrix values="1 0 0 0 0  .49 .51 0 0 0  0 .14 .86 0 0  0 0 0 1 0"/></filter>
+  <filter id="enamel-rotor" color-interpolation-filters="sRGB"><feColorMatrix values="0 .27 .73 0 0  .60 .40 0 0 0  .57 .43 0 0 0  0 0 0 1 0"/></filter>
+  <filter id="enamel-stinger" color-interpolation-filters="sRGB"><feColorMatrix values="0 .49 .51 0 0  .16 .84 0 0 0  .91 .09 0 0 0  0 0 0 1 0"/></filter>
+  <filter id="enamel-beacon" color-interpolation-filters="sRGB"><feColorMatrix values=".90 .10 0 0 0  0 .25 .75 0 0  0 .50 .50 0 0  0 0 0 1 0"/></filter>
+ </defs>
+</svg>
 <picture class="grove-backdrop" aria-hidden="true"><img src="assets/woodland-clearing.webp" alt="" fetchpriority="high"></picture>
 <canvas id="swarm-stinger" hidden aria-hidden="true"></canvas>
 <div class="camera-window"><div id="camera-track"><div id="play-stage">
@@ -30,4 +39,4 @@
  <div class="shop-tabs" aria-label="Shop sections"><button data-tab="features">Feature spins</button><button data-tab="buys">Bonus buys</button></div>
  <div class="shop-options"><section class="bonus-cards" aria-label="Available options"></section></div><p id="bonus-menu-note"></p>
 </dialog>
-<dialog id="menu"><div class="dlg-head"><small>APIS INDUSTRIES &nbsp; / &nbsp; OPERATIONS</small><button class="close" aria-label="Close">×</button></div><div id="content"></div></dialog><script type="module" src="game.mjs?v=18"></script></body></html>
+<dialog id="menu"><div class="dlg-head"><small>APIS INDUSTRIES &nbsp; / &nbsp; OPERATIONS</small><button class="close" aria-label="Close">×</button></div><div id="content"></div></dialog><script type="module" src="game.mjs?v=19"></script></body></html>

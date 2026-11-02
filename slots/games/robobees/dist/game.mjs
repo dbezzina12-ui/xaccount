@@ -16,8 +16,11 @@ const desc={
 const sample=['hive','K','nectar','stinger','Q','A','rotor','W','beacon','10','stinger','J','hive','K','nectar','10','beacon','Q','rotor','FS'];
 const stakes=[10,20,40,60,80,100,150,200,300,400,500,750,1000,1500,2000,3000,4000,5000,7500,10000,15000,20000,25000,30000,40000,50000];
 const money=cents=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(cents/100);
-const key='robobees-playtest-controller-v1';
-const preview=new URLSearchParams(location.search).get('preview')==='stinger';
+const params=new URLSearchParams(location.search);
+const enamel=params.get('palette')==='enamel';
+const preview=params.get('preview')==='stinger';
+document.body.classList.toggle('enamel-preview',enamel);
+const key=enamel?'robobees-enamel-preview-v1':'robobees-playtest-controller-v1';
 let saved;
 try{if(!preview)saved=JSON.parse(localStorage.getItem(key)||'null')}catch{}
 let state=saved?.state??start(),face=saved?.face??sample,previous=saved?.previous??null,pending=saved?.pending??null;
@@ -231,7 +234,7 @@ function showBonuses(section='buys'){
   card.className='bonus-card';card.dataset.mode=id;
   const eyebrow=isBuy?({regular:'3 FS · REGULAR BONUS',super:'4 FS · SUPER BONUS',mystery:'MYSTERY BONUS'}[id]):item.type.toUpperCase();
   const caption=isBuy?'10 FREE SPINS':'PER PAID SPIN';
-  card.innerHTML='<div class="card-content"><span class="purchase-eyebrow">'+eyebrow+'</span><div class="card-emblem"><img alt="" src="'+symbolUrl(item.art)+'"></div><h3>'+item.label+'</h3><p>'+(isBuy?shopCopy[id]:item.copy)+'</p><small>'+caption+'</small><div class="card-price"><strong>'+money(cost)+'</strong><span>'+item.price+'× BASE BET</span></div></div><button class="card-action"></button>';
+  card.innerHTML='<div class="card-content"><span class="purchase-eyebrow">'+eyebrow+'</span><div class="card-emblem '+symbolClass(item.art)+'"><img alt="" src="'+symbolUrl(item.art)+'"></div><h3>'+item.label+'</h3><p>'+(isBuy?shopCopy[id]:item.copy)+'</p><small>'+caption+'</small><div class="card-price"><strong>'+money(cost)+'</strong><span>'+item.price+'× BASE BET</span></div></div><button class="card-action"></button>';
   const button=card.querySelector('button');button.disabled=!active&&balance<cost;
   button.textContent=button.disabled?'Not enough credits':isBuy?(id==='mystery'?'Buy mystery':'Buy free spins'):active?'Disable':'Enable';
   button.onclick=()=>{shop.close();if(isBuy){confirmBuy(id);return}
@@ -304,6 +307,7 @@ if(pending){$('notice').textContent=modes[pending]+' unlocked · Press play to e
 
 if(preview){
  // The replay uses the exact award path, separate from the saved playtest.
+ if(enamel)$('replay-stinger').href='?palette=enamel&preview=stinger';
  const entry=purchaseEntry('super');
  face=entry.board;draw(face,state.spots);pending='super';labels();
  document.body.classList.add('preview-ready');$('preview-stinger').hidden=false;$('replay-stinger').hidden=false;

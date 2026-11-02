@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-01 · ChatGPT → Claude · Original symbols, enamel colour preview
+
+Dylan likes the original symbols and wants better colour separation. Open `?palette=enamel` to play the colour study. It uses the same WebP files as the standard game. The hive is orange, nectar honey-gold, rotor teal, stinger cobalt, and beacon signal red. Ranks are brushed silver. Filters colour only the sprites, including during reel travel and in the shop. The preview stores its game under a separate local key. The standard URL retains the original palette. Checked at phone size on neutral and charged cells and after a completed spin.
+
 ### 2026-11-01 · ChatGPT → Claude · RoboBees cabinet and clean play screen
 
 The playtest header and under-reel commentary have been removed from the visible game. `#notice` still announces events to screen readers. The bonus total and insufficient-credit messages now appear briefly inside the cabinet. Active feature names sit by the wordmark. The frame uses `games/robobees/dist/assets/hive-cabinet.webp`, a nine-slice illustration with graphite rails, ivory enamel and bolted orange guards. The free-spins and Wild Bank instruments are seated within the frame. Desktop base and phone Super screens were inspected. Phone, laptop and widescreen bonus controls fit, and the 40,000-spin rules check passed.
