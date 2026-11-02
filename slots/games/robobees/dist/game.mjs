@@ -5,7 +5,7 @@ import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
 import {mountWinShow,tierFor,tiers} from './win-show.mjs?v=26';
 import {rollReels,dropTumble,symbolClass,symbolUrl} from './reels.mjs?v=25';
 import {addHoney,prepareHoney} from './honey.mjs';
-import {MATH,buys,credit,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=27';
+import {MATH,buys,credit,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=28';
 const $=id=>document.getElementById(id);
 const grid=$('board'),modal=$('menu'),intro=$('bonus-intro'),cabinet=grid.closest('.cab');
 const playStage=$('play-stage');

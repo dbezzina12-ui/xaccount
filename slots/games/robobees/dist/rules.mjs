@@ -18,10 +18,10 @@ export const MATH={
  cap:25000,
  pays:{10:[0.35,1.06,3.52],hive:[2.35,7.05,21.14],nectar:[1.64,4.7,14.09],stinger:[1.17,3.52,10.57],rotor:[0.94,2.35,8.22],beacon:[0.7,2.11,7.05],A:[0.47,1.41,4.7],K:[0.47,1.41,4.7],Q:[0.35,1.06,3.52],J:[0.35,1.06,3.52]},
  weights:{base:[2,3],random:[2,3],full32:[4,2],regular:[4,2],super:[2,3],hidden:[2,3]},
- wilds:{base:[0.33,0.08],random:[1,0.36409],full32:[1,0.6],regular:[1,0.26755],super:[0.41548,0.1],hidden:[1,0.03]},
- refillWild:{base:0.02,random:0.02,full32:0.09691,regular:0.02,super:0.02,hidden:0.02},
+ wilds:{base:[0.33,0.08],random:[1,0.367216],full32:[1,0.6],regular:[1,0.269261],super:[0.414122,0.1],hidden:[1,0.03]},
+ refillWild:{base:0.02,random:0.02,full32:0.096807,regular:0.02,super:0.02,hidden:0.02},
  scatter:{base:0.075056,enhanced:0.132926},
- boosts:[1,0.17225,0.05742],
+ boosts:[1,0.179471,0.059824],
  pollen:[0.1,0.12,0.18,0.3,0.3],
  mystery:[0.5,0.4,0.1],
 };
