@@ -2,6 +2,7 @@ import {playStinger,flyHiveBees} from './drone-stinger.mjs?v=14';
 import {mountMascot} from './mascot/mascot.mjs?v=6';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
+import {mountWinShow,tierFor,tiers} from './win-show.mjs?v=26';
 import {rollReels,dropTumble,symbolClass,symbolUrl} from './reels.mjs?v=25';
 import {addHoney,prepareHoney} from './honey.mjs';
 import {buys,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=25';
@@ -21,7 +22,8 @@ const params=new URLSearchParams(location.search);
 const palette=params.get('palette');
 const scatterDemo=params.get('preview')==='scatter';
 const tumbleDemo=params.get('preview')==='tumble';
-const preview=tumbleDemo||scatterDemo||params.get('preview')==='stinger';
+const winDemo=params.get('preview')==='wins';
+const preview=winDemo||tumbleDemo||scatterDemo||params.get('preview')==='stinger';
 document.body.classList.toggle('enamel-symbols',palette!=='original');
 // Keep the old colour-study link attached to its separate saved game.
 const key=palette==='enamel'?'robobees-enamel-preview-v1':'robobees-playtest-controller-v1';
@@ -35,6 +37,7 @@ let featureMode=Object.hasOwn(features,saved?.featureMode)?saved.featureMode:nul
 const spinCost=()=>bet*(features[featureMode]?.price??1);
 const shop=$('bonus-menu');
 let busy=false,stop=false,audio,bonusTimer,checkpoint=null,flightBank=null;
+const winShow=mountWinShow($('win-show'),{money,audioContext:()=>audio,muted:()=>mute,toggleMute:toggleSound});
 const autoplay=new Autoplay();
 const controller=mountController($('controller'),{onAction:action});
 const skin=document.createElement('link');skin.rel='stylesheet';skin.href='controller/robobees.css';$('controller').shadowRoot.append(skin);
@@ -223,6 +226,7 @@ async function play(rng=Math.random){
  $('cab-feedback').hidden=true;
  stop=false;const result=spin(state,rng,bonus?null:featureMode),oldBank=state.bank;
  const award=Math.round(result.amount*bet),finished=bonus&&result.state.left===0;
+ if(bonus)result.state.awardedCents=(state.awardedCents??Math.round(state.total*bet))+award;
  if(!bonus)balance-=spinCost();
  win=0;checkpoint={state:finished?previous:result.state,face:result.board,previous:finished?null:previous,pending:result.trigger,balance:balance+award,win:award};save();lock(true);
  $('notice').textContent=result.finale?'Final spin · '+oldBank+' bees ready to deploy.':'Reels in motion…';tone(135,.14);
@@ -242,6 +246,13 @@ async function play(rng=Math.random){
  $('notice').textContent=lineCount?lineCount+' winning lines · '+tumbles+' tumbles':'No connection this spin.';
  if(state.bank>oldBank)$('notice').textContent+=' +'+(state.bank-oldBank)+' Wild'+(state.bank-oldBank>1?'s':'')+' banked.';
  if(result.trigger){autoplay.stop();pending=result.trigger;$('notice').textContent=modes[pending]+' unlocked · Press play to enter.'}
+ // Present the settled chain once. The last free spin presents the whole bonus instead.
+ const multiple=finished?state.total:result.amount;
+ const tier=tierFor(multiple,result.maxWin===true);
+ if(tier){
+  labels();
+  await winShow.show(tier,finished?state.awardedCents:award,multiple,finished?'Free spins total':bonus?'Free spin win':'Spin win',{quick:turbo||stop,reduced});
+ }
  if(state.mode!=='base'&&state.left===0){cabinetMessage(modes[state.mode]+' complete · '+state.total.toFixed(2)+'× total');await wait(500);document.body.dataset.scene='base';state=previous??start();previous=null;draw(face,state.spots)}
  checkpoint=null;save();
  if(!bonus&&autoplay.active)autoplay.finishRound(play,turbo?180:500);
@@ -315,6 +326,7 @@ function choices(title,items){
  modal.showModal();
 }
 function action(name){
+ if(winDemo||$('win-show').open)return;
  if(document.body.classList.contains('preview-ready')){if(name==='play')$('preview-stinger').click();return}
  if(!mute&&audio?.state!=='running')prepareFlightSound();
  if(name==='sound'){toggleSound();return}
@@ -334,7 +346,7 @@ function action(name){
 }
 modal.addEventListener('close',()=>{if(!modal.open)modal.classList.remove('shop');scheduleBonus()});
 document.addEventListener('keydown',e=>{
- if(e.code!=='Space'||e.repeat||modal.open||shop.open||playStage.inert||e.composedPath().some(el=>el.tagName==='BUTTON'))return;
+ if(e.code!=='Space'||e.repeat||winDemo||$('win-show').open||modal.open||shop.open||playStage.inert||e.composedPath().some(el=>el.tagName==='BUTTON'))return;
  e.preventDefault();action('play');
 });
 document.body.dataset.scene=state.mode;
@@ -345,7 +357,17 @@ if(state.left===10&&(state.mode==='super'||state.mode==='hidden')){
 }else scheduleBonus();
 if(pending){$('notice').textContent=modes[pending]+' unlocked · Press play to enter.';showAward()}
 
-if(tumbleDemo){
+if(winDemo){
+ document.querySelector('.camera-window').inert=true;
+ $('controller').hidden=true;
+ const gallery=document.querySelector('.win-gallery');gallery.hidden=false;
+ const samples={nice:12.5,big:48,epic:160,mythic:850,max:25000};
+ for(const [id,config] of Object.entries(tiers)){
+  const choice=document.createElement('button');choice.type='button';choice.textContent=config.label;
+  choice.onclick=()=>{if(!mute)prepareFlightSound();void winShow.show(id,Math.round(samples[id]*100),samples[id],'Animation preview',{reduced,holdForReview:true})};
+  gallery.append(choice);
+ }
+}else if(tumbleDemo){
  const button=$('preview-stinger');
  button.hidden=false;button.textContent='▶ Play 32× tumble';
  document.body.classList.add('preview-ready');

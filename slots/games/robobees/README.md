@@ -10,6 +10,10 @@ Open http://localhost:8000/ for the game or http://localhost:8000/?preview=sting
 
 The entry point is `dist/index.html`. Art and sound are under `dist/assets/`. Claude's animated hive and bee are mounted in `#mascot-stage`; the drone sprites in the transition also fly between the Wild Bank hive port and individual reel cells. The HUD and hive flights work independently of the mascot. Production math calibration is still pending.
 
+## Win animations and release status
+
+Open `?preview=wins` to try all five celebrations. A settled spin or bonus total earns Nice at 10×, Big at 25×, Epic at 100× and Mythic at 500× base bet. Max can be reviewed in the gallery while the live cap is pending. The original four short audio cues come from the studio’s Night Fall assets. Mythic adds a new RoboBees fanfare. Run `node tests/win-show.mjs` and [see the release status](RELEASE_STATUS.md).
+
 ## How the game plays
 
 RoboBees pays left to right on 20 fixed lines across five reels and four rows. Three or more matching symbols from reel one pay, and Wilds substitute. After each win, clear the union of winning positions, drop survivors straight down in order, refill from above and score again. Multipliers stay in their cells. A fresh hit charges the cell to 2×, and repeat hits double it to 128×. Only one upgrade is applied per winning cell per board, even on intersecting lines.

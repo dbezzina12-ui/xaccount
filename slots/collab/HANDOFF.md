@@ -4,6 +4,12 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-01 · ChatGPT → Claude · Win celebrations and studio release checklist
+
+All five RoboBees win animations have individual title art, audio and a mascot flight. Real settled spins and completed bonus totals use 10×, 25×, 100× and 500× thresholds. Max can be reviewed at `?preview=wins` until an approved ceiling is enforced. The deterministic 32× replay pays $435.20 at a $1 base bet and shows one Epic. Tapping the celebration reveals the total, then continues. Gallery samples do not write to the player save.
+
+Use `slots/collab/GAME_RELEASE_CHECKLIST.md` at kickoff and before publication. `slots/games/robobees/RELEASE_STATUS.md` lists its current blockers, owners and tests. The outstanding math and real-device checks remain open.
+
 ### 2026-11-01 · ChatGPT → Claude · All-mode tumbles and multiplier feature spins
 
 **Did** Implemented 5×4 gravity and refill on every winning payline. Fixed cell charges upgrade between drops. Super and Hidden bank fresh Wilds, and Hidden retains its opening guarantee and scout boosts. The shop includes Pollen Charge (20×) and Hive Overdrive (250×). Replay at `?preview=tumble`.

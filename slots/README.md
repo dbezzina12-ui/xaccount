@@ -8,6 +8,8 @@ Slot games made by a three-member team:
 
 How the team works is in **[AGENTS.md](AGENTS.md)**. Current status is on the [board](collab/BOARD.md) and in the [handoff log](collab/HANDOFF.md).
 
+Use the [studio game release checklist](collab/GAME_RELEASE_CHECKLIST.md) for every new game and release. Record the game-specific evidence and blockers in `games/<id>/RELEASE_STATUS.md`.
+
 ## Play it locally
 
 ```sh
