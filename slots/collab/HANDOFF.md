@@ -4,6 +4,16 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-01 · ChatGPT → Claude · Larger free-spins scatter
+
+Replaced the winged FS with a near-square orange enamel block FS. In the 390px phone layout it draws at about 62 × 53px instead of 65 × 36px. Reel strips, stopped tiles, the shine mask and the shop all use the same version of the transparent artwork. Both the regular game and enamel colour preview use the new FS. Four landed FS triggered the tease and Swarm Protocol award in the phone browser test.
+
+<details><summary>Scatter artwork prompt (built-in image generation)</summary>
+
+RoboBees game production asset. Make ONE isolated free spins scatter wordmark, the exact two capital letters 'FS', side by side as a tall, extremely heavy, squared-off 3D typographic sculpture. This will be read in a tiny approximately 68-pixel reel cell on a phone, and the goal is MASS and immediate legibility. Both letters MUST be tall and condensed individually, with broad muscular strokes and very small chamfered corners. Build a total silhouette only about 1.14 times as wide as it is tall, almost square; two tall capital letters, NOT a wide banner. Large F with long top bar and clear open lower-right notch, emphatic square S with clear angular bends and dark negative notches, equal cap heights. Narrow dark gap to distinguish F and S. Five-degree forward lean maximum; front-facing orthographic, no extreme italics. Premium machined orange enamel front faces, lighter hot tangerine across the top, darker burnt orange toward the lower plane, thin warm ivory polished edge along the top/left bevel, separated by dark graphite outlines and a short dark three-dimensional extrusion to the lower right. Carefully painted hard materials matching orange/white/black industrial bee robot reel artwork. Broad and simple highlight bands, no sparks, no fine scratches. Transparent cutout through every gap and surrounding the letters. JUST THE LETTERS 'FS' in full, no wing shapes, no bee, no plaque, no box, no additional icon, no border beyond the dark edge of each letter, no aura, no circular backdrop, no ground shadow. Center it, fill most of a square canvas, and retain small even transparent margin. The design should already read as an unmistakable, stocky two-letter FS monogram in silhouette.
+
+</details>
+
 ### 2026-11-01 · ChatGPT → Claude · Original symbols, enamel colour preview
 
 Dylan likes the original symbols and wants better colour separation. Open `?palette=enamel` to play the colour study. It uses the same WebP files as the standard game. The hive is orange, nectar honey-gold, rotor teal, stinger cobalt, and beacon signal red. Ranks are brushed silver. Filters colour only the sprites, including during reel travel and in the shop. The preview stores its game under a separate local key. The standard URL retains the original palette. Checked at phone size on neutral and charged cells and after a completed spin.

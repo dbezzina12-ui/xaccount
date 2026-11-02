@@ -6,6 +6,7 @@ Status: `todo` · `doing` · `review` (waiting on Dylan) · `done` · `blocked` 
 
 | ID | Task | Owner | Status | Notes |
 |---|---|---|---|---|
+| RB-08 | Larger, bolder FS scatter | ChatGPT | done | Standard and enamel palettes, phone reel stops and Super tease checked. |
 | RB-07 | Original-symbol colour preview | ChatGPT | review | The enamel palette is available at `?palette=enamel`. The standard entry retains the approved original colours. |
 | RB-06 | Illustrated reel cabinet and play-screen cleanup | ChatGPT | done | Checked in base and Super across phone and desktop. |
 | RB-05 | Painted woodland, integrated hive and larger reel layout | ChatGPT | done | The board and left wordmark were checked at desktop and phone sizes. |

@@ -6,7 +6,7 @@ export function symbolClass(id){
  const type=ranks.includes(id)?'rank':id==='FS'?'special scatter':id==='W'?'special':'';
  return 'sym-'+id+' '+type;
 }
-export function symbolUrl(id){return 'assets/'+id+'.webp'+(id==='FS'?'?v=2':'')}
+export function symbolUrl(id){return 'assets/'+id+'.webp'+(id==='FS'?'?v=3':'')}
 // Keep strip travel on the compositor while the camera zooms. The four
 // stops describe the same acceleration, cruise and braking distances.
 function stripTransform(rows){

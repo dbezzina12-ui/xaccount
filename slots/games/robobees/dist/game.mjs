@@ -2,7 +2,7 @@ import {playStinger,flyHiveBees} from './drone-stinger.mjs?v=13';
 import {mountMascot} from './mascot/mascot.mjs?v=5';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
-import {rollReels,symbolClass,symbolUrl} from './reels.mjs?v=14';
+import {rollReels,symbolClass,symbolUrl} from './reels.mjs?v=20';
 import {buys,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=7';
 const $=id=>document.getElementById(id);
 const grid=$('board'),modal=$('menu'),intro=$('bonus-intro'),cabinet=grid.closest('.cab');
