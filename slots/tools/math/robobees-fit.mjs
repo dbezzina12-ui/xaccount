@@ -4,7 +4,7 @@
 //
 //   node tools/math/robobees-fit.mjs            print the fitted MATH and Scout Run's price
 //   node tools/math/robobees-fit.mjs --write    and write them into rules.mjs
-//   node tools/math/robobees-fit.mjs --refine super,random,full32 --write
+//   node tools/math/robobees-fit.mjs --refine super,random,full32 [--scale 4] --write
 //                                               re-solve only those knobs from the shipped MATH, on 4x the spins
 //
 // 1. Bonus averages are pinned by their buy prices: Regular 96x (100x buy), Super 240x (250x buy), and Hidden 2,400x,
@@ -111,11 +111,11 @@ export async function fit() {
   return {math, scoutPrice: round(scout / RTP, 2), scoutReturn: scout};
 }
 
-/** re-solves the named knobs from the shipped MATH on 4x the spins, near their current values */
-export async function refine(names, done = () => {}) {
+/** re-solves the named knobs from the shipped MATH on scale x the spins, near their current values */
+export async function refine(names, done = () => {}, scale = 4) {
   const R = await import(new URL('file://' + RULES).href);
   const math = structuredClone(R.MATH);
-  const big = (k) => N[k] * 4;
+  const big = (k) => N[k] * scale;
   const near = (x, lo, hi) => [Math.max(lo, x * 0.92), Math.min(hi, x * 1.08)];
   const paid = async (m, feature, seed) => modeReturn(await simulate('lines', m, {feature, n: big(feature ?? 'base'), seed, boost: BOOST}));
   const bonus = async (m, mode, seed) => (await simulate('bonus', m, {mode, n: big(mode), seed})).mean;
@@ -161,7 +161,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     write(r);
     console.error(`wrote ${RULES}`);
   };
-  const r = at > 0 ? await refine(process.argv[at + 1].split(','), process.argv.includes('--write') ? save : undefined) : await fit();
+  const r = at > 0 ? await refine(process.argv[at + 1].split(','), process.argv.includes('--write') ? save : undefined, Number(process.argv[process.argv.indexOf('--scale') + 1]) || 4) : await fit();
   console.log(JSON.stringify(r, null, 1));
   if (process.argv.includes('--write') && at < 0) save(r);
   console.error(`${((Date.now() - t0) / 60000).toFixed(1)} min`);
