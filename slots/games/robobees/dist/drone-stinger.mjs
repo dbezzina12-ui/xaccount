@@ -5,10 +5,10 @@
 const clamp=x=>Math.max(0,Math.min(1,x));
 const ease=x=>{x=clamp(x);return x*x*(3-2*x)};
 function sprite(name){
- const img=new Image();img.src='assets/'+name+'.webp';
+ const img=new Image();img.src=name;
  return img.decode().then(()=>img);
 }
-const art=Promise.all([sprite('drone-body'),sprite('drone-wing')]).catch(()=>null);
+const art=Promise.all([sprite('assets/drone-body.webp'),sprite('assets/drone-wing.webp')]).catch(()=>null);
 
 function drawBee(ctx,[body,wing],x,y,size,bank,beat,yaw){
  ctx.save();ctx.translate(x,y);ctx.rotate(bank);
@@ -88,33 +88,61 @@ export async function playStinger({canvas,scatterCells,reduced,cut,sound,release
  }finally{swap();canvas.hidden=true;canvas.width=1;canvas.height=1}
 }
 
-// One board-space flight per destination. Arrival updates are independent of
-// frame rate; a skipped or backgrounded flight still delivers every bee.
-export async function flyHiveBees({canvas,hive,targets,collect,fast,skip,onArrival}){
+// Each endpoint is measured in viewport coordinates every frame, including after a rotation.
+let workers;
+function workerArt(){
+ workers??=Promise.all([
+  sprite('mascot/bee-hover.webp'),
+  fetch('mascot/mascot.json').then(r=>{if(!r.ok)throw Error();return r.json()})
+ ]).then(([image,meta])=>({image,clip:meta.clips.hover})).catch(()=>null);
+ return workers;
+}
+
+export async function flyHiveBees({canvas,hive,targets,collect,fast,skip,onDeparture=()=>{},onArrival}){
  if(!targets.length)return;
- const sprites=await art,ctx=canvas.getContext('2d');
- if(!sprites||!ctx||skip()||document.hidden){targets.forEach((_,i)=>onArrival(i));return}
- const spacing=fast?28:70,travel=fast?300:590,total=travel+spacing*(targets.length-1);
- const landed=new Set();
+ const departed=new Set(),landed=new Set();
+ function leave(i){if(!departed.has(i)){departed.add(i);onDeparture(i)}}
+ function arrive(i){if(!landed.has(i)){leave(i);landed.add(i);onArrival(i)}}
+ const finish=()=>targets.forEach((_,i)=>arrive(i));
+ if(skip()||document.hidden){finish();return}
+ const ctx=canvas.getContext('2d'),worker=await workerArt(),drones=worker?null:await art;
+ if(!ctx||!(worker||drones)||skip()||document.hidden){finish();return}
+ const spacing=fast?55:145,travel=fast?400:850,total=travel+spacing*(targets.length-1);
  canvas.hidden=false;
  try{
   await animate(total,progress=>{
-   const w=canvas.clientWidth,h=canvas.clientHeight,dpr=Math.min(devicePixelRatio||1,1.4);
+   const bounds=canvas.getBoundingClientRect(),w=bounds.width,h=bounds.height;
+   const dpr=Math.min(devicePixelRatio||1,1.4);
    if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr)}
    ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
-   const port=hive.getBoundingClientRect(),hx=port.x+port.width/2,hy=port.y+port.height/2;
+   const port=hive.getBoundingClientRect(),hx=port.x+port.width/2-bounds.x,hy=port.y+port.height/2-bounds.y;
    targets.forEach((target,i)=>{
     if(landed.has(i))return;
-    const t=clamp((progress*total-i*spacing)/travel);
-    if(t===1||progress===1){landed.add(i);onArrival(i);return}
-    if(t<=0)return;
-    const r=target.getBoundingClientRect(),px=r.x+r.width/2,py=r.y+r.height/2;
-    const u=collect?1-ease(t):ease(t),arc=Math.sin(u*Math.PI);
-    const swing=(i%2?1:-1)*Math.min(32,r.width*.32)*arc;
-    const x=hx+(px-hx)*u+swing,y=hy+(py-hy)*u-arc*Math.min(82,r.height*.9);
-    const size=Math.max(15,Math.min(37,r.width*.36))*(.55+.45*arc);
-    drawBee(ctx,sprites,x,y,size,(collect?-1:1)*(.16+.18*arc)*Math.sign(px-hx),progress*total*.052+i,arc*.6);
+    const elapsed=progress*total-i*spacing;
+    if(elapsed<0)return;
+    leave(i);
+    if(elapsed>=travel||progress===1){arrive(i);return}
+    const t=ease(clamp(elapsed/travel)),u=collect?1-t:t,v=1-u;
+    const r=target.getBoundingClientRect(),dx=r.x+r.width/2-bounds.x-hx,dy=r.y+r.height/2-bounds.y-hy;
+    // Both directions pass through the same tunnel. Nose out from its sill first,
+    // then bank over the reels. The reverse path ducks behind the front lip.
+    const side=Math.sign(dx)||1,reach=Math.min(95,Math.hypot(dx,dy)*.29);
+    const ax=side*(port.width*.4+reach*.5),ay=port.height*.65;
+    const bx=dx-side*reach,by=dy-Math.min(82,r.height*(.65+.13*(i%3)));
+    const x=hx+3*v*v*u*ax+3*v*u*u*bx+u*u*u*dx;
+    const y=hy+3*v*v*u*ay+3*v*u*u*by+u*u*u*dy;
+    const entry=ease(u/.14),arc=Math.sin(Math.PI*u);
+    const size=Math.min(45,Math.max(22,r.width*.46))*(.18+.82*entry)*(.78+.22*arc);
+    const direction=collect?-side:side;
+    ctx.save();ctx.globalAlpha=entry;
+    if(worker){
+     const frame=worker.clip.frames[(Math.floor(progress*total*worker.clip.fps/1000)+i*5)%worker.clip.frames.length];
+     const height=size*frame[3]/frame[2];
+     ctx.translate(x,y);ctx.rotate(direction*(collect?.12:-.12)*arc);ctx.scale(direction,1);
+     ctx.drawImage(worker.image,frame[0],frame[1],frame[2],frame[3],-size/2,-height/2,size,height);
+    }else drawBee(ctx,drones,x,y,size,direction*.18*arc,progress*total*.052+i,arc*.6);
+    ctx.restore();
    });
   },skip);
- }finally{canvas.hidden=true;canvas.width=1;canvas.height=1}
+ }finally{finish();canvas.hidden=true;canvas.width=1;canvas.height=1}
 }

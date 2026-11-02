@@ -1,4 +1,4 @@
-import {playStinger,flyHiveBees} from './drone-stinger.mjs?v=14';
+import {playStinger,flyHiveBees} from './drone-stinger.mjs?v=15';
 import {mountMascot} from './mascot/mascot.mjs?v=6';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
@@ -23,7 +23,8 @@ const palette=params.get('palette');
 const scatterDemo=params.get('preview')==='scatter';
 const tumbleDemo=params.get('preview')==='tumble';
 const winDemo=params.get('preview')==='wins';
-const preview=winDemo||tumbleDemo||scatterDemo||params.get('preview')==='stinger';
+const hiveDemo=params.get('preview')==='hive';
+const preview=hiveDemo||winDemo||tumbleDemo||scatterDemo||params.get('preview')==='stinger';
 document.body.classList.toggle('enamel-symbols',palette!=='original');
 // Keep the old colour-study link attached to its separate saved game.
 const key=palette==='enamel'?'robobees-enamel-preview-v1':'robobees-playtest-controller-v1';
@@ -62,14 +63,13 @@ function cell(i,id,spots,hit=false){
 function draw(board,spots,hits=[]){cells.forEach((_,i)=>cell(i,board[i],spots,hits.includes(i)))}
 function showFlightBank(n){
  flightBank=n;$('bank-count').textContent=String(n);
- mascot.setBank(n);
 }
 function labels(){
  const bonus=state.mode!=='base';
  mascot.setTurbo(turbo);
  $('mode').hidden=!bonus&&!featureMode;
  $('mode').textContent=bonus?modes[state.mode]:features[featureMode]?.label??'';
- $('bonus-hud').hidden=!bonus;$('wild-dock').hidden=state.mode==='regular';
+ $('bonus-hud').hidden=!bonus;$('hive-bank').hidden=state.mode!=='super'&&state.mode!=='hidden';
  $('spin-count').textContent=String(state.left);$('bank-count').textContent=String(flightBank??state.bank);
  controller.update({ready:true,busy,holding:bonus&&!busy,continuing:!!pending&&!busy,autoActive:autoplay.active,
   remaining:autoplay.remaining,muted:mute,turbo,balance:money(balance),bet:money(bonus?bet:spinCost()),win:money(win),buyActive:!!featureMode&&!bonus,
@@ -93,12 +93,12 @@ async function droneCue(name){
 }
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 async function wait(ms){for(let left=reduced?0:ms;left>0&&!stop;left-=25)await new Promise(r=>setTimeout(r,25))}
-async function hiveFlight(indices,collect,arrive){
- const dock=$('wild-dock');
+async function hiveFlight(indices,collect,arrive,depart){
+ const dock=$('hive-bank');
  dock.classList.add('hive-active');
  try{
   await flyHiveBees({canvas:$('swarm-stinger'),hive:$('hive-port'),targets:indices.map(i=>cells[i]),
-   collect,fast:turbo,skip:()=>stop||reduced,onArrival:n=>{
+   collect,fast:turbo,skip:()=>stop||reduced,onDeparture:depart,onArrival:n=>{
     arrive(indices[n],n);tone((collect?360:510)+n*12,.08,.018);
    }});
  }finally{dock.classList.remove('hive-active')}
@@ -204,8 +204,8 @@ async function showTumbles(result,oldBank){
   if(step.drops.length){
    $('notice').textContent='Hive release · '+step.drops.length+' Wilds incoming';
    await hiveFlight(step.drops,false,i=>{
-    cell(i,'W',step.active);cells[i].classList.add('wild-landing');showFlightBank(--bank);
-   });
+    cell(i,'W',step.active);cells[i].classList.add('wild-landing');
+   },()=>showFlightBank(--bank));
    await wait(turbo?70:180);
   }
   face=step.board;draw(face,step.active,step.hit);
@@ -262,7 +262,7 @@ async function play(rng=Math.random){
  lock(false);if(pending)showAward();else scheduleBonus();
 }
 function scheduleBonus(){
- clearTimeout(bonusTimer);
+ clearTimeout(bonusTimer);if(hiveDemo)return;
  if(!busy&&!modal.open&&!playStage.inert&&state.mode!=='base')bonusTimer=setTimeout(()=>{if(!modal.open&&!playStage.inert&&!busy)play()},turbo?300:740);
 }
 const shopCopy={
@@ -355,14 +355,28 @@ document.addEventListener('keydown',e=>{
  e.preventDefault();action('play');
 });
 document.body.dataset.scene=state.mode;
-mascot.setBank(state.mode==='base'?0:state.bank,{animate:false});
 draw(face,state.spots);labels();void prepareHoney();
 if(state.left===10&&(state.mode==='super'||state.mode==='hidden')){
  lock(true);primeBoard().finally(()=>{lock(false);scheduleBonus()});
 }else scheduleBonus();
 if(pending){$('notice').textContent=modes[pending]+' unlocked · Press play to enter.';showAward()}
 
-if(winDemo){
+if(hiveDemo){
+ const button=$('preview-stinger');let seed;
+ const rng=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);
+ button.hidden=false;button.textContent='▶ Collect Wilds';document.body.classList.add('preview-ready');
+ button.onclick=async()=>{
+  if(busy)return;
+  button.hidden=true;document.body.classList.remove('preview-ready');
+  if(state.mode==='base'){
+   seed=509;previous=start();state={...start('super'),left:2};face=sample;win=0;
+   document.body.dataset.scene='super';draw(face,state.spots);labels();
+  }
+  await play(rng);
+  button.textContent=state.mode==='super'?'▶ Release '+state.bank+' Wilds':'↻ Replay hive flights';
+  button.hidden=false;document.body.classList.add('preview-ready');
+ };
+}else if(winDemo){
  document.querySelector('.camera-window').inert=true;
  $('controller').hidden=true;
  const gallery=document.querySelector('.win-gallery');gallery.hidden=false;

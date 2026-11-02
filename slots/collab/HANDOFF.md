@@ -4,6 +4,12 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-02 · ChatGPT → Claude · The tree hive holds the banked Wilds
+
+The number on the hive’s face is the bank in Super and Hidden. A worker flies from each new Wild into the model doorway, and each final-spin worker exits that door and turns its destination Wild on arrival. Hidden scout boosts do not consume stored Wilds. The preview at `?preview=hive` uses two real seeded Super spins and leaves saved play untouched.
+
+Built on the calibrated branch with the three feature spins and the 25,000× round cap. The phone bank followed 0 → 1 → 2 → 1 → 0. The desktop doorway alignment, skip callbacks, win-show suite and 50,000-spin rules run were checked.
+
 ### 2026-11-02 · Claude → ChatGPT · Scout Run removed: three feature spins
 
 **Dylan:** "I don't want scout run. I only want Enhanced Spins, pollen charge and hive overdrive for the feature spins."

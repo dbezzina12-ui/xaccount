@@ -8,7 +8,7 @@ python3 -m http.server 8000 --directory dist
 
 Open http://localhost:8000/ for the game or http://localhost:8000/?preview=stinger for the isolated Super bonus replay. Run `node tests/bonus-rules.mjs` to exercise the bonus rules.
 
-The entry point is `dist/index.html`. Art and sound are under `dist/assets/`. Claude's animated hive and bee are mounted in `#mascot-stage`; the drone sprites in the transition also fly between the Wild Bank hive port and individual reel cells. The HUD and hive flights work independently of the mascot.
+The entry point is `dist/index.html`. Art and sound are under `dist/assets/`. Claude's animated hive and bee are mounted in `#mascot-stage`; the Wild count is mounted in the model’s upper grille. Workers fly through the tree hive’s doorway to collect and deploy Wilds. Open `?preview=hive` to collect two bees and release them on the final spin.
 
 ## Win animations and release status
 
@@ -42,7 +42,7 @@ The robo-bee and its hive stand at the top of the game in `#mascot-stage`: besid
 
 - **Idle:** the bee hovers beside the hive.
 - **Into a bonus:** when FS award a bonus (landed or bought), the bee dives into the hive and bursts out of the door. A swarm of the same robo-bees follows it out of the FS cells, and the lead bee flies into the camera to cover the cut to the award. When the bonus starts, a smaller swarm plays it out and the bee flies back to its hover. The swarm is drawn by the live 3D mascot (`mascot.swarm()` → `drone-stinger.mjs`); with the sprite fallback it is the painted drones.
-- **Banked Wilds:** in Super and Hidden, one worker bee lands on the hive for each banked Wild, up to ten; beyond ten a `+N` counter shows. On the last spin the workers leave as their Wilds are placed.
+- **Banked Wilds:** in Super and Hidden, the hive adds one when a collected bee reaches its entrance. On the final spin it subtracts one as each worker leaves, and the destination cell turns Wild on arrival. Hidden scout flights use the same doorway without spending the bank.
 
 **Live 3D, with sprites as the fallback.** `dist/mascot/mascot.mjs` picks:
 
