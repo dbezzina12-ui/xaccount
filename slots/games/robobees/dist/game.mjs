@@ -1,5 +1,5 @@
-import {playStinger} from './drone-stinger.mjs?v=12';
-import {mountMascot} from './mascot/mascot.mjs?v=5';
+import {playStinger} from './drone-stinger.mjs?v=13';
+import {mountMascot} from './mascot/mascot.mjs?v=6';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
 import {rollReels,symbolClass,symbolUrl} from './reels.mjs?v=10';
@@ -107,7 +107,7 @@ async function showRoll(landing,spots,purchased=false){
 }
 function flyAcross(release,cut){
  return playStinger({canvas:$('swarm-stinger'),scatterCells:cells.filter(c=>c.classList.contains('scatter')),reduced,
-  release,cut,sound:()=>droneCue(release?'release':'rush')});
+  release,cut,sound:()=>droneCue(release?'release':'rush'),painter:mascot.swarm()});
 }
 async function showAward(){
  if(!pending||playStage.inert||modal.open)return;

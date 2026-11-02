@@ -26,12 +26,12 @@ The rules live in `dist/rules.mjs`; `game.mjs` decides each spin there before an
 The robo-bee and its hive stand at the top of the game in `#mascot-stage`: beside the cabinet on wide screens, next to the logo on narrow ones.
 
 - **Idle:** the bee hovers beside the hive.
-- **Into a bonus:** when FS award a bonus, the bee dives into the hive and bursts out of the door, and the drone swarm follows it out. When the bonus starts, the bee flies back to its hover.
+- **Into a bonus:** when FS award a bonus (landed or bought), the bee dives into the hive and bursts out of the door. A swarm of the same robo-bees follows it out of the FS cells, and the lead bee flies into the camera to cover the cut to the award. When the bonus starts, a smaller swarm plays it out and the bee flies back to its hover. The swarm is drawn by the live 3D mascot (`mascot.swarm()` → `drone-stinger.mjs`); with the sprite fallback it is the painted drones.
 - **Banked Wilds:** in Super and Hidden, one worker bee lands on the hive for each banked Wild, up to ten; beyond ten a `+N` counter shows. On the last spin the workers leave as their Wilds are placed.
 
 **Live 3D, with sprites as the fallback.** `dist/mascot/mascot.mjs` picks:
 
-- **Live 3D:** `live3d.js` draws the bee and hive in real time with three.js. It's about 160 KB gzipped (606 KB raw) and loads after the game starts. On screen it's about 70 draw calls and 70,000 triangles, plus about 11,000 per banked-Wild worker. The ten workers are drawn as instances of one bee.
+- **Live 3D:** `live3d.js` draws the bee and hive in real time with three.js, and the bonus transition's swarm (a full-detail lead bee, the rest instances of one bee at six wing-beat phases, built while the page is idle). It's about 160 KB gzipped (606 KB raw) and loads after the game starts. On screen it's about 70 draw calls and 70,000 triangles, plus about 11,000 per banked-Wild worker. The ten workers are drawn as instances of one bee.
   - If frames run slow, it first drops its pixel ratio, then its shadows.
 - **Sprites:** `sprites.mjs` plays frames pre-rendered from the same models (about 430 KB of WebP). They're only downloaded if needed. The sprites take over when:
   - WebGL is missing or software-only;

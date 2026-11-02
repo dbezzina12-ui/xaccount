@@ -111,14 +111,19 @@ test('the live bundle never calls Math.random, the outcome stream', () => {
   assert.doesNotMatch(js, /Math\.random/);
 });
 
-test('the bonus award transition finishes with the bee diving and bursting first', async () => {
-  const { page, errors } = await open({ width: 1920, height: 1080 }, { query: '?preview=stinger&mascot=3d' });
-  await probe3d(page);
-  await page.click('#preview-stinger');
-  await page.waitForFunction(() => document.body.classList.contains('present-award') && !document.getElementById('bonus-intro').inert, null, { timeout: 20000 });
-  assert.deepEqual(errors, []);
-  await page.close();
-});
+for (const [pick, painter] of [['3d', 'mascot'], ['sprites', 'drone']]) {
+  test(`the bonus award transition finishes, its swarm drawn by the ${painter} (?mascot=${pick})`, async () => {
+    const { page, errors } = await open({ width: 1280, height: 720 }, { query: `?preview=stinger&mascot=${pick}` });
+    assert.equal(await mode(page), pick);
+    if (pick === '3d') await probe3d(page);
+    else await drawn(page);
+    await page.click('#preview-stinger');
+    await page.waitForFunction(() => document.body.classList.contains('present-award') && !document.getElementById('bonus-intro').inert, null, { timeout: 30000 });
+    assert.equal(await page.evaluate(() => document.getElementById('swarm-stinger').dataset.painter), painter);
+    assert.deepEqual(errors, []);
+    await page.close();
+  });
+}
 
 test('seeded bonus spins land the same with the mascot as with a stand-in that does nothing', async () => {
   const play = async (standIn) => {
