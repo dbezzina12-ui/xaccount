@@ -3,6 +3,15 @@ import {readFileSync} from 'node:fs';
 import {tiers,tierFor,createWinCount} from '../dist/win-show.mjs';
 for(const [n,id] of [[0,null],[9.99,null],[10,'nice'],[24.99,'nice'],[25,'big'],[99.99,'big'],[100,'epic'],[499.99,'epic'],[500,'mythic'],[25000,'mythic']])assert.equal(tierFor(n),id);
 assert.equal(tierFor(25000,true),'max');
+for(const price of [20,250]){
+ for(const [cost,tier] of [[0,null],[1.999,null],[2,'nice'],[4.999,'nice'],[5,'big'],[24.999,'big'],[25,'epic'],[49.999,'epic'],[50,'mythic']]){
+  assert.equal(tierFor(cost*price,false,price),tier);
+ }
+ assert.equal(tierFor(25000,true,price),'max');
+}
+assert.equal(tierFor(500,false,250),'nice');
+assert.equal(tierFor(500,false,20),'epic');
+
 const svg=readFileSync(new URL('../dist/assets/wins/titles.svg',import.meta.url),'utf8');
 for(const [id,config] of Object.entries(tiers)){
  assert.ok(svg.includes('<symbol id="'+id+'"'));

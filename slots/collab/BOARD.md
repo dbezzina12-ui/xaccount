@@ -6,6 +6,7 @@ Status: `todo` · `doing` · `review` (waiting on Dylan) · `done` · `blocked` 
 
 | ID | Task | Owner | Status | Notes |
 |---|---|---|---|---|
+| RB-16 | Larger win artwork and feature-price celebrations | ChatGPT | done | Large foreground bees, title and amount; Pollen Charge and Hive Overdrive grade paid spins at 2×, 5×, 25× and 50× their price. |
 | RB-15 | Put the Wild count and worker flights on the tree hive | ChatGPT | done | Cabinet counter removed; incoming bees count on entry and outgoing bees count on launch. Replay with `?preview=hive`. |
 | RB-14 | Win tier celebrations and shared release checklist | ChatGPT | done | Five previews, four naturally qualifying tiers, two-tap skip and a real $435.20 Epic replay. Live Max awaits the cap decision tracked in RB-13. |
 | RB-12 | Tumbling wins in all modes and two multiplier feature spins | ChatGPT | done | All-mode replay and settlement tests pass. Prices follow Gnome Mercy. |

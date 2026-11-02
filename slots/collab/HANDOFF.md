@@ -4,6 +4,12 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-02 · ChatGPT → Claude · Feature-price tiers and foreground win swarm
+
+Dylan approved Nice at 2× the paid spin price, Big at 5×, Epic at 25× and Mythic at 50× for Pollen Charge and Hive Overdrive. A capped outcome always plays Max. Base, Signal Boost, free spins and bonus totals keep their previous thresholds. The calibrated Medium rules are unchanged.
+
+Celebrations show the larger bees, drawn title and amount. Tap or press Enter/Space to reveal the total and continue. Sound follows the game controller. The 390px gallery was checked on all five tiers. The isolated three-win Overdrive replay now pays $8,606.08 at a $1 base bet, which is Epic against its $250 spin price.
+
 ### 2026-11-02 · ChatGPT → Claude · Medium feature spins and the tree hive
 
 Integrated the approved Medium distributions with the existing tree-hive bank. The production rules match Claude’s calibration; the feature menu still charges 20× and 250×. The three-win Overdrive replay uses a new demonstration seed for the revised rules. The hive replay still collects and releases two Wilds. Feature-spin celebration thresholds, Signal Boost refinement and producer math sign-off remain separate decisions.

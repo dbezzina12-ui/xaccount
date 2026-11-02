@@ -2,7 +2,7 @@ import {playStinger,flyHiveBees} from './drone-stinger.mjs?v=15';
 import {mountMascot} from './mascot/mascot.mjs?v=6';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
-import {mountWinShow,tierFor,tiers} from './win-show.mjs?v=26';
+import {mountWinShow,tierFor,tiers} from './win-show.mjs?v=34';
 import {rollReels,dropTumble,symbolClass,symbolUrl} from './reels.mjs?v=33';
 import {addHoney,prepareHoney} from './honey.mjs';
 import {MATH,buys,credit,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=31';
@@ -29,7 +29,10 @@ document.body.classList.toggle('enamel-symbols',palette!=='original');
 // Keep the old colour-study link attached to its separate saved game.
 const key=palette==='enamel'?'robobees-enamel-preview-v1':'robobees-playtest-controller-v1';
 let saved;
-try{if(!preview)saved=JSON.parse(localStorage.getItem(key)||'null')}catch{}
+try{
+ if(!preview)saved=JSON.parse(localStorage.getItem(key)||'null');
+ else if(winDemo)saved={mute:JSON.parse(localStorage.getItem(key)||'null')?.mute??false};
+}catch{}
 let state=saved?.state??start(),face=saved?.face??sample,previous=saved?.previous??null,pending=saved?.pending??null;
 // what a natural trigger spin paid: it counts toward the bonus round's cap
 let carry=saved?.carry??0;
@@ -40,7 +43,7 @@ let featureMode=Object.hasOwn(features,saved?.featureMode)?saved.featureMode:nul
 const spinCost=()=>bet*(features[featureMode]?.price??1);
 const shop=$('bonus-menu');
 let busy=false,stop=false,audio,bonusTimer,checkpoint=null,flightBank=null;
-const winShow=mountWinShow($('win-show'),{money,audioContext:()=>audio,muted:()=>mute,toggleMute:toggleSound});
+const winShow=mountWinShow($('win-show'),{money,audioContext:()=>audio,muted:()=>mute,swarm:()=>mascot.swarm?.()});
 const autoplay=new Autoplay();
 const controller=mountController($('controller'),{onAction:action});
 const skin=document.createElement('link');skin.rel='stylesheet';skin.href='controller/robobees.css';$('controller').shadowRoot.append(skin);
@@ -250,10 +253,10 @@ async function play(rng=Math.random){
  if(result.trigger){autoplay.stop();pending=result.trigger;carry=result.amount;$('notice').textContent=modes[pending]+' unlocked · Press play to enter.'}
  // Present the settled chain once. The last free spin presents the whole bonus instead.
  const multiple=finished?state.total:result.amount;
- const tier=tierFor(multiple,result.maxWin===true);
+ const tier=tierFor(multiple,result.maxWin===true,result.seeded?features[featureMode].price:0);
  if(tier){
   labels();
-  await winShow.show(tier,finished?state.awardedCents:award,multiple,finished?'Free spins total':bonus?'Free spin win':'Spin win',{quick:turbo||stop,reduced});
+  await winShow.show(tier,finished?state.awardedCents:award,finished?'Free spins total':bonus?'Free spin win':'Spin win',{quick:turbo||stop,reduced});
  }
  if(result.maxWin&&!bonus)cabinetMessage('Max win · '+MATH.cap.toLocaleString('en-US')+'× reached');
  if(state.mode!=='base'&&state.left===0){cabinetMessage(result.maxWin?'Max win · '+MATH.cap.toLocaleString('en-US')+'× reached':modes[state.mode]+' complete · '+state.total.toFixed(2)+'× total');await wait(500);document.body.dataset.scene='base';state=previous??start();previous=null;draw(face,state.spots)}
@@ -313,7 +316,7 @@ async function buy(id){
 const pct=x=>(Math.round(x*1000)/10)+'%';
 function showRules(){
  const cap=MATH.cap.toLocaleString('en-US');
- $('content').innerHTML='<h2>Field manual</h2><p>Match three or more symbols from reel one on a fixed payline. Wilds substitute for paying symbols. Winning symbols clear together, the rest fall straight down, and new symbols fill from above. Each new board can pay again on the same spin.</p><p>Winning cells charge to 2×, then double on repeat hits up to 128×. Add the values on a winning line. A shared cell upgrades once per drop. Normal and Signal Boost wins carry their charges into the next paid spin. Free spins keep all charges throughout the bonus.</p><ul class="multi-key" aria-label="Cell multiplier colours">'+[2,4,8,16,32,64,128].map(n=>'<li data-multi="'+n+'">'+n+'×</li>').join('')+'</ul><p>Signal Boost costs '+features.enhanced.price+'× and raises the FS chance per reel from '+pct(MATH.scatter.base)+' to '+pct(MATH.scatter.enhanced)+'. Pollen Charge costs '+features.random.price+'× and seeds 6–12 cells at 2× to 32×. Hive Overdrive costs '+features.full32.price+'× and starts all 20 cells at 32×. Both seeded boards reset each paid spin. All wins use your base bet.</p><p>FS survive tumbles. Finish with 3, 4 or 5 FS to trigger Regular, Super or Hidden. All give 10 free spins. Super and Hidden start at 2× and bank each newly landed Wild once on spins 1–9. On spin 10 the hive turns cells Wild. If the bank fills the board, remaining bees deploy on the next refill. Hidden also guarantees one opening Wild and upgrades up to three cells per spin.</p><p>Every mode returns 96% of what it costs over the long run. A round, its trigger spin and free spins included, pays at most '+cap+'× the base bet; reaching it ends the round.</p><small>PLAY MONEY · RTP 96% IN EVERY MODE · MAX WIN '+cap+'×</small>';
+ $('content').innerHTML='<h2>Field manual</h2><p>Match three or more symbols from reel one on a fixed payline. Wilds substitute for paying symbols. Winning symbols clear together, the rest fall straight down, and new symbols fill from above. Each new board can pay again on the same spin.</p><p>Winning cells charge to 2×, then double on repeat hits up to 128×. Add the values on a winning line. A shared cell upgrades once per drop. Normal and Signal Boost wins carry their charges into the next paid spin. Free spins keep all charges throughout the bonus.</p><ul class="multi-key" aria-label="Cell multiplier colours">'+[2,4,8,16,32,64,128].map(n=>'<li data-multi="'+n+'">'+n+'×</li>').join('')+'</ul><p>Signal Boost costs '+features.enhanced.price+'× and raises the FS chance per reel from '+pct(MATH.scatter.base)+' to '+pct(MATH.scatter.enhanced)+'. Pollen Charge costs '+features.random.price+'× and seeds 6–12 cells at 2× to 32×. Hive Overdrive costs '+features.full32.price+'× and starts all 20 cells at 32×. Both seeded boards reset each paid spin. All wins use your base bet. On these two paid spins, Nice, Big, Epic and Mythic celebrate returns of 2×, 5×, 25× and 50× the spin price. A capped round plays Max.</p><p>FS survive tumbles. Finish with 3, 4 or 5 FS to trigger Regular, Super or Hidden. All give 10 free spins. Super and Hidden start at 2× and bank each newly landed Wild once on spins 1–9. On spin 10 the hive turns cells Wild. If the bank fills the board, remaining bees deploy on the next refill. Hidden also guarantees one opening Wild and upgrades up to three cells per spin.</p><p>Every mode returns 96% of what it costs over the long run. A round, its trigger spin and free spins included, pays at most '+cap+'× the base bet; reaching it ends the round.</p><small>PLAY MONEY · RTP 96% IN EVERY MODE · MAX WIN '+cap+'×</small>';
  modal.showModal();
 }
 modal.querySelector('.close').onclick=()=>modal.close();
@@ -383,7 +386,7 @@ if(hiveDemo){
  const samples={nice:12.5,big:48,epic:160,mythic:850,max:25000};
  for(const [id,config] of Object.entries(tiers)){
   const choice=document.createElement('button');choice.type='button';choice.textContent=config.label;
-  choice.onclick=()=>{if(!mute)prepareFlightSound();void winShow.show(id,Math.round(samples[id]*100),samples[id],'Animation preview',{reduced,holdForReview:true})};
+  choice.onclick=()=>{if(!mute)prepareFlightSound();void winShow.show(id,Math.round(samples[id]*100),'Animation preview',{reduced,holdForReview:true})};
   gallery.append(choice);
  }
 }else if(tumbleDemo){
@@ -395,7 +398,7 @@ if(hiveDemo){
   button.hidden=true;document.body.classList.remove('preview-ready');
   state=start();face=sample;featureMode='full32';balance=1000000;bet=100;draw(face,state.spots);
   // Fixed demo only. The three wins and their payouts use the live spin rules.
-  let seed=154;
+  let seed=924;
   await play(()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296));
   button.textContent='↻ Replay 32× tumble · '+money(win)+' won';button.hidden=false;document.body.classList.add('preview-ready');
  };

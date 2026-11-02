@@ -12,7 +12,7 @@ The entry point is `dist/index.html`. Art and sound are under `dist/assets/`. Cl
 
 ## Win animations and release status
 
-Open `?preview=wins` to try all five celebrations. A settled spin or bonus total earns Nice at 10×, Big at 25×, Epic at 100× and Mythic at 500× base bet. Max plays when a round reaches the 25,000× cap. The original four short audio cues come from the studio’s Night Fall assets. Mythic adds a new RoboBees fanfare. Run `node tests/win-show.mjs` and [see the release status](RELEASE_STATUS.md).
+Open `?preview=wins` to try all five celebrations. Base spins, Signal Boost and free spins earn Nice at 10×, Big at 25×, Epic at 100× and Mythic at 500× base bet. On paid Pollen Charge and Hive Overdrive spins, those tiers start at 2×, 5×, 25× and 50× the feature price. Tap the artwork to finish counting or continue. Sound follows the game’s controller. Max plays when a round reaches the 25,000× cap. The original four short audio cues come from the studio’s Night Fall assets. Mythic adds a new RoboBees fanfare. Run `node tests/win-show.mjs` and [see the release status](RELEASE_STATUS.md).
 
 ## How the game plays
 

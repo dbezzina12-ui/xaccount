@@ -1,15 +1,18 @@
 // All values entering the presenter are already settled. Nothing here can award a credit.
 export const tiers={
- nice:{label:'Nice Win',min:10,seconds:2.15,hold:.78,bees:1,accent:'#efba72'},
- big:{label:'Big Win',min:25,seconds:2.85,hold:.90,bees:2,accent:'#ffae51'},
- epic:{label:'Epic Win',min:100,seconds:3.80,hold:1.05,bees:3,accent:'#81dedc'},
- mythic:{label:'Mythic Win',min:500,seconds:4.10,hold:1.20,bees:5,accent:'#eec978'},
+ nice:{label:'Nice Win',min:10,perCost:2,seconds:2.15,hold:.78,bees:1,accent:'#efba72'},
+ big:{label:'Big Win',min:25,perCost:5,seconds:2.85,hold:.90,bees:2,accent:'#ffae51'},
+ epic:{label:'Epic Win',min:100,perCost:25,seconds:3.80,hold:1.05,bees:3,accent:'#81dedc'},
+ mythic:{label:'Mythic Win',min:500,perCost:50,seconds:4.10,hold:1.20,bees:5,accent:'#eec978'},
  max:{label:'Max Win',seconds:4.75,hold:1.40,bees:7,accent:'#ffdc83'}
 };
 
-export function tierFor(multiple,maxWin=false){
+export function tierFor(multiple,maxWin=false,seededPrice=0){
  if(maxWin)return 'max';
- for(const id of ['mythic','epic','big','nice'])if(multiple>=tiers[id].min)return id;
+ for(const id of ['mythic','epic','big','nice']){
+  const threshold=seededPrice>0?tiers[id].perCost*seededPrice:tiers[id].min;
+  if(multiple>=threshold)return id;
+ }
  return null;
 }
 
@@ -42,15 +45,15 @@ function polygon(ctx,x,y,r){
  ctx.closePath();
 }
 
-function paint(ctx,canvas,config,t,sprites,still){
+function paint(ctx,canvas,config,t,sprites,still,scene){
  // Fixed design coordinates let the same choreography fit a phone or a landscape cabinet.
- const w=720,h=430,scale=Math.min(2,(canvas.clientWidth||w)/w*(devicePixelRatio||1));
+ const w=720,h=500,scale=Math.min(2,(canvas.clientWidth||w)/w*(devicePixelRatio||1));
  if(canvas.width!==Math.round(w*scale)||canvas.height!==Math.round(h*scale)){
   canvas.width=Math.round(w*scale);canvas.height=Math.round(h*scale);
  }
  ctx.setTransform(scale,0,0,scale,0,0);ctx.clearRect(0,0,w,h);
  const level=config.bees,accent=config.accent,open=still?1:1-(1-clamp(t/.58))**3;
- ctx.save();ctx.translate(360,209);
+ ctx.save();ctx.translate(360,291);
  // Etched honeycomb rings and illuminated contact pads expand out from the count.
  for(let ring=0;ring<(level>=3?3:2);ring++){
   ctx.globalAlpha=.17-ring*.035;ctx.strokeStyle=accent;ctx.lineWidth=ring?1.2:2;
@@ -96,26 +99,37 @@ function paint(ctx,canvas,config,t,sprites,still){
   ctx.fillRect(-3,-1,2+phase*7,2.4);ctx.restore();
  }
  ctx.restore();
- if(!sprites)return;
- const {clip,img}=sprites;
+ // Fly the hero into the foreground and fan the smaller workers across the outer
+ // thirds. Reserve the bottom half for the title and the exact payout.
+ const placed=[];
  for(let i=level-1;i>=0;i--){
-  const hero=i===0,arrival=still?1:clamp((t-i*.055)/(.70+i*.025));
+  const hero=i===0,arrival=still?1:clamp((t-i*.045)/(.62+i*.025));
   if(!arrival)continue;
-  const side=i%2?-1:1,endX=hero?365:360+side*(97+Math.floor((i-1)/2)*43);
-  const endY=hero?66:89+Math.floor((i-1)/2)*19,bob=still?0:Math.sin(t*3+i)*3;
-  const arc=Math.sin(arrival*Math.PI);
-  let x=endX+(1-arrival)**2*(hero?-205:side*185);
-  let y=endY+(1-arrival)**2*(hero?-62:70)+bob-14*Math.sin(arrival*Math.PI);
+  const side=i%2?-1:1,rank=Math.floor((i-1)/2);
+  const endX=hero?360:360+side*(154+rank*66),endY=hero?132:144+rank*28;
+  const arc=Math.sin(arrival*Math.PI),bob=still?0:Math.sin(t*2.7+i)*4;
+  let x=endX+(1-arrival)**2*(hero?-215:side*185);
+  let y=endY+(1-arrival)**2*(hero?-100:75)+bob-16*arc;
   if(level===2){x=endX+(1-arrival)*(hero?185:-190);y-=arc*21}
   if(level===3){x+=arc*Math.cos(arrival*Math.PI*2+i)*46;y+=arc*Math.sin(arrival*Math.PI*2+i)*32}
   if(level===5)y-=arc*(hero?27:9+i*5);
-  if(level===7){x=360+(endX-360)*arrival+arc*side*65;y=145+(endY-145)*arrival-arc*36}
-  const f=clip.frames[Math.floor((still?0:t*clip.fps+i*5))%clip.frames.length];
-  const size=(hero?70+level*2:32+i*1.5)*(.63+.37*arrival);
-  ctx.save();ctx.globalAlpha=arrival;ctx.translate(x,y);ctx.rotate((1-arrival)*side*.34);
-  if(i%2)ctx.scale(-1,1);
-  ctx.drawImage(img,f[0],f[1],f[2],f[3],-size/2,-size*f[3]/f[2]/2,size,size*f[3]/f[2]);ctx.restore();
+  if(level===7){x=360+(endX-360)*arrival+arc*side*65;y=208+(endY-208)*arrival-arc*36+bob}
+  const size=(hero?213+level*5:131-rank*16)*(.55+.45*arrival);
+  placed.push({x,y,size,hero,side,arrival,bank:(1-arrival)*side*.34,beat:still?i:t*42+i*1.2,yaw:side*.75});
  }
+ if(scene.painter){
+  try{scene.painter.draw(ctx,w,h,scale,placed);return}catch{scene.painter=null}
+ }
+ if(!sprites)return;
+ const {clip,img}=sprites;
+ for(const [index,bee] of placed.entries()){
+  const f=clip.frames[Math.floor(still?0:t*clip.fps+index*5)%clip.frames.length];
+  const height=bee.size*f[3]/f[2];
+  ctx.save();ctx.globalAlpha=bee.arrival;ctx.translate(bee.x,bee.y);ctx.rotate(bee.bank);
+  if(!bee.hero&&bee.side>0)ctx.scale(-1,1);
+  ctx.drawImage(img,f[0],f[1],f[2],f[3],-bee.size/2,-height/2,bee.size,height);ctx.restore();
+ }
+
 }
 
 const recordings=new Map();
@@ -129,10 +143,10 @@ function recording(id,context){
  return recordings.get(id);
 }
 
-export function mountWinShow(dialog,{money,audioContext,muted,toggleMute}){
+export function mountWinShow(dialog,{money,audioContext,muted,swarm}){
  const canvas=dialog.querySelector('canvas'),ctx=canvas.getContext('2d'),amount=dialog.querySelector('.win-cash');
- const title=dialog.querySelector('use'),skip=dialog.querySelector('.win-skip'),sound=dialog.querySelector('.win-sound');
- const reader=dialog.querySelector('.win-reader'),scope=dialog.querySelector('.win-scope');
+ const title=dialog.querySelector('use'),dismiss=dialog.querySelector('.win-dismiss');
+ const reader=dialog.querySelector('.win-reader');
  let active=null,sprites=null;
 
  function stopCue(s){
@@ -161,9 +175,9 @@ export function mountWinShow(dialog,{money,audioContext,muted,toggleMute}){
  function update(s,now){
   const counter=s.counter,complete=counter.complete;
   const formatted=money(counter.value);if(amount.textContent!==formatted)amount.textContent=formatted;
-  if(ctx)paint(ctx,canvas,tiers[s.id],s.still?1:(now-s.start)/1000,sprites,s.still);
+  if(ctx)paint(ctx,canvas,tiers[s.id],s.still?1:(now-s.start)/1000,sprites,s.still,s);
   if(complete&&!s.announced){
-   dialog.dataset.phase='total';skip.textContent='Continue';s.announced=true;
+   dialog.dataset.phase='total';dismiss.setAttribute('aria-label','Continue');s.announced=true;
    reader.textContent=tiers[s.id].label+'. '+s.scope+'. '+formatted+'.';
   }
  }
@@ -178,24 +192,22 @@ export function mountWinShow(dialog,{money,audioContext,muted,toggleMute}){
   if(s.counter.closed||document.hidden){close();return}
   update(s,now);s.frame=requestAnimationFrame(time=>tick(s,time));
  }
- function soundLabel(){sound.textContent=muted()?'Sound off':'Sound on';sound.setAttribute('aria-pressed',String(!muted()))}
- dialog.addEventListener('click',e=>{
-  if(e.target.closest('.win-sound')){toggleMute();soundLabel();if(active){if(muted())stopCue(active);else void cue(active)}return}
-  advance();
- });
+ dismiss.addEventListener('click',advance);
  dialog.addEventListener('cancel',e=>{e.preventDefault();advance()});
  document.addEventListener('visibilitychange',()=>{if(document.hidden)close()});
  return {
-  show(id,total,multiple,context,{quick=false,reduced=false,holdForReview=false}={}){
+  show(id,total,context,{quick=false,reduced=false,holdForReview=false}={}){
    if(!id||document.hidden)return Promise.resolve();
    close();
    const conf=tiers[id],now=performance.now(),counter=createWinCount(total,reduced?0:conf.seconds*(quick?.35:1),holdForReview?Infinity:reduced?1.05:conf.hold*(quick?.65:1));
    dialog.dataset.tier=id;dialog.dataset.phase='counting';dialog.style.setProperty('--signal',conf.accent);
    title.setAttribute('href','assets/wins/titles.svg#'+id);dialog.querySelector('.win-name').textContent=conf.label;
-   scope.textContent=context;dialog.querySelector('.win-multiple').textContent=multiple.toLocaleString('en-US',{maximumFractionDigits:2})+'×';
-   skip.textContent='Show total';reader.textContent='';soundLabel();dialog.showModal();skip.focus({preventScroll:true});
+   // Keep the largest supported payouts on one line, including at narrow phone widths.
+   amount.style.setProperty('--cash-size',Math.min(13,156/money(total).length)+'cqw');
+   reader.textContent='';dismiss.setAttribute('aria-label','Show total');dialog.showModal();dismiss.focus({preventScroll:true});
    return new Promise(resolve=>{
-    const s={id,scope:context,start:now,last:now,counter,resolve,still:reduced,frame:0,cueVersion:0};active=s;
+    const s={id,scope:context,start:now,last:now,counter,resolve,still:reduced,frame:0,cueVersion:0,painter:null};active=s;
+    try{s.painter=swarm?.()??null}catch{/* Use the pre-rendered mascot frames when 3D is unavailable. */}
     void swarmArt().then(a=>{sprites=a});void cue(s);update(s,now);s.frame=requestAnimationFrame(time=>tick(s,time));
    });
   }
