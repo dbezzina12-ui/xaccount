@@ -6,8 +6,9 @@ const random=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);
 const indices=Array.from({length:20},(_,i)=>i);
 const blank=()=>Array(20).fill(0);
 const charge=n=>Math.min(128,Math.max(2,n*2));
-let tumbles=0,freshWilds=0,carriedWilds=0,lateFS=0,maxWins=0;
+let tumbles=0,freshWilds=0,carriedWilds=0,lateFS=0,maxWins=0,verified=0;
 function verify(state,r,mode){
+ verified++;
  const bonus=state.mode!=='base',swarm=['super','hidden'].includes(state.mode);
  const touched=new Set();let active=[...r.prior],bank=state.bank,amount=0;
  for(const i of r.boosts)active[i]=charge(active[i]);
@@ -65,6 +66,8 @@ function verify(state,r,mode){
  assert.equal(r.state.bank,bank);
  if(r.finale&&!r.maxWin)assert.equal(bank,0);
  assert.deepEqual(r.state.spots,bonus?active:active.map((v,i)=>r.seeded||!touched.has(i)?0:v));
+ // a seeded spin that triggers a bonus hands it its final multipliers; nothing else does
+ if(r.seeded&&r.trigger)assert.deepEqual(r.charges,r.steps.at(-1).after);else assert.equal(r.charges,null);
  const fs=r.board.filter(x=>x==='FS').length;
  if(!r.maxWin)assert.equal(r.trigger,bonus?null:({3:'regular',4:'super',5:'hidden'}[fs]??null));
 }
@@ -117,6 +120,23 @@ for(const bet of [10,50000]){
  }
 }
 assert.ok(cappedCredits>0);
+// A bonus landed in Pollen Charge or Hive Overdrive keeps the trigger spin's multipliers (or its own start, if higher).
+const kept=Array.from({length:20},(_,i)=>[0,2,4,8,16,32,64,128][i%8]);
+assert.deepEqual(start('regular',0,kept).spots,kept);
+assert.deepEqual(start('super',0,kept).spots,kept.map(v=>Math.max(2,v)));
+assert.deepEqual(start('hidden').spots,Array(20).fill(2));
+let keptBonuses=0;
+for(const mode of ['random','full32']){
+ let state=start(),played=0;
+ while(played<40){
+  const r=spin(state,random,mode);verify(state,r,mode);state=r.state;
+  if(!r.trigger)continue;
+  let b=start(r.trigger,r.amount,r.charges);
+  assert.deepEqual(b.spots,r.charges.map(v=>Math.max(r.trigger==='regular'?0:2,v)));
+  while(b.left){const s=spin(b,random);verify(b,s,null);b=s.state}
+  played++;keptBonuses++;
+ }
+}
 assert.equal(credit(start(),12.34,10),123);assert.equal(credit(start(),0.35,10),4);assert.equal(credit(start(),0.05,10),1);
 assert.equal(Object.keys(features).length,3);
-console.log('50,000 spins verified;',tumbles,'tumbles;',freshWilds,'new banked refill Wilds;',carriedWilds,'surviving Wild observations;',lateFS,'refill scatters;',maxWins,'rounds reached the cap;',cappedCredits,'capped rounds credited exactly the cap in cents at $0.10 and $500.');
+console.log(verified.toLocaleString('en-US')+' spins verified;',tumbles,'tumbles;',freshWilds,'new banked refill Wilds;',carriedWilds,'surviving Wild observations;',lateFS,'refill scatters;',maxWins,'rounds reached the cap;',cappedCredits,'capped rounds credited exactly the cap in cents at $0.10 and $500;',keptBonuses,'bonuses played from kept Pollen Charge and Hive Overdrive multipliers.');

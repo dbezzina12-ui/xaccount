@@ -20,7 +20,7 @@ RoboBees pays left to right on 20 fixed lines across five reels and four rows. T
 
 - **Paid and Regular.** Ordinary paid hits carry one spin forward. Regular keeps charges for all ten spins. FS survive refills, at most one per reel. The settled base board awards Regular, Super or Hidden for three, four or five FS.
 - **Super and Hidden.** Both start at 2× everywhere. Every newly landed Wild on spins 1–9 joins the bank, including refills. A survivor moving down a column is counted only on arrival. Spin ten deploys one bee per banked Wild. If the grid fills, the remaining bees return after the next refill. Hidden also guarantees an opening Wild and sends scouts to upgrade up to three eligible cells per spin.
-- **Feature spins (three).** Signal Boost (enhanced spins) costs 3× the base bet and increases FS chances. Pollen Charge costs 20× and starts 6–12 distinct cells at 2×–32×. Hive Overdrive costs 250× and starts all 20 cells at 32×. Both seeded modes reset every paid spin, reveal their multipliers before the reel roll and pay from the base bet.
+- **Feature spins (three).** Signal Boost (enhanced spins) costs 3× the base bet and increases FS chances. Pollen Charge costs 20× and starts 6–12 distinct cells at 2×–32×. Hive Overdrive costs 250× and starts all 20 cells at 32×. Both seeded modes reset every paid spin, reveal their multipliers before the reel roll and pay from the base bet. A bonus landed in either one keeps that spin's multipliers for its ten free spins. Each cell keeps its multiplier, or the bonus's own 2× start if that is higher. Pollen Charge lands FS less often (5% per reel) to keep those bonuses rare.
 - **Bonus buys.** Regular costs 100×, Super 250× and Mystery 400× (50% Regular, 40% Super and 10% Hidden).
 
 Play `?preview=tumble` for an isolated three-win Hive Overdrive replay. The outcome and the final save checkpoint are calculated before the presentation begins. Stop settles only the current spin. A safety limit of 100 scored boards bounds pathological chains.
@@ -35,6 +35,7 @@ Every mode returns 96% of what it costs: base spins, the three feature spins and
 - **Fit:** `node ../../tools/math/robobees-fit.mjs --write` re-solves every knob for 96% (about 16 minutes on four cores). `--refine super,random --write` re-solves just those knobs, on larger samples, from the shipped values.
 - **Report:** `node ../../tools/math/robobees-report.mjs` plays fresh seeds and rewrites `MATH.md` and `math/summary.json` (about 5 minutes).
 - **Bonus averages:** Regular 96× (100× buy), Super 240× (250× buy), Hidden 2,400×. Mystery's 50/40/10 mix returns 96% of 400×.
+- **Kept multipliers:** a bonus landed in Pollen Charge or Hive Overdrive keeps the trigger spin's multipliers, which makes it worth several times a bought one (see MATH.md). Those two modes are measured and fitted on whole rounds.
 - **Big hits:** Pollen Charge and Hive Overdrive keep most of their Wilds for the tumbles. They pay something less often, but long chains and big hits carry more of their return. The Big hits table in `MATH.md` shows how often each mode pays 1× to 100× its cost.
 
 ## Mascot
