@@ -3,7 +3,7 @@ import {mountMascot} from './mascot/mascot.mjs?v=6';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
 import {rollReels,symbolClass,symbolUrl} from './reels.mjs?v=10';
-import {buys,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=7';
+import {MATH,buys,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=8';
 const $=id=>document.getElementById(id);
 const grid=$('board'),modal=$('menu'),intro=$('bonus-intro'),cabinet=grid.closest('.cab');
 const playStage=$('play-stage');
@@ -18,6 +18,8 @@ const preview=new URLSearchParams(location.search).get('preview')==='stinger';
 let saved;
 try{if(!preview)saved=JSON.parse(localStorage.getItem(key)||'null')}catch{}
 let state=saved?.state??start(),face=saved?.face??sample,previous=saved?.previous??null,pending=saved?.pending??null;
+// what a natural trigger spin paid: it counts toward the bonus round's cap
+let carry=saved?.carry??0;
 // Preserve earned multipliers in features saved under the previous rules.
 if(state.mode==='super'||state.mode==='hidden')state.spots=state.spots.map(v=>Math.max(2,v));
 let balance=saved?.balance??1000000,bet=saved?.bet??100,win=saved?.win??0,turbo=saved?.turbo??false,mute=saved?.mute??true;
@@ -30,7 +32,7 @@ const controller=mountController($('controller'),{onAction:action});
 const skin=document.createElement('link');skin.rel='stylesheet';skin.href='controller/robobees.css';$('controller').shadowRoot.append(skin);
 function save(){
  if(preview)return;
- const settled=checkpoint??{state,face,previous,pending,balance,win};
+ const settled=checkpoint??{state,face,previous,pending,carry,balance,win};
  try{localStorage.setItem(key,JSON.stringify({...settled,bet,turbo,mute,featureMode}))}catch{}
 }
 const cells=Array.from({length:20},()=>{const c=document.createElement('div');c.className='cell';c.append(new Image(),document.createElement('span'));grid.append(c);return c});
@@ -78,7 +80,7 @@ async function showCellValues(indices){
 }
 function lock(val){busy=val;labels()}
 async function feature(mode){
- autoplay.stop();previous=state;state=start(mode);pending=null;win=0;stop=false;save();lock(true);
+ autoplay.stop();previous=state;state=start(mode,carry);pending=null;carry=0;win=0;stop=false;save();lock(true);
  intro.inert=true;
  await flyAcross(true,()=>{
   document.body.dataset.scene=mode;draw(face,state.spots);
@@ -132,7 +134,7 @@ async function play(){
  stop=false;const result=spin(state,Math.random,bonus?null:featureMode),oldBank=state.bank;
  const award=Math.round(result.amount*bet),finished=bonus&&result.state.left===0;
  if(!bonus)balance-=spinCost();
- win=0;checkpoint={state:finished?previous:result.state,face:result.board,previous:finished?null:previous,pending:result.trigger,balance:balance+award,win:award};save();lock(true);
+ win=0;checkpoint={state:finished?previous:result.state,face:result.board,previous:finished?null:previous,pending:result.trigger,carry:result.trigger?result.amount:0,balance:balance+award,win:award};save();lock(true);
  $('notice').textContent=result.finale?'Final spin · '+oldBank+' bees ready to deploy.':'Reels in motion…';tone(135,.14);
  await showRoll(result.landing,result.prior);
 
@@ -150,8 +152,8 @@ async function play(){
  const charge=result.hit.length?' · '+result.hit.length+' cells charged':'';
  $('notice').textContent=result.amount?result.wins.length+' winning '+(result.wins.length===1?'line':'lines')+charge:'No connection this spin.';
  if(state.bank>oldBank)$('notice').textContent+=' +'+(state.bank-oldBank)+' Wild'+(state.bank-oldBank>1?'s':'')+' banked.';
- if(result.trigger){autoplay.stop();pending=result.trigger;$('notice').textContent=modes[pending]+' unlocked · Press play to enter.'}
- if(state.mode!=='base'&&state.left===0){$('notice').textContent=modes[state.mode]+' complete · '+state.total.toFixed(2)+'× total';await wait(500);document.body.dataset.scene='base';state=previous??start();previous=null;draw(face,state.spots);mascot.setBank(0)}
+ if(result.trigger){autoplay.stop();pending=result.trigger;carry=result.amount;$('notice').textContent=modes[pending]+' unlocked · Press play to enter.'}
+ if(state.mode!=='base'&&state.left===0){$('notice').textContent=result.capped?'Max win · '+MATH.cap.toLocaleString('en-US')+'× reached':modes[state.mode]+' complete · '+state.total.toFixed(2)+'× total';await wait(500);document.body.dataset.scene='base';state=previous??start();previous=null;draw(face,state.spots);mascot.setBank(0)}
  checkpoint=null;save();
  if(!bonus&&autoplay.active)autoplay.finishRound(play,turbo?180:500);
  lock(false);if(pending)showAward();else scheduleBonus();
@@ -198,13 +200,14 @@ async function buy(id){
  const cost=bet*buys[id].price;
  if(busy||pending||state.mode!=='base'||autoplay.active||balance<cost)return;
  const entry=purchaseEntry(id);
- modal.close();balance-=cost;pending=entry.mode;stop=false;win=0;
- checkpoint={state,face:entry.board,previous,pending,balance,win};save();lock(true);
+ modal.close();balance-=cost;pending=entry.mode;carry=0;stop=false;win=0;
+ checkpoint={state,face:entry.board,previous,pending,carry,balance,win};save();lock(true);
  $('notice').textContent='Bonus purchased · Landing FS';await showRoll(entry.board,state.spots,true);
  face=entry.board;draw(face,state.spots);checkpoint=null;save();lock(false);
  $('notice').textContent=modes[pending]+' unlocked · Press play to enter.';showAward();
 }
-function showRules(){$('content').innerHTML='<h2>Field manual</h2><p>Land three or more matching symbols from reel one on any of 20 fixed paylines. W substitutes for paying symbols. FS scatters trigger Regular, Super or Hidden with 3, 4 or 5 respectively. Signal Boost costs 3× the base bet per spin and increases the scatter chance per reel from 7.5% to 11.5%. Scout Run costs 10× and guarantees at least one Wild per paid spin. Both modes pay wins on the base bet.</p><p>Winning cells become 2× on the next spin. Repeat hits double up to 128×. Add the active cell values along each winning line. Shared cells level up once per spin.</p><p>In base play a charge lasts through the next spin. During free spins it persists until the bonus ends. Super and Hidden start with 2× on every cell. Hidden guarantees a Wild every spin and sends bees to double up to three cells before scoring. Free spins advance automatically. Stop finishes only the spin in progress.</p><small>PLAY-MONEY MECHANICS BUILD · UNTUNED RETURNS</small>';modal.showModal()};
+const pct=x=>(Math.round(x*1000)/10)+'%';
+function showRules(){$('content').innerHTML='<h2>Field manual</h2><p>Land three or more matching symbols from reel one on any of 20 fixed paylines. W substitutes for paying symbols. FS scatters trigger Regular, Super or Hidden with 3, 4 or 5 respectively. Signal Boost costs '+features.enhanced.price+'× the base bet per spin and increases the scatter chance per reel from '+pct(MATH.scatter.base)+' to '+pct(MATH.scatter.enhanced)+'. Scout Run costs '+features.scout.price+'× and guarantees at least one Wild per paid spin. Both modes pay wins on the base bet.</p><p>Winning cells become 2× on the next spin. Repeat hits double up to 128×. Add the active cell values along each winning line. Shared cells level up once per spin.</p><p>In base play a charge lasts through the next spin. During free spins it persists until the bonus ends. Super and Hidden start with 2× on every cell. Hidden guarantees a Wild every spin and sends bees to double up to three cells before scoring. Free spins advance automatically. Stop finishes only the spin in progress.</p><p>Every mode returns 96% of what it costs over the long run. A round, its trigger spin and bonus included, pays at most '+MATH.cap.toLocaleString('en-US')+'× the base bet; reaching it ends the round.</p><small>PLAY MONEY · RTP 96% IN EVERY MODE · MAX WIN '+MATH.cap.toLocaleString('en-US')+'×</small>';modal.showModal()};
 modal.querySelector('.close').onclick=()=>modal.close();
 function setBet(value){
  if(busy||pending||autoplay.active||state.mode!=='base'||!stakes.includes(value))return;
