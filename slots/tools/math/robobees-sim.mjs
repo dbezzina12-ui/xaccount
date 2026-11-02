@@ -7,6 +7,10 @@
 //   lines   {feature, n}: n paid spins without playing their bonuses: line-win sum, hits, triggers, sampled wins
 //   bonus   {mode, n, carry}: n bonuses from their start: sum, sum of squares, cap hits, sampled totals
 //   rounds  {feature, n}: n paid spins with their bonuses played, as the game does: per-round totals sampled
+// With {boost: q}, each paid spin of 'lines' is shadowed by a second spin from the same state with the FS chance per
+// reel raised to q, weighted by how much likelier q made its FS draws (importance sampling): an unbiased and precise
+// measure of the chance of ending on 3, 4 or 5 FS (rates), even for the rare 5-FS trigger. The chain itself runs at
+// the true chance, so charges carried between paid spins keep their true distribution.
 import {Worker, isMainThread, parentPort, workerData} from 'node:worker_threads';
 import os from 'node:os';
 import {fileURLToPath} from 'node:url';
@@ -46,12 +50,49 @@ async function work({task, math, opts, seed}) {
     let capped = false;
     while (st.left > 0) {
       const r = R.spin(st, rng);
-      capped ||= r.capped;
+      capped ||= r.maxWin;
       st = r.state;
     }
     return {total: st.total, capped};
   };
-  const out = {n: opts.n, sum: 0, sq: 0, hits: 0, capped: 0, max: 0, trig: {regular: 0, super: 0, hidden: 0}};
+  const key = opts.feature === 'enhanced' ? 'enhanced' : 'base';
+  const p = R.MATH.scatter[key];
+  const shadowRng = rngOf(seed ^ 0x5bd1e995);
+  // the likelihood of a spin's FS draws at chance a over chance b, read from its boards
+  const isFS = (id) => id === 'FS';
+  const ratio = (r, a, b) => {
+    let w = 1;
+    for (let c = 0; c < 5; c++) {
+      const opening = [c, c + 5, c + 10, c + 15].some((i) => isFS(r.steps[0].landed[i]));
+      w *= opening ? a / b : (1 - a) / (1 - b);
+    }
+    for (let n = 1; n < r.steps.length; n++) {
+      const step = r.steps[n];
+      const prev = r.steps[n - 1].board;
+      for (let c = 0; c < 5; c++) {
+        const col = [c, c + 5, c + 10, c + 15];
+        const count = col.filter((i) => step.from[i] < 0).length;
+        if (!count || col.some((i) => isFS(prev[i]))) continue;
+        const pa = 1 - (1 - a) ** (count / 4);
+        const pb = 1 - (1 - b) ** (count / 4);
+        w *= col.some((i) => step.from[i] < 0 && isFS(step.landed[i])) ? pa / pb : (1 - pa) / (1 - pb);
+      }
+    }
+    return w;
+  };
+  const shadow = (st) => {
+    R.MATH.scatter[key] = opts.boost;
+    const r = R.spin(st, shadowRng, opts.feature);
+    R.MATH.scatter[key] = p;
+    const w = ratio(r, p, opts.boost);
+    out.w += w;
+    const k = {regular: 3, super: 4, hidden: 5}[r.trigger];
+    if (k) {
+      out['p' + k] += w;
+      out['q' + k] += w * w;
+    }
+  };
+  const out = {n: opts.n, sum: 0, sq: 0, hits: 0, capped: 0, max: 0, trig: {regular: 0, super: 0, hidden: 0}, p3: 0, p4: 0, p5: 0, q3: 0, q4: 0, q5: 0, w: 0};
   if (task === 'bonus') {
     for (let i = 0; i < opts.n; i++) {
       const b = bonus(opts.mode, opts.carry || 0);
@@ -65,6 +106,7 @@ async function work({task, math, opts, seed}) {
   } else {
     let st = R.start();
     for (let i = 0; i < opts.n; i++) {
+      if (opts.boost) shadow(st);
       const r = R.spin(st, rng, opts.feature);
       st = r.state;
       let w = r.amount;
@@ -73,9 +115,9 @@ async function work({task, math, opts, seed}) {
         if (task === 'rounds') {
           const b = bonus(r.trigger, r.amount);
           w += b.total;
-          out.capped += b.capped || r.capped;
+          out.capped += b.capped;
         }
-      } else if (r.capped) out.capped++;
+      } else if (r.maxWin) out.capped++;
       out.sum += w;
       out.sq += w * w;
       out.max = Math.max(out.max, w);
@@ -99,14 +141,20 @@ export async function simulate(task, math, opts) {
       w.on('error', reject);
     })),
   );
-  const out = {n: 0, sum: 0, sq: 0, hits: 0, capped: 0, max: 0, trig: {regular: 0, super: 0, hidden: 0}, sample: []};
+  const out = {n: 0, sum: 0, sq: 0, hits: 0, capped: 0, max: 0, trig: {regular: 0, super: 0, hidden: 0}, p3: 0, p4: 0, p5: 0, q3: 0, q4: 0, q5: 0, w: 0, sample: []};
   for (const p of parts) {
-    for (const k of ['n', 'sum', 'sq', 'hits', 'capped']) out[k] += p[k];
+    for (const k of ['n', 'sum', 'sq', 'hits', 'capped', 'p3', 'p4', 'p5', 'q3', 'q4', 'q5', 'w']) out[k] += p[k];
     out.max = Math.max(out.max, p.max);
     for (const k in out.trig) out.trig[k] += p.trig[k];
     for (const v of p.sample) out.sample.push(v);
   }
   out.mean = out.sum / out.n;
+  // importance-sampled trigger chances (with a boost); without one, the direct counts
+  out.rates = opts.boost ? {regular: out.p3 / out.n, super: out.p4 / out.n, hidden: out.p5 / out.n} : {regular: out.trig.regular / out.n, super: out.trig.super / out.n, hidden: out.trig.hidden / out.n};
+  out.weight = out.w / out.n;
+  // the standard errors of the importance-sampled rates
+  const seOf = (sum, sq) => Math.sqrt(Math.max(0, sq / out.n - (sum / out.n) ** 2) / out.n);
+  out.ratesSe = {regular: seOf(out.p3, out.q3), super: seOf(out.p4, out.q4), hidden: seOf(out.p5, out.q5)};
   out.sd = Math.sqrt(Math.max(0, out.sq / out.n - out.mean * out.mean));
   out.se = out.sd / Math.sqrt(out.n);
   return out;

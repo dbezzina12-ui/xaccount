@@ -7,13 +7,16 @@
 //
 // 1. Bonus averages are pinned by their buy prices: Regular 96x (100x buy), Super 240x (250x buy), and Hidden 2,400x,
 //    which makes the Mystery Buy's 50/40/10 mix return 96% of 400x.
-// 2. Line pays keep their shape and scale by one factor, rounded to 0.01x, so base spins return 96% with those bonuses.
-//    The base scatter chance then absorbs the rounding.
-// 3. Each bonus has one knob: Regular's second-Wild chance (it always lands one Wild, on premium-rich reels), Super's
-//    Wild chance, and Hidden's odds of boosting 2 or 3 cells rather than 1 (1 : x : x/3; it always lands one Wild and
-//    a second 3% of the time). Even a second Wild never alone takes Hidden too high to reach its target.
-// 4. Signal Boost's scatter chance makes its 3x spins return 96%. Scout Run keeps the base game and adds its Wild: its
-//    price is what it returns over 96%.
+// 2. Line pays keep their shape and scale by one factor, rounded to 0.01x, so base spins return 96% with those bonuses
+//    at their trigger chances. The base FS chance then absorbs the rounding.
+// 3. One knob per bonus: Regular's second-Wild chance (it always lands one, on premium-rich symbols), Super's Wild
+//    chance, and Hidden's odds of boosting 2 or 3 cells rather than 1 (1 : x : x/3; it always lands one Wild, a second
+//    3% of the time).
+// 4. One knob per paid feature, each at its price: Signal Boost's FS chance (3x); Pollen Charge's second-Wild chance
+//    (20x; it always lands one, with its seeds leaning to 16x and 32x); Hive Overdrive's tumble-Wild chance (250x; two
+//    opening Wilds often, on premium-rich symbols). Scout Run keeps the base game plus its Wild, priced at its return.
+// A paid mode's return: its line wins plus, for each bonus, the chance of triggering it (importance-sampled) times its
+// target average.
 import fs from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {simulate} from './robobees-sim.mjs';
@@ -21,13 +24,13 @@ import {simulate} from './robobees-sim.mjs';
 const RULES = fileURLToPath(new URL('../../games/robobees/dist/rules.mjs', import.meta.url));
 export const RTP = 0.96;
 export const TARGET = {regular: 96, super: 240, hidden: 2400};
+export const PRICE = {enhanced: 3, random: 20, full32: 250};
+export const BOOST = 0.2;
 const SHAPE = {hive: [2, 6, 18], nectar: [1.4, 4, 12], stinger: [1, 3, 9], rotor: [0.8, 2, 7], beacon: [0.6, 1.8, 6], A: [0.4, 1.2, 4], K: [0.4, 1.2, 4], Q: [0.3, 0.9, 3], J: [0.3, 0.9, 3], 10: [0.3, 0.9, 3]};
-const N = {lines: 8e6, regular: 3e5, super: 3e5, hidden: 1.5e5};
+const N = {base: 4e6, enhanced: 3e6, scout: 3e6, random: 2e6, full32: 4e5, regular: 3e5, super: 3e5, hidden: 1.5e5};
 
-/** chance of exactly k FS on 5 reels, each landing one with chance p */
-export const fsChance = (p, k) => [1, 5, 10, 10, 5, 1][k] * p ** k * (1 - p) ** (5 - k);
-/** what a paid spin's bonuses return on average, if each bonus pays its target */
-export const bonusReturn = (p) => fsChance(p, 3) * TARGET.regular + fsChance(p, 4) * TARGET.super + fsChance(p, 5) * TARGET.hidden;
+/** what a paid mode returns per spin: line wins plus each bonus's trigger chance times its target */
+export const modeReturn = (l) => l.mean + l.rates.regular * TARGET.regular + l.rates.super * TARGET.super + l.rates.hidden * TARGET.hidden;
 
 /** a root of f on [lo, hi] (f increasing or decreasing), Illinois regula falsi, to tolerance tol in x */
 async function solve(f, lo, hi, tol, label) {
@@ -60,34 +63,48 @@ export async function fit() {
   const math = {
     cap: 25000,
     pays: SHAPE,
-    weights: {base: [2, 3], regular: [4, 2], super: [2, 3], hidden: [2, 3]},
-    wilds: {base: [0.33, 0.08], regular: [1, 0.3], super: [0.4, 0.1], hidden: [1, 0.03]},
+    weights: {base: [2, 3], random: [2, 3], full32: [4, 2], regular: [4, 2], super: [2, 3], hidden: [2, 3]},
+    wilds: {base: [0.33, 0.08], random: [1, 0.3], full32: [1, 0.6], regular: [1, 0.3], super: [0.4, 0.1], hidden: [1, 0.03]},
+    refillWild: {base: 0.02, random: 0.02, full32: 0.08, regular: 0.02, super: 0.02, hidden: 0.02},
     scatter: {base: 0.075, enhanced: 0.115},
     boosts: [1, 0.5, 0.5 / 3],
+    pollen: [0.1, 0.12, 0.18, 0.3, 0.3],
     mystery: [0.5, 0.4, 0.1],
   };
-  const lines = async (m, feature, seed) => (await simulate('lines', m, {feature, n: N.lines, seed})).mean;
-  // 2. scale the line pays
-  const l0 = await lines(math, null, 11);
-  const k = (RTP - bonusReturn(math.scatter.base)) / l0;
+  const tuned = (patch) => {
+    const m = structuredClone(math);
+    for (const [path, v] of Object.entries(patch)) {
+      const ks = path.split('.');
+      let o = m;
+      while (ks.length > 1) o = o[ks.shift()];
+      o[ks[0]] = v;
+    }
+    return m;
+  };
+  const paid = (m, feature, seed) => simulate('lines', m, {feature, n: N[feature ?? 'base'], seed, boost: BOOST});
+  const bonus = async (m, mode, seed) => (await simulate('bonus', m, {mode, n: N[mode], seed})).mean;
+  // 2. scale the line pays, then let the base FS chance absorb their rounding
+  const l0 = await paid(math, null, 11);
+  const k = (RTP - (modeReturn(l0) - l0.mean)) / l0.mean;
   math.pays = Object.fromEntries(Object.entries(SHAPE).map(([s, v]) => [s, v.map((x) => Math.round(x * k * 100) / 100)]));
-  console.error(`line pays x${k.toFixed(4)} (base lines ${l0.toFixed(4)} per spin before)`);
-  // the base scatter chance absorbs the rounding of the pays
-  math.scatter.base = await solve(async (p) => (await lines({...math, scatter: {...math.scatter, base: p}}, null, 11)) + bonusReturn(p) - RTP, 0.06, 0.09, 2e-6, 'base scatter');
-  // 3. one knob per bonus
-  const bonus = async (mode, m, seed) => (await simulate('bonus', m, {mode, n: N[mode], seed})).mean;
-  math.wilds.regular[1] = await solve(async (x) => (await bonus('regular', {...math, wilds: {...math.wilds, regular: [1, x]}}, 21)) - TARGET.regular, 0, 1, 1e-5, 'regular 2nd wild');
-  math.wilds.super[0] = await solve(async (x) => (await bonus('super', {...math, wilds: {...math.wilds, super: [x, 0.1]}}, 22)) - TARGET.super, 0.15, 0.95, 1e-5, 'super wild');
-  const boost = await solve(async (x) => (await bonus('hidden', {...math, boosts: [1, x, x / 3]}, 23)) - TARGET.hidden, 0.01, 1, 1e-5, 'hidden boosts');
-  math.boosts = [1, boost, boost / 3];
-  // 4. Signal Boost's scatter, then Scout Run's price
-  math.scatter.enhanced = await solve(async (p) => ((await lines({...math, scatter: {...math.scatter, enhanced: p}}, 'enhanced', 12)) + bonusReturn(p)) / 3 - RTP, 0.1, 0.25, 2e-6, 'signal boost scatter');
-  const scout = (await lines(math, 'scout', 13)) + bonusReturn(math.scatter.base);
+  console.error(`line pays x${k.toFixed(4)} (base lines ${l0.mean.toFixed(4)} per spin before)`);
+  math.scatter.base = await solve(async (p) => modeReturn(await paid(tuned({'scatter.base': p}), null, 11)) - RTP, 0.06, 0.09, 2e-6, 'base FS chance');
+  // 3. the bonuses
+  math.wilds.regular[1] = await solve(async (x) => (await bonus(tuned({'wilds.regular': [1, x]}), 'regular', 21)) - TARGET.regular, 0, 1, 1e-5, 'regular 2nd wild');
+  math.wilds.super[0] = await solve(async (x) => (await bonus(tuned({'wilds.super': [x, 0.1]}), 'super', 22)) - TARGET.super, 0.15, 1, 1e-5, 'super wild');
+  const b = await solve(async (x) => (await bonus(tuned({boosts: [1, x, x / 3]}), 'hidden', 23)) - TARGET.hidden, 0.001, 1.5, 1e-5, 'hidden boosts');
+  math.boosts = [1, b, b / 3];
+  // 4. the paid features
+  math.scatter.enhanced = await solve(async (p) => modeReturn(await paid(tuned({'scatter.enhanced': p}), 'enhanced', 12)) / PRICE.enhanced - RTP, 0.08, 0.3, 2e-6, 'signal boost FS chance');
+  math.wilds.random[1] = await solve(async (x) => modeReturn(await paid(tuned({'wilds.random': [1, x]}), 'random', 14)) / PRICE.random - RTP, 0, 1, 1e-5, 'pollen 2nd wild');
+  math.refillWild.full32 = await solve(async (x) => modeReturn(await paid(tuned({'refillWild.full32': x}), 'full32', 15)) / PRICE.full32 - RTP, 0.005, 0.4, 1e-5, 'overdrive tumble wild');
+  const scout = modeReturn(await paid(math, 'scout', 13));
   const round = (x, d) => Math.round(x * 10 ** d) / 10 ** d;
-  math.scatter.base = round(math.scatter.base, 6);
-  math.scatter.enhanced = round(math.scatter.enhanced, 6);
+  for (const key of ['base', 'enhanced']) math.scatter[key] = round(math.scatter[key], 6);
   math.wilds.regular[1] = round(math.wilds.regular[1], 5);
   math.wilds.super[0] = round(math.wilds.super[0], 5);
+  math.wilds.random[1] = round(math.wilds.random[1], 5);
+  math.refillWild.full32 = round(math.refillWild.full32, 5);
   math.boosts = math.boosts.map((v) => round(v, 5));
   return {math, scoutPrice: round(scout / RTP, 2), scoutReturn: scout};
 }
@@ -98,7 +115,7 @@ export function write({math, scoutPrice}) {
   const a = src.indexOf('export const MATH={');
   const b = src.indexOf('\n};\n', a) + 4;
   const j = (v) => JSON.stringify(v).replace(/"([A-Za-z_][A-Za-z0-9_]*|\d+)":/g, '$1:');
-  const block = `export const MATH={\n cap:${math.cap},\n pays:${j(math.pays)},\n weights:${j(math.weights)},\n wilds:${j(math.wilds)},\n scatter:${j(math.scatter)},\n boosts:${j(math.boosts)},\n mystery:${j(math.mystery)},\n};\n`;
+  const block = `export const MATH={\n${Object.entries(math).map(([k, v]) => ` ${k}:${j(v)},`).join('\n')}\n};\n`;
   src = src.slice(0, a) + block + src.slice(b);
   src = src.replace(/(scout:\{price:)[0-9.]+/, `$1${scoutPrice}`);
   fs.writeFileSync(RULES, src);

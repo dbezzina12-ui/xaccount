@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
-import {start,spin,evaluate,refill,features} from '../dist/rules.mjs';
+import {MATH,start,spin,evaluate,refill,features} from '../dist/rules.mjs';
 
 let seed=982341;
 const random=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);
 const indices=Array.from({length:20},(_,i)=>i);
 const blank=()=>Array(20).fill(0);
 const charge=n=>Math.min(128,Math.max(2,n*2));
-let tumbles=0,freshWilds=0,carriedWilds=0,lateFS=0;
+let tumbles=0,freshWilds=0,carriedWilds=0,lateFS=0,maxWins=0;
 function verify(state,r,mode){
  const bonus=state.mode!=='base',swarm=['super','hidden'].includes(state.mode);
  const touched=new Set();let active=[...r.prior],bank=state.bank,amount=0;
@@ -50,19 +50,24 @@ function verify(state,r,mode){
   for(const i of w.drops)assert.notEqual(w.landed[i],'W');
   assert.deepEqual(w.board,w.landed.map((id,i)=>w.drops.includes(i)?'W':id));
   bank-=w.drops.length;
-  const score=evaluate(w.board,w.active);
+  const score=evaluate(w.board,w.active),last=n===r.steps.length-1;
+  // the cap: the step that reaches it pays only what is left, and ends the chain
+  if(r.maxWin&&last){assert.ok(w.amount<=score.amount);score.amount=w.amount}
   assert.deepEqual(w.hit,score.hit);assert.equal(w.amount,score.amount);
   active=active.map((v,i)=>score.hit.includes(i)?charge(v):v);
   assert.deepEqual(w.after,active);score.hit.forEach(i=>touched.add(i));
   amount+=score.amount;
  }
- assert.equal(r.limited,false);assert.equal(r.steps.at(-1).hit.length,0);
+ assert.equal(r.limited,false);
  assert.equal(r.amount,Math.round(amount*100)/100);
- assert.equal(r.state.left,Math.max(0,state.left-1));assert.equal(r.state.bank,bank);
- if(r.finale)assert.equal(bank,0);
+ const room=Math.round((MATH.cap-(bonus?state.total+(state.carry||0):0))*100)/100;
+ if(r.maxWin){maxWins++;assert.equal(r.amount,room);assert.equal(r.trigger,null);assert.equal(r.state.left,0)}
+ else{assert.ok(r.amount<room);assert.equal(r.steps.at(-1).hit.length,0);assert.equal(r.state.left,Math.max(0,state.left-1))}
+ assert.equal(r.state.bank,bank);
+ if(r.finale&&!r.maxWin)assert.equal(bank,0);
  assert.deepEqual(r.state.spots,bonus?active:active.map((v,i)=>r.seeded||!touched.has(i)?0:v));
  const fs=r.board.filter(x=>x==='FS').length;
- assert.equal(r.trigger,bonus?null:({3:'regular',4:'super',5:'hidden'}[fs]??null));
+ if(!r.maxWin)assert.equal(r.trigger,bonus?null:({3:'regular',4:'super',5:'hidden'}[fs]??null));
 }
 for(const mode of ['regular','super','hidden']){
  for(let run=0;run<1500;run++){
@@ -87,4 +92,10 @@ assert.deepEqual([0,5,10,15].map(i=>gravity.from[i]),[-2,-1,0,2]);
 assert.equal(gravity.landed[10],'0');assert.equal(gravity.landed[15],'10');
 assert.ok(freshWilds>0&&carriedWilds>0&&lateFS>0);
 assert.equal(features.random.price,20);assert.equal(features.full32.price,250);
-console.log('50,000 spins verified;',tumbles,'tumbles;',freshWilds,'new banked refill Wilds;',carriedWilds,'surviving Wild observations;',lateFS,'refill scatters.');
+// The cap counts a natural trigger spin's win (carry): a round near it pays only the rest, then ends.
+for(let run=0;run<300;run++){
+ const near={...start('hidden',run%2?400:0),left:5};near.spots.fill(128);near.total=MATH.cap-near.carry-150;
+ const r=spin(near,random);verify(near,r,null);
+ assert.ok(r.amount<=150);if(r.maxWin)assert.equal(r.state.total+near.carry,MATH.cap);
+}
+console.log('50,000 spins verified;',tumbles,'tumbles;',freshWilds,'new banked refill Wilds;',carriedWilds,'surviving Wild observations;',lateFS,'refill scatters;',maxWins,'rounds reached the cap.');
