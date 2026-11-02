@@ -6,6 +6,7 @@ Status: `todo` · `doing` · `review` (waiting on Dylan) · `done` · `blocked` 
 
 | ID | Task | Owner | Status | Notes |
 |---|---|---|---|---|
+| RB-10 | Glass FS with liquid honey | ChatGPT | done | Slosh, surface and bubbles respond on reel travel and landing. Phone Super replay verified. |
 | RB-09 | Tighten and animate FS letters | ChatGPT | done | Per-reel landing, synchronized tease and award verified at phone width. Replay with `?preview=scatter`. |
 | RB-08 | Larger, bolder FS scatter | ChatGPT | done | Standard and enamel palettes, phone reel stops and Super tease checked. |
 | RB-07 | Original-symbol colour preview | ChatGPT | review | The enamel palette is available at `?palette=enamel`. The standard entry retains the approved original colours. |

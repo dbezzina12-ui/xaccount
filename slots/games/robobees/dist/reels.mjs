@@ -1,12 +1,13 @@
 // The reel strip starts on the outgoing four symbols and finishes on the
 // committed layout. The ramp follows Gnome Mercy's reelPosition profile.
 import {premiums,ranks} from './rules.mjs';
+import {addHoney,honeyStill} from './honey.mjs';
 const regular=[...premiums,...ranks];
 export function symbolClass(id){
  const type=ranks.includes(id)?'rank':id==='FS'?'special scatter':id==='W'?'special':'';
  return 'sym-'+id+' '+type;
 }
-export function symbolUrl(id){return 'assets/'+id+'.webp'+(id==='FS'?'?v=4':'')}
+export function symbolUrl(id){return id==='FS'?honeyStill:'assets/'+id+'.webp'}
 // Keep strip travel on the compositor while the camera zooms. The four
 // stops describe the same acceleration, cruise and braking distances.
 function stripTransform(rows){
@@ -20,20 +21,22 @@ export async function rollReels({cells,before,after,spots,place,turbo,reduced,sk
   const rows=[0,1,2,3],tease=scatters>=2&&(!turbo||purchased)&&!reduced;
   if(tease)extra+=purchased?980:760;
   const duration=reduced?0:(850+col*150+extra)*(turbo && !purchased ? .34 : 1);
+  const delay=reduced?0:col*(turbo?8:30);
   const fillerCount=9+col*2+Math.round(extra/60);
   const fillers=Array.from({length:fillerCount},()=>regular[Math.floor(Math.random()*regular.length)]);
   const ids=[...rows.map(i=>after[idx(i)]),...fillers,...rows.map(i=>before[idx(i)])];
   const view=document.createElement('div'),strip=document.createElement('div');
+  view.style.setProperty('--travel',duration+'ms');view.style.setProperty('--delay',delay+'ms');
   view.className='reel-viewport';strip.className='reel-strip';view.append(strip);board.append(view);
   view.style.gridColumn=(col+1)+' / span 1';view.style.gridRow='1 / span 4';
   // Only the symbols travel. Keep each multiplier bed in its own board position.
   for(const row of rows)cells[idx(row)].classList.add('rolling');
   for(const id of ids){
    const tile=document.createElement('div'),img=new Image();
-   tile.className='cell '+symbolClass(id);img.src=symbolUrl(id);img.alt='';tile.append(img);strip.append(tile);
+   tile.className='cell '+symbolClass(id);img.src=symbolUrl(id);img.alt='';tile.append(img);if(id==='FS')addHoney(tile);strip.append(tile);
   }
   scatters+=rows.filter(i=>after[idx(i)]==='FS').length;
-  return {view,strip,col,delay:reduced?0:col*(turbo?8:30),duration,steps:ids.length-4,tease,done:false};
+  return {view,strip,col,delay,duration,steps:ids.length-4,tease,done:false};
  });
  for(const p of plans){
   if(!p.duration)continue;

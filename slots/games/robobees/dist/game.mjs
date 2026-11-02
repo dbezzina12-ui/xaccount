@@ -2,7 +2,8 @@ import {playStinger,flyHiveBees} from './drone-stinger.mjs?v=13';
 import {mountMascot} from './mascot/mascot.mjs?v=5';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
-import {rollReels,symbolClass,symbolUrl} from './reels.mjs?v=21';
+import {rollReels,symbolClass,symbolUrl} from './reels.mjs?v=22';
+import {addHoney,prepareHoney} from './honey.mjs';
 import {buys,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=7';
 const $=id=>document.getElementById(id);
 const grid=$('board'),modal=$('menu'),intro=$('bonus-intro'),cabinet=grid.closest('.cab');
@@ -43,12 +44,12 @@ function save(){
 const cells=Array.from({length:20},(_,i)=>{
  const c=document.createElement('div');
  c.className='cell';c.style.setProperty('--reel',i%5);
- const rig=document.createElement('span');rig.className='fs-rig';rig.setAttribute('aria-hidden','true');
- c.append(new Image(),rig,document.createElement('span'));grid.append(c);return c;
+ c.append(new Image(),document.createElement('span'));grid.append(c);return c;
 });
 function cell(i,id,spots,hit=false){
  const c=cells[i],m=spots[i];c.className='cell '+symbolClass(id)+(m?' charged':'')+(hit?' hit':'');
  c.dataset.multi=m;
+ if(id==='FS')addHoney(c);else c.querySelector('.fs-rig')?.remove();
  c.firstChild.src=symbolUrl(id);c.firstChild.alt=id;c.lastChild.className='multi';c.lastChild.textContent=m?m+'×':'';c.lastChild.hidden=!m;c.lastChild.toggleAttribute('data-long',m>=100);
 }
 function draw(board,spots,hits=[]){cells.forEach((_,i)=>cell(i,board[i],spots,hits.includes(i)))}
@@ -134,8 +135,9 @@ async function showRoll(landing,spots,purchased=false){
   land:(col,scatters)=>{
    if(!scatters){tone(200+col*30,.06);return}
    count+=scatters;
-   if(!reduced&&!stop)for(let i=col;i<20;i+=5){
-    if(landing[i]==='FS')cells[i].querySelector('.fs-rig').classList.add('latching');
+   if(stop)grid.classList.add('fs-fast');
+   if(!reduced)for(let i=col;i<20;i+=5){
+    if(landing[i]==='FS')cells[i].querySelector('.fs-rig')?.classList.add('latching');
    }
    tone(410*1.16**count,.22);
    $('notice').textContent=count+' FS landed'+(count===2?' · One more for free spins':'');
@@ -306,7 +308,7 @@ document.addEventListener('keydown',e=>{
 });
 document.body.dataset.scene=state.mode;
 mascot.setBank(state.mode==='base'?0:state.bank,{animate:false});
-draw(face,state.spots);labels();
+draw(face,state.spots);labels();void prepareHoney();
 if(state.left===10&&(state.mode==='super'||state.mode==='hidden')){
  lock(true);primeBoard().finally(()=>{lock(false);scheduleBonus()});
 }else scheduleBonus();

@@ -4,6 +4,14 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-02 · ChatGPT → Claude · Honey-filled FS
+
+**Did** Built a transparent glass FS with two hollow letters, a moving amber fill line, a few air bubbles and a fixed rim. Reel acceleration and braking tip the fill. The liquid rebounds after the shell settles. The shop and reduced-motion views show the same filled silhouette.
+
+**Files** `slots/games/robobees/dist/assets/fs-honey.svg` is the layered source. `assets/FS.webp` is its still export. `honey.mjs`, `presentation.css`, `game.mjs` and `reels.mjs` drive the reel presentation.
+
+**Verification** Four FS reached the Super award at 390px width. The travel, landing, crest and bubble animations ran. Bonus rules passed 40,000 spins. Use `?palette=enamel&preview=scatter` for the replay.
+
 ### 2026-11-02 · ChatGPT → Claude · FS scatter spacing and landing
 
 The ivory F and orange S now tuck together on the reel and in the bonus shop. The two faces spring into place independently when their reel stops, hold together through the tease and pulse before the award. The moving strip and reduced-motion view use a matching still. Open `?preview=scatter` and select **Play FS landing** for a replay on the real reels. At a 390px phone width the replay registered four landed scatters, both letter animations, the anticipation wave and the Super award. The bonus rules suite passed 40,000 spins.
