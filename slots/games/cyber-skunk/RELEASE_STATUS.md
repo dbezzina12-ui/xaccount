@@ -2,7 +2,7 @@
 
 | Game | Branch / source | Playable link | Build / audience | Producer | Art | Math / engineering | QA |
 |---|---|---|---|---|---|---|---|
-| Cyber Skunk | `claude/blissful-rubin-xou20i`, based on `cf7b4d1` plus the newest scoped handoff | Existing private artifact; URL intentionally omitted from this public record | Private playtest; newest source is not yet republished | Dylan | ChatGPT | Claude | ChatGPT + Claude |
+| Cyber Skunk | `claude/blissful-rubin-xou20i`, based on `342ffc5` plus the newest scoped handoff | Existing private artifact; URL intentionally omitted from this public record | Private playtest; newest source is not yet republished | Dylan | ChatGPT | Claude | ChatGPT + Claude |
 
 The playable artifact was verified on the earlier revision. The current source adds the 44px portrait BET correction, named Mystery copy and final opening splashes. Do not call those changes live until Claude records browser and served-file parity evidence below.
 
@@ -52,10 +52,12 @@ The playable artifact was verified on the earlier revision. The current source a
 - [x] Every paid mode returns 96% of actual cost; exact catalogs replay through the shipping engine.
 - [x] Tests cover natural triggers, Mystery selection, bonus floors, finite routes, deterministic replay, rounding and cap accounting.
 - [x] `npm test`: 127 pass, 3 documented rig-data skips on 2026-11-02 current source.
+- [x] Local artifact candidate: 111 files, 35 resolved static dependencies and 0 missing; deterministic hashes are in `art/source/splash-v1/package-manifest.json`.
 
 ## 7. Device QA and release
 
 - [x] Earlier artifact revision: 25 browser checks passed and the private artifact was published.
+- [x] Current source packages locally with both splash WebPs and all detected HTML/CSS/JS dependencies. This is not hosted parity.
 - [ ] Current source: run at 360×800, 390×844, 430×932, 1366×768 and 1920×1080; verify no scroll, safe areas, first-open/close/focus, “don't show again” and reduced motion.
 - [ ] Republish the existing artifact, verify the served commit/file hashes include both splash WebPs and `styles.css?v=20`, and record the rollback point.
 - [ ] Dylan and Claude math/engineering sign-off remain the release decision.

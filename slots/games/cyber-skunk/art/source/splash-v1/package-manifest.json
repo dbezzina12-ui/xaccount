@@ -1,0 +1,17 @@
+{
+  "status": "pass",
+  "scope": "static local package only; not browser QA or hosted served-file parity",
+  "artifact_file_count": 111,
+  "static_reference_count": 35,
+  "missing_references": [],
+  "required_files": {
+    "assets/ui/splash-desktop.webp": "b446a7bd0d85b1b7587ddbcb273898b42806470799c23ba1695e288286d3ff9f",
+    "assets/ui/splash-mobile.webp": "68d284426b15e09487a8f35ae9ed9d160daf2baaea109e17db691817521101c6",
+    "styles.css": "4b4bfa61777bd871e47dd6ed7aaa682fce6109fa631b7736b249eb54900ff4f1",
+    "entry-shop.css": "5bebafe6832a39400f436b1b81ae4d4d8ff7ca4689f2a0dd9557e2d5fccacb98",
+    "launch.js": "65e3dd6d1b3de2267c9d7ee8c15011e38a3a931090103cec5083f1e7b3a5f0b3",
+    "app.js": "4afc582d9d59f70122e3938c8b83968094811e472df088dd2d75939e97bdff39"
+  },
+  "package_page_sha256": "7f92ce783973279129e2daee672874cf2dd5bfab7a20121e8a86af9106d94558",
+  "package_files_json_sha256": "afd0f673f14303a07bcf44aa7384ca8a96b6f8bfc383e0a2984fd153f4b555bd"
+}

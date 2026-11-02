@@ -8,3 +8,5 @@ This deterministic batch completes ART_SPEC §8's final two source inputs:
 Both are static opening illustrations assembled from the approved production hall, cabinet, logo, character-free symbols and compact mascot reference. The flattened splash mascot does not replace the articulated v4.1 runtime rig. Prices, rules, controls and outcomes remain live UI and are not baked into the art.
 
 Run `python3 slots/games/cyber-skunk/art/source/splash-v1/build.py` from any directory. The builder recreates both PNGs, `review.jpg`, and `manifest.json` with hashes and safe-zone luminance checks. The repo PNGs use a deterministic 96-colour painted palette and a 2/3-scale master inside the exact target canvas; prep converts them to runtime WebP.
+
+After prep and intro wiring, run `node slots/games/cyber-skunk/art/source/splash-v1/verify-package.mjs`. It invokes the real artifact packager, resolves local HTML/CSS/JS dependencies, checks both responsive splash references and writes `package-manifest.json`. This is static package evidence only; Claude still supplies browser screenshots and hosted served-file parity.
