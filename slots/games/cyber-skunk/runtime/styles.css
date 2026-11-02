@@ -284,10 +284,10 @@ dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}
 
 
 /* A feature showcase built out of the same hall, vent and dial as the game. */
-.intro{position:fixed;inset:0;z-index:70;display:flex;overflow-y:auto;overscroll-behavior:contain;isolation:isolate;padding:clamp(14px,3vh,34px) max(18px,4vw) max(18px,env(safe-area-inset-bottom));background:linear-gradient(180deg,#060c1199,#09111990 47%,#060d12ee),url(assets/bg/bg-desktop.webp) center/cover no-repeat}
+.intro{position:fixed;inset:0;z-index:70;display:flex;overflow-y:auto;overscroll-behavior:contain;isolation:isolate;padding:clamp(14px,3vh,34px) max(18px,4vw) max(18px,env(safe-area-inset-bottom));background:linear-gradient(180deg,#060c115c,#09111982 47%,#060d12f2),url(assets/ui/splash-desktop.webp) center top/cover no-repeat}
 .intro-inner{width:min(1080px,100%);margin:auto;display:grid;justify-items:center;gap:clamp(10px,2vh,22px);animation:panel-in .36s ease-out}
 .intro h2{margin:0;line-height:0}
-.intro-mark{display:block;width:min(390px,54vw,48vh);max-height:17vh;object-fit:contain;filter:drop-shadow(0 5px 12px #0009)}
+.intro-mark{display:block;width:min(390px,54vw,48vh);max-height:17vh;object-fit:contain;opacity:0;pointer-events:none}
 .intro-cards{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2.7vw,38px);touch-action:pan-y}
 .intro-card{--accent:#cd8eff;--wash:#7033bb;display:grid;grid-template-rows:auto 1fr;min-width:0;text-align:center;isolation:isolate}
 .intro-card:nth-child(2){--accent:#95e4da;--wash:#1c837b}
@@ -311,7 +311,7 @@ dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}
 .intro-skip input{width:18px;height:18px;accent-color:var(--amber)}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 @media(max-width:759px){
- .intro{background-image:linear-gradient(180deg,#07101675,#07101680 45%,#070e14f0),url(assets/bg/bg-mobile.webp);padding:14px max(18px,5vw) max(14px,env(safe-area-inset-bottom))}
+ .intro{background-image:linear-gradient(180deg,#07101652,#07101680 45%,#070e14f2),url(assets/ui/splash-mobile.webp);background-position:center top;padding:14px max(18px,5vw) max(14px,env(safe-area-inset-bottom))}
  .intro-inner{max-width:410px;gap:10px}
  .intro-mark{width:min(300px,76vw);max-height:17svh}
  .intro-cards{display:block;max-width:360px}
