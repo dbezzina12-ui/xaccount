@@ -1,11 +1,11 @@
-/* Opt-in enamel colour study. These filters affect symbol pixels only. */
-.enamel-preview .sym-nectar{--enamel:url(#enamel-nectar)}
-.enamel-preview .sym-rotor{--enamel:url(#enamel-rotor)}
-.enamel-preview .sym-stinger{--enamel:url(#enamel-stinger)}
-.enamel-preview .sym-beacon{--enamel:url(#enamel-beacon)}
-.enamel-preview .rank{--enamel:saturate(.12) brightness(.92)}
-.enamel-preview .cell:not(.special) img{filter:var(--enamel,) drop-shadow(0 3px 2px #09090899)}
-.enamel-preview #bonus-menu .card-emblem>img{filter:var(--enamel,) drop-shadow(0 6px 5px #0008)}
+/* Default enamel colours. The original-palette link omits these sprite filters. */
+.enamel-symbols .sym-nectar{--enamel:url(#enamel-nectar)}
+.enamel-symbols .sym-rotor{--enamel:url(#enamel-rotor)}
+.enamel-symbols .sym-stinger{--enamel:url(#enamel-stinger)}
+.enamel-symbols .sym-beacon{--enamel:url(#enamel-beacon)}
+.enamel-symbols .rank{--enamel:saturate(.12) brightness(.92)}
+.enamel-symbols .cell:not(.special) img{filter:var(--enamel,) drop-shadow(0 3px 2px #09090899)}
+.enamel-symbols #bonus-menu .card-emblem>img{filter:var(--enamel,) drop-shadow(0 6px 5px #0008)}
 /* Fixed position multipliers are engraved on the bed behind the reel symbols. */
 .cell .multi{inset:0;display:grid;place-items:center;z-index:0;padding:0;background:none;border:0;box-shadow:none;border-radius:0;
  color:var(--multi-ink,#ffcf91);font:950 64cqmin/.9 system-ui,sans-serif;letter-spacing:-.095em;-webkit-text-stroke:1px var(--multi-bed,#43301c);paint-order:stroke fill;

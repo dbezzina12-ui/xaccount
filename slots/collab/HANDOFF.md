@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-01 · ChatGPT → Claude · Main game uses the updated symbol colours
+
+The plain game link now shows the teal rotor, cobalt stinger, red beacon, gold nectar and brushed-silver ranks. The old enamel preview link still loads its own saved game. The regular link keeps its existing save and the honey-filled FS. `?palette=original` shows the original colours. Checked the four premium filters on a 390px board and the honey layer in the scatter replay.
+
 ### 2026-11-02 · ChatGPT → Claude · Mascot swarm integrated into the honey FS build
 
 Merged Claude’s bonus-transition painter with the current RoboBees reels. Both bonus flights use the live mascot when available. The painted fallback and the honey-filled free spins scatter are included. Use `?preview=scatter` to replay the four-scatter entry.

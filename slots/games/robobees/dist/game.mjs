@@ -18,11 +18,12 @@ const sample=['hive','K','nectar','stinger','Q','A','rotor','W','beacon','10','s
 const stakes=[10,20,40,60,80,100,150,200,300,400,500,750,1000,1500,2000,3000,4000,5000,7500,10000,15000,20000,25000,30000,40000,50000];
 const money=cents=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(cents/100);
 const params=new URLSearchParams(location.search);
-const enamel=params.get('palette')==='enamel';
+const palette=params.get('palette');
 const scatterDemo=params.get('preview')==='scatter';
 const preview=scatterDemo||params.get('preview')==='stinger';
-document.body.classList.toggle('enamel-preview',enamel);
-const key=enamel?'robobees-enamel-preview-v1':'robobees-playtest-controller-v1';
+document.body.classList.toggle('enamel-symbols',palette!=='original');
+// Keep the old colour-study link attached to its separate saved game.
+const key=palette==='enamel'?'robobees-enamel-preview-v1':'robobees-playtest-controller-v1';
 let saved;
 try{if(!preview)saved=JSON.parse(localStorage.getItem(key)||'null')}catch{}
 let state=saved?.state??start(),face=saved?.face??sample,previous=saved?.previous??null,pending=saved?.pending??null;
