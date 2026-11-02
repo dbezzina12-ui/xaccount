@@ -78,10 +78,6 @@
  .brand small{display:none}
  #controller{width:min(740px,98vw);margin-top:8px}
 }
-.cell.fs-land{box-shadow:inset 0 0 0 2px #ffad47;background:radial-gradient(ellipse,#805027,#3f3024)}
-.cell.fs-land img{animation:fs-lock .34s ease-out}
-@keyframes fs-lock{0%{transform:translateY(-12%)}55%{transform:translateY(3%)}100%{transform:translateY(0)}}
-@media(prefers-reduced-motion:reduce){.cell.fs-land img{animation:none}}
 dialog.shop{width:min(735px,94vw);max-height:92svh;overflow:auto}
 .shop-tools,.shop-bet,.buy-actions,.buy-summary span{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .shop-tools{border-block:1px solid #796e59;padding:10px 0;margin-bottom:12px}

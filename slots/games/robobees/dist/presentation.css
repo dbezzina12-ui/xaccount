@@ -33,16 +33,47 @@
 .cell.show-value img{opacity:.1}
 .cell.show-value .multi{opacity:1;animation:stamp-in .32s ease-out}
 @keyframes stamp-in{from{transform:scale(1.12)}to{transform:scale(1)}}
-/* Scatter enamel scan and landing compression are confined to the FS silhouette. */
-.cell.scatter::after{content:"";position:absolute;inset:0;margin:auto;width:var(--art-width,96%);height:var(--art-height);pointer-events:none;z-index:2;
- mask:url(assets/FS.webp?v=3) center/contain no-repeat;background:linear-gradient(110deg,transparent 36%,#fff8ccf2 47%,transparent 57%) 130% 0/300% 100%;animation:fs-scan 3.2s ease-in-out infinite}
-.reel-strip .scatter::after{display:none}
-@keyframes fs-scan{0%,28%{background-position:120% 0}62%,100%{background-position:-20% 0}}
-.cell.fs-land img{animation:fs-touch .54s cubic-bezier(.23,1,.3,1)}
-@keyframes fs-touch{0%{transform:translateY(-12%) scale(.96,1.03)}30%{transform:translateY(2%) scale(1.08,.92)}62%{transform:translateY(-3%) scale(.99,1.03)}100%{transform:none}}
+/* The still art rides the reel. Once parked, its two actual letter faces move independently. */
+.fs-rig{display:none}
 .anticipation>.cell:not(.scatter) img{filter:var(--enamel,) drop-shadow(0 3px 2px #09090899) saturate(.22) brightness(.73)}
-.anticipation>.cell.scatter img,.fs-awarded>.cell.scatter img{animation:fs-arm .65s ease-in-out infinite alternate}
-@keyframes fs-arm{to{transform:translateY(-3%) scale(1.055);filter:drop-shadow(0 0 6px #ffaf42)}}
+@media(prefers-reduced-motion:no-preference){
+ #board:not(.priming)>.scatter:not(.rolling)>img{opacity:0}
+ #board:not(.priming)>.scatter:not(.rolling)>.fs-rig{
+  display:block;position:relative;grid-area:1/1;margin:auto;width:min(var(--art-width),calc(var(--art-height)*512/428));
+  aspect-ratio:512/428;pointer-events:none;z-index:1;
+ }
+ .fs-rig::before,.fs-rig::after{
+  content:"";position:absolute;inset:0;background:url(assets/fs-letters.webp) center/100% 100% no-repeat;
+ }
+ .fs-rig::before{clip-path:inset(0 50% 0 0);translate:3.125% 0;transform-origin:26% 68%}
+ .fs-rig::after{clip-path:inset(0 0 0 50%);translate:-3.125% 0;transform-origin:74% 56%}
+ .fs-rig.latching::before{animation:fs-seat-f var(--seat,.53s) cubic-bezier(.18,.72,.26,1) both}
+ .fs-rig.latching::after{animation:fs-seat-s var(--seat,.53s) cubic-bezier(.18,.72,.26,1) both}
+ .fs-fast{--seat:.24s}
+ @keyframes fs-seat-f{
+  0%{transform:translate(-13%,-24%) rotate(-20deg) scale(.78)}
+  42%{transform:translate(4%,3%) rotate(6deg) scale(1.04,.93)}
+  66%{transform:translate(-2%,-1%) rotate(-3deg)}100%{transform:none}
+ }
+ @keyframes fs-seat-s{
+  0%{transform:translate(24%,12%) rotate(22deg) scale(.52,.85)}
+  24%{transform:translate(15%,8%) rotate(14deg) scale(.80,.94)}
+  56%{transform:translate(-4%,-1%) rotate(-6deg) scale(1.04,1)}
+  77%{transform:translate(2%,0) rotate(2deg)}100%{transform:none}
+ }
+ #board.anticipation>.scatter:not(.rolling)>.fs-rig{animation:fs-coil .84s ease-in-out infinite}
+ #board.fs-awarded>.scatter>.fs-rig{animation:fs-release var(--burst,.68s) ease-out both}
+ .fs-fast{--burst:.26s}
+ @keyframes fs-coil{0%,100%{transform:none}46%{transform:translateY(-4%) scale(1.065);filter:drop-shadow(0 0 3px #ffc169) brightness(1.14)}}
+ @keyframes fs-release{0%{transform:scale(.93)}32%{transform:scale(1.09);filter:drop-shadow(0 0 5px #ffb04b) brightness(1.26)}100%{transform:none}}
+ /* An open hexagonal radio wave leaves the lock as the hive answers. */
+ #board:is(.anticipation,.fs-awarded)>.scatter:not(.rolling)::after{
+  content:"";position:absolute;inset:2%;pointer-events:none;background:url(assets/fs-signal.svg) center/contain no-repeat;
+  animation:fs-wave .84s ease-out infinite;
+ }
+ #board.fs-awarded>.scatter:not(.rolling)::after{animation:fs-wave var(--burst,.68s) ease-out both}
+ @keyframes fs-wave{0%{opacity:0;transform:scale(.45)}22%{opacity:.9}83%,100%{opacity:0;transform:scale(1.05)}}
+}
 .reel-viewport.tease{filter:none;outline:none}
 .reel-viewport.tease::after{content:"";position:absolute;inset:0;pointer-events:none;border:2px solid #ffbc62;border-radius:4px;box-shadow:inset 0 0 18px #f88d353b;animation:signal-pulse .56s ease-in-out infinite alternate}
 @keyframes signal-pulse{to{border-color:#fff2bb;box-shadow:inset 0 0 26px #f88d3560}}
@@ -89,7 +120,7 @@ body[data-scene=hidden] .grove-backdrop img{filter:brightness(.87) saturate(.95)
 #bonus-menu .shop-tabs button[aria-pressed=true]{background:#f7af62;color:#221a11}
 #bonus-menu .card-action{text-transform:uppercase}
 #bonus-menu .card-emblem img{object-fit:contain}
-@media(prefers-reduced-motion:reduce){.cell.scatter::after,.cell.fs-land img,.anticipation>.cell.scatter img,.fs-awarded>.cell.scatter img,.reel-viewport.tease::after,.cell.show-value .multi{animation:none}.cell img{transition:none}}
+@media(prefers-reduced-motion:reduce){.reel-viewport.tease::after,.cell.show-value .multi{animation:none}.cell img{transition:none}}
 #bonus-menu.shop .shop-bet-steps button{background:#342c22;border-color:#7c694f;color:#ffe6c7}
 /* An unbroken camera move across adjacent positions in the same environment. */
 .camera-window{width:100%;overflow:clip}

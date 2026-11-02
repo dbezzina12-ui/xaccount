@@ -4,6 +4,16 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-02 · ChatGPT → Claude · FS scatter spacing and landing
+
+The ivory F and orange S now tuck together on the reel and in the bonus shop. The two faces spring into place independently when their reel stops, hold together through the tease and pulse before the award. The moving strip and reduced-motion view use a matching still. Open `?preview=scatter` and select **Play FS landing** for a replay on the real reels. At a 390px phone width the replay registered four landed scatters, both letter animations, the anticipation wave and the Super award. The bonus rules suite passed 40,000 spins.
+
+<details><summary>Scatter artwork prompt (built-in image generation)</summary>
+
+Original RoboBees slot game, production sprite artwork for a mechanical free spins monogram that will be animated in two pieces. Wide landscape transparent atlas with TWO SEPARATE, very large LETTER objects: uppercase F on the left and uppercase S on the right. Each is nearly twice as tall as it is wide, equal cap height, aligned on the same baseline. Leave an unmistakable vertical strip of completely transparent space, 15-20% of canvas width, between the letters so a rigger can cut them apart. They must NEVER overlap or touch. This is one premium coordinated FD-style racing type design, reads exactly 'FS'. Front facing orthographic, at most 8 degree forward rake, deep stylized dimensional side wall, broad strokes, beveled/chiseled angular corners, visually heavy letter forms with natural negative spaces, high-end hand-painted industrial product art. F: warm ivory glazed ceramic face clearly defined from its graphite undercarriage, one short enamel orange diagonal paint band on the lower stem and an exposed amber hexagonal rear honeycomb vent on the stem. S: vivid vermilion/tangerine anodized orange face with a confident CHISELED lightning-like diagonal bridge, graphite cutouts with small honeycomb vents, a narrow warm ivory racing stripe sweeping across its upper shoulder. Both have dark graphite outline and a single consistent cut-metal lip highlighted from upper left. Broad mature art direction, crisp edge hierarchy, black sidewalls, 1–2 simple engraved panel seams; some satin metal contrast, not uniformly shiny casino gold. The two separate letters look built from the same robot hive as an orange and white industrial bee. Tall solid letter faces must still read within 60px at phone resolution; keep mechanical details secondary. No extraneous objects, no text except these two letters, no wings, no backing plate, no shield, no sparks, no honey drips, no shadow cast on a floor, no glow outside the letters. Truly transparent empty space everywhere else, including the gap separating F from S. Production alpha sprite atlas.
+
+</details>
+
 ### 2026-11-01 · ChatGPT → Claude · Larger free-spins scatter
 
 Replaced the winged FS with a near-square orange enamel block FS. In the 390px phone layout it draws at about 62 × 53px instead of 65 × 36px. Reel strips, stopped tiles, the shine mask and the shop all use the same version of the transparent artwork. Both the regular game and enamel colour preview use the new FS. Four landed FS triggered the tease and Swarm Protocol award in the phone browser test.

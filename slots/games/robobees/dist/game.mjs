@@ -2,7 +2,7 @@ import {playStinger,flyHiveBees} from './drone-stinger.mjs?v=13';
 import {mountMascot} from './mascot/mascot.mjs?v=5';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
-import {rollReels,symbolClass,symbolUrl} from './reels.mjs?v=20';
+import {rollReels,symbolClass,symbolUrl} from './reels.mjs?v=21';
 import {buys,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=7';
 const $=id=>document.getElementById(id);
 const grid=$('board'),modal=$('menu'),intro=$('bonus-intro'),cabinet=grid.closest('.cab');
@@ -18,7 +18,8 @@ const stakes=[10,20,40,60,80,100,150,200,300,400,500,750,1000,1500,2000,3000,400
 const money=cents=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(cents/100);
 const params=new URLSearchParams(location.search);
 const enamel=params.get('palette')==='enamel';
-const preview=params.get('preview')==='stinger';
+const scatterDemo=params.get('preview')==='scatter';
+const preview=scatterDemo||params.get('preview')==='stinger';
 document.body.classList.toggle('enamel-preview',enamel);
 const key=enamel?'robobees-enamel-preview-v1':'robobees-playtest-controller-v1';
 let saved;
@@ -42,7 +43,8 @@ function save(){
 const cells=Array.from({length:20},(_,i)=>{
  const c=document.createElement('div');
  c.className='cell';c.style.setProperty('--reel',i%5);
- c.append(new Image(),document.createElement('span'));grid.append(c);return c;
+ const rig=document.createElement('span');rig.className='fs-rig';rig.setAttribute('aria-hidden','true');
+ c.append(new Image(),rig,document.createElement('span'));grid.append(c);return c;
 });
 function cell(i,id,spots,hit=false){
  const c=cells[i],m=spots[i];c.className='cell '+symbolClass(id)+(m?' charged':'')+(hit?' hit':'');
@@ -125,18 +127,22 @@ async function feature(mode){
 async function showRoll(landing,spots,purchased=false){
  let count=0;
  grid.classList.remove('priming');
+ grid.classList.toggle('fs-fast',turbo);
+ for(const rig of grid.querySelectorAll('.fs-rig.latching'))rig.classList.remove('latching');
  await rollReels({cells,before:face,after:landing,spots,place:cell,turbo,reduced,purchased,skip:()=>stop,
   onTease:col=>{cabinet.classList.add('tease-zoom');grid.classList.add('anticipation');$('notice').textContent='Hive signal · Reel '+(col+1);tone(295+col*55,.30)},
   land:(col,scatters)=>{
    if(!scatters){tone(200+col*30,.06);return}
    count+=scatters;
-   for(let i=col;i<20;i+=5)if(landing[i]==='FS')cells[i].classList.add('fs-land');
+   if(!reduced&&!stop)for(let i=col;i<20;i+=5){
+    if(landing[i]==='FS')cells[i].querySelector('.fs-rig').classList.add('latching');
+   }
    tone(410*1.16**count,.22);
    $('notice').textContent=count+' FS landed'+(count===2?' · One more for free spins':'');
   }});
  if(count<3)cabinet.classList.remove('tease-zoom');
  grid.classList.remove('anticipation');
- if(count>=3){grid.classList.add('fs-awarded');await wait(320);grid.classList.remove('fs-awarded')}
+ if(count>=3&&!stop&&!reduced){grid.classList.add('fs-awarded');await wait(turbo?280:700);grid.classList.remove('fs-awarded')}
 }
 function flyAcross(release,cut){
  return playStinger({canvas:$('swarm-stinger'),scatterCells:cells.filter(c=>c.classList.contains('scatter')),reduced,
@@ -276,6 +282,7 @@ function choices(title,items){
  modal.showModal();
 }
 function action(name){
+ if(document.body.classList.contains('preview-ready')){if(name==='play')$('preview-stinger').click();return}
  if(!mute&&audio?.state!=='running')prepareFlightSound();
  if(name==='sound'){toggleSound();return}
  if(name==='turbo'){turbo=!turbo;save();labels();return}
@@ -306,14 +313,21 @@ if(state.left===10&&(state.mode==='super'||state.mode==='hidden')){
 if(pending){$('notice').textContent=modes[pending]+' unlocked · Press play to enter.';showAward()}
 
 if(preview){
- // The replay uses the exact award path, separate from the saved playtest.
- if(enamel)$('replay-stinger').href='?palette=enamel&preview=stinger';
- const entry=purchaseEntry('super');
- face=entry.board;draw(face,state.spots);pending='super';labels();
- document.body.classList.add('preview-ready');$('preview-stinger').hidden=false;$('replay-stinger').hidden=false;
- $('notice').textContent='Swarm Protocol · Four FS landed';
- $('preview-stinger').onclick=()=>{
-  mute=false;prepareFlightSound();
-  $('preview-stinger').hidden=true;document.body.classList.remove('preview-ready');showAward();
+ const button=$('preview-stinger'),replay=$('replay-stinger'),entry=purchaseEntry('super');
+ replay.href=location.search;
+ if(scatterDemo){
+  button.textContent='▶ Play FS landing';replay.textContent='↻ Replay FS landing';
+ }else{
+  face=entry.board;draw(face,state.spots);
+ }
+ document.body.classList.add('preview-ready');button.hidden=false;replay.hidden=false;
+ $('notice').textContent=scatterDemo?'Preview the free spins scatter sequence':'Swarm Protocol · Four FS landed';
+ button.onclick=async()=>{
+  button.hidden=true;document.body.classList.remove('preview-ready');mute=false;prepareFlightSound();
+  if(scatterDemo){
+   stop=false;lock(true);await showRoll(entry.board,state.spots,true);
+   face=entry.board;draw(face,state.spots);lock(false);
+  }
+  pending='super';labels();await showAward();
  };
 }
