@@ -4,6 +4,28 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-01 · ChatGPT → Claude · Win celebrations and studio release checklist
+
+All five RoboBees win animations have individual title art, audio and a mascot flight. Real settled spins and completed bonus totals use 10×, 25×, 100× and 500× thresholds. Max can be reviewed at `?preview=wins` until an approved ceiling is enforced. The deterministic 32× replay pays $435.20 at a $1 base bet and shows one Epic. Tapping the celebration reveals the total, then continues. Gallery samples do not write to the player save.
+
+Use `slots/collab/GAME_RELEASE_CHECKLIST.md` at kickoff and before publication. `slots/games/robobees/RELEASE_STATUS.md` lists its current blockers, owners and tests. The outstanding math and real-device checks remain open.
+
+### 2026-11-01 · ChatGPT → Claude · All-mode tumbles and multiplier feature spins
+
+**Did** Implemented 5×4 gravity and refill on every winning payline. Fixed cell charges upgrade between drops. Super and Hidden bank fresh Wilds, and Hidden retains its opening guarantee and scout boosts. The shop includes Pollen Charge (20×) and Hive Overdrive (250×). Replay at `?preview=tumble`.
+
+**Checked** 50,000 seeded spins included 19,098 tumbles. Phone QA confirmed three aligned drops, the upfront 32× board and a random feature debit of $20 at a $1 bet. A 36-bee Hidden finale used two refills and returned to the base game.
+
+**REQUEST for Claude** Calibrate paid modes and bonus buys before production. In 30,000 paid spins per new mode at seed 12879631 (LCG, including earned bonuses), mean payouts were 6.27× base bet for Pollen Charge and 30.73× for Hive Overdrive. Prices are 20× and 250× respectively. A separate 4,000-Hidden-bonus sample reached 33,930.6×. Verify the studio max-win target, cap policy and feature economics with the production math tooling.
+
+### 2026-11-01 · ChatGPT → Claude · Main game uses the updated symbol colours
+
+The plain game link now shows the teal rotor, cobalt stinger, red beacon, gold nectar and brushed-silver ranks. The old enamel preview link still loads its own saved game. The regular link keeps its existing save and the honey-filled FS. `?palette=original` shows the original colours. Checked the four premium filters on a 390px board and the honey layer in the scatter replay.
+
+### 2026-11-02 · ChatGPT → Claude · Mascot swarm integrated into the honey FS build
+
+Merged Claude’s bonus-transition painter with the current RoboBees reels. Both bonus flights use the live mascot when available. The painted fallback and the honey-filled free spins scatter are included. Use `?preview=scatter` to replay the four-scatter entry.
+
 ### 2026-11-02 02:10 · Claude → ChatGPT · The bonus transition's swarm is now the mascot bee
 
 **Dylan:** "swap out the code bee that plays when bonuses are bought with the mascot version."
@@ -25,6 +47,64 @@ Newest on top. Format is in `AGENTS.md`.
 **Questions for Dylan:** see if it feels right on your phone. The bees face the viewer; your drones had a top-down three-quarter look.
 
 **Blocked on:** nothing.
+
+### 2026-11-02 · ChatGPT → Claude · Honey-filled FS
+
+**Did** Built a transparent glass FS with two hollow letters, a moving amber fill line, a few air bubbles and a fixed rim. Reel acceleration and braking tip the fill. The liquid rebounds after the shell settles. The shop and reduced-motion views show the same filled silhouette.
+
+**Files** `slots/games/robobees/dist/assets/fs-honey.svg` is the layered source. `assets/FS.webp` is its still export. `honey.mjs`, `presentation.css`, `game.mjs` and `reels.mjs` drive the reel presentation.
+
+**Verification** Four FS reached the Super award at 390px width. The travel, landing, crest and bubble animations ran. Bonus rules passed 40,000 spins. Use `?palette=enamel&preview=scatter` for the replay.
+
+### 2026-11-02 · ChatGPT → Claude · FS scatter spacing and landing
+
+The ivory F and orange S now tuck together on the reel and in the bonus shop. The two faces spring into place independently when their reel stops, hold together through the tease and pulse before the award. The moving strip and reduced-motion view use a matching still. Open `?preview=scatter` and select **Play FS landing** for a replay on the real reels. At a 390px phone width the replay registered four landed scatters, both letter animations, the anticipation wave and the Super award. The bonus rules suite passed 40,000 spins.
+
+<details><summary>Scatter artwork prompt (built-in image generation)</summary>
+
+Original RoboBees slot game, production sprite artwork for a mechanical free spins monogram that will be animated in two pieces. Wide landscape transparent atlas with TWO SEPARATE, very large LETTER objects: uppercase F on the left and uppercase S on the right. Each is nearly twice as tall as it is wide, equal cap height, aligned on the same baseline. Leave an unmistakable vertical strip of completely transparent space, 15-20% of canvas width, between the letters so a rigger can cut them apart. They must NEVER overlap or touch. This is one premium coordinated FD-style racing type design, reads exactly 'FS'. Front facing orthographic, at most 8 degree forward rake, deep stylized dimensional side wall, broad strokes, beveled/chiseled angular corners, visually heavy letter forms with natural negative spaces, high-end hand-painted industrial product art. F: warm ivory glazed ceramic face clearly defined from its graphite undercarriage, one short enamel orange diagonal paint band on the lower stem and an exposed amber hexagonal rear honeycomb vent on the stem. S: vivid vermilion/tangerine anodized orange face with a confident CHISELED lightning-like diagonal bridge, graphite cutouts with small honeycomb vents, a narrow warm ivory racing stripe sweeping across its upper shoulder. Both have dark graphite outline and a single consistent cut-metal lip highlighted from upper left. Broad mature art direction, crisp edge hierarchy, black sidewalls, 1–2 simple engraved panel seams; some satin metal contrast, not uniformly shiny casino gold. The two separate letters look built from the same robot hive as an orange and white industrial bee. Tall solid letter faces must still read within 60px at phone resolution; keep mechanical details secondary. No extraneous objects, no text except these two letters, no wings, no backing plate, no shield, no sparks, no honey drips, no shadow cast on a floor, no glow outside the letters. Truly transparent empty space everywhere else, including the gap separating F from S. Production alpha sprite atlas.
+
+</details>
+
+### 2026-11-01 · ChatGPT → Claude · Larger free-spins scatter
+
+Replaced the winged FS with a near-square orange enamel block FS. In the 390px phone layout it draws at about 62 × 53px instead of 65 × 36px. Reel strips, stopped tiles, the shine mask and the shop all use the same version of the transparent artwork. Both the regular game and enamel colour preview use the new FS. Four landed FS triggered the tease and Swarm Protocol award in the phone browser test.
+
+<details><summary>Scatter artwork prompt (built-in image generation)</summary>
+
+RoboBees game production asset. Make ONE isolated free spins scatter wordmark, the exact two capital letters 'FS', side by side as a tall, extremely heavy, squared-off 3D typographic sculpture. This will be read in a tiny approximately 68-pixel reel cell on a phone, and the goal is MASS and immediate legibility. Both letters MUST be tall and condensed individually, with broad muscular strokes and very small chamfered corners. Build a total silhouette only about 1.14 times as wide as it is tall, almost square; two tall capital letters, NOT a wide banner. Large F with long top bar and clear open lower-right notch, emphatic square S with clear angular bends and dark negative notches, equal cap heights. Narrow dark gap to distinguish F and S. Five-degree forward lean maximum; front-facing orthographic, no extreme italics. Premium machined orange enamel front faces, lighter hot tangerine across the top, darker burnt orange toward the lower plane, thin warm ivory polished edge along the top/left bevel, separated by dark graphite outlines and a short dark three-dimensional extrusion to the lower right. Carefully painted hard materials matching orange/white/black industrial bee robot reel artwork. Broad and simple highlight bands, no sparks, no fine scratches. Transparent cutout through every gap and surrounding the letters. JUST THE LETTERS 'FS' in full, no wing shapes, no bee, no plaque, no box, no additional icon, no border beyond the dark edge of each letter, no aura, no circular backdrop, no ground shadow. Center it, fill most of a square canvas, and retain small even transparent margin. The design should already read as an unmistakable, stocky two-letter FS monogram in silhouette.
+
+</details>
+
+### 2026-11-01 · ChatGPT → Claude · Original symbols, enamel colour preview
+
+Dylan likes the original symbols and wants better colour separation. Open `?palette=enamel` to play the colour study. It uses the same WebP files as the standard game. The hive is orange, nectar honey-gold, rotor teal, stinger cobalt, and beacon signal red. Ranks are brushed silver. Filters colour only the sprites, including during reel travel and in the shop. The preview stores its game under a separate local key. The standard URL retains the original palette. Checked at phone size on neutral and charged cells and after a completed spin.
+
+### 2026-11-01 · ChatGPT → Claude · RoboBees cabinet and clean play screen
+
+The playtest header and under-reel commentary have been removed from the visible game. `#notice` still announces events to screen readers. The bonus total and insufficient-credit messages now appear briefly inside the cabinet. Active feature names sit by the wordmark. The frame uses `games/robobees/dist/assets/hive-cabinet.webp`, a nine-slice illustration with graphite rails, ivory enamel and bolted orange guards. The free-spins and Wild Bank instruments are seated within the frame. Desktop base and phone Super screens were inspected. Phone, laptop and widescreen bonus controls fit, and the 40,000-spin rules check passed.
+
+<details><summary>Cabinet artwork prompt (built-in image generation)</summary>
+
+Use case: stylized-concept. Create a finished 2D game UI asset: a premium mechanical robo-bee reel cabinet bezel ONLY, straight-on orthographic flat elevation, a single wide rectangular ring, landscape aspect 3:2. Transparent background both outside the silhouette AND through a large completely empty rectangular aperture in the middle. This is a reusable nine-slice frame surrounding real game symbols later. Camera dead square and centered. All four corners in full, no perspective, no floor, absolutely no reel symbols, panel filling the hole, letters, words, numbers, branding, UI text or buttons. Professional industrial product design: long deep graphite anodized perimeter rails, narrow warm ivory ceramic/enamel face insets along the four rails, crisp bevel highlights and a visible dark recessed black inner rubber gasket. Four distinctive protective burnt-orange chamfered corner castings with two countersunk dark gunmetal fasteners and shallow machined seam; broader orange tapered shoulder caps only at the four extreme corners. Top and bottom rails deliberately straight/continuous across the middle 70 percent, identical thickness; keep central edges free of badges, seams, decorations and grilles so they may stretch horizontally and vertically; be restrained. Crisp, shadowed layering of machined real materials without dingy scratches. Tactile, sophisticated and legible; a production game sprite with the warmth of painted 3D industrial illustration. Outer silhouette slightly clipped at diagonal corners. Frame should occupy nearly the whole canvas with only a small even transparent margin. Each side rail is about 4 percent of the image width, top and bottom rail around 5 percent of the height; corners can reach slightly further along each rail but never project far into the inner rectangle. The open reel window is square-cornered or very slightly rounded. The goal is a beautifully crafted, confident orange / graphite / warm white machine bezel that will remain legible as a slim border on a phone. No honeycomb pattern. No glowing neon or gold trim.
+
+</details>
+
+### 2026-11-01 · ChatGPT → Claude · Painted woodland and larger RoboBees reels
+
+The desktop title sits left of the cabinet in a two-line lockup. The playable 5 × 4 grid measures 902 × 571 at 1363 × 936. Portrait keeps the title at the upper left. The clearing and oak are raster game art in `games/robobees/dist/assets/woodland-clearing.webp` and `hollow-oak.webp`. The animated hive in `#mascot-stage` is positioned relative to the oak. A clipped copy of its wooden sill sits in front of the hive base so the rig stays seated when the screen rotates. The existing controller, outcomes and mascot animation contracts remain in place. Sprite-fallback desktop and phone shots were inspected. The Super bonus layout fits on a 360 × 640 phone, 844 × 390 landscape and 1920 × 1080 desktop.
+
+<details><summary>Original artwork prompts (built-in image generation)</summary>
+
+**Woodland clearing.** Original AAA stylized video game environment backdrop plate, extra wide cinematic 16:9, landscape. A secluded woodland clearing at blue hour with restrained amber dusk far back. Dark muted slate, charcoal blue-green and warm taupe palette; a few broad silhouettes of old trees at the extreme left and right edges with simple painted bark planes, indistinct distant woods and a horizontal clearing, soft diffuse ambient sky through canopy. Beautiful hand-painted 2.5D animated-film background art with deliberately grouped shapes, velvety gouache surface and brush edges; modest, illustrative, not photoreal. Large uninterrupted quiet dark negative space across entire middle 70% and left mid-height to host an orange-and-cream wordmark and game board later. Right third also muted and open for a separate large foreground oak. Low contrast, absolutely no tiny highlights. No bees, no hive, no hollow tree as a focus, no buildings, no characters, no signage, no text, no logos, no UI, no framed border. Full bleed.
+
+**Hollow oak.** Original premium 2.5D side-scrolling game foreground asset, a single OLD HOLLOW OAK TREE on genuinely TRANSPARENT background, no surrounding landscape. Portrait canvas, whole broad silhouette of tree including roots, compact canopy and one thick upright gnarled trunk. Gentle asymmetry. Crucial design: a LARGE EMPTY dark round-arched hollow opens directly toward the camera in the front middle of the trunk, with heavy bark curving around it like a fitted socket. Hollow nearly HALF of the trunk width minimum, dark recess with no bright interior detail, broad gently level low wooden sill at its base that can support a separately animated round mechanical beehive. Treat this as an entrance in a tree stump in a classic animated fantasy forest. The outer rim and lip silhouette must be obvious and the opening must be unobstructed; centered on the horizontal axis and approximately 55–60% down the tree. No hive or bee or honey, no door, no props in opening. Broad mossy roots, two or three large sculptural limbs, a few clusters of desaturated leaves near top. Clean modern hand-painted animation background art, carved angular bark in charcoal umber with restrained orange-copper side light at upper left, subdued grey-green canopy. Flat grouped facets and painterly edges, not a photo, not a plastic render, no microtexture or busy curling twigs. Readable at small scale with warm off-white highlights used sparingly. No words, no ground plane or backdrop other than transparent alpha. Front three-quarter tree, straight-on level view of the hollow.
+
+</details>
+
+### 2026-11-01 · ChatGPT → Claude · Live 3D mascot integrated in RoboBees
+
+Merged Claude’s mascot through `e64af83` onto `codex/robobees`, retaining the apiary yard and seven multiplier colours. The worker count follows each Wild Bank arrival and release. The mobile Super entry and sprite fallback were checked in the combined game. Real-device 3D frame rate remains to be checked.
 
 ### 2026-11-01 23:30 · Claude → ChatGPT · RoboBees' mascot now runs as live 3D
 
@@ -88,6 +168,18 @@ Newest on top. Format is in `AGENTS.md`.
 2. Is the live build newer than `codex/robobees`, as you said? If so, which commit is it? This work is based on f27c4e2.
 
 **Blocked on:** nothing.
+
+
+### 2026-11-01 · ChatGPT → Claude · RoboBees apiary yard
+
+The detailed foundry and vault scenery has been replaced with a low-contrast industrial yard. `games/robobees/dist/assets/apiary-yard.svg` contains the landscape and portrait compositions. The style sheets set the sky colour for base, Regular, Super and Hidden. Desktop and mobile bonus artwork were checked inside the running game. The mascot can use the open bay at `#mascot-stage`.
+
+### 2026-11-01 · ChatGPT → Claude · RoboBees multiplier colours
+
+RoboBees on `codex/robobees` now keeps the multiplier colour under the symbols, including while each reel spins. Each doubling has its own shade from bronze (2×) to ivory (128×). The phone check covered a full seven-tier board, base charge expiry and bonus charge retention.
+
+The presentation lives in `games/robobees/dist/{game.mjs,reels.mjs,presentation.css,index.html}`. Claude can mount the mascot at `#mascot-stage`. The independent hive flight origin is `#hive-port`.
+
 
 
 ### 2026-11-01 17:40 · Claude → ChatGPT · The tail nozzle is seated on the tail tip

@@ -12,6 +12,10 @@ Shared files anyone may edit: `collab/BOARD.md` (task board), `collab/HANDOFF.md
 
 **Don't edit files another member owns.** Ask in a handoff note instead (`REQUEST for Claude: …`).
 
+## Game release checklist
+
+At kickoff and before every release, use [the studio checklist](collab/GAME_RELEASE_CHECKLIST.md). Record the tested commit, evidence, owners and open gates in `games/<id>/RELEASE_STATUS.md`. Include every win tier and distinguish preview coverage from settled gameplay.
+
 ## The loop
 
 1. **Pick up.** Read the top entries of `collab/HANDOFF.md` and your rows in `collab/BOARD.md`.

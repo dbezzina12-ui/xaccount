@@ -24,12 +24,12 @@ function drawBee(ctx,[body,wing],x,y,size,bank,beat,yaw){
  ctx.drawImage(body,-.5,-.53,1,1.08);ctx.restore();
 }
 
-function animate(duration,draw){
+function animate(duration,draw,skip=()=>false){
  return new Promise(resolve=>{
   const start=performance.now();let frame;
   function finish(){cancelAnimationFrame(frame);document.removeEventListener('visibilitychange',hidden);draw(1);resolve()}
   function hidden(){if(document.hidden)finish()}
-  function tick(now){const t=(now-start)/duration;if(t>=1||document.hidden){finish();return}draw(clamp(t));frame=requestAnimationFrame(tick)}
+  function tick(now){const t=(now-start)/duration;if(t>=1||document.hidden||skip()){finish();return}draw(clamp(t));frame=requestAnimationFrame(tick)}
   document.addEventListener('visibilitychange',hidden);tick(start);
  });
 }
@@ -86,4 +86,35 @@ export async function playStinger({canvas,scatterCells,reduced,cut,sound,release
    ctx.globalAlpha=1;
   });
  }finally{swap();canvas.hidden=true;canvas.width=1;canvas.height=1}
+}
+
+// One board-space flight per destination. Arrival updates are independent of
+// frame rate; a skipped or backgrounded flight still delivers every bee.
+export async function flyHiveBees({canvas,hive,targets,collect,fast,skip,onArrival}){
+ if(!targets.length)return;
+ const sprites=await art,ctx=canvas.getContext('2d');
+ if(!sprites||!ctx||skip()||document.hidden){targets.forEach((_,i)=>onArrival(i));return}
+ const spacing=fast?28:70,travel=fast?300:590,total=travel+spacing*(targets.length-1);
+ const landed=new Set();
+ canvas.hidden=false;
+ try{
+  await animate(total,progress=>{
+   const w=canvas.clientWidth,h=canvas.clientHeight,dpr=Math.min(devicePixelRatio||1,1.4);
+   if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr)}
+   ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+   const port=hive.getBoundingClientRect(),hx=port.x+port.width/2,hy=port.y+port.height/2;
+   targets.forEach((target,i)=>{
+    if(landed.has(i))return;
+    const t=clamp((progress*total-i*spacing)/travel);
+    if(t===1||progress===1){landed.add(i);onArrival(i);return}
+    if(t<=0)return;
+    const r=target.getBoundingClientRect(),px=r.x+r.width/2,py=r.y+r.height/2;
+    const u=collect?1-ease(t):ease(t),arc=Math.sin(u*Math.PI);
+    const swing=(i%2?1:-1)*Math.min(32,r.width*.32)*arc;
+    const x=hx+(px-hx)*u+swing,y=hy+(py-hy)*u-arc*Math.min(82,r.height*.9);
+    const size=Math.max(15,Math.min(37,r.width*.36))*(.55+.45*arc);
+    drawBee(ctx,sprites,x,y,size,(collect?-1:1)*(.16+.18*arc)*Math.sign(px-hx),progress*total*.052+i,arc*.6);
+   });
+  },skip);
+ }finally{canvas.hidden=true;canvas.width=1;canvas.height=1}
 }

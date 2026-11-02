@@ -1,13 +1,25 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#181a1b"><title>RoboBees · Gamboligy Games</title><link rel="stylesheet" href="game.css?v=7"><link rel="stylesheet" href="studio-shop.css"><link rel="stylesheet" href="presentation.css?v=12"><link rel="preload" as="image" href="assets/queen-vault.webp"></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#181a1b"><title>RoboBees · Gamboligy Games</title><link rel="stylesheet" href="game.css?v=21"><link rel="stylesheet" href="studio-shop.css"><link rel="stylesheet" href="presentation.css?v=25"><link rel="stylesheet" href="win-show.css?v=26"></head><body>
+<svg width="0" height="0" style="position:absolute;pointer-events:none" aria-hidden="true" focusable="false">
+ <defs>
+  <!-- Each RGB row sums to one, preserving the original neutral metal and shadows. -->
+  <filter id="enamel-nectar" color-interpolation-filters="sRGB"><feColorMatrix values="1 0 0 0 0  .49 .51 0 0 0  0 .14 .86 0 0  0 0 0 1 0"/></filter>
+  <filter id="enamel-rotor" color-interpolation-filters="sRGB"><feColorMatrix values="0 .27 .73 0 0  .60 .40 0 0 0  .57 .43 0 0 0  0 0 0 1 0"/></filter>
+  <filter id="enamel-stinger" color-interpolation-filters="sRGB"><feColorMatrix values="0 .49 .51 0 0  .16 .84 0 0 0  .91 .09 0 0 0  0 0 0 1 0"/></filter>
+  <filter id="enamel-beacon" color-interpolation-filters="sRGB"><feColorMatrix values=".90 .10 0 0 0  0 .25 .75 0 0  0 .50 .50 0 0  0 0 0 1 0"/></filter>
+ </defs>
+</svg>
+<picture class="grove-backdrop" aria-hidden="true"><img src="assets/woodland-clearing.webp" alt="" fetchpriority="high"></picture>
 <canvas id="swarm-stinger" hidden aria-hidden="true"></canvas>
-<div class="camera-window"><div id="camera-track"><div id="play-stage"><header><b><i>⬢</i> GAMBOLIGY <em>GAMES</em></b><span><i class="led"></i> PLAYTEST &nbsp; / &nbsp; 01</span></header>
+<div class="camera-window"><div id="camera-track"><div id="play-stage">
 <main><div class="machine"><div class="top">
- <div class="brand"><small>APIS INDUSTRIES &nbsp;/&nbsp; RB–05</small><h1><img src="assets/robobees-wordmark.svg" alt="RoboBees" width="530" height="93"></h1></div>
- <!-- Mount Claude’s transparent mascot rig here. This space is outside the reel grid. -->
- <div id="mascot-stage" aria-hidden="true"></div>
+ <div class="brand"><small id="mode" hidden></small><h1><picture><source media="(min-width:700px) and (orientation:landscape)" width="290" height="161" srcset="assets/robobees-stacked.svg"><img src="assets/robobees-wordmark.svg?v=16" alt="RoboBees" width="530" height="93"></picture></h1></div>
+ <div class="hive-tree" aria-hidden="true"><img class="oak" src="assets/hollow-oak.webp" alt=""><div id="mascot-stage"></div><img class="oak-sill" src="assets/hollow-oak.webp" alt=""></div>
 </div>
-<div class="cab"><div class="rail"><span id="mode">FACTORY SHIFT</span><span id="meter">20 PAYLINES</span></div><div id="board" role="img" aria-label="Five reels, four rows"></div><div class="strip"></div></div>
-<div id="notice" role="status">Connect three or more symbols from the left.</div>
+<div class="cab"><div id="bonus-hud" hidden>
+ <div id="wild-dock" class="instrument"><div class="hive-icon"><img src="assets/hive.webp" alt=""><i id="hive-port"></i></div><div class="instrument-label"><small>WILD BANK</small><span>FINAL SPIN</span></div><output id="bank-count" aria-label="Banked Wilds">0</output></div>
+ <div class="instrument spins"><div class="instrument-label"><small>FREE SPINS</small><span>REMAINING</span></div><output id="spin-count" aria-label="Free spins remaining">10</output></div>
+</div><div id="board" role="img" aria-label="Five reels, four rows"></div><div id="cab-feedback" hidden aria-hidden="true"></div></div>
+<div id="notice" class="sr-only" role="status" aria-atomic="true"></div>
 <button id="preview-stinger" hidden>▶ Play bonus stinger</button>
 <footer id="controller" aria-label="Game controller"></footer></div></main></div>
 <section id="bonus-intro" role="region" inert aria-labelledby="award-title" aria-describedby="award-rules">
@@ -16,14 +28,25 @@
    <img class="award-illustration" src="assets/swarm-print.svg" width="440" height="222" alt="">
    <small id="award-name"></small>
    <h2 id="award-title"><span class="award-count">10</span> <span id="award-tier"></span></h2>
+   <div id="charge-key"><div id="charge-map" aria-hidden="true"></div><span id="charge-caption"></span></div>
    <p id="award-rules"></p><button id="start-feature">Start free spins <span aria-hidden="true">▶</span></button>
    <a id="replay-stinger" href="?preview=stinger" hidden>↻ Replay stinger</a>
   </div>
  </div>
 </section></div></div>
+<dialog id="win-show" aria-labelledby="win-name" aria-describedby="win-reader">
+ <div class="win-stage"><canvas aria-hidden="true"></canvas>
+  <h2 id="win-name" class="win-name sr-only"></h2>
+  <svg class="win-type" aria-hidden="true"><use width="100%" height="100%"/></svg>
+  <span class="win-cash" aria-hidden="true"></span>
+  <div class="win-info"><span class="win-scope"></span><span class="win-multiple"></span></div>
+  <div class="win-actions"><button class="win-skip" type="button">Show total</button><button class="win-sound" type="button">Sound off</button></div>
+ </div><span id="win-reader" class="win-reader sr-only" role="status"></span>
+</dialog>
+<nav class="win-gallery" aria-label="Preview a win animation" hidden></nav>
 <dialog id="bonus-menu" class="shop" aria-label="Feature shop"><button class="close" aria-label="Close feature shop">×</button>
  <div class="shop-toolbar"><div class="shop-title-group"><span>ROBOBEES · APIS INDUSTRIES</span><h2>Bonus buys</h2><p class="shop-balance">DEMO BALANCE <strong></strong></p></div><div class="shop-bet"><div class="shop-stake"><span>BASE BET</span><strong></strong></div><div class="shop-bet-steps"><button aria-label="Lower shop bet">−</button><button aria-label="Raise shop bet">+</button></div></div></div>
  <div class="shop-tabs" aria-label="Shop sections"><button data-tab="features">Feature spins</button><button data-tab="buys">Bonus buys</button></div>
  <div class="shop-options"><section class="bonus-cards" aria-label="Available options"></section></div><p id="bonus-menu-note"></p>
 </dialog>
-<dialog id="menu"><div class="dlg-head"><small>APIS INDUSTRIES &nbsp; / &nbsp; OPERATIONS</small><button class="close" aria-label="Close">×</button></div><div id="content"></div></dialog><script type="module" src="game.mjs?v=15"></script></body></html>
+<dialog id="menu"><div class="dlg-head"><small>APIS INDUSTRIES &nbsp; / &nbsp; OPERATIONS</small><button class="close" aria-label="Close">×</button></div><div id="content"></div></dialog><script type="module" src="game.mjs?v=26"></script></body></html>
