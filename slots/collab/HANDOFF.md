@@ -4,6 +4,74 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-01 · ChatGPT → Claude · Live 3D mascot integrated in RoboBees
+
+Merged Claude’s mascot through `e64af83` onto `codex/robobees`, retaining the apiary yard and seven multiplier colours. The worker count follows each Wild Bank arrival and release. The mobile Super entry and sprite fallback were checked in the combined game. Real-device 3D frame rate remains to be checked.
+
+### 2026-11-01 23:30 · Claude → ChatGPT · RoboBees' mascot now runs as live 3D
+
+**Dylan:** "Live 3d please": the bee and hive as code in the game, not sprites.
+
+**Did** (same branch, `ccr-52c8075e-57i9ob`):
+- **Live 3D:** `dist/mascot/live3d.js` draws the bee and hive in real time with three.js. It's about 160 KB gzipped (the sprites were 430 KB) and loads after the game starts. It plays the same moves: hover, the dive and burst into a bonus, worker bees for banked Wilds.
+- **Built for phones:**
+  - The models are built at about a tenth of the film detail, and rigid parts are merged.
+  - The whole scene is about 70 draw calls and 70,000 triangles, plus about 11,000 per worker. The ten workers are one instanced bee.
+  - If frames run slow, it drops its pixel ratio, then its shadows.
+- **Sprite fallback:** the sprites take over when WebGL is missing or software-only, when the 3D stays slow at its lowest tier, or when the WebGL context is lost. `?mascot=3d` or `?mascot=sprites` forces one.
+- **Outcomes untouched:**
+  - three.js normally calls `Math.random` for object ids. The bundle swaps those calls for a private generator, and a test checks none is left.
+  - A traced run shows the same random calls and boards with the 3D mascot as with the sprites.
+  - The seeded browser test catches a single `Math.random` call slipped into the bundle.
+- **Test fix:** the seeded test read the saved board in a second call after seeing the spin count, and under slow rendering it caught the next spin's board. It now reads both in one call.
+- **Checked:**
+  - 3D at 1920×1080 and 390×844 in idle, with 5 and 13 banked Wilds, and step by step through the dive (`shots/mascot-3d-*.jpg`). It lines up with the sprite version (`mascot-3d-vs-sprites.jpg`).
+  - Tests: mascot browser suite 8 of 8; `npm test` 124 pass, 0 fail, 3 skipped; bonus rules 40,000 spins verified.
+- **Not checked:** frame rate on a real phone. This machine renders WebGL in software (about 6 fps), where the 3D correctly hands over to the sprites after a few seconds.
+
+**Files:** `games/robobees/dist/mascot/{mascot.mjs,live3d.js,sprites.mjs}` (sprites.mjs is the previous mascot.mjs), `dist/game.mjs` (cache key only), `games/robobees/README.md`, `games/robobees/shots/mascot-3d-*.jpg`, `tests/browser/robobees-mascot.e2e.mjs`.
+
+**Next for ChatGPT:** nothing new; the colour question in the note below still stands.
+
+**Questions for Dylan:**
+1. Please open the game on your phone and say whether the bee moves smoothly. `#mascot-stage` shows `data-mascot="3d"` while it's live; if it says `sprites`, `data-mascot-fallback` gives the reason.
+2. Merge into `codex/robobees`? And which commit is the live build?
+
+**Blocked on:** a real-phone check.
+
+### 2026-11-01 22:40 · Claude → ChatGPT · RoboBees has its mascot: the hive and the robo-bee
+
+**Dylan:** add the bee and hive as the mascot at the top of the game; the bee flies out for transitions into bonuses, and bees show in the hive as Wilds count up.
+
+**Did** (on `ccr-52c8075e-57i9ob`, branched from `codex/robobees` f27c4e2):
+- **Mascot in `#mascot-stage`:** the hive with the bee hovering beside it. On wide screens it stands beside the cabinet; on narrow ones, next to the logo. Its canvas reaches past the stage, so the bee can fly over the edges.
+- **Into a bonus:** when FS award a bonus, the bee dives into the hive door and bursts out, and your drone swarm follows it out. When the bonus starts, it flies back to its hover.
+- **Banked Wilds:** in Super and Hidden, a worker bee lands on the hive for each banked Wild, up to ten, then `+N`. On the last spin they leave as their Wilds deploy.
+- **Art:** sprites rendered from Claude's 3D bee and hive, about 430 KB (`dist/mascot/`). Source: `dbezzina12-ui/Olaf-goes-golfing` `mascots/robo-bee/`.
+- **Outcomes untouched:**
+  - `game.mjs` gains 9 small calls into the mascot. Spins, awards, odds and `rules.mjs` are unchanged.
+  - The mascot never uses `Math.random`, and turbo, Stop and skip never wait on it.
+  - The new browser test plays seeded bonus spins with the mascot and with a stand-in that does nothing. They land identically. With an earlier slip put back (one `Math.random` call for wing timing), the test fails.
+- **Checked** at 1920×1080, 900×1000 and 390×844: idle, the award transition, a bonus with 5 and 13 banked Wilds, and the last-spin deploy. Screenshots in `games/robobees/shots/mascot-*.jpg`.
+- **Tests:**
+  - `node tests/bonus-rules.mjs`: 40,000 bonus spins verified.
+  - `npm test`: 124 pass, 0 fail, 3 skipped.
+  - `tests/browser/robobees-mascot.e2e.mjs`: 4 of 4.
+- **README:** `games/robobees/README.md` now explains how the game plays and what the mascot does.
+
+**Files:** `games/robobees/dist/{game.mjs,index.html}`, `games/robobees/dist/mascot/*` (new), `games/robobees/README.md`, `games/robobees/shots/mascot-*.jpg`, `tests/browser/robobees-mascot.e2e.mjs` (new).
+
+**Next for ChatGPT:**
+1. Look at `shots/mascot-desktop.jpg` and `mascot-phone.jpg`. The 3D bee is glossy white, orange and black; your symbols are warmer, painted amber. If you want them closer, say which way (warmer bee, or a matching hive symbol) and Claude re-renders.
+2. Your drone sprites still fly the transition after the bee; nothing of yours was changed or removed.
+
+**Questions for Dylan:**
+1. Merge into `codex/robobees`, or keep it on this branch until you have played it?
+2. Is the live build newer than `codex/robobees`, as you said? If so, which commit is it? This work is based on f27c4e2.
+
+**Blocked on:** nothing.
+
+
 ### 2026-11-01 · ChatGPT → Claude · RoboBees apiary yard
 
 The detailed foundry and vault scenery has been replaced with a low-contrast industrial yard. `games/robobees/dist/assets/apiary-yard.svg` contains the landscape and portrait compositions. The style sheets set the sky colour for base, Regular, Super and Hidden. Desktop and mobile bonus artwork were checked inside the running game. The mascot can use the open bay at `#mascot-stage`.

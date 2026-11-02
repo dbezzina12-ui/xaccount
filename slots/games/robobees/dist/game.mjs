@@ -1,4 +1,5 @@
 import {playStinger,flyHiveBees} from './drone-stinger.mjs?v=13';
+import {mountMascot} from './mascot/mascot.mjs?v=5';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
 import {rollReels,symbolClass,symbolUrl} from './reels.mjs?v=14';
@@ -6,6 +7,7 @@ import {buys,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=7';
 const $=id=>document.getElementById(id);
 const grid=$('board'),modal=$('menu'),intro=$('bonus-intro'),cabinet=grid.closest('.cab');
 const playStage=$('play-stage');
+const mascot=mountMascot($('mascot-stage'));
 const desc={
  regular:'Start with an uncharged board. Any reel can land a Wild. Charged cells stay lit and double on repeat wins.',
  super:'Bank Wilds on spins 1–9. On spin 10, one bee flies out of the hive for each banked Wild and turns a cell Wild.',
@@ -47,9 +49,11 @@ function cell(i,id,spots,hit=false){
 function draw(board,spots,hits=[]){cells.forEach((_,i)=>cell(i,board[i],spots,hits.includes(i)))}
 function showFlightBank(n){
  flightBank=n;$('bank-count').textContent=String(n);
+ mascot.setBank(n);
 }
 function labels(){
  const bonus=state.mode!=='base';
+ mascot.setTurbo(turbo);
  $('mode').textContent=(bonus?modes[state.mode]:features[featureMode]?.label??modes.base).toUpperCase();
  $('meter').textContent=bonus?'BONUS ACTIVE':'20 PAYLINES';
  $('bonus-hud').hidden=!bonus;$('wild-dock').hidden=state.mode==='regular';
@@ -108,6 +112,7 @@ async function feature(mode){
   grid.classList.toggle('priming',mode!=='regular');
   cabinet.classList.remove('tease-zoom');document.body.classList.remove('present-award');
  });
+ mascot.arrive();
  playStage.inert=false;
  await primeBoard();
  controller.element('play').focus({preventScroll:true});
@@ -151,6 +156,7 @@ async function showAward(){
  $('charge-caption').textContent=mode==='regular'?'First win on a cell charges it to 2×':'Starting board · 20 cells at 2×';
  intro.dataset.tier=mode;
  playStage.inert=true;
+ await mascot.depart();
  await flyAcross(false,()=>document.body.classList.add('present-award'));
  intro.inert=false;$('start-feature').focus({preventScroll:true});
 }
@@ -282,6 +288,7 @@ document.addEventListener('keydown',e=>{
  e.preventDefault();action('play');
 });
 document.body.dataset.scene=state.mode;
+mascot.setBank(state.mode==='base'?0:state.bank,{animate:false});
 draw(face,state.spots);labels();
 if(state.left===10&&(state.mode==='super'||state.mode==='hidden')){
  lock(true);primeBoard().finally(()=>{lock(false);scheduleBonus()});
