@@ -10,8 +10,8 @@
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Base spins | 1x | **95.93%** ± 0.14% | 24.3% | 12.2% | 0x | 1.4x | 10.8x | 119x | 14.76 | 8,301x | 1 in 397,556,210 |
 | Signal Boost | 3x | **95.73%** ± 0.23% | 24.6% | 5.7% | 0x | 1.4x | 59.6x | 391x | 13.41 | 25,000x | 1 in 26,189,490 |
-| Pollen Charge | 20x | **95.83%** ± 0.20% | 41.0% | 20.6% | 0x | 53.2x | 257x | 697x | 3.05 | 12,354x | 1 in 337,337,748 |
-| Hive Overdrive | 250x | **95.84%** ± 0.33% | 47.8% | 23.4% | 0x | 641x | 2,931x | 6,344x | 2.36 | 25,000x | 1 in 1,986,112 |
+| Pollen Charge | 20x | **96.04%** ± 0.23% | 34.9% | 19.0% | 0x | 50.9x | 287x | 840x | 3.48 | 7,681x | 1 in 357,197,764 |
+| Hive Overdrive | 250x | **95.78%** ± 0.42% | 39.5% | 19.1% | 0x | 602x | 3,528x | 8,816x | 3.03 | 25,000x | 1 in 52,623 |
 | Worker Shift (buy) | 100x | **95.94%** ± 0.22% | 99.6% | 28.2% | 50.3x | 219x | 709x | 1,738x | 1.58 | 14,303x | not seen |
 | Swarm Protocol (buy) | 250x | **96.19%** ± 0.25% | 98.9% | 26.6% | 110x | 563x | 1,970x | 5,061x | 1.82 | 25,000x | 1 in 285,714 |
 | Mystery Buy | 400x | **96.02%** ± 0.14% | 99.4% | 17.7% | 83.6x | 910x | 4,922x | 12,689x | 2.65 | 25,000x | 1 in 15,060 |
@@ -21,14 +21,28 @@
 - **Pollen Charge** and **Hive Overdrive** pay their wins on the base bet: they return 96% of their 20x and 250x prices. Each draws its own symbols and Wilds (below) and keeps the base FS chance.
 - **Buys** are measured on the bought bonus alone: a bought round has no paid trigger spin.
 
+## Big hits
+
+How often a round pays at least each multiple of what it costs (counted over 12M, 6M, 4M, 1M whole rounds and the bonus samples above).
+
+| Mode | Cost | 1x its cost | 2x its cost | 5x its cost | 10x its cost | 25x its cost | 50x its cost | 100x its cost |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Base spins | 1x | 12.2% | 7.0% | 2.5% | 1.1% | 1 in 229 | 1 in 410 | 1 in 783 |
+| Signal Boost | 3x | 5.7% | 3.5% | 2.1% | 1.5% | 1 in 119 | 1 in 241 | 1 in 643 |
+| Pollen Charge | 20x | 19.0% | 11.9% | 4.9% | 1.8% | 1 in 312 | 1 in 1,569 | 1 in 11,869 |
+| Hive Overdrive | 250x | 19.1% | 11.6% | 4.7% | 1.8% | 1 in 373 | 1 in 3,040 | 1 in 52,632 |
+| Worker Shift (buy) | 100x | 28.0% | 11.5% | 2.2% | 1 in 231 | 1 in 3,053 | 1 in 33,333 | 1 in 1,000,000 |
+| Swarm Protocol (buy) | 250x | 26.5% | 11.8% | 2.6% | 1 in 171 | 1 in 1,733 | 1 in 13,072 | 1 in 285,714 |
+| Mystery Buy | 400x | 17.7% | 11.0% | 4.6% | 1.5% | 1 in 518 | 1 in 5,285 | not seen |
+
 ## Natural bonus rates
 
 | Mode | Scatter chance per reel | Worker Shift (3 FS) | Swarm Protocol (4 FS) | Queen Override (5 FS) | Any bonus |
 | --- | --- | --- | --- | --- | --- |
 | Base spins | 7.5056% | 1 in 244 | 1 in 5,739 | 1 in 341,119 | 1 in 234 |
 | Signal Boost | 13.2926% | 1 in 51 | 1 in 632 | 1 in 19,911 | 1 in 47 |
-| Pollen Charge | 7.5056% | 1 in 219 | 1 in 5,021 | 1 in 286,689 | 1 in 210 |
-| Hive Overdrive | 7.5056% | 1 in 200 | 1 in 4,419 | 1 in 240,367 | 1 in 191 |
+| Pollen Charge | 7.5056% | 1 in 226 | 1 in 5,222 | 1 in 305,257 | 1 in 217 |
+| Hive Overdrive | 7.5056% | 1 in 204 | 1 in 4,494 | 1 in 261,493 | 1 in 195 |
 
 - A bonus triggers when a paid spin settles with 3, 4 or 5 FS, at most one per reel; FS land on the opening board and on refills, and survive tumbles. Rates are importance-sampled (see above).
 
@@ -38,8 +52,8 @@
 | --- | --- | --- | --- | --- |
 | Base spins | 51.68% | 39.36% | 4.19% | 0.70% |
 | Signal Boost | 15.91% | 63.12% | 12.68% | 4.02% |
-| Pollen Charge | 93.36% | 2.19% | 0.24% | 0.04% |
-| Hive Overdrive | 95.62% | 0.19% | 0.02% | 0.00% |
+| Pollen Charge | 93.65% | 2.12% | 0.23% | 0.04% |
+| Hive Overdrive | 95.57% | 0.19% | 0.02% | 0.00% |
 
 ## Each bonus on its own
 
@@ -55,15 +69,15 @@
 
 | Round pays | Base spins | Signal Boost | Pollen Charge | Hive Overdrive |
 | --- | --- | --- | --- | --- |
-| No win | 75.70% | 75.40% | 58.98% | 52.18% |
-| 0.01x to under 1x | 12.13% | 11.61% | 3.08% | 1 in 62,500 |
-| 1x to under 2x | 5.18% | 4.88% | 1.67% | 1 in 35,714 |
-| 2x to under 5x | 4.51% | 4.23% | 2.90% | 1 in 9,804 |
-| 5x to under 10x | 1.37% | 1.35% | 4.64% | 1 in 5,988 |
-| 10x to under 50x | 1 in 115 | 1.40% | 17.95% | 3.84% |
-| 50x to under 100x | 1 in 887 | 1 in 204 | 5.99% | 5.88% |
-| 100x to under 1,000x | 1 in 846 | 1 in 160 | 4.74% | 32.17% |
-| 1,000x or more | 1 in 40,000 | 1 in 5,495 | 1 in 2,387 | 5.89% |
+| No win | 75.70% | 75.40% | 65.05% | 60.54% |
+| 0.01x to under 1x | 12.13% | 11.61% | 2.67% | 1 in 47,619 |
+| 1x to under 2x | 5.18% | 4.88% | 1.15% | 1 in 31,250 |
+| 2x to under 5x | 4.51% | 4.23% | 1.60% | 1 in 8,696 |
+| 5x to under 10x | 1.37% | 1.35% | 3.42% | 1 in 6,211 |
+| 10x to under 50x | 1 in 115 | 1.40% | 15.87% | 3.31% |
+| 50x to under 100x | 1 in 887 | 1 in 204 | 5.33% | 5.23% |
+| 100x to under 1,000x | 1 in 846 | 1 in 160 | 4.84% | 24.84% |
+| 1,000x or more | 1 in 40,000 | 1 in 5,495 | 1 in 1,541 | 6.05% |
 
 ## The settings
 
@@ -85,11 +99,11 @@
 | Setting | Base spins | Pollen Charge | Hive Overdrive | Worker Shift | Swarm Protocol | Queen Override |
 | --- | --- | --- | --- | --- | --- | --- |
 | Draw weight of each premium : each rank | 2 : 3 | 2 : 3 | 4 : 2 | 4 : 2 | 2 : 3 | 2 : 3 |
-| Chance of a first / a second opening Wild | 33.00% / 8.00% | 100% / 36.72% | 100% / 60.00% | 100% / 26.93% | 41.41% / 10.00% | 100% / 3.00% |
-| A dropped tile's chance to be a Wild | 2.00% | 2.00% | 9.68% | 2.00% | 2.00% | 2.00% |
+| Chance of a first / a second opening Wild | 33.00% / 8.00% | 100% / 4.12% | 100% / 15.00% | 100% / 26.93% | 41.41% / 10.00% | 100% / 3.00% |
+| A dropped tile's chance to be a Wild | 2.00% | 8.00% | 17.66% | 2.00% | 2.00% | 2.00% |
 | Starting charges | carried from the last paid spin | 6–12 cells at 2x–32x | every cell 32x | none | every cell 2x | every cell 2x |
 
 - Signal Boost draws as base spins. Scatter chance per reel: base 7.5056%, Signal Boost 13.2926%.
-- Pollen Charge's seeds: 2x, 4x, 8x, 16x and 32x at 10.0%, 12.0%, 18.0%, 30.0%, 30.0%.
+- Pollen Charge's seeds: 2x, 4x, 8x, 16x and 32x at 5.0%, 8.0%, 12.0%, 35.0%, 40.0%.
 - Queen Override's bee boosts per spin, 1 : 2 : 3 cells, at 1 : 0.1795 : 0.0598.
 

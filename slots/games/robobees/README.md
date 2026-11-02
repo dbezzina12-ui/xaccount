@@ -35,6 +35,7 @@ Every mode returns 96% of what it costs: base spins, the three feature spins and
 - **Fit:** `node ../../tools/math/robobees-fit.mjs --write` re-solves every knob for 96% (about 16 minutes on four cores). `--refine super,random --write` re-solves just those knobs, on larger samples, from the shipped values.
 - **Report:** `node ../../tools/math/robobees-report.mjs` plays fresh seeds and rewrites `MATH.md` and `math/summary.json` (about 5 minutes).
 - **Bonus averages:** Regular 96× (100× buy), Super 240× (250× buy), Hidden 2,400×. Mystery's 50/40/10 mix returns 96% of 400×.
+- **Big hits:** Pollen Charge and Hive Overdrive keep most of their Wilds for the tumbles. They pay something less often, but long chains and big hits carry more of their return. The Big hits table in `MATH.md` shows how often each mode pays 1× to 100× its cost.
 
 ## Mascot
 
