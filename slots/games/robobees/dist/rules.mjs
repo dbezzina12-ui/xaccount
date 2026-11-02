@@ -11,16 +11,17 @@ export const lines=[
 // Every number that sets the return, fitted by tools/math/robobees-fit.mjs so each mode returns 96% (MATH.md).
 // pays: per line for 3/4/5 of a kind, x the base bet. Per kind of spin (base, the two seeded features, each bonus):
 // weights, the draw chance of each premium and each rank; wilds, the chance of a first and of a second opening Wild.
-// refillWild: per kind of spin, a dropped tile's chance to be a Wild. scatter: the FS chance per reel. boosts: Hidden's odds of 1, 2 or
+// refillWild: per kind of spin, a dropped tile's chance to be a Wild. scatter: the FS chance per reel (base,
+// Signal Boost and each seeded feature). boosts: Hidden's odds of 1, 2 or
 // 3 bee boosts. pollen: Pollen Charge's 6-12 seeded cells' odds of 2x, 4x, 8x, 16x and 32x. mystery: Regular, Super,
 // Hidden. cap: the most a round pays, its trigger spin included.
 export const MATH={
  cap:25000,
  pays:{10:[0.35,1.06,3.52],hive:[2.35,7.05,21.14],nectar:[1.64,4.7,14.09],stinger:[1.17,3.52,10.57],rotor:[0.94,2.35,8.22],beacon:[0.7,2.11,7.05],A:[0.47,1.41,4.7],K:[0.47,1.41,4.7],Q:[0.35,1.06,3.52],J:[0.35,1.06,3.52]},
  weights:{base:[2,3],random:[2,3],full32:[4,2],regular:[4,2],super:[2,3],hidden:[2,3]},
- wilds:{base:[0.33,0.08],random:[1,0.041246],full32:[1,0.15],regular:[1,0.269261],super:[0.414122,0.1],hidden:[1,0.03]},
+ wilds:{base:[0.33,0.08],random:[0.948895,0],full32:[1,0.075571],regular:[1,0.269261],super:[0.414122,0.1],hidden:[1,0.03]},
  refillWild:{base:0.02,random:0.08,full32:0.176597,regular:0.02,super:0.02,hidden:0.02},
- scatter:{base:0.075056,enhanced:0.132926},
+ scatter:{base:0.075056,enhanced:0.132926,random:0.05,full32:0.075056},
  boosts:[1,0.179471,0.059824],
  pollen:[0.05,0.08,0.12,0.35,0.4],
  mystery:[0.5,0.4,0.1],
@@ -53,9 +54,11 @@ export function purchaseEntry(id,rng=Math.random){
  for(const col of [0,1,...take([2,3],scatterCounts[mode]-3,rng),4])board[col+5*Math.floor(rng()*4)]='FS';
  return {mode,board};
 }
-// carry: what a natural trigger spin paid; it counts toward the bonus round's cap
-export function start(mode='base',carry=0){
- const spots=Array(20).fill(mode==='super'||mode==='hidden'?2:0);
+// carry: what a natural trigger spin paid; it counts toward the bonus round's cap. charges: the cell multipliers a
+// Pollen Charge or Hive Overdrive trigger spin ended with; the bonus keeps each one (or its own start, if higher).
+export function start(mode='base',carry=0,charges=null){
+ const base=mode==='super'||mode==='hidden'?2:0;
+ const spots=Array.from({length:20},(_,i)=>Math.max(base,charges?.[i]??0));
  return {mode,spots,left:mode==='base'?0:10,bank:0,total:0,carry};
 }
 // The cents a spin credits at a bet in cents per 1x. A bonus spin credits the change in its round's rounded total, so a
@@ -130,7 +133,8 @@ export function spin(state,rng=Math.random,featureMode=null){
  let active=[...prior],landed=allCells().map(()=>draw(weights,rng)),from=null;
  const openingWilds=Number(rng()<w1)+Number(rng()<w2);
  for(const i of take(allCells(),openingWilds,rng))landed[i]='W';
- const scatterChance=bonus?0:featureMode==='enhanced'?MATH.scatter.enhanced:MATH.scatter.base;
+ // the FS chance per reel: Signal Boost and the seeded features have their own; free spins land none
+ const scatterChance=bonus?0:MATH.scatter[featureMode]??MATH.scatter.base;
  if(scatterChance)for(let col=0;col<5;col++){
   if(rng()<scatterChance)landed[col+5*Math.floor(rng()*4)]='FS';
  }
@@ -166,6 +170,8 @@ export function spin(state,rng=Math.random,featureMode=null){
  // Ordinary paid hits survive for the next paid spin. Feature seeds and their
  // upgrades belong to that purchase; free spins keep all cells between spins.
  const spots=bonus?active:active.map((v,i)=>!seeded&&touched.has(i)?v:0);
- return {steps,landing:steps[0].landed,board,prior,boosts,seeded,finale,trigger,amount,limited,maxWin,
+ // a seeded spin's final multipliers, which a bonus it triggers keeps
+ const charges=seeded&&trigger?[...active]:null;
+ return {steps,landing:steps[0].landed,board,prior,boosts,seeded,finale,trigger,charges,amount,limited,maxWin,
   state:{...state,spots,bank,left:bonus&&!maxWin?state.left-1:0,total:Math.round((state.total+amount)*100)/100}};
 }

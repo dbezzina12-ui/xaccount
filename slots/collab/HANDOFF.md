@@ -4,6 +4,46 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-02 · Claude → ChatGPT · Bonuses landed in Pollen Charge and Hive Overdrive keep the multipliers
+
+**Dylan:** "Bonuses that are spun in during Overdrive or Charge should keep their multis … Might mean it needs a rework or just less likely for a bonus."
+
+**Did** (branch `ccr-52c8075e-57i9ob`):
+- **Rule:** a bonus landed in either mode starts its 10 free spins with that spin's final multipliers. Each cell keeps its multiplier, or the bonus's own start if that is higher (2× in Super and Hidden). Bought bonuses and bonuses from base or Signal Boost spins are unchanged.
+- **What it's worth:** a Hive Overdrive bonus now averages about 3,300× (its Queen Override about 20,000×), and a Pollen Charge bonus about 1,000×. A bought or base-game Worker Shift averages 96×.
+- **Rebalanced at 96%:**
+  - Pollen Charge lands FS less often: 5% per reel, so a bonus about 1 in 709 spins (was 1 in 216). Its opening Wild is now 94.9% and it never lands a second.
+  - Hive Overdrive keeps its bonus chance, about 1 in 198 spins. Its second opening Wild drops from 15% to 7.6%.
+  - Tumble Wilds are unchanged, so the big hits got bigger:
+
+    | | Pays anything | 50× its cost | 100× its cost | Highest seen |
+    | --- | --- | --- | --- | --- |
+    | Pollen Charge, before → now | 35% → 34% | 1 in 1,569 → 1 in 956 | 1 in 11,869 → 1 in 3,877 | 24,594× |
+    | Hive Overdrive, before → now | 40% → 38% | 1 in 3,040 → 1 in 2,398 | the cap: 1 in 52,600 → 1 in 47,300 | 25,000× |
+
+  - Checked on fresh spins: Pollen Charge 95.91% ± 0.21, Hive Overdrive 96.05% ± 0.22. Nothing else changed.
+- **Game:**
+  - A pending bonus keeps the multipliers through a reload.
+  - The award screen's charge map shows them, with the caption "Starting board · multipliers kept from the trigger spin".
+  - The bonus board starts with them, and the notice says they were kept.
+  - The field manual states the rule and both FS chances.
+- **Tools:** both modes are now measured and fitted on whole rounds. `MATH.md` adds a table of what their bonuses are worth.
+- **Cache keys:** `rules.mjs?v=32`, `game.mjs?v=33`.
+- **Checked:**
+  - Tests: `npm test`, the rules suite (now plays 80 bonuses from kept multipliers), win-show, and the 9 mascot browser tests all pass.
+  - In the real game at 1280×720 and 390×844: a saved pending bonus with 32×–128× multipliers shows them on the award screen, starts the free spins with them and keeps the trigger win toward the cap. Pollen Charge and Hive Overdrive spins debit and credit correctly. No console errors.
+
+**Files:** `games/robobees/dist/{rules.mjs, game.mjs, index.html}`, `games/robobees/{MATH.md, math/summary.json, README.md, RELEASE_STATUS.md, tests/bonus-rules.mjs}`, `tools/math/robobees-{sim,fit,report}.mjs`, `tests/robobees.test.mjs`, `collab/BOARD.md`.
+
+**Next for ChatGPT:**
+1. On the award screen's small charge map, 64× and 128× cells are pale and hard to read. Its colours were made for 2× cells only.
+2. The Pollen Charge and Hive Overdrive cards could say their bonuses keep the multipliers. That's your copy; the rule is in the field manual.
+3. A Hive Overdrive bonus now starts at 32×+ everywhere, so its free spins pay much bigger. Check the bonus presentation and celebrations with one.
+
+**Questions for Dylan:** none new. Signal Boost tightening and math sign-off are still open.
+
+**Blocked on:** nothing.
+
 ### 2026-11-02 · ChatGPT → Claude · Full-screen RoboBees bonus results
 
 All three bonuses now end on a full-screen Total Win with the credited cents and actual free spins played. An unfinished acknowledgement survives reloading without another credit. Checked a $78.94 Super on desktop and phone, a Regular result below Nice, a zero receipt, and an early Hidden cap across reload and dismissal. Open `?preview=bonus-end` for the seeded final-spin replay. The entry map and field manual now explicitly describe the fresh bonus board. The shipped math is unchanged.

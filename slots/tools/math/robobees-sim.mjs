@@ -46,8 +46,9 @@ async function work({task, math, opts, seed}) {
       if (j < KEEP) sample[j] = v;
     }
   };
-  const bonus = (mode, carry = 0) => {
-    let st = R.start(mode, carry);
+  // a bonus from its start; a Pollen Charge or Hive Overdrive trigger passes the multipliers it keeps
+  const bonus = (mode, carry = 0, charges = null) => {
+    let st = R.start(mode, carry, charges);
     let capped = false;
     while (st.left > 0) {
       const r = R.spin(st, rng);
@@ -56,7 +57,7 @@ async function work({task, math, opts, seed}) {
     }
     return {total: st.total, capped};
   };
-  const key = opts.feature === 'enhanced' ? 'enhanced' : 'base';
+  const key = opts.feature in R.MATH.scatter ? opts.feature : 'base';
   const p = R.MATH.scatter[key];
   const shadowRng = rngOf(seed ^ 0x5bd1e995);
   // the likelihood of a spin's FS draws at chance a over chance b, read from its boards
@@ -93,7 +94,8 @@ async function work({task, math, opts, seed}) {
       out['q' + k] += w * w;
     }
   };
-  const out = {n: opts.n, sum: 0, sq: 0, hits: 0, capped: 0, max: 0, trig: {regular: 0, super: 0, hidden: 0}, p3: 0, p4: 0, p5: 0, q3: 0, q4: 0, q5: 0, w: 0};
+  // bsum: what the bonuses each trigger kind led to paid (rounds); lsum: the paid spins' own wins (rounds)
+  const out = {n: opts.n, sum: 0, sq: 0, hits: 0, capped: 0, max: 0, trig: {regular: 0, super: 0, hidden: 0}, bsum: {regular: 0, super: 0, hidden: 0}, lsum: 0, p3: 0, p4: 0, p5: 0, q3: 0, q4: 0, q5: 0, w: 0};
   const over = opts.over || [];
   out.over = over.map(() => 0);
   const count = (v) => {
@@ -120,11 +122,13 @@ async function work({task, math, opts, seed}) {
       if (r.trigger) {
         out.trig[r.trigger]++;
         if (task === 'rounds') {
-          const b = bonus(r.trigger, r.amount);
+          const b = bonus(r.trigger, r.amount, r.charges);
           w += b.total;
+          out.bsum[r.trigger] += b.total;
           out.capped += b.capped;
         }
       } else if (r.maxWin) out.capped++;
+      out.lsum += r.amount;
       out.sum += w;
       out.sq += w * w;
       out.max = Math.max(out.max, w);
@@ -149,12 +153,15 @@ export async function simulate(task, math, opts) {
       w.on('error', reject);
     })),
   );
-  const out = {n: 0, sum: 0, sq: 0, hits: 0, capped: 0, max: 0, trig: {regular: 0, super: 0, hidden: 0}, p3: 0, p4: 0, p5: 0, q3: 0, q4: 0, q5: 0, w: 0, sample: [], over: (opts.over || []).map(() => 0)};
+  const out = {n: 0, sum: 0, sq: 0, hits: 0, capped: 0, max: 0, trig: {regular: 0, super: 0, hidden: 0}, bsum: {regular: 0, super: 0, hidden: 0}, lsum: 0, p3: 0, p4: 0, p5: 0, q3: 0, q4: 0, q5: 0, w: 0, sample: [], over: (opts.over || []).map(() => 0)};
   for (const p of parts) {
     p.over.forEach((c, j) => (out.over[j] += c));
-    for (const k of ['n', 'sum', 'sq', 'hits', 'capped', 'p3', 'p4', 'p5', 'q3', 'q4', 'q5', 'w']) out[k] += p[k];
+    for (const k of ['n', 'sum', 'sq', 'hits', 'capped', 'lsum', 'p3', 'p4', 'p5', 'q3', 'q4', 'q5', 'w']) out[k] += p[k];
     out.max = Math.max(out.max, p.max);
-    for (const k in out.trig) out.trig[k] += p.trig[k];
+    for (const k in out.trig) {
+      out.trig[k] += p.trig[k];
+      out.bsum[k] += p.bsum[k];
+    }
     for (const v of p.sample) out.sample.push(v);
   }
   out.mean = out.sum / out.n;
