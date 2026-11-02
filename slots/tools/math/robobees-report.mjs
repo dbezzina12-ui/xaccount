@@ -33,17 +33,21 @@ const FEATURES = [
   {id: 'full32', label: 'Hive Overdrive', cost: R.features.full32.price, feature: 'full32', scatter: MATH.scatter.base, lines: 1e6, rounds: 5e5, seed: 5},
 ].map((f) => ({...f, lines: f.lines * scale, rounds: f.rounds * scale}));
 
+// big hits: how often a round pays at least each multiple of its price (counted, not sampled)
+const MULTS = [1, 2, 5, 10, 25, 50, 100];
+const BUY_T = [...new Set(Object.values(R.buys).flatMap((b) => MULTS.map((m) => m * b.price)))].sort((a, b) => a - b);
+
 // ---------------------------------------------------------------- measure
 const bonus = {};
 for (const [i, m] of MODES.entries()) {
-  bonus[m] = await simulate('bonus', MATH, {mode: m, n: N[m], seed: 101 + i});
+  bonus[m] = await simulate('bonus', MATH, {mode: m, n: N[m], seed: 101 + i, over: BUY_T});
   log(`${m}: ${bonus[m].mean.toFixed(2)}x ± ${(1.96 * bonus[m].se).toFixed(2)}`);
 }
 const lines = {};
 const rounds = {};
 for (const f of FEATURES) {
   lines[f.id] = await simulate('lines', MATH, {feature: f.feature, n: f.lines, seed: 200 + f.seed, boost: BOOST});
-  rounds[f.id] = await simulate('rounds', MATH, {feature: f.feature, n: f.rounds, seed: 300 + f.seed});
+  rounds[f.id] = await simulate('rounds', MATH, {feature: f.feature, n: f.rounds, seed: 300 + f.seed, over: MULTS.map((m) => m * f.cost)});
   log(`${f.id}: lines ${lines[f.id].mean.toFixed(4)}, rounds sampled`);
 }
 
@@ -67,7 +71,7 @@ for (const f of FEATURES) {
   modes[f.id] = {
     label: f.label, cost: f.cost, rtp: ret / f.cost, ci: (1.96 * se) / f.cost, parts: Object.fromEntries(Object.entries(parts).map(([k, v]) => [k, v / f.cost])),
     hit: share(s, (v) => v > 0), atLeastCost: share(s, (v) => v >= f.cost), median: q(s, 0.5), p90: q(s, 0.9), p99: q(s, 0.99), p999: q(s, 0.999),
-    sdPerCost: rounds[f.id].sd / f.cost, cap: capOdds, sample: s, max: rounds[f.id].max,
+    sdPerCost: rounds[f.id].sd / f.cost, cap: capOdds, sample: s, max: rounds[f.id].max, big: rounds[f.id].over.map((c) => c / rounds[f.id].n),
     bonusRate: MODES.reduce((a, m) => a + P[m], 0), rates: P, scatter: f.scatter,
   };
 }
@@ -79,7 +83,8 @@ const buyOf = (id, mix) => {
   const total = 4e5;
   const s = sorted(MODES.flatMap((m) => (mix[m] ? Array.from({length: Math.round(total * mix[m])}, (_, i) => bonus[m].sample[i % bonus[m].sample.length]) : [])));
   const capOdds = MODES.reduce((a, m) => a + (mix[m] || 0) * (bonus[m].capped / bonus[m].n), 0);
-  return {label: R.buys[id].label + (id === 'mystery' ? '' : ' (buy)'), cost, rtp: mean / cost, ci: (1.96 * se) / cost, hit: share(s, (v) => v > 0), atLeastCost: share(s, (v) => v >= cost), median: q(s, 0.5), p90: q(s, 0.9), p99: q(s, 0.99), p999: q(s, 0.999), sdPerCost: Math.sqrt(MODES.reduce((a, m) => a + (mix[m] || 0) * (bonus[m].sd ** 2 + bonus[m].mean ** 2), 0) - mean ** 2) / cost, cap: capOdds, mix, max: Math.max(...MODES.filter((m) => mix[m]).map((m) => bonus[m].max))};
+  return {label: R.buys[id].label + (id === 'mystery' ? '' : ' (buy)'), cost, rtp: mean / cost, ci: (1.96 * se) / cost, hit: share(s, (v) => v > 0), atLeastCost: share(s, (v) => v >= cost), median: q(s, 0.5), p90: q(s, 0.9), p99: q(s, 0.99), p999: q(s, 0.999), sdPerCost: Math.sqrt(MODES.reduce((a, m) => a + (mix[m] || 0) * (bonus[m].sd ** 2 + bonus[m].mean ** 2), 0) - mean ** 2) / cost, cap: capOdds, mix, max: Math.max(...MODES.filter((m) => mix[m]).map((m) => bonus[m].max)),
+    big: MULTS.map((k) => MODES.reduce((a, m) => a + (mix[m] || 0) * (bonus[m].over[BUY_T.indexOf(k * cost)] / bonus[m].n), 0))};
 };
 const [mR, mS, mH] = MATH.mystery;
 const buys = {regular: buyOf('regular', {regular: 1}), super: buyOf('super', {super: 1}), mystery: buyOf('mystery', {regular: mR, super: mS, hidden: mH})};
@@ -104,6 +109,12 @@ md.push(`- **Max win** is ${MATH.cap.toLocaleString('en-US')}x the base bet per 
 md.push(`- **Mystery Buy** reveals Regular ${pct(mR, 0)}, Super ${pct(mS, 0)} or Hidden ${pct(mH, 0)}. Hidden is never sold on its own.`);
 md.push(`- **Pollen Charge** and **Hive Overdrive** pay their wins on the base bet: they return 96% of their ${modes.random.cost}x and ${modes.full32.cost}x prices. Each draws its own symbols and Wilds (below) and keeps the base FS chance.`);
 md.push('- **Buys** are measured on the bought bonus alone: a bought round has no paid trigger spin.', '');
+md.push('## Big hits', '');
+md.push(`How often a round pays at least each multiple of what it costs (counted over ${FEATURES.map((f) => `${(f.rounds / 1e6).toLocaleString('en-US')}M`).join(', ')} whole rounds and the bonus samples above).`, '');
+md.push(`| Mode | Cost | ${MULTS.map((m) => `${m}x its cost`).join(' | ')} |`);
+md.push(`| --- | --- | ${MULTS.map(() => '---').join(' | ')} |`);
+for (const r of rows) md.push(`| ${r.label} | ${r.cost}x | ${r.big.map((v) => (v === 0 ? 'not seen' : v < 0.01 ? odds(v) : pct(v, 1))).join(' | ')} |`);
+md.push('');
 md.push('## Natural bonus rates', '');
 md.push('| Mode | Scatter chance per reel | Worker Shift (3 FS) | Swarm Protocol (4 FS) | Queen Override (5 FS) | Any bonus |');
 md.push('| --- | --- | --- | --- | --- | --- |');

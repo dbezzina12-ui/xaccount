@@ -7,6 +7,7 @@
 //   lines   {feature, n}: n paid spins without playing their bonuses: line-win sum, hits, triggers, sampled wins
 //   bonus   {mode, n, carry}: n bonuses from their start: sum, sum of squares, cap hits, sampled totals
 //   rounds  {feature, n}: n paid spins with their bonuses played, as the game does: per-round totals sampled
+// opts.over: thresholds (x the base bet); out.over counts the rounds or bonuses paying at least each one
 // With {boost: q}, each paid spin of 'lines' is shadowed by a second spin from the same state with the FS chance per
 // reel raised to q, weighted by how much likelier q made its FS draws (importance sampling): an unbiased and precise
 // measure of the chance of ending on 3, 4 or 5 FS (rates), even for the rare 5-FS trigger. The chain itself runs at
@@ -93,6 +94,11 @@ async function work({task, math, opts, seed}) {
     }
   };
   const out = {n: opts.n, sum: 0, sq: 0, hits: 0, capped: 0, max: 0, trig: {regular: 0, super: 0, hidden: 0}, p3: 0, p4: 0, p5: 0, q3: 0, q4: 0, q5: 0, w: 0};
+  const over = opts.over || [];
+  out.over = over.map(() => 0);
+  const count = (v) => {
+    for (let j = 0; j < over.length; j++) if (v >= over[j] - 1e-9) out.over[j]++;
+  };
   if (task === 'bonus') {
     for (let i = 0; i < opts.n; i++) {
       const b = bonus(opts.mode, opts.carry || 0);
@@ -101,6 +107,7 @@ async function work({task, math, opts, seed}) {
       out.capped += b.capped;
       out.max = Math.max(out.max, b.total);
       if (b.total > 0) out.hits++;
+      count(b.total);
       keep(b.total);
     }
   } else {
@@ -122,6 +129,7 @@ async function work({task, math, opts, seed}) {
       out.sq += w * w;
       out.max = Math.max(out.max, w);
       if (w > 0) out.hits++;
+      count(w);
       keep(w);
     }
   }
@@ -141,8 +149,9 @@ export async function simulate(task, math, opts) {
       w.on('error', reject);
     })),
   );
-  const out = {n: 0, sum: 0, sq: 0, hits: 0, capped: 0, max: 0, trig: {regular: 0, super: 0, hidden: 0}, p3: 0, p4: 0, p5: 0, q3: 0, q4: 0, q5: 0, w: 0, sample: []};
+  const out = {n: 0, sum: 0, sq: 0, hits: 0, capped: 0, max: 0, trig: {regular: 0, super: 0, hidden: 0}, p3: 0, p4: 0, p5: 0, q3: 0, q4: 0, q5: 0, w: 0, sample: [], over: (opts.over || []).map(() => 0)};
   for (const p of parts) {
+    p.over.forEach((c, j) => (out.over[j] += c));
     for (const k of ['n', 'sum', 'sq', 'hits', 'capped', 'p3', 'p4', 'p5', 'q3', 'q4', 'q5', 'w']) out[k] += p[k];
     out.max = Math.max(out.max, p.max);
     for (const k in out.trig) out.trig[k] += p.trig[k];
