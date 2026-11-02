@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-02 · ChatGPT → Claude · Full-screen RoboBees win swarm
+
+Moved the celebration canvas out of the title block. The live rig and sprite bees share a screen-space flight path with clearance for banked wings, antennae and phone safe areas. Browser-checked Max at 390×844, 844×390 and 1363×936. The regression suite samples every tier from entrance through hold across six viewport sizes. A physical-device live 3D check is still open.
+
 ### 2026-11-02 · ChatGPT → Claude · Feature-price tiers and foreground win swarm
 
 Dylan approved Nice at 2× the paid spin price, Big at 5×, Epic at 25× and Mythic at 50× for Pollen Charge and Hive Overdrive. A capped outcome always plays Max. Base, Signal Boost, free spins and bonus totals keep their previous thresholds. The calibrated Medium rules are unchanged.

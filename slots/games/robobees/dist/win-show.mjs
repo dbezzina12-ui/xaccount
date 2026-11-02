@@ -45,15 +45,67 @@ function polygon(ctx,x,y,r){
  ctx.closePath();
 }
 
+// Flight positions are optical centres in viewport pixels. Only the etched artwork
+// and lettering use the cabinet's original design coordinates.
+export function swarmFlight(view,level,t,still=false){
+ const {w,h,insets,stage}=view;
+ const pad=Math.max(8,Math.min(w,h)*.025);
+ const left=insets.left+pad,right=w-insets.right-pad,top=insets.top+pad;
+ const bottom=Math.min(h-insets.bottom-pad,stage.y+stage.h*.47);
+ const width=right-left,height=bottom-top;
+ if(width<=0||height<=0)return [];
+ const wide=clamp((w/h-.7)/1.1);
+ const heroSpan=Math.min(stage.w*(.42+.008*level),width*.72,height*.93);
+ const placed=[];
+ for(let i=level-1;i>=0;i--){
+  const hero=i===0,side=i%2?-1:1,rank=Math.floor((i-1)/2);
+  const arrival=still?1:clamp((t-i*.055)/(.74+i*.03));
+  if(!arrival)continue;
+  const glide=1-(1-arrival)**2,arc=Math.sin(arrival*Math.PI);
+  const emerge=clamp(arrival/.24);
+  const span=hero?heroSpan:heroSpan*(.55-rank*.062);
+  const size=span*(.67+.33*glide)*emerge*(2-emerge);
+  const bank=still?0:side*(.30*(1-glide)+.085*arc);
+  // A square around the widest wingbeat also encloses the sprite's antennae and
+  // the live rig's feet. Rotate that envelope before choosing the flight path.
+  const reach=size*(Math.abs(Math.cos(bank))+Math.abs(Math.sin(bank)))/2;
+  const endX=hero?.5:.5+side*[.265,.402,.475][rank];
+  const endY=hero?.66:[.32+.21*wide,.81-.03*wide,.12+.13*wide][rank];
+  const fromX=hero?(level===2?.82:.17):side<0?.015:.985;
+  const fromY=hero?(level===7?.91:.13):rank%2?.90:.15;
+  const bob=still?0:Math.sin(t*2.7+i)*.013;
+  const x=clamp(fromX+(endX-fromX)*glide+arc*side*(level===3?.09:.045));
+  const y=clamp(fromY+(endY-fromY)*glide-arc*(level>=5?.14:.08)+bob);
+  placed.push({x:left+reach+x*(width-2*reach),y:top+reach+y*(height-2*reach),
+   size,hero,side,arrival,bank,beat:still?i:t*42+i*1.2,yaw:side*.75});
+ }
+ return placed;
+}
+
+function rigPlacement(bee){
+ // The 3D rig's wing envelope is 2.26 authored units wide and its optical
+ // centre is .175 units above its origin. The sprite is already centred.
+ const size=bee.size/2.26;
+ return {...bee,size,x:bee.x-Math.sin(bee.bank)*.175*size,y:bee.y+Math.cos(bee.bank)*.175*size};
+}
+
 function paint(ctx,canvas,config,t,sprites,still,scene){
- // Fixed design coordinates let the same choreography fit a phone or a landscape cabinet.
- const w=720,h=500,scale=Math.min(2,(canvas.clientWidth||w)/w*(devicePixelRatio||1));
+ const w=canvas.clientWidth,h=canvas.clientHeight;
+ if(!w||!h)return;
+ if(!scene.view||scene.view.w!==w||scene.view.h!==h){
+  const rect=scene.stage.getBoundingClientRect(),origin=canvas.getBoundingClientRect();
+  const safe=getComputedStyle(scene.dismiss);
+  scene.view={w,h,stage:{x:rect.left-origin.left,y:rect.top-origin.top,w:rect.width,h:rect.height},
+   insets:{left:parseFloat(safe.paddingLeft),right:parseFloat(safe.paddingRight),top:parseFloat(safe.paddingTop),bottom:parseFloat(safe.paddingBottom)}};
+ }
+ const scale=Math.min(2,devicePixelRatio||1,Math.sqrt(2400000/(w*h)));
  if(canvas.width!==Math.round(w*scale)||canvas.height!==Math.round(h*scale)){
   canvas.width=Math.round(w*scale);canvas.height=Math.round(h*scale);
  }
- ctx.setTransform(scale,0,0,scale,0,0);ctx.clearRect(0,0,w,h);
+ ctx.setTransform(canvas.width/w,0,0,canvas.height/h,0,0);ctx.clearRect(0,0,w,h);
  const level=config.bees,accent=config.accent,open=still?1:1-(1-clamp(t/.58))**3;
- ctx.save();ctx.translate(360,291);
+ const stage=scene.view.stage;
+ ctx.save();ctx.translate(stage.x,stage.y);ctx.scale(stage.w/720,stage.h/500);ctx.translate(360,291);
  // Etched honeycomb rings and illuminated contact pads expand out from the count.
  for(let ring=0;ring<(level>=3?3:2);ring++){
   ctx.globalAlpha=.17-ring*.035;ctx.strokeStyle=accent;ctx.lineWidth=ring?1.2:2;
@@ -99,26 +151,9 @@ function paint(ctx,canvas,config,t,sprites,still,scene){
   ctx.fillRect(-3,-1,2+phase*7,2.4);ctx.restore();
  }
  ctx.restore();
- // Fly the hero into the foreground and fan the smaller workers across the outer
- // thirds. Reserve the bottom half for the title and the exact payout.
- const placed=[];
- for(let i=level-1;i>=0;i--){
-  const hero=i===0,arrival=still?1:clamp((t-i*.045)/(.62+i*.025));
-  if(!arrival)continue;
-  const side=i%2?-1:1,rank=Math.floor((i-1)/2);
-  const endX=hero?360:360+side*(154+rank*66),endY=hero?132:144+rank*28;
-  const arc=Math.sin(arrival*Math.PI),bob=still?0:Math.sin(t*2.7+i)*4;
-  let x=endX+(1-arrival)**2*(hero?-215:side*185);
-  let y=endY+(1-arrival)**2*(hero?-100:75)+bob-16*arc;
-  if(level===2){x=endX+(1-arrival)*(hero?185:-190);y-=arc*21}
-  if(level===3){x+=arc*Math.cos(arrival*Math.PI*2+i)*46;y+=arc*Math.sin(arrival*Math.PI*2+i)*32}
-  if(level===5)y-=arc*(hero?27:9+i*5);
-  if(level===7){x=360+(endX-360)*arrival+arc*side*65;y=208+(endY-208)*arrival-arc*36+bob}
-  const size=(hero?213+level*5:131-rank*16)*(.55+.45*arrival);
-  placed.push({x,y,size,hero,side,arrival,bank:(1-arrival)*side*.34,beat:still?i:t*42+i*1.2,yaw:side*.75});
- }
+ const placed=swarmFlight(scene.view,level,t,still);
  if(scene.painter){
-  try{scene.painter.draw(ctx,w,h,scale,placed);return}catch{scene.painter=null}
+  try{scene.painter.draw(ctx,w,h,scale,placed.map(rigPlacement));return}catch{scene.painter=null}
  }
  if(!sprites)return;
  const {clip,img}=sprites;
@@ -146,7 +181,7 @@ function recording(id,context){
 export function mountWinShow(dialog,{money,audioContext,muted,swarm}){
  const canvas=dialog.querySelector('canvas'),ctx=canvas.getContext('2d'),amount=dialog.querySelector('.win-cash');
  const title=dialog.querySelector('use'),dismiss=dialog.querySelector('.win-dismiss');
- const reader=dialog.querySelector('.win-reader');
+ const reader=dialog.querySelector('.win-reader'),stage=dialog.querySelector('.win-stage');
  let active=null,sprites=null;
 
  function stopCue(s){
@@ -206,7 +241,7 @@ export function mountWinShow(dialog,{money,audioContext,muted,swarm}){
    amount.style.setProperty('--cash-size',Math.min(13,156/money(total).length)+'cqw');
    reader.textContent='';dismiss.setAttribute('aria-label','Show total');dialog.showModal();dismiss.focus({preventScroll:true});
    return new Promise(resolve=>{
-    const s={id,scope:context,start:now,last:now,counter,resolve,still:reduced,frame:0,cueVersion:0,painter:null};active=s;
+    const s={id,scope:context,start:now,last:now,counter,resolve,still:reduced,frame:0,cueVersion:0,painter:null,stage,dismiss};active=s;
     try{s.painter=swarm?.()??null}catch{/* Use the pre-rendered mascot frames when 3D is unavailable. */}
     void swarmArt().then(a=>{sprites=a});void cue(s);update(s,now);s.frame=requestAnimationFrame(time=>tick(s,time));
    });

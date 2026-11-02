@@ -2,7 +2,7 @@ import {playStinger,flyHiveBees} from './drone-stinger.mjs?v=15';
 import {mountMascot} from './mascot/mascot.mjs?v=6';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
-import {mountWinShow,tierFor,tiers} from './win-show.mjs?v=34';
+import {mountWinShow,tierFor,tiers} from './win-show.mjs?v=35';
 import {rollReels,dropTumble,symbolClass,symbolUrl} from './reels.mjs?v=33';
 import {addHoney,prepareHoney} from './honey.mjs';
 import {MATH,buys,credit,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=31';
