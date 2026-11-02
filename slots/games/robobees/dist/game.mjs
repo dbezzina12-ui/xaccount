@@ -3,9 +3,9 @@ import {mountMascot} from './mascot/mascot.mjs?v=6';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
 import {mountWinShow,tierFor,tiers} from './win-show.mjs?v=26';
-import {rollReels,dropTumble,symbolClass,symbolUrl} from './reels.mjs?v=25';
+import {rollReels,dropTumble,symbolClass,symbolUrl} from './reels.mjs?v=33';
 import {addHoney,prepareHoney} from './honey.mjs';
-import {MATH,buys,credit,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=30';
+import {MATH,buys,credit,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=31';
 const $=id=>document.getElementById(id);
 const grid=$('board'),modal=$('menu'),intro=$('bonus-intro'),cabinet=grid.closest('.cab');
 const playStage=$('play-stage');
@@ -395,7 +395,7 @@ if(hiveDemo){
   button.hidden=true;document.body.classList.remove('preview-ready');
   state=start();face=sample;featureMode='full32';balance=1000000;bet=100;draw(face,state.spots);
   // Fixed demo only. The three wins and their payouts use the live spin rules.
-  let seed=2590;
+  let seed=154;
   await play(()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296));
   button.textContent='↻ Replay 32× tumble · '+money(win)+' won';button.hidden=false;document.body.classList.add('preview-ready');
  };

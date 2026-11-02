@@ -15,8 +15,9 @@
 //    chance, and Hidden's odds of boosting 2 or 3 cells rather than 1 (1 : x : x/3; it always lands one Wild, a second
 //    3% of the time).
 // 4. One knob per paid feature, each at its price: Signal Boost's FS chance (3x); Pollen Charge's second-Wild chance
-//    (20x; it always lands one, with its seeds leaning to 16x and 32x); Hive Overdrive's tumble-Wild chance (250x; two
-//    opening Wilds often, on premium-rich symbols).
+//    (20x; it always lands one, its seeds lean to 16x and 32x, and 8% of tumble tiles are Wild); Hive Overdrive's
+//    tumble-Wild chance (250x; one opening Wild, a second 15% of the time, on premium-rich symbols). The two seeded
+//    features keep most of their Wilds for the tumbles, so long chains and big hits carry more of their return.
 // A paid mode's return: its line wins plus, for each bonus, the chance of triggering it (importance-sampled) times its
 // target average.
 import fs from 'node:fs';
@@ -66,11 +67,11 @@ export async function fit() {
     cap: 25000,
     pays: SHAPE,
     weights: {base: [2, 3], random: [2, 3], full32: [4, 2], regular: [4, 2], super: [2, 3], hidden: [2, 3]},
-    wilds: {base: [0.33, 0.08], random: [1, 0.3], full32: [1, 0.6], regular: [1, 0.3], super: [0.4, 0.1], hidden: [1, 0.03]},
-    refillWild: {base: 0.02, random: 0.02, full32: 0.08, regular: 0.02, super: 0.02, hidden: 0.02},
+    wilds: {base: [0.33, 0.08], random: [1, 0.05], full32: [1, 0.15], regular: [1, 0.3], super: [0.4, 0.1], hidden: [1, 0.03]},
+    refillWild: {base: 0.02, random: 0.08, full32: 0.17, regular: 0.02, super: 0.02, hidden: 0.02},
     scatter: {base: 0.075, enhanced: 0.115},
     boosts: [1, 0.5, 0.5 / 3],
-    pollen: [0.1, 0.12, 0.18, 0.3, 0.3],
+    pollen: [0.05, 0.08, 0.12, 0.35, 0.4],
     mystery: [0.5, 0.4, 0.1],
   };
   const tuned = (patch) => {
@@ -123,7 +124,7 @@ export async function refine(names, done = () => {}, scale = 4) {
     super: {get: () => math.wilds.super[0], set: (m, x) => (m.wilds.super[0] = x), f: (m) => bonus(m, 'super', 32).then((v) => v - TARGET.super), range: [0.15, 1]},
     hidden: {get: () => math.boosts[1], set: (m, x) => (m.boosts = [1, x, Math.round((x / 3) * 1e6) / 1e6]), f: (m) => bonus(m, 'hidden', 33).then((v) => v - TARGET.hidden), range: [0.001, 1.5]},
     enhanced: {get: () => math.scatter.enhanced, set: (m, x) => (m.scatter.enhanced = x), f: (m) => paid(m, 'enhanced', 34).then((v) => v / PRICE.enhanced - RTP), range: [0.08, 0.3]},
-    random: {get: () => math.wilds.random[1], set: (m, x) => (m.wilds.random[1] = x), f: (m) => paid(m, 'random', 35).then((v) => v / PRICE.random - RTP), range: [0, 1]},
+    random: {get: () => math.wilds.random[1], set: (m, x) => (m.wilds.random[1] = x), f: (m) => paid(m, 'random', 35).then((v) => v / PRICE.random - RTP), range: [0, 0.2], wide: true},
     full32: {get: () => math.refillWild.full32, set: (m, x) => (m.refillWild.full32 = x), f: (m) => paid(m, 'full32', 36).then((v) => v / PRICE.full32 - RTP), range: [0.005, 0.4]},
   };
   for (const name of names) {
