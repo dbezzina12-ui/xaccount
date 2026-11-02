@@ -16,6 +16,11 @@ export function tierFor(multiple,maxWin=false,seededPrice=0){
  return null;
 }
 
+// A cap can end the ten-spin award early. Preserve the sum of credited cents.
+export function bonusSummary(before,result){
+ return {mode:before.mode,spins:10-before.left+1,cents:result.state.awardedCents,tier:tierFor(result.state.total,result.maxWin)};
+}
+
 // Integer-cent count and two-stage skip follow the studio celebration model.
 export function createWinCount(total,seconds,hold){
  let elapsed=0,held=0,complete=seconds===0,closed=false;
@@ -113,7 +118,7 @@ function paint(ctx,canvas,config,t,sprites,still,scene){
   polygon(ctx,0,0,radius);ctx.stroke();
  }
  ctx.globalAlpha=1;
- for(const side of [-1,1]){
+ if(!scene.bonus)for(const side of [-1,1]){
   ctx.save();ctx.scale(side,1);
   for(let k=0;k<Math.min(4,level+1);k++){
    const y=-29+k*13,x=111+k*8,reach=(56+level*9-k*10)*open;
@@ -167,6 +172,9 @@ function paint(ctx,canvas,config,t,sprites,still,scene){
 
 }
 
+const bonusScenery={regular:'woodland-clearing',super:'foundry',hidden:'queen-vault'};
+const ordinaryTotal={seconds:1.15,bees:1,accent:'#ffaa51'};
+
 const recordings=new Map();
 function recording(id,context){
  if(!recordings.has(id)){
@@ -182,6 +190,11 @@ export function mountWinShow(dialog,{money,audioContext,muted,swarm}){
  const canvas=dialog.querySelector('canvas'),ctx=canvas.getContext('2d'),amount=dialog.querySelector('.win-cash');
  const title=dialog.querySelector('use'),dismiss=dialog.querySelector('.win-dismiss');
  const reader=dialog.querySelector('.win-reader'),stage=dialog.querySelector('.win-stage');
+ const scenery=dialog.querySelector('.bonus-landscape img');
+ function prepareBonus(mode){
+  const url='assets/'+bonusScenery[mode]+'.webp';
+  if(scenery.getAttribute('src')!==url)scenery.src=url;
+ }
  let active=null,sprites=null;
 
  function stopCue(s){
@@ -210,40 +223,55 @@ export function mountWinShow(dialog,{money,audioContext,muted,swarm}){
  function update(s,now){
   const counter=s.counter,complete=counter.complete;
   const formatted=money(counter.value);if(amount.textContent!==formatted)amount.textContent=formatted;
-  if(ctx)paint(ctx,canvas,tiers[s.id],s.still?1:(now-s.start)/1000,sprites,s.still,s);
+  if(ctx)paint(ctx,canvas,s.config,s.still?1:(now-s.start)/1000,sprites,s.still,s);
   if(complete&&!s.announced){
-   dialog.dataset.phase='total';dismiss.setAttribute('aria-label','Continue');s.announced=true;
-   reader.textContent=tiers[s.id].label+'. '+s.scope+'. '+formatted+'.';
+   dialog.dataset.phase='total';dismiss.setAttribute('aria-label',s.bonus?'Return to reels':'Continue');s.announced=true;
+   reader.textContent=s.scope+'. '+formatted+'.';
   }
  }
  function advance(){
-  if(!active)return;
-  const s=active;s.counter.advance();stopCue(s);
-  if(s.counter.closed)close();else update(s,performance.now());
+  const s=active;if(!s||s.leaving)return;
+  s.counter.advance();stopCue(s);
+  if(!s.counter.closed){update(s,performance.now());return}
+  if(!s.bonus||s.still){close();return}
+  s.leaving=true;cancelAnimationFrame(s.frame);
+  dialog.animate([{opacity:1},{opacity:0}],{duration:260,easing:'ease-in',fill:'forwards'}).finished
+   .then(animation=>{animation.cancel();if(active===s)close()});
  }
  function tick(s,now){
   if(s!==active)return;
   s.counter.tick((now-s.last)/1000);s.last=now;
-  if(s.counter.closed||document.hidden){close();return}
+  if(s.counter.closed||(!s.bonus&&document.hidden)){close();return}
   update(s,now);s.frame=requestAnimationFrame(time=>tick(s,time));
  }
  dismiss.addEventListener('click',advance);
  dialog.addEventListener('cancel',e=>{e.preventDefault();advance()});
- document.addEventListener('visibilitychange',()=>{if(document.hidden)close()});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden&&!active?.bonus)close()});
  return {
-  show(id,total,context,{quick=false,reduced=false,holdForReview=false}={}){
-   if(!id||document.hidden)return Promise.resolve();
+  prepareBonus,
+  show(id,total,context,{quick=false,reduced=false,holdForReview=false,bonus=null}={}){
+   if(!bonus&&(!id||document.hidden))return Promise.resolve();
    close();
-   const conf=tiers[id],now=performance.now(),counter=createWinCount(total,reduced?0:conf.seconds*(quick?.35:1),holdForReview?Infinity:reduced?1.05:conf.hold*(quick?.65:1));
-   dialog.dataset.tier=id;dialog.dataset.phase='counting';dialog.style.setProperty('--signal',conf.accent);
-   title.setAttribute('href','assets/wins/titles.svg#'+id);dialog.querySelector('.win-name').textContent=conf.label;
-   // Keep the largest supported payouts on one line, including at narrow phone widths.
-   amount.style.setProperty('--cash-size',Math.min(13,156/money(total).length)+'cqw');
+   const conf=tiers[id]??ordinaryTotal,now=performance.now();
+   const seconds=reduced||total===0?0:conf.seconds*(quick?.35:1);
+   const counter=createWinCount(total,seconds,bonus||holdForReview?Infinity:reduced?1.05:conf.hold*(quick?.65:1));
+   let heading=conf.label,scope=context;
+   if(bonus){
+    prepareBonus(bonus.mode);dialog.dataset.bonus=bonus.mode;
+    const played=bonus.spins+' free spin'+(bonus.spins===1?'':'s');
+    dialog.querySelector('.bonus-signature').textContent=context+' complete';
+    dialog.querySelector('.bonus-detail').textContent=played+(id?' · '+conf.label:'');
+    heading=context+' total win';scope=heading+'. '+played+(id?'. '+conf.label:'');
+   }else{delete dialog.dataset.bonus;scope=heading+'. '+context}
+   dialog.dataset.tier=id??'total';dialog.dataset.phase='counting';dialog.style.setProperty('--signal',conf.accent);
+   title.setAttribute('href','assets/wins/titles.svg?v=37#'+(bonus?'total':id));dialog.querySelector('.win-name').textContent=heading;
+   amount.style.setProperty('--cash-size',Math.min(bonus?17:13,156/money(total).length)+'cqw');
    reader.textContent='';dismiss.setAttribute('aria-label','Show total');dialog.showModal();dismiss.focus({preventScroll:true});
    return new Promise(resolve=>{
-    const s={id,scope:context,start:now,last:now,counter,resolve,still:reduced,frame:0,cueVersion:0,painter:null,stage,dismiss};active=s;
+    const config=bonus&&conf.bees===2?{...conf,bees:3}:conf;
+    const s={id,config,bonus,scope,start:now,last:now,counter,resolve,still:reduced,frame:0,cueVersion:0,painter:null,stage,dismiss};active=s;
     try{s.painter=swarm?.()??null}catch{/* Use the pre-rendered mascot frames when 3D is unavailable. */}
-    void swarmArt().then(a=>{sprites=a});void cue(s);update(s,now);s.frame=requestAnimationFrame(time=>tick(s,time));
+    void swarmArt().then(a=>{sprites=a});if(id)void cue(s);update(s,now);s.frame=requestAnimationFrame(time=>tick(s,time));
    });
   }
  };

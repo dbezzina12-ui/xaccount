@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-02 · ChatGPT → Claude · Full-screen RoboBees bonus results
+
+All three bonuses now end on a full-screen Total Win with the credited cents and actual free spins played. An unfinished acknowledgement survives reloading without another credit. Checked a $78.94 Super on desktop and phone, a Regular result below Nice, a zero receipt, and an early Hidden cap across reload and dismissal. Open `?preview=bonus-end` for the seeded final-spin replay. The entry map and field manual now explicitly describe the fresh bonus board. The shipped math is unchanged.
+
 ### 2026-11-02 · ChatGPT → Claude · Demo balance reset and reel symbol loading
 
 The Control room can restore $10,000 in demo credits between rounds. Confirm and reload preserved the bet and charged board. All twelve symbols decode before Play becomes available. On a 390px phone layout a simulated Ace failure kept Play disabled until Retry restored all 20 tiles. A, K, Q, J and 10 have a shared height on the board, rolling strips and tumbles.

@@ -2,7 +2,7 @@ import {playStinger,flyHiveBees} from './drone-stinger.mjs?v=15';
 import {mountMascot} from './mascot/mascot.mjs?v=6';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
-import {mountWinShow,tierFor,tiers} from './win-show.mjs?v=35';
+import {mountWinShow,bonusSummary,tierFor,tiers} from './win-show.mjs?v=37';
 import {rollReels,dropTumble,preloadSymbols,symbolClass,symbolUrl} from './reels.mjs?v=36';
 import {addHoney,prepareHoney} from './honey.mjs';
 import {MATH,buys,credit,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=31';
@@ -24,7 +24,8 @@ const scatterDemo=params.get('preview')==='scatter';
 const tumbleDemo=params.get('preview')==='tumble';
 const winDemo=params.get('preview')==='wins';
 const hiveDemo=params.get('preview')==='hive';
-const preview=hiveDemo||winDemo||tumbleDemo||scatterDemo||params.get('preview')==='stinger';
+const endDemo=params.get('preview')==='bonus-end';
+const preview=endDemo||hiveDemo||winDemo||tumbleDemo||scatterDemo||params.get('preview')==='stinger';
 document.body.classList.toggle('enamel-symbols',palette!=='original');
 // Keep the old colour-study link attached to its separate saved game.
 const key=palette==='enamel'?'robobees-enamel-preview-v1':'robobees-playtest-controller-v1';
@@ -35,7 +36,7 @@ try{
 }catch{}
 let state=saved?.state??start(),face=saved?.face??sample,previous=saved?.previous??null,pending=saved?.pending??null;
 // what a natural trigger spin paid: it counts toward the bonus round's cap
-let carry=saved?.carry??0;
+let carry=saved?.carry??0,bonusResult=saved?.bonusResult??null;
 // Preserve earned multipliers in features saved under the previous rules.
 if(state.mode==='super'||state.mode==='hidden')state.spots=state.spots.map(v=>Math.max(2,v));
 const startingBalance=1000000;
@@ -50,7 +51,7 @@ const controller=mountController($('controller'),{onAction:action});
 const skin=document.createElement('link');skin.rel='stylesheet';skin.href='controller/robobees.css';$('controller').shadowRoot.append(skin);
 function save(){
  if(preview)return;
- const settled=checkpoint??{state,face,previous,pending,carry,balance,win};
+ const settled=checkpoint??{state,face,previous,pending,carry,balance,win,bonusResult};
  try{localStorage.setItem(key,JSON.stringify({...settled,bet,turbo,mute,featureMode}))}catch{}
 }
 const cells=Array.from({length:20},(_,i)=>{
@@ -124,6 +125,7 @@ async function showCellValues(indices){
 }
 function lock(val){busy=val;labels()}
 async function feature(mode){
+ winShow.prepareBonus(mode);
  autoplay.stop();previous=state;state=start(mode,carry);pending=null;carry=0;win=0;stop=false;save();lock(true);
  intro.inert=true;
  await flyAcross(true,()=>{
@@ -174,10 +176,10 @@ async function showAward(){
  $('charge-map').replaceChildren(...initial.map((v,i)=>{
   const square=document.createElement('i');
   square.style.setProperty('--reel',i%5);
-  square.textContent=v?'2×':i>=5&&i<=7?'2×':'';
+  square.textContent=v?v+'×':'';
   if(square.textContent){square.classList.add('lit');square.dataset.multi=2}return square;
  }));
- $('charge-caption').textContent=mode==='regular'?'First win on a cell charges it to 2×':'Starting board · 20 cells at 2×';
+ $('charge-caption').textContent=mode==='regular'?'Starts uncharged · Wins charge cells to 2×':'Fresh board · All 20 cells start at 2×';
  intro.dataset.tier=mode;
  playStage.inert=true;
  await mascot.depart();
@@ -226,6 +228,11 @@ async function showTumbles(result,oldBank){
  }
  return lineCount;
 }
+async function presentBonusResult(){
+ const {mode,cents,tier,spins}=bonusResult;
+ await winShow.show(tier,cents,modes[mode],{bonus:{mode,spins},quick:turbo,reduced});
+ bonusResult=null;
+}
 async function play(rng=Math.random){
  if(busy){stop=true;return}
  if(pending){showAward();return}
@@ -235,8 +242,9 @@ async function play(rng=Math.random){
  stop=false;const result=spin(state,rng,bonus?null:featureMode),oldBank=state.bank;
  const award=credit(state,result.amount,bet),finished=bonus&&result.state.left===0;
  if(bonus)result.state.awardedCents=(state.awardedCents??credit({...state,total:0},state.total,bet))+award;
+ if(finished)bonusResult=bonusSummary(state,result);
  if(!bonus)balance-=spinCost();
- win=0;checkpoint={state:finished?previous:result.state,face:result.board,previous:finished?null:previous,pending:result.trigger,carry:result.trigger?result.amount:0,balance:balance+award,win:award};save();lock(true);
+ win=0;checkpoint={state:finished?(previous??start()):result.state,face:result.board,previous:finished?null:previous,pending:result.trigger,carry:result.trigger?result.amount:0,balance:balance+award,win:finished?bonusResult.cents:award,bonusResult};save();lock(true);
  $('notice').textContent=result.finale?'Final spin · '+oldBank+' bees ready to deploy.':'Reels in motion…';tone(135,.14);
  if(result.seeded){
   draw(face,result.prior);grid.classList.add('priming','feature-seeding');
@@ -254,15 +262,16 @@ async function play(rng=Math.random){
  $('notice').textContent=lineCount?lineCount+' winning lines · '+tumbles+' tumbles':'No connection this spin.';
  if(state.bank>oldBank)$('notice').textContent+=' +'+(state.bank-oldBank)+' Wild'+(state.bank-oldBank>1?'s':'')+' banked.';
  if(result.trigger){autoplay.stop();pending=result.trigger;carry=result.amount;$('notice').textContent=modes[pending]+' unlocked · Press play to enter.'}
- // Present the settled chain once. The last free spin presents the whole bonus instead.
- const multiple=finished?state.total:result.amount;
- const tier=tierFor(multiple,result.maxWin===true,result.seeded?features[featureMode].price:0);
- if(tier){
-  labels();
-  await winShow.show(tier,finished?state.awardedCents:award,finished?'Free spins total':bonus?'Free spin win':'Spin win',{quick:turbo||stop,reduced});
+ if(finished){
+  win=bonusResult.cents;labels();await presentBonusResult();
+  document.body.dataset.scene='base';state=previous??start();previous=null;draw(face,state.spots);
+ }else{
+  const tier=tierFor(result.amount,result.maxWin,result.seeded?features[featureMode].price:0);
+  if(tier){
+   labels();await winShow.show(tier,award,bonus?'Free spin win':'Spin win',{quick:turbo||stop,reduced});
+  }
+  if(result.maxWin&&!bonus)cabinetMessage('Max win · '+MATH.cap.toLocaleString('en-US')+'× reached');
  }
- if(result.maxWin&&!bonus)cabinetMessage('Max win · '+MATH.cap.toLocaleString('en-US')+'× reached');
- if(state.mode!=='base'&&state.left===0){cabinetMessage(result.maxWin?'Max win · '+MATH.cap.toLocaleString('en-US')+'× reached':modes[state.mode]+' complete · '+state.total.toFixed(2)+'× total');await wait(500);document.body.dataset.scene='base';state=previous??start();previous=null;draw(face,state.spots)}
  checkpoint=null;save();
  if(!bonus&&autoplay.active)autoplay.finishRound(play,turbo?180:500);
  lock(false);if(pending)showAward();else scheduleBonus();
@@ -390,12 +399,33 @@ for(;;){
 }
 draw(face,state.spots);grid.setAttribute('aria-busy','false');
 ready=true;loading.hidden=true;labels();
+if(state.mode!=='base')winShow.prepareBonus(state.mode);
+if(bonusResult){lock(true);await presentBonusResult();save();lock(false)}
 if(state.left===10&&(state.mode==='super'||state.mode==='hidden')){
  lock(true);primeBoard().finally(()=>{lock(false);scheduleBonus()});
 }else scheduleBonus();
 if(pending){$('notice').textContent=modes[pending]+' unlocked · Press play to enter.';showAward()}
 
-if(hiveDemo){
+if(endDemo){
+ const button=$('preview-stinger'),mode=params.get('mode');
+ const demoMode=['regular','super','hidden'].includes(mode)?mode:'super';
+ async function replay(){
+  if(busy)return;
+  button.hidden=true;document.body.classList.remove('preview-ready');
+  previous=start();state=start(demoMode);win=0;bet=100;balance=startingBalance;
+  let seed=42;
+  const rng=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);
+  // Settle the first nine spins with the shipped rules; play the tenth on screen.
+  while(state.left>1){
+   const result=spin(state,rng);
+   balance+=credit(state,result.amount,bet);state=result.state;face=result.board;
+  }
+  document.body.dataset.scene=demoMode;winShow.prepareBonus(demoMode);draw(face,state.spots);labels();
+  await play(rng);
+  button.textContent='Replay bonus ending';button.hidden=false;document.body.classList.add('preview-ready');
+ }
+ button.onclick=replay;void replay();
+}else if(hiveDemo){
  const button=$('preview-stinger');let seed;
  const rng=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);
  button.hidden=false;button.textContent='▶ Collect Wilds';document.body.classList.add('preview-ready');
