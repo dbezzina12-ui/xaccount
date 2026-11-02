@@ -1,0 +1,327 @@
+[
+  {
+    "width": 360,
+    "height": 800,
+    "intro": {
+      "background": "linear-gradient(rgba(7, 16, 22, 0.32), rgba(7, 16, 22, 0.5) 45%, rgba(7, 14, 20, 0.95)), url(\"http://127.0.0.1:32907/games/cyber-skunk/runtime/assets/ui/splash-mobile.webp\")",
+      "scroll": false,
+      "play": {
+        "x": 100.5,
+        "y": 564.6968994140625,
+        "width": 159,
+        "height": 30,
+        "top": 564.6968994140625,
+        "right": 259.5,
+        "bottom": 594.6968994140625,
+        "left": 100.5
+      }
+    },
+    "controls": {
+      "betPicker": {
+        "x": 125.328125,
+        "y": 756,
+        "width": 109.328125,
+        "height": 44,
+        "top": 756,
+        "right": 234.65625,
+        "bottom": 800,
+        "left": 125.328125
+      },
+      "betPlus": {
+        "x": 234.390625,
+        "y": 651.59375,
+        "width": 44,
+        "height": 44,
+        "top": 651.59375,
+        "right": 278.390625,
+        "bottom": 695.59375,
+        "left": 234.390625
+      },
+      "betMinus": {
+        "x": 81.59375,
+        "y": 651.59375,
+        "width": 44,
+        "height": 44,
+        "top": 651.59375,
+        "right": 125.59375,
+        "bottom": 695.59375,
+        "left": 81.59375
+      },
+      "play": {
+        "x": 129.59375,
+        "y": 623.203125,
+        "width": 100.796875,
+        "height": 100.796875,
+        "top": 623.203125,
+        "right": 230.390625,
+        "bottom": 724,
+        "left": 129.59375
+      }
+    },
+    "interaction": {
+      "raised": true,
+      "restored": true,
+      "betDialog": true,
+      "mysteryText": "ADMIT ONE\n$500.00\n500× BASE BET\nBUY BONUS\n›"
+    },
+    "errors": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "intro": {
+      "background": "linear-gradient(rgba(7, 16, 22, 0.32), rgba(7, 16, 22, 0.5) 45%, rgba(7, 14, 20, 0.95)), url(\"http://127.0.0.1:32907/games/cyber-skunk/runtime/assets/ui/splash-mobile.webp\")",
+      "scroll": false,
+      "play": {
+        "x": 115.5,
+        "y": 594.3375244140625,
+        "width": 159,
+        "height": 30,
+        "top": 594.3375244140625,
+        "right": 274.5,
+        "bottom": 624.3375244140625,
+        "left": 115.5
+      }
+    },
+    "controls": {
+      "betPicker": {
+        "x": 135.328125,
+        "y": 800,
+        "width": 119.328125,
+        "height": 44,
+        "top": 800,
+        "right": 254.65625,
+        "bottom": 844,
+        "left": 135.328125
+      },
+      "betPlus": {
+        "x": 253.59375,
+        "y": 691.40625,
+        "width": 44,
+        "height": 44,
+        "top": 691.40625,
+        "right": 297.59375,
+        "bottom": 735.40625,
+        "left": 253.59375
+      },
+      "betMinus": {
+        "x": 92.40625,
+        "y": 691.40625,
+        "width": 44,
+        "height": 44,
+        "top": 691.40625,
+        "right": 136.40625,
+        "bottom": 735.40625,
+        "left": 92.40625
+      },
+      "play": {
+        "x": 140.40625,
+        "y": 658.8125,
+        "width": 109.1875,
+        "height": 109.1875,
+        "top": 658.8125,
+        "right": 249.59375,
+        "bottom": 768,
+        "left": 140.40625
+      }
+    },
+    "interaction": {
+      "raised": true,
+      "restored": true,
+      "betDialog": true,
+      "mysteryText": "ADMIT ONE\n$500.00\n500× BASE BET\nBUY BONUS\n›"
+    },
+    "errors": []
+  },
+  {
+    "width": 430,
+    "height": 932,
+    "intro": {
+      "background": "linear-gradient(rgba(7, 16, 22, 0.32), rgba(7, 16, 22, 0.5) 45%, rgba(7, 14, 20, 0.95)), url(\"http://127.0.0.1:32907/games/cyber-skunk/runtime/assets/ui/splash-mobile.webp\")",
+      "scroll": false,
+      "play": {
+        "x": 135.5,
+        "y": 648.5281372070312,
+        "width": 159,
+        "height": 30,
+        "top": 648.5281372070312,
+        "right": 294.5,
+        "bottom": 678.5281372070312,
+        "left": 135.5
+      }
+    },
+    "controls": {
+      "betPicker": {
+        "x": 148.65625,
+        "y": 888,
+        "width": 132.671875,
+        "height": 44,
+        "top": 888,
+        "right": 281.328125,
+        "bottom": 932,
+        "left": 148.65625
+      },
+      "betPlus": {
+        "x": 277,
+        "y": 776,
+        "width": 44,
+        "height": 44,
+        "top": 776,
+        "right": 321,
+        "bottom": 820,
+        "left": 277
+      },
+      "betMinus": {
+        "x": 109,
+        "y": 776,
+        "width": 44,
+        "height": 44,
+        "top": 776,
+        "right": 153,
+        "bottom": 820,
+        "left": 109
+      },
+      "play": {
+        "x": 157,
+        "y": 740,
+        "width": 116,
+        "height": 116,
+        "top": 740,
+        "right": 273,
+        "bottom": 856,
+        "left": 157
+      }
+    },
+    "interaction": {
+      "raised": true,
+      "restored": true,
+      "betDialog": true,
+      "mysteryText": "ADMIT ONE\n$500.00\n500× BASE BET\nBUY BONUS\n›"
+    },
+    "errors": []
+  },
+  {
+    "width": 1366,
+    "height": 768,
+    "intro": {
+      "background": "linear-gradient(rgba(6, 12, 17, 0.36), rgba(9, 17, 25, 0.51) 47%, rgba(6, 13, 18, 0.95)), url(\"http://127.0.0.1:32907/games/cyber-skunk/runtime/assets/ui/splash-desktop.webp\")",
+      "scroll": false,
+      "play": {
+        "x": 603.5,
+        "y": 545.768798828125,
+        "width": 159,
+        "height": 30,
+        "top": 545.768798828125,
+        "right": 762.5,
+        "bottom": 575.768798828125,
+        "left": 603.5
+      }
+    },
+    "controls": {
+      "betPicker": {
+        "x": 808.7833251953125,
+        "y": 688.4400634765625,
+        "width": 102.6134033203125,
+        "height": 73.95550537109375,
+        "top": 688.4400634765625,
+        "right": 911.396728515625,
+        "bottom": 762.3955688476562,
+        "left": 808.7833251953125
+      },
+      "betPlus": {
+        "x": 911.396728515625,
+        "y": 688.4400634765625,
+        "width": 29.58209228515625,
+        "height": 36.97772216796875,
+        "top": 688.4400634765625,
+        "right": 940.9788208007812,
+        "bottom": 725.4177856445312,
+        "left": 911.396728515625
+      },
+      "betMinus": {
+        "x": 911.396728515625,
+        "y": 725.4177856445312,
+        "width": 29.58209228515625,
+        "height": 36.977783203125,
+        "top": 725.4177856445312,
+        "right": 940.9788208007812,
+        "bottom": 762.3955688476562,
+        "left": 911.396728515625
+      },
+      "play": {
+        "x": 941.9033203125,
+        "y": 684.7422485351562,
+        "width": 81.35113525390625,
+        "height": 81.35107421875,
+        "top": 684.7422485351562,
+        "right": 1023.2544555664062,
+        "bottom": 766.0933227539062,
+        "left": 941.9033203125
+      }
+    },
+    "interaction": {},
+    "errors": []
+  },
+  {
+    "width": 1920,
+    "height": 1080,
+    "intro": {
+      "background": "linear-gradient(rgba(6, 12, 17, 0.36), rgba(9, 17, 25, 0.51) 47%, rgba(6, 13, 18, 0.95)), url(\"http://127.0.0.1:32907/games/cyber-skunk/runtime/assets/ui/splash-desktop.webp\")",
+      "scroll": false,
+      "play": {
+        "x": 880.5,
+        "y": 734.5374755859375,
+        "width": 159,
+        "height": 30,
+        "top": 734.5374755859375,
+        "right": 1039.5,
+        "bottom": 764.5374755859375,
+        "left": 880.5
+      }
+    },
+    "controls": {
+      "betPicker": {
+        "x": 1136.8828125,
+        "y": 968.1187744140625,
+        "width": 144.300048828125,
+        "height": 104,
+        "top": 968.1187744140625,
+        "right": 1281.182861328125,
+        "bottom": 1072.1187744140625,
+        "left": 1136.8828125
+      },
+      "betPlus": {
+        "x": 1281.182861328125,
+        "y": 968.1187744140625,
+        "width": 41.599853515625,
+        "height": 52,
+        "top": 968.1187744140625,
+        "right": 1322.78271484375,
+        "bottom": 1020.1187744140625,
+        "left": 1281.182861328125
+      },
+      "betMinus": {
+        "x": 1281.182861328125,
+        "y": 1020.1187744140625,
+        "width": 41.599853515625,
+        "height": 52,
+        "top": 1020.1187744140625,
+        "right": 1322.78271484375,
+        "bottom": 1072.1187744140625,
+        "left": 1281.182861328125
+      },
+      "play": {
+        "x": 1324.082763671875,
+        "y": 962.9187622070312,
+        "width": 114.4000244140625,
+        "height": 114.39996337890625,
+        "top": 962.9187622070312,
+        "right": 1438.4827880859375,
+        "bottom": 1077.3187255859375,
+        "left": 1324.082763671875
+      }
+    },
+    "interaction": {},
+    "errors": []
+  }
+]

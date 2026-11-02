@@ -1,0 +1,33 @@
+✔ desktop: base, Spray Job, Vent Break and Overpressure settle exactly (69439.648795ms)
+✔ phone: base, Spray Job, Vent Break and Overpressure settle exactly (30323.514412ms)
+✔ phone pressure strip fits the lower casting above the bonus panels (41029.377032ms)
+✔ vents: full symbol lands, centred reverse flips for spray, skip restores the paying face (14497.0148ms)
+✔ buy screen: Feature Spins first, Bonus Buys second, Hidden as information; short balance disables confirm (6432.203212ms)
+✔ the intro shows before the first spin, and returns on reload (9551.351177ms)
+✔ the feature guide pages on phones and can be reopened from the menu (20870.532393ms)
+✔ the rules show the shipping prices and 96% RTP (5287.43535ms)
+✔ audio: nothing clips, the music sits under the reels, the big moments are loudest, phones hear the reels (27745.980015ms)
+✔ natural FS trigger fits at rest and during its landing pulse (360×640) (9982.727776ms)
+✔ natural FS trigger fits at rest and during its landing pulse (390×844) (10387.295345ms)
+✔ natural FS trigger fits at rest and during its landing pulse (430×932) (10400.518619ms)
+✔ natural FS trigger fits at rest and during its landing pulse (1366×768) (10275.474743ms)
+✔ loading precedes the guide, category buttons switch, and Mystery settles once (24090.449562ms)
+✔ Mystery purchase finishes through the controller and credits the exact win (12584.194179ms)
+✔ failed startup offers a working reload (5415.197546ms)
+✔ rare path, blackout (1920×1080): plays, shows blackout and bigwin-max, settles exactly, and the page never scrolls (9876.508671ms)
+✔ rare path, cap (390×844): plays, shows bigwin-max, settles exactly, and the page never scrolls (10671.892704ms)
+✔ rare path, retrigger (1366×768): plays, shows banner, settles exactly, and the page never scrolls (10771.73416ms)
+✔ a reload mid-bonus loses nothing: the round is paid on the next visit and kept in history (24975.737524ms)
+✔ Zombify shop sections and free previews preserve credits and history (23146.291375ms)
+✔ studio ident advances to a gated guide on slow loads (4966.185163ms)
+✔ polished shop and single unboxed bonus result on phones and desktop (43112.17631ms)
+✔ scatter landing precedes the held bonus briefing on every entry path (89053.837094ms)
+✔ tier popups use each spin payout on the winning board, and the bonus has a separate total (70726.03718ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 595915.085889
