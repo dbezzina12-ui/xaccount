@@ -6,6 +6,7 @@ Status: `todo` · `doing` · `review` (waiting on Dylan) · `done` · `blocked` 
 
 | ID | Task | Owner | Status | Notes |
 |---|---|---|---|---|
+| RB-05 | Painted woodland, integrated hive and larger reel layout | ChatGPT | done | The board and left wordmark were checked at desktop and phone sizes. |
 | RB-03 | Mascot: hive and robo-bee in `#mascot-stage`; bee flies out on bonus transitions; worker bees show banked Wilds | Claude | done | 2026-11-01. Live 3D (`live3d.js`, about 160 KB gzipped, about 70 draw calls) with sprite fallback. Outcomes untouched (seeded browser test, no `Math.random` in the bundle). Tests pass. Merged into the game; real-phone frame rate awaits Dylan’s check. |
 | RB-04 | Production math calibration | Claude | todo | README: "Production math calibration is still pending." |
 | RB-02 | Simplify the reel scenery | ChatGPT | done | Responsive apiary silhouette with dusk lighting in bonuses, verified on desktop and phone. |

@@ -42,20 +42,15 @@
 body[data-scene=super] .rail{background:#533419;color:#ffda96}
 body[data-scene=hidden] .rail{background:#602a18;color:#ffdfa4}
 body:not([data-scene=base]) .cab{border-color:#533b22;box-shadow:inset 0 2px #ffdb9a,inset 0 -4px #392c21,0 7px #201914,0 18px 48px #000b}
-/* The steel-blue sky warms as a bonus starts. The printed scenery stays still. */
+/* Both scenery layers are painted images; the bonus changes the colour grade. */
 body{isolation:isolate}
-.apiary-yard{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
- background:linear-gradient(170deg,#252c30 5%,#454c4c 47%,#60615a 68%,#353a39)}
-.apiary-yard::before,.apiary-yard::after{content:"";position:absolute;inset:0}
-.apiary-yard::before{background:linear-gradient(166deg,#302b2c 5%,#685541 49%,#82644a 69%,#343636);
- opacity:0;transition:opacity .85s ease-out}
-body[data-scene=regular] .apiary-yard::before{opacity:.42}
-body[data-scene=super] .apiary-yard::before{opacity:.78}
-body[data-scene=hidden] .apiary-yard::before{opacity:1}
-.apiary-yard::after{background:url(assets/apiary-yard.svg?v=15) center/cover no-repeat}
-@media(max-aspect-ratio:1/1){
- .apiary-yard::after{background-image:url(assets/apiary-yard.svg?v=15#portrait);background-size:100% 100%}}
-@media(prefers-reduced-motion:reduce){.apiary-yard::before{transition:none}}
+.grove-backdrop{position:fixed;inset:0;z-index:-1;pointer-events:none;background:#232928}
+.grove-backdrop img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;
+ filter:brightness(.94) saturate(.86);transition:filter .85s ease-out}
+body[data-scene=regular] .grove-backdrop img{filter:brightness(.91) saturate(.86) sepia(.12)}
+body[data-scene=super] .grove-backdrop img{filter:brightness(.91) saturate(.94) sepia(.32)}
+body[data-scene=hidden] .grove-backdrop img{filter:brightness(.87) saturate(.95) sepia(.44)}
+@media(prefers-reduced-motion:reduce){.grove-backdrop img{transition:none}}
 #bonus-menu.shop{background:linear-gradient(145deg,#272927,#191b1a 75%);background-color:#1b1d1c}
 #bonus-menu.shop .bonus-card{--card:#efc38c;background:linear-gradient(155deg,#39342d,#201f1c);border-color:#776653;border-top:3px solid var(--card)}
 #bonus-menu.shop .bonus-card[data-mode=super],#bonus-menu.shop .bonus-card[data-mode=scout]{--card:#ffaf5e;background:linear-gradient(155deg,#4a3427,#211d19)}
@@ -137,5 +132,15 @@ body:not([data-scene=base]) #board.priming .multi{opacity:1;animation:charge-set
 .cell.wild-landing img{animation:wild-settle .28s cubic-bezier(.18,.78,.22,1)}
 @keyframes wild-settle{from{transform:scale(.74);opacity:.4}65%{transform:scale(1.05)}to{transform:none;opacity:1}}
 @media(max-width:600px){.instrument{padding:3px 6px;min-height:44px;gap:5px}.instrument output{font-size:22px;min-width:29px}.instrument-label small{font-size:10px}.instrument-label span{font-size:7px}}
-@media(max-height:690px) and (orientation:portrait){body:not([data-scene=base]) .top,body:not([data-scene=base]) #mascot-stage{min-height:55px;height:55px}body:not([data-scene=base]) #board{aspect-ratio:1.52}}
+
 @media(prefers-reduced-motion:reduce){#board.priming .cell .multi,.cell.wild-landing img,.present-award #charge-map i.lit{animation:none!important}}
+
+@media(min-width:700px) and (max-height:520px) and (orientation:landscape){
+ #play-stage>header{height:24px}
+ .instrument{min-height:30px;padding:2px 7px}
+ .instrument output{font-size:18px;min-width:28px;padding:1px 3px}
+ .hive-icon{width:24px}
+ .instrument-label small{font-size:9px}
+ .rail{margin:2px;padding:1px 8px}
+ .strip{height:2px;margin:2px auto 0}
+}
