@@ -1,31 +1,90 @@
 import assert from 'node:assert/strict';
-import {start,spin,evaluate} from '../dist/rules.mjs';
+import {start,spin,evaluate,refill,features} from '../dist/rules.mjs';
+
 let seed=982341;
 const random=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);
-for(const mode of ['super','hidden']){
- for(let run=0;run<2000;run++){
-  let state=start(mode);assert(state.spots.every(n=>n===2));let bank=0;
-  while(state.left){
-   const r=spin(state,random),wilds=r.landing.filter(id=>id==='W').length;
-   const available=state.spots.filter(n=>n<128).length;
-   if(mode==='hidden'){
-    assert(wilds>=1&&wilds<=2);
-    assert(r.boosts.length>=Math.min(1,available)&&r.boosts.length<=Math.min(3,available));
-   }else assert.equal(r.boosts.length,0);
-   assert.equal(new Set(r.boosts).size,r.boosts.length);
-   for(let i=0;i<20;i++){
-    const active=r.boosts.includes(i)?Math.min(128,state.spots[i]*2):state.spots[i];
-    assert.equal(r.active[i],active);
-    assert.equal(r.state.spots[i],r.hit.includes(i)?Math.min(128,active*2):active);
+const indices=Array.from({length:20},(_,i)=>i);
+const blank=()=>Array(20).fill(0);
+const charge=n=>Math.min(128,Math.max(2,n*2));
+let tumbles=0,freshWilds=0,carriedWilds=0,lateFS=0;
+function verify(state,r,mode){
+ const bonus=state.mode!=='base',swarm=['super','hidden'].includes(state.mode);
+ const touched=new Set();let active=[...r.prior],bank=state.bank,amount=0;
+ for(const i of r.boosts)active[i]=charge(active[i]);
+ assert.equal(new Set(r.boosts).size,r.boosts.length);
+ if(state.mode==='hidden'){
+  assert.ok(r.landing.includes('W'));
+  const available=state.spots.filter(n=>n<128).length;
+  assert.ok(r.boosts.length>=Math.min(1,available)&&r.boosts.length<=Math.min(3,available));
+ }else assert.equal(r.boosts.length,0);
+ if(mode==='random'){
+  assert.equal(r.seeded,true);const n=r.prior.filter(Boolean).length;
+  assert.ok(n>=6&&n<=12);assert.ok(r.prior.every(v=>[0,2,4,8,16,32].includes(v)));
+ }else if(mode==='full32'){assert.ok(r.prior.every(v=>v===32));assert.ok(r.seeded)}
+ else assert.deepEqual(r.prior,state.spots);
+ if(mode==='scout')assert.ok(r.landing.includes('W'));
+ for(const [n,w] of r.steps.entries()){
+  const prev=r.steps[n-1];
+  assert.deepEqual(w.active,active);
+  if(n){
+   tumbles++;
+   for(let col=0;col<5;col++){
+    const rows=[col,col+5,col+10,col+15],kept=rows.filter(i=>!prev.hit.includes(i));
+    const vacancies=4-kept.length;
+    for(let row=0;row<4;row++){
+     const i=rows[row];
+     if(row<vacancies){assert.equal(w.from[i],row-vacancies);if(w.landed[i]==='FS')lateFS++}
+     else{
+      const j=kept[row-vacancies];assert.equal(w.from[i],Math.floor(j/5));assert.equal(w.landed[i],prev.board[j]);
+      if(w.landed[i]==='W'&&swarm&&!r.finale)carriedWilds++;
+     }
+    }
    }
-   assert.equal(r.amount,evaluate(r.board,r.active).amount);
-   if(state.left===1){
-    assert.equal(r.drops.length,bank);assert.equal(new Set(r.drops).size,bank);
-    assert(r.drops.every(i=>r.landing[i]!=='W'&&r.board[i]==='W'));
-   }else bank+=wilds;
-   state=r.state;
+  }else{assert.equal(w.from,null);assert.deepEqual(w.landed,r.landing)}
+  const arrived=swarm&&!r.finale?indices.filter(i=>w.landed[i]==='W'&&(!n||w.from[i]<0)):[];
+  assert.deepEqual(w.collected,arrived);
+  if(n)freshWilds+=arrived.length;
+  bank+=arrived.length;
+  assert.equal(new Set(w.drops).size,w.drops.length);
+  if(!r.finale)assert.equal(w.drops.length,0);
+  for(const i of w.drops)assert.notEqual(w.landed[i],'W');
+  assert.deepEqual(w.board,w.landed.map((id,i)=>w.drops.includes(i)?'W':id));
+  bank-=w.drops.length;
+  const score=evaluate(w.board,w.active);
+  assert.deepEqual(w.hit,score.hit);assert.equal(w.amount,score.amount);
+  active=active.map((v,i)=>score.hit.includes(i)?charge(v):v);
+  assert.deepEqual(w.after,active);score.hit.forEach(i=>touched.add(i));
+  amount+=score.amount;
+ }
+ assert.equal(r.limited,false);assert.equal(r.steps.at(-1).hit.length,0);
+ assert.equal(r.amount,Math.round(amount*100)/100);
+ assert.equal(r.state.left,Math.max(0,state.left-1));assert.equal(r.state.bank,bank);
+ if(r.finale)assert.equal(bank,0);
+ assert.deepEqual(r.state.spots,bonus?active:active.map((v,i)=>r.seeded||!touched.has(i)?0:v));
+ const fs=r.board.filter(x=>x==='FS').length;
+ assert.equal(r.trigger,bonus?null:({3:'regular',4:'super',5:'hidden'}[fs]??null));
+}
+for(const mode of ['regular','super','hidden']){
+ for(let run=0;run<1500;run++){
+  let state=start(mode);assert.ok(state.spots.every(v=>v===(mode==='regular'?0:2)));
+  while(state.left){
+   const r=spin(state,random);verify(state,r,null);state=r.state;
   }
  }
 }
+for(const mode of [null,...Object.keys(features)]){
+ let state=start();
+ for(let run=0;run<1000;run++){const r=spin(state,random,mode);verify(state,r,mode);state=r.state}
+}
+const overflow={...start('super'),left:1,bank:36};
+const finale=spin(overflow,random);verify(overflow,finale,null);
+assert.equal(finale.steps.reduce((n,s)=>n+s.drops.length,0),36);
+assert.ok(finale.steps.filter(s=>s.drops.length).length>=2);
 const capped=start('hidden');capped.spots.fill(128);assert.equal(spin(capped,random).boosts.length,0);
-console.log('40,000 bonus spins verified');
+const sample=Array.from({length:20},(_,i)=>String(i));
+const gravity=refill(sample,[5,15],0,()=>.3);
+assert.deepEqual([0,5,10,15].map(i=>gravity.from[i]),[-2,-1,0,2]);
+assert.equal(gravity.landed[10],'0');assert.equal(gravity.landed[15],'10');
+assert.ok(freshWilds>0&&carriedWilds>0&&lateFS>0);
+assert.equal(features.random.price,20);assert.equal(features.full32.price,250);
+console.log('50,000 spins verified;',tumbles,'tumbles;',freshWilds,'new banked refill Wilds;',carriedWilds,'surviving Wild observations;',lateFS,'refill scatters.');

@@ -208,3 +208,15 @@ body:not([data-scene=base]) #board.priming .multi{opacity:1;animation:charge-set
  .hive-icon{width:24px}
  .instrument-label small{font-size:9px}
 }
+
+/* Gravity moves the contents of a reel; its engraved multiplier beds stay put. */
+#board>.tumble-column{position:absolute;inset:0;display:grid;grid-template-rows:repeat(4,minmax(0,1fr));gap:2px;overflow:hidden;min-height:0;z-index:3;pointer-events:none}
+#board .tumble-column>.cell{background:transparent;box-shadow:none}
+#board .tumble-clear>img{opacity:0;transition:opacity .13s ease-out}
+#board.feature-seeding .multi{opacity:1}
+#bonus-menu.shop .bonus-card[data-mode=random]{--card:#8ad7c2}
+#bonus-menu.shop .bonus-card[data-mode=full32]{--card:#ffc260}
+#bonus-menu .multi-stamp{position:absolute;right:8%;bottom:4%;padding:.14em .38em;background:#27221c;border:2px solid var(--card);border-radius:4px;color:var(--card);font:900 clamp(15px,2vw,25px)/1 system-ui;transform:rotate(-5deg)}
+@media(prefers-reduced-motion:reduce){#board .tumble-clear>img{transition:none}}
+
+@media(min-width:981px){#bonus-menu .bonus-cards.feature-options{grid-template-columns:repeat(4,minmax(0,1fr))}}

@@ -4,6 +4,14 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-01 · ChatGPT → Claude · All-mode tumbles and multiplier feature spins
+
+**Did** Implemented 5×4 gravity and refill on every winning payline. Fixed cell charges upgrade between drops. Super and Hidden bank fresh Wilds, and Hidden retains its opening guarantee and scout boosts. The shop includes Pollen Charge (20×) and Hive Overdrive (250×). Replay at `?preview=tumble`.
+
+**Checked** 50,000 seeded spins included 19,098 tumbles. Phone QA confirmed three aligned drops, the upfront 32× board and a random feature debit of $20 at a $1 bet. A 36-bee Hidden finale used two refills and returned to the base game.
+
+**REQUEST for Claude** Calibrate paid modes and bonus buys before production. In 30,000 paid spins per new mode at seed 12879631 (LCG, including earned bonuses), mean payouts were 6.27× base bet for Pollen Charge and 30.73× for Hive Overdrive. Prices are 20× and 250× respectively. A separate 4,000-Hidden-bonus sample reached 33,930.6×. Verify the studio max-win target, cap policy and feature economics with the production math tooling.
+
 ### 2026-11-01 · ChatGPT → Claude · Main game uses the updated symbol colours
 
 The plain game link now shows the teal rotor, cobalt stinger, red beacon, gold nectar and brushed-silver ranks. The old enamel preview link still loads its own saved game. The regular link keeps its existing save and the honey-filled FS. `?palette=original` shows the original colours. Checked the four premium filters on a 390px board and the honey layer in the scatter replay.

@@ -2,17 +2,17 @@ import {playStinger,flyHiveBees} from './drone-stinger.mjs?v=14';
 import {mountMascot} from './mascot/mascot.mjs?v=6';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
-import {rollReels,symbolClass,symbolUrl} from './reels.mjs?v=22';
+import {rollReels,dropTumble,symbolClass,symbolUrl} from './reels.mjs?v=25';
 import {addHoney,prepareHoney} from './honey.mjs';
-import {buys,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=7';
+import {buys,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=25';
 const $=id=>document.getElementById(id);
 const grid=$('board'),modal=$('menu'),intro=$('bonus-intro'),cabinet=grid.closest('.cab');
 const playStage=$('play-stage');
 const mascot=mountMascot($('mascot-stage'));
 const desc={
- regular:'Start with an uncharged board. Any reel can land a Wild. Charged cells stay lit and double on repeat wins.',
- super:'Bank Wilds on spins 1–9. On spin 10, one bee flies out of the hive for each banked Wild and turns a cell Wild.',
- hidden:'Land a Wild every spin. Scout bees double up to three cells before wins pay. On spin 10, the hive releases your banked Wilds.'
+ regular:'Wins tumble. Winning cells charge to 2×, then double on repeat hits. Charges stay for all 10 free spins.',
+ super:'Bank every new Wild from spins and tumbles. On spin 10, each banked bee returns as a Wild.',
+ hidden:'One Wild guaranteed per spin. Bees boost up to three cells before wins pay. New Wilds from tumbles also join the final-spin bank.'
 };
 const sample=['hive','K','nectar','stinger','Q','A','rotor','W','beacon','10','stinger','J','hive','K','nectar','10','beacon','Q','rotor','FS'];
 const stakes=[10,20,40,60,80,100,150,200,300,400,500,750,1000,1500,2000,3000,4000,5000,7500,10000,15000,20000,25000,30000,40000,50000];
@@ -20,7 +20,8 @@ const money=cents=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD
 const params=new URLSearchParams(location.search);
 const palette=params.get('palette');
 const scatterDemo=params.get('preview')==='scatter';
-const preview=scatterDemo||params.get('preview')==='stinger';
+const tumbleDemo=params.get('preview')==='tumble';
+const preview=tumbleDemo||scatterDemo||params.get('preview')==='stinger';
 document.body.classList.toggle('enamel-symbols',palette!=='original');
 // Keep the old colour-study link attached to its separate saved game.
 const key=palette==='enamel'?'robobees-enamel-preview-v1':'robobees-playtest-controller-v1';
@@ -179,41 +180,66 @@ function cabinetMessage(message){
  panel.textContent=message;panel.hidden=false;$('notice').textContent=message;
  clearTimeout(feedbackTimer);feedbackTimer=setTimeout(()=>{panel.hidden=true},3500);
 }
-async function play(){
+async function showTumbles(result,oldBank){
+ let bank=oldBank,runningWin=0,lineCount=0;
+ for(const [index,step] of result.steps.entries()){
+  if(index){
+   $('notice').textContent='Tumble '+index;
+   await dropTumble({cells,step,turbo,reduced,skip:()=>stop,place:cell});
+  }
+  if(step.collected.length){
+   $('notice').textContent='Wilds returning to the hive';
+   await hiveFlight(step.collected,true,()=>showFlightBank(++bank));
+  }
+  if(!index&&result.boosts.length){
+   $('notice').textContent='Scout bees charging '+result.boosts.length+' cells';
+   await hiveFlight(result.boosts,false,i=>cell(i,step.landed[i],step.active));
+   await showCellValues(result.boosts);
+  }
+  if(step.drops.length){
+   $('notice').textContent='Hive release · '+step.drops.length+' Wilds incoming';
+   await hiveFlight(step.drops,false,i=>{
+    cell(i,'W',step.active);cells[i].classList.add('wild-landing');showFlightBank(--bank);
+   });
+   await wait(turbo?70:180);
+  }
+  face=step.board;draw(face,step.active,step.hit);
+  if(!step.hit.length)break;
+  lineCount+=step.wins.length;
+  runningWin+=step.amount;win=Math.round(runningWin*bet);labels();tone(500+Math.min(index,6)*55,.16);
+  await wait(turbo?100:300);
+  // Stamp each unique cell once, even if two paylines used the same symbol.
+  for(const i of step.hit){cell(i,face[i],step.after);cells[i].classList.add('tumble-clear')}
+  await showCellValues(step.hit);
+  for(const i of step.hit)cells[i].classList.remove('tumble-clear');
+ }
+ return lineCount;
+}
+async function play(rng=Math.random){
  if(busy){stop=true;return}
  if(pending){showAward();return}
  const bonus=state.mode!=='base';
  if(!bonus&&balance<spinCost()){autoplay.stop();cabinetMessage('Insufficient demo balance for this bet.');labels();return}
  $('cab-feedback').hidden=true;
- stop=false;const result=spin(state,Math.random,bonus?null:featureMode),oldBank=state.bank;
+ stop=false;const result=spin(state,rng,bonus?null:featureMode),oldBank=state.bank;
  const award=Math.round(result.amount*bet),finished=bonus&&result.state.left===0;
  if(!bonus)balance-=spinCost();
  win=0;checkpoint={state:finished?previous:result.state,face:result.board,previous:finished?null:previous,pending:result.trigger,balance:balance+award,win:award};save();lock(true);
  $('notice').textContent=result.finale?'Final spin · '+oldBank+' bees ready to deploy.':'Reels in motion…';tone(135,.14);
+ if(result.seeded){
+  draw(face,result.prior);grid.classList.add('priming','feature-seeding');
+  $('notice').textContent=features[featureMode].label+' · Starting multipliers';
+  // Reduced-motion players also need a readable still before the opening spin.
+  for(let ms=0;ms<(turbo?300:770)&&!stop&&!document.hidden;ms+=50)await new Promise(r=>setTimeout(r,50));
+  grid.classList.remove('feature-seeding');
+ }
  await showRoll(result.landing,result.prior);
 
- if(result.state.bank>oldBank){
-  const collected=result.landing.flatMap((id,i)=>id==='W'?[i]:[]);
-  $('notice').textContent='Wild collected · Returning to hive';
-  await hiveFlight(collected,true,(_,n)=>showFlightBank(oldBank+n+1));
- }
- if(result.boosts.length){
-  $('notice').textContent='Scout bees · Charging '+result.boosts.length+' multiplier '+(result.boosts.length===1?'cell':'cells');
-  await hiveFlight(result.boosts,false,i=>cell(i,result.landing[i],result.active));
-  await showCellValues(result.boosts);
- }
- if(result.drops.length){
-  $('notice').textContent='Hive release · '+result.drops.length+' Wilds incoming';
-  await hiveFlight(result.drops,false,(i,n)=>{
-   cell(i,'W',result.active);cells[i].classList.add('wild-landing');
-   showFlightBank(oldBank-n-1);
-  });await wait(180);
- }
- face=result.board;draw(face,result.active,result.hit);if(result.amount){tone(660,.19);await wait(340)}
- flightBank=null;state=result.state;draw(face,state.spots,result.hit);balance+=award;win=award;
- if(result.hit.length){labels();await showCellValues(result.hit)}
- const charge=result.hit.length?' · '+result.hit.length+' cells charged':'';
- $('notice').textContent=result.amount?result.wins.length+' winning '+(result.wins.length===1?'line':'lines')+charge:'No connection this spin.';
+ const lineCount=await showTumbles(result,oldBank);
+ flightBank=null;state=result.state;face=result.board;
+ draw(face,result.seeded?result.steps.at(-1).after:state.spots);balance+=award;win=award;
+ const tumbles=result.steps.length-1;
+ $('notice').textContent=lineCount?lineCount+' winning lines · '+tumbles+' tumbles':'No connection this spin.';
  if(state.bank>oldBank)$('notice').textContent+=' +'+(state.bank-oldBank)+' Wild'+(state.bank-oldBank>1?'s':'')+' banked.';
  if(result.trigger){autoplay.stop();pending=result.trigger;$('notice').textContent=modes[pending]+' unlocked · Press play to enter.'}
  if(state.mode!=='base'&&state.left===0){cabinetMessage(modes[state.mode]+' complete · '+state.total.toFixed(2)+'× total');await wait(500);document.body.dataset.scene='base';state=previous??start();previous=null;draw(face,state.spots)}
@@ -226,8 +252,8 @@ function scheduleBonus(){
  if(!busy&&!modal.open&&!playStage.inert&&state.mode!=='base')bonusTimer=setTimeout(()=>{if(!modal.open&&!playStage.inert&&!busy)play()},turbo?300:740);
 }
 const shopCopy={
- regular:'10 free spins. Winning cells build multipliers that stay for the bonus.',
- super:'10 free spins. All 20 cells start at 2×. Collected Wilds return on the final spin.',
+ regular:'10 free spins. Wins tumble and charge cells. Multipliers stay for all 10 spins.',
+ super:'10 free spins on a 2× board. Wilds from spins and tumbles return on spin 10.',
  mystery:'10 free spins in a random bonus. Regular 50% · Super 40% · Hidden 10%.'
 };
 function showBonuses(section='buys'){
@@ -237,13 +263,14 @@ function showBonuses(section='buys'){
  shop.querySelector('.shop-stake strong').textContent=money(bet);
  shop.querySelectorAll('[data-tab]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.tab===section));b.onclick=()=>showBonuses(b.dataset.tab)});
  shop.querySelectorAll('.shop-bet-steps button').forEach((b,i)=>{const v=stakes[stakes.indexOf(bet)+(i?1:-1)];b.disabled=v===undefined;b.onclick=()=>{setBet(v);showBonuses(section)}});
- const cards=shop.querySelector('.bonus-cards');cards.replaceChildren();
+ const cards=shop.querySelector('.bonus-cards');cards.classList.toggle('feature-options',!isBuy);cards.replaceChildren();
  for(const [id,item] of Object.entries(isBuy?buys:features)){
   const card=document.createElement('article'),cost=bet*item.price,active=!isBuy&&featureMode===id;
   card.className='bonus-card';card.dataset.mode=id;
   const eyebrow=isBuy?({regular:'3 FS · REGULAR BONUS',super:'4 FS · SUPER BONUS',mystery:'MYSTERY BONUS'}[id]):item.type.toUpperCase();
   const caption=isBuy?'10 FREE SPINS':'PER PAID SPIN';
-  card.innerHTML='<div class="card-content"><span class="purchase-eyebrow">'+eyebrow+'</span><div class="card-emblem '+symbolClass(item.art)+'"><img alt="" src="'+symbolUrl(item.art)+'"></div><h3>'+item.label+'</h3><p>'+(isBuy?shopCopy[id]:item.copy)+'</p><small>'+caption+'</small><div class="card-price"><strong>'+money(cost)+'</strong><span>'+item.price+'× BASE BET</span></div></div><button class="card-action"></button>';
+  const tag=id==='random'?'2–32×':id==='full32'?'32×':'';
+  card.innerHTML='<div class="card-content"><span class="purchase-eyebrow">'+eyebrow+'</span><div class="card-emblem '+symbolClass(item.art)+'"><img alt="" src="'+symbolUrl(item.art)+'">'+(tag?'<b class="multi-stamp">'+tag+'</b>':'')+'</div><h3>'+item.label+'</h3><p>'+(isBuy?shopCopy[id]:item.copy)+'</p><small>'+caption+'</small><div class="card-price"><strong>'+money(cost)+'</strong><span>'+item.price+'× BASE BET</span></div></div><button class="card-action"></button>';
   const button=card.querySelector('button');button.disabled=!active&&balance<cost;
   button.textContent=button.disabled?'Not enough credits':isBuy?(id==='mystery'?'Buy mystery':'Buy free spins'):active?'Disable':'Enable';
   button.onclick=()=>{shop.close();if(isBuy){confirmBuy(id);return}
@@ -269,7 +296,10 @@ async function buy(id){
  face=entry.board;draw(face,state.spots);checkpoint=null;save();lock(false);
  $('notice').textContent=modes[pending]+' unlocked · Press play to enter.';showAward();
 }
-function showRules(){$('content').innerHTML='<h2>Field manual</h2><p>Land three or more matching symbols from reel one on any of 20 fixed paylines. W substitutes for paying symbols. FS scatters trigger Regular, Super or Hidden with 3, 4 or 5 respectively. Signal Boost costs 3× the base bet per spin and increases the scatter chance per reel from 7.5% to 11.5%. Scout Run costs 10× and guarantees at least one Wild per paid spin. Both modes pay wins on the base bet.</p><p>Winning cells become 2× on the next spin. Repeat hits double up to 128×. Add the active cell values along each winning line. Shared cells level up once per spin. Brighter cells hold higher multipliers.</p><ul class="multi-key" aria-label="Cell multiplier colours">'+[2,4,8,16,32,64,128].map(n=>'<li data-multi="'+n+'">'+n+'×</li>').join('')+'</ul><p>In base play a charge lasts through the next spin. During free spins it persists until the bonus ends. Super and Hidden start with 2× on every cell. Hidden guarantees a Wild every spin and sends bees to double up to three cells before scoring. Free spins advance automatically. Stop finishes only the spin in progress.</p><small>PLAY-MONEY MECHANICS BUILD · UNTUNED RETURNS</small>';modal.showModal()};
+function showRules(){
+ $('content').innerHTML='<h2>Field manual</h2><p>Match three or more symbols from reel one on a fixed payline. Wilds substitute for paying symbols. Winning symbols clear together, the rest fall straight down, and new symbols fill from above. Each new board can pay again on the same spin.</p><p>Winning cells charge to 2×, then double on repeat hits up to 128×. Add the values on a winning line. A shared cell upgrades once per drop. Normal and Signal Boost wins carry their charges into the next paid spin. Free spins keep all charges throughout the bonus.</p><ul class="multi-key" aria-label="Cell multiplier colours">'+[2,4,8,16,32,64,128].map(n=>'<li data-multi="'+n+'">'+n+'×</li>').join('')+'</ul><p>Signal Boost costs 3× and raises FS chances. Scout Run costs 10× and guarantees an opening Wild. Pollen Charge costs 20× and seeds 6–12 cells at 2× to 32×. Hive Overdrive costs 250× and starts all 20 cells at 32×. Both seeded boards reset each paid spin. All wins use your base bet.</p><p>FS survive tumbles. Finish with 3, 4 or 5 FS to trigger Regular, Super or Hidden. All give 10 free spins. Super and Hidden start at 2× and bank each newly landed Wild once on spins 1–9. On spin 10 the hive turns cells Wild. If the bank fills the board, remaining bees deploy on the next refill. Hidden also guarantees one opening Wild and upgrades up to three cells per spin.</p><small>PLAY-MONEY MECHANICS BUILD · UNTUNED RETURNS</small>';
+ modal.showModal();
+}
 modal.querySelector('.close').onclick=()=>modal.close();
 function setBet(value){
  if(busy||pending||autoplay.active||state.mode!=='base'||!stakes.includes(value))return;
@@ -315,7 +345,20 @@ if(state.left===10&&(state.mode==='super'||state.mode==='hidden')){
 }else scheduleBonus();
 if(pending){$('notice').textContent=modes[pending]+' unlocked · Press play to enter.';showAward()}
 
-if(preview){
+if(tumbleDemo){
+ const button=$('preview-stinger');
+ button.hidden=false;button.textContent='▶ Play 32× tumble';
+ document.body.classList.add('preview-ready');
+ button.onclick=async()=>{
+  if(busy)return;
+  button.hidden=true;document.body.classList.remove('preview-ready');
+  state=start();face=sample;featureMode='full32';balance=1000000;bet=100;draw(face,state.spots);
+  // Fixed demo only. The three wins and their payouts use the live spin rules.
+  let seed=2590;
+  await play(()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296));
+  button.textContent='↻ Replay 32× tumble · '+money(win)+' won';button.hidden=false;document.body.classList.add('preview-ready');
+ };
+}else if(preview){
  const button=$('preview-stinger'),replay=$('replay-stinger'),entry=purchaseEntry('super');
  replay.href=location.search;
  if(scatterDemo){

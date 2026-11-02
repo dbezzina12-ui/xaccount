@@ -12,14 +12,16 @@ The entry point is `dist/index.html`. Art and sound are under `dist/assets/`. Cl
 
 ## How the game plays
 
-A 5×4 grid on 20 fixed paylines. Three or more matching symbols from reel one pay; **W** (Wild) stands in for any paying symbol.
+RoboBees pays left to right on 20 fixed lines across five reels and four rows. Three or more matching symbols from reel one pay, and Wilds substitute. After each win, clear the union of winning positions, drop survivors straight down in order, refill from above and score again. Multipliers stay in their cells. A fresh hit charges the cell to 2×, and repeat hits double it to 128×. Only one upgrade is applied per winning cell per board, even on intersecting lines.
 
-- **Charged cells:** a winning cell becomes 2× on the next spin, and doubles on each repeat hit up to 128×. A winning line adds up the values of its cells. In base play a charge lasts one spin; in free spins it lasts until the bonus ends.
-- **FS scatters** award ten free spins: 3 FS start **Worker Shift** (Regular), 4 start **Swarm Protocol** (Super), 5 start **Queen Override** (Hidden).
-- **Super and Hidden** start every cell at 2×. Each Wild that lands is **banked**. On the last spin, one bee per banked Wild flies out and places a Wild on the reels before the spin is scored. Hidden also lands a Wild every spin and sends scout bees to double up to three cells.
-- **Feature spins:** Signal Boost (3× bet) raises the FS chance per reel from 7.5% to 11.5%. Scout Run (10× bet) guarantees a Wild on every paid spin. Bonus buys start Regular (100×), Super (250×) or Mystery (400×: 50% Regular, 40% Super, 10% Hidden).
+- **Paid and Regular.** Ordinary paid hits carry one spin forward. Regular keeps charges for all ten spins. FS survive refills, at most one per reel. The settled base board awards Regular, Super or Hidden for three, four or five FS.
+- **Super and Hidden.** Both start at 2× everywhere. Every newly landed Wild on spins 1–9 joins the bank, including refills. A survivor moving down a column is counted only on arrival. Spin ten deploys one bee per banked Wild. If the grid fills, the remaining bees return after the next refill. Hidden also guarantees an opening Wild and sends scouts to upgrade up to three eligible cells per spin.
+- **Feature spins.** Signal Boost costs 3× the base bet and increases FS chances. Scout Run costs 10× and guarantees an ordinary opening Wild. Pollen Charge costs 20× and starts 6–12 distinct cells at 2×–32×. Hive Overdrive costs 250× and starts all 20 cells at 32×. Both seeded modes reset every paid spin, reveal their multipliers before the reel roll and pay from the base bet.
+- **Bonus buys.** Regular costs 100×, Super 250× and Mystery 400× (50% Regular, 40% Super and 10% Hidden).
 
-The rules live in `dist/rules.mjs`; `game.mjs` decides each spin there before anything animates. The tuned production math is still pending.
+Play `?preview=tumble` for an isolated three-win Hive Overdrive replay. The outcome and the final save checkpoint are calculated before the presentation begins. Stop settles only the current spin. A safety limit of 100 scored boards bounds pathological chains.
+
+The rules are in `dist/rules.mjs`. This is a play-money mechanics build. Production return tuning is pending.
 
 ## Mascot
 

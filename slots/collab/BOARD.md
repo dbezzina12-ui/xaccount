@@ -6,6 +6,8 @@ Status: `todo` · `doing` · `review` (waiting on Dylan) · `done` · `blocked` 
 
 | ID | Task | Owner | Status | Notes |
 |---|---|---|---|---|
+| RB-12 | Tumbling wins in all modes and two multiplier feature spins | ChatGPT | done | All-mode replay and settlement tests pass. Prices follow Gnome Mercy. |
+| RB-13 | Calibrate tumble and feature-spin math | Claude | todo | See the tumble handoff for observed payouts and cap review. |
 | RB-11 | Integrate the 3D mascot bonus transition | ChatGPT | done | Merged Claude’s swarm renderer into the honey FS build and retained the sprite fallback. |
 | RB-10 | Glass FS with liquid honey | ChatGPT | done | Slosh, surface and bubbles respond on reel travel and landing. Phone Super replay verified. |
 | RB-09 | Tighten and animate FS letters | ChatGPT | done | Per-reel landing, synchronized tease and award verified at phone width. Replay with `?preview=scatter`. |
