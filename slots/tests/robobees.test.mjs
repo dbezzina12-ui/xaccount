@@ -24,10 +24,11 @@ test('RoboBees MATH.md matches the shipped MATH and prices, and every mode retur
   const prices = Object.fromEntries([...Object.entries(features), ...Object.entries(buys)].map(([k, v]) => [k, v.price]));
   assert.deepEqual(sheet.prices, prices);
   assert.equal(MATH.cap, 25000);
+  // every price is whole cents at every stake (stakes are multiples of 10 cents)
+  for (const v of Object.values(prices)) assert.ok(Number.isInteger(Math.round(v * 10 * 1e9) / 1e9), `price ${v}x`);
   for (const m of [...Object.values(sheet.modes), ...Object.values(sheet.buys)]) {
-    // within the 99.9% interval (ci is the 95% one, 1.96 standard errors), plus Scout Run's price rounding to 0.01x.
-    // The fit and the sheet use independent seeds, so each mode is a few tenths of a point off 96% by sampling alone.
-    const slack = m.label === 'Scout Run' ? 0.005 / m.cost : 0;
-    assert.ok(Math.abs(m.rtp - 0.96) <= (m.ci * 3.29) / 1.96 + slack, `${m.label}: ${(100 * m.rtp).toFixed(2)}% ± ${(100 * m.ci).toFixed(2)}%`);
+    // within the 99.9% interval (ci is the 95% one, 1.96 standard errors). The fit and the sheet use independent
+    // seeds, so each mode is a few tenths of a point off 96% by sampling alone.
+    assert.ok(Math.abs(m.rtp - 0.96) <= (m.ci * 3.29) / 1.96, `${m.label}: ${(100 * m.rtp).toFixed(2)}% ± ${(100 * m.ci).toFixed(2)}%`);
   }
 });

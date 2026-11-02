@@ -10,7 +10,7 @@
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Base spins | 1x | **95.93%** ± 0.14% | 24.3% | 12.2% | 0x | 1.4x | 10.8x | 119x | 14.76 | 8,301x | 1 in 397,556,210 |
 | Signal Boost | 3x | **95.73%** ± 0.23% | 24.6% | 5.7% | 0x | 1.4x | 59.6x | 391x | 13.41 | 25,000x | 1 in 26,189,490 |
-| Scout Run | 1.48x | **96.13%** ± 0.21% | 35.0% | 14.9% | 0x | 2.4x | 18.4x | 137x | 10.65 | 12,087x | 1 in 351,985,182 |
+| Scout Run | 1.5x | **95.82%** ± 0.20% | 35.1% | 15.0% | 0x | 2.4x | 18.5x | 139x | 11.11 | 7,730x | 1 in 348,374,549 |
 | Pollen Charge | 20x | **95.83%** ± 0.20% | 41.0% | 20.6% | 0x | 53.2x | 257x | 697x | 3.05 | 12,354x | 1 in 337,337,748 |
 | Hive Overdrive | 250x | **95.84%** ± 0.33% | 47.8% | 23.4% | 0x | 641x | 2,931x | 6,344x | 2.36 | 25,000x | 1 in 1,986,112 |
 | Worker Shift (buy) | 100x | **95.94%** ± 0.22% | 99.6% | 28.2% | 50.3x | 219x | 709x | 1,738x | 1.58 | 14,303x | not seen |
@@ -20,7 +20,7 @@
 - **Max win** is 25,000x the base bet per round, counted once across the trigger spin and the bonus. Reaching it ends the round.
 - **Mystery Buy** reveals Regular 50%, Super 40% or Hidden 10%. Hidden is never sold on its own.
 - **Pollen Charge** and **Hive Overdrive** pay their wins on the base bet: they return 96% of their 20x and 250x prices. Each draws its own symbols and Wilds (below) and keeps the base FS chance.
-- **Scout Run** is priced at what it returns: the base game plus one guaranteed opening Wild per paid spin. It returns 1.4x a spin, so at 1.48x it returns 96.13%. It keeps the base FS chance.
+- **Scout Run** (1.5x) is the base game plus at least one opening Wild per paid spin: a guaranteed one when none lands, then one more 1.14% of the time. It keeps the base FS chance.
 - **Buys** are measured on the bought bonus alone: a bought round has no paid trigger spin.
 
 ## Natural bonus rates
@@ -29,7 +29,7 @@
 | --- | --- | --- | --- | --- | --- |
 | Base spins | 7.5056% | 1 in 244 | 1 in 5,739 | 1 in 341,119 | 1 in 234 |
 | Signal Boost | 13.2926% | 1 in 51 | 1 in 632 | 1 in 19,911 | 1 in 47 |
-| Scout Run | 7.5056% | 1 in 228 | 1 in 5,257 | 1 in 298,809 | 1 in 218 |
+| Scout Run | 7.5056% | 1 in 229 | 1 in 5,238 | 1 in 295,148 | 1 in 219 |
 | Pollen Charge | 7.5056% | 1 in 219 | 1 in 5,021 | 1 in 286,689 | 1 in 210 |
 | Hive Overdrive | 7.5056% | 1 in 200 | 1 in 4,419 | 1 in 240,367 | 1 in 191 |
 
@@ -41,7 +41,7 @@
 | --- | --- | --- | --- | --- |
 | Base spins | 51.68% | 39.36% | 4.19% | 0.70% |
 | Signal Boost | 15.91% | 63.12% | 12.68% | 4.02% |
-| Scout Run | 64.06% | 28.43% | 3.09% | 0.54% |
+| Scout Run | 64.28% | 27.94% | 3.06% | 0.54% |
 | Pollen Charge | 93.36% | 2.19% | 0.24% | 0.04% |
 | Hive Overdrive | 95.62% | 0.19% | 0.02% | 0.00% |
 
@@ -59,15 +59,15 @@
 
 | Round pays | Base spins | Signal Boost | Scout Run | Pollen Charge | Hive Overdrive |
 | --- | --- | --- | --- | --- | --- |
-| No win | 75.70% | 75.40% | 65.03% | 58.98% | 52.18% |
+| No win | 75.70% | 75.40% | 64.86% | 58.98% | 52.18% |
 | 0.01x to under 1x | 12.13% | 11.61% | 15.21% | 3.08% | 1 in 62,500 |
-| 1x to under 2x | 5.18% | 4.88% | 7.64% | 1.67% | 1 in 35,714 |
-| 2x to under 5x | 4.51% | 4.23% | 7.49% | 2.90% | 1 in 9,804 |
-| 5x to under 10x | 1.37% | 1.35% | 2.61% | 4.64% | 1 in 5,988 |
-| 10x to under 50x | 1 in 115 | 1.40% | 1.71% | 17.95% | 3.84% |
+| 1x to under 2x | 5.18% | 4.88% | 7.67% | 1.67% | 1 in 35,714 |
+| 2x to under 5x | 4.51% | 4.23% | 7.58% | 2.90% | 1 in 9,804 |
+| 5x to under 10x | 1.37% | 1.35% | 2.64% | 4.64% | 1 in 5,988 |
+| 10x to under 50x | 1 in 115 | 1.40% | 1.72% | 17.95% | 3.84% |
 | 50x to under 100x | 1 in 887 | 1 in 204 | 1 in 612 | 5.99% | 5.88% |
-| 100x to under 1,000x | 1 in 846 | 1 in 160 | 1 in 692 | 4.74% | 32.17% |
-| 1,000x or more | 1 in 40,000 | 1 in 5,495 | 1 in 25,000 | 1 in 2,387 | 5.89% |
+| 100x to under 1,000x | 1 in 846 | 1 in 160 | 1 in 664 | 4.74% | 32.17% |
+| 1,000x or more | 1 in 40,000 | 1 in 5,495 | 1 in 40,000 | 1 in 2,387 | 5.89% |
 
 ## The settings
 
@@ -96,4 +96,5 @@
 - Signal Boost and Scout Run draw as base spins. Scatter chance per reel: base 7.5056%, Signal Boost 13.2926%.
 - Pollen Charge's seeds: 2x, 4x, 8x, 16x and 32x at 10.0%, 12.0%, 18.0%, 30.0%, 30.0%.
 - Queen Override's bee boosts per spin, 1 : 2 : 3 cells, at 1 : 0.1795 : 0.0598.
+- Scout Run's chance of one more opening Wild after its guarantee: 1.14%.
 

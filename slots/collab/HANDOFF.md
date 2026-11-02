@@ -4,6 +4,54 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-02 · Claude → ChatGPT · RoboBees math balanced: 96% in every mode, 25,000× cap
+
+**Dylan:** "RoboBees needs a math balance … Pollen run and hive overdrive balance these too." He chose 96% RTP in every mode with a 25,000× max win.
+
+**Did** (branch `ccr-52c8075e-57i9ob`):
+- **One block:** every number that sets the return is in the `MATH` block at the top of `dist/rules.mjs`. The game, tests and math tools all read it.
+- **Fit and check:** `tools/math/robobees-fit.mjs` fits the block, and `tools/math/robobees-report.mjs` writes [MATH.md](../games/robobees/MATH.md) from independent seeds:
+
+  | Mode | Price | RTP (± 95% interval) |
+  | --- | --- | --- |
+  | Base | 1× | 95.93% ± 0.14 |
+  | Signal Boost | 3× | 95.73% ± 0.23 |
+  | Scout Run | 1.5× (was 10×) | 95.82% ± 0.20 |
+  | Pollen Charge | 20× | 95.83% ± 0.20 |
+  | Hive Overdrive | 250× | 95.84% ± 0.33 |
+  | Worker Shift buy | 100× | 95.94% ± 0.22 |
+  | Swarm Protocol buy | 250× | 96.19% ± 0.25 |
+  | Mystery | 400× | 96.02% ± 0.14 |
+
+- **Bonus averages:** Regular 95.9×, Super 240×, Hidden 2,399×.
+- **Natural bonus rate:** base spins trigger a bonus 1 in 234, Signal Boost 1 in 47.
+- **Prices:** your prices are unchanged except Scout Run. It now costs 1.5× (was 10×), which is whole cents at every stake. It still guarantees an opening Wild, and adds a second one 1.14% of the time to return 96%.
+- **Cap:** a round pays at most 25,000×, counting its trigger spin and free spins together. The spin that reaches it pays the rest, ends the round and plays the live Max tier.
+  - A capped round credits exactly the cap in cents at every stake (`credit()` in `rules.mjs`, used by `game.mjs`).
+  - The cap is reached about 1 in 15,000 Mystery Buys and 1 in 286,000 Swarm Protocol buys.
+- **Field manual:** it reads prices, FS chances and the cap from `MATH`, and ends "PLAY MONEY · RTP 96% IN EVERY MODE · MAX WIN 25,000×".
+- **Tests:** `npm test` now runs RoboBees' rules and win-show suites (`tests/robobees.test.mjs`). It fails if `MATH.md` no longer matches the shipped `MATH` and prices, or a mode leaves its 99.9% interval.
+- **Cache keys:** `rules.mjs?v=29` and `game.mjs?v=30`.
+
+**Checked:**
+- `npm test`: 127 pass, 3 skipped. `node games/robobees/tests/bonus-rules.mjs` passes. All 9 mascot browser tests pass.
+- In the real game at 1280×720 and 390×844, a spin debits and credits the right cents, the field manual shows the numbers, and there are no console errors.
+- Not yet watched: a live Max on a phone.
+
+**Files:** `games/robobees/dist/{rules.mjs, game.mjs, index.html}`, `games/robobees/{MATH.md, math/summary.json, README.md, RELEASE_STATUS.md, tests/bonus-rules.mjs}`, `tools/math/robobees-{sim,fit,report}.mjs`, `tests/robobees.test.mjs`, `collab/BOARD.md`.
+
+**Next for ChatGPT:**
+1. Keep the `MATH` block, prices and `credit()` as they are. A price or odds change needs a refit and a regenerated `MATH.md`; `npm test` checks this. Ask in a handoff.
+2. The shop cards and copy are yours. Scout Run's card now shows 1.5×; its copy ("at least one ordinary Wild") is still accurate.
+3. When you next touch the win show, check a live Max on a phone.
+
+**Questions for Dylan:**
+1. **Hive Overdrive's feel.** Its return is right, but 52% of 250× spins pay nothing and its median is 0×. More opening Wilds and fewer tumble Wilds would raise the hit rate and keep 96%. Change it?
+2. **Signal Boost.** It measures 95.73% ± 0.23. A 30-minute refine would tighten it toward 96%. Worth doing before release?
+3. **Sign-off.** Please approve the math and the 1.5× Scout Run price (RB-13).
+
+**Blocked on:** nothing.
+
 ### 2026-11-01 · ChatGPT → Claude · Win celebrations and studio release checklist
 
 All five RoboBees win animations have individual title art, audio and a mascot flight. Real settled spins and completed bonus totals use 10×, 25×, 100× and 500× thresholds. Max can be reviewed at `?preview=wins` until an approved ceiling is enforced. The deterministic 32× replay pays $435.20 at a $1 base bet and shows one Epic. Tapping the celebration reveals the total, then continues. Gallery samples do not write to the player save.

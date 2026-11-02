@@ -102,7 +102,7 @@ md.push('');
 md.push(`- **Max win** is ${MATH.cap.toLocaleString('en-US')}x the base bet per round, counted once across the trigger spin and the bonus. Reaching it ends the round.`);
 md.push(`- **Mystery Buy** reveals Regular ${pct(mR, 0)}, Super ${pct(mS, 0)} or Hidden ${pct(mH, 0)}. Hidden is never sold on its own.`);
 md.push(`- **Pollen Charge** and **Hive Overdrive** pay their wins on the base bet: they return 96% of their ${modes.random.cost}x and ${modes.full32.cost}x prices. Each draws its own symbols and Wilds (below) and keeps the base FS chance.`);
-md.push(`- **Scout Run** is priced at what it returns: the base game plus one guaranteed opening Wild per paid spin. It returns ${x(modes.scout.rtp * modes.scout.cost)} a spin, so at ${modes.scout.cost}x it returns ${pct(modes.scout.rtp)}. It keeps the base FS chance.`);
+md.push(`- **Scout Run** (${modes.scout.cost}x) is the base game plus at least one opening Wild per paid spin: a guaranteed one when none lands, then one more ${pct(MATH.scoutWild)} of the time. It keeps the base FS chance.`);
 md.push('- **Buys** are measured on the bought bonus alone: a bought round has no paid trigger spin.', '');
 md.push('## Natural bonus rates', '');
 md.push('| Mode | Scatter chance per reel | Worker Shift (3 FS) | Swarm Protocol (4 FS) | Queen Override (5 FS) | Any bonus |');
@@ -152,7 +152,8 @@ md.push(`| A dropped tile's chance to be a Wild | ${KINDS.map((m) => pct(MATH.re
 md.push(`| Starting charges | carried from the last paid spin | 6–12 cells at 2x–32x | every cell 32x | none | every cell 2x | every cell 2x |`);
 md.push('', `- Signal Boost and Scout Run draw as base spins. Scatter chance per reel: base ${(100 * MATH.scatter.base).toFixed(4)}%, Signal Boost ${(100 * MATH.scatter.enhanced).toFixed(4)}%.`);
 md.push(`- Pollen Charge's seeds: 2x, 4x, 8x, 16x and 32x at ${MATH.pollen.map((v) => pct(v / MATH.pollen.reduce((a, b) => a + b, 0), 1)).join(', ')}.`);
-md.push(`- Queen Override's bee boosts per spin, 1 : 2 : 3 cells, at ${MATH.boosts.map((v) => +v.toFixed(4)).join(' : ')}.`, '');
+md.push(`- Queen Override's bee boosts per spin, 1 : 2 : 3 cells, at ${MATH.boosts.map((v) => +v.toFixed(4)).join(' : ')}.`);
+md.push(`- Scout Run's chance of one more opening Wild after its guarantee: ${pct(MATH.scoutWild)}.`, '');
 fs.writeFileSync(ROOT + 'MATH.md', md.join('\n') + '\n');
 fs.mkdirSync(ROOT + 'math', {recursive: true});
 const strip = (o) => Object.fromEntries(Object.entries(o).filter(([k]) => k !== 'sample'));
