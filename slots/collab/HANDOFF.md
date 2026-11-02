@@ -4,6 +4,22 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-02 14:30 EST · ChatGPT → Claude · Final 49/49 splashes and named Mystery outcomes
+
+**Picked up:** your Nov 1 nozzle/Mystery handoffs and all later shared-branch work. Preserved the fitted v4.1 sixteen-piece rig, seated nozzle, card flip, 500× Mystery price, 90% Overpressure / 10% Blackout tickets, exact math, catalogs and audio. No math, outcome, rig or audio file changed.
+
+**Did:** completed ART_SPEC §8's final two source inputs. `art/ui/splash-desktop.png` is exact 1920×1080 with the lower 40% quiet; `splash-mobile.png` is exact 1080×1920 with the lower 45% quiet. Both are deterministic indexed opening illustrations made only from the production hall, cabinet, logo, character-free symbols and compact mascot reference; prep converts them to WebP. The flattened splash mascot does not replace the articulated runtime rig. Also changed the Mystery ticket's generic Super/Hidden labels to **Overpressure / Blackout Protocol** and exposed the configured **40× minimum / Blackout 1,000× minimum**. App/launch cache keys are bumped.
+
+**Checked:** repeated splash builds produce identical hashes; lower-zone mean luminance is 27 vs 49 above on desktop and 25 vs 57 above on mobile. Prep with the registered v4.1 override reports 49/49 sources, 16/16 mascot pieces and no problems. `node --check` passes for app/launch; Cyber Skunk is 27/27, including Mystery 96%, 90/10 tickets and both floors. The local 25-test browser command cannot launch because Playwright is absent; this is an environment dependency failure, not 25 executed game failures. No intro integration or artifact-publication claim is made.
+
+**Next for Claude:** 1. Prep both splashes with `--mascot art/source/mascot-compact-v4/registered`; preserve fitted eyelids/nozzle and current cabinet/symbol/logo runtime files. 2. Verify the intro at 360×800, 390×844, 430×932, 1366×768 and 1920×1080: live cards, labels, checkbox and PLAY stay readable; hero/logo/cabinet/trail crop cleanly; first-open, close, focus, “don't show again,” reduced motion and no-scroll all work. 3. Open Bonus Buys and confirm the Mystery pass reads Overpressure 90.00%, Blackout Protocol 10.00%, 40× minimum and Blackout 1,000× minimum without clipping. In the same phone run, measure the final portrait `betPicker` at ≥44px and exercise BET and −/+. 4. Run 25 browser, 27 game and 127 core tests, capture intro/ticket/controller evidence, republish the existing artifact, and verify served-file/hash parity before returning CS-06/CS-07 to done.
+
+**Next for ChatGPT:** review concrete intro/ticket/controller screenshots only if source-art or copy spacing needs correction.
+
+**Questions for Dylan:** none. **Blocked on:** Claude's prep, combined browser QA and artifact republish. Keep hourly continuation enabled per Dylan's explicit instruction.
+
+---
+
 ### 2026-11-02 · ChatGPT → Claude · Full-screen RoboBees win swarm
 
 Moved the celebration canvas out of the title block. The live rig and sprite bees share a screen-space flight path with clearance for banked wings, antennae and phone safe areas. Browser-checked Max at 390×844, 844×390 and 1363×936. The regression suite samples every tier from entrance through hold across six viewport sizes. A physical-device live 3D check is still open.

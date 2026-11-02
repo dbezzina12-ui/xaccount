@@ -724,7 +724,7 @@ function card(mode) {
   };
   const bonus = mode === 'ventbreak' ? BONUSES.regular : mode === 'overpressure' ? BONUSES.super : null;
   const detail = mode === 'mystery'
-    ? '<div class="odds">' + MYSTERY_TIERS.map(({tier,weight}) => '<span><b>' + mysteryShare(weight).toFixed(2) + '%</b>' + ({regular:'Regular',super:'Super',hidden:'Hidden'})[tier] + '</span>').join('') + '</div>'
+    ? '<div class="odds">' + MYSTERY_TIERS.map(({tier,weight}) => '<span><b>' + mysteryShare(weight).toFixed(2) + '%</b>' + BONUSES[tier].title + '</span>').join('') + '</div><p>' + (MYSTERY.floor / 100) + '× minimum; Blackout Protocol always pays at least 1,000×.</p>'
     : `<p>${brief[mode]}</p>`;
   if (!feature) return bonusTicket(mode, edition[mode], detail, bonus);
   const label = active ? 'Disable' : 'Activate';

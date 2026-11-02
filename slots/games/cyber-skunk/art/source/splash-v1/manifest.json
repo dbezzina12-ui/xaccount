@@ -1,0 +1,57 @@
+{
+  "files": {
+    "ui/splash-desktop.png": {
+      "sha256": "b196a5ba854597842e2f63e8aa90e2cfa2986c127c218d23a51f8939710712d4",
+      "checks": {
+        "size": [
+          1920,
+          1080
+        ],
+        "mode": "RGB",
+        "calm_zone_starts_y": 648,
+        "upper_luma_mean": 47.67,
+        "lower_luma_mean": 25.67,
+        "lower_is_darker": true,
+        "no_live_prices_rules_controls_or_outcomes": true,
+        "approved_production_inputs_only": true,
+        "png_mode": "P",
+        "palette_colors": 96,
+        "effective_source_size": [
+          1280,
+          720
+        ]
+      }
+    },
+    "ui/splash-mobile.png": {
+      "sha256": "095a79c404b76572e0b010ac576add6cea76fa96197a89336b0d5305577fdeca",
+      "checks": {
+        "size": [
+          1080,
+          1920
+        ],
+        "mode": "RGB",
+        "calm_zone_starts_y": 1056,
+        "upper_luma_mean": 55.6,
+        "lower_luma_mean": 23.11,
+        "lower_is_darker": true,
+        "no_live_prices_rules_controls_or_outcomes": true,
+        "approved_production_inputs_only": true,
+        "png_mode": "P",
+        "palette_colors": 96,
+        "effective_source_size": [
+          720,
+          1280
+        ]
+      }
+    }
+  },
+  "inputs": [
+    "backgrounds/bg-desktop.webp",
+    "backgrounds/bg-mobile.webp",
+    "cabinet/cabinet.png",
+    "logo.png",
+    "mascot/reference-compact.png",
+    "symbols/*.png"
+  ],
+  "method": "Deterministic Pillow composition from approved production art; no generated image."
+}
