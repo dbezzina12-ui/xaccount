@@ -16,14 +16,14 @@ export const lines=[
 // Hidden. cap: the most a round pays, its trigger spin included.
 export const MATH={
  cap:25000,
- pays:{hive:[2,6,18],nectar:[1.4,4,12],stinger:[1,3,9],rotor:[.8,2,7],beacon:[.6,1.8,6],A:[.4,1.2,4],K:[.4,1.2,4],Q:[.3,.9,3],J:[.3,.9,3],10:[.3,.9,3]},
- weights:{base:[2,3],random:[2,3],full32:[2,3],regular:[2,3],super:[2,3],hidden:[2,3]},
- wilds:{base:[.33,.08],random:[.33,.08],full32:[.33,.08],regular:[.33,.08],super:[.33,.08],hidden:[1,.08]},
- refillWild:{base:.02,random:.02,full32:.02,regular:.02,super:.02,hidden:.02},
- scatter:{base:.075,enhanced:.115},
- boosts:[1,1,1],
- pollen:[.15,.15,.2,.2975,.2025],
- mystery:[.5,.4,.1],
+ pays:{10:[0.35,1.06,3.52],hive:[2.35,7.05,21.14],nectar:[1.64,4.7,14.09],stinger:[1.17,3.52,10.57],rotor:[0.94,2.35,8.22],beacon:[0.7,2.11,7.05],A:[0.47,1.41,4.7],K:[0.47,1.41,4.7],Q:[0.35,1.06,3.52],J:[0.35,1.06,3.52]},
+ weights:{base:[2,3],random:[2,3],full32:[4,2],regular:[4,2],super:[2,3],hidden:[2,3]},
+ wilds:{base:[0.33,0.08],random:[1,0.36409],full32:[1,0.6],regular:[1,0.26755],super:[0.41548,0.1],hidden:[1,0.03]},
+ refillWild:{base:0.02,random:0.02,full32:0.09691,regular:0.02,super:0.02,hidden:0.02},
+ scatter:{base:0.075056,enhanced:0.132926},
+ boosts:[1,0.17225,0.05742],
+ pollen:[0.1,0.12,0.18,0.3,0.3],
+ mystery:[0.5,0.4,0.1],
 };
 const pick=(items,rng)=>items[Math.floor(rng()*items.length)];
 const allCells=()=>Array.from({length:20},(_,i)=>i);
@@ -35,7 +35,7 @@ export const buys={
 };
 export const features={
  enhanced:{price:3,label:'Signal Boost',type:'Enhanced spins',art:'beacon',copy:'Each reel has a higher chance to land FS.'},
- scout:{price:10,label:'Scout Run',type:'Feature spins',art:'stinger',copy:'Start each paid spin with at least one ordinary Wild.'},
+ scout:{price:1.48,label:'Scout Run',type:'Feature spins',art:'stinger',copy:'Start each paid spin with at least one ordinary Wild.'},
  random:{price:20,label:'Pollen Charge',type:'Random multipliers',art:'rotor',copy:'Start each spin with 6–12 random cells at 2× to 32×. Winning cells keep doubling through tumbles.'},
  full32:{price:250,label:'Hive Overdrive',type:'Full 32× board',art:'hive',copy:'All 20 cells start at 32× each spin. Winning cells double to 64×, then 128×.'}
 };
