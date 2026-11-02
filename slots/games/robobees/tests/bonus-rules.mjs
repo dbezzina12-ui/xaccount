@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {MATH,start,spin,evaluate,refill,features} from '../dist/rules.mjs';
+import {MATH,start,spin,evaluate,refill,features,credit} from '../dist/rules.mjs';
 
 let seed=982341;
 const random=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);
@@ -98,4 +98,24 @@ for(let run=0;run<300;run++){
  const r=spin(near,random);verify(near,r,null);
  assert.ok(r.amount<=150);if(r.maxWin)assert.equal(r.state.total+near.carry,MATH.cap);
 }
-console.log('50,000 spins verified;',tumbles,'tumbles;',freshWilds,'new banked refill Wilds;',carriedWilds,'surviving Wild observations;',lateFS,'refill scatters;',maxWins,'rounds reached the cap.');
+// Credits in cents: a round's spins add up to its rounded total, and a capped round to exactly the cap, at the
+// smallest and largest stakes ($0.10 and $500).
+let cappedCredits=0;
+for(const bet of [10,50000]){
+ for(let run=0;run<200;run++){
+  const carry=[0,0.35,1.07,412.49][run%4];
+  let s={...start(run%3?'hidden':'super',carry),left:3+run%4};s.spots.fill(128);s.total=Math.round((MATH.cap-carry-[60.13,333.37,1250.01][run%3])*100)/100;
+  let cents=credit(start(),carry,bet),inBonus=0; // the trigger spin
+  const first=credit({...s,total:0},s.total,bet);cents+=first;inBonus+=first; // already credited
+  s={...s,awardedCents:first};
+  while(s.left){
+   const r=spin(s,random),c=credit(s,r.amount,bet);cents+=c;inBonus+=c;s=r.state;
+   if(r.maxWin){assert.equal(cents,MATH.cap*bet);cappedCredits++}
+  }
+  assert.equal(cents,Math.round(Math.round((carry+s.total)*100)*bet/100));
+  assert.equal(inBonus,cents-credit(start(),carry,bet));
+ }
+}
+assert.ok(cappedCredits>0);
+assert.equal(credit(start(),12.34,10),123);assert.equal(credit(start(),0.35,10),4);assert.equal(credit(start(),0.05,10),1);
+console.log('50,000 spins verified;',tumbles,'tumbles;',freshWilds,'new banked refill Wilds;',carriedWilds,'surviving Wild observations;',lateFS,'refill scatters;',maxWins,'rounds reached the cap;',cappedCredits,'capped rounds credited exactly the cap in cents at $0.10 and $500.');

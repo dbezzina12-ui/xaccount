@@ -5,7 +5,7 @@ import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
 import {mountWinShow,tierFor,tiers} from './win-show.mjs?v=26';
 import {rollReels,dropTumble,symbolClass,symbolUrl} from './reels.mjs?v=25';
 import {addHoney,prepareHoney} from './honey.mjs';
-import {MATH,buys,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=26';
+import {MATH,buys,credit,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=27';
 const $=id=>document.getElementById(id);
 const grid=$('board'),modal=$('menu'),intro=$('bonus-intro'),cabinet=grid.closest('.cab');
 const playStage=$('play-stage');
@@ -227,8 +227,8 @@ async function play(rng=Math.random){
  if(!bonus&&balance<spinCost()){autoplay.stop();cabinetMessage('Insufficient demo balance for this bet.');labels();return}
  $('cab-feedback').hidden=true;
  stop=false;const result=spin(state,rng,bonus?null:featureMode),oldBank=state.bank;
- const award=Math.round(result.amount*bet),finished=bonus&&result.state.left===0;
- if(bonus)result.state.awardedCents=(state.awardedCents??Math.round(state.total*bet))+award;
+ const award=credit(state,result.amount,bet),finished=bonus&&result.state.left===0;
+ if(bonus)result.state.awardedCents=(state.awardedCents??credit({...state,total:0},state.total,bet))+award;
  if(!bonus)balance-=spinCost();
  win=0;checkpoint={state:finished?previous:result.state,face:result.board,previous:finished?null:previous,pending:result.trigger,carry:result.trigger?result.amount:0,balance:balance+award,win:award};save();lock(true);
  $('notice').textContent=result.finale?'Final spin · '+oldBank+' bees ready to deploy.':'Reels in motion…';tone(135,.14);

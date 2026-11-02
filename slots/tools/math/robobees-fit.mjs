@@ -4,6 +4,8 @@
 //
 //   node tools/math/robobees-fit.mjs            print the fitted MATH and Scout Run's price
 //   node tools/math/robobees-fit.mjs --write    and write them into rules.mjs
+//   node tools/math/robobees-fit.mjs --refine super,random,full32 --write
+//                                               re-solve only those knobs from the shipped MATH, on 4x the spins
 //
 // 1. Bonus averages are pinned by their buy prices: Regular 96x (100x buy), Super 240x (250x buy), and Hidden 2,400x,
 //    which makes the Mystery Buy's 50/40/10 mix return 96% of 400x.
@@ -109,6 +111,36 @@ export async function fit() {
   return {math, scoutPrice: round(scout / RTP, 2), scoutReturn: scout};
 }
 
+/** re-solves the named knobs from the shipped MATH on 4x the spins, near their current values */
+export async function refine(names, done = () => {}) {
+  const R = await import(new URL('file://' + RULES).href);
+  const math = structuredClone(R.MATH);
+  const big = (k) => N[k] * 4;
+  const near = (x, lo, hi) => [Math.max(lo, x * 0.92), Math.min(hi, x * 1.08)];
+  const paid = async (m, feature, seed) => modeReturn(await simulate('lines', m, {feature, n: big(feature ?? 'base'), seed, boost: BOOST}));
+  const bonus = async (m, mode, seed) => (await simulate('bonus', m, {mode, n: big(mode), seed})).mean;
+  const knobs = {
+    regular: {get: () => math.wilds.regular[1], set: (m, x) => (m.wilds.regular[1] = x), f: (m) => bonus(m, 'regular', 31).then((v) => v - TARGET.regular), range: [0, 1]},
+    super: {get: () => math.wilds.super[0], set: (m, x) => (m.wilds.super[0] = x), f: (m) => bonus(m, 'super', 32).then((v) => v - TARGET.super), range: [0.15, 1]},
+    hidden: {get: () => math.boosts[1], set: (m, x) => (m.boosts = [1, x, x / 3]), f: (m) => bonus(m, 'hidden', 33).then((v) => v - TARGET.hidden), range: [0.001, 1.5]},
+    enhanced: {get: () => math.scatter.enhanced, set: (m, x) => (m.scatter.enhanced = x), f: (m) => paid(m, 'enhanced', 34).then((v) => v / PRICE.enhanced - RTP), range: [0.08, 0.3]},
+    random: {get: () => math.wilds.random[1], set: (m, x) => (m.wilds.random[1] = x), f: (m) => paid(m, 'random', 35).then((v) => v / PRICE.random - RTP), range: [0, 1]},
+    full32: {get: () => math.refillWild.full32, set: (m, x) => (m.refillWild.full32 = x), f: (m) => paid(m, 'full32', 36).then((v) => v / PRICE.full32 - RTP), range: [0.005, 0.4]},
+  };
+  for (const name of names) {
+    const k = knobs[name];
+    const [lo, hi] = near(k.get(), ...k.range);
+    const x = await solve(async (v) => {
+      const m = structuredClone(math);
+      k.set(m, v);
+      return k.f(m);
+    }, lo, hi, 2e-4 * k.get(), `refine ${name}`);
+    k.set(math, Math.round(x * 1e6) / 1e6);
+    done({math, scoutPrice: R.features.scout.price});
+  }
+  return {math, scoutPrice: R.features.scout.price};
+}
+
 /** rewrites rules.mjs's MATH block and Scout Run's price */
 export function write({math, scoutPrice}) {
   let src = fs.readFileSync(RULES, 'utf8');
@@ -123,11 +155,14 @@ export function write({math, scoutPrice}) {
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const t0 = Date.now();
-  const r = await fit();
-  console.log(JSON.stringify(r, null, 1));
-  if (process.argv.includes('--write')) {
+  const at = process.argv.indexOf('--refine');
+  // a refine saves after each knob, so a long run keeps what it has solved
+  const save = (r) => {
     write(r);
     console.error(`wrote ${RULES}`);
-  }
+  };
+  const r = at > 0 ? await refine(process.argv[at + 1].split(','), process.argv.includes('--write') ? save : undefined) : await fit();
+  console.log(JSON.stringify(r, null, 1));
+  if (process.argv.includes('--write') && at < 0) save(r);
   console.error(`${((Date.now() - t0) / 60000).toFixed(1)} min`);
 }

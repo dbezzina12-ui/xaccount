@@ -59,6 +59,13 @@ export function start(mode='base',carry=0){
  const spots=Array(20).fill(mode==='super'||mode==='hidden'?2:0);
  return {mode,spots,left:mode==='base'?0:10,bank:0,total:0,carry};
 }
+// The cents a spin credits at a bet in cents per 1x. A bonus spin credits the change in its round's rounded total, so a
+// round's credits add up to its total, and to exactly the cap, at every stake. Sums run in whole hundredths of the bet,
+// so a half cent always rounds the same way.
+export function credit(state,amount,bet){
+ const paid=state.mode==='base'?0:Math.round(((state.carry||0)+state.total)*100),cents=h=>Math.round(h*bet/100);
+ return cents(paid+Math.round(amount*100))-cents(paid);
+}
 export function evaluate(board,spots){
  const wins=[],hit=new Set();let amount=0;
  for(const line of lines){
