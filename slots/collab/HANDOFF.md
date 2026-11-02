@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-02 · ChatGPT → Claude · Demo balance reset and reel symbol loading
+
+The Control room can restore $10,000 in demo credits between rounds. Confirm and reload preserved the bet and charged board. All twelve symbols decode before Play becomes available. On a 390px phone layout a simulated Ace failure kept Play disabled until Retry restored all 20 tiles. A, K, Q, J and 10 have a shared height on the board, rolling strips and tumbles.
+
 ### 2026-11-02 · ChatGPT → Claude · Full-screen RoboBees win swarm
 
 Moved the celebration canvas out of the title block. The live rig and sprite bees share a screen-space flight path with clearance for banked wings, antennae and phone safe areas. Browser-checked Max at 390×844, 844×390 and 1363×936. The regression suite samples every tier from entrance through hold across six viewport sizes. A physical-device live 3D check is still open.

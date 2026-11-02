@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import fs from 'node:fs';
 import {fileURLToPath} from 'node:url';
-import {MATH, buys, features} from '../games/robobees/dist/rules.mjs';
+import {MATH, buys, features, premiums, ranks} from '../games/robobees/dist/rules.mjs';
 
 const GAME = fileURLToPath(new URL('../games/robobees/', import.meta.url));
 const run = (file) => execFileSync(process.execPath, [file], {cwd: GAME, encoding: 'utf8'});
@@ -15,6 +15,33 @@ test('RoboBees rules: tumbles, banks, the cap and cents', () => {
 
 test('RoboBees win celebrations', () => {
   assert.match(run('tests/win-show.mjs'), /verified/);
+});
+
+test('every reel symbol decodes before play and retry only reloads a failed image', async () => {
+  const {preloadSymbols, symbolUrl} = await import('../games/robobees/dist/reels.mjs');
+  const urls = [...premiums, ...ranks, 'W', 'FS'].map(symbolUrl);
+  const requests = [];
+  const previousImage = globalThis.Image;
+  globalThis.Image = class {
+    async decode() {
+      requests.push(this.src);
+      if (this.src === symbolUrl('A') && requests.filter(url => url === this.src).length === 1) {
+        throw new Error('interrupted image');
+      }
+    }
+  };
+  try {
+    await assert.rejects(preloadSymbols(), /interrupted image/);
+    assert.deepEqual(requests, urls);
+    const [images, concurrent] = await Promise.all([preloadSymbols(), preloadSymbols()]);
+    assert.deepEqual(images.map(image => image.src), urls);
+    assert.ok(images.every((image, index) => image === concurrent[index]));
+    await preloadSymbols();
+    assert.deepEqual(requests, [...urls, symbolUrl('A')]);
+  } finally {
+    if (previousImage === undefined) delete globalThis.Image;
+    else globalThis.Image = previousImage;
+  }
 });
 
 test('RoboBees MATH.md matches the shipped MATH and prices, and every mode returns 96%', () => {

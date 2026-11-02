@@ -3,7 +3,7 @@ import {mountMascot} from './mascot/mascot.mjs?v=6';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
 import {mountWinShow,tierFor,tiers} from './win-show.mjs?v=35';
-import {rollReels,dropTumble,symbolClass,symbolUrl} from './reels.mjs?v=33';
+import {rollReels,dropTumble,preloadSymbols,symbolClass,symbolUrl} from './reels.mjs?v=36';
 import {addHoney,prepareHoney} from './honey.mjs';
 import {MATH,buys,credit,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=31';
 const $=id=>document.getElementById(id);
@@ -38,11 +38,12 @@ let state=saved?.state??start(),face=saved?.face??sample,previous=saved?.previou
 let carry=saved?.carry??0;
 // Preserve earned multipliers in features saved under the previous rules.
 if(state.mode==='super'||state.mode==='hidden')state.spots=state.spots.map(v=>Math.max(2,v));
-let balance=saved?.balance??1000000,bet=saved?.bet??100,win=saved?.win??0,turbo=saved?.turbo??false,mute=saved?.mute??true;
+const startingBalance=1000000;
+let balance=saved?.balance??startingBalance,bet=saved?.bet??100,win=saved?.win??0,turbo=saved?.turbo??false,mute=saved?.mute??true;
 let featureMode=Object.hasOwn(features,saved?.featureMode)?saved.featureMode:null;
 const spinCost=()=>bet*(features[featureMode]?.price??1);
 const shop=$('bonus-menu');
-let busy=false,stop=false,audio,bonusTimer,checkpoint=null,flightBank=null;
+let ready=false,busy=false,stop=false,audio,bonusTimer,checkpoint=null,flightBank=null;
 const winShow=mountWinShow($('win-show'),{money,audioContext:()=>audio,muted:()=>mute,swarm:()=>mascot.swarm?.()});
 const autoplay=new Autoplay();
 const controller=mountController($('controller'),{onAction:action});
@@ -61,7 +62,9 @@ function cell(i,id,spots,hit=false){
  const c=cells[i],m=spots[i];c.className='cell '+symbolClass(id)+(m?' charged':'')+(hit?' hit':'');
  c.dataset.multi=m;
  if(id==='FS')addHoney(c);else c.querySelector('.fs-rig')?.remove();
- c.firstChild.src=symbolUrl(id);c.firstChild.alt=id;c.lastChild.className='multi';c.lastChild.textContent=m?m+'×':'';c.lastChild.hidden=!m;c.lastChild.toggleAttribute('data-long',m>=100);
+ const url=symbolUrl(id);
+ if(c.firstChild.getAttribute('src')!==url)c.firstChild.src=url;
+ c.firstChild.alt=id;c.lastChild.className='multi';c.lastChild.textContent=m?m+'×':'';c.lastChild.hidden=!m;c.lastChild.toggleAttribute('data-long',m>=100);
 }
 function draw(board,spots,hits=[]){cells.forEach((_,i)=>cell(i,board[i],spots,hits.includes(i)))}
 function showFlightBank(n){
@@ -74,9 +77,9 @@ function labels(){
  $('mode').textContent=bonus?modes[state.mode]:features[featureMode]?.label??'';
  $('bonus-hud').hidden=!bonus;$('hive-bank').hidden=state.mode!=='super'&&state.mode!=='hidden';
  $('spin-count').textContent=String(state.left);$('bank-count').textContent=String(flightBank??state.bank);
- controller.update({ready:true,busy,holding:bonus&&!busy,continuing:!!pending&&!busy,autoActive:autoplay.active,
+ controller.update({ready,busy,holding:bonus&&!busy,continuing:!!pending&&!busy,autoActive:autoplay.active,
   remaining:autoplay.remaining,muted:mute,turbo,balance:money(balance),bet:money(bonus?bet:spinCost()),win:money(win),buyActive:!!featureMode&&!bonus,
-  canIncrease:bet<stakes.at(-1),canDecrease:bet>stakes[0],featureColor:bonus?'#ffa344':null});
+  canIncrease:ready&&bet<stakes.at(-1),canDecrease:ready&&bet>stakes[0],featureColor:bonus?'#ffa344':null});
  if(bonus||pending)for(const id of ['betPicker','betPlus','betMinus','buy','auto'])controller.element(id).disabled=true;
 }
 function tone(hz,len=.08,gain=.035){if(mute||!audio)return;const osc=audio.createOscillator(),v=audio.createGain();osc.type='triangle';osc.frequency.setValueAtTime(hz,audio.currentTime);osc.frequency.exponentialRampToValueAtTime(hz*.73,audio.currentTime+len);v.gain.setValueAtTime(gain,audio.currentTime);v.gain.exponentialRampToValueAtTime(.001,audio.currentTime+len);osc.connect(v).connect(audio.destination);osc.start();osc.stop(audio.currentTime+len)}
@@ -227,7 +230,7 @@ async function play(rng=Math.random){
  if(busy){stop=true;return}
  if(pending){showAward();return}
  const bonus=state.mode!=='base';
- if(!bonus&&balance<spinCost()){autoplay.stop();cabinetMessage('Insufficient demo balance for this bet.');labels();return}
+ if(!bonus&&balance<spinCost()){autoplay.stop();cabinetMessage('Insufficient demo balance. Open Menu to reset it.');labels();return}
  $('cab-feedback').hidden=true;
  stop=false;const result=spin(state,rng,bonus?null:featureMode),oldBank=state.bank;
  const award=credit(state,result.amount,bet),finished=bonus&&result.state.left===0;
@@ -327,21 +330,36 @@ function setBet(value){
 function toggleSound(){
  mute=!mute;if(!mute){audio??=new AudioContext();prepareFlightSound();tone(440)}save();labels();
 }
+function canResetBalance(){
+ return !preview&&ready&&!busy&&!checkpoint&&!pending&&!autoplay.active&&state.mode==='base';
+}
+function confirmBalanceReset(){
+ if(!canResetBalance())return;
+ choices('Reset demo balance?',[
+  ['Cancel',()=>{}],
+  ['Reset to '+money(startingBalance),()=>{
+   if(!canResetBalance())return;
+   balance=startingBalance;save();labels();
+   cabinetMessage('Demo balance reset to '+money(balance));
+  }]
+ ]);
+}
 function choices(title,items){
  const content=$('content');content.replaceChildren();const heading=document.createElement('h2');heading.textContent=title;content.append(heading);
  const row=document.createElement('div');row.className='choice-row';content.append(row);
- for(const [label,fn,selected] of items){const b=document.createElement('button');b.textContent=label;b.setAttribute('aria-pressed',String(!!selected));b.onclick=()=>{modal.close();fn()};row.append(b)}
+ for(const [label,fn,selected,disabled=false] of items){const b=document.createElement('button');b.textContent=label;if(selected!==undefined)b.setAttribute('aria-pressed',String(selected));b.disabled=disabled;b.onclick=()=>{modal.close();fn()};row.append(b)}
  modal.showModal();
 }
 function action(name){
- if(winDemo||$('win-show').open)return;
+ if(!ready||winDemo||$('win-show').open)return;
  if(document.body.classList.contains('preview-ready')){if(name==='play')$('preview-stinger').click();return}
  if(!mute&&audio?.state!=='running')prepareFlightSound();
  if(name==='sound'){toggleSound();return}
  if(name==='turbo'){turbo=!turbo;save();labels();return}
  if(name==='settings'){
   autoplay.stop();labels();choices('Control room',[
-   [mute?'Sound off':'Sound on',toggleSound,!mute],[turbo?'Turbo on':'Turbo off',()=>action('turbo'),turbo],['Game rules',showRules]]);
+   [mute?'Sound off':'Sound on',toggleSound,!mute],[turbo?'Turbo on':'Turbo off',()=>action('turbo'),turbo],['Game rules',showRules],
+   ['Reset demo balance',confirmBalanceReset,undefined,!canResetBalance()]]);
   return;
  }
  if(name==='play'){if(busy)stop=true;else if(!autoplay.active&&(pending||state.mode==='base'))play();return}
@@ -358,7 +376,20 @@ document.addEventListener('keydown',e=>{
  e.preventDefault();action('play');
 });
 document.body.dataset.scene=state.mode;
-draw(face,state.spots);labels();void prepareHoney();
+labels();
+void prepareHoney();
+const loading=$('symbol-loading'),loadingMessage=loading.querySelector('[role=status]'),retry=loading.querySelector('button');
+for(;;){
+ try{await preloadSymbols();break}
+ catch{
+  loadingMessage.textContent='Couldn’t load all symbols.';
+  retry.hidden=false;
+  await new Promise(resolve=>retry.addEventListener('click',resolve,{once:true}));
+  retry.hidden=true;loadingMessage.textContent='Loading symbols…';
+ }
+}
+draw(face,state.spots);grid.setAttribute('aria-busy','false');
+ready=true;loading.hidden=true;labels();
 if(state.left===10&&(state.mode==='super'||state.mode==='hidden')){
  lock(true);primeBoard().finally(()=>{lock(false);scheduleBonus()});
 }else scheduleBonus();
@@ -396,7 +427,7 @@ if(hiveDemo){
  button.onclick=async()=>{
   if(busy)return;
   button.hidden=true;document.body.classList.remove('preview-ready');
-  state=start();face=sample;featureMode='full32';balance=1000000;bet=100;draw(face,state.spots);
+  state=start();face=sample;featureMode='full32';balance=startingBalance;bet=100;draw(face,state.spots);
   // Fixed demo only. The three wins and their payouts use the live spin rules.
   let seed=924;
   await play(()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296));
