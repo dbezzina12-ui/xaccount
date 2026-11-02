@@ -10,7 +10,8 @@
 // 2. Line pays keep their shape and scale by one factor, rounded to 0.01x, so base spins return 96% with those bonuses.
 //    The base scatter chance then absorbs the rounding.
 // 3. Each bonus has one knob: Regular's second-Wild chance (it always lands one Wild, on premium-rich reels), Super's
-//    Wild chance, Hidden's second-Wild chance (it always lands one, and boosts 1, 2 or 3 cells at 6:3:1).
+//    Wild chance, and Hidden's odds of boosting 2 or 3 cells rather than 1 (1 : x : x/3; it always lands one Wild and
+//    a second 3% of the time). Even a second Wild never alone takes Hidden too high to reach its target.
 // 4. Signal Boost's scatter chance makes its 3x spins return 96%. Scout Run keeps the base game and adds its Wild: its
 //    price is what it returns over 96%.
 import fs from 'node:fs';
@@ -60,9 +61,9 @@ export async function fit() {
     cap: 25000,
     pays: SHAPE,
     weights: {base: [2, 3], regular: [4, 2], super: [2, 3], hidden: [2, 3]},
-    wilds: {base: [0.33, 0.08], regular: [1, 0.3], super: [0.4, 0.1], hidden: [1, 0.05]},
+    wilds: {base: [0.33, 0.08], regular: [1, 0.3], super: [0.4, 0.1], hidden: [1, 0.03]},
     scatter: {base: 0.075, enhanced: 0.115},
-    boosts: [6, 3, 1],
+    boosts: [1, 0.5, 0.5 / 3],
     mystery: [0.5, 0.4, 0.1],
   };
   const lines = async (m, feature, seed) => (await simulate('lines', m, {feature, n: N.lines, seed})).mean;
@@ -77,7 +78,8 @@ export async function fit() {
   const bonus = async (mode, m, seed) => (await simulate('bonus', m, {mode, n: N[mode], seed})).mean;
   math.wilds.regular[1] = await solve(async (x) => (await bonus('regular', {...math, wilds: {...math.wilds, regular: [1, x]}}, 21)) - TARGET.regular, 0, 1, 1e-5, 'regular 2nd wild');
   math.wilds.super[0] = await solve(async (x) => (await bonus('super', {...math, wilds: {...math.wilds, super: [x, 0.1]}}, 22)) - TARGET.super, 0.15, 0.95, 1e-5, 'super wild');
-  math.wilds.hidden[1] = await solve(async (x) => (await bonus('hidden', {...math, wilds: {...math.wilds, hidden: [1, x]}}, 23)) - TARGET.hidden, 0, 0.6, 1e-5, 'hidden 2nd wild');
+  const boost = await solve(async (x) => (await bonus('hidden', {...math, boosts: [1, x, x / 3]}, 23)) - TARGET.hidden, 0.01, 1, 1e-5, 'hidden boosts');
+  math.boosts = [1, boost, boost / 3];
   // 4. Signal Boost's scatter, then Scout Run's price
   math.scatter.enhanced = await solve(async (p) => ((await lines({...math, scatter: {...math.scatter, enhanced: p}}, 'enhanced', 12)) + bonusReturn(p)) / 3 - RTP, 0.1, 0.25, 2e-6, 'signal boost scatter');
   const scout = (await lines(math, 'scout', 13)) + bonusReturn(math.scatter.base);
@@ -86,7 +88,7 @@ export async function fit() {
   math.scatter.enhanced = round(math.scatter.enhanced, 6);
   math.wilds.regular[1] = round(math.wilds.regular[1], 5);
   math.wilds.super[0] = round(math.wilds.super[0], 5);
-  math.wilds.hidden[1] = round(math.wilds.hidden[1], 5);
+  math.boosts = math.boosts.map((v) => round(v, 5));
   return {math, scoutPrice: round(scout / RTP, 2), scoutReturn: scout};
 }
 
