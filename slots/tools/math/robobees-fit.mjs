@@ -122,7 +122,7 @@ export async function refine(names, done = () => {}, scale = 4) {
   const knobs = {
     regular: {get: () => math.wilds.regular[1], set: (m, x) => (m.wilds.regular[1] = x), f: (m) => bonus(m, 'regular', 31).then((v) => v - TARGET.regular), range: [0, 1]},
     super: {get: () => math.wilds.super[0], set: (m, x) => (m.wilds.super[0] = x), f: (m) => bonus(m, 'super', 32).then((v) => v - TARGET.super), range: [0.15, 1]},
-    hidden: {get: () => math.boosts[1], set: (m, x) => (m.boosts = [1, x, x / 3]), f: (m) => bonus(m, 'hidden', 33).then((v) => v - TARGET.hidden), range: [0.001, 1.5]},
+    hidden: {get: () => math.boosts[1], set: (m, x) => (m.boosts = [1, x, Math.round((x / 3) * 1e6) / 1e6]), f: (m) => bonus(m, 'hidden', 33).then((v) => v - TARGET.hidden), range: [0.001, 1.5]},
     enhanced: {get: () => math.scatter.enhanced, set: (m, x) => (m.scatter.enhanced = x), f: (m) => paid(m, 'enhanced', 34).then((v) => v / PRICE.enhanced - RTP), range: [0.08, 0.3]},
     random: {get: () => math.wilds.random[1], set: (m, x) => (m.wilds.random[1] = x), f: (m) => paid(m, 'random', 35).then((v) => v / PRICE.random - RTP), range: [0, 1]},
     full32: {get: () => math.refillWild.full32, set: (m, x) => (m.refillWild.full32 = x), f: (m) => paid(m, 'full32', 36).then((v) => v / PRICE.full32 - RTP), range: [0.005, 0.4]},
