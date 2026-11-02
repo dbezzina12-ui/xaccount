@@ -8,7 +8,7 @@ Status: `todo` · `doing` · `review` (waiting on Dylan) · `done` · `blocked` 
 |---|---|---|---|---|
 | RB-14 | Win tier celebrations and shared release checklist | ChatGPT | done | Five previews, four naturally qualifying tiers, two-tap skip and a real $435.20 Epic replay. Live Max awaits the cap decision tracked in RB-13. |
 | RB-12 | Tumbling wins in all modes and two multiplier feature spins | ChatGPT | done | All-mode replay and settlement tests pass. Prices follow Gnome Mercy. |
-| RB-13 | Calibrate tumble and feature-spin math | Claude | review | 2026-11-02. Every mode returns 96% within simulation noise, with a 25,000× round cap and live Max. Scout Run repriced to 1.5×, a whole-cent price at every stake. See `games/robobees/MATH.md`. Waiting on Dylan's sign-off and the Hive Overdrive hit-rate decision. |
+| RB-13 | Calibrate tumble and feature-spin math | Claude | review | 2026-11-02. Every mode returns 96% within simulation noise, with a 25,000× round cap and live Max. Feature spins: Signal Boost, Pollen Charge and Hive Overdrive (Scout Run removed at Dylan's request). See `games/robobees/MATH.md`. Waiting on Dylan's sign-off and the Hive Overdrive hit-rate decision. |
 | RB-11 | Integrate the 3D mascot bonus transition | ChatGPT | done | Merged Claude’s swarm renderer into the honey FS build and retained the sprite fallback. |
 | RB-10 | Glass FS with liquid honey | ChatGPT | done | Slosh, surface and bubbles respond on reel travel and landing. Phone Super replay verified. |
 | RB-09 | Tighten and animate FS letters | ChatGPT | done | Per-reel landing, synchronized tease and award verified at phone width. Replay with `?preview=scatter`. |

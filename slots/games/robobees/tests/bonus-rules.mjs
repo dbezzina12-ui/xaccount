@@ -22,7 +22,6 @@ function verify(state,r,mode){
   assert.ok(n>=6&&n<=12);assert.ok(r.prior.every(v=>[0,2,4,8,16,32].includes(v)));
  }else if(mode==='full32'){assert.ok(r.prior.every(v=>v===32));assert.ok(r.seeded)}
  else assert.deepEqual(r.prior,state.spots);
- if(mode==='scout')assert.ok(r.landing.includes('W'));
  for(const [n,w] of r.steps.entries()){
   const prev=r.steps[n-1];
   assert.deepEqual(w.active,active);
@@ -77,9 +76,10 @@ for(const mode of ['regular','super','hidden']){
   }
  }
 }
+// 45,000 free spins above, and 1,250 paid spins in each of the 4 paid modes
 for(const mode of [null,...Object.keys(features)]){
  let state=start();
- for(let run=0;run<1000;run++){const r=spin(state,random,mode);verify(state,r,mode);state=r.state}
+ for(let run=0;run<1250;run++){const r=spin(state,random,mode);verify(state,r,mode);state=r.state}
 }
 const overflow={...start('super'),left:1,bank:36};
 const finale=spin(overflow,random);verify(overflow,finale,null);
@@ -118,4 +118,5 @@ for(const bet of [10,50000]){
 }
 assert.ok(cappedCredits>0);
 assert.equal(credit(start(),12.34,10),123);assert.equal(credit(start(),0.35,10),4);assert.equal(credit(start(),0.05,10),1);
+assert.equal(Object.keys(features).length,3);
 console.log('50,000 spins verified;',tumbles,'tumbles;',freshWilds,'new banked refill Wilds;',carriedWilds,'surviving Wild observations;',lateFS,'refill scatters;',maxWins,'rounds reached the cap;',cappedCredits,'capped rounds credited exactly the cap in cents at $0.10 and $500.');

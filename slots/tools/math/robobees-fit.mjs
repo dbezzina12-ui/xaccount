@@ -2,7 +2,7 @@
 // Fits RoboBees' MATH block (games/robobees/dist/rules.mjs) so every mode returns 96%, by simulating the game's own
 // rules (robobees-sim.mjs). Every step uses fixed seeds, so each measured curve is smooth in its knob.
 //
-//   node tools/math/robobees-fit.mjs            print the fitted MATH and Scout Run's price
+//   node tools/math/robobees-fit.mjs            print the fitted MATH
 //   node tools/math/robobees-fit.mjs --write    and write them into rules.mjs
 //   node tools/math/robobees-fit.mjs --refine super,random,full32 [--scale 4] --write
 //                                               re-solve only those knobs from the shipped MATH, on 4x the spins
@@ -16,8 +16,7 @@
 //    3% of the time).
 // 4. One knob per paid feature, each at its price: Signal Boost's FS chance (3x); Pollen Charge's second-Wild chance
 //    (20x; it always lands one, with its seeds leaning to 16x and 32x); Hive Overdrive's tumble-Wild chance (250x; two
-//    opening Wilds often, on premium-rich symbols); Scout Run's chance of a second opening Wild after its guarantee
-//    (1.5x, a price in whole cents at every stake).
+//    opening Wilds often, on premium-rich symbols).
 // A paid mode's return: its line wins plus, for each bonus, the chance of triggering it (importance-sampled) times its
 // target average.
 import fs from 'node:fs';
@@ -27,10 +26,10 @@ import {simulate} from './robobees-sim.mjs';
 const RULES = fileURLToPath(new URL('../../games/robobees/dist/rules.mjs', import.meta.url));
 export const RTP = 0.96;
 export const TARGET = {regular: 96, super: 240, hidden: 2400};
-export const PRICE = {enhanced: 3, scout: 1.5, random: 20, full32: 250};
+export const PRICE = {enhanced: 3, random: 20, full32: 250};
 export const BOOST = 0.2;
 const SHAPE = {hive: [2, 6, 18], nectar: [1.4, 4, 12], stinger: [1, 3, 9], rotor: [0.8, 2, 7], beacon: [0.6, 1.8, 6], A: [0.4, 1.2, 4], K: [0.4, 1.2, 4], Q: [0.3, 0.9, 3], J: [0.3, 0.9, 3], 10: [0.3, 0.9, 3]};
-const N = {base: 4e6, enhanced: 3e6, scout: 3e6, random: 2e6, full32: 4e5, regular: 3e5, super: 3e5, hidden: 1.5e5};
+const N = {base: 4e6, enhanced: 3e6, random: 2e6, full32: 4e5, regular: 3e5, super: 3e5, hidden: 1.5e5};
 
 /** what a paid mode returns per spin: line wins plus each bonus's trigger chance times its target */
 export const modeReturn = (l) => l.mean + l.rates.regular * TARGET.regular + l.rates.super * TARGET.super + l.rates.hidden * TARGET.hidden;
@@ -73,7 +72,6 @@ export async function fit() {
     boosts: [1, 0.5, 0.5 / 3],
     pollen: [0.1, 0.12, 0.18, 0.3, 0.3],
     mystery: [0.5, 0.4, 0.1],
-    scoutWild: 0.04,
   };
   const tuned = (patch) => {
     const m = structuredClone(math);
@@ -102,16 +100,14 @@ export async function fit() {
   math.scatter.enhanced = await solve(async (p) => modeReturn(await paid(tuned({'scatter.enhanced': p}), 'enhanced', 12)) / PRICE.enhanced - RTP, 0.08, 0.3, 2e-6, 'signal boost FS chance');
   math.wilds.random[1] = await solve(async (x) => modeReturn(await paid(tuned({'wilds.random': [1, x]}), 'random', 14)) / PRICE.random - RTP, 0, 1, 1e-5, 'pollen 2nd wild');
   math.refillWild.full32 = await solve(async (x) => modeReturn(await paid(tuned({'refillWild.full32': x}), 'full32', 15)) / PRICE.full32 - RTP, 0.005, 0.4, 1e-5, 'overdrive tumble wild');
-  math.scoutWild = await solve(async (x) => modeReturn(await paid(tuned({scoutWild: x}), 'scout', 13)) / PRICE.scout - RTP, 0, 0.4, 1e-5, 'scout 2nd wild');
   const round = (x, d) => Math.round(x * 10 ** d) / 10 ** d;
   for (const key of ['base', 'enhanced']) math.scatter[key] = round(math.scatter[key], 6);
   math.wilds.regular[1] = round(math.wilds.regular[1], 5);
   math.wilds.super[0] = round(math.wilds.super[0], 5);
   math.wilds.random[1] = round(math.wilds.random[1], 5);
   math.refillWild.full32 = round(math.refillWild.full32, 5);
-  math.scoutWild = round(math.scoutWild, 5);
   math.boosts = math.boosts.map((v) => round(v, 5));
-  return {math, scoutPrice: PRICE.scout};
+  return {math};
 }
 
 /** re-solves the named knobs from the shipped MATH on scale x the spins, near their current values */
@@ -129,7 +125,6 @@ export async function refine(names, done = () => {}, scale = 4) {
     enhanced: {get: () => math.scatter.enhanced, set: (m, x) => (m.scatter.enhanced = x), f: (m) => paid(m, 'enhanced', 34).then((v) => v / PRICE.enhanced - RTP), range: [0.08, 0.3]},
     random: {get: () => math.wilds.random[1], set: (m, x) => (m.wilds.random[1] = x), f: (m) => paid(m, 'random', 35).then((v) => v / PRICE.random - RTP), range: [0, 1]},
     full32: {get: () => math.refillWild.full32, set: (m, x) => (m.refillWild.full32 = x), f: (m) => paid(m, 'full32', 36).then((v) => v / PRICE.full32 - RTP), range: [0.005, 0.4]},
-    scout: {get: () => math.scoutWild, set: (m, x) => (m.scoutWild = x), f: (m) => paid(m, 'scout', 37).then((v) => v / PRICE.scout - RTP), range: [0, 0.4], wide: true},
   };
   for (const name of names) {
     const k = knobs[name];
@@ -140,20 +135,19 @@ export async function refine(names, done = () => {}, scale = 4) {
       return k.f(m);
     }, lo, hi, 2e-4 * (k.wide ? 0.05 : k.get()), `refine ${name}`);
     k.set(math, Math.round(x * 1e6) / 1e6);
-    done({math, scoutPrice: PRICE.scout});
+    done({math});
   }
-  return {math, scoutPrice: PRICE.scout};
+  return {math};
 }
 
-/** rewrites rules.mjs's MATH block and Scout Run's price */
-export function write({math, scoutPrice}) {
+/** rewrites rules.mjs's MATH block */
+export function write({math}) {
   let src = fs.readFileSync(RULES, 'utf8');
   const a = src.indexOf('export const MATH={');
   const b = src.indexOf('\n};\n', a) + 4;
   const j = (v) => JSON.stringify(v).replace(/"([A-Za-z_][A-Za-z0-9_]*|\d+)":/g, '$1:');
   const block = `export const MATH={\n${Object.entries(math).map(([k, v]) => ` ${k}:${j(v)},`).join('\n')}\n};\n`;
   src = src.slice(0, a) + block + src.slice(b);
-  src = src.replace(/(scout:\{price:)[0-9.]+/, `$1${scoutPrice}`);
   fs.writeFileSync(RULES, src);
 }
 

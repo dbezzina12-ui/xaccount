@@ -13,8 +13,7 @@ export const lines=[
 // weights, the draw chance of each premium and each rank; wilds, the chance of a first and of a second opening Wild.
 // refillWild: per kind of spin, a dropped tile's chance to be a Wild. scatter: the FS chance per reel. boosts: Hidden's odds of 1, 2 or
 // 3 bee boosts. pollen: Pollen Charge's 6-12 seeded cells' odds of 2x, 4x, 8x, 16x and 32x. mystery: Regular, Super,
-// Hidden. scoutWild: Scout Run's chance of one more opening Wild after its guarantee. cap: the most a round pays, its
-// trigger spin included.
+// Hidden. cap: the most a round pays, its trigger spin included.
 export const MATH={
  cap:25000,
  pays:{10:[0.35,1.06,3.52],hive:[2.35,7.05,21.14],nectar:[1.64,4.7,14.09],stinger:[1.17,3.52,10.57],rotor:[0.94,2.35,8.22],beacon:[0.7,2.11,7.05],A:[0.47,1.41,4.7],K:[0.47,1.41,4.7],Q:[0.35,1.06,3.52],J:[0.35,1.06,3.52]},
@@ -25,7 +24,6 @@ export const MATH={
  boosts:[1,0.179471,0.059824],
  pollen:[0.1,0.12,0.18,0.3,0.3],
  mystery:[0.5,0.4,0.1],
- scoutWild:0.011392,
 };
 const pick=(items,rng)=>items[Math.floor(rng()*items.length)];
 const allCells=()=>Array.from({length:20},(_,i)=>i);
@@ -37,7 +35,6 @@ export const buys={
 };
 export const features={
  enhanced:{price:3,label:'Signal Boost',type:'Enhanced spins',art:'beacon',copy:'Each reel has a higher chance to land FS.'},
- scout:{price:1.5,label:'Scout Run',type:'Feature spins',art:'stinger',copy:'Start each paid spin with at least one ordinary Wild.'},
  random:{price:20,label:'Pollen Charge',type:'Random multipliers',art:'rotor',copy:'Start each spin with 6–12 random cells at 2× to 32×. Winning cells keep doubling through tumbles.'},
  full32:{price:250,label:'Hive Overdrive',type:'Full 32× board',art:'hive',copy:'All 20 cells start at 32× each spin. Winning cells double to 64×, then 128×.'}
 };
@@ -136,10 +133,6 @@ export function spin(state,rng=Math.random,featureMode=null){
  const scatterChance=bonus?0:featureMode==='enhanced'?MATH.scatter.enhanced:MATH.scatter.base;
  if(scatterChance)for(let col=0;col<5;col++){
   if(rng()<scatterChance)landed[col+5*Math.floor(rng()*4)]='FS';
- }
- if(!bonus&&featureMode==='scout'){
-  if(!landed.includes('W')){const [i]=take(allCells().filter(i=>landed[i]!=='FS'),1,rng);landed[i]='W'}
-  if(rng()<MATH.scoutWild){const [i]=take(allCells().filter(i=>landed[i]!=='FS'&&landed[i]!=='W'),1,rng);if(i!==undefined)landed[i]='W'}
  }
  const eligible=allCells().filter(i=>active[i]<128);
  const boosts=state.mode==='hidden'?take(eligible,Math.min(eligible.length,1+weighted(MATH.boosts,rng)),rng):[];

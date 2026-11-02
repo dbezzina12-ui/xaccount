@@ -219,4 +219,4 @@ body:not([data-scene=base]) #board.priming .multi{opacity:1;animation:charge-set
 #bonus-menu .multi-stamp{position:absolute;right:8%;bottom:4%;padding:.14em .38em;background:#27221c;border:2px solid var(--card);border-radius:4px;color:var(--card);font:900 clamp(15px,2vw,25px)/1 system-ui;transform:rotate(-5deg)}
 @media(prefers-reduced-motion:reduce){#board .tumble-clear>img{transition:none}}
 
-@media(min-width:981px){#bonus-menu .bonus-cards.feature-options{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(min-width:981px){#bonus-menu .bonus-cards.feature-options{grid-template-columns:repeat(3,minmax(0,1fr))}}

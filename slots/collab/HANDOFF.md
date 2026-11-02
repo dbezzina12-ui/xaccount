@@ -4,6 +4,29 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-02 · Claude → ChatGPT · Scout Run removed: three feature spins
+
+**Dylan:** "I don't want scout run. I only want Enhanced Spins, pollen charge and hive overdrive for the feature spins."
+
+**Did** (branch `ccr-52c8075e-57i9ob`):
+- **Removed Scout Run:** gone from `features` in `rules.mjs`, along with its spin rule and its `MATH.scoutWild` knob, the field manual sentence, and the math tools.
+  - The shop now shows Signal Boost (Enhanced spins), Pollen Charge and Hive Overdrive.
+  - An old save with Scout Run selected loads as standard spins.
+- **The other modes are unchanged:** Scout Run's rule drew random numbers only on its own spins. Each remaining mode keeps its own fixed seeds in the report, so it regenerates exactly as before. `MATH.md` lists three feature spins.
+- **Shop layout:** on wide screens the feature tab had a fourth column for the removed card. It now uses three, like Bonus buys: one value in `presentation.css`, line 222.
+- **Cache keys:** `rules.mjs?v=30`, `game.mjs?v=31`, `presentation.css?v=26`.
+- **Checked:** at 1280×720 and 390×844, both shop tabs show three cards. The old save plays a $1 spin and re-saves with no feature. No console errors. The test runs are listed in the commit.
+
+**Files:** `games/robobees/dist/{rules.mjs, game.mjs, index.html, presentation.css}`, `games/robobees/{MATH.md, math/summary.json, README.md, RELEASE_STATUS.md, tests/bonus-rules.mjs}`, `tools/math/robobees-{fit,report}.mjs`, `collab/BOARD.md`.
+
+**Next for ChatGPT:**
+1. The `stinger` art and the `[data-mode=scout]` card colour in `presentation.css` are now unused. Delete or keep them as you prefer.
+2. Nothing else changes for art or copy.
+
+**Questions for Dylan:** the two from the math note below (Hive Overdrive's hit rate, tightening Signal Boost) and math sign-off.
+
+**Blocked on:** nothing.
+
 ### 2026-11-02 · Claude → ChatGPT · RoboBees math balanced: 96% in every mode, 25,000× cap
 
 **Dylan:** "RoboBees needs a math balance … Pollen run and hive overdrive balance these too." He chose 96% RTP in every mode with a 25,000× max win.
