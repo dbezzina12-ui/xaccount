@@ -54,8 +54,8 @@ function showFlightBank(n){
 function labels(){
  const bonus=state.mode!=='base';
  mascot.setTurbo(turbo);
- $('mode').textContent=(bonus?modes[state.mode]:features[featureMode]?.label??modes.base).toUpperCase();
- $('meter').textContent=bonus?'BONUS ACTIVE':'20 PAYLINES';
+ $('mode').hidden=!bonus&&!featureMode;
+ $('mode').textContent=bonus?modes[state.mode]:features[featureMode]?.label??'';
  $('bonus-hud').hidden=!bonus;$('wild-dock').hidden=state.mode==='regular';
  $('spin-count').textContent=String(state.left);$('bank-count').textContent=String(flightBank??state.bank);
  controller.update({ready:true,busy,holding:bonus&&!busy,continuing:!!pending&&!busy,autoActive:autoplay.active,
@@ -161,11 +161,18 @@ async function showAward(){
  intro.inert=false;$('start-feature').focus({preventScroll:true});
 }
 $('start-feature').onclick=()=>{if(!busy&&pending){prepareFlightSound();feature(pending)}};
+let feedbackTimer;
+function cabinetMessage(message){
+ const panel=$('cab-feedback');
+ panel.textContent=message;panel.hidden=false;$('notice').textContent=message;
+ clearTimeout(feedbackTimer);feedbackTimer=setTimeout(()=>{panel.hidden=true},3500);
+}
 async function play(){
  if(busy){stop=true;return}
  if(pending){showAward();return}
  const bonus=state.mode!=='base';
- if(!bonus&&balance<spinCost()){autoplay.stop();$('notice').textContent='Insufficient demo balance for this bet.';labels();return}
+ if(!bonus&&balance<spinCost()){autoplay.stop();cabinetMessage('Insufficient demo balance for this bet.');labels();return}
+ $('cab-feedback').hidden=true;
  stop=false;const result=spin(state,Math.random,bonus?null:featureMode),oldBank=state.bank;
  const award=Math.round(result.amount*bet),finished=bonus&&result.state.left===0;
  if(!bonus)balance-=spinCost();
@@ -197,7 +204,7 @@ async function play(){
  $('notice').textContent=result.amount?result.wins.length+' winning '+(result.wins.length===1?'line':'lines')+charge:'No connection this spin.';
  if(state.bank>oldBank)$('notice').textContent+=' +'+(state.bank-oldBank)+' Wild'+(state.bank-oldBank>1?'s':'')+' banked.';
  if(result.trigger){autoplay.stop();pending=result.trigger;$('notice').textContent=modes[pending]+' unlocked · Press play to enter.'}
- if(state.mode!=='base'&&state.left===0){$('notice').textContent=modes[state.mode]+' complete · '+state.total.toFixed(2)+'× total';await wait(500);document.body.dataset.scene='base';state=previous??start();previous=null;draw(face,state.spots)}
+ if(state.mode!=='base'&&state.left===0){cabinetMessage(modes[state.mode]+' complete · '+state.total.toFixed(2)+'× total');await wait(500);document.body.dataset.scene='base';state=previous??start();previous=null;draw(face,state.spots)}
  checkpoint=null;save();
  if(!bonus&&autoplay.active)autoplay.finishRound(play,turbo?180:500);
  lock(false);if(pending)showAward();else scheduleBonus();
@@ -244,7 +251,7 @@ async function buy(id){
  const cost=bet*buys[id].price;
  if(busy||pending||state.mode!=='base'||autoplay.active||balance<cost)return;
  const entry=purchaseEntry(id);
- modal.close();balance-=cost;pending=entry.mode;stop=false;win=0;
+ $('cab-feedback').hidden=true;modal.close();balance-=cost;pending=entry.mode;stop=false;win=0;
  checkpoint={state,face:entry.board,previous,pending,balance,win};save();lock(true);
  $('notice').textContent='Bonus purchased · Landing FS';await showRoll(entry.board,state.spots,true);
  face=entry.board;draw(face,state.spots);checkpoint=null;save();lock(false);

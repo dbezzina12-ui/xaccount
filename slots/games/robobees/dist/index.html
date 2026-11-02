@@ -1,16 +1,16 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#181a1b"><title>RoboBees · Gamboligy Games</title><link rel="stylesheet" href="game.css?v=17.4"><link rel="stylesheet" href="studio-shop.css"><link rel="stylesheet" href="presentation.css?v=17.3"></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#181a1b"><title>RoboBees · Gamboligy Games</title><link rel="stylesheet" href="game.css?v=18.2"><link rel="stylesheet" href="studio-shop.css"><link rel="stylesheet" href="presentation.css?v=18.1"></head><body>
 <picture class="grove-backdrop" aria-hidden="true"><img src="assets/woodland-clearing.webp" alt="" fetchpriority="high"></picture>
 <canvas id="swarm-stinger" hidden aria-hidden="true"></canvas>
-<div class="camera-window"><div id="camera-track"><div id="play-stage"><header><b><i>⬢</i> GAMBOLIGY <em>GAMES</em></b><span><i class="led"></i> PLAYTEST &nbsp; / &nbsp; 01</span></header>
+<div class="camera-window"><div id="camera-track"><div id="play-stage">
 <main><div class="machine"><div class="top">
- <div class="brand"><small>APIS INDUSTRIES &nbsp;/&nbsp; RB–05</small><h1><picture><source media="(min-width:700px) and (orientation:landscape)" width="290" height="161" srcset="assets/robobees-stacked.svg"><img src="assets/robobees-wordmark.svg?v=16" alt="RoboBees" width="530" height="93"></picture></h1></div>
+ <div class="brand"><small id="mode" hidden></small><h1><picture><source media="(min-width:700px) and (orientation:landscape)" width="290" height="161" srcset="assets/robobees-stacked.svg"><img src="assets/robobees-wordmark.svg?v=16" alt="RoboBees" width="530" height="93"></picture></h1></div>
  <div class="hive-tree" aria-hidden="true"><img class="oak" src="assets/hollow-oak.webp" alt=""><div id="mascot-stage"></div><img class="oak-sill" src="assets/hollow-oak.webp" alt=""></div>
 </div>
-<div class="cab"><div class="rail"><span id="mode">FACTORY SHIFT</span><span id="meter">20 PAYLINES</span></div><div id="bonus-hud" hidden>
+<div class="cab"><div id="bonus-hud" hidden>
  <div id="wild-dock" class="instrument"><div class="hive-icon"><img src="assets/hive.webp" alt=""><i id="hive-port"></i></div><div class="instrument-label"><small>WILD BANK</small><span>FINAL SPIN</span></div><output id="bank-count" aria-label="Banked Wilds">0</output></div>
  <div class="instrument spins"><div class="instrument-label"><small>FREE SPINS</small><span>REMAINING</span></div><output id="spin-count" aria-label="Free spins remaining">10</output></div>
-</div><div id="board" role="img" aria-label="Five reels, four rows"></div><div class="strip"></div></div>
-<div id="notice" role="status">Connect three or more symbols from the left.</div>
+</div><div id="board" role="img" aria-label="Five reels, four rows"></div><div id="cab-feedback" hidden aria-hidden="true"></div></div>
+<div id="notice" class="sr-only" role="status" aria-atomic="true"></div>
 <button id="preview-stinger" hidden>▶ Play bonus stinger</button>
 <footer id="controller" aria-label="Game controller"></footer></div></main></div>
 <section id="bonus-intro" role="region" inert aria-labelledby="award-title" aria-describedby="award-rules">
@@ -30,4 +30,4 @@
  <div class="shop-tabs" aria-label="Shop sections"><button data-tab="features">Feature spins</button><button data-tab="buys">Bonus buys</button></div>
  <div class="shop-options"><section class="bonus-cards" aria-label="Available options"></section></div><p id="bonus-menu-note"></p>
 </dialog>
-<dialog id="menu"><div class="dlg-head"><small>APIS INDUSTRIES &nbsp; / &nbsp; OPERATIONS</small><button class="close" aria-label="Close">×</button></div><div id="content"></div></dialog><script type="module" src="game.mjs?v=16"></script></body></html>
+<dialog id="menu"><div class="dlg-head"><small>APIS INDUSTRIES &nbsp; / &nbsp; OPERATIONS</small><button class="close" aria-label="Close">×</button></div><div id="content"></div></dialog><script type="module" src="game.mjs?v=18"></script></body></html>
