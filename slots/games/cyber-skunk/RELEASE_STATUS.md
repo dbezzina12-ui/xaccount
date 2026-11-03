@@ -22,6 +22,8 @@ The playable artifact was verified on an earlier revision. Current source includ
 
 ## 3. Spin and feature flow
 
+- [x] Existing per-spin Stop scope verified at `6825901`: one Stop in free spin 1 leaves free spin 2 spinning normally, with no early settlement. Vent Break/Overpressure pass at desktop and touch phone; all four cases preserve the exact cost and catalog award. New regression/evidence: `shots/single-stop-qa-2026-11-03/`. Runtime unchanged; this is focused coverage, not a new combined-suite or hosted claim.
+
 - [x] Final-scatter camera source `325a141`: focused six-entry regression passes; normal/Stop/resize/reduced-motion probes restore the wide camera with no leftover animation or gust faces. Evidence and precise scope: `shots/focus-qa-2026-11-02/`.
 
 - [x] Held award layout aligns the large spin numeral to the middle of the viewport with FREE SPINS underneath. Phone checks at 390×740 and 320×568 and short landscape at 844×390 showed zero midpoint offset and no panel scroll.

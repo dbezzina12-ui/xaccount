@@ -1,0 +1,16 @@
+{"label":"desktop","width":1366,"height":768,"mode":"ventbreak","expected":{"seed":653812,"paid":20,"cost":10000},"next":{"spin":"2 / 12","spinning":6,"skip":false,"busy":true,"balance":990000,"history":0},"finalBalance":990020}
+✔ desktop: one Stop only skips the active ventbreak free spin (23166.993856ms)
+{"label":"desktop","width":1366,"height":768,"mode":"overpressure","expected":{"seed":253677,"paid":0,"cost":25000},"next":{"spin":"2 / 10","spinning":6,"skip":false,"busy":true,"balance":975000,"history":0},"finalBalance":975000}
+✔ desktop: one Stop only skips the active overpressure free spin (21308.617577ms)
+{"label":"phone","width":390,"height":844,"mode":"ventbreak","expected":{"seed":653812,"paid":20,"cost":10000},"next":{"spin":"2 / 12","spinning":6,"skip":false,"busy":true,"balance":990000,"history":0},"finalBalance":990020}
+✔ phone: one Stop only skips the active ventbreak free spin (23022.871422ms)
+{"label":"phone","width":390,"height":844,"mode":"overpressure","expected":{"seed":253677,"paid":0,"cost":25000},"next":{"spin":"2 / 10","spinning":6,"skip":false,"busy":true,"balance":975000,"history":0},"finalBalance":975000}
+✔ phone: one Stop only skips the active overpressure free spin (19560.153559ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 87632.768919

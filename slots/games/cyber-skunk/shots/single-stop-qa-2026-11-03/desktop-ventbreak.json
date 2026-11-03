@@ -1,0 +1,20 @@
+{
+  "label": "desktop",
+  "width": 1366,
+  "height": 768,
+  "mode": "ventbreak",
+  "expected": {
+    "seed": 653812,
+    "paid": 20,
+    "cost": 10000
+  },
+  "next": {
+    "spin": "2 / 12",
+    "spinning": 6,
+    "skip": false,
+    "busy": true,
+    "balance": 990000,
+    "history": 0
+  },
+  "finalBalance": 990020
+}
