@@ -3,15 +3,16 @@
   "scope": "static local package only; not browser QA or hosted served-file parity",
   "artifact_file_count": 115,
   "static_reference_count": 39,
+  "stylesheet": "styles.css?v=blackout-entry-1",
   "missing_references": [],
   "required_files": {
     "assets/ui/splash-desktop.webp": "b446a7bd0d85b1b7587ddbcb273898b42806470799c23ba1695e288286d3ff9f",
     "assets/ui/splash-mobile.webp": "68d284426b15e09487a8f35ae9ed9d160daf2baaea109e17db691817521101c6",
-    "styles.css": "4b4bfa61777bd871e47dd6ed7aaa682fce6109fa631b7736b249eb54900ff4f1",
-    "entry-shop.css": "3954c2a6910921d9c7d7cf66d2a58847d865105089c15e00bdbb83d1d5c289bd",
-    "launch.js": "1cd2c7dd5f294781bc2fb040c42df032aa5eab4e78aaa9fc31a14a270c003583",
-    "app.js": "0b0d7df16e24c8ef99b005368b0f8c818aa4288091c3bee55ca69e318c62ef7a"
+    "styles.css": "d8f27afb89f96b68c6bb999ebf6f03d973c06ee2fb969e5b73439b05f50b06fa",
+    "entry-shop.css": "0230f25992a1b76d31e8a328d401dbb0f75b6ee0eb4a93a6cb3069c21a8fd339",
+    "launch.js": "8a643bae94947a0f280df3ace794f55478ed2c21167ea607af5d3ef3860e322d",
+    "app.js": "0f3c951492a2e10353721689867d253b3b6a8d07a932c86181af846f2f1e2520"
   },
-  "package_page_sha256": "6b6683ffb92b744f945dc92bdca13f96b2234d0a35b20a575086f42c524b9902",
+  "package_page_sha256": "deabd8eacefc0d2276c5c274d485c4bf43d6f3397d1aa87d94e3e36718406fda",
   "package_files_json_sha256": "d2ff88862e9ddca967acac4f168a63d63ecb029c1c0b21d7d45419bc8a960911"
 }

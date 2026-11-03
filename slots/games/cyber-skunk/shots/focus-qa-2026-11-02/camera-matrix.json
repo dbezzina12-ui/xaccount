@@ -1,0 +1,101 @@
+[
+  {
+    "width": 390,
+    "height": 844,
+    "action": "normal",
+    "zoom": "matrix(1.00802, 0, 0, 1.00802, -2.80529, -1.51887)",
+    "phases": [
+      "focus-scatter",
+      "charging",
+      "sealed"
+    ],
+    "centerX": -0.0146636962890625,
+    "centerY": -0.0078125,
+    "startHeight": 46,
+    "startVisible": true,
+    "camera": "none",
+    "cameraAnimations": 0,
+    "gusts": 0,
+    "balance": 1000000,
+    "errors": []
+  },
+  {
+    "width": 1366,
+    "height": 768,
+    "action": "normal",
+    "zoom": "matrix(1, 0, 0, 1, 0, 0)",
+    "phases": [
+      "focus-scatter",
+      "charging",
+      "sealed"
+    ],
+    "centerX": -18,
+    "centerY": -0.0078125,
+    "startHeight": 46,
+    "startVisible": true,
+    "camera": "none",
+    "cameraAnimations": 0,
+    "gusts": 0,
+    "balance": 1000000,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "action": "stop",
+    "zoom": "matrix(2.43792, 0, 0, 2.43792, -502.716, -272.186)",
+    "phases": [
+      "focus-scatter",
+      "charging",
+      "sealed"
+    ],
+    "centerX": 0,
+    "centerY": -0.0078125,
+    "startHeight": 46,
+    "startVisible": true,
+    "camera": "none",
+    "cameraAnimations": 0,
+    "gusts": 0,
+    "balance": 1000000,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "action": "resize",
+    "zoom": "matrix(2.24877, 0, 0, 2.24877, -436.586, -236.381)",
+    "phases": [
+      "focus-scatter",
+      "charging",
+      "sealed"
+    ],
+    "centerX": 0,
+    "centerY": 0,
+    "startHeight": 44,
+    "startVisible": true,
+    "camera": "none",
+    "cameraAnimations": 0,
+    "gusts": 0,
+    "balance": 1000000,
+    "errors": []
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "action": "reduce",
+    "zoom": null,
+    "phases": [
+      "charging",
+      "sealed"
+    ],
+    "centerX": 0,
+    "centerY": 0,
+    "startHeight": 44,
+    "startVisible": true,
+    "camera": "none",
+    "cameraAnimations": 0,
+    "gusts": 0,
+    "balance": 1000000,
+    "errors": []
+  }
+]

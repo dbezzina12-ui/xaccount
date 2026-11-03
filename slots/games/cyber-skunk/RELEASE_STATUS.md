@@ -22,6 +22,8 @@ The playable artifact was verified on the earlier revision. The current source a
 
 ## 3. Spin and feature flow
 
+- [x] Final-scatter camera source `325a141`: focused six-entry regression passes; normal/Stop/resize/reduced-motion probes restore the wide camera with no leftover animation or gust faces. Evidence and precise scope: `shots/focus-qa-2026-11-02/`.
+
 - [x] Held award layout aligns the large spin numeral to the middle of the viewport with FREE SPINS underneath. Phone checks at 390×740 and 320×568 and short landscape at 844×390 showed zero midpoint offset and no panel scroll.
 
 - [x] Extractor follow-up: all three tiers fit at 844×390; short-landscape Start corrected from 40px to 44px. Portrait/desktop centering, reduced motion, normal entrance and keyboard Start inspected. Evidence: `shots/extractor-qa-2026-11-02/`.
@@ -56,7 +58,7 @@ The playable artifact was verified on the earlier revision. The current source a
 
 ## 6. Math, settlement and recovery
 
-- [x] `npm run test:cyber-skunk`: 29/29 on extractor source `2ed2531`; see `shots/extractor-qa-2026-11-02/game-tests.txt`.
+- [x] `npm run test:cyber-skunk`: 29/29 on final-scatter source `325a141`; see `shots/focus-qa-2026-11-02/game-tests.txt`.
 - [x] Every paid mode returns 96% of actual cost; exact catalogs replay through the shipping engine.
 - [x] Tests cover natural triggers, Mystery selection, bonus floors, finite routes, deterministic replay, rounding and cap accounting.
 - [x] `npm test`: 127 pass, 3 documented rig-data skips on 2026-11-02 current source.

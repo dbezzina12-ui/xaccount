@@ -80,7 +80,8 @@ try {
 
   const index = readFileSync(join(RUNTIME, 'index.html'), 'utf8');
   const css = readFileSync(join(RUNTIME, 'styles.css'), 'utf8');
-  if (!index.includes('styles.css?v=20')) throw new Error('index.html does not select styles.css?v=20');
+  const stylesheet = index.match(/<link\b[^>]*href=["'](styles\.css\?v=[^"']+)["']/)?.[1];
+  if (!stylesheet) throw new Error('index.html must select a versioned styles.css');
   if (!index.includes('splash-desktop.webp') || !index.includes('splash-mobile.webp')) throw new Error('responsive splash preloads are missing');
   if (!css.includes('url(assets/ui/splash-desktop.webp)') || !css.includes('url(assets/ui/splash-mobile.webp)')) throw new Error('intro does not select both splash assets');
   if (!/\.intro-mark\{[^}]*opacity:0/.test(css)) throw new Error('the duplicate live intro logo is not suppressed');
@@ -90,6 +91,7 @@ try {
     scope: 'static local package only; not browser QA or hosted served-file parity',
     artifact_file_count: packagedNames.size,
     static_reference_count: checks.length,
+    stylesheet,
     missing_references: [],
     required_files: Object.fromEntries(required.map((name) => [name, hash(join(RUNTIME, name))])),
     package_page_sha256: hash(join(OUT, 'cyber-skunk.html')),
