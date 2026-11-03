@@ -29,7 +29,7 @@ Coordination: `games/cyber-skunk/STYLE.md`; deadline target 2026-10-31 08:25 UTC
 
 | ID | Task | Owner | Status | Notes |
 |---|---|---|---|---|
-| CS-08 | Replace bonus airlock with an extractor pressure surge | ChatGPT | done | The extractor spools up, blows water and landed symbols away, then centers the spin numeral in both axes with its label below. Rules and Start now sit just beneath the award. Blackout alone cuts the power before the spray and restores emergency lighting. Desktop and phone reviewed. |
+| CS-08 | Replace bonus airlock with an extractor pressure surge | ChatGPT | done | The extractor spools up, blows water and landed symbols away, then centers the spin numeral in both axes with its label below. Rules and Start now sit just beneath the award. Blackout frames the last landed FS and pulls back before the skunk sprays. Scatter-to-fan trails are removed from all tiers. Desktop and phone reviewed. |
 | CS-01 | Concept, all-mode brief, visual direction and first style frame | ChatGPT | done | b738449, 9d5f8c9; design only, not playable |
 | CS-02 | Exact art/pivot contract and articulated rig guide | Claude | done | Rig v4 (compact, waist up): `art/rig/pivots-v4.json`, `guide-v2.jpg`, 17 pieces; ChatGPT painting the pieces |
 | CS-03 | Engine, paytable/calibration, all-mode distribution and max odds | Claude | done | cs-2 (Dylan's odds, all met): base max 1 in 1,000,000; bought Vent Break 1 in 200,000 (now with a Reservoir to 5) and Overpressure 1 in 50,000; Blackout 1 in 200 and ≥1,000×; all modes exactly 96% |

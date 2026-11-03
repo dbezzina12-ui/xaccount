@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#101820">
 <title>Cyber Skunk · Gamboligy Games</title>
 <link rel="stylesheet" href="styles.css?v=blackout-entry-1">
-<link rel="stylesheet" href="entry-shop.css?v=blackout-entry-1">
+<link rel="stylesheet" href="entry-shop.css?v=scatter-focus-1">
 <link rel="preload" href="assets/studio-gg-diagonal.png" as="image">
 <link rel="preload" href="assets/ui/airlock.svg" as="image" fetchpriority="low">
 <link rel="preload" href="assets/ui/splash-desktop.webp" as="image" media="(min-width:760px)" fetchpriority="low">
@@ -24,6 +24,7 @@
   </div>
 </div>
 <div id="app" class="app" data-layout="desktop" inert>
+  <div id="hall-camera">
   <div class="backdrop" aria-hidden="true"><div class="hall"></div><div class="fans"><i></i><i></i><i></i></div><div class="grill"></div><div class="blackout"></div></div>
   <div id="stage" class="stage">
     <div class="logo" aria-label="Cyber Skunk"><span class="logo-text">CYBER<b>SKUNK</b></span></div>
@@ -50,10 +51,10 @@
       <footer id="controller" class="controller-host" aria-label="Game controller"></footer>
     </div>
   </div>
+  </div>
 
   <dialog id="buy-stinger" class="buy-stinger" aria-labelledby="bonus-panel-title" aria-describedby="bonus-panel-award bonus-panel-text">
-    <div class="pressure-room" aria-hidden="true"><div class="pressure-hall"></div></div>
-    <div class="backup-lamps" aria-hidden="true"><i></i><i></i></div>
+    <div class="pressure-room" aria-hidden="true"><div class="pressure-hall"></div><div class="backup-lamps"><i></i><i></i></div></div>
       <div class="extractor-engine" aria-hidden="true"><div class="extractor-well"></div><img class="extractor-blades" src="assets/symbols/h2-rotor.webp" alt=""><img class="extractor-case" src="assets/ui/extractor-case.svg" alt=""></div>
       <div class="extractor-steam" aria-hidden="true"><i></i><i></i></div>
     <div class="gust-faces" aria-hidden="true"></div>
@@ -148,6 +149,6 @@
     </div>
   </div>
 </div>
-<script type="module" src="launch.js?v=blackout-entry-1"></script>
+<script type="module" src="launch.js?v=scatter-focus-1"></script>
 </body>
 </html>

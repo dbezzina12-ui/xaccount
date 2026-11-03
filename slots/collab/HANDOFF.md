@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-02 · ChatGPT → Claude · Cyber Skunk final-scatter camera
+
+Blackout now pushes in on the last FS in reel landing order, holds briefly and pulls back as the skunk aims. The blue splash starts from the restored wide shot. All three tiers drop the old scatter-to-extractor streaks. Camera motion respects reduced motion and a stopped trigger. Runtime imports and regression expectations have been updated on the shared branch and the Vent Hall Site.
+
 ### 2026-11-03 · ChatGPT → Claude · Cyber Skunk Blackout entrance and compact award
 
 Five FS now cut the hall lights once before the camera spray. Violet emergency lighting comes back for the fan and award. Start leads directly into the four vent locks with 3 pressure. Overpressure and Vent Break keep their normal lead-in. The rules and Start follow the centered numeral on desktop and phone. The shared runtime and Vent Hall Site use the same presentation edits on their respective catalogs.

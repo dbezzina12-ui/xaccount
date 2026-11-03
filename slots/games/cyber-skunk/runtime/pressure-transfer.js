@@ -1,16 +1,16 @@
 import { paintLensWater } from './lens-water.js?v=2';
 import { carryReelFaces, paintGust, windFront, shaftAngle } from './fan-gust.js?v=1';
-// The awarded scatters are the emitters. All particles use fixed phases and never touch the round RNG.
+// The nozzle supplies the water and the extractor supplies the gust.
 const clamp = n => Math.max(0, Math.min(1, n));
 const smooth = n => { const x=clamp(n); return x*x*(3-2*x); };
 
-export function drawPressureTransfer(dialog, cells, { duration, skip, mist, faces=[], getBarrel, onPilot, onHose, onImpact }) {
+export function drawPressureTransfer(dialog, { duration, skip, mist, faces=[], getBarrel, onPilot, onHose, onImpact }) {
   const canvas = dialog.querySelector('.pressure-transfer');
   const ctx = canvas.getContext('2d');
   const hub = dialog.querySelector('.extractor-anchor');
   const ink = getComputedStyle(dialog).getPropertyValue('--surge').trim();
   const tier=dialog.dataset.tier;
-  let moving, fanRadius=0, width=0, height=0, cx=0, cy=0, far=0, sources=[], elapsed=0, last=null, struck=false, pilot=false, hose=false;
+  let moving, fanRadius=0, width=0, height=0, cx=0, cy=0, far=0, elapsed=0, last=null, struck=false, pilot=false, hose=false;
   function fit() {
     width=canvas.clientWidth; height=canvas.clientHeight;
     const resolution=Math.min(devicePixelRatio||1,1.6,Math.sqrt(1400000/(width*height)));
@@ -21,10 +21,6 @@ export function drawPressureTransfer(dialog, cells, { duration, skip, mist, face
     far=Math.hypot(Math.max(cx,width-cx),Math.max(cy,height-cy))+48;
     fanRadius=(dialog.querySelector('.extractor-engine')?.getBoundingClientRect().width || Math.min(width,height)*.4)*.53;
     moving?.fit(origin.left,origin.top,cx,cy,width,height);
-    sources=cells.map(cell=>{
-      const box=cell.getBoundingClientRect();
-      return {x:box.left-origin.left+box.width/2,y:box.top-origin.top+box.height/2,r:Math.min(box.width,box.height)*.39};
-    });
   }
   function frame(t) {
     if (width!==canvas.clientWidth || height!==canvas.clientHeight) fit();
@@ -42,19 +38,6 @@ export function drawPressureTransfer(dialog, cells, { duration, skip, mist, face
     if (!ctx) return;
     ctx.clearRect(0,0,width,height);
     ctx.lineCap='round';
-    for (const [i,src] of sources.entries()) {
-      const q=clamp((t-i*.034)/.41);
-      if(q<=0||q>=1)continue;
-      const bendX=(src.x+cx)*.5+Math.min(width*.075,76), bendY=Math.min(src.y,cy)-Math.min(height*.17,120);
-      const pos=k=>({x:(1-k)**2*src.x+2*(1-k)*k*bendX+k*k*cx,y:(1-k)**2*src.y+2*(1-k)*k*bendY+k*k*cy});
-      ctx.globalAlpha=(1-q)*.95;ctx.strokeStyle=ink;ctx.lineWidth=2.2;
-      ctx.beginPath();ctx.arc(src.x,src.y,src.r*(.72+.65*q),0,Math.PI*2);ctx.stroke();
-      const tail=Math.max(0,q-.27);
-      ctx.beginPath();for(let j=0;j<=12;j++){const p=pos(tail+(q-tail)*j/12);if(j===0)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y);}
-      ctx.globalAlpha=Math.sin(Math.PI*q);ctx.lineWidth=Math.max(2,src.r*.09);ctx.strokeStyle=ink;ctx.stroke();
-      ctx.strokeStyle='#fff3d5';ctx.lineWidth=1.5;ctx.stroke();
-      const p=pos(q);ctx.fillStyle='#fffae8';ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fill();
-    }
     if (blast>0 && blast<1) {
       // Layer the hall reveal under a textured, expanding pressure front.
       const size=Math.max(48,Math.min(width,height)*.20);

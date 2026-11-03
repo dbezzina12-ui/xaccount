@@ -19,7 +19,7 @@ test('pressure transfers reveal the whole viewport once, including skip, rotatio
   const dialog={dataset:{tier:'super'},style:{setProperty:(k,v)=>styles.set(k,v)},querySelector:q=>q==='.pressure-transfer'?canvas:cell};
   for(const [duration,stopAt] of [[0,0],[1400,0],[1400,1],[1400,Infinity]]){
     let draws=0,hits=0;const beats=[];
-    const done=drawPressureTransfer(dialog,[cell,cell,cell],{duration,skip:()=>draws>=stopAt,onPilot:()=>beats.push('drop'),onHose:()=>beats.push('hose'),onImpact:()=>{hits++;beats.push('reveal');}});
+    const done=drawPressureTransfer(dialog,{duration,skip:()=>draws>=stopAt,onPilot:()=>beats.push('drop'),onHose:()=>beats.push('hose'),onImpact:()=>{hits++;beats.push('reveal');}});
     while(queue.length){
       const frame=queue.shift();if(draws===1){canvas.clientWidth=844;canvas.clientHeight=390;}
       frame(draws*500);draws++;assert.ok(draws<8,'slow frames must not stretch the scene');

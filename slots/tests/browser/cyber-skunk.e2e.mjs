@@ -546,7 +546,8 @@ test('scatter landing precedes the held bonus briefing on every entry path', asy
       assert.ok(await page.locator('#bonus-panel').isHidden());
       await page.locator('#buy-stinger[open][data-phase=sealed] #bonus-panel-go').waitFor();
       assert.deepEqual(await page.evaluate(() => window.entryPhases),
-        count === 5 ? ['power-cut','emergency','charging','sealed'] : ['charging','sealed']);
+        count === 5 ? ['focus-scatter','charging','sealed'] : ['charging','sealed']);
+      assert.equal(await page.locator('#hall-camera').evaluate(el=>getComputedStyle(el).transform),'none');
       assert.equal(await page.locator('#bonus-panel-title img').getAttribute('alt'),title);
       assert.equal(await page.locator('#bonus-panel-award').textContent(),(count===3?'12':'10')+' FREE SPINS');
       await page.waitForTimeout(650);

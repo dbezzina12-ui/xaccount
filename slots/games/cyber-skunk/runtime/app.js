@@ -1,4 +1,4 @@
-import { drawPressureTransfer } from './pressure-transfer.js?v=3';
+import { drawPressureTransfer } from './pressure-transfer.js?v=scatter-focus-1';
 // Cyber Skunk: the playable game. The engine settles each round before
 // anything moves (playRound returns its total and every event); this file only
 // presents those events, so skip, turbo and frame timing never change a result.
@@ -457,12 +457,32 @@ async function countTo(target, ms) {
 const paintWin = () => { controller.update({ win: money(state.win) }); if (state.tier) $('hud-win').textContent = money(state.win); };
 
 // ---- Bonuses ----
-// Land the real FS before drawing their pressure paths in viewport coordinates.
+// Move the hall and the real reel faces together; the fitted stage retains its own responsive transform.
+function focusLastScatter(cell) {
+  const camera = $('hall-camera'), frame = camera.getBoundingClientRect(), tile = cell.getBoundingClientRect();
+  const zoom = Math.min(3.3, Math.max(2.1, Math.min(frame.width, frame.height) * .38 / tile.width));
+  // Keep the hall covering the viewport even when the final FS is on an outside reel.
+  const offset = (center, size) => Math.max(size * (1 - zoom), Math.min(0, size / 2 - zoom * center));
+  const centerX = tile.left + tile.width / 2 - frame.left, centerY = tile.top + tile.height / 2 - frame.top;
+  camera.style.setProperty('--focus-x', centerX + 'px');
+  camera.style.setProperty('--focus-y', centerY + 'px');
+  camera.style.setProperty('--focus-core', Math.min(tile.width, tile.height) * .55 + 'px');
+  const x = offset(centerX, frame.width), y = offset(centerY, frame.height);
+  const wide = 'translate3d(0,0,0) scale(1)', close = `translate3d(${x}px,${y}px,0) scale(${zoom})`;
+  return camera.animate([
+    {transform:wide, easing:'cubic-bezier(.45,0,.15,1)'},
+    {transform:close, offset:.46},
+    {transform:close, offset:.60, easing:'cubic-bezier(.44,0,.22,1)'},
+    {transform:wide}
+  ], {duration:1320 * pace()});
+}
+
 async function bonusStart(e, result, mode) {
   const tier = BONUSES[e.tier], presentation = TIER[e.tier];
   if (!e.natural) await spinInBonus(e.tier, result.draw?.bonus ?? 811, mode);
-  const sources = board.flatMap((cell, i) => cell.s === 'S' ? [cellEl(i)] : []).filter(Boolean);
-  status(sources.length + ' FS · ' + tier.title);
+  // Reel strips are ordered left to right, with simultaneous symbols raised from top to bottom.
+  const scatters = $('reels').querySelectorAll('.cell.scatter-cell[data-i]');
+  status(scatters.length + ' FS · ' + tier.title);
   const faces = board.map((_,i) => $('fs-faces').querySelector('[data-cell="'+i+'"]')?.firstElementChild ||
     cellEl(i)?.querySelector('.sym')?.firstElementChild).filter(Boolean);
   const dialog = $('buy-stinger'), panel = $('bonus-panel'), start = $('bonus-panel-go');
@@ -474,25 +494,35 @@ async function bonusStart(e, result, mode) {
   $('bonus-panel-text').textContent = presentation.text;
   panel.classList.toggle('has-art', !!titleArt);
   panel.dataset.tier = dialog.dataset.tier = e.tier;
-  const powerCut = e.tier === 'hidden' && !reduced.matches && !state.skip;
-  dialog.dataset.phase = powerCut ? 'power-cut' : 'charging';
+  const focus = e.tier === 'hidden' && !reduced.matches && !state.skip && scatters.length > 0;
+  dialog.dataset.phase = focus ? 'focus-scatter' : 'charging';
   dialog.style.setProperty('--radius', '0px'); dialog.style.setProperty('--ignition', '0');
   dialog.oncancel = event => event.preventDefault();
   dialog.showModal();
   try {
     start.disabled = true; panel.inert = true;
-    if (powerCut) {
-      audio.music('blackout'); audio.play('blackout');
-      await wait(680);
-      dialog.dataset.phase = 'emergency';
-      await wait(360);
-      dialog.dataset.phase = 'charging';
+    const camera = focus ? focusLastScatter(scatters[scatters.length - 1]) : null;
+    const resetCamera = () => camera?.finish();
+    try {
+      if (camera) {
+        running.add(camera);
+        window.addEventListener('resize', resetCamera, {once:true});
+        await wait(760); // The skunk winds up during the pullback, ready when the wide shot lands.
+      }
+      if (!reduced.matches && !state.skip) {
+        audio.play('charge');
+        await skunk.spray();
+      }
+      if (camera) await camera.finished;
+    } finally {
+      if (camera) {
+        window.removeEventListener('resize', resetCamera);
+        running.delete(camera);
+        camera.cancel();
+      }
     }
-    if (!reduced.matches && !state.skip) {
-      audio.play('charge');
-      await skunk.spray();
-    }
-    await drawPressureTransfer(dialog, sources, {
+    if (focus) dialog.dataset.phase = 'charging';
+    await drawPressureTransfer(dialog, {
       duration: reduced.matches ? 0 : 2480 * pace(), faces, skip: () => state.skip, mist: fxSprites.mist,
       getBarrel: () => {
         const tip = skunk.nozzle(), base = skunk.nozzle(0);
@@ -894,7 +924,7 @@ function renderRules() {
   <h3>BONUSES</h3>
   <p><b>3 FS scatters: VENT BREAK.</b> ${BONUSES.regular.spins} free spins. Vents that land stay until the bonus ends, up to ${MAX_STICKY}, and the <b>Reservoir</b> gauge banks each spray's pressure gain up to ${BONUSES.regular.reservoirMax}: every later spray starts at 1 + the Reservoir.</p>
   <p><b>4 FS scatters: OVERPRESSURE.</b> ${BONUSES.super.spins} free spins with sticky vents and the <b>Reservoir</b> gauge: after each spray, the pressure gained is banked (up to ${MAX_RESERVOIR}), and every later spray starts at 1 + the Reservoir.</p>
-  <p><b>5 FS scatters: BLACKOUT PROTOCOL.</b> ${BONUSES.hidden.spins} free spins. The lights go out, 4 vents come online as one route and the Reservoir starts at ${BONUSES.hidden.reservoirStart}; then it plays as Overpressure. It always pays at least 1,000× the base bet. Mystery Buy can also reveal it.</p>
+  <p><b>5 FS scatters: BLACKOUT PROTOCOL.</b> ${BONUSES.hidden.spins} free spins. Four vents come online as one route and the Reservoir starts at ${BONUSES.hidden.reservoirStart}; then it plays as Overpressure. It always pays at least 1,000× the base bet. Mystery Buy can also reveal it.</p>
   <p>${RETRIGGER.scatters} or more FS scatters during a bonus add +${RETRIGGER.spins} spins, up to ${MAX_SPINS} in total.</p>
   <p><b>MYSTERY BUY · ${PLAY_OPTIONS.mystery.cost}×.</b> ${COPY.mystery.text}</p>
   <h3>WAYS TO PLAY</h3>
