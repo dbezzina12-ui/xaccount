@@ -1,0 +1,42 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> test:cyber-skunk
+> node --test games/cyber-skunk/tests/*.test.mjs
+
+✔ every pool and tier table is whole tickets summing to 1e9 (232.85381ms)
+✔ every paid mode returns 96% of its cost; the report matches the shipped catalogs (23.472974ms)
+✔ max-win odds are Dylan's: base 1 in 1,000,000, bought Overpressure 1 in 50,000, Blackout 1 in 200 and at least 1,000x (2.897479ms)
+✔ a triggered bonus averages the same as a bought one (18.18302ms)
+✔ tier tables carry the natural trigger rates of rules.js (0.498146ms)
+✔ a sample of every pool replays exactly through the engine (404.735198ms)
+✔ the game draws rounds from the catalogs and they replay exactly (450.913874ms)
+✔ a replay that disagrees with the catalog is refused (0.960123ms)
+✔ a round is a pure function of its seeds (111.432015ms)
+✔ the route lands on the left-most vent, follows each outlet, and gains 1 pressure per vent (0.672358ms)
+✔ a route never loops: it ends on a touched cell, at the edge, or after its step limit (94.719971ms)
+✔ touched cells turn wild, vents carry xN, scatters stay scatters (0.711545ms)
+✔ lines: the first real symbol decides, wilds substitute, xN vents add up, six wilds pay as H1 (1.436538ms)
+✔ every win is a whole 0.1x, every round stays within the 25,000x cap (935.923224ms)
+✔ Blackout Protocol opens with 4 vents on one route (0.727931ms)
+✔ bonus rules: sticky vents, Reservoir, retriggers and their caps (536.463388ms)
+✔ Spray Job always sprays from reel 1; a natural bonus is its trigger spin plus the bonus (166.938259ms)
+✔ Mystery reveals Overpressure or Blackout only, 90% / 10% of every ticket (9.164009ms)
+✔ Mystery returns 96% of its 500x price, to a billionth of the cost (29.716289ms)
+✔ every Mystery pays at least 40x, every Blackout at least 1,000x (55.869444ms)
+✔ both ends of each Mystery tier replay the selected catalog bonus (22.516332ms)
+✔ pressure transfers reveal the whole viewport once, including skip, rotation and low frame rate (20.425205ms)
+✔ fan starts still, accelerates, carries real faces outwards and restores them (7.12001ms)
+✔ the game ships the same pivots as the art contract (14.560618ms)
+✔ the spray pose reaches over the head within the ±35° each segment allows (0.686272ms)
+✔ no joint ever separates: each part turns about a point its parent carries (155.417545ms)
+✔ both boots stay planted, flat on the floor, in every clip (116.791913ms)
+✔ tail segments stay inside their ±35° range in every clip (53.078003ms)
+✔ rig v4.1 (ChatGPT's pieces, waist up): every joint holds and the tail stays in range in every clip (236.126617ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2652.264297

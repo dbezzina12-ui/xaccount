@@ -1,0 +1,14 @@
+{
+  "base_runtime": "d0b6f679069db99831d21b8b7b866271620e8b61",
+  "unchanged_runtime_files": 117,
+  "changed": {
+    "games/cyber-skunk/runtime/entry-shop.css": {
+      "before": "2e7e36951318a695bb14cfaab81ae5a8a50b4a74a117ed4cd957735e326a5b64",
+      "after": "7de123b827c03e2d68665507e36c27b4d0a3a2878b09d615b07d6e6077ea18e7"
+    },
+    "games/cyber-skunk/runtime/index.html": {
+      "before": "d1bc4ddb0635faece3bf7925371ccfc1ecb76c6f46990c7cbe4da9efdf00d1ce",
+      "after": "2fab8bc10806123b6230ae5a5e7ba339453089792466ac505237bf592b5ff9f5"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+✔ buy screen: Feature Spins first, Bonus Buys second, Hidden as information; short balance disables confirm (8116.462318ms)
+✔ polished shop and single unboxed bonus result on phones and desktop (44566.410424ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 52957.942446

@@ -1,0 +1,24 @@
+{"name":"prices-desktop","limits":{"min":10,"max":10000},"rows":[{"edge":"min","bet":10,"mode":"ventbreak","cost":1000,"cancelBalance":100000000},{"edge":"min","bet":10,"mode":"overpressure","cost":2500,"cancelBalance":100000000},{"edge":"min","bet":10,"mode":"mystery","cost":5000,"cancelBalance":100000000},{"edge":"min","bet":10,"mode":"enhanced","cost":30},{"edge":"min","bet":10,"mode":"sprayjob","cost":100},{"edge":"max","bet":10000,"mode":"ventbreak","cost":1000000,"cancelBalance":100000000},{"edge":"max","bet":10000,"mode":"overpressure","cost":2500000,"cancelBalance":100000000},{"edge":"max","bet":10000,"mode":"mystery","cost":5000000,"cancelBalance":100000000},{"edge":"max","bet":10000,"mode":"enhanced","cost":30000},{"edge":"max","bet":10000,"mode":"sprayjob","cost":100000}]}
+✔ stake prices: desktop minimum and maximum (22552.007838ms)
+{"name":"prices-phone","limits":{"min":10,"max":10000},"rows":[{"edge":"min","bet":10,"mode":"ventbreak","cost":1000,"cancelBalance":100000000},{"edge":"min","bet":10,"mode":"overpressure","cost":2500,"cancelBalance":100000000},{"edge":"min","bet":10,"mode":"mystery","cost":5000,"cancelBalance":100000000},{"edge":"min","bet":10,"mode":"enhanced","cost":30},{"edge":"min","bet":10,"mode":"sprayjob","cost":100},{"edge":"max","bet":10000,"mode":"ventbreak","cost":1000000,"cancelBalance":100000000},{"edge":"max","bet":10000,"mode":"overpressure","cost":2500000,"cancelBalance":100000000},{"edge":"max","bet":10000,"mode":"mystery","cost":5000000,"cancelBalance":100000000},{"edge":"max","bet":10000,"mode":"enhanced","cost":30000},{"edge":"max","bet":10000,"mode":"sprayjob","cost":100000}]}
+✔ stake prices: phone minimum and maximum (12420.262243ms)
+{"name":"boundary-min-exact","bet":10,"cost":1000,"balance":1000,"disabled":false}
+✔ stake balance boundary: min exact credit (6814.273997ms)
+{"name":"boundary-min-short","bet":10,"cost":1000,"balance":999,"disabled":true}
+✔ stake balance boundary: min one cent short (5788.341867ms)
+{"name":"boundary-max-exact","bet":10000,"cost":1000000,"balance":1000000,"disabled":false}
+✔ stake balance boundary: max exact credit (7043.469389ms)
+{"name":"boundary-max-short","bet":10000,"cost":1000000,"balance":999999,"disabled":true}
+✔ stake balance boundary: max one cent short (6970.010622ms)
+{"name":"settlement-min","bet":10,"cost":1000,"paid":2,"expected":{"seed":653812,"hundredths":20},"after":{"balance":99999002,"busy":false,"history":[{"t":1793698866396,"mode":"ventbreak","bet":10,"cost":1000,"win":2,"tier":"regular","seed":{"bonus":653812}}]}}
+✔ stake settlement: min catalog award is whole cents (10028.433623ms)
+{"name":"settlement-max","bet":10000,"cost":1000000,"paid":2000,"expected":{"seed":653812,"hundredths":20},"after":{"balance":99002000,"busy":false,"history":[{"t":1793698875934,"mode":"ventbreak","bet":10000,"cost":1000000,"win":2000,"tier":"regular","seed":{"bonus":653812}}]}}
+✔ stake settlement: max catalog award is whole cents (9390.387338ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 81282.191604

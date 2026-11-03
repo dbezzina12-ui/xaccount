@@ -292,7 +292,7 @@ dialog.confirm.pass-receipt{border:0;border-radius:6px;color:var(--ink);box-shad
  .pass-receipt .confirm-actions{flex-direction:row;gap:12px}
  .pass-receipt .confirm-actions button{flex:1;font-size:15px}
 }
-@media(min-width:1100px){#bonus-cards{grid-template-columns:repeat(3,minmax(0,1fr))}.pass-info h3{font-size:27px}.pass-body{min-height:180px}.pass-stub{padding-inline:8px}.stub-price{font-size:22px}}
+@media(min-width:1100px){#bonus-cards{grid-template-columns:repeat(3,minmax(0,1fr))}.offer.pass{grid-template-columns:minmax(0,1fr) minmax(100px,max-content)}.pass-info h3{font-size:27px}.pass-body{min-height:180px}.pass-stub{padding-inline:8px}.stub-price{font-size:22px}}
 @media(max-width:759px){#bonus-cards{grid-template-columns:1fr;gap:10px}.pass-body{min-height:146px}.pass-info h3{font-size:26px}.pass-stub{padding-inline:8px}}
 @media(max-width:365px){.offer.pass{grid-template-columns:minmax(0,1fr) 101px}.pass-body{padding-inline:12px}.pass-info h3{font-size:23px}.stub-price{font-size:20px}}
 

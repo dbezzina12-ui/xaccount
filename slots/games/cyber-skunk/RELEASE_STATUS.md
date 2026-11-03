@@ -2,9 +2,11 @@
 
 | Game | Branch / source | Playable link | Build / audience | Producer | Art | Math / engineering | QA |
 |---|---|---|---|---|---|---|---|
-| Cyber Skunk | `claude/blissful-rubin-xou20i`, frozen source `d0b6f67` | Existing private artifact; URL intentionally omitted from this public record | Private playtest; newest hosted parity unverified | Dylan | ChatGPT | Claude | ChatGPT + Claude |
+| Cyber Skunk | `claude/blissful-rubin-xou20i`, frozen 36-case source `d0b6f67` plus scoped `stake-prices-1` follow-up | Existing private artifact; URL intentionally omitted from this public record | Private playtest; newest hosted parity unverified | Dylan | ChatGPT | Claude | ChatGPT + Claude |
 
 The playable artifact was verified on an earlier revision. Current source includes the final splashes, named Mystery copy, card/bonus presentation, controller/shop corrections and keyboard award handling. All 36 browser tests passed together on frozen `d0b6f67`; all 124 runtime/test/helper fingerprints match that commit and remained unchanged. See `shots/combined-browser-qa-2026-11-03/`. Prior complete catalog replay/report regeneration remains in `shots/frozen-build-qa-2026-11-02/` for unchanged math sources. Source QA does not establish hosted parity. Preview sampling, physical-device checks and sign-off remain open.
+
+The later `stake-prices-1` desktop shop correction has 10 targeted browser passes and price-fit evidence in `shots/stake-qa-2026-11-03/`; it has not received a new combined 46-case run.
 
 ## 1. Brief and rules
 
@@ -41,6 +43,8 @@ The playable artifact was verified on an earlier revision. Current source includ
 - [x] Frozen runtime `b533d72`: full run 25 passed/one Studio resize-readiness assertion failed. A 24-switch probe reproduced premature measurements but all settled correctly; the test-only wait now checks completed layout before its original assertions. Focused reruns and original failure are archived in `shots/frozen-build-qa-2026-11-02/`. No final all-26-in-one-run claim or hosted claim.
 
 ## 4. Controller and purchases
+
+- [x] Stake-limit follow-up on `3af617f` (`stake-prices-1`): desktop high ticket prices now fit their intrinsic content width. Eight stake cases plus two existing shop cases pass: configured prices, receipt/cancel fields, exact-credit/one-cent-short Regular affordability, and exact 2/2000-cent shipping awards at 10/10000-cent bets. Four viewport price probes and desktop frame reviewed. Synthetic test wallets only; no cost/math change. Evidence/limits: `shots/stake-qa-2026-11-03/`. Not a new combined 46-case or hosted claim.
 
 - [x] Shop bet/Close/Back targets are at least 44px; landscape confirmation shows the whole receipt without initial clipping. Six touch-enabled viewport checks preserve bet, balance and return focus. Reservoir copy derives from the existing config. Evidence: `shots/shop-targets-qa-2026-11-02/`; hosted review remains open.
 

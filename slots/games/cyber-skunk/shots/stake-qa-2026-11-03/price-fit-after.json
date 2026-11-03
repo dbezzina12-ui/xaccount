@@ -1,0 +1,110 @@
+[
+  {
+    "width": 360,
+    "height": 800,
+    "prices": [
+      {
+        "mode": "ventbreak",
+        "text": "$10,000.00",
+        "textWidth": 82.015625,
+        "available": 85,
+        "overflows": false
+      },
+      {
+        "mode": "overpressure",
+        "text": "$25,000.00",
+        "textWidth": 85.015625,
+        "available": 85,
+        "overflows": false
+      },
+      {
+        "mode": "mystery",
+        "text": "$50,000.00",
+        "textWidth": 85.015625,
+        "available": 85,
+        "overflows": false
+      }
+    ]
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "prices": [
+      {
+        "mode": "ventbreak",
+        "text": "$10,000.00",
+        "textWidth": 73.203125,
+        "available": 88.390625,
+        "overflows": false
+      },
+      {
+        "mode": "overpressure",
+        "text": "$25,000.00",
+        "textWidth": 76.203125,
+        "available": 88.390625,
+        "overflows": false
+      },
+      {
+        "mode": "mystery",
+        "text": "$50,000.00",
+        "textWidth": 76.203125,
+        "available": 88.390625,
+        "overflows": false
+      }
+    ]
+  },
+  {
+    "width": 430,
+    "height": 932,
+    "prices": [
+      {
+        "mode": "ventbreak",
+        "text": "$10,000.00",
+        "textWidth": 73.203125,
+        "available": 100,
+        "overflows": false
+      },
+      {
+        "mode": "overpressure",
+        "text": "$25,000.00",
+        "textWidth": 76.203125,
+        "available": 100,
+        "overflows": false
+      },
+      {
+        "mode": "mystery",
+        "text": "$50,000.00",
+        "textWidth": 76.203125,
+        "available": 100,
+        "overflows": false
+      }
+    ]
+  },
+  {
+    "width": 1366,
+    "height": 768,
+    "prices": [
+      {
+        "mode": "ventbreak",
+        "text": "$10,000.00",
+        "textWidth": 88.609375,
+        "available": 88.609375,
+        "overflows": false
+      },
+      {
+        "mode": "overpressure",
+        "text": "$25,000.00",
+        "textWidth": 92.609375,
+        "available": 92.609375,
+        "overflows": false
+      },
+      {
+        "mode": "mystery",
+        "text": "$50,000.00",
+        "textWidth": 92.609375,
+        "available": 92.609375,
+        "overflows": false
+      }
+    ]
+  }
+]
