@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" fill="none">
+ <defs>
+  <linearGradient id="steel" x2=".78" y2="1"><stop stop-color="#c1aa81"/><stop offset=".17" stop-color="#5c625a"/><stop offset=".38" stop-color="#303c3d"/><stop offset=".63" stop-color="#182527"/><stop offset=".83" stop-color="#4f5144"/><stop offset="1" stop-color="#172023"/></linearGradient>
+  <linearGradient id="lip" x2=".7" y2="1"><stop stop-color="#ceb589"/><stop offset=".17" stop-color="#737769"/><stop offset=".45" stop-color="#293535"/><stop offset=".71" stop-color="#72634d"/><stop offset="1" stop-color="#292c27"/></linearGradient>
+  <linearGradient id="bronze" x2=".45" y2="1"><stop stop-color="#f2d598"/><stop offset=".2" stop-color="#ab8350"/><stop offset=".55" stop-color="#594b34"/><stop offset="1" stop-color="#262a26"/></linearGradient>
+  <g id="strut"><path d="m-12-185 27 1-2 83-11 72h-10l4-78z" fill="#060d10" opacity=".65" transform="translate(6 7)"/><path d="m-12-185 27 1-2 83-11 72h-10l4-78z" fill="url(#steel)" stroke="#1c2526" stroke-width="2"/><path d="m-9-182 6 75-4 72" stroke="#bdab87" stroke-width="2"/><path d="m11-179-2 72-9 66" stroke="#122023" stroke-width="3"/></g>
+  <g id="bolt"><circle r="6" fill="#101b1c"/><path d="m-3.8-2.2 3.8-2.2 3.8 2.2v4.4L0 4.4l-3.8-2.2z" fill="url(#lip)" stroke="#9b9477" stroke-width=".6"/><path d="m-2.1 1.3 4.2-2.6" stroke="#343b35" stroke-width="1.3"/></g>
+  <g id="lug"><path d="m-34-203 9-27h50l9 27-7 8h-54z" fill="#0d1718" stroke="#202b2c" stroke-width="4"/><path d="m-29-204 7-22h44l7 22-7 5h-44z" fill="url(#steel)" stroke="#877e64"/><path d="m-17-219 32 0" stroke="#c2aa7d" opacity=".6"/><use href="#bolt" x="-16" y="-210"/><use href="#bolt" x="16" y="-210"/></g>
+ </defs>
+ <g transform="translate(240 240)">
+  <use href="#lug" transform="rotate(37)"/><use href="#lug" transform="rotate(127)"/><use href="#lug" transform="rotate(217)"/><use href="#lug" transform="rotate(307)"/>
+  <circle r="118" stroke="#171f20" stroke-width="5" opacity=".82"/><circle r="118" stroke="#8a8771" stroke-width="1.3" opacity=".72"/>
+  <use href="#strut" transform="rotate(18)"/><use href="#strut" transform="rotate(138)"/><use href="#strut" transform="rotate(258)"/>
+  <circle r="34" fill="url(#lip)" stroke="#1b2325" stroke-width="4"/><circle r="26" fill="url(#steel)" stroke="#a18c68" stroke-width="2"/><circle r="16" fill="#172326" stroke="#695f4a" stroke-width="2"/><use href="#bolt" transform="scale(1.8)"/>
+  <circle r="201" stroke="#0b1415" stroke-width="40"/><circle r="201" stroke="url(#steel)" stroke-width="34"/><circle r="218" stroke="url(#lip)" stroke-width="4"/><circle r="190" stroke="#0c191b" stroke-width="5"/><circle r="185" stroke="url(#bronze)" stroke-width="6"/><circle r="179" stroke="#070d0e" stroke-width="6"/>
+  <circle r="197" stroke="#c6b289" stroke-width="2.8" stroke-dasharray="1.3 10.7" opacity=".53"/>
+  <path d="M-196-44a201 201 0 0 1 75-115M120 161a201 201 0 0 1-82 37" stroke="#e3ce9e" stroke-width="2" opacity=".6"/>
+  <g fill="#102022" stroke="#6e7766" stroke-width=".8"><rect x="-37" y="-211" width="74" height="13" rx="4"/><rect x="-30" y="199" width="60" height="8" rx="3"/></g>
+  <g fill="#e9be6f"><rect x="-28" y="-207" width="13" height="3"/><rect x="-10" y="-207" width="13" height="3"/><rect x="8" y="-207" width="13" height="3"/></g>
+  <use href="#bolt" x="-204"/><use href="#bolt" x="204"/><use href="#bolt" x="-105" y="-173"/><use href="#bolt" x="105" y="-173"/><use href="#bolt" x="-106" y="173"/><use href="#bolt" x="106" y="173"/>
+ </g>
+</svg>

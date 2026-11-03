@@ -133,16 +133,6 @@ dialog.confirm{background:linear-gradient(0deg,#131c20 38%,#182327db 76%,#17262a
 /* Wins are drawn over the scene. No symbol frames or sign plates. */
 .line-award{pointer-events:none;position:absolute;z-index:15;left:50%;top:46%;transform:translate(-50%,-50%) rotate(-3deg);font:400 100px/1 var(--title);white-space:nowrap;color:#fff0bb;-webkit-text-stroke:7px #342819;paint-order:stroke fill;text-shadow:0 5px #8f642d,0 12px 18px #071015;animation:award-in .26s ease-out}
 @keyframes award-in{from{opacity:0;scale:.82}to{opacity:1;scale:1}}
-/* The feature introduction is mounted on the closed airlock. */
-.buy-stinger .bonus-panel{background:radial-gradient(ellipse at center,#0a1115ee,#0a161bc9 46%,#0b161952 85%);backdrop-filter:none;overflow:auto;padding:clamp(12px,4dvh,38px) 20px}
-.bonus-panel-inner{width:min(100%,580px);margin:auto;display:grid;justify-items:center;text-align:center;gap:clamp(10px,2.3dvh,20px);animation:award-in .28s ease-out}
-.bonus-panel .kicker{font:800 12px/1 var(--font);letter-spacing:.20em;color:#d5c199}
-.bonus-panel.has-art h2,.bonus-panel h2{margin:0}
-.bonus-panel.has-art h2 img{width:auto;height:auto;max-height:32dvh;max-width:min(81vw,495px);margin:auto}
-#bonus-panel-award{font:400 clamp(32px,6dvh,54px)/1 var(--title);color:#ffdd93;text-shadow:0 3px 0 #44301d}
-.bonus-panel p{max-width:36ch;margin:0 auto;color:#f1eee4;font:600 clamp(18px,2.7dvh,24px)/1.35 var(--font);text-wrap:balance}
-.bonus-panel .primary{margin-top:6px;min-width:180px;border-radius:5px}
-@media(prefers-reduced-motion:reduce){.bonus-panel-inner{animation:none}}
 .bigwin{position:absolute;inset:130px auto auto 120px;width:1200px;height:800px;z-index:16;overflow:hidden;border-radius:8px}
 .bigwin{--light:#ffe19e;--deep:#966222;display:grid;place-items:center;place-content:normal;background:radial-gradient(ellipse at center,#0a1018ed 0%,#0a1018cf 23%,#11192259 50%,transparent 75%);pointer-events:none}
 .bigwin::before{display:none}
@@ -154,17 +144,64 @@ dialog.confirm{background:linear-gradient(0deg,#131c20 38%,#182327db 76%,#17262a
 .bigwin .bigwin-amount{margin:4px 0 0;font:800 104px/1 var(--font);color:#fff5df;font-variant-numeric:tabular-nums;text-shadow:0 5px 12px #070a0e}
 #win-dismiss{position:absolute;inset:0;border:0;background:none;pointer-events:auto}
 @keyframes win-land{from{opacity:0;translate:0 25px;scale:.78}75%{scale:1.035}to{opacity:1;translate:0 0;scale:1}}
-/* Both leaves share one registered drawing. The cabinet changes scene behind the seal. */
-dialog.buy-stinger{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:0;border:0;border-radius:0;background:transparent;overflow:hidden;color:inherit;box-shadow:none;outline:0}
+/* Stage coordinates are shared by the fan and the pressure wave. The backdrop stays
+   transparent until the wave crosses the cabinet, so its source is visible. */
+dialog.buy-stinger{--hx:76%;--hy:46%;--fan:min(55vw,77dvh,810px);--surge:#89e0d6;--grade:#2a8e90;--radius:0px;--ignition:0;position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;padding:0;margin:0;border:0;border-radius:0;background:transparent;overflow:hidden;color:#fff3d7;box-shadow:none;outline:0;isolation:isolate}
 dialog.buy-stinger::backdrop{background:transparent;backdrop-filter:none}
-.airlock-leaf{position:absolute;inset:0 auto 0 0;width:50%;overflow:hidden;transform:translateX(-101%)}
-.airlock-leaf.right{left:50%;transform:translateX(101%)}
-.airlock-leaf::before{content:"";position:absolute;inset:0 auto 0 0;width:200%;background:url("assets/ui/airlock.svg") center/cover no-repeat}
-.airlock-leaf.right::before{left:auto;right:0}
-.buy-stinger[data-phase=closing] .airlock-leaf,.buy-stinger[data-phase=sealed] .airlock-leaf{transform:translateX(0)}
-.buy-stinger[data-phase=closing] .airlock-leaf{transition:transform var(--close-time) cubic-bezier(.5,.03,.86,.56)}
-.buy-stinger[data-phase=opening] .airlock-leaf{transition:transform var(--open-time) cubic-bezier(.34,.03,.23,1)}
-@media(prefers-reduced-motion:reduce){.bigwin .bigwin-title{animation:none}.buy-stinger .airlock-leaf{transition:none!important}}
+.buy-stinger[data-tier=super]{--surge:#ffc169;--grade:#bb681f}
+.buy-stinger[data-tier=hidden]{--surge:#b4b9ff;--grade:#5f55aa}
+.pressure-room,.pressure-transfer,.pressure-hall{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.pressure-room{overflow:hidden;clip-path:circle(var(--radius) at var(--hx) var(--hy));background:#0e151a}
+.pressure-hall{background:linear-gradient(90deg,#10191cef,#10171ad9 37%,#0e171940 74%),linear-gradient(0deg,#101512e3,transparent 48%),url(assets/bg/bg-bonus-desktop.webp) 50% 46%/cover no-repeat}
+.pressure-room::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at var(--hx) var(--hy),color-mix(in srgb,var(--grade) 25%,transparent),transparent 58%);pointer-events:none}
+[data-tier=hidden] .pressure-hall{filter:brightness(.63) saturate(.55)}
+[data-tier=hidden] .extractor-well{box-shadow:inset 3px 7px 18px #030710,0 0 24px #938ed84f}
+.extractor-anchor{position:absolute;left:var(--hx);top:var(--hy);width:0;height:0}
+.extractor-engine{position:absolute;width:var(--fan);aspect-ratio:1;left:var(--hx);top:var(--hy);translate:-50% -50%;transform:perspective(1100px) rotateY(-16deg) rotateX(5deg);filter:drop-shadow(18px 27px 21px #03080aa6);opacity:var(--ignition)}
+.extractor-well{position:absolute;inset:9%;border-radius:50%;background:repeating-radial-gradient(circle at 50% 52%,#10202255 0 7%,transparent 8% 10%),radial-gradient(circle at 50% 52%,#030708 18%,#101d20 48%,var(--grade) 77%,#17252a 82%);box-shadow:inset 4px 9px 22px #020607}
+.extractor-case,.extractor-blades{position:absolute;width:100%;height:100%;object-fit:contain}
+.extractor-case{inset:0;z-index:2}
+.extractor-blades{inset:10%;width:80%;height:80%;animation:extractor-turn var(--rpm,4.8s) linear infinite;filter:brightness(.86) saturate(.84) drop-shadow(2px 8px 5px #000b)}
+[data-tier=super] .extractor-blades{--rpm:3s}[data-tier=hidden] .extractor-blades{--rpm:2.2s}
+.extractor-steam{position:absolute;z-index:3;left:var(--hx);top:var(--hy);width:var(--fan);height:var(--fan);translate:-50% -50%;pointer-events:none;mix-blend-mode:screen}
+.extractor-steam i{position:absolute;inset:18%;background:url(assets/fx/fx-steam.webp) center/contain no-repeat;opacity:0;animation:pressure-drift 5.2s ease-out infinite}
+.extractor-steam i:nth-child(2){animation-delay:-2.55s}
+.pressure-transfer{z-index:2}
+.buy-stinger .bonus-panel{position:absolute;inset:0;z-index:3;display:grid;align-items:center;justify-items:start;overflow:auto;overscroll-behavior:contain;padding:max(20px,env(safe-area-inset-top)) 5vw max(20px,env(safe-area-inset-bottom)) max(6vw,env(safe-area-inset-left));background:none;backdrop-filter:none}
+.bonus-panel-inner{width:min(43vw,660px);display:grid;justify-items:start;text-align:left;gap:clamp(8px,1.8dvh,18px);margin-block:auto;animation:pressure-copy-in .36s cubic-bezier(.16,.76,.24,1) both}
+.bonus-panel .kicker{display:flex;align-items:center;gap:.8em;color:var(--surge);font:800 clamp(12px,1.2vw,17px)/1 var(--font);letter-spacing:.18em}
+.bonus-panel .kicker::before{content:"";width:2.4em;height:.24em;background:repeating-linear-gradient(120deg,var(--surge) 0 5px,transparent 5px 8px)}
+.bonus-panel .bonus-panel-inner h2{margin:0;width:100%;font:400 clamp(40px,6vw,100px)/.95 var(--title)}
+.bonus-panel .bonus-panel-inner h2 img{display:block;width:auto;max-width:100%;height:auto;max-height:min(26dvh,240px);object-fit:contain;object-position:left center;margin:0;filter:drop-shadow(0 6px 7px #04080a)}
+#bonus-panel-award{display:flex;align-items:center;gap:.14em;color:#fff6e0;font:400 clamp(68px,min(9vw,13dvh),136px)/.94 var(--title);letter-spacing:-.035em;text-shadow:0 3px #6d5234}
+#bonus-panel-award small{display:block;width:3em;font:800 .30em/.9 var(--font);letter-spacing:.06em;color:var(--surge);text-shadow:none}
+.buy-stinger .bonus-panel p{margin:0;max-width:32ch;color:#e8e5d9;font:600 clamp(16px,2.5dvh,24px)/1.23 var(--font);text-wrap:balance}
+.buy-stinger .bonus-panel .primary{min-height:46px;margin-top:4px;padding:12px 24px;display:flex;align-items:center;justify-content:center;gap:20px;border:1px solid #fff0bc;border-radius:3px;background:#ffcf7f;color:#201b15;box-shadow:0 3px 0 #80501d;font:800 17px/1 var(--font);letter-spacing:.05em}
+.buy-stinger .primary::after{content:"";width:9px;height:9px;border-top:2px solid;border-right:2px solid;transform:rotate(45deg)}
+.buy-stinger[data-phase=opening]{opacity:0;transition:opacity var(--open-time) ease-in}
+.buy-stinger[data-phase=opening] .pressure-room{transform:scale(1.2);transform-origin:var(--hx) var(--hy);transition:transform var(--open-time) cubic-bezier(.46,.02,.94,.52)}
+.buy-stinger[data-phase=opening] .bonus-panel{opacity:0;transform:translateX(-2%);transition:opacity .16s,transform .24s}
+@keyframes extractor-turn{to{transform:rotate(360deg)}}
+@keyframes pressure-drift{0%{opacity:0;transform:translate(5%,-5%) scale(.6)}25%{opacity:.35}100%{opacity:0;transform:translate(-62%,-35%) scale(1.28)}}
+@keyframes pressure-copy-in{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}
+@media(max-aspect-ratio:1/1){
+ dialog.buy-stinger{--hx:56%;--hy:23%;--fan:min(81vw,42dvh,470px)}
+ .pressure-hall{background:linear-gradient(0deg,#0b1318 0%,#10191bf7 31%,#0a1318c5 54%,#0c171c35 84%),url(assets/bg/bg-bonus-mobile.webp) center/cover}
+ .buy-stinger .bonus-panel{align-items:start;justify-items:center;padding:max(39dvh,env(safe-area-inset-top)) 6vw max(14px,env(safe-area-inset-bottom))}
+ .bonus-panel-inner{width:min(100%,490px);justify-items:center;text-align:center;gap:clamp(7px,1.4dvh,15px)}
+ .bonus-panel .bonus-panel-inner h2 img{margin:auto;max-height:17dvh;object-position:center}
+ #bonus-panel-award{font-size:clamp(55px,9dvh,90px)}
+ .buy-stinger .bonus-panel p{font-size:clamp(17px,2.5dvh,22px)}
+}
+@media(max-height:450px) and (orientation:landscape){
+ .bonus-panel-inner{gap:5px;width:min(49vw,540px)}.bonus-panel .bonus-panel-inner h2 img{max-height:24dvh}.buy-stinger .bonus-panel p{font-size:16px}#bonus-panel-award{font-size:52px}.buy-stinger .bonus-panel .primary{min-height:40px;margin:0;padding:8px 20px}
+}
+@media(prefers-reduced-motion:reduce){
+ .extractor-blades,.extractor-steam i,.bonus-panel-inner{animation:none!important}
+ .buy-stinger[data-phase=opening],.buy-stinger[data-phase=opening] .pressure-room,.buy-stinger[data-phase=opening] .bonus-panel{transition:none;transform:none}
+}
+
+@media(prefers-reduced-motion:reduce){.bigwin .bigwin-title{animation:none}}
 
 /* Paid bonus offers are two pieces of one printed maintenance ticket. */
 #bonus-cards{grid-template-columns:repeat(auto-fit,minmax(min(100%,375px),1fr));gap:15px}

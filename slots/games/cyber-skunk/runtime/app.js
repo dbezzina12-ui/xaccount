@@ -1,3 +1,4 @@
+import { drawPressureTransfer } from './pressure-transfer.js?v=1';
 // Cyber Skunk: the playable game. The engine settles each round before
 // anything moves (playRound returns its total and every event); this file only
 // presents those events, so skip, turbo and frame timing never change a result.
@@ -456,53 +457,52 @@ async function countTo(target, ms) {
 const paintWin = () => { controller.update({ win: money(state.win) }); if (state.tier) $('hud-win').textContent = money(state.win); };
 
 // ---- Bonuses ----
-// The doors carry the briefing. Opening them resumes the same round.
+// Land the real FS before drawing their pressure paths in viewport coordinates.
 async function bonusStart(e, result, mode) {
   const tier = BONUSES[e.tier], presentation = TIER[e.tier];
   if (!e.natural) await spinInBonus(e.tier, result.draw?.bonus ?? 811, mode);
-  status(board.filter(cell => cell.s === 'S').length + ' FS · ' + tier.title);
-  await wait(900);
+  const sources = board.flatMap((cell, i) => cell.s === 'S' ? [cellEl(i)] : []).filter(Boolean);
+  status(sources.length + ' FS · ' + tier.title);
+  skunk.play('anticipate');
+  await wait(480);
 
-  const door = $('buy-stinger'), panel = $('bonus-panel'), start = $('bonus-panel-go');
-  const closeTime = reduced.matches ? 0 : 460, openTime = reduced.matches ? 0 : 520;
-  door.dataset.phase = 'ready';
-  door.style.setProperty('--close-time', closeTime * pace() + 'ms');
-  door.oncancel = event => event.preventDefault();
-  door.showModal();
+  const dialog = $('buy-stinger'), panel = $('bonus-panel'), start = $('bonus-panel-go');
+  const titleArt = artImg(presentation.panel, tier.title);
+  $('bonus-panel-title').innerHTML = titleArt || tier.title;
+  $('bonus-panel-kicker').textContent = 'preview' in app.dataset ? 'FREE PREVIEW' : e.natural ? 'BONUS TRIGGERED' : mode === 'mystery' ? 'MYSTERY BUY REVEALS' : 'BONUS UNLOCKED';
+  const unit = document.createElement('small'); unit.textContent = ' FREE SPINS';
+  $('bonus-panel-award').replaceChildren(document.createTextNode(String(e.spins)), unit);
+  $('bonus-panel-text').textContent = presentation.text;
+  panel.classList.toggle('has-art', !!titleArt);
+  panel.dataset.tier = dialog.dataset.tier = e.tier;
+  dialog.dataset.phase = 'charging';
+  dialog.style.setProperty('--radius', '0px'); dialog.style.setProperty('--ignition', '0');
+  dialog.oncancel = event => event.preventDefault();
+  dialog.showModal();
   try {
-    door.getBoundingClientRect();
-    door.dataset.phase = 'closing';
-    await wait(closeTime);
-    door.dataset.phase = 'sealed';
-    audio.play('stop');
-
-    state.tier = e.tier;
-    app.dataset.bonus = e.tier;
-    $('bonus-hud').hidden = false;
+    if (!state.skip) audio.play('charge');
+    await drawPressureTransfer(dialog, sources, {
+      duration: reduced.matches ? 0 : 1480 * pace(), skip: () => state.skip, mist: fxSprites.mist,
+      onImpact: () => { if (!state.skip) audio.play('vent', {pressure:e.reservoir || 1}); }
+    });
+    state.tier = e.tier; app.dataset.bonus = e.tier; $('bonus-hud').hidden = false;
     $('hud-tier').textContent = tier.title;
     hud(0, e.spins); gauge(e.reservoir);
     audio.play('bonus-in', { tier:e.tier }); audio.music(e.tier === 'hidden' ? 'hidden' : 'bonus');
     skunk.play('bonus');
-
-    const titleArt = artImg(presentation.panel, tier.title);
-    $('bonus-panel-title').innerHTML = titleArt || tier.title;
-    $('bonus-panel-kicker').textContent = 'preview' in app.dataset ? 'FREE PREVIEW' : e.natural ? 'BONUS TRIGGERED' : mode === 'mystery' ? 'MYSTERY BUY REVEALS' : 'BONUS UNLOCKED';
-    $('bonus-panel-award').textContent = e.spins + ' FREE SPINS';
-    $('bonus-panel-text').textContent = presentation.text;
-    panel.classList.toggle('has-art', !!titleArt);
-    panel.dataset.tier = e.tier;
+    dialog.dataset.phase = 'sealed';
     panel.hidden = false;
     start.focus({preventScroll:true});
     await new Promise(resolve => { start.onclick = resolve; });
-    state.skip = false; // Stopping the trigger spin must not fast-forward the free spins.
-    door.style.setProperty('--open-time', openTime * pace() + 'ms');
-    panel.hidden = true;
-    door.dataset.phase = 'opening';
-    audio.play('release');
-    await wait(openTime);
+    start.disabled = true;
+    state.skip = false;
+    const releaseTime = reduced.matches ? 0 : 540;
+    dialog.style.setProperty('--open-time', releaseTime * pace() + 'ms');
+    dialog.dataset.phase = 'opening'; audio.play('release');
+    await wait(releaseTime);
   } finally {
-    start.onclick = null; panel.hidden = true;
-    door.close(); door.oncancel = null;
+    start.disabled = false; start.onclick = null; panel.hidden = true;
+    dialog.close(); dialog.oncancel = null;
   }
 }
 const hud = (spin, of) => { $('hud-spins').textContent = `${spin} / ${of}`; $('hud-win').textContent = money(state.win); };
@@ -991,11 +991,15 @@ function showIntro() {
   ($('intro-go').disabled ? $('intro') : $('intro-go')).focus({ preventScroll: true });
 }
 $('menu-guide').onclick = () => { $('menu').close(); showIntro(); };
+const requestedPreview = new URLSearchParams(location.search).get('preview');
+let linkedTier = ({ventbreak:'regular',overpressure:'super',blackout:'hidden'})[requestedPreview];
+if (!Object.hasOwn(TIER, linkedTier)) linkedTier = null;
 $('intro-go').onclick = () => {
   $('intro').hidden = true;
   $('stage').inert = $('controller').inert = false;
   demos.stop(); void audio.unlock();
   $('controller').shadowRoot?.querySelector('[data-action=play]')?.focus({ preventScroll: true });
+  if (linkedTier) { const tier = linkedTier; linkedTier = null; void freePreview(tier); }
 };
 // For browser tests: a read-only view of the session. Nothing here forces outcomes.
 window.cyberSkunk = { get state() { return { ...state, history: undefined }; }, version: 1 };

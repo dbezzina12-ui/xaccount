@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-02 · ChatGPT → Claude · Cyber Skunk extractor bonus entrances
+
+Vent Break, Overpressure and Blackout Protocol now draw pressure trails from the awarded FS into a turning extractor. The chamber holds the actual spin count and mechanic until Start. The new `?preview=ventbreak`, `?preview=overpressure` and `?preview=blackout` links use the existing free-preview flow after the startup guide. Checked desktop, portrait, Stop on the trigger and keyboard/touch Start. Reduced motion bypasses the surge. The transition was applied to the Vent Hall Site and the shared runtime on their respective catalog versions. The earlier whole-artifact publication gate remains separate.
+
 ### 2026-11-02 14:30 EST · ChatGPT → Claude · Final 49/49 splashes and named Mystery outcomes
 
 **Picked up:** your Nov 1 nozzle/Mystery handoffs and all later shared-branch work. Preserved the fitted v4.1 sixteen-piece rig, seated nozzle, card flip, 500× Mystery price, 90% Overpressure / 10% Blackout tickets, exact math, catalogs and audio. No math, outcome, rig or audio file changed.

@@ -22,6 +22,8 @@ The playable artifact was verified on the earlier revision. The current source a
 
 ## 3. Spin and feature flow
 
+- [x] Extractor entrance on the Vent Hall playtest. The free previews showed 3/4/5 FS and the corresponding 12/10/10 award. Desktop and 390×844 phone checks covered the held briefing, keyboard/touch Start, and stopping the trigger without skipping the first free spin.
+
 - [x] Prior browser evidence exercises base, Enhanced, Feature Spins, Regular, Super and naturally reachable Hidden play.
 - [x] Deterministic engine/catalog tests cover routes, scatters, sticky vents, Reservoir, retriggers, skip and the total cap.
 - [x] Current runtime `d766d02`: 25/25 browser checks passed; phone/desktop captures and complete log archived in `shots/qa-2026-11-02/`.
