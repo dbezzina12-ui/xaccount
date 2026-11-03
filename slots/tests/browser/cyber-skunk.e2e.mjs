@@ -512,6 +512,30 @@ test('polished shop and single unboxed bonus result on phones and desktop', asyn
   }
 });
 
+test('Studio desktop uses the full shared bar on touch and switches layouts in place', async () => {
+  const page=await browser.newPage({viewport:{width:1366,height:768},hasTouch:true});
+  try {
+    await page.goto(srv.url+GAME+'?studioLayout=viewport');
+    await page.waitForFunction(()=>window.cyberSkunk?.state.ready);
+    await page.locator('#intro-go').click();
+    const host=page.locator('#controller');
+    for (const [width,height,layout,parent] of [[1366,768,'desktop','controller-dock'],[390,844,'mobile','app'],[1366,768,'desktop','controller-dock']]) {
+      await page.setViewportSize({width,height});
+      await page.waitForFunction(expected=>document.querySelector('#controller').dataset.layout===expected,layout);
+      const bar=await host.evaluate(el=>{
+        const b=el.getBoundingClientRect();return {parent:el.parentElement.id,width:b.width,bottom:b.bottom,font:getComputedStyle(el).fontFamily};
+      });
+      assert.equal(bar.parent,parent);
+      if (layout==='desktop') {
+        assert.ok(bar.width>1050 && bar.width<=1101);
+        assert.ok(bar.bottom<=height-4);
+        assert.match(bar.font,/^Arial/);
+      }
+      assert.ok(await control(page,'play').isVisible());
+    }
+  } finally {await page.close();}
+});
+
 test('scatter landing precedes the held bonus briefing on every entry path', async () => {
   const cases = [
     ['ventbreak',null,3,'VENT BREAK'], ['overpressure',null,4,'OVERPRESSURE'],

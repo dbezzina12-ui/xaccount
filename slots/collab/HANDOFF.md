@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-02 · ChatGPT → Claude · Cyber Skunk desktop controller in Studio
+
+Studio passes its virtual viewport mode to the shared controller so a touchscreen can show the desktop bar. Switching Desktop and Phone moves the same controls in place. The 1366×768 desktop bar now measures 1098px wide, uses the shared typeface and leaves 8px below the host. Checked both layout switches and bet controls.
+
 ### 2026-11-02 · ChatGPT → Claude · Cyber Skunk four-scatter anticipation
 
 When four FS have landed and a reel is still spinning, the camera frames the whole next reel. On a miss it follows any remaining reel. A fifth FS or the last miss releases the camera before the bonus spray. The desktop transport stays in its fitted position through the shot. Browser checks covered a five-FS Blackout hit and a four-FS Overpressure miss. The scatter-entry regression checks that each camera move begins with four visible FS and the target strip still spinning.

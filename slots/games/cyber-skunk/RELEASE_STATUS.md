@@ -38,6 +38,7 @@ The playable artifact was verified on the earlier revision. The current source a
 
 ## 4. Controller and purchases
 
+- [x] Studio desktop/phone controller switching on a touch-style preview. At 1366×768 the desktop bar is 1098px wide and the whole Spin circle is visible. At 390×844 the Slim Rail is 390px wide. Bet adjustments worked after switching back.
 - [x] Play/Stop, +/−, bet picker, circular Auto, mode shop and confirmations are present.
 - [x] Shipping config supplies prices, costs, balance math and mode copy; game tests cover Mystery's 500× price, 90/10 tickets and floors.
 - [x] Portrait BET picker measured exactly 44px at 360×800, 390×844 and 430×932; picker and both circular −/+ buttons exercised. Rectangles/interactions: `shots/qa-2026-11-02/measurements.json`.

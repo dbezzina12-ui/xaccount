@@ -69,6 +69,9 @@ const skunk = new Skunk($('mascot'));
 const controller = mountController($('controller'), {
   initial: { balance: money(state.balance), bet: money(state.bet), win: money(0) },
   layoutTargets: { desktop: $('controller-dock'), mobile: app },
+  // Studio sizes a virtual game screen. A touch device can display either preview.
+  layoutMedia: new URLSearchParams(location.search).get('studioLayout') === 'viewport'
+    ? matchMedia('(max-width: 760px)') : undefined,
   onAction: act,
 });
 function update() {
@@ -113,6 +116,12 @@ function fit() {
   }
   const x = (w - W * s) / 2, y = (h - reserve - H * s) / 2;
   stage.style.transform = $('controller-stage').style.transform = `translate(${x}px, ${y}px) scale(${s})`;
+  if (layout === 'desktop') {
+    const dock = $('controller-dock');
+    // Match the shared full bar, capped at its native desktop width and button size.
+    dock.style.setProperty('--rail-width', Math.min(1544, 1100 / s) + 'px');
+    dock.style.setProperty('--rail-zoom', Math.min(1.3, 1 / s));
+  }
   state.scale = s;
   if (jet.width !== W || jet.height !== H) { jet.width = W; jet.height = H; }
   skunk.resize(s);

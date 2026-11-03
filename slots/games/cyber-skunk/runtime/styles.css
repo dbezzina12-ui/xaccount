@@ -75,6 +75,8 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .machine{position:absolute;z-index:5}
 .jet{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9}
 .app[data-layout=desktop] .machine{left:410px;top:140px;width:1100px}
+.app[data-layout=desktop]:has(#controller-dock > .controller-host) .machine{top:116px}
+.app[data-layout=desktop] #controller-dock{left:50%;transform:translateX(-50%);width:var(--rail-width,1100px)}
 .app[data-layout=mobile] .machine{left:-66px;top:calc(var(--cabinet-top) + var(--slack, 0px));width:1212px;bottom:0}
 .app[data-layout=mobile] .mascot{translate:0 var(--slack, 0px)}
 /* A phone's machine runs down to the controller: a console under the reels. */
@@ -179,6 +181,7 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
    screen (touch layout); controller.js moves the same host between the two. */
 .controller-host{display:block;--controller-accent:#eda83c;--controller-ink:#efe5cf;font-family:var(--font)}
 .machine > .controller-host{position:absolute;left:0;top:calc(1060px * .7639 + 8px);width:calc(100% / 1.3);transform:scale(1.3);transform-origin:0 0}
+.app[data-layout=desktop] #controller-dock > .controller-host{width:calc(100% / var(--rail-zoom,1));transform:scale(var(--rail-zoom,1));font-family:Arial,Helvetica,sans-serif}
 .app[data-layout=mobile] .machine > .controller-host{left:66px;top:calc(1060px * .8417 + 214px);width:calc((100% - 132px) / 1.9);transform:scale(1.9)}
 .app > .controller-host{position:absolute;left:0;right:0;bottom:0;z-index:20;padding-bottom:env(safe-area-inset-bottom)}
 
