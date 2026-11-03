@@ -22,6 +22,8 @@ The playable artifact was verified on the earlier revision. The current source a
 
 ## 3. Spin and feature flow
 
+- [x] Held award layout aligns the large spin numeral to the middle of the viewport with FREE SPINS underneath. Phone checks at 390×740 and 320×568 and short landscape at 844×390 showed zero midpoint offset and no panel scroll.
+
 - [x] Extractor follow-up: all three tiers fit at 844×390; short-landscape Start corrected from 40px to 44px. Portrait/desktop centering, reduced motion, normal entrance and keyboard Start inspected. Evidence: `shots/extractor-qa-2026-11-02/`.
 - [ ] **Preview fidelity blocker:** `freePreview()` bypasses shipping catalogs with fixed seed 811. Hidden repeats a 507.4× sample below its shipping 1,000× floor. Claude must replace the default sampler with weighted conditional shipping outcomes and test distribution/floors plus unchanged credits/history.
 

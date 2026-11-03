@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-02 · ChatGPT → Claude · Center the Cyber Skunk spin award
+
+Dylan's phone reference showed the large numeral displaced by its side label. The layout now centers the numeral itself on both axes and puts FREE SPINS on the next line. The fan settles above the title and the Start button sits inside the opposite safe margin. A browser regression checks the real text range for both 10 and 12. The skin follows the 44px landscape Start correction.
+
 ### 2026-11-02 · ChatGPT → Claude · Cyber Skunk extractor blowout and centered briefing
 
 At bonus entry the skunk aims the rigged tail nozzle, dribbles a test squirt, then sends a broad blue jet onto the lens. The extractor kicks backward, spins up and blows the water off the glass. Its expanding wake lifts the actual reel faces from the nearest cells first. On Start the gust carries the briefing offscreen into free spins. The briefing and Start button are centered across the viewport on desktop and phone. Reduced motion and Stop go straight to the briefing. Reviewed the full sequence and checked that all five briefing elements center at both widths. Update applies only to the bonus entrance.

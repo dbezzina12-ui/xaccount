@@ -543,6 +543,15 @@ test('scatter landing precedes the held bonus briefing on every entry path', asy
       assert.equal(await page.locator('#bonus-panel-award').textContent(),(count===3?'12':'10')+' FREE SPINS');
       await page.waitForTimeout(650);
       assert.equal(await page.locator('#buy-stinger').getAttribute('data-phase'),'sealed');
+      const awardLayout=await page.locator('#bonus-panel-award').evaluate(el=>{
+        const viewport=el.closest('dialog').getBoundingClientRect(),line=el.getBoundingClientRect();
+        const digits=document.createRange();digits.selectNodeContents(el.firstChild);
+        const ink=digits.getBoundingClientRect(),unit=el.querySelector('small').getBoundingClientRect();
+        return {dx:ink.left+ink.width/2-viewport.left-viewport.width/2,
+          dy:line.top+line.height/2-viewport.top-viewport.height/2,stacked:unit.top>=line.bottom};
+      });
+      assert.ok(Math.abs(awardLayout.dx)<1&&Math.abs(awardLayout.dy)<1);
+      assert.ok(awardLayout.stacked);
       await page.locator('#bonus-panel-go').click();
       await page.locator('#buy-stinger').waitFor({state:'hidden'});
       assert.ok(await page.locator('#bonus-hud').isVisible());

@@ -146,7 +146,7 @@ dialog.confirm{background:linear-gradient(0deg,#131c20 38%,#182327db 76%,#17262a
 @keyframes win-land{from{opacity:0;translate:0 25px;scale:.78}75%{scale:1.035}to{opacity:1;translate:0 0;scale:1}}
 /* Stage coordinates are shared by the fan and the pressure wave. The backdrop stays
    transparent until the wave crosses the cabinet, so its source is visible. */
-dialog.buy-stinger{--hx:87%;--hy:46%;--fan:min(39vw,68dvh,660px);--surge:#89e0d6;--grade:#2a8e90;--radius:0px;--ignition:0;position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;padding:0;margin:0;border:0;border-radius:0;background:transparent;overflow:hidden;color:#fff3d7;box-shadow:none;outline:0;isolation:isolate}
+dialog.buy-stinger{--award-edge:max(3.8dvh,env(safe-area-inset-top),env(safe-area-inset-bottom));--docked-fan:min(54vw,21dvh,255px);--hx:87%;--hy:46%;--fan:min(39vw,68dvh,660px);--surge:#89e0d6;--grade:#2a8e90;--radius:0px;--ignition:0;position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;padding:0;margin:0;border:0;border-radius:0;background:transparent;overflow:hidden;color:#fff3d7;box-shadow:none;outline:0;isolation:isolate}
 dialog.buy-stinger::backdrop{background:transparent;backdrop-filter:none}
 .buy-stinger[data-tier=super]{--surge:#ffc169;--grade:#bb681f}
 .buy-stinger[data-tier=hidden]{--surge:#b4b9ff;--grade:#5f55aa}
@@ -167,14 +167,18 @@ dialog.buy-stinger::backdrop{background:transparent;backdrop-filter:none}
 .extractor-steam i{position:absolute;inset:18%;background:url(assets/fx/fx-steam.webp) center/contain no-repeat;opacity:0;animation:pressure-drift 5.2s ease-out infinite}
 .extractor-steam i:nth-child(2){animation-delay:-2.55s}
 .pressure-transfer{z-index:4}
-.buy-stinger .bonus-panel{position:absolute;inset:0;z-index:3;display:grid;align-items:center;justify-items:center;overflow:auto;overscroll-behavior:contain;padding:max(20px,env(safe-area-inset-top)) max(5vw,env(safe-area-inset-left),env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom));background:none;backdrop-filter:none}
-.bonus-panel-inner{width:min(46vw,660px);display:grid;justify-items:center;text-align:center;gap:clamp(8px,1.8dvh,18px);margin-block:auto;animation:pressure-copy-in .36s cubic-bezier(.16,.76,.24,1) both}
+/* Equal tracks above and below the numeral put the award itself at the viewport midpoint. */
+.buy-stinger .bonus-panel{--space:clamp(7px,1.3dvh,14px);--unit:clamp(17px,2.6dvh,26px);position:absolute;inset:0;z-index:3;display:block;box-sizing:border-box;overflow:auto;overscroll-behavior:contain;padding:var(--award-edge) max(5vw,env(safe-area-inset-left),env(safe-area-inset-right));background:none;backdrop-filter:none}
+.bonus-panel-inner{width:min(92%,620px);min-height:100%;margin-inline:auto;display:grid;grid-template-rows:minmax(max-content,1fr) auto minmax(max-content,1fr);justify-items:center;row-gap:var(--space);text-align:center;animation:pressure-copy-in .36s cubic-bezier(.16,.76,.24,1) both}
+.award-heading,.award-actions{width:100%;display:grid;justify-items:center;gap:var(--space)}
+.award-heading{align-self:end}
+.award-actions{align-self:stretch;align-items:center;grid-template-rows:minmax(max-content,1fr) auto;padding-top:calc(var(--unit) + var(--space));row-gap:clamp(16px,3.6dvh,34px)}
 .bonus-panel .kicker{display:flex;align-items:center;gap:.8em;color:var(--surge);font:800 clamp(12px,1.2vw,17px)/1 var(--font);letter-spacing:.18em}
 .bonus-panel .kicker::before,.bonus-panel .kicker::after{content:"";width:2.4em;height:.24em;background:repeating-linear-gradient(120deg,var(--surge) 0 5px,transparent 5px 8px)}
 .bonus-panel .bonus-panel-inner h2{margin:0;width:100%;font:400 clamp(40px,6vw,100px)/.95 var(--title)}
-.bonus-panel .bonus-panel-inner h2 img{display:block;width:auto;max-width:100%;height:auto;max-height:min(26dvh,240px);object-fit:contain;object-position:center;margin:0 auto;filter:drop-shadow(0 6px 7px #04080a)}
-#bonus-panel-award{display:flex;align-items:baseline;justify-content:center;gap:.14em;color:#fff6e0;font:400 clamp(68px,min(9vw,13dvh),136px)/.94 var(--title);letter-spacing:-.035em;text-shadow:0 3px #6d5234}
-#bonus-panel-award small{display:block;white-space:nowrap;font:800 .30em/.9 var(--font);letter-spacing:.06em;color:var(--surge);text-shadow:none}
+.bonus-panel .bonus-panel-inner h2 img{display:block;width:auto;max-width:100%;height:auto;max-height:min(14dvh,150px);object-fit:contain;object-position:center;margin:0 auto;filter:drop-shadow(0 6px 7px #04080a)}
+#bonus-panel-award{position:relative;display:grid;place-items:center;color:#fff6e0;font:400 clamp(58px,11.5dvh,120px)/.96 var(--title);letter-spacing:0;font-variant-numeric:tabular-nums;text-shadow:0 3px #6d5234}
+#bonus-panel-award small{position:absolute;top:calc(100% + var(--space)*.55);left:50%;translate:-50% 0;width:max-content;white-space:nowrap;font:800 var(--unit)/1 var(--font);letter-spacing:.09em;color:var(--surge);text-shadow:none}
 .buy-stinger .bonus-panel p{margin:0;max-width:32ch;color:#e8e5d9;font:600 clamp(16px,2.5dvh,24px)/1.23 var(--font);text-wrap:balance}
 .buy-stinger .bonus-panel .primary{position:relative;min-height:46px;margin-top:4px;padding:12px 32px;display:flex;align-items:center;justify-content:center;border:1px solid #fff0bc;border-radius:3px;background:#ffcf7f;color:#201b15;box-shadow:0 3px 0 #80501d;font:800 17px/1 var(--font);letter-spacing:.05em}
 .buy-stinger .primary::after{content:"";position:absolute;right:12px;width:9px;height:9px;border-top:2px solid;border-right:2px solid;transform:rotate(45deg)}
@@ -198,19 +202,27 @@ dialog.buy-stinger::backdrop{background:transparent;backdrop-filter:none}
 @media(max-aspect-ratio:1/1){.buy-stinger[data-phase=opening] .bonus-panel-inner>*{--side:-9vw;--down:62vh}.buy-stinger[data-phase=opening] .bonus-panel-inner>:nth-child(even){--side:8vw;--down:69vh}}
 @keyframes pressure-drift{0%{opacity:0;transform:translate(5%,-5%) scale(.6)}25%{opacity:.35}100%{opacity:0;transform:translate(-62%,-35%) scale(1.28)}}
 @keyframes pressure-copy-in{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}
+/* The fan moves from its gust origin into a smaller spot above the award. */
+.buy-stinger:is([data-phase=sealed],[data-phase=opening]) :is(.extractor-engine,.extractor-steam){left:50%;top:calc(var(--award-edge) + var(--docked-fan)/2);width:var(--docked-fan);transition:top .38s ease-out,left .38s ease-out,width .38s ease-out,height .38s ease-out}
+.buy-stinger:is([data-phase=sealed],[data-phase=opening]) .extractor-steam{height:var(--docked-fan)}
 @media(max-aspect-ratio:1/1){
  dialog.buy-stinger{--hx:50%;--hy:23%;--fan:min(81vw,42dvh,470px)}
  .pressure-hall{background:linear-gradient(0deg,#0b1318 0%,#10191bf7 31%,#0a1318c5 54%,#0c171c35 84%),url(assets/bg/bg-bonus-mobile.webp) center/cover}
- .buy-stinger .bonus-panel{align-items:start;justify-items:center;padding:max(39dvh,env(safe-area-inset-top)) 6vw max(14px,env(safe-area-inset-bottom))}
- .bonus-panel-inner{width:min(100%,490px);justify-items:center;text-align:center;gap:clamp(7px,1.4dvh,15px)}
- .bonus-panel .bonus-panel-inner h2 img{margin:auto;max-height:17dvh;object-position:center}
- #bonus-panel-award{font-size:clamp(55px,9dvh,90px)}
+ .bonus-panel-inner{width:min(100%,490px)}
  .buy-stinger .bonus-panel p{font-size:clamp(17px,2.5dvh,22px)}
 }
-@media(max-height:450px) and (orientation:landscape){
- .bonus-panel-inner{gap:5px;width:min(49vw,540px)}.bonus-panel .bonus-panel-inner h2 img{max-height:24dvh}.buy-stinger .bonus-panel p{font-size:16px}#bonus-panel-award{font-size:52px}.buy-stinger .bonus-panel .primary{min-height:44px;margin:0;padding:8px 30px}
+@media(max-height:520px) and (orientation:landscape){
+ .buy-stinger .bonus-panel{--space:5px;--unit:16px}
+ .bonus-panel-inner{width:min(72vw,550px)}
+ .bonus-panel .bonus-panel-inner h2 img{max-height:15dvh}
+ .buy-stinger .bonus-panel p{font-size:16px}
+ .award-actions{row-gap:9px}
+ #bonus-panel-award{font-size:50px}
+ .buy-stinger .bonus-panel .primary{min-height:44px;margin:0;padding:8px 30px}
+ dialog.buy-stinger{--award-edge:max(2dvh,env(safe-area-inset-top),env(safe-area-inset-bottom));--docked-fan:17dvh}
 }
 @media(prefers-reduced-motion:reduce){
+ .buy-stinger:is([data-phase=sealed],[data-phase=opening]) :is(.extractor-engine,.extractor-steam){transition:none}
  .extractor-blades,.extractor-steam i,.bonus-panel-inner,.buy-stinger[data-phase=opening],.buy-stinger[data-phase=opening] .bonus-panel-inner>*{animation:none!important}
  .buy-stinger[data-phase=opening],.buy-stinger[data-phase=opening] .pressure-room,.buy-stinger[data-phase=opening] .bonus-panel{transition:none;transform:none}
 }
