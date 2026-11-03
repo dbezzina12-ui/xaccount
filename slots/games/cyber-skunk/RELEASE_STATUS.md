@@ -2,9 +2,9 @@
 
 | Game | Branch / source | Playable link | Build / audience | Producer | Art | Math / engineering | QA |
 |---|---|---|---|---|---|---|---|
-| Cyber Skunk | `claude/blissful-rubin-xou20i`, tested runtime `d766d02` plus the newest evidence handoff | Existing private artifact; URL intentionally omitted from this public record | Private playtest; newest source is not yet republished | Dylan | ChatGPT | Claude | ChatGPT + Claude |
+| Cyber Skunk | `claude/blissful-rubin-xou20i`, frozen runtime `b533d72` plus the newest evidence handoff | Existing private artifact; URL intentionally omitted from this public record | Private playtest; newest source is not yet republished | Dylan | ChatGPT | Claude | ChatGPT + Claude |
 
-The playable artifact was verified on the earlier revision. The current source adds the 44px portrait BET correction, named Mystery copy and final opening splashes. Do not call those changes live until Claude records browser and served-file parity evidence below.
+The playable artifact was verified on an earlier revision. Current source includes the final splashes, named Mystery copy, card/bonus presentation and controller/shop corrections. Source evidence does not establish that those changes are hosted. See `shots/frozen-build-qa-2026-11-02/` for the frozen-runtime browser result, Studio test timing correction, full catalog replay and byte-identical math-report regeneration. Preview sampling and served-file parity remain open.
 
 ## 1. Brief and rules
 
@@ -34,7 +34,9 @@ The playable artifact was verified on the earlier revision. The current source a
 
 - [x] Prior browser evidence exercises base, Enhanced, Feature Spins, Regular, Super and naturally reachable Hidden play.
 - [x] Deterministic engine/catalog tests cover routes, scatters, sticky vents, Reservoir, retriggers, skip and the total cap.
-- [x] Current runtime `d766d02`: 25/25 browser checks passed; phone/desktop captures and complete log archived in `shots/qa-2026-11-02/`.
+- [x] Historical runtime `d766d02`: 25/25 browser checks passed; phone/desktop captures and complete log archived in `shots/qa-2026-11-02/`.
+
+- [x] Frozen runtime `b533d72`: full run 25 passed/one Studio resize-readiness assertion failed. A 24-switch probe reproduced premature measurements but all settled correctly; the test-only wait now checks completed layout before its original assertions. Focused reruns and original failure are archived in `shots/frozen-build-qa-2026-11-02/`. No final all-26-in-one-run claim or hosted claim.
 
 ## 4. Controller and purchases
 

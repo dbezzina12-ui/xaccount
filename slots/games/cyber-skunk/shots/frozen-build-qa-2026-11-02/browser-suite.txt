@@ -1,0 +1,53 @@
+✔ desktop: base, Spray Job, Vent Break and Overpressure settle exactly (103439.137107ms)
+✔ phone: base, Spray Job, Vent Break and Overpressure settle exactly (91697.210529ms)
+✔ phone pressure strip fits the lower casting above the bonus panels (23109.078279ms)
+✔ vents: full symbol lands, centred reverse flips for spray, skip restores the paying face (8086.859577ms)
+✔ buy screen: Feature Spins first, Bonus Buys second, Hidden as information; short balance disables confirm (5819.655474ms)
+✔ the intro shows before the first spin, and returns on reload (9254.302903ms)
+✔ the feature guide pages on phones and can be reopened from the menu (21608.082617ms)
+✔ the rules show the shipping prices and 96% RTP (5617.726832ms)
+✔ audio: nothing clips, the music sits under the reels, the big moments are loudest, phones hear the reels (20786.835503ms)
+✔ natural FS trigger fits at rest and during its landing pulse (360×640) (10625.286698ms)
+✔ natural FS trigger fits at rest and during its landing pulse (390×844) (11166.754294ms)
+✔ natural FS trigger fits at rest and during its landing pulse (430×932) (10671.296053ms)
+✔ natural FS trigger fits at rest and during its landing pulse (1366×768) (10729.885468ms)
+✔ loading precedes the guide, category buttons switch, and Mystery settles once (26286.975587ms)
+✔ Mystery purchase finishes through the controller and credits the exact win (43138.298667ms)
+✔ failed startup offers a working reload (5158.255049ms)
+✔ rare path, blackout (1920×1080): plays, shows blackout and bigwin-max, settles exactly, and the page never scrolls (38967.86366ms)
+✔ rare path, cap (390×844): plays, shows bigwin-max, settles exactly, and the page never scrolls (39434.203543ms)
+✔ rare path, retrigger (1366×768): plays, shows banner, settles exactly, and the page never scrolls (40271.2081ms)
+✔ a reload mid-bonus loses nothing: the round is paid on the next visit and kept in history (29710.177221ms)
+✔ Zombify shop sections and free previews preserve credits and history (120344.14048ms)
+✔ studio ident advances to a gated guide on slow loads (4974.447419ms)
+✔ polished shop and single unboxed bonus result on phones and desktop (40815.322856ms)
+✖ Studio desktop uses the full shared bar on touch and switches layouts in place (5540.903708ms)
+✔ scatter landing precedes the held bonus briefing on every entry path (105917.906913ms)
+✔ tier popups use each spin payout on the winning board, and the bonus has a separate total (67931.886969ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 25
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 901370.563826
+
+✖ failing tests:
+
+test at tests/browser/cyber-skunk.e2e.mjs:515:1
+✖ Studio desktop uses the full shared bar on touch and switches layouts in place (5540.903708ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+    assert.ok(bar.bottom<=height-4)
+
+      at TestContext.<anonymous> (file:///workspace/scratch/f97daebb795a/cyber-current/slots/tests/browser/cyber-skunk.e2e.mjs:531:16)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

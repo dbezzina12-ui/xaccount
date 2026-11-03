@@ -1,0 +1,578 @@
+[
+  {
+    "cycle": 0,
+    "width": 1366,
+    "height": 768,
+    "layout": "desktop",
+    "immediate": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 0,
+    "width": 390,
+    "height": 844,
+    "layout": "mobile",
+    "immediate": {
+      "stage": "mobile",
+      "controller": "mobile",
+      "parent": "app",
+      "width": 390,
+      "bottom": 844,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "mobile",
+      "controller": "mobile",
+      "parent": "app",
+      "width": 390,
+      "bottom": 844,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 0,
+    "width": 1366,
+    "height": 768,
+    "layout": "desktop",
+    "immediate": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 1,
+    "width": 1366,
+    "height": 768,
+    "layout": "desktop",
+    "immediate": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 1,
+    "width": 390,
+    "height": 844,
+    "layout": "mobile",
+    "immediate": {
+      "stage": "mobile",
+      "controller": "mobile",
+      "parent": "app",
+      "width": 390,
+      "bottom": 844,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "mobile",
+      "controller": "mobile",
+      "parent": "app",
+      "width": 390,
+      "bottom": 844,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 1,
+    "width": 1366,
+    "height": 768,
+    "layout": "desktop",
+    "immediate": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 2110.7333984375,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 2,
+    "width": 1366,
+    "height": 768,
+    "layout": "desktop",
+    "immediate": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 2,
+    "width": 390,
+    "height": 844,
+    "layout": "mobile",
+    "immediate": {
+      "stage": "mobile",
+      "controller": "mobile",
+      "parent": "app",
+      "width": 390,
+      "bottom": 844,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "mobile",
+      "controller": "mobile",
+      "parent": "app",
+      "width": 390,
+      "bottom": 844,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 2,
+    "width": 1366,
+    "height": 768,
+    "layout": "desktop",
+    "immediate": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 3,
+    "width": 1366,
+    "height": 768,
+    "layout": "desktop",
+    "immediate": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 3,
+    "width": 390,
+    "height": 844,
+    "layout": "mobile",
+    "immediate": {
+      "stage": "mobile",
+      "controller": "mobile",
+      "parent": "app",
+      "width": 390,
+      "bottom": 844,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "mobile",
+      "controller": "mobile",
+      "parent": "app",
+      "width": 390,
+      "bottom": 844,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 3,
+    "width": 1366,
+    "height": 768,
+    "layout": "desktop",
+    "immediate": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 2110.7333984375,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 4,
+    "width": 1366,
+    "height": 768,
+    "layout": "desktop",
+    "immediate": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 4,
+    "width": 390,
+    "height": 844,
+    "layout": "mobile",
+    "immediate": {
+      "stage": "mobile",
+      "controller": "mobile",
+      "parent": "app",
+      "width": 390,
+      "bottom": 844,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "mobile",
+      "controller": "mobile",
+      "parent": "app",
+      "width": 390,
+      "bottom": 844,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 4,
+    "width": 1366,
+    "height": 768,
+    "layout": "desktop",
+    "immediate": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 2110.7333984375,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 5,
+    "width": 1366,
+    "height": 768,
+    "layout": "desktop",
+    "immediate": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 5,
+    "width": 390,
+    "height": 844,
+    "layout": "mobile",
+    "immediate": {
+      "stage": "mobile",
+      "controller": "mobile",
+      "parent": "app",
+      "width": 390,
+      "bottom": 844,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "mobile",
+      "controller": "mobile",
+      "parent": "app",
+      "width": 390,
+      "bottom": 844,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 5,
+    "width": 1366,
+    "height": 768,
+    "layout": "desktop",
+    "immediate": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 6,
+    "width": 1366,
+    "height": 768,
+    "layout": "desktop",
+    "immediate": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 6,
+    "width": 390,
+    "height": 844,
+    "layout": "mobile",
+    "immediate": {
+      "stage": "mobile",
+      "controller": "mobile",
+      "parent": "app",
+      "width": 390,
+      "bottom": 844,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "mobile",
+      "controller": "mobile",
+      "parent": "app",
+      "width": 390,
+      "bottom": 844,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 6,
+    "width": 1366,
+    "height": 768,
+    "layout": "desktop",
+    "immediate": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 2110.7333984375,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 7,
+    "width": 1366,
+    "height": 768,
+    "layout": "desktop",
+    "immediate": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 7,
+    "width": 390,
+    "height": 844,
+    "layout": "mobile",
+    "immediate": {
+      "stage": "mobile",
+      "controller": "mobile",
+      "parent": "app",
+      "width": 390,
+      "bottom": 844,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "mobile",
+      "controller": "mobile",
+      "parent": "app",
+      "width": 390,
+      "bottom": 844,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  },
+  {
+    "cycle": 7,
+    "width": 1366,
+    "height": 768,
+    "layout": "desktop",
+    "immediate": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    },
+    "settled": {
+      "stage": "desktop",
+      "controller": "desktop",
+      "parent": "controller-dock",
+      "width": 1097.951171875,
+      "bottom": 760.1199951171875,
+      "samePlay": true,
+      "balance": 1000000
+    }
+  }
+]

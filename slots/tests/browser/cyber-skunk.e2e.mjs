@@ -521,7 +521,14 @@ test('Studio desktop uses the full shared bar on touch and switches layouts in p
     const host=page.locator('#controller');
     for (const [width,height,layout,parent] of [[1366,768,'desktop','controller-dock'],[390,844,'mobile','app'],[1366,768,'desktop','controller-dock']]) {
       await page.setViewportSize({width,height});
-      await page.waitForFunction(expected=>document.querySelector('#controller').dataset.layout===expected,layout);
+      // The controller moves synchronously on media change; the stage fit and
+      // stylesheet layout finish separately. Its dataset alone is not readiness.
+      await page.waitForFunction(({layout,parent,height})=>{
+        const host=document.querySelector('#controller'),bar=host.getBoundingClientRect();
+        return host.dataset.layout===layout && host.parentElement.id===parent &&
+          document.querySelector('#app').dataset.layout===layout &&
+          (layout!=='desktop' || (bar.width>1050 && bar.width<=1101 && bar.bottom<=height-4));
+      },{layout,parent,height},{timeout:5000});
       const bar=await host.evaluate(el=>{
         const b=el.getBoundingClientRect();return {parent:el.parentElement.id,width:b.width,bottom:b.bottom,font:getComputedStyle(el).fontFamily};
       });
