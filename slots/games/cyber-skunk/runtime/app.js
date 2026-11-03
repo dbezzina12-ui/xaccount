@@ -34,9 +34,9 @@ const COPY = {
 };
 const featureBadges = {sprayjob:'assets/cards/spray-job-badge.webp', enhanced:'assets/cards/signal-boost-badge.webp'};
 const TIER = {
-  regular: { panel: 'panel-vent-break', text: 'Vents stay on the reels. Each spray banks pressure for the next one, up to 5.' },
-  super: { panel: 'panel-overpressure', text: 'Vents stay on the reels. Each spray banks pressure for the next one, up to 10.' },
-  hidden: { panel: 'panel-blackout', text: 'Start with four locked vents and 3 pressure already banked. Each new vent stays on the reels.' },
+  regular: { panel: 'panel-vent-break', text: `Vents stay on the reels. Each spray banks pressure for the next one, up to ${BONUSES.regular.reservoirMax ?? MAX_RESERVOIR}.` },
+  super: { panel: 'panel-overpressure', text: `Vents stay on the reels. Each spray banks pressure for the next one, up to ${BONUSES.super.reservoirMax ?? MAX_RESERVOIR}.` },
+  hidden: { panel: 'panel-blackout', text: `Start with four locked vents and ${BONUSES.hidden.reservoirStart} pressure already banked. Each new vent stays on the reels.` },
 };
 // Win tiers from the round's actual award, in base bets (STYLE.md).
 const WIN_TIERS = [[500, 'MYTHIC WIN'], [100, 'EPIC WIN'], [25, 'BIG WIN'], [10, 'NICE WIN']];
@@ -800,8 +800,8 @@ function card(mode) {
   const brief = {
     enhanced:COPY.enhanced.text,
     sprayjob:'A guaranteed spray with at least three vents on every spin.',
-    ventbreak:'Sticky vents bank up to 5 pressure.',
-    overpressure:'Sticky vents bank up to 10 pressure.',
+    ventbreak:`Sticky vents bank up to ${BONUSES.regular.reservoirMax ?? MAX_RESERVOIR} pressure.`,
+    overpressure:`Sticky vents bank up to ${BONUSES.super.reservoirMax ?? MAX_RESERVOIR} pressure.`,
   };
   const bonus = mode === 'ventbreak' ? BONUSES.regular : mode === 'overpressure' ? BONUSES.super : null;
   const detail = mode === 'mystery'

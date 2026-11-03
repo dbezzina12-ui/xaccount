@@ -1,0 +1,42 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> test:cyber-skunk
+> node --test games/cyber-skunk/tests/*.test.mjs
+
+✔ every pool and tier table is whole tickets summing to 1e9 (92.028814ms)
+✔ every paid mode returns 96% of its cost; the report matches the shipped catalogs (8.543184ms)
+✔ max-win odds are Dylan's: base 1 in 1,000,000, bought Overpressure 1 in 50,000, Blackout 1 in 200 and at least 1,000x (1.665615ms)
+✔ a triggered bonus averages the same as a bought one (11.557382ms)
+✔ tier tables carry the natural trigger rates of rules.js (0.305156ms)
+✔ a sample of every pool replays exactly through the engine (183.848095ms)
+✔ the game draws rounds from the catalogs and they replay exactly (171.332987ms)
+✔ a replay that disagrees with the catalog is refused (1.230453ms)
+✔ a round is a pure function of its seeds (39.928955ms)
+✔ the route lands on the left-most vent, follows each outlet, and gains 1 pressure per vent (0.449194ms)
+✔ a route never loops: it ends on a touched cell, at the edge, or after its step limit (26.965807ms)
+✔ touched cells turn wild, vents carry xN, scatters stay scatters (0.441839ms)
+✔ lines: the first real symbol decides, wilds substitute, xN vents add up, six wilds pay as H1 (2.420787ms)
+✔ every win is a whole 0.1x, every round stays within the 25,000x cap (278.170337ms)
+✔ Blackout Protocol opens with 4 vents on one route (0.889863ms)
+✔ bonus rules: sticky vents, Reservoir, retriggers and their caps (217.8695ms)
+✔ Spray Job always sprays from reel 1; a natural bonus is its trigger spin plus the bonus (71.104485ms)
+✔ Mystery reveals Overpressure or Blackout only, 90% / 10% of every ticket (3.425395ms)
+✔ Mystery returns 96% of its 500x price, to a billionth of the cost (9.986804ms)
+✔ every Mystery pays at least 40x, every Blackout at least 1,000x (9.018388ms)
+✔ both ends of each Mystery tier replay the selected catalog bonus (5.283262ms)
+✔ pressure transfers reveal the whole viewport once, including skip, rotation and low frame rate (5.299774ms)
+✔ fan starts still, accelerates, carries real faces outwards and restores them (2.380681ms)
+✔ the game ships the same pivots as the art contract (2.887258ms)
+✔ the spray pose reaches over the head within the ±35° each segment allows (0.404504ms)
+✔ no joint ever separates: each part turns about a point its parent carries (55.23226ms)
+✔ both boots stay planted, flat on the floor, in every clip (17.383663ms)
+✔ tail segments stay inside their ±35° range in every clip (6.023717ms)
+✔ rig v4.1 (ChatGPT's pieces, waist up): every joint holds and the tail stays in range in every clip (25.756233ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 967.872753

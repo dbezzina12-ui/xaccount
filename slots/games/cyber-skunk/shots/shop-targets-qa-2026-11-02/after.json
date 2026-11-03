@@ -1,0 +1,1430 @@
+[
+  {
+    "width": 360,
+    "height": 800,
+    "shop": [
+      {
+        "id": "Lower bet",
+        "x": 164.515625,
+        "y": 17,
+        "width": 44,
+        "height": 44,
+        "top": 17,
+        "right": 208.515625,
+        "bottom": 61,
+        "left": 164.515625
+      },
+      {
+        "id": "Raise bet",
+        "x": 250,
+        "y": 17,
+        "width": 44,
+        "height": 44,
+        "top": 17,
+        "right": 294,
+        "bottom": 61,
+        "left": 250
+      },
+      {
+        "id": "Close shop",
+        "x": 303,
+        "y": 17,
+        "width": 44,
+        "height": 44,
+        "top": 17,
+        "right": 347,
+        "bottom": 61,
+        "left": 303
+      },
+      {
+        "id": "bonus",
+        "x": 13,
+        "y": 74,
+        "width": 95.203125,
+        "height": 44,
+        "top": 74,
+        "right": 108.203125,
+        "bottom": 118,
+        "left": 13
+      },
+      {
+        "id": "feature",
+        "x": 115.734375,
+        "y": 74,
+        "width": 109.375,
+        "height": 44,
+        "top": 74,
+        "right": 225.109375,
+        "bottom": 118,
+        "left": 115.734375
+      },
+      {
+        "id": "preview",
+        "x": 232.625,
+        "y": 74,
+        "width": 114.375,
+        "height": 44,
+        "top": 74,
+        "right": 347,
+        "bottom": 118,
+        "left": 232.625
+      },
+      {
+        "id": "ventbreak",
+        "x": 244,
+        "y": 160.796875,
+        "width": 101,
+        "height": 149.953125,
+        "top": 160.796875,
+        "right": 345,
+        "bottom": 310.75,
+        "left": 244
+      },
+      {
+        "id": "overpressure",
+        "x": 244,
+        "y": 320.75,
+        "width": 101,
+        "height": 149.953125,
+        "top": 320.75,
+        "right": 345,
+        "bottom": 470.703125,
+        "left": 244
+      },
+      {
+        "id": "mystery",
+        "x": 244,
+        "y": 480.703125,
+        "width": 101,
+        "height": 179.359375,
+        "top": 480.703125,
+        "right": 345,
+        "bottom": 660.0625,
+        "left": 244
+      }
+    ],
+    "receipt": [
+      {
+        "id": "Lower bet",
+        "x": 164.515625,
+        "y": 17,
+        "width": 44,
+        "height": 44,
+        "top": 17,
+        "right": 208.515625,
+        "bottom": 61,
+        "left": 164.515625
+      },
+      {
+        "id": "Raise bet",
+        "x": 250,
+        "y": 17,
+        "width": 44,
+        "height": 44,
+        "top": 17,
+        "right": 294,
+        "bottom": 61,
+        "left": 250
+      },
+      {
+        "id": "Close shop",
+        "x": 303,
+        "y": 17,
+        "width": 44,
+        "height": 44,
+        "top": 17,
+        "right": 347,
+        "bottom": 61,
+        "left": 303
+      },
+      {
+        "id": "bonus",
+        "x": 13,
+        "y": 74,
+        "width": 95.203125,
+        "height": 44,
+        "top": 74,
+        "right": 108.203125,
+        "bottom": 118,
+        "left": 13
+      },
+      {
+        "id": "feature",
+        "x": 115.734375,
+        "y": 74,
+        "width": 109.375,
+        "height": 44,
+        "top": 74,
+        "right": 225.109375,
+        "bottom": 118,
+        "left": 115.734375
+      },
+      {
+        "id": "preview",
+        "x": 232.625,
+        "y": 74,
+        "width": 114.375,
+        "height": 44,
+        "top": 74,
+        "right": 347,
+        "bottom": 118,
+        "left": 232.625
+      },
+      {
+        "id": "ventbreak",
+        "x": 244,
+        "y": 160.796875,
+        "width": 101,
+        "height": 149.953125,
+        "top": 160.796875,
+        "right": 345,
+        "bottom": 310.75,
+        "left": 244
+      },
+      {
+        "id": "overpressure",
+        "x": 244,
+        "y": 320.75,
+        "width": 101,
+        "height": 149.953125,
+        "top": 320.75,
+        "right": 345,
+        "bottom": 470.703125,
+        "left": 244
+      },
+      {
+        "id": "mystery",
+        "x": 244,
+        "y": 480.703125,
+        "width": 101,
+        "height": 179.359375,
+        "top": 480.703125,
+        "right": 345,
+        "bottom": 660.0625,
+        "left": 244
+      },
+      {
+        "id": "confirm-cancel",
+        "x": 38.796875,
+        "y": 584.484375,
+        "width": 282.390625,
+        "height": 44,
+        "top": 584.484375,
+        "right": 321.1875,
+        "bottom": 628.484375,
+        "left": 38.796875
+      },
+      {
+        "id": "confirm-ok",
+        "x": 38.796875,
+        "y": 532.484375,
+        "width": 282.390625,
+        "height": 44,
+        "top": 532.484375,
+        "right": 321.1875,
+        "bottom": 576.484375,
+        "left": 38.796875
+      }
+    ],
+    "receiptTitle": {
+      "x": 38.796875,
+      "y": 197.546875,
+      "width": 282.390625,
+      "height": 36.796875
+    },
+    "restoredFocus": "mystery",
+    "betRestored": true,
+    "headingClear": true,
+    "balance": 1000000
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "shop": [
+      {
+        "id": "Lower bet",
+        "x": 194.515625,
+        "y": 17,
+        "width": 44,
+        "height": 44,
+        "top": 17,
+        "right": 238.515625,
+        "bottom": 61,
+        "left": 194.515625
+      },
+      {
+        "id": "Raise bet",
+        "x": 280,
+        "y": 17,
+        "width": 44,
+        "height": 44,
+        "top": 17,
+        "right": 324,
+        "bottom": 61,
+        "left": 280
+      },
+      {
+        "id": "Close shop",
+        "x": 333,
+        "y": 17,
+        "width": 44,
+        "height": 44,
+        "top": 17,
+        "right": 377,
+        "bottom": 61,
+        "left": 333
+      },
+      {
+        "id": "bonus",
+        "x": 13,
+        "y": 74,
+        "width": 95.203125,
+        "height": 44,
+        "top": 74,
+        "right": 108.203125,
+        "bottom": 118,
+        "left": 13
+      },
+      {
+        "id": "feature",
+        "x": 130.734375,
+        "y": 74,
+        "width": 109.375,
+        "height": 44,
+        "top": 74,
+        "right": 240.109375,
+        "bottom": 118,
+        "left": 130.734375
+      },
+      {
+        "id": "preview",
+        "x": 262.625,
+        "y": 74,
+        "width": 114.375,
+        "height": 44,
+        "top": 74,
+        "right": 377,
+        "bottom": 118,
+        "left": 262.625
+      },
+      {
+        "id": "ventbreak",
+        "x": 270.609375,
+        "y": 160.796875,
+        "width": 104.390625,
+        "height": 153.3125,
+        "top": 160.796875,
+        "right": 375,
+        "bottom": 314.109375,
+        "left": 270.609375
+      },
+      {
+        "id": "overpressure",
+        "x": 270.609375,
+        "y": 324.109375,
+        "width": 104.390625,
+        "height": 153.3125,
+        "top": 324.109375,
+        "right": 375,
+        "bottom": 477.421875,
+        "left": 270.609375
+      },
+      {
+        "id": "mystery",
+        "x": 270.609375,
+        "y": 487.421875,
+        "width": 104.390625,
+        "height": 182.71875,
+        "top": 487.421875,
+        "right": 375,
+        "bottom": 670.140625,
+        "left": 270.609375
+      }
+    ],
+    "receipt": [
+      {
+        "id": "Lower bet",
+        "x": 194.515625,
+        "y": 17,
+        "width": 44,
+        "height": 44,
+        "top": 17,
+        "right": 238.515625,
+        "bottom": 61,
+        "left": 194.515625
+      },
+      {
+        "id": "Raise bet",
+        "x": 280,
+        "y": 17,
+        "width": 44,
+        "height": 44,
+        "top": 17,
+        "right": 324,
+        "bottom": 61,
+        "left": 280
+      },
+      {
+        "id": "Close shop",
+        "x": 333,
+        "y": 17,
+        "width": 44,
+        "height": 44,
+        "top": 17,
+        "right": 377,
+        "bottom": 61,
+        "left": 333
+      },
+      {
+        "id": "bonus",
+        "x": 13,
+        "y": 74,
+        "width": 95.203125,
+        "height": 44,
+        "top": 74,
+        "right": 108.203125,
+        "bottom": 118,
+        "left": 13
+      },
+      {
+        "id": "feature",
+        "x": 130.734375,
+        "y": 74,
+        "width": 109.375,
+        "height": 44,
+        "top": 74,
+        "right": 240.109375,
+        "bottom": 118,
+        "left": 130.734375
+      },
+      {
+        "id": "preview",
+        "x": 262.625,
+        "y": 74,
+        "width": 114.375,
+        "height": 44,
+        "top": 74,
+        "right": 377,
+        "bottom": 118,
+        "left": 262.625
+      },
+      {
+        "id": "ventbreak",
+        "x": 270.609375,
+        "y": 160.796875,
+        "width": 104.390625,
+        "height": 153.3125,
+        "top": 160.796875,
+        "right": 375,
+        "bottom": 314.109375,
+        "left": 270.609375
+      },
+      {
+        "id": "overpressure",
+        "x": 270.609375,
+        "y": 324.109375,
+        "width": 104.390625,
+        "height": 153.3125,
+        "top": 324.109375,
+        "right": 375,
+        "bottom": 477.421875,
+        "left": 270.609375
+      },
+      {
+        "id": "mystery",
+        "x": 270.609375,
+        "y": 487.421875,
+        "width": 104.390625,
+        "height": 182.71875,
+        "top": 487.421875,
+        "right": 375,
+        "bottom": 670.140625,
+        "left": 270.609375
+      },
+      {
+        "id": "confirm-cancel",
+        "x": 39.703125,
+        "y": 594.78125,
+        "width": 310.59375,
+        "height": 44,
+        "top": 594.78125,
+        "right": 350.296875,
+        "bottom": 638.78125,
+        "left": 39.703125
+      },
+      {
+        "id": "confirm-ok",
+        "x": 39.703125,
+        "y": 542.78125,
+        "width": 310.59375,
+        "height": 44,
+        "top": 542.78125,
+        "right": 350.296875,
+        "bottom": 586.78125,
+        "left": 39.703125
+      }
+    ],
+    "receiptTitle": {
+      "x": 39.703125,
+      "y": 231.234375,
+      "width": 310.59375,
+      "height": 36.796875
+    },
+    "restoredFocus": "mystery",
+    "betRestored": true,
+    "headingClear": true,
+    "balance": 1000000
+  },
+  {
+    "width": 430,
+    "height": 932,
+    "shop": [
+      {
+        "id": "Lower bet",
+        "x": 234.515625,
+        "y": 17,
+        "width": 44,
+        "height": 44,
+        "top": 17,
+        "right": 278.515625,
+        "bottom": 61,
+        "left": 234.515625
+      },
+      {
+        "id": "Raise bet",
+        "x": 320,
+        "y": 17,
+        "width": 44,
+        "height": 44,
+        "top": 17,
+        "right": 364,
+        "bottom": 61,
+        "left": 320
+      },
+      {
+        "id": "Close shop",
+        "x": 373,
+        "y": 17,
+        "width": 44,
+        "height": 44,
+        "top": 17,
+        "right": 417,
+        "bottom": 61,
+        "left": 373
+      },
+      {
+        "id": "bonus",
+        "x": 13,
+        "y": 74,
+        "width": 95.203125,
+        "height": 44,
+        "top": 74,
+        "right": 108.203125,
+        "bottom": 118,
+        "left": 13
+      },
+      {
+        "id": "feature",
+        "x": 150.734375,
+        "y": 74,
+        "width": 109.375,
+        "height": 44,
+        "top": 74,
+        "right": 260.109375,
+        "bottom": 118,
+        "left": 150.734375
+      },
+      {
+        "id": "preview",
+        "x": 302.625,
+        "y": 74,
+        "width": 114.375,
+        "height": 44,
+        "top": 74,
+        "right": 417,
+        "bottom": 118,
+        "left": 302.625
+      },
+      {
+        "id": "ventbreak",
+        "x": 299,
+        "y": 160.796875,
+        "width": 116,
+        "height": 153.3125,
+        "top": 160.796875,
+        "right": 415,
+        "bottom": 314.109375,
+        "left": 299
+      },
+      {
+        "id": "overpressure",
+        "x": 299,
+        "y": 324.109375,
+        "width": 116,
+        "height": 153.3125,
+        "top": 324.109375,
+        "right": 415,
+        "bottom": 477.421875,
+        "left": 299
+      },
+      {
+        "id": "mystery",
+        "x": 299,
+        "y": 487.421875,
+        "width": 116,
+        "height": 182.71875,
+        "top": 487.421875,
+        "right": 415,
+        "bottom": 670.140625,
+        "left": 299
+      }
+    ],
+    "receipt": [
+      {
+        "id": "Lower bet",
+        "x": 234.515625,
+        "y": 17,
+        "width": 44,
+        "height": 44,
+        "top": 17,
+        "right": 278.515625,
+        "bottom": 61,
+        "left": 234.515625
+      },
+      {
+        "id": "Raise bet",
+        "x": 320,
+        "y": 17,
+        "width": 44,
+        "height": 44,
+        "top": 17,
+        "right": 364,
+        "bottom": 61,
+        "left": 320
+      },
+      {
+        "id": "Close shop",
+        "x": 373,
+        "y": 17,
+        "width": 44,
+        "height": 44,
+        "top": 17,
+        "right": 417,
+        "bottom": 61,
+        "left": 373
+      },
+      {
+        "id": "bonus",
+        "x": 13,
+        "y": 74,
+        "width": 95.203125,
+        "height": 44,
+        "top": 74,
+        "right": 108.203125,
+        "bottom": 118,
+        "left": 13
+      },
+      {
+        "id": "feature",
+        "x": 150.734375,
+        "y": 74,
+        "width": 109.375,
+        "height": 44,
+        "top": 74,
+        "right": 260.109375,
+        "bottom": 118,
+        "left": 150.734375
+      },
+      {
+        "id": "preview",
+        "x": 302.625,
+        "y": 74,
+        "width": 114.375,
+        "height": 44,
+        "top": 74,
+        "right": 417,
+        "bottom": 118,
+        "left": 302.625
+      },
+      {
+        "id": "ventbreak",
+        "x": 299,
+        "y": 160.796875,
+        "width": 116,
+        "height": 153.3125,
+        "top": 160.796875,
+        "right": 415,
+        "bottom": 314.109375,
+        "left": 299
+      },
+      {
+        "id": "overpressure",
+        "x": 299,
+        "y": 324.109375,
+        "width": 116,
+        "height": 153.3125,
+        "top": 324.109375,
+        "right": 415,
+        "bottom": 477.421875,
+        "left": 299
+      },
+      {
+        "id": "mystery",
+        "x": 299,
+        "y": 487.421875,
+        "width": 116,
+        "height": 182.71875,
+        "top": 487.421875,
+        "right": 415,
+        "bottom": 670.140625,
+        "left": 299
+      },
+      {
+        "id": "confirm-cancel",
+        "x": 40.90625,
+        "y": 638.78125,
+        "width": 348.1875,
+        "height": 44,
+        "top": 638.78125,
+        "right": 389.09375,
+        "bottom": 682.78125,
+        "left": 40.90625
+      },
+      {
+        "id": "confirm-ok",
+        "x": 40.90625,
+        "y": 586.78125,
+        "width": 348.1875,
+        "height": 44,
+        "top": 586.78125,
+        "right": 389.09375,
+        "bottom": 630.78125,
+        "left": 40.90625
+      }
+    ],
+    "receiptTitle": {
+      "x": 40.90625,
+      "y": 275.234375,
+      "width": 348.1875,
+      "height": 36.796875
+    },
+    "restoredFocus": "mystery",
+    "betRestored": true,
+    "headingClear": true,
+    "balance": 1000000
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "shop": [
+      {
+        "id": "Lower bet",
+        "x": 579,
+        "y": 31.765625,
+        "width": 44,
+        "height": 44,
+        "top": 31.765625,
+        "right": 623,
+        "bottom": 75.765625,
+        "left": 579
+      },
+      {
+        "id": "Raise bet",
+        "x": 686.8125,
+        "y": 31.765625,
+        "width": 44,
+        "height": 44,
+        "top": 31.765625,
+        "right": 730.8125,
+        "bottom": 75.765625,
+        "left": 686.8125
+      },
+      {
+        "id": "Close shop",
+        "x": 757.8125,
+        "y": 31.765625,
+        "width": 44,
+        "height": 44,
+        "top": 31.765625,
+        "right": 801.8125,
+        "bottom": 75.765625,
+        "left": 757.8125
+      },
+      {
+        "id": "bonus",
+        "x": 42.1875,
+        "y": 100.046875,
+        "width": 99,
+        "height": 44,
+        "top": 100.046875,
+        "right": 141.1875,
+        "bottom": 144.046875,
+        "left": 42.1875
+      },
+      {
+        "id": "feature",
+        "x": 165.1875,
+        "y": 100.046875,
+        "width": 115.40625,
+        "height": 44,
+        "top": 100.046875,
+        "right": 280.59375,
+        "bottom": 144.046875,
+        "left": 165.1875
+      },
+      {
+        "id": "preview",
+        "x": 304.59375,
+        "y": 100.046875,
+        "width": 120.40625,
+        "height": 44,
+        "top": 100.046875,
+        "right": 425,
+        "bottom": 144.046875,
+        "left": 304.59375
+      },
+      {
+        "id": "ventbreak",
+        "x": 580.6875,
+        "y": 196.4375,
+        "width": 219.125,
+        "height": 162,
+        "top": 196.4375,
+        "right": 799.8125,
+        "bottom": 358.4375,
+        "left": 580.6875
+      },
+      {
+        "id": "overpressure",
+        "x": 580.6875,
+        "y": 373.4375,
+        "width": 219.125,
+        "height": 162,
+        "top": 373.4375,
+        "right": 799.8125,
+        "bottom": 535.4375,
+        "left": 580.6875
+      },
+      {
+        "id": "mystery",
+        "x": 580.6875,
+        "y": 550.4375,
+        "width": 219.125,
+        "height": 171.28125,
+        "top": 550.4375,
+        "right": 799.8125,
+        "bottom": 721.71875,
+        "left": 580.6875
+      }
+    ],
+    "receipt": [
+      {
+        "id": "Lower bet",
+        "x": 579,
+        "y": 31.765625,
+        "width": 44,
+        "height": 44,
+        "top": 31.765625,
+        "right": 623,
+        "bottom": 75.765625,
+        "left": 579
+      },
+      {
+        "id": "Raise bet",
+        "x": 686.8125,
+        "y": 31.765625,
+        "width": 44,
+        "height": 44,
+        "top": 31.765625,
+        "right": 730.8125,
+        "bottom": 75.765625,
+        "left": 686.8125
+      },
+      {
+        "id": "Close shop",
+        "x": 757.8125,
+        "y": 31.765625,
+        "width": 44,
+        "height": 44,
+        "top": 31.765625,
+        "right": 801.8125,
+        "bottom": 75.765625,
+        "left": 757.8125
+      },
+      {
+        "id": "bonus",
+        "x": 42.1875,
+        "y": 100.046875,
+        "width": 99,
+        "height": 44,
+        "top": 100.046875,
+        "right": 141.1875,
+        "bottom": 144.046875,
+        "left": 42.1875
+      },
+      {
+        "id": "feature",
+        "x": 165.1875,
+        "y": 100.046875,
+        "width": 115.40625,
+        "height": 44,
+        "top": 100.046875,
+        "right": 280.59375,
+        "bottom": 144.046875,
+        "left": 165.1875
+      },
+      {
+        "id": "preview",
+        "x": 304.59375,
+        "y": 100.046875,
+        "width": 120.40625,
+        "height": 44,
+        "top": 100.046875,
+        "right": 425,
+        "bottom": 144.046875,
+        "left": 304.59375
+      },
+      {
+        "id": "ventbreak",
+        "x": 580.6875,
+        "y": -167.5625,
+        "width": 219.125,
+        "height": 162,
+        "top": -167.5625,
+        "right": 799.8125,
+        "bottom": -5.5625,
+        "left": 580.6875
+      },
+      {
+        "id": "overpressure",
+        "x": 580.6875,
+        "y": 9.4375,
+        "width": 219.125,
+        "height": 162,
+        "top": 9.4375,
+        "right": 799.8125,
+        "bottom": 171.4375,
+        "left": 580.6875
+      },
+      {
+        "id": "mystery",
+        "x": 580.6875,
+        "y": 186.4375,
+        "width": 219.125,
+        "height": 171.28125,
+        "top": 186.4375,
+        "right": 799.8125,
+        "bottom": 357.71875,
+        "left": 580.6875
+      },
+      {
+        "id": "confirm-cancel",
+        "x": 104,
+        "y": 290.34375,
+        "width": 312,
+        "height": 44,
+        "top": 290.34375,
+        "right": 416,
+        "bottom": 334.34375,
+        "left": 104
+      },
+      {
+        "id": "confirm-ok",
+        "x": 428,
+        "y": 290.34375,
+        "width": 312,
+        "height": 44,
+        "top": 290.34375,
+        "right": 740,
+        "bottom": 334.34375,
+        "left": 428
+      }
+    ],
+    "receiptTitle": {
+      "x": 104,
+      "y": 78.65625,
+      "width": 636,
+      "height": 32.1875
+    },
+    "restoredFocus": "mystery",
+    "betRestored": true,
+    "headingClear": true,
+    "balance": 1000000
+  },
+  {
+    "width": 768,
+    "height": 1024,
+    "shop": [
+      {
+        "id": "Lower bet",
+        "x": 506.796875,
+        "y": 61.25,
+        "width": 44,
+        "height": 44,
+        "top": 61.25,
+        "right": 550.796875,
+        "bottom": 105.25,
+        "left": 506.796875
+      },
+      {
+        "id": "Raise bet",
+        "x": 614.609375,
+        "y": 61.25,
+        "width": 44,
+        "height": 44,
+        "top": 61.25,
+        "right": 658.609375,
+        "bottom": 105.25,
+        "left": 614.609375
+      },
+      {
+        "id": "Close shop",
+        "x": 685.609375,
+        "y": 61.25,
+        "width": 44,
+        "height": 44,
+        "top": 61.25,
+        "right": 729.609375,
+        "bottom": 105.25,
+        "left": 685.609375
+      },
+      {
+        "id": "bonus",
+        "x": 38.390625,
+        "y": 140.3125,
+        "width": 99,
+        "height": 44,
+        "top": 140.3125,
+        "right": 137.390625,
+        "bottom": 184.3125,
+        "left": 38.390625
+      },
+      {
+        "id": "feature",
+        "x": 161.390625,
+        "y": 140.3125,
+        "width": 115.40625,
+        "height": 44,
+        "top": 140.3125,
+        "right": 276.796875,
+        "bottom": 184.3125,
+        "left": 161.390625
+      },
+      {
+        "id": "preview",
+        "x": 300.796875,
+        "y": 140.3125,
+        "width": 120.40625,
+        "height": 44,
+        "top": 140.3125,
+        "right": 421.203125,
+        "bottom": 184.3125,
+        "left": 300.796875
+      },
+      {
+        "id": "ventbreak",
+        "x": 528.328125,
+        "y": 249.703125,
+        "width": 199.28125,
+        "height": 162,
+        "top": 249.703125,
+        "right": 727.609375,
+        "bottom": 411.703125,
+        "left": 528.328125
+      },
+      {
+        "id": "overpressure",
+        "x": 528.328125,
+        "y": 426.703125,
+        "width": 199.28125,
+        "height": 162,
+        "top": 426.703125,
+        "right": 727.609375,
+        "bottom": 588.703125,
+        "left": 528.328125
+      },
+      {
+        "id": "mystery",
+        "x": 528.328125,
+        "y": 603.703125,
+        "width": 199.28125,
+        "height": 168.375,
+        "top": 603.703125,
+        "right": 727.609375,
+        "bottom": 772.078125,
+        "left": 528.328125
+      }
+    ],
+    "receipt": [
+      {
+        "id": "Lower bet",
+        "x": 506.796875,
+        "y": 61.25,
+        "width": 44,
+        "height": 44,
+        "top": 61.25,
+        "right": 550.796875,
+        "bottom": 105.25,
+        "left": 506.796875
+      },
+      {
+        "id": "Raise bet",
+        "x": 614.609375,
+        "y": 61.25,
+        "width": 44,
+        "height": 44,
+        "top": 61.25,
+        "right": 658.609375,
+        "bottom": 105.25,
+        "left": 614.609375
+      },
+      {
+        "id": "Close shop",
+        "x": 685.609375,
+        "y": 61.25,
+        "width": 44,
+        "height": 44,
+        "top": 61.25,
+        "right": 729.609375,
+        "bottom": 105.25,
+        "left": 685.609375
+      },
+      {
+        "id": "bonus",
+        "x": 38.390625,
+        "y": 140.3125,
+        "width": 99,
+        "height": 44,
+        "top": 140.3125,
+        "right": 137.390625,
+        "bottom": 184.3125,
+        "left": 38.390625
+      },
+      {
+        "id": "feature",
+        "x": 161.390625,
+        "y": 140.3125,
+        "width": 115.40625,
+        "height": 44,
+        "top": 140.3125,
+        "right": 276.796875,
+        "bottom": 184.3125,
+        "left": 161.390625
+      },
+      {
+        "id": "preview",
+        "x": 300.796875,
+        "y": 140.3125,
+        "width": 120.40625,
+        "height": 44,
+        "top": 140.3125,
+        "right": 421.203125,
+        "bottom": 184.3125,
+        "left": 300.796875
+      },
+      {
+        "id": "ventbreak",
+        "x": 528.328125,
+        "y": 249.703125,
+        "width": 199.28125,
+        "height": 162,
+        "top": 249.703125,
+        "right": 727.609375,
+        "bottom": 411.703125,
+        "left": 528.328125
+      },
+      {
+        "id": "overpressure",
+        "x": 528.328125,
+        "y": 426.703125,
+        "width": 199.28125,
+        "height": 162,
+        "top": 426.703125,
+        "right": 727.609375,
+        "bottom": 588.703125,
+        "left": 528.328125
+      },
+      {
+        "id": "mystery",
+        "x": 528.328125,
+        "y": 603.703125,
+        "width": 199.28125,
+        "height": 168.375,
+        "top": 603.703125,
+        "right": 727.609375,
+        "bottom": 772.078125,
+        "left": 528.328125
+      },
+      {
+        "id": "confirm-cancel",
+        "x": 202,
+        "y": 696.890625,
+        "width": 364,
+        "height": 44,
+        "top": 696.890625,
+        "right": 566,
+        "bottom": 740.890625,
+        "left": 202
+      },
+      {
+        "id": "confirm-ok",
+        "x": 202,
+        "y": 644.890625,
+        "width": 364,
+        "height": 44,
+        "top": 644.890625,
+        "right": 566,
+        "bottom": 688.890625,
+        "left": 202
+      }
+    ],
+    "receiptTitle": {
+      "x": 202,
+      "y": 312.21875,
+      "width": 364,
+      "height": 52.984375
+    },
+    "restoredFocus": "mystery",
+    "betRestored": true,
+    "headingClear": true,
+    "balance": 1000000
+  },
+  {
+    "width": 1366,
+    "height": 768,
+    "shop": [
+      {
+        "id": "Lower bet",
+        "x": 980.1875,
+        "y": 62.484375,
+        "width": 44,
+        "height": 44,
+        "top": 62.484375,
+        "right": 1024.1875,
+        "bottom": 106.484375,
+        "left": 980.1875
+      },
+      {
+        "id": "Raise bet",
+        "x": 1088,
+        "y": 62.484375,
+        "width": 44,
+        "height": 44,
+        "top": 62.484375,
+        "right": 1132,
+        "bottom": 106.484375,
+        "left": 1088
+      },
+      {
+        "id": "Close shop",
+        "x": 1159,
+        "y": 62.484375,
+        "width": 44,
+        "height": 44,
+        "top": 62.484375,
+        "right": 1203,
+        "bottom": 106.484375,
+        "left": 1159
+      },
+      {
+        "id": "bonus",
+        "x": 163,
+        "y": 150.53125,
+        "width": 99,
+        "height": 44,
+        "top": 150.53125,
+        "right": 262,
+        "bottom": 194.53125,
+        "left": 163
+      },
+      {
+        "id": "feature",
+        "x": 286,
+        "y": 150.53125,
+        "width": 115.40625,
+        "height": 44,
+        "top": 150.53125,
+        "right": 401.40625,
+        "bottom": 194.53125,
+        "left": 286
+      },
+      {
+        "id": "preview",
+        "x": 425.40625,
+        "y": 150.53125,
+        "width": 120.40625,
+        "height": 44,
+        "top": 150.53125,
+        "right": 545.8125,
+        "bottom": 194.53125,
+        "left": 425.40625
+      },
+      {
+        "id": "ventbreak",
+        "x": 400.328125,
+        "y": 254.875,
+        "width": 100,
+        "height": 185.890625,
+        "top": 254.875,
+        "right": 500.328125,
+        "bottom": 440.765625,
+        "left": 400.328125
+      },
+      {
+        "id": "overpressure",
+        "x": 750.65625,
+        "y": 254.875,
+        "width": 100,
+        "height": 185.890625,
+        "top": 254.875,
+        "right": 850.65625,
+        "bottom": 440.765625,
+        "left": 750.65625
+      },
+      {
+        "id": "mystery",
+        "x": 1101,
+        "y": 254.875,
+        "width": 100,
+        "height": 185.890625,
+        "top": 254.875,
+        "right": 1201,
+        "bottom": 440.765625,
+        "left": 1101
+      }
+    ],
+    "receipt": [
+      {
+        "id": "Lower bet",
+        "x": 980.1875,
+        "y": 62.484375,
+        "width": 44,
+        "height": 44,
+        "top": 62.484375,
+        "right": 1024.1875,
+        "bottom": 106.484375,
+        "left": 980.1875
+      },
+      {
+        "id": "Raise bet",
+        "x": 1088,
+        "y": 62.484375,
+        "width": 44,
+        "height": 44,
+        "top": 62.484375,
+        "right": 1132,
+        "bottom": 106.484375,
+        "left": 1088
+      },
+      {
+        "id": "Close shop",
+        "x": 1159,
+        "y": 62.484375,
+        "width": 44,
+        "height": 44,
+        "top": 62.484375,
+        "right": 1203,
+        "bottom": 106.484375,
+        "left": 1159
+      },
+      {
+        "id": "bonus",
+        "x": 163,
+        "y": 150.53125,
+        "width": 99,
+        "height": 44,
+        "top": 150.53125,
+        "right": 262,
+        "bottom": 194.53125,
+        "left": 163
+      },
+      {
+        "id": "feature",
+        "x": 286,
+        "y": 150.53125,
+        "width": 115.40625,
+        "height": 44,
+        "top": 150.53125,
+        "right": 401.40625,
+        "bottom": 194.53125,
+        "left": 286
+      },
+      {
+        "id": "preview",
+        "x": 425.40625,
+        "y": 150.53125,
+        "width": 120.40625,
+        "height": 44,
+        "top": 150.53125,
+        "right": 545.8125,
+        "bottom": 194.53125,
+        "left": 425.40625
+      },
+      {
+        "id": "ventbreak",
+        "x": 400.328125,
+        "y": 254.875,
+        "width": 100,
+        "height": 185.890625,
+        "top": 254.875,
+        "right": 500.328125,
+        "bottom": 440.765625,
+        "left": 400.328125
+      },
+      {
+        "id": "overpressure",
+        "x": 750.65625,
+        "y": 254.875,
+        "width": 100,
+        "height": 185.890625,
+        "top": 254.875,
+        "right": 850.65625,
+        "bottom": 440.765625,
+        "left": 750.65625
+      },
+      {
+        "id": "mystery",
+        "x": 1101,
+        "y": 254.875,
+        "width": 100,
+        "height": 185.890625,
+        "top": 254.875,
+        "right": 1201,
+        "bottom": 440.765625,
+        "left": 1101
+      },
+      {
+        "id": "confirm-cancel",
+        "x": 501,
+        "y": 570.546875,
+        "width": 364,
+        "height": 44,
+        "top": 570.546875,
+        "right": 865,
+        "bottom": 614.546875,
+        "left": 501
+      },
+      {
+        "id": "confirm-ok",
+        "x": 501,
+        "y": 518.546875,
+        "width": 364,
+        "height": 44,
+        "top": 518.546875,
+        "right": 865,
+        "bottom": 562.546875,
+        "left": 501
+      }
+    ],
+    "receiptTitle": {
+      "x": 501,
+      "y": 183,
+      "width": 364,
+      "height": 55.1875
+    },
+    "restoredFocus": "mystery",
+    "betRestored": true,
+    "headingClear": true,
+    "balance": 1000000
+  }
+]

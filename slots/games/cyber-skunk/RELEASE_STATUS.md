@@ -38,6 +38,8 @@ The playable artifact was verified on the earlier revision. The current source a
 
 ## 4. Controller and purchases
 
+- [x] Shop bet/Close/Back targets are at least 44px; landscape confirmation shows the whole receipt without initial clipping. Six touch-enabled viewport checks preserve bet, balance and return focus. Reservoir copy derives from the existing config. Evidence: `shots/shop-targets-qa-2026-11-02/`; hosted review remains open.
+
 - [x] Studio aspect-ratio correction after `35da2ee`: stage/controller agree through six desktop/phone/tablet viewport changes on a touch-enabled page; original controls/state survive. The 768×1024 portrait controller is on-screen instead of extending to y=1139. Evidence: `shots/studio-controller-qa-2026-11-02/`.
 
 - [x] Studio desktop/phone controller switching on a touch-style preview. At 1366×768 the desktop bar is 1098px wide and the whole Spin circle is visible. At 390×844 the Slim Rail is 390px wide. Bet adjustments worked after switching back.
