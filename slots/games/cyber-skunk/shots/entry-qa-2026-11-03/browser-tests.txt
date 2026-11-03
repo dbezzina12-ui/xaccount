@@ -1,0 +1,10 @@
+✔ ordinary entry: desktop launches, settles and resumes credits (10228.509047ms)
+✔ ordinary entry: phone launches, settles and resumes credits (9455.956935ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19896.520533

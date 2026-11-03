@@ -10,7 +10,17 @@
 <body>
   <script type="module">
     import { boot } from './engine/client/main.js';
-    boot({ game: 'game-001' });
+    const requested = new URL(location.href);
+    if (requested.searchParams.get('game') === 'cyber-skunk') {
+      // Cyber Skunk ships its own runtime rather than a legacy model.json.
+      const target = new URL('./games/cyber-skunk/runtime/index.html', location.href);
+      requested.searchParams.delete('game');
+      target.search = requested.search;
+      target.hash = requested.hash;
+      location.replace(target.href);
+    } else {
+      boot({ game: 'game-001' });
+    }
   </script>
 </body>
 </html>

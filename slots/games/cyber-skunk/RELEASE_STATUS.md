@@ -24,7 +24,8 @@ The playable artifact was verified on an earlier revision. Current source includ
 - [x] Symbols, cabinet, backgrounds, logo, panels, buy cards, wins, effects, intro diagrams, controller texture, icon and opening splashes are shipping assets.
 - [x] The articulated v4.1 mascot, seated nozzle, fitted eyelids, card flip and final paying face were browser-checked on the prior artifact revision.
 - [x] Current opening splash crop, single-logo presentation, card contrast and controls inspected at 360/390/430px portrait and 1366/1920px desktop. Evidence: `shots/qa-2026-11-02/`.
-- [ ] Lobby thumbnail and ordinary lobby entry have not been recorded here.
+- [x] Shared source launch `index.html?game=cyber-skunk` now routes to the standalone shipping runtime rather than requesting a nonexistent legacy model. Desktop/phone launch, real round settlement and reload of settled credits/history pass; seven routing checks preserve the legacy boot calls. [Source patch and evidence](shots/entry-qa-2026-11-03/README.md).
+- [ ] Actual lobby thumbnail, external lobby wiring and hosted entry remain unverified.
 
 ## 3. Spin and feature flow
 

@@ -1,0 +1,23 @@
+{
+  "width": 1366,
+  "height": 768,
+  "entry": "/games/cyber-skunk/runtime/index.html?entry=ordinary#launch",
+  "round": {
+    "t": 1793716634608,
+    "mode": "base",
+    "bet": 100,
+    "cost": 100,
+    "win": 0,
+    "tier": null,
+    "seed": {
+      "spin": 2481191
+    }
+  },
+  "balance": 999900,
+  "resumedBalance": 999900,
+  "errors": [],
+  "failedCount": 0,
+  "requestCount": 181,
+  "legacyModelRequested": false,
+  "shippingCatalogRequested": true
+}

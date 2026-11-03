@@ -2,6 +2,16 @@
 
 Newest entry first. Read alongside the [studio history](HANDOFF.md). This game-only log links the scoped batches without copying unrelated studio history or private playable URLs.
 
+## 2026-11-03 09:34 Toronto · ChatGPT → Claude · Shared entry reaches shipping runtime
+
+**Picked up:** `c27480d`; no newer Claude handoff. Recovered an isolated checkout after the prior local workspace disappeared. Fixed `slots/index.html?game=cyber-skunk`: it previously invoked the legacy launcher and requested a nonexistent model. It now replaces the page with the standalone runtime, retaining other query values/hash. Other games keep their existing boot path. STYLE links both source entry routes.
+
+**Checked:** desktop/phone browser **2/2**: shared launch, shipping catalog, ordinary crypto-drawn base round, exact wallet/history and reload of settled credits. Seven routing checks cover nested deployment, parameters/hash and legacy calls. Core **134 passed/three existing skips**; game **29 passed**. All 119 runtime files plus the legacy launcher remain Git-identical. [Logs, seeds, initial fixture correction, hashes and reproduction](../games/cyber-skunk/shots/entry-qa-2026-11-03/README.md). No math/rig/audio/art edit or hosted claim.
+
+**Next for Claude:** 1. Replace fixed-seed free previews with weighted conditional shipping pools and validate floors/diversity/credits/history. 2. Refresh hashes after runtime edits; freeze and run all **eight** Cyber Skunk browser files together (currently 58 cases), plus core/game checks. 3. Republish the existing private artifact and verify served hashes/phone/desktop; separately check the real external lobby entry/thumbnail, physical devices and producer/math-owner sign-off.
+
+**Questions for Dylan:** none. **Blocked on:** existing preview/hosted/device/sign-off gates. CS-06/CS-07 remain open; continuation stays enabled.
+
 ## 2026-11-03 08:34 Toronto · ChatGPT → Claude · Keyboard dialog regression
 
 **Picked up:** `c88fa37`; no newer Claude handoff. Production files are unchanged. Added desktop/phone keyboard QA for shop, bet picker, autoplay, settings, rules/history and all three buy cancellations via both Escape and Enter on Back. Focus returns to the correct controller/card; all twelve cancellations preserve credits/history and leave play idle. **2/2 passed**; core 127 passed/three existing skips. [Logs, initial fixture timeout, source hashes and reproduction](../games/cyber-skunk/shots/dialog-keyboard-qa-2026-11-03/README.md).

@@ -1,0 +1,38 @@
+✖ ordinary entry: desktop launches, settles and resumes credits (1831.4321ms)
+✖ ordinary entry: phone launches, settles and resumes credits (569.123506ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2632.760622
+
+✖ failing tests:
+
+test at tests/browser/cyber-skunk-entry.e2e.mjs:10:75
+✖ ordinary entry: desktop launches, settles and resumes credits (1831.4321ms)
+  page.waitForFunction: ReferenceError: cyberSkunk is not defined
+      at eval (eval at predicate (eval at evaluate (:311:30)), <anonymous>:1:22)
+      at predicate (eval at evaluate (:311:30), <anonymous>:7:27)
+      at next (eval at evaluate (:311:30), <anonymous>:29:33)
+      at eval (eval at evaluate (:311:30), <anonymous>:42:13)
+      at UtilityScript.evaluate (<anonymous>:313:16)
+      at UtilityScript.<anonymous> (<anonymous>:1:44)
+      at TestContext.<anonymous> (/workspace/scratch/cyber-continuation/slots/tests/browser/cyber-skunk-entry.e2e.mjs:17:13) {
+    log: []
+  }
+
+test at tests/browser/cyber-skunk-entry.e2e.mjs:10:75
+✖ ordinary entry: phone launches, settles and resumes credits (569.123506ms)
+  page.waitForFunction: ReferenceError: cyberSkunk is not defined
+      at eval (eval at predicate (eval at evaluate (:311:30)), <anonymous>:1:22)
+      at predicate (eval at evaluate (:311:30), <anonymous>:7:27)
+      at next (eval at evaluate (:311:30), <anonymous>:29:33)
+      at eval (eval at evaluate (:311:30), <anonymous>:42:13)
+      at UtilityScript.evaluate (<anonymous>:313:16)
+      at UtilityScript.<anonymous> (<anonymous>:1:44)
+      at TestContext.<anonymous> (/workspace/scratch/cyber-continuation/slots/tests/browser/cyber-skunk-entry.e2e.mjs:17:13) {
+    log: []
+  }
