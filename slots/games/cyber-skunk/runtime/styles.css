@@ -28,7 +28,7 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 @keyframes fan{to{transform:rotate(360deg)}}
 .backdrop .grill{position:absolute;left:0;right:0;bottom:0;height:24%;background:repeating-linear-gradient(90deg,#0a0f12 0 6px,#20282c 6px 9px),linear-gradient(#0000,#000a);opacity:.55;transform:perspective(600px) rotateX(55deg);transform-origin:bottom}
 .backdrop .blackout{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .6s}
-.app[data-blackout] .backdrop .blackout{opacity:.82}
+.app[data-blackout] .backdrop .blackout{background:#282746;opacity:.26}
 .app[data-bonus] .backdrop{background:radial-gradient(120% 80% at 60% 40%,#14303a 0%,#0b1a21 55%,#05090c 100%)}
 .app[data-bonus=super] .backdrop{background:radial-gradient(120% 80% at 60% 40%,#3a2a12 0%,#1a120a 55%,#070503 100%)}
 .app[data-bonus=hidden] .backdrop{background:radial-gradient(120% 80% at 60% 40%,#0d2d2f 0%,#06100f 55%,#000 100%)}
@@ -126,7 +126,7 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 @keyframes tease{to{box-shadow:inset 0 0 0 6px #eda83c,inset 0 0 80px #eda83caa}}
 .cell.entry .vent-art,.cell.online .vent-art{filter:drop-shadow(0 0 14px #68c8c3) drop-shadow(0 0 4px #fff)}
 .app[data-blackout] .reels .cell:not(.online){opacity:.12;transition:opacity .4s}
-.app[data-blackout] .cabinet-art{filter:brightness(.35)}
+.app[data-blackout] .cabinet-art{filter:brightness(.82)}
 .cell.vent-card{perspective:900px}
 .card-flipper{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateY(0deg)}
 .cell.reverse .card-flipper{transform:rotateY(180deg)}

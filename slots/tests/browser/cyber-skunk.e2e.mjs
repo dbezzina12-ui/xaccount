@@ -525,6 +525,12 @@ test('scatter landing precedes the held bonus briefing on every entry path', asy
       await page.addInitScript(STEER);
       await page.goto(srv.url+GAME);
       await page.locator('#intro-go').click();
+      await page.evaluate(() => {
+        window.entryPhases = [];
+        const dialog = document.getElementById('buy-stinger');
+        new MutationObserver(() => window.entryPhases.push(dialog.dataset.phase))
+          .observe(dialog, { attributes:true, attributeFilter:['data-phase'] });
+      });
       if (mode === 'base') {
         await steer(page,'blackout');
         await control(page,'play').click();
@@ -539,6 +545,8 @@ test('scatter landing precedes the held bonus briefing on every entry path', asy
       await page.waitForFunction(n=>document.querySelectorAll('#fs-faces .fs-raised').length===n && !document.querySelector('#reels .spinning'),count);
       assert.ok(await page.locator('#bonus-panel').isHidden());
       await page.locator('#buy-stinger[open][data-phase=sealed] #bonus-panel-go').waitFor();
+      assert.deepEqual(await page.evaluate(() => window.entryPhases),
+        count === 5 ? ['power-cut','emergency','charging','sealed'] : ['charging','sealed']);
       assert.equal(await page.locator('#bonus-panel-title img').getAttribute('alt'),title);
       assert.equal(await page.locator('#bonus-panel-award').textContent(),(count===3?'12':'10')+' FREE SPINS');
       await page.waitForTimeout(650);
@@ -547,11 +555,15 @@ test('scatter landing precedes the held bonus briefing on every entry path', asy
         const viewport=el.closest('dialog').getBoundingClientRect(),line=el.getBoundingClientRect();
         const digits=document.createRange();digits.selectNodeContents(el.firstChild);
         const ink=digits.getBoundingClientRect(),unit=el.querySelector('small').getBoundingClientRect();
-        return {dx:ink.left+ink.width/2-viewport.left-viewport.width/2,
+        const rules=document.querySelector('#bonus-panel-text').getBoundingClientRect();
+        const start=document.querySelector('#bonus-panel-go').getBoundingClientRect();
+        return {rulesGap:rules.top-unit.bottom,buttonGap:start.top-rules.bottom,dx:ink.left+ink.width/2-viewport.left-viewport.width/2,
           dy:line.top+line.height/2-viewport.top-viewport.height/2,stacked:unit.top>=line.bottom};
       });
       assert.ok(Math.abs(awardLayout.dx)<1&&Math.abs(awardLayout.dy)<1);
       assert.ok(awardLayout.stacked);
+      assert.ok(awardLayout.rulesGap>=0 && awardLayout.rulesGap<=26);
+      assert.ok(awardLayout.buttonGap>=0 && awardLayout.buttonGap<=26);
       await page.locator('#bonus-panel-go').click();
       await page.locator('#buy-stinger').waitFor({state:'hidden'});
       assert.ok(await page.locator('#bonus-hud').isVisible());

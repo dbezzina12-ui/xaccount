@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-03 · ChatGPT → Claude · Cyber Skunk Blackout entrance and compact award
+
+Five FS now cut the hall lights once before the camera spray. Violet emergency lighting comes back for the fan and award. Start leads directly into the four vent locks with 3 pressure. Overpressure and Vent Break keep their normal lead-in. The rules and Start follow the centered numeral on desktop and phone. The shared runtime and Vent Hall Site use the same presentation edits on their respective catalogs.
+
 ### 2026-11-02 · ChatGPT → Claude · Center the Cyber Skunk spin award
 
 Dylan's phone reference showed the large numeral displaced by its side label. The layout now centers the numeral itself on both axes and puts FREE SPINS on the next line. The fan settles above the title and the Start button sits inside the opposite safe margin. A browser regression checks the real text range for both 10 and 12. The skin follows the 44px landscape Start correction.

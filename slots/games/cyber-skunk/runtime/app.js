@@ -463,11 +463,6 @@ async function bonusStart(e, result, mode) {
   if (!e.natural) await spinInBonus(e.tier, result.draw?.bonus ?? 811, mode);
   const sources = board.flatMap((cell, i) => cell.s === 'S' ? [cellEl(i)] : []).filter(Boolean);
   status(sources.length + ' FS · ' + tier.title);
-  if (!reduced.matches && !state.skip) {
-    audio.play('charge');
-    await skunk.spray(); // the little test squirt leaves as the articulated nozzle finishes aiming
-  }
-
   const faces = board.map((_,i) => $('fs-faces').querySelector('[data-cell="'+i+'"]')?.firstElementChild ||
     cellEl(i)?.querySelector('.sym')?.firstElementChild).filter(Boolean);
   const dialog = $('buy-stinger'), panel = $('bonus-panel'), start = $('bonus-panel-go');
@@ -479,12 +474,24 @@ async function bonusStart(e, result, mode) {
   $('bonus-panel-text').textContent = presentation.text;
   panel.classList.toggle('has-art', !!titleArt);
   panel.dataset.tier = dialog.dataset.tier = e.tier;
-  dialog.dataset.phase = 'charging';
+  const powerCut = e.tier === 'hidden' && !reduced.matches && !state.skip;
+  dialog.dataset.phase = powerCut ? 'power-cut' : 'charging';
   dialog.style.setProperty('--radius', '0px'); dialog.style.setProperty('--ignition', '0');
   dialog.oncancel = event => event.preventDefault();
   dialog.showModal();
   try {
     start.disabled = true; panel.inert = true;
+    if (powerCut) {
+      audio.music('blackout'); audio.play('blackout');
+      await wait(680);
+      dialog.dataset.phase = 'emergency';
+      await wait(360);
+      dialog.dataset.phase = 'charging';
+    }
+    if (!reduced.matches && !state.skip) {
+      audio.play('charge');
+      await skunk.spray();
+    }
     await drawPressureTransfer(dialog, sources, {
       duration: reduced.matches ? 0 : 2480 * pace(), faces, skip: () => state.skip, mist: fxSprites.mist,
       getBarrel: () => {
@@ -531,8 +538,7 @@ function gauge(value) {
 }
 async function blackout(e) {
   app.dataset.blackout = '';
-  audio.music('blackout'); audio.play('blackout'); status('BLACKOUT PROTOCOL');
-  await wait(900);
+  status('BLACKOUT PROTOCOL');
   const cells = board.length ? board.map((c) => ({ s: c.s })) : Array.from({ length: CELLS }, filler);
   for (const v of e.vents) cells[v.i] = { ...cells[v.i], vent: v.dir, sticky: true };
   setBoard(cells, false);
