@@ -1,4 +1,4 @@
-import { drawPressureTransfer } from './pressure-transfer.js?v=1';
+import { drawPressureTransfer } from './pressure-transfer.js?v=3';
 // Cyber Skunk: the playable game. The engine settles each round before
 // anything moves (playRound returns its total and every event); this file only
 // presents those events, so skip, turbo and frame timing never change a result.
@@ -463,9 +463,13 @@ async function bonusStart(e, result, mode) {
   if (!e.natural) await spinInBonus(e.tier, result.draw?.bonus ?? 811, mode);
   const sources = board.flatMap((cell, i) => cell.s === 'S' ? [cellEl(i)] : []).filter(Boolean);
   status(sources.length + ' FS · ' + tier.title);
-  skunk.play('anticipate');
-  await wait(480);
+  if (!reduced.matches && !state.skip) {
+    audio.play('charge');
+    await skunk.spray(); // the little test squirt leaves as the articulated nozzle finishes aiming
+  }
 
+  const faces = board.map((_,i) => $('fs-faces').querySelector('[data-cell="'+i+'"]')?.firstElementChild ||
+    cellEl(i)?.querySelector('.sym')?.firstElementChild).filter(Boolean);
   const dialog = $('buy-stinger'), panel = $('bonus-panel'), start = $('bonus-panel-go');
   const titleArt = artImg(presentation.panel, tier.title);
   $('bonus-panel-title').innerHTML = titleArt || tier.title;
@@ -480,28 +484,41 @@ async function bonusStart(e, result, mode) {
   dialog.oncancel = event => event.preventDefault();
   dialog.showModal();
   try {
-    if (!state.skip) audio.play('charge');
+    start.disabled = true; panel.inert = true;
     await drawPressureTransfer(dialog, sources, {
-      duration: reduced.matches ? 0 : 1480 * pace(), skip: () => state.skip, mist: fxSprites.mist,
-      onImpact: () => { if (!state.skip) audio.play('vent', {pressure:e.reservoir || 1}); }
+      duration: reduced.matches ? 0 : 2480 * pace(), faces, skip: () => state.skip, mist: fxSprites.mist,
+      getBarrel: () => {
+        const tip = skunk.nozzle(), base = skunk.nozzle(0);
+        if (!tip || !base) return null;
+        const box = $('mascot').getBoundingClientRect();
+        const origin = dialog.getBoundingClientRect();
+        // The stage has a mirrored mascot; the art rig reports unmirrored fractions.
+        const dx = (base[0]-tip[0])*box.width, dy = (tip[1]-base[1])*box.height;
+        const length = Math.hypot(dx,dy) || 1;
+        return {x:box.right-tip[0]*box.width-origin.left, y:box.top+tip[1]*box.height-origin.top, dx:dx/length, dy:dy/length};
+      },
+      onPilot: () => audio.play('paint', {k:0}),
+      onHose: () => audio.play('spray'),
+      onImpact: () => {
+        state.tier = e.tier; app.dataset.bonus = e.tier; $('bonus-hud').hidden = false;
+        $('hud-tier').textContent = tier.title;
+        hud(0, e.spins); gauge(e.reservoir);
+        audio.play('bonus-in', { tier:e.tier }); audio.music(e.tier === 'hidden' ? 'hidden' : 'bonus');
+        skunk.play('bonus');
+      }
     });
-    state.tier = e.tier; app.dataset.bonus = e.tier; $('bonus-hud').hidden = false;
-    $('hud-tier').textContent = tier.title;
-    hud(0, e.spins); gauge(e.reservoir);
-    audio.play('bonus-in', { tier:e.tier }); audio.music(e.tier === 'hidden' ? 'hidden' : 'bonus');
-    skunk.play('bonus');
-    dialog.dataset.phase = 'sealed';
-    panel.hidden = false;
+    dialog.dataset.phase = 'sealed'; panel.hidden = false; panel.inert = false; start.disabled = false;
     start.focus({preventScroll:true});
     await new Promise(resolve => { start.onclick = resolve; });
     start.disabled = true;
     state.skip = false;
-    const releaseTime = reduced.matches ? 0 : 540;
+    const releaseTime = reduced.matches ? 0 : 660;
+    dialog.style.setProperty('--release-from',getComputedStyle(dialog.querySelector('.extractor-blades')).transform);
     dialog.style.setProperty('--open-time', releaseTime * pace() + 'ms');
     dialog.dataset.phase = 'opening'; audio.play('release');
     await wait(releaseTime);
   } finally {
-    start.disabled = false; start.onclick = null; panel.hidden = true;
+    start.disabled = false; start.onclick = null; panel.inert = false; panel.hidden = true;
     dialog.close(); dialog.oncancel = null;
   }
 }

@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-02 · ChatGPT → Claude · Cyber Skunk extractor blowout and centered briefing
+
+At bonus entry the skunk aims the rigged tail nozzle, dribbles a test squirt, then sends a broad blue jet onto the lens. The extractor kicks backward, spins up and blows the water off the glass. Its expanding wake lifts the actual reel faces from the nearest cells first. On Start the gust carries the briefing offscreen into free spins. The briefing and Start button are centered across the viewport on desktop and phone. Reduced motion and Stop go straight to the briefing. Reviewed the full sequence and checked that all five briefing elements center at both widths. Update applies only to the bonus entrance.
+
 ### 2026-11-02 · ChatGPT → Claude · Cyber Skunk extractor bonus entrances
 
 Vent Break, Overpressure and Blackout Protocol now draw pressure trails from the awarded FS into a turning extractor. The chamber holds the actual spin count and mechanic until Start. The new `?preview=ventbreak`, `?preview=overpressure` and `?preview=blackout` links use the existing free-preview flow after the startup guide. Checked desktop, portrait, Stop on the trigger and keyboard/touch Start. Reduced motion bypasses the surge. The transition was applied to the Vent Hall Site and the shared runtime on their respective catalog versions. The earlier whole-artifact publication gate remains separate.

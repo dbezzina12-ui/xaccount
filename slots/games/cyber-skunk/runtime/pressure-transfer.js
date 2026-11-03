@@ -1,14 +1,16 @@
+import { paintLensWater } from './lens-water.js?v=2';
+import { carryReelFaces, paintGust, windFront, shaftAngle } from './fan-gust.js?v=1';
 // The awarded scatters are the emitters. All particles use fixed phases and never touch the round RNG.
 const clamp = n => Math.max(0, Math.min(1, n));
 const smooth = n => { const x=clamp(n); return x*x*(3-2*x); };
 
-export function drawPressureTransfer(dialog, cells, { duration, skip, mist, onImpact }) {
+export function drawPressureTransfer(dialog, cells, { duration, skip, mist, faces=[], getBarrel, onPilot, onHose, onImpact }) {
   const canvas = dialog.querySelector('.pressure-transfer');
   const ctx = canvas.getContext('2d');
   const hub = dialog.querySelector('.extractor-anchor');
   const ink = getComputedStyle(dialog).getPropertyValue('--surge').trim();
   const tier=dialog.dataset.tier;
-  let width=0, height=0, cx=0, cy=0, far=0, sources=[], elapsed=0, last=null, struck=false;
+  let moving, fanRadius=0, width=0, height=0, cx=0, cy=0, far=0, sources=[], elapsed=0, last=null, struck=false, pilot=false, hose=false;
   function fit() {
     width=canvas.clientWidth; height=canvas.clientHeight;
     const resolution=Math.min(devicePixelRatio||1,1.6,Math.sqrt(1400000/(width*height)));
@@ -17,6 +19,8 @@ export function drawPressureTransfer(dialog, cells, { duration, skip, mist, onIm
     const b=hub.getBoundingClientRect(), origin=canvas.getBoundingClientRect();
     cx=b.left-origin.left+b.width/2; cy=b.top-origin.top+b.height/2;
     far=Math.hypot(Math.max(cx,width-cx),Math.max(cy,height-cy))+48;
+    fanRadius=(dialog.querySelector('.extractor-engine')?.getBoundingClientRect().width || Math.min(width,height)*.4)*.53;
+    moving?.fit(origin.left,origin.top,cx,cy,width,height);
     sources=cells.map(cell=>{
       const box=cell.getBoundingClientRect();
       return {x:box.left-origin.left+box.width/2,y:box.top-origin.top+box.height/2,r:Math.min(box.width,box.height)*.39};
@@ -24,10 +28,17 @@ export function drawPressureTransfer(dialog, cells, { duration, skip, mist, onIm
   }
   function frame(t) {
     if (width!==canvas.clientWidth || height!==canvas.clientHeight) fit();
-    const blast=smooth((t-.42)/.56), radius=far*blast;
+    const blast=smooth((t-.685)/.295), radius=far*blast;
+    const front=windFront(t,far,fanRadius);
+    dialog.style.setProperty('--shaft-angle',shaftAngle(t,duration/1000,tier).toFixed(2)+'deg');
+    moving?.update(t>.56?front:0,far);
     dialog.style.setProperty('--radius',radius.toFixed(1)+'px');
-    dialog.style.setProperty('--ignition',smooth(t/.50).toFixed(3));
-    if (!struck && t>=.42) { struck=true;onImpact(); }
+    dialog.style.setProperty('--ignition',smooth((t-.39)/.15).toFixed(3));
+    if (!skip() && t<1) {
+      if (!pilot && t>=.114) { pilot=true;onPilot?.(); }
+      if (!hose && t>=.31) { hose=true;onHose?.(); }
+    }
+    if (!struck && t>=.61) { struck=true;onImpact(); }
     if (!ctx) return;
     ctx.clearRect(0,0,width,height);
     ctx.lineCap='round';
@@ -68,10 +79,13 @@ export function drawPressureTransfer(dialog, cells, { duration, skip, mist, onIm
       }
     }
     ctx.globalAlpha=1;
+    paintLensWater(ctx,width,height,t,t<.565 ? getBarrel?.() : null,{cx,cy,front});
+    paintGust(ctx,cx,cy,front,Math.min(width,height),t);
   }
   if(!duration||skip()){
-    dialog.style.setProperty('--radius','160vmax');dialog.style.setProperty('--ignition','1');onImpact();return Promise.resolve();
+    dialog.style.setProperty('--radius','160vmax');dialog.style.setProperty('--ignition','1');dialog.style.setProperty('--shaft-angle','0deg');onImpact();return Promise.resolve();
   }
+  if(faces.length) moving=carryReelFaces(dialog.querySelector('.gust-faces'),faces);
   return new Promise(resolve=>{
     const pause=()=>{last=null;};
     document.addEventListener('visibilitychange',pause);
@@ -81,7 +95,7 @@ export function drawPressureTransfer(dialog, cells, { duration, skip, mist, onIm
       const t=skip()?1:clamp(elapsed/duration);
       frame(t);
       if(t<1)requestAnimationFrame(tick);
-      else{document.removeEventListener('visibilitychange',pause);dialog.style.setProperty('--radius','160vmax');resolve();}
+      else{moving?.clear();document.removeEventListener('visibilitychange',pause);dialog.style.setProperty('--radius','160vmax');resolve();}
     }
     requestAnimationFrame(tick);
   });

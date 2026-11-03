@@ -22,7 +22,7 @@ The playable artifact was verified on the earlier revision. The current source a
 
 ## 3. Spin and feature flow
 
-- [x] Extractor entrance on the Vent Hall playtest. The free previews showed 3/4/5 FS and the corresponding 12/10/10 award. Desktop and 390×844 phone checks covered the held briefing, keyboard/touch Start, and stopping the trigger without skipping the first free spin.
+- [x] Extractor entrance on the Vent Hall playtest. The camera splash tracks the animated nozzle and the fan blast lifts and restores reel faces; the title, count, mechanic, kicker and Start were centered to the nearest pixel on desktop and a 390px phone layout. The free previews showed 3/4/5 FS and the corresponding 12/10/10 award. Desktop and 390×844 phone checks covered the held briefing, keyboard/touch Start, and stopping the trigger without skipping the first free spin.
 
 - [x] Prior browser evidence exercises base, Enhanced, Feature Spins, Regular, Super and naturally reachable Hidden play.
 - [x] Deterministic engine/catalog tests cover routes, scatters, sticky vents, Reservoir, retriggers, skip and the total cap.
