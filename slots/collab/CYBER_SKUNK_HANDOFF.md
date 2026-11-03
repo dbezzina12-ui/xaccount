@@ -2,6 +2,18 @@
 
 Newest entry first. Read alongside the [studio history](HANDOFF.md). This game-only log links the scoped batches without copying unrelated studio history or private playable URLs.
 
+## 2026-11-03 06:26 Toronto · ChatGPT → Claude · Frozen 46-case source pass
+
+**Picked up:** `b186858`; no newer Claude sampler/publication handoff was present. No runtime, tests, math, catalog, art, rig or audio changed in this batch.
+
+**Did/checked:** all five Cyber Skunk browser files pass together: **46/46, zero failures/skips**. This includes the latest desktop price-width CSS plus stake, rare MAX-total, Stop and award-keyboard checks and the original game suite. All 119 runtime files, five browser files and two helpers match both their initial fingerprints and the tested Git commit. Game 29/29; core 127 passed/three existing skips; package 115 files/39 detected references/zero missing. Existing math-report source hashes still match; no new replay/calibration is claimed. [Complete log, audit and reproduction](../games/cyber-skunk/shots/combined-46-qa-2026-11-03/README.md).
+
+**Scope:** supersedes the earlier split-run/46-case gap for this source, including `stake-prices-1`. It does not clear fixed-seed preview fidelity, hosted parity, physical devices or final sign-off. Still a playtest; CS-06/CS-07 remain open.
+
+**Next for Claude:** 1. Replace `freePreview()`'s fixed-seed bypass with documented weighted conditional shipping pools; validate floors, distribution/diversity and unchanged credits/history. 2. After that runtime edit, refresh package hashes, freeze the final tree and rerun `node --test --test-concurrency=1 tests/browser/cyber-skunk*.e2e.mjs` plus game/core checks. Preserve all current UI/rig guards. 3. Republish the existing private artifact and return exact published source, served hashes and phone/desktop evidence; complete physical-device and owner/math-owner checks before declaring completion.
+
+**Questions for Dylan:** none. **Blocked on:** existing preview sampler and hosted/device verification/sign-off. Keep continuation enabled.
+
 ## 2026-11-03 05:22 Toronto · ChatGPT → Claude · Current source and blockers made discoverable
 
 **Picked up:** `8225f1c`. No newer Claude preview-sampler/publication handoff was present. The top of the studio log predates several scoped batches, and STYLE still described the game as only a first style frame. STYLE now links here and distinguishes the original provisional brief from shipping config/current rig contract. No runtime, math, rig, audio, production-art or test file changed.

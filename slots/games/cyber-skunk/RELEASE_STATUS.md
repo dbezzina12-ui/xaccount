@@ -4,11 +4,9 @@ Current ordered continuation tasks: [game-specific handoff](../../collab/CYBER_S
 
 | Game | Branch / source | Playable link | Build / audience | Producer | Art | Math / engineering | QA |
 |---|---|---|---|---|---|---|---|
-| Cyber Skunk | `claude/blissful-rubin-xou20i`, frozen 36-case source `d0b6f67` plus scoped `stake-prices-1` follow-up | Existing private artifact; URL intentionally omitted from this public record | Private playtest; newest hosted parity unverified | Dylan | ChatGPT | Claude | ChatGPT + Claude |
+| Cyber Skunk | `claude/blissful-rubin-xou20i`, frozen 46-case source `b186858` | Existing private artifact; URL intentionally omitted from this public record | Private playtest; newest hosted parity unverified | Dylan | ChatGPT | Claude | ChatGPT + Claude |
 
-The playable artifact was verified on an earlier revision. Current source includes the final splashes, named Mystery copy, card/bonus presentation, controller/shop corrections and keyboard award handling. All 36 browser tests passed together on frozen `d0b6f67`; all 124 runtime/test/helper fingerprints match that commit and remained unchanged. See `shots/combined-browser-qa-2026-11-03/`. Prior complete catalog replay/report regeneration remains in `shots/frozen-build-qa-2026-11-02/` for unchanged math sources. Source QA does not establish hosted parity. Preview sampling, physical-device checks and sign-off remain open.
-
-The later `stake-prices-1` desktop shop correction has 10 targeted browser passes and price-fit evidence in `shots/stake-qa-2026-11-03/`; it has not received a new combined 46-case run.
+The playable artifact was verified on an earlier revision. Current source includes the final splashes, named Mystery copy, card/bonus presentation, controller/shop corrections and keyboard award handling. All **46 browser tests passed together** on frozen `b186858`, including the `stake-prices-1` correction. All 126 runtime/test/helper fingerprints match that commit and remained unchanged. See `shots/combined-46-qa-2026-11-03/`. Prior complete catalog replay/report regeneration remains in `shots/frozen-build-qa-2026-11-02/` for unchanged math sources. Source QA does not establish preview fidelity or hosted parity. Preview sampling, physical-device checks and sign-off remain open.
 
 ## 1. Brief and rules
 
@@ -86,6 +84,8 @@ The later `stake-prices-1` desktop shop correction has 10 targeted browser passe
 - [x] Extractor artifact candidate: 115 files, 39 detected static dependencies and 0 missing; refreshed hashes are in `art/source/splash-v1/package-manifest.json`.
 
 ## 7. Device QA and release
+
+- [x] Current combined run at `b186858`: **46/46 browser tests, one invocation, zero failures/skips**; game 29/29; core 127 passed/three existing skips; package 115 files/39 detected references/zero missing. No runtime/test edits; 126 fingerprints match before/after and Git. This supersedes earlier split-run and latest-CSS coverage gaps, not preview/hosted/device gates. Evidence: `shots/combined-46-qa-2026-11-03/`.
 
 - [x] Combined local source run at `d0b6f67`: **36/36 browser tests in one invocation, zero skips**; game 29/29; core 127 passed/three existing skips; static package 115 files/39 detected references/zero missing. No runtime/test edits during execution; 124 fingerprints match before/after and the tested commit. This supersedes the earlier split-run limitation, not the preview-fidelity or hosted/physical-device gates. Evidence: `shots/combined-browser-qa-2026-11-03/`.
 
