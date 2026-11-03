@@ -2,9 +2,9 @@
 
 | Game | Branch / source | Playable link | Build / audience | Producer | Art | Math / engineering | QA |
 |---|---|---|---|---|---|---|---|
-| Cyber Skunk | `claude/blissful-rubin-xou20i`, frozen runtime `b533d72` plus the newest evidence handoff | Existing private artifact; URL intentionally omitted from this public record | Private playtest; newest source is not yet republished | Dylan | ChatGPT | Claude | ChatGPT + Claude |
+| Cyber Skunk | `claude/blissful-rubin-xou20i`, frozen source `d0b6f67` | Existing private artifact; URL intentionally omitted from this public record | Private playtest; newest hosted parity unverified | Dylan | ChatGPT | Claude | ChatGPT + Claude |
 
-The playable artifact was verified on an earlier revision. Current source includes the final splashes, named Mystery copy, card/bonus presentation and controller/shop corrections. Source evidence does not establish that those changes are hosted. See `shots/frozen-build-qa-2026-11-02/` for the frozen-runtime browser result, Studio test timing correction, full catalog replay and byte-identical math-report regeneration. Preview sampling and served-file parity remain open.
+The playable artifact was verified on an earlier revision. Current source includes the final splashes, named Mystery copy, card/bonus presentation, controller/shop corrections and keyboard award handling. All 36 browser tests passed together on frozen `d0b6f67`; all 124 runtime/test/helper fingerprints match that commit and remained unchanged. See `shots/combined-browser-qa-2026-11-03/`. Prior complete catalog replay/report regeneration remains in `shots/frozen-build-qa-2026-11-02/` for unchanged math sources. Source QA does not establish hosted parity. Preview sampling, physical-device checks and sign-off remain open.
 
 ## 1. Brief and rules
 
@@ -76,6 +76,8 @@ The playable artifact was verified on an earlier revision. Current source includ
 - [x] Extractor artifact candidate: 115 files, 39 detected static dependencies and 0 missing; refreshed hashes are in `art/source/splash-v1/package-manifest.json`.
 
 ## 7. Device QA and release
+
+- [x] Combined local source run at `d0b6f67`: **36/36 browser tests in one invocation, zero skips**; game 29/29; core 127 passed/three existing skips; static package 115 files/39 detected references/zero missing. No runtime/test edits during execution; 124 fingerprints match before/after and the tested commit. This supersedes the earlier split-run limitation, not the preview-fidelity or hosted/physical-device gates. Evidence: `shots/combined-browser-qa-2026-11-03/`.
 
 - [x] Earlier artifact revision: 25 browser checks passed and the private artifact was published.
 - [x] Current source packages locally with both splash WebPs and all detected HTML/CSS/JS dependencies. This is not hosted parity.

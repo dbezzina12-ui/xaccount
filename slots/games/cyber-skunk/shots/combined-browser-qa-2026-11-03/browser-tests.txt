@@ -1,0 +1,54 @@
+{"label":"desktop","width":1366,"height":768,"mode":"ventbreak","expected":{"seed":653812,"paid":20,"cost":10000},"next":{"spin":"2 / 12","spinning":6,"skip":false,"busy":true,"balance":990000,"history":0},"finalBalance":990020}
+✔ desktop: one Stop only skips the active ventbreak free spin (20352.303996ms)
+{"label":"desktop","width":1366,"height":768,"mode":"overpressure","expected":{"seed":253677,"paid":0,"cost":25000},"next":{"spin":"2 / 10","spinning":6,"skip":false,"busy":true,"balance":975000,"history":0},"finalBalance":975000}
+✔ desktop: one Stop only skips the active overpressure free spin (23867.912085ms)
+{"label":"phone","width":390,"height":844,"mode":"ventbreak","expected":{"seed":653812,"paid":20,"cost":10000},"next":{"spin":"2 / 12","spinning":6,"skip":false,"busy":true,"balance":990000,"history":0},"finalBalance":990020}
+✔ phone: one Stop only skips the active ventbreak free spin (16640.184869ms)
+{"label":"phone","width":390,"height":844,"mode":"overpressure","expected":{"seed":253677,"paid":0,"cost":25000},"next":{"spin":"2 / 10","spinning":6,"skip":false,"busy":true,"balance":975000,"history":0},"finalBalance":975000}
+✔ phone: one Stop only skips the active overpressure free spin (19616.409782ms)
+{"label":"desktop-space","width":1366,"height":768,"key":"Space","controllerFocus":false,"bonus":false,"menu":false,"expected":{"seed":1782064,"paid":2690,"cost":100},"before":{"balance":999900,"history":0},"after":{"balance":1002590,"busy":false,"history":[{"t":1793690965103,"mode":"base","bet":100,"cost":100,"win":2690,"tier":null,"seed":{"spin":1782064}}]}}
+✔ win keys: desktop-space (12109.119887ms)
+{"label":"desktop-held-enter","width":1366,"height":768,"key":"Enter","controllerFocus":true,"bonus":false,"menu":false,"expected":{"seed":1782064,"paid":2690,"cost":100},"before":{"balance":999900,"history":0},"after":{"balance":1002590,"busy":false,"history":[{"t":1793690976361,"mode":"base","bet":100,"cost":100,"win":2690,"tier":null,"seed":{"spin":1782064}}]}}
+✔ win keys: desktop-held-enter (11343.102418ms)
+{"label":"desktop-escape","width":1366,"height":768,"key":"Escape","controllerFocus":false,"bonus":false,"menu":false,"expected":{"seed":1782064,"paid":2690,"cost":100},"before":{"balance":999900,"history":0},"after":{"balance":1002590,"busy":false,"history":[{"t":1793690988389,"mode":"base","bet":100,"cost":100,"win":2690,"tier":null,"seed":{"spin":1782064}}]}}
+✔ win keys: desktop-escape (11885.09382ms)
+{"label":"phone-escape","width":390,"height":844,"key":"Escape","controllerFocus":false,"bonus":false,"menu":false,"expected":{"seed":1782064,"paid":2690,"cost":100},"before":{"balance":999900,"history":0},"after":{"balance":1002590,"busy":false,"history":[{"t":1793691000091,"mode":"base","bet":100,"cost":100,"win":2690,"tier":null,"seed":{"spin":1782064}}]}}
+✔ win keys: phone-escape (11820.40802ms)
+{"label":"phone-bonus-total","width":390,"height":844,"key":"Space","controllerFocus":true,"bonus":true,"menu":false,"expected":{"seed":653812,"paid":20,"cost":10000},"before":{"balance":990000,"history":0},"after":{"balance":990020,"busy":false,"history":[{"t":1793691012846,"mode":"ventbreak","bet":100,"cost":10000,"win":20,"tier":"regular","seed":{"bonus":653812}}]}}
+✔ win keys: phone-bonus-total (14952.493148ms)
+{"label":"desktop-menu-priority","width":1366,"height":768,"key":"Escape","controllerFocus":false,"bonus":false,"menu":true,"expected":{"seed":1782064,"paid":2690,"cost":100},"before":{"balance":999900,"history":0},"after":{"balance":1002590,"busy":false,"history":[{"t":1793691026840,"mode":"base","bet":100,"cost":100,"win":2690,"tier":null,"seed":{"spin":1782064}}]}}
+✔ win keys: desktop-menu-priority (11647.37103ms)
+✔ desktop: base, Spray Job, Vent Break and Overpressure settle exactly (95590.666005ms)
+✔ phone: base, Spray Job, Vent Break and Overpressure settle exactly (97021.950215ms)
+✔ phone pressure strip fits the lower casting above the bonus panels (21918.173158ms)
+✔ vents: full symbol lands, centred reverse flips for spray, skip restores the paying face (8829.823876ms)
+✔ buy screen: Feature Spins first, Bonus Buys second, Hidden as information; short balance disables confirm (6502.269793ms)
+✔ the intro shows before the first spin, and returns on reload (9413.760976ms)
+✔ the feature guide pages on phones and can be reopened from the menu (21120.119519ms)
+✔ the rules show the shipping prices and 96% RTP (5296.066575ms)
+✔ audio: nothing clips, the music sits under the reels, the big moments are loudest, phones hear the reels (30978.057068ms)
+✔ natural FS trigger fits at rest and during its landing pulse (360×640) (10618.164602ms)
+✔ natural FS trigger fits at rest and during its landing pulse (390×844) (10979.193555ms)
+✔ natural FS trigger fits at rest and during its landing pulse (430×932) (10408.12973ms)
+✔ natural FS trigger fits at rest and during its landing pulse (1366×768) (10920.71754ms)
+✔ loading precedes the guide, category buttons switch, and Mystery settles once (29064.285629ms)
+✔ Mystery purchase finishes through the controller and credits the exact win (42060.00967ms)
+✔ failed startup offers a working reload (5399.814392ms)
+✔ rare path, blackout (1920×1080): plays, shows blackout and bigwin-max, settles exactly, and the page never scrolls (39500.734763ms)
+✔ rare path, cap (390×844): plays, shows bigwin-max, settles exactly, and the page never scrolls (40530.458726ms)
+✔ rare path, retrigger (1366×768): plays, shows banner, settles exactly, and the page never scrolls (40385.626542ms)
+✔ a reload mid-bonus loses nothing: the round is paid on the next visit and kept in history (25989.47372ms)
+✔ Zombify shop sections and free previews preserve credits and history (60074.764462ms)
+✔ studio ident advances to a gated guide on slow loads (5185.734813ms)
+✔ polished shop and single unboxed bonus result on phones and desktop (44901.712125ms)
+✔ Studio desktop uses the full shared bar on touch and switches layouts in place (5989.270396ms)
+✔ scatter landing precedes the held bonus briefing on every entry path (100481.819664ms)
+✔ tier popups use each spin payout on the winning board, and the bonus has a separate total (69368.819925ms)
+ℹ tests 36
+ℹ suites 0
+ℹ pass 36
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1003609.626409
