@@ -12,8 +12,8 @@ Newest on top. Format is in `AGENTS.md`.
 - **The cause:** the upper arm ends in a metal ring (with a rivet) and a round cap, and the forearm ends in a wrist ring. As delivered, the forearm sat below the cap with its rounded end sticking out toward the body, and the hand hung below the wrist ring and covered most of it. Both joints read as loose pieces, which the large desktop mascot made obvious.
 - **The fix,** the same way as the nozzle: the fit tool writes moved copies to `art/rig/fitted/`, and the draw order is unchanged.
   - `far-forearm` moves 42 px in and 32 px up. Its end covers the round cap, so only the elbow ring shows.
-  - `far-hand` moves 94 px out and 54 px up. It covers the forearm's fur stub past the wrist ring, so the wrist ring shows.
-  - The joints moved too: `far_elbow` is the cap's centre (1178, 1093), so a bent forearm keeps covering it, and `far_wrist` is where the hand covers the stub (1378, 1138).
+  - `far-hand` moves 86 px out and 54 px up, so its wrist meets the ring. It covers the forearm's fur stub past the ring and none of the ring's gold. Dylan: "The hand is slightly off as well"; at 94 out, a sliver of the stub showed.
+  - The joints moved too: `far_elbow` is the cap's centre (1178, 1093), so a bent forearm keeps covering it, and `far_wrist` is where the hand covers the stub (1370, 1138).
 - **Checked:**
   - In the game at 1920×1080, 1366×768 and 390×844.
   - Every clip (idle, anticipate, spray, recoil, release, win, bigwin, bonus), each at four moments: both rings show and the forearm and hand come out of them.

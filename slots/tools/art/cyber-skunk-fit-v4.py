@@ -25,7 +25,7 @@ RIG = GAME / "art" / "rig"
 J = {
     "base": (850, 1250), "neck": (900, 955), "ear": (825, 545), "far_ear": (1092, 530), "goggles": (940, 600), "eyes": (920, 800),
     "near_shoulder": (705, 975), "near_elbow": (550, 1150), "near_wrist": (695, 1263),
-    "far_shoulder": (1040, 1005), "far_elbow": (1178, 1093), "far_wrist": (1378, 1138),
+    "far_shoulder": (1040, 1005), "far_elbow": (1178, 1093), "far_wrist": (1370, 1138),
     "tail_root": (738, 1160), "tail_1": (480, 955), "tail_2": (600, 415), "tail_tip": (1190, 443),
 }
 JOINT_OF = {
@@ -58,10 +58,11 @@ NOZZLE_MOUTH = (1339, 427)  # the opening's centre, as delivered
 # the forearm's end covers the cap (88% of it, 4% of the ring) and comes out of the
 # ring. far_elbow is the cap's centre, so a bent forearm keeps covering it.
 # The wrist ("look at the hand now") had the same fault: the hand hung 25 px below the
-# forearm's wrist ring and covered most of it. The hand moves a further 52 px out and
-# 22 px up, so it covers the forearm's fur stub past the ring (92%) and leaves the
-# ring showing (4% covered); far_wrist is where the hand covers that stub.
-ARM_FIT = {"far-forearm": (42, -32), "far-hand": (94, -54)}
+# forearm's wrist ring and covered most of it. The hand moves a further 44 px out and
+# 22 px up ("slightly off" at 52 out: the stub showed between ring and hand), so its
+# wrist meets the ring: it covers the forearm's fur stub past the ring (all but 2 px)
+# and none of the ring's gold. far_wrist is where the hand covers that stub.
+ARM_FIT = {"far-forearm": (42, -32), "far-hand": (86, -54)}
 
 
 def fit_nozzle():

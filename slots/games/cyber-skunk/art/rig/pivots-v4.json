@@ -53,7 +53,7 @@
    1093
   ],
   "far_wrist": [
-   1378,
+   1370,
    1138
   ],
   "tail_root": [
@@ -172,16 +172,16 @@
   },
   "far-hand": {
    "pivot": [
-    1378,
+    1370,
     1138
    ],
    "joint": "far_wrist",
    "parent": "far-forearm",
    "order": 7,
    "extent": [
-    1364,
+    1356,
     1027,
-    1600,
+    1596,
     1194
    ],
    "file": "far-hand.png"
