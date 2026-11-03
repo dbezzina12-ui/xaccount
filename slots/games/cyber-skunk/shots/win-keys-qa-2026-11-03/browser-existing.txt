@@ -1,0 +1,10 @@
+✔ Studio desktop uses the full shared bar on touch and switches layouts in place (7641.543955ms)
+✔ tier popups use each spin payout on the winning board, and the bonus has a separate total (69596.027195ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 77518.325265

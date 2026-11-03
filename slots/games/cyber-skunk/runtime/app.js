@@ -967,8 +967,19 @@ function renderHistory() {
   $('history-rows').innerHTML = state.history.length ? state.history.map((h) => `<div class="history-row"><span>${new Date(h.t).toLocaleTimeString()} · ${h.mode === 'base' ? 'Base' : COPY[h.mode]?.name || h.mode}${h.tier ? ` → ${BONUSES[h.tier].title}` : ''}</span><span>−${money(h.cost)}</span><b>${h.win ? '+' + money(h.win) : '0.00'}</b></div>`).join('') : '<p class="note">No rounds yet.</p>';
 }
 
-// ---- Keyboard: Space or Enter spins, unless a control or dialog has focus ----
+// ---- Keyboard: award dismissal, then ordinary spin shortcuts ----
+// Keep a dismissed award's key consumed until release: holding Enter must not
+// become a second action when the overlay disappears or focus is on Play.
+const heldAwardKeys = new Set();
+addEventListener('keyup', (ev) => { if (heldAwardKeys.delete(ev.code)) ev.preventDefault(); });
+addEventListener('blur', () => heldAwardKeys.clear());
 addEventListener('keydown', (ev) => {
+  if (heldAwardKeys.has(ev.code)) { ev.preventDefault(); return; }
+  if (!$('bigwin').hidden && !document.querySelector('dialog[open]') && ['Space', 'Enter', 'Escape'].includes(ev.code)) {
+    ev.preventDefault(); heldAwardKeys.add(ev.code);
+    if (!ev.repeat) $('win-dismiss').click();
+    return;
+  }
   if (ev.code !== 'Space' && ev.code !== 'Enter') return;
   if (!$('bigwin').hidden || document.querySelector('dialog[open]') || !$('bonus-panel').hidden || !$('intro').hidden) return;
   if (ev.composedPath().some((n) => n instanceof HTMLElement && /^(BUTTON|INPUT|SELECT|TEXTAREA|A)$/.test(n.tagName))) return;

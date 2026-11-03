@@ -54,6 +54,8 @@ The playable artifact was verified on an earlier revision. Current source includ
 
 ## 5. Wins, sound and pacing
 
+- [x] Keyboard award dismissal (`win-keys-1`): Space/Enter/Escape use the pointer-dismiss action; held keys cannot become a second wager; open dialogs keep keyboard priority. Six new cases plus six existing popup/Studio/Stop checks pass, with exact shipping awards/history. Evidence: `shots/win-keys-qa-2026-11-03/`. Source-only patch; not a new combined-suite or hosted claim.
+
 | Tier | Source art | Runtime status | Current-release evidence |
 |---|---|---|---|
 | Nice | `art/wins/win-nice.png` | integrated | source spin/bonus popup suite passes; hosted verification pending |

@@ -1,0 +1,20 @@
+{"label":"desktop-space","width":1366,"height":768,"key":"Space","controllerFocus":false,"bonus":false,"menu":false,"expected":{"seed":1782064,"paid":2690,"cost":100},"before":{"balance":999900,"history":0},"after":{"balance":1002590,"busy":false,"history":[{"t":1793687709452,"mode":"base","bet":100,"cost":100,"win":2690,"tier":null,"seed":{"spin":1782064}}]}}
+✔ win keys: desktop-space (13139.071514ms)
+{"label":"desktop-held-enter","width":1366,"height":768,"key":"Enter","controllerFocus":true,"bonus":false,"menu":false,"expected":{"seed":1782064,"paid":2690,"cost":100},"before":{"balance":999900,"history":0},"after":{"balance":1002590,"busy":false,"history":[{"t":1793687722143,"mode":"base","bet":100,"cost":100,"win":2690,"tier":null,"seed":{"spin":1782064}}]}}
+✔ win keys: desktop-held-enter (12757.767608ms)
+{"label":"desktop-escape","width":1366,"height":768,"key":"Escape","controllerFocus":false,"bonus":false,"menu":false,"expected":{"seed":1782064,"paid":2690,"cost":100},"before":{"balance":999900,"history":0},"after":{"balance":1002590,"busy":false,"history":[{"t":1793687735205,"mode":"base","bet":100,"cost":100,"win":2690,"tier":null,"seed":{"spin":1782064}}]}}
+✔ win keys: desktop-escape (12891.176097ms)
+{"label":"phone-escape","width":390,"height":844,"key":"Escape","controllerFocus":false,"bonus":false,"menu":false,"expected":{"seed":1782064,"paid":2690,"cost":100},"before":{"balance":999900,"history":0},"after":{"balance":1002590,"busy":false,"history":[{"t":1793687746661,"mode":"base","bet":100,"cost":100,"win":2690,"tier":null,"seed":{"spin":1782064}}]}}
+✔ win keys: phone-escape (11438.095302ms)
+{"label":"phone-bonus-total","width":390,"height":844,"key":"Space","controllerFocus":true,"bonus":true,"menu":false,"expected":{"seed":653812,"paid":20,"cost":10000},"before":{"balance":990000,"history":0},"after":{"balance":990020,"busy":false,"history":[{"t":1793687759650,"mode":"ventbreak","bet":100,"cost":10000,"win":20,"tier":"regular","seed":{"bonus":653812}}]}}
+✔ win keys: phone-bonus-total (15245.506006ms)
+{"label":"desktop-menu-priority","width":1366,"height":768,"key":"Escape","controllerFocus":false,"bonus":false,"menu":true,"expected":{"seed":1782064,"paid":2690,"cost":100},"before":{"balance":999900,"history":0},"after":{"balance":1002590,"busy":false,"history":[{"t":1793687773651,"mode":"base","bet":100,"cost":100,"win":2690,"tier":null,"seed":{"spin":1782064}}]}}
+✔ win keys: desktop-menu-priority (11980.159305ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 77747.077076
