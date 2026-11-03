@@ -38,6 +38,8 @@ The playable artifact was verified on the earlier revision. The current source a
 
 ## 4. Controller and purchases
 
+- [x] Studio aspect-ratio correction after `35da2ee`: stage/controller agree through six desktop/phone/tablet viewport changes on a touch-enabled page; original controls/state survive. The 768×1024 portrait controller is on-screen instead of extending to y=1139. Evidence: `shots/studio-controller-qa-2026-11-02/`.
+
 - [x] Studio desktop/phone controller switching on a touch-style preview. At 1366×768 the desktop bar is 1098px wide and the whole Spin circle is visible. At 390×844 the Slim Rail is 390px wide. Bet adjustments worked after switching back.
 - [x] Play/Stop, +/−, bet picker, circular Auto, mode shop and confirmations are present.
 - [x] Shipping config supplies prices, costs, balance math and mode copy; game tests cover Mystery's 500× price, 90/10 tickets and floors.

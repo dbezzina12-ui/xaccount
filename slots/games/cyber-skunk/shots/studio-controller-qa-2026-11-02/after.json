@@ -1,0 +1,116 @@
+[
+  {
+    "width": 1366,
+    "height": 768,
+    "stage": "desktop",
+    "controller": "desktop",
+    "hostParent": "controller-dock",
+    "samePlay": true,
+    "host": {
+      "x": 134.022216796875,
+      "y": 663.977783203125,
+      "width": 1097.951171875,
+      "height": 96.1422119140625,
+      "top": 663.977783203125,
+      "right": 1231.973388671875,
+      "bottom": 760.1199951171875,
+      "left": 134.022216796875
+    },
+    "balance": 1000000
+  },
+  {
+    "width": 768,
+    "height": 1024,
+    "stage": "mobile",
+    "controller": "mobile",
+    "hostParent": "app",
+    "samePlay": true,
+    "host": {
+      "x": 0,
+      "y": 830,
+      "width": 768,
+      "height": 194,
+      "top": 830,
+      "right": 768,
+      "bottom": 1024,
+      "left": 0
+    },
+    "balance": 1000000
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "stage": "desktop",
+    "controller": "desktop",
+    "hostParent": "controller-dock",
+    "samePlay": true,
+    "host": {
+      "x": 143.22222900390625,
+      "y": 337.17620849609375,
+      "width": 557.55322265625,
+      "height": 48.82220458984375,
+      "top": 337.17620849609375,
+      "right": 700.7754516601562,
+      "bottom": 385.9984130859375,
+      "left": 143.22222900390625
+    },
+    "balance": 1000000
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "stage": "mobile",
+    "controller": "mobile",
+    "hostParent": "app",
+    "samePlay": true,
+    "host": {
+      "x": 0,
+      "y": 656.8125,
+      "width": 390,
+      "height": 187.1875,
+      "top": 656.8125,
+      "right": 390,
+      "bottom": 844,
+      "left": 0
+    },
+    "balance": 1000000
+  },
+  {
+    "width": 760,
+    "height": 800,
+    "stage": "mobile",
+    "controller": "mobile",
+    "hostParent": "app",
+    "samePlay": true,
+    "host": {
+      "x": 0,
+      "y": 606,
+      "width": 760,
+      "height": 194,
+      "top": 606,
+      "right": 760,
+      "bottom": 800,
+      "left": 0
+    },
+    "balance": 1000000
+  },
+  {
+    "width": 1024,
+    "height": 768,
+    "stage": "desktop",
+    "controller": "desktop",
+    "hostParent": "controller-dock",
+    "samePlay": true,
+    "host": {
+      "x": 100.26667022705078,
+      "y": 593.9833984375,
+      "width": 823.4633178710938,
+      "height": 72.10662841796875,
+      "top": 593.9833984375,
+      "right": 923.7299880981445,
+      "bottom": 666.0900268554688,
+      "left": 100.26667022705078
+    },
+    "balance": 1000000
+  }
+]

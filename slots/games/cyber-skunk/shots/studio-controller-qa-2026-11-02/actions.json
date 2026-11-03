@@ -1,0 +1,42 @@
+[
+  {
+    "width": 768,
+    "height": 1024,
+    "stage": "mobile",
+    "controller": "mobile",
+    "hostParent": "app",
+    "samePlay": true,
+    "host": {
+      "x": 0,
+      "y": 830,
+      "width": 768,
+      "height": 194,
+      "top": 830,
+      "right": 768,
+      "bottom": 1024,
+      "left": 0
+    },
+    "balance": 1000000,
+    "betActionsPass": true
+  },
+  {
+    "width": 1366,
+    "height": 768,
+    "stage": "desktop",
+    "controller": "desktop",
+    "hostParent": "controller-dock",
+    "samePlay": true,
+    "host": {
+      "x": 134.022216796875,
+      "y": 663.977783203125,
+      "width": 1097.951171875,
+      "height": 96.1422119140625,
+      "top": 663.977783203125,
+      "right": 1231.973388671875,
+      "bottom": 760.1199951171875,
+      "left": 134.022216796875
+    },
+    "balance": 1000000,
+    "betActionsPass": true
+  }
+]

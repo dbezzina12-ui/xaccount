@@ -65,13 +65,14 @@ if (resumed) { state.balance += resumed.win; state.history.unshift(resumed); sta
 const audio = new GameAudio();
 audio.setMuted(state.muted); audio.setLevels(state.music / 100, state.effects / 100);
 const skunk = new Skunk($('mascot'));
+const studioLayoutMedia = new URLSearchParams(location.search).get('studioLayout') === 'viewport'
+  ? matchMedia('(max-aspect-ratio: 20/21)') : undefined;
 
 const controller = mountController($('controller'), {
   initial: { balance: money(state.balance), bet: money(state.bet), win: money(0) },
   layoutTargets: { desktop: $('controller-dock'), mobile: app },
   // Studio sizes a virtual game screen. A touch device can display either preview.
-  layoutMedia: new URLSearchParams(location.search).get('studioLayout') === 'viewport'
-    ? matchMedia('(max-width: 760px)') : undefined,
+  layoutMedia: studioLayoutMedia,
   onAction: act,
 });
 function update() {
@@ -102,7 +103,9 @@ function toast(text) { const t = $('toast'); t.textContent = text; t.hidden = fa
 // ---- Layout: one design size per layout, scaled as a whole. ----
 const MOBILE_MIN_H = 1590; // header 480 + cabinet 892 + room for the pressure console
 function fit() {
-  const w = innerWidth, h = innerHeight, layout = h > w * 1.05 ? 'mobile' : 'desktop';
+  const w = innerWidth, h = innerHeight;
+  const portrait = studioLayoutMedia ? studioLayoutMedia.matches : h > w * 1.05;
+  const layout = portrait ? 'mobile' : 'desktop';
   app.dataset.layout = layout;
   const host = $('controller'), reserve = host.parentElement === app ? host.getBoundingClientRect().height : 0;
   // A phone's stage is 1080 wide and as tall as the room above the controller
