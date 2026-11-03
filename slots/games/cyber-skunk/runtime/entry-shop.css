@@ -147,8 +147,10 @@ dialog.confirm{background:linear-gradient(0deg,#131c20 38%,#182327db 76%,#17262a
 /* Stage coordinates are shared by the fan and the pressure wave. The backdrop stays
    transparent until the wave crosses the cabinet, so its source is visible. */
 #hall-camera{position:absolute;inset:0;transform-origin:0 0}
-#hall-camera::after{content:"";position:absolute;inset:0;z-index:15;pointer-events:none;opacity:0;transition:opacity .24s ease;background:radial-gradient(circle at var(--focus-x,50%) var(--focus-y,50%),transparent var(--focus-core,0px),#080b15a8 calc(2.2 * var(--focus-core,0px)))}
-.app:has(#buy-stinger[open][data-phase=focus-scatter]) #hall-camera::after{opacity:1}
+#controller-stage{pointer-events:none}
+#controller-stage .controller-host{pointer-events:auto}
+#hall-camera::after{content:"";position:absolute;inset:0;z-index:15;pointer-events:none;opacity:0;transition:opacity .22s ease;background:radial-gradient(ellipse var(--lane-width,100px) var(--lane-height,200px) at var(--focus-x,50%) var(--focus-y,50%),transparent 64%,#080b1585 150%)}
+#hall-camera[data-tease-reel]::after{opacity:1}
 dialog.buy-stinger{--award-edge:max(3.8dvh,env(safe-area-inset-top),env(safe-area-inset-bottom));--docked-fan:min(54vw,21dvh,255px);--hx:87%;--hy:46%;--fan:min(39vw,68dvh,660px);--surge:#89e0d6;--grade:#2a8e90;--radius:0px;--ignition:0;position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;padding:0;margin:0;border:0;border-radius:0;background:transparent;overflow:hidden;color:#fff3d7;box-shadow:none;outline:0;isolation:isolate}
 dialog.buy-stinger::backdrop{background:transparent;backdrop-filter:none}
 .buy-stinger[data-tier=super]{--surge:#ffc169;--grade:#bb681f}

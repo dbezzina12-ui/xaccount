@@ -68,7 +68,7 @@ const skunk = new Skunk($('mascot'));
 
 const controller = mountController($('controller'), {
   initial: { balance: money(state.balance), bet: money(state.bet), win: money(0) },
-  layoutTargets: { desktop: $('machine'), mobile: app },
+  layoutTargets: { desktop: $('controller-dock'), mobile: app },
   onAction: act,
 });
 function update() {
@@ -107,12 +107,12 @@ function fit() {
   let [W, H] = layout === 'mobile' ? [1080, MOBILE_MIN_H] : [1920, 1080];
   const s = Math.min(w / W, (h - reserve) / H);
   if (layout === 'mobile') {
-    H = Math.max(MOBILE_MIN_H, Math.round((h - reserve) / s)); stage.style.setProperty('--stage-h', `${H}px`);
+    H = Math.max(MOBILE_MIN_H, Math.round((h - reserve) / s)); app.style.setProperty('--stage-h', `${H}px`);
     // A tall phone's spare height is shared: half above the header, half in the console.
-    stage.style.setProperty('--slack', `${Math.round((H - MOBILE_MIN_H) / 2)}px`);
+    app.style.setProperty('--slack', `${Math.round((H - MOBILE_MIN_H) / 2)}px`);
   }
   const x = (w - W * s) / 2, y = (h - reserve - H * s) / 2;
-  stage.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
+  stage.style.transform = $('controller-stage').style.transform = `translate(${x}px, ${y}px) scale(${s})`;
   state.scale = s;
   if (jet.width !== W || jet.height !== H) { jet.width = W; jet.height = H; }
   skunk.resize(s);
@@ -182,6 +182,50 @@ function raiseScatter(i, pulse) {
 const running = new Set();
 const pace = () => (state.skip ? 0 : state.speed === 'turbo' || reduced.matches ? 0.35 : state.speed === 'quick' ? 0.65 : 1);
 
+// The camera watches a whole spinning reel. Its aim never reads the symbols that reel will land.
+const hallCamera = $('hall-camera');
+let teaseMove = null;
+function clearTeaseCamera() {
+  teaseMove?.cancel();
+  teaseMove = null;
+  delete hallCamera.dataset.teaseReel;
+}
+function moveTeaseCamera(target, duration, hold = 0) {
+  const from = getComputedStyle(hallCamera).transform;
+  const frames = [{transform:from}];
+  if (hold) frames.push({transform:from, offset:hold / duration});
+  frames.push({transform:target});
+  frames[frames.length - 2].easing = 'cubic-bezier(.40,0,.20,1)';
+  teaseMove?.cancel();
+  teaseMove = hallCamera.animate(frames, {duration, fill:'forwards'});
+  // Use the same document clock as the strips, including a delayed first paint.
+  if (document.timeline.currentTime !== null) teaseMove.startTime = document.timeline.currentTime;
+  return teaseMove;
+}
+function followSpinningReel(reel, speed) {
+  const frame = hallCamera.getBoundingClientRect(), lane = reels[reel].el.getBoundingClientRect();
+  const w = hallCamera.clientWidth, h = hallCamera.clientHeight, scale = frame.width / w;
+  const x = (lane.left + lane.width / 2 - frame.left) / scale;
+  const y = (lane.top + lane.height / 2 - frame.top) / scale;
+  const zoom = Math.min(2.65, Math.max(1, h * .84 / (lane.height / scale)));
+  const offset = (mid, size) => Math.max(size * (1 - zoom), Math.min(0, size / 2 - mid * zoom));
+  hallCamera.style.setProperty('--focus-x', x + 'px');
+  hallCamera.style.setProperty('--focus-y', y + 'px');
+  hallCamera.style.setProperty('--lane-width', lane.width / scale + 'px');
+  hallCamera.style.setProperty('--lane-height', lane.height / scale * .64 + 'px');
+  const duration = teaseMove ? 330 : 600;
+  hallCamera.dataset.teaseReel = reel;
+  moveTeaseCamera(`translate3d(${offset(x,w)}px,${offset(y,h)}px,0) scale(${zoom})`, duration * speed);
+}
+async function pullBackFromReel(speed) {
+  delete hallCamera.dataset.teaseReel;
+  const back = moveTeaseCamera('none', 630 * speed, 170 * speed);
+  try { await back.finished; } catch { /* Stop or a resize restored the wide shot. */ }
+  finally { if (teaseMove === back) clearTeaseCamera(); }
+}
+addEventListener('resize', clearTeaseCamera);
+reduced.addEventListener('change', clearTeaseCamera);
+
 // Spins every reel to the landed board. Reels stop left to right; with two
 // scatters down and a bonus still possible, the remaining reels tease longer.
 async function spinTo(cells, { canTrigger }) {
@@ -191,10 +235,11 @@ async function spinTo(cells, { canTrigger }) {
   let seen = 0, landingTime = 0, teasedReels = 0;
   const stops = reels.map(({ el, strip }, reel) => {
     const tease = canTrigger && seen >= 2 && speed > 0;
+    const fourDown = seen === 4 && !reduced.matches;
     if (column(cells, reel).some((c) => c.s === 'S')) scatters.push(reel), seen++;
     // All strips start together. Accumulate gaps so each landing has its own beat.
     if (tease) {
-      const gap = teasedReels === 0 ? 1750 : 1150;
+      const gap = fourDown ? 1620 : teasedReels === 0 ? 1750 : 1150;
       landingTime += gap * speed;
       teasedReels++;
     } else {
@@ -221,8 +266,9 @@ async function spinTo(cells, { canTrigger }) {
     running.add(anim);
     return { reel, tease, done: anim.finished.catch(() => {}).then(() => running.delete(anim)) };
   });
-  let teased = false;
+  let teased = false, landedScatters = 0, pullback;
   for (const { reel, tease, done } of stops) {
+    if (tease && landedScatters === 4 && !state.skip && !reduced.matches) followSpinningReel(reel, speed);
     if (tease && !state.skip && !reduced.matches) reels[reel].el.classList.add('tease');
     if (tease && !teased && !state.skip) { teased = true; audio.play('tease'); skunk.play('anticipate'); status('ONE MORE…'); }
     await done;
@@ -231,10 +277,18 @@ async function spinTo(cells, { canTrigger }) {
     reels[reel].strip.querySelectorAll('.cell[data-i]').forEach((el) => el.classList.add('landed'));
     const sc = column(cells, reel).some((c) => c.s === 'S');
     audio.play(sc ? 'scatter' : 'stop', { index: sc ? scatters.indexOf(reel) : reel });
-    if (sc) column(cells, reel).forEach((c, row) => { if (c.s === 'S') raiseScatter(at(row, reel), true); });
+    if (sc) {
+      column(cells, reel).forEach((c, row) => {
+        if (c.s === 'S') { raiseScatter(at(row, reel), true); landedScatters++; }
+      });
+    }
+    if (hallCamera.hasAttribute('data-tease-reel') && (landedScatters >= 5 || reel === REELS - 1)) {
+      pullback = pullBackFromReel(speed);
+    }
     if (column(cells, reel).some((c) => c.vent !== undefined && !c.sticky)) audio.play('vent-land');
   }
   if (teased) audio.play(scatters.length >= 3 ? 'tease-hit' : 'tease-miss');
+  if (pullback) await pullback;
   // Keep landed cards and trim away the temporary spinning strip.
   board = cells;
   for (const { strip } of reels) {
@@ -457,26 +511,6 @@ async function countTo(target, ms) {
 const paintWin = () => { controller.update({ win: money(state.win) }); if (state.tier) $('hud-win').textContent = money(state.win); };
 
 // ---- Bonuses ----
-// Move the hall and the real reel faces together; the fitted stage retains its own responsive transform.
-function focusLastScatter(cell) {
-  const camera = $('hall-camera'), frame = camera.getBoundingClientRect(), tile = cell.getBoundingClientRect();
-  const zoom = Math.min(3.3, Math.max(2.1, Math.min(frame.width, frame.height) * .38 / tile.width));
-  // Keep the hall covering the viewport even when the final FS is on an outside reel.
-  const offset = (center, size) => Math.max(size * (1 - zoom), Math.min(0, size / 2 - zoom * center));
-  const centerX = tile.left + tile.width / 2 - frame.left, centerY = tile.top + tile.height / 2 - frame.top;
-  camera.style.setProperty('--focus-x', centerX + 'px');
-  camera.style.setProperty('--focus-y', centerY + 'px');
-  camera.style.setProperty('--focus-core', Math.min(tile.width, tile.height) * .55 + 'px');
-  const x = offset(centerX, frame.width), y = offset(centerY, frame.height);
-  const wide = 'translate3d(0,0,0) scale(1)', close = `translate3d(${x}px,${y}px,0) scale(${zoom})`;
-  return camera.animate([
-    {transform:wide, easing:'cubic-bezier(.45,0,.15,1)'},
-    {transform:close, offset:.46},
-    {transform:close, offset:.60, easing:'cubic-bezier(.44,0,.22,1)'},
-    {transform:wide}
-  ], {duration:1320 * pace()});
-}
-
 async function bonusStart(e, result, mode) {
   const tier = BONUSES[e.tier], presentation = TIER[e.tier];
   if (!e.natural) await spinInBonus(e.tier, result.draw?.bonus ?? 811, mode);
@@ -494,34 +528,16 @@ async function bonusStart(e, result, mode) {
   $('bonus-panel-text').textContent = presentation.text;
   panel.classList.toggle('has-art', !!titleArt);
   panel.dataset.tier = dialog.dataset.tier = e.tier;
-  const focus = e.tier === 'hidden' && !reduced.matches && !state.skip && scatters.length > 0;
-  dialog.dataset.phase = focus ? 'focus-scatter' : 'charging';
+  dialog.dataset.phase = 'charging';
   dialog.style.setProperty('--radius', '0px'); dialog.style.setProperty('--ignition', '0');
   dialog.oncancel = event => event.preventDefault();
   dialog.showModal();
   try {
     start.disabled = true; panel.inert = true;
-    const camera = focus ? focusLastScatter(scatters[scatters.length - 1]) : null;
-    const resetCamera = () => camera?.finish();
-    try {
-      if (camera) {
-        running.add(camera);
-        window.addEventListener('resize', resetCamera, {once:true});
-        await wait(760); // The skunk winds up during the pullback, ready when the wide shot lands.
-      }
-      if (!reduced.matches && !state.skip) {
-        audio.play('charge');
-        await skunk.spray();
-      }
-      if (camera) await camera.finished;
-    } finally {
-      if (camera) {
-        window.removeEventListener('resize', resetCamera);
-        running.delete(camera);
-        camera.cancel();
-      }
+    if (!reduced.matches && !state.skip) {
+      audio.play('charge');
+      await skunk.spray();
     }
-    if (focus) dialog.dataset.phase = 'charging';
     await drawPressureTransfer(dialog, {
       duration: reduced.matches ? 0 : 2480 * pace(), faces, skip: () => state.skip, mist: fxSprites.mist,
       getBarrel: () => {
@@ -728,7 +744,7 @@ function act(action) {
   if (action === 'sound') { setMuted(!state.muted); return; }
   if (action === 'turbo') { state.speed = state.speed === 'turbo' ? 'normal' : 'turbo'; $('menu-speed').value = state.speed; persist(); update(); return; }
   if (action === 'play') {
-    if (state.busy) { state.skip = true; running.forEach((a) => a.finish()); return; }
+    if (state.busy) { state.skip = true; clearTeaseCamera(); running.forEach((a) => a.finish()); return; }
     audio.play('click'); void play(); return;
   }
   if (action === 'auto') { if (state.auto) { state.auto = 0; update(); toast('Autoplay stops after this round.'); } else if (!state.busy) open('autoplay'); return; }

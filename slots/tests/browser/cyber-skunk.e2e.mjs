@@ -527,6 +527,16 @@ test('scatter landing precedes the held bonus briefing on every entry path', asy
       await page.locator('#intro-go').click();
       await page.evaluate(() => {
         window.entryPhases = [];
+        window.teaseLanes = [];
+        const camera = document.getElementById('hall-camera');
+        new MutationObserver(() => {
+          if (!camera.hasAttribute('data-tease-reel')) return;
+          const reel = Number(camera.dataset.teaseReel);
+          window.teaseLanes.push({
+            reel, landed:document.querySelectorAll('#fs-faces .fs-raised').length,
+            spinning:document.querySelectorAll('#reels .reel')[reel].classList.contains('spinning')
+          });
+        }).observe(camera,{attributes:true,attributeFilter:['data-tease-reel']});
         const dialog = document.getElementById('buy-stinger');
         new MutationObserver(() => window.entryPhases.push(dialog.dataset.phase))
           .observe(dialog, { attributes:true, attributeFilter:['data-phase'] });
@@ -545,8 +555,12 @@ test('scatter landing precedes the held bonus briefing on every entry path', asy
       await page.waitForFunction(n=>document.querySelectorAll('#fs-faces .fs-raised').length===n && !document.querySelector('#reels .spinning'),count);
       assert.ok(await page.locator('#bonus-panel').isHidden());
       await page.locator('#buy-stinger[open][data-phase=sealed] #bonus-panel-go').waitFor();
-      assert.deepEqual(await page.evaluate(() => window.entryPhases),
-        count === 5 ? ['focus-scatter','charging','sealed'] : ['charging','sealed']);
+      assert.deepEqual(await page.evaluate(() => window.entryPhases),['charging','sealed']);
+      const lanes=await page.evaluate(() => [...document.querySelectorAll('#reels .reel')].flatMap((reel,i)=>
+        reel.querySelector('.scatter-cell[data-i]')?[i]:[]));
+      const expectedLanes=[];
+      for (let i=(lanes[3] ?? 5)+1; i<=(lanes[4] ?? 5); i++) expectedLanes.push({reel:i,landed:4,spinning:true});
+      assert.deepEqual(await page.evaluate(() => window.teaseLanes),expectedLanes);
       assert.equal(await page.locator('#hall-camera').evaluate(el=>getComputedStyle(el).transform),'none');
       assert.equal(await page.locator('#bonus-panel-title img').getAttribute('alt'),title);
       assert.equal(await page.locator('#bonus-panel-award').textContent(),(count===3?'12':'10')+' FREE SPINS');

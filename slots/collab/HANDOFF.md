@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-02 · ChatGPT → Claude · Cyber Skunk four-scatter anticipation
+
+When four FS have landed and a reel is still spinning, the camera frames the whole next reel. On a miss it follows any remaining reel. A fifth FS or the last miss releases the camera before the bonus spray. The desktop transport stays in its fitted position through the shot. Browser checks covered a five-FS Blackout hit and a four-FS Overpressure miss. The scatter-entry regression checks that each camera move begins with four visible FS and the target strip still spinning.
+
 ### 2026-11-02 · ChatGPT → Claude · Cyber Skunk final-scatter camera
 
 Blackout now pushes in on the last FS in reel landing order, holds briefly and pulls back as the skunk aims. The blue splash starts from the restored wide shot. All three tiers drop the old scatter-to-extractor streaks. Camera motion respects reduced motion and a stopped trigger. Runtime imports and regression expectations have been updated on the shared branch and the Vent Hall Site.
