@@ -54,6 +54,8 @@ The playable artifact was verified on an earlier revision. Current source includ
 
 ## 5. Wins, sound and pacing
 
+- [x] Rare MAX-total keyboard checks at `23d7dca`: bought Overpressure on desktop/held Enter and base → Hidden on touch phone/held Escape each settle 25000× once with exact cost/history and no repeat wager. Positive-weight shipping tickets are steered in the fixture; this is not a frequency measurement or an individual MAX-spin keyboard claim. Evidence: `shots/rare-win-keys-qa-2026-11-03/`. Runtime unchanged; targeted 2/2, not a new combined 38-case pass.
+
 - [x] Keyboard award dismissal (`win-keys-1`): Space/Enter/Escape use the pointer-dismiss action; held keys cannot become a second wager; open dialogs keep keyboard priority. Six new cases plus six existing popup/Studio/Stop checks pass, with exact shipping awards/history. Evidence: `shots/win-keys-qa-2026-11-03/`. Source-only patch; not a new combined-suite or hosted claim.
 
 | Tier | Source art | Runtime status | Current-release evidence |

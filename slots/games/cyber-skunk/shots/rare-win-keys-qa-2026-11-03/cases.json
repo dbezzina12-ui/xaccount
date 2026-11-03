@@ -1,0 +1,108 @@
+[
+  {
+    "label": "desktop-super-max",
+    "width": 1366,
+    "height": 768,
+    "key": "Enter",
+    "expected": {
+      "mode": "overpressure",
+      "tier": "super",
+      "poolName": "bonus-super",
+      "seed": 614838,
+      "rowWeight": 308,
+      "hiddenTickets": null,
+      "totalTickets": 1000000000,
+      "cost": 25000,
+      "paid": 2500000
+    },
+    "spinPopups": [],
+    "before": {
+      "balance": 975000,
+      "pending": {
+        "t": 1793694850531,
+        "mode": "overpressure",
+        "bet": 100,
+        "cost": 25000,
+        "win": 2500000,
+        "tier": "super",
+        "seed": {
+          "bonus": 614838
+        }
+      },
+      "history": 0
+    },
+    "after": {
+      "balance": 3475000,
+      "busy": false,
+      "amount": "$25,000.00",
+      "history": [
+        {
+          "t": 1793694850531,
+          "mode": "overpressure",
+          "bet": 100,
+          "cost": 25000,
+          "win": 2500000,
+          "tier": "super",
+          "seed": {
+            "bonus": 614838
+          }
+        }
+      ]
+    }
+  },
+  {
+    "label": "phone-base-hidden-max",
+    "width": 390,
+    "height": 844,
+    "key": "Escape",
+    "expected": {
+      "mode": "base",
+      "tier": "hidden",
+      "poolName": "bonus-hidden",
+      "seed": 68471,
+      "rowWeight": 40901,
+      "hiddenTickets": 6585,
+      "totalTickets": 1000000000,
+      "cost": 100,
+      "paid": 2500000
+    },
+    "spinPopups": [],
+    "before": {
+      "balance": 999900,
+      "pending": {
+        "t": 1793694859136,
+        "mode": "base",
+        "bet": 100,
+        "cost": 100,
+        "win": 2500000,
+        "tier": "hidden",
+        "seed": {
+          "entry": 40,
+          "bonus": 68471,
+          "tier": "hidden"
+        }
+      },
+      "history": 0
+    },
+    "after": {
+      "balance": 3499900,
+      "busy": false,
+      "amount": "$25,000.00",
+      "history": [
+        {
+          "t": 1793694859136,
+          "mode": "base",
+          "bet": 100,
+          "cost": 100,
+          "win": 2500000,
+          "tier": "hidden",
+          "seed": {
+            "entry": 40,
+            "bonus": 68471,
+            "tier": "hidden"
+          }
+        }
+      ]
+    }
+  }
+]
