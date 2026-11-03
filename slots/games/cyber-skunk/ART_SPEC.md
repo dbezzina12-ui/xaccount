@@ -24,10 +24,11 @@
 >   - the near arm: `near-upper-arm`, `near-forearm`, `near-hand`.
 > - **Joints:** each sits where its piece overlaps its parent. `tools/art/cyber-skunk-fit-v4.py` writes the contract `art/rig/pivots-v4.json`, the overlap report `art/rig/fit-v4.1.md` and the guide `art/rig/guide-v3.jpg`.
 > - **Game:** `cyber-skunk-prep.py --mascot art/source/mascot-compact-v4/registered` puts them in the game. Wins pump the near arm, because the far arm would rise behind the head.
-> - **Fitted pieces:** the fit tool writes corrected copies of two pieces to `art/rig/fitted/`, and prep uses those instead of the sources:
+> - **Fitted pieces:** the fit tool writes corrected copies of four pieces to `art/rig/fitted/`, and prep uses those instead of the sources:
 >   - **`eyelids`:** each lid moved onto its eye.
 >   - **`nozzle`:** the back stub is removed and the nozzle moves 8 px left and 26 px down. Its collar now sits on the tail's centre line (y ≈ 441) and closes round the tip like a cuff, with the fur shaded where it goes in. The `tail_tip` joint (1190, 443) is the centre of the collar's rear rim, and the jet leaves from the mouth (1331, 453).
->   - **If you repaint either piece,** draw it already on its mark and say so; Claude then retires its fitted copy.
+>   - **`far-forearm` and `far-hand` (2026-11-03):** as delivered, the forearm sat below the upper arm's elbow cuff and was drawn over it, so its rounded end stuck out toward the body and the arm looked disconnected on desktop. Both move 25 px in and 35 px up so the forearm's end sits under the cuff, and the forearm is drawn behind the upper arm (order 5, upper arm 6), so the cuff covers the joint in every pose. `far_wrist` moves with them to (1340, 1139).
+>   - **If you repaint any of these,** draw it already on its mark and say so; Claude then retires its fitted copy.
 > - **Improvements go in the same folder under the same names**, and the next prep run picks them up:
 >   - **A separate `jaw`** (and the head without its lower jaw) would let the mouth open. Say so and the contract gains it.
 >   - **More paint** past the elbows and wrists.

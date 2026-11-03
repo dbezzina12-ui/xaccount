@@ -53,8 +53,8 @@
    1110
   ],
   "far_wrist": [
-   1315,
-   1174
+   1340,
+   1139
   ],
   "tail_root": [
    738,
@@ -138,6 +138,22 @@
    ],
    "file": "nozzle.png"
   },
+  "far-forearm": {
+   "pivot": [
+    1153,
+    1110
+   ],
+   "joint": "far_elbow",
+   "parent": "far-upper-arm",
+   "order": 5,
+   "extent": [
+    1135,
+    1053,
+    1375,
+    1167
+   ],
+   "file": "far-forearm.png"
+  },
   "far-upper-arm": {
    "pivot": [
     1040,
@@ -145,7 +161,7 @@
    ],
    "joint": "far_shoulder",
    "parent": "torso",
-   "order": 5,
+   "order": 6,
    "extent": [
     990,
     937,
@@ -154,35 +170,19 @@
    ],
    "file": "far-upper-arm.png"
   },
-  "far-forearm": {
-   "pivot": [
-    1153,
-    1110
-   ],
-   "joint": "far_elbow",
-   "parent": "far-upper-arm",
-   "order": 6,
-   "extent": [
-    1110,
-    1088,
-    1350,
-    1202
-   ],
-   "file": "far-forearm.png"
-  },
   "far-hand": {
    "pivot": [
-    1315,
-    1174
+    1340,
+    1139
    ],
    "joint": "far_wrist",
    "parent": "far-forearm",
    "order": 7,
    "extent": [
-    1270,
-    1081,
-    1510,
-    1248
+    1295,
+    1046,
+    1535,
+    1213
    ],
    "file": "far-hand.png"
   },

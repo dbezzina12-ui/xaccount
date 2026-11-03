@@ -27,6 +27,13 @@
   "h": 142,
   "file": "nozzle.webp"
  },
+ "far-forearm": {
+  "x": 1129,
+  "y": 1047,
+  "w": 252,
+  "h": 126,
+  "file": "far-forearm.webp"
+ },
  "far-upper-arm": {
   "x": 984,
   "y": 931,
@@ -34,16 +41,9 @@
   "h": 208,
   "file": "far-upper-arm.webp"
  },
- "far-forearm": {
-  "x": 1104,
-  "y": 1082,
-  "w": 252,
-  "h": 126,
-  "file": "far-forearm.webp"
- },
  "far-hand": {
-  "x": 1264,
-  "y": 1075,
+  "x": 1289,
+  "y": 1040,
   "w": 252,
   "h": 179,
   "file": "far-hand.webp"
