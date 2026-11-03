@@ -4,27 +4,27 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
-### 2026-11-03 · Claude → ChatGPT · Cyber Skunk: the reaching arm's elbow is joined
+### 2026-11-03 · Claude → ChatGPT · Cyber Skunk: the reaching arm's elbow and wrist are joined
 
-**Dylan:** "The arm isn't connected properly on desktop." His screenshot showed the skunk's reaching arm, which is the far arm, since the mascot is mirrored to face the reels.
+**Dylan:** "The arm isn't connected properly on desktop." Then: "The forearm should cover the round part of the elbow only leaving the metal ring for the elbow showing … SLIGHTLY down … Look at the hand now." This is the skunk's far arm, which reaches toward the reels because the mascot is mirrored.
 
 **Did** (branch `ccr-52c8075e-57i9ob`):
-- **The cause:** as delivered, `far-forearm` sat below the upper arm's gold elbow cuff and was drawn on top of it. Its rounded end stuck out past the elbow toward the body, so the forearm read as a separate tube. On desktop the mascot is large enough that this was obvious.
-- **The fix,** the same way as the nozzle fix: the fit tool writes moved copies of `far-forearm` and `far-hand` to `art/rig/fitted/`, 25 px in and 35 px up, so the forearm's end sits under the cuff.
-  - The contract now draws the forearm behind the upper arm (order 5, upper arm 6), so the cuff covers the joint in every pose.
-  - `far_wrist` moved with the hand to (1340, 1139).
-  - Transforms still run parents first; only the draw order changed.
+- **The cause:** the upper arm ends in a metal ring (with a rivet) and a round cap, and the forearm ends in a wrist ring. As delivered, the forearm sat below the cap with its rounded end sticking out toward the body, and the hand hung below the wrist ring and covered most of it. Both joints read as loose pieces, which the large desktop mascot made obvious.
+- **The fix,** the same way as the nozzle: the fit tool writes moved copies to `art/rig/fitted/`, and the draw order is unchanged.
+  - `far-forearm` moves 42 px in and 32 px up. Its end covers the round cap, so only the elbow ring shows.
+  - `far-hand` moves 94 px out and 54 px up. It covers the forearm's fur stub past the wrist ring, so the wrist ring shows.
+  - The joints moved too: `far_elbow` is the cap's centre (1178, 1093), so a bent forearm keeps covering it, and `far_wrist` is where the hand covers the stub (1378, 1138).
 - **Checked:**
   - In the game at 1920×1080, 1366×768 and 390×844.
-  - Every clip (idle, anticipate, spray, recoil, release, win, bigwin, bonus), each frozen at four moments: the forearm comes out of the elbow cap in all of them.
-  - Cyber Skunk tests 27/27, the browser suite 25/25, and `npm test` pass.
+  - Every clip (idle, anticipate, spray, recoil, release, win, bigwin, bonus), each at four moments: both rings show and the forearm and hand come out of them.
+  - The prep report is clean. Cyber Skunk tests 27/27, the browser suite 25/25, and `npm test` pass.
   - Shots: `games/cyber-skunk/shots/far-arm-elbow-game.jpg`, `far-arm-elbow-zoom.jpg`, `far-arm-elbow-poses.jpg`.
 - The prep run also re-encoded some symbol and cabinet WebPs with no change of art. I left those as they were.
 
-**Files:** `tools/art/cyber-skunk-fit-v4.py`, `games/cyber-skunk/art/rig/{pivots-v4.json, fit-v4.1.md, guide-v3.jpg, fitted/far-forearm.png, fitted/far-hand.png}`, `games/cyber-skunk/runtime/assets/mascot/{layers.json, pivots.json, pivots-v4.json}`, `games/cyber-skunk/ART_SPEC.md`, `games/cyber-skunk/shots/far-arm-elbow-*.jpg`, `collab/BOARD.md`.
+**Files:** `tools/art/cyber-skunk-fit-v4.py`, `games/cyber-skunk/art/rig/{pivots-v4.json, fit-v4.1.md, guide-v3.jpg, fitted/far-forearm.png, fitted/far-hand.png}`, `games/cyber-skunk/runtime/assets/mascot/{layers.json, pivots.json, pivots-v4.json, far-hand.webp}`, `games/cyber-skunk/ART_SPEC.md`, `games/cyber-skunk/shots/far-arm-elbow-*.jpg`, `collab/BOARD.md`.
 
 **Next for ChatGPT:**
-1. If you repaint the far arm, paint the forearm starting under the elbow cuff, and say so. Claude then retires the fitted copies.
+1. If you repaint the far arm, paint the forearm covering the elbow's round cap and the hand coming out of the wrist ring, and say so. Claude then retires the fitted copies.
 2. Nothing else to change.
 
 **Questions for Dylan:** none.

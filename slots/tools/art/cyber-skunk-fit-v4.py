@@ -25,7 +25,7 @@ RIG = GAME / "art" / "rig"
 J = {
     "base": (850, 1250), "neck": (900, 955), "ear": (825, 545), "far_ear": (1092, 530), "goggles": (940, 600), "eyes": (920, 800),
     "near_shoulder": (705, 975), "near_elbow": (550, 1150), "near_wrist": (695, 1263),
-    "far_shoulder": (1040, 1005), "far_elbow": (1153, 1110), "far_wrist": (1340, 1139),
+    "far_shoulder": (1040, 1005), "far_elbow": (1178, 1093), "far_wrist": (1378, 1138),
     "tail_root": (738, 1160), "tail_1": (480, 955), "tail_2": (600, 415), "tail_tip": (1190, 443),
 }
 JOINT_OF = {
@@ -48,15 +48,20 @@ LID_FIT = [((933, 802), (955, 749)), ((1095, 835), (1128, 789))]
 # joint is the rim's centre; the jet leaves from the mouth's opening.
 NOZZLE_FIT = (-8, 26)
 NOZZLE_MOUTH = (1339, 427)  # the opening's centre, as delivered
-# Far arm (Dylan, 2026-11-03: "the arm isn't connected properly on desktop"): as
-# delivered the far forearm sat below the upper arm's elbow cuff and was drawn over
-# it, so its rounded end stuck out past the elbow toward the body and the forearm
-# read as a separate tube. The fitted forearm and hand move 25 px in and 35 px up,
-# so the forearm's end sits under the cuff (far_wrist moves with them), and the
-# forearm is drawn behind the upper arm, so the cuff closes over the joint in every
-# pose. Transforms still run parents first; only the draw order changes.
-ARM_FIT = (25, -35)
-ORDER_FIT = {"far-forearm": 5, "far-upper-arm": 6}
+# Far arm (Dylan, 2026-11-03: "the arm isn't connected properly on desktop" ...
+# "the forearm should cover the round part of the elbow only leaving the metal ring
+# for the elbow showing"): the upper arm ends in a metal ring (with its rivet) and a
+# round cap. As delivered, the far forearm sat below that cap, so its rounded end
+# stuck out toward the body and the forearm read as a separate tube. The fitted
+# forearm and hand move 42 px in and 32 px up ("slightly down" from 38 up, so the
+# forearm's top meets the ring's): drawn in front of the upper arm (as delivered),
+# the forearm's end covers the cap (88% of it, 4% of the ring) and comes out of the
+# ring. far_elbow is the cap's centre, so a bent forearm keeps covering it.
+# The wrist ("look at the hand now") had the same fault: the hand hung 25 px below the
+# forearm's wrist ring and covered most of it. The hand moves a further 52 px out and
+# 22 px up, so it covers the forearm's fur stub past the ring (92%) and leaves the
+# ring showing (4% covered); far_wrist is where the hand covers that stub.
+ARM_FIT = {"far-forearm": (42, -32), "far-hand": (94, -54)}
 
 
 def fit_nozzle():
@@ -110,9 +115,8 @@ def fit_nozzle():
 
 
 def fit_arm():
-    """The far forearm and hand moved together, the forearm's end under the elbow cuff."""
-    dx, dy = ARM_FIT
-    for name in ("far-forearm", "far-hand"):
+    """The far forearm over the elbow's round cap, the far hand out of the wrist ring."""
+    for name, (dx, dy) in ARM_FIT.items():
         src = np.array(Image.open(SRC / "registered" / f"{name}.png").convert("RGBA"))
         h, w = src.shape[:2]
         out = np.zeros_like(src)
@@ -145,8 +149,6 @@ def main():
     seat = fit_nozzle()
     assert seat == J["tail_tip"], f"the nozzle's rim centre is {seat}, J says {J['tail_tip']}"
     proposal = json.loads((SRC / "assembly-proposal.json").read_text())
-    for q in proposal["parts"]:
-        q["order"] = ORDER_FIT.get(q["name"], q["order"])
     parts = sorted(proposal["parts"], key=lambda q: q["order"])
     # A fitted piece (art/rig/fitted/) stands in for its source everywhere below.
     source = lambda q: RIG / "fitted" / f"{q['name']}.png" if (RIG / "fitted" / f"{q['name']}.png").exists() else SRC / q["file"]
