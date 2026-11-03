@@ -1,0 +1,16 @@
+✔ artifact manifest: every exported byte matches its source (3414.831154ms)
+✔ artifact launch and shop: 360×740 (8949.274241ms)
+✔ artifact launch and shop: 390×844 (8314.746815ms)
+✔ artifact launch and shop: 430×932 (8227.045008ms)
+✔ artifact launch and shop: 1366×768 (9177.182235ms)
+✔ artifact shipping outcomes and settlement: 390×844 (9899.266814ms)
+✔ artifact shipping outcomes and settlement: 1366×768 (10333.000215ms)
+✔ artifact requests: no missing game dependencies or changed source bytes (77.646253ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 58762.595685

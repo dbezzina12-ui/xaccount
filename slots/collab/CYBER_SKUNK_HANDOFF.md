@@ -2,6 +2,18 @@
 
 Newest entry first. Read alongside the [studio history](HANDOFF.md). This game-only log links the scoped batches without copying unrelated studio history or private playable URLs.
 
+## 2026-11-03 07:35 Toronto · ChatGPT → Claude · Exported artifact tested locally
+
+**Picked up:** `897de9c`; no newer Claude sampler/publication handoff. Added a packaging browser regression and evidence; production runtime/art/math/rig/audio/builder are unchanged.
+
+**Did/checked:** real artifact builder, isolated manifest-only directory and a minimal local HTML skeleton: **8/8 passed**. All 115 exported files match source and HTTP bytes; 119 runtime files plus builder match Git. All 621 requests succeeded. Four widths (360/390/430/1366) launch and expose config-priced buys/features; phone/desktop screenshots inspected. Eight ordinary crypto-drawn shipping rounds cover base, Enhanced, Feature and Regular bonus with exact history/balance accounting. Game 29 passed; core 127 passed/three existing skips. [Evidence, seeds, hashes, limits and reproduction](../games/cyber-skunk/shots/artifact-local-qa-2026-11-03/README.md).
+
+**Scope:** local package verification, not hosted-service/sandbox/cache parity. Earlier 46-case source pass remains valid for unchanged runtime; the new eight cases passed separately, not as one 54-case run. This does not clear the preview sampler or final release gates.
+
+**Next for Claude:** 1. Replace fixed-seed `freePreview()` with weighted conditional shipping pools and validate floors/diversity/distribution plus unchanged credits/history. 2. Refresh package hashes after that runtime edit; freeze and run all **six** `tests/browser/cyber-skunk*.e2e.mjs` files together (currently 54 cases), plus game/core checks. `CYBER_SKUNK_ARTIFACT_EVIDENCE` optionally records package proof. 3. Republish the existing private artifact; return exact source/served hashes and phone/desktop evidence. Complete physical-device and owner/math-owner sign-off before calling it finished.
+
+**Questions for Dylan:** none. **Blocked on:** existing sampler, hosted/device checks and sign-off. CS-06/CS-07 remain open; continuation remains enabled.
+
 ## 2026-11-03 06:26 Toronto · ChatGPT → Claude · Frozen 46-case source pass
 
 **Picked up:** `b186858`; no newer Claude sampler/publication handoff was present. No runtime, tests, math, catalog, art, rig or audio changed in this batch.

@@ -8,6 +8,8 @@ Current ordered continuation tasks: [game-specific handoff](../../collab/CYBER_S
 
 The playable artifact was verified on an earlier revision. Current source includes the final splashes, named Mystery copy, card/bonus presentation, controller/shop corrections and keyboard award handling. All **46 browser tests passed together** on frozen `b186858`, including the `stake-prices-1` correction. All 126 runtime/test/helper fingerprints match that commit and remained unchanged. See `shots/combined-46-qa-2026-11-03/`. Prior complete catalog replay/report regeneration remains in `shots/frozen-build-qa-2026-11-02/` for unchanged math sources. Source QA does not establish preview fidelity or hosted parity. Preview sampling, physical-device checks and sign-off remain open.
 
+**Local artifact export:** source `897de9c` additionally passes eight new manifest-only package browser checks: 115 exported files byte-match source and HTTP, 621 requests succeed, four viewport launches/shops and eight ordinary shipping rounds settle exactly. All 119 runtime files plus builder match Git. [Evidence and reproduction](shots/artifact-local-qa-2026-11-03/README.md). This uses a minimal local skeleton; the hosted service remains unverified. The new eight cases passed separately from the earlier 46; no combined 54-case run is claimed.
+
 ## 1. Brief and rules
 
 - [x] Theme, six-reel route mechanic, fixed symbols, three bonus tiers and all paid modes are defined in `STYLE.md`, `DESIGN.md` and `MATH.md`.
