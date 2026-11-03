@@ -1,0 +1,12 @@
+✔ desktop: base, Spray Job, Vent Break and Overpressure settle exactly (94588.713266ms)
+✔ phone: base, Spray Job, Vent Break and Overpressure settle exactly (94410.404655ms)
+✔ vents: full symbol lands, centred reverse flips for spray, skip restores the paying face (8204.935056ms)
+✔ scatter landing precedes the held bonus briefing on every entry path (119300.983585ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 316765.416419

@@ -22,6 +22,9 @@ The playable artifact was verified on the earlier revision. The current source a
 
 ## 3. Spin and feature flow
 
+- [x] Extractor follow-up: all three tiers fit at 844×390; short-landscape Start corrected from 40px to 44px. Portrait/desktop centering, reduced motion, normal entrance and keyboard Start inspected. Evidence: `shots/extractor-qa-2026-11-02/`.
+- [ ] **Preview fidelity blocker:** `freePreview()` bypasses shipping catalogs with fixed seed 811. Hidden repeats a 507.4× sample below its shipping 1,000× floor. Claude must replace the default sampler with weighted conditional shipping outcomes and test distribution/floors plus unchanged credits/history.
+
 - [x] Extractor entrance on the Vent Hall playtest. The camera splash tracks the animated nozzle and the fan blast lifts and restores reel faces; the title, count, mechanic, kicker and Start were centered to the nearest pixel on desktop and a 390px phone layout. The free previews showed 3/4/5 FS and the corresponding 12/10/10 award. Desktop and 390×844 phone checks covered the held briefing, keyboard/touch Start, and stopping the trigger without skipping the first free spin.
 
 - [x] Prior browser evidence exercises base, Enhanced, Feature Spins, Regular, Super and naturally reachable Hidden play.
@@ -50,11 +53,11 @@ The playable artifact was verified on the earlier revision. The current source a
 
 ## 6. Math, settlement and recovery
 
-- [x] `npm run test:cyber-skunk`: 27/27 on 2026-11-02 current source.
+- [x] `npm run test:cyber-skunk`: 29/29 on extractor source `2ed2531`; see `shots/extractor-qa-2026-11-02/game-tests.txt`.
 - [x] Every paid mode returns 96% of actual cost; exact catalogs replay through the shipping engine.
 - [x] Tests cover natural triggers, Mystery selection, bonus floors, finite routes, deterministic replay, rounding and cap accounting.
 - [x] `npm test`: 127 pass, 3 documented rig-data skips on 2026-11-02 current source.
-- [x] Local artifact candidate: 111 files, 35 resolved static dependencies and 0 missing; deterministic hashes are in `art/source/splash-v1/package-manifest.json`.
+- [x] Extractor artifact candidate: 115 files, 39 detected static dependencies and 0 missing; refreshed hashes are in `art/source/splash-v1/package-manifest.json`.
 
 ## 7. Device QA and release
 

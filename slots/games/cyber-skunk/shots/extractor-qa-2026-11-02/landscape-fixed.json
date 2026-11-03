@@ -1,0 +1,158 @@
+[
+  {
+    "width": 844,
+    "height": 390,
+    "tier": "ventbreak",
+    "motion": "reduce",
+    "elements": {
+      "bonus-panel-kicker": {
+        "x": 339.640625,
+        "y": 56.25,
+        "width": 164.703125,
+        "height": 12,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-title": {
+        "x": 215.21875,
+        "y": 73.25,
+        "width": 413.546875,
+        "height": 93.59375,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-award": {
+        "x": 361.484375,
+        "y": 171.84375,
+        "width": 121.015625,
+        "height": 48.875,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-text": {
+        "x": 309.984375,
+        "y": 225.71875,
+        "width": 224,
+        "height": 59.015625,
+        "centerError": 0.015625,
+        "visible": true
+      },
+      "bonus-panel-go": {
+        "x": 327.1875,
+        "y": 289.734375,
+        "width": 189.609375,
+        "height": 44,
+        "centerError": 0.0078125,
+        "visible": true
+      }
+    },
+    "glyphs": 0,
+    "scroll": false,
+    "balance": 1000000,
+    "errors": []
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "tier": "overpressure",
+    "motion": "reduce",
+    "elements": {
+      "bonus-panel-kicker": {
+        "x": 339.640625,
+        "y": 56.25,
+        "width": 164.703125,
+        "height": 12,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-title": {
+        "x": 215.21875,
+        "y": 73.25,
+        "width": 413.546875,
+        "height": 93.59375,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-award": {
+        "x": 361.484375,
+        "y": 171.84375,
+        "width": 121.015625,
+        "height": 48.875,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-text": {
+        "x": 309.984375,
+        "y": 225.71875,
+        "width": 224,
+        "height": 59.015625,
+        "centerError": 0.015625,
+        "visible": true
+      },
+      "bonus-panel-go": {
+        "x": 327.1875,
+        "y": 289.734375,
+        "width": 189.609375,
+        "height": 44,
+        "centerError": 0.0078125,
+        "visible": true
+      }
+    },
+    "glyphs": 0,
+    "scroll": false,
+    "balance": 1000000,
+    "errors": []
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "tier": "blackout",
+    "motion": "reduce",
+    "elements": {
+      "bonus-panel-kicker": {
+        "x": 339.640625,
+        "y": 56.25,
+        "width": 164.703125,
+        "height": 12,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-title": {
+        "x": 215.21875,
+        "y": 73.25,
+        "width": 413.546875,
+        "height": 93.59375,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-award": {
+        "x": 361.484375,
+        "y": 171.84375,
+        "width": 121.015625,
+        "height": 48.875,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-text": {
+        "x": 309.984375,
+        "y": 225.71875,
+        "width": 224,
+        "height": 59.015625,
+        "centerError": 0.015625,
+        "visible": true
+      },
+      "bonus-panel-go": {
+        "x": 327.1875,
+        "y": 289.734375,
+        "width": 189.609375,
+        "height": 44,
+        "centerError": 0.0078125,
+        "visible": true
+      }
+    },
+    "glyphs": 0,
+    "scroll": false,
+    "balance": 1000000,
+    "errors": []
+  }
+]

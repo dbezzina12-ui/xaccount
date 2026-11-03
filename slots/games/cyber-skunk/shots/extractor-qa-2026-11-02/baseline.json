@@ -1,0 +1,366 @@
+[
+  {
+    "width": 844,
+    "height": 390,
+    "tier": "ventbreak",
+    "motion": "reduce",
+    "elements": {
+      "bonus-panel-kicker": {
+        "x": 339.640625,
+        "y": 58.25,
+        "width": 164.703125,
+        "height": 12,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-title": {
+        "x": 215.21875,
+        "y": 75.25,
+        "width": 413.546875,
+        "height": 93.59375,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-award": {
+        "x": 361.484375,
+        "y": 173.84375,
+        "width": 121.015625,
+        "height": 48.875,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-text": {
+        "x": 309.984375,
+        "y": 227.71875,
+        "width": 224,
+        "height": 59.015625,
+        "centerError": 0.015625,
+        "visible": true
+      },
+      "bonus-panel-go": {
+        "x": 327.1875,
+        "y": 291.734375,
+        "width": 189.609375,
+        "height": 40,
+        "centerError": 0.0078125,
+        "visible": true
+      }
+    },
+    "glyphs": 0,
+    "scroll": false,
+    "balance": 1000000,
+    "errors": []
+  },
+  {
+    "width": 360,
+    "height": 640,
+    "tier": "blackout",
+    "motion": "reduce",
+    "elements": {
+      "bonus-panel-kicker": {
+        "x": 97.640625,
+        "y": 276.0625,
+        "width": 164.703125,
+        "height": 12,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-title": {
+        "x": 21.59375,
+        "y": 297.015625,
+        "width": 316.8125,
+        "height": 108.796875,
+        "centerError": 0,
+        "visible": true
+      },
+      "bonus-panel-award": {
+        "x": 113.296875,
+        "y": 414.765625,
+        "width": 133.40625,
+        "height": 54.125,
+        "centerError": 0,
+        "visible": true
+      },
+      "bonus-panel-text": {
+        "x": 52,
+        "y": 477.84375,
+        "width": 256,
+        "height": 62.71875,
+        "centerError": 0,
+        "visible": true
+      },
+      "bonus-panel-go": {
+        "x": 83.1875,
+        "y": 553.515625,
+        "width": 193.609375,
+        "height": 46,
+        "centerError": 0.0078125,
+        "visible": true
+      }
+    },
+    "glyphs": 0,
+    "scroll": false,
+    "balance": 1000000,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "tier": "overpressure",
+    "motion": "reduce",
+    "elements": {
+      "bonus-panel-kicker": {
+        "x": 112.640625,
+        "y": 391.578125,
+        "width": 164.703125,
+        "height": 12,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-title": {
+        "x": 23.390625,
+        "y": 415.390625,
+        "width": 343.21875,
+        "height": 143.46875,
+        "centerError": 0,
+        "visible": true
+      },
+      "bonus-panel-award": {
+        "x": 107,
+        "y": 570.671875,
+        "width": 176,
+        "height": 71.390625,
+        "centerError": 0,
+        "visible": true
+      },
+      "bonus-panel-text": {
+        "x": 35,
+        "y": 653.875,
+        "width": 320,
+        "height": 51.875,
+        "centerError": 0,
+        "visible": true
+      },
+      "bonus-panel-go": {
+        "x": 98.1875,
+        "y": 721.5625,
+        "width": 193.609375,
+        "height": 46,
+        "centerError": 0.0078125,
+        "visible": true
+      }
+    },
+    "glyphs": 0,
+    "scroll": false,
+    "balance": 1000000,
+    "errors": []
+  },
+  {
+    "width": 430,
+    "height": 932,
+    "tier": "ventbreak",
+    "motion": "reduce",
+    "elements": {
+      "bonus-panel-kicker": {
+        "x": 132.640625,
+        "y": 437.953125,
+        "width": 164.703125,
+        "height": 12,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-title": {
+        "x": 25.796875,
+        "y": 463,
+        "width": 378.40625,
+        "height": 158.4375,
+        "centerError": 0,
+        "visible": true
+      },
+      "bonus-panel-award": {
+        "x": 118,
+        "y": 634.484375,
+        "width": 193.984375,
+        "height": 78.828125,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-text": {
+        "x": 55,
+        "y": 726.359375,
+        "width": 320,
+        "height": 54.09375,
+        "centerError": 0,
+        "visible": true
+      },
+      "bonus-panel-go": {
+        "x": 118.1875,
+        "y": 797.5,
+        "width": 193.609375,
+        "height": 46,
+        "centerError": 0.0078125,
+        "visible": true
+      }
+    },
+    "glyphs": 0,
+    "scroll": false,
+    "balance": 1000000,
+    "errors": []
+  },
+  {
+    "width": 1366,
+    "height": 768,
+    "tier": "blackout",
+    "motion": "reduce",
+    "elements": {
+      "bonus-panel-kicker": {
+        "x": 569.84375,
+        "y": 141,
+        "width": 226.296875,
+        "height": 16.390625,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-title": {
+        "x": 368.8125,
+        "y": 171.203125,
+        "width": 628.359375,
+        "height": 199.671875,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-award": {
+        "x": 567.5,
+        "y": 384.6875,
+        "width": 230.96875,
+        "height": 93.84375,
+        "centerError": 0.015625,
+        "visible": true
+      },
+      "bonus-panel-text": {
+        "x": 538.984375,
+        "y": 492.34375,
+        "width": 288,
+        "height": 70.828125,
+        "centerError": 0.015625,
+        "visible": true
+      },
+      "bonus-panel-go": {
+        "x": 586.1875,
+        "y": 580.984375,
+        "width": 193.609375,
+        "height": 46,
+        "centerError": 0.0078125,
+        "visible": true
+      }
+    },
+    "glyphs": 0,
+    "scroll": false,
+    "balance": 1000000,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "tier": "ventbreak",
+    "motion": "no-preference",
+    "elements": {
+      "bonus-panel-kicker": {
+        "x": 112.640625,
+        "y": 391.578125,
+        "width": 164.703125,
+        "height": 12,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-title": {
+        "x": 23.390625,
+        "y": 415.390625,
+        "width": 343.21875,
+        "height": 143.46875,
+        "centerError": 0,
+        "visible": true
+      },
+      "bonus-panel-award": {
+        "x": 107,
+        "y": 570.671875,
+        "width": 176,
+        "height": 71.390625,
+        "centerError": 0,
+        "visible": true
+      },
+      "bonus-panel-text": {
+        "x": 35,
+        "y": 653.875,
+        "width": 320,
+        "height": 51.875,
+        "centerError": 0,
+        "visible": true
+      },
+      "bonus-panel-go": {
+        "x": 98.1875,
+        "y": 721.5625,
+        "width": 193.609375,
+        "height": 46,
+        "centerError": 0.0078125,
+        "visible": true
+      }
+    },
+    "glyphs": 0,
+    "scroll": false,
+    "balance": 1000000,
+    "errors": []
+  },
+  {
+    "width": 1366,
+    "height": 768,
+    "tier": "overpressure",
+    "motion": "no-preference",
+    "elements": {
+      "bonus-panel-kicker": {
+        "x": 569.84375,
+        "y": 152.8125,
+        "width": 226.296875,
+        "height": 16.390625,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-title": {
+        "x": 368.8125,
+        "y": 183.015625,
+        "width": 628.359375,
+        "height": 199.671875,
+        "centerError": 0.0078125,
+        "visible": true
+      },
+      "bonus-panel-award": {
+        "x": 567.5,
+        "y": 396.5,
+        "width": 230.96875,
+        "height": 93.84375,
+        "centerError": 0.015625,
+        "visible": true
+      },
+      "bonus-panel-text": {
+        "x": 538.984375,
+        "y": 504.15625,
+        "width": 288,
+        "height": 47.21875,
+        "centerError": 0.015625,
+        "visible": true
+      },
+      "bonus-panel-go": {
+        "x": 586.1875,
+        "y": 569.1875,
+        "width": 193.609375,
+        "height": 46,
+        "centerError": 0.0078125,
+        "visible": true
+      }
+    },
+    "glyphs": 0,
+    "scroll": false,
+    "balance": 1000000,
+    "errors": []
+  }
+]
