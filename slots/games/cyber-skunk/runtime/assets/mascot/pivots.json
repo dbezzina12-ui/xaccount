@@ -352,11 +352,9 @@
   0
  ],
  "cheer": {
-  "near-upper-arm": 100,
-  "near-forearm": -75,
-  "near-hand": -20,
-  "far-upper-arm": -25,
-  "far-forearm": -15
+  "far-upper-arm": -40,
+  "far-forearm": -20,
+  "far-hand": -10
  },
  "notes": "Fitted to ChatGPT's 16 painted pieces as delivered: 3 tail segments, a separate far ear, no jaw yet (the grin is painted on the head)."
 }

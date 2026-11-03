@@ -166,8 +166,10 @@ def main():
         # The spray: the nozzle joint lifts to here (every tail segment within +-35 degrees),
         # the nozzle stays level and the jet leaves from its mouth.
         "sprayTarget": [1250, 260], "nozzleMouth": [NOZZLE_MOUTH[0] + NOZZLE_FIT[0], NOZZLE_MOUTH[1] + NOZZLE_FIT[1]], "tuck": [0, 0, 0],
-        # Wins pump the near arm: the far one would rise behind the head.
-        "cheer": {"near-upper-arm": 100, "near-forearm": -75, "near-hand": -20, "far-upper-arm": -25, "far-forearm": -15},
+        # Wins raise the far arm's open palm beside the head, toward the reels; the near arm
+        # stays on the hip. (Dylan, 2026-11-03: the near arm's cheer folded it across the chest
+        # and pumped the fist up and down in front of the body, and read as a lewd gesture.)
+        "cheer": {"far-upper-arm": -40, "far-forearm": -20, "far-hand": -10},
         "notes": "Fitted to ChatGPT's 16 painted pieces as delivered: 3 tail segments, a separate far ear, no jaw yet (the grin is painted on the head).",
     }
     rows = []

@@ -23,7 +23,7 @@
 >   - `torso`, `head`, `far-ear`, `ear`, `goggles`, `eyelids`;
 >   - the near arm: `near-upper-arm`, `near-forearm`, `near-hand`.
 > - **Joints:** each sits where its piece overlaps its parent. `tools/art/cyber-skunk-fit-v4.py` writes the contract `art/rig/pivots-v4.json`, the overlap report `art/rig/fit-v4.1.md` and the guide `art/rig/guide-v3.jpg`.
-> - **Game:** `cyber-skunk-prep.py --mascot art/source/mascot-compact-v4/registered` puts them in the game. Wins pump the near arm, because the far arm would rise behind the head.
+> - **Game:** `cyber-skunk-prep.py --mascot art/source/mascot-compact-v4/registered` puts them in the game. Wins raise the far arm's open palm beside the head, toward the reels, and the near arm stays on the hip. (Until 2026-11-03 the near arm pumped across the chest, which read as a lewd gesture.)
 > - **Fitted pieces:** the fit tool writes corrected copies of four pieces to `art/rig/fitted/`, and prep uses those instead of the sources:
 >   - **`eyelids`:** each lid moved onto its eye.
 >   - **`nozzle`:** the back stub is removed and the nozzle moves 8 px left and 26 px down. Its collar now sits on the tail's centre line (y ≈ 441) and closes round the tip like a cuff, with the fur shaded where it goes in. The `tail_tip` joint (1190, 443) is the centre of the collar's rear rim, and the jet leaves from the mouth (1331, 453).
