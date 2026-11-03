@@ -1,0 +1,22 @@
+desktop: ventbreak cancellation with Escape
+desktop: ventbreak cancellation with Enter
+desktop: overpressure cancellation with Escape
+desktop: overpressure cancellation with Enter
+desktop: mystery cancellation with Escape
+desktop: mystery cancellation with Enter
+✔ dialog keys: desktop containment, cancellation and focus restoration (17216.088526ms)
+phone: ventbreak cancellation with Escape
+phone: ventbreak cancellation with Enter
+phone: overpressure cancellation with Escape
+phone: overpressure cancellation with Enter
+phone: mystery cancellation with Escape
+phone: mystery cancellation with Enter
+✔ dialog keys: phone containment, cancellation and focus restoration (13758.942128ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 31322.347764

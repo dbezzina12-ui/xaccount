@@ -1,0 +1,85 @@
+{
+  "width": 390,
+  "height": 844,
+  "checks": [
+    {
+      "dialog": "buy-menu",
+      "returnTo": "buy",
+      "balance": 1000000,
+      "busy": false,
+      "history": []
+    },
+    {
+      "dialog": "bet-picker",
+      "returnTo": "bet",
+      "balance": 1000000,
+      "busy": false,
+      "history": []
+    },
+    {
+      "dialog": "autoplay",
+      "returnTo": "auto",
+      "balance": 1000000,
+      "busy": false,
+      "history": []
+    },
+    {
+      "dialog": "menu",
+      "returnTo": "settings",
+      "balance": 1000000,
+      "busy": false,
+      "history": []
+    },
+    {
+      "dialog": "rules",
+      "returnTo": "settings"
+    },
+    {
+      "dialog": "history",
+      "returnTo": "settings"
+    },
+    {
+      "mode": "ventbreak",
+      "cancelKey": "Escape",
+      "balance": 1000000,
+      "busy": false,
+      "history": []
+    },
+    {
+      "mode": "ventbreak",
+      "cancelKey": "Enter",
+      "balance": 1000000,
+      "busy": false,
+      "history": []
+    },
+    {
+      "mode": "overpressure",
+      "cancelKey": "Escape",
+      "balance": 1000000,
+      "busy": false,
+      "history": []
+    },
+    {
+      "mode": "overpressure",
+      "cancelKey": "Enter",
+      "balance": 1000000,
+      "busy": false,
+      "history": []
+    },
+    {
+      "mode": "mystery",
+      "cancelKey": "Escape",
+      "balance": 1000000,
+      "busy": false,
+      "history": []
+    },
+    {
+      "mode": "mystery",
+      "cancelKey": "Enter",
+      "balance": 1000000,
+      "busy": false,
+      "history": []
+    }
+  ],
+  "errors": []
+}

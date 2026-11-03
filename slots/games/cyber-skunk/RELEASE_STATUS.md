@@ -56,6 +56,7 @@ The playable artifact was verified on an earlier revision. Current source includ
 
 - [x] Studio desktop/phone controller switching on a touch-style preview. At 1366×768 the desktop bar is 1098px wide and the whole Spin circle is visible. At 390×844 the Slim Rail is 390px wide. Bet adjustments worked after switching back.
 - [x] Play/Stop, +/−, bet picker, circular Auto, mode shop and confirmations are present.
+- [x] Local keyboard dialog QA at `c88fa37`: desktop/phone Enter opens, forward/backward focus traversal, Escape restoration, rules/history navigation and twelve bonus-buy cancellations pass with unchanged wallet/history and no spin. New two-case regression passes separately from the earlier 46+8; no combined 56-case or hosted accessibility claim. [Evidence](shots/dialog-keyboard-qa-2026-11-03/README.md).
 - [x] Shipping config supplies prices, costs, balance math and mode copy; game tests cover Mystery's 500× price, 90/10 tickets and floors.
 - [x] Portrait BET picker measured exactly 44px at 360×800, 390×844 and 430×932; picker and both circular −/+ buttons exercised. Rectangles/interactions: `shots/qa-2026-11-02/measurements.json`.
 - [x] Mystery pass labels, 90/10 odds and 40×/1,000× minimum copy fit at all three phone widths. Screenshot: `shots/qa-2026-11-02/mystery-phone.jpg`.

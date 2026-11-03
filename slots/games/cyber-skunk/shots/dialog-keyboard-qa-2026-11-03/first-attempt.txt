@@ -1,0 +1,25 @@
+✖ dialog keys: desktop containment, cancellation and focus restoration (88859.998945ms)
+✔ dialog keys: phone containment, cancellation and focus restoration (12317.588121ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 101477.29601
+
+✖ failing tests:
+
+test at tests/browser/cyber-skunk-dialog-keys.e2e.mjs:32:76
+✖ dialog keys: desktop containment, cancellation and focus restoration (88859.998945ms)
+  locator.waitFor: Timeout 30000ms exceeded.
+  Call log:
+    - waiting for locator('#confirm') to be visible
+      63 × locator resolved to hidden <dialog id="confirm" data-mode="ventbreak" aria-labelledby="confirm-title" class="panel confirm pass-receipt">…</dialog>
+
+      at modal (/workspace/scratch/f97daebb795a/cyber-current/slots/tests/browser/cyber-skunk-dialog-keys.e2e.mjs:21:27)
+      at TestContext.<anonymous> (/workspace/scratch/f97daebb795a/cyber-current/slots/tests/browser/cyber-skunk-dialog-keys.e2e.mjs:50:92) {
+    name: 'TimeoutError',
+    log: [ "  - waiting for locator('#confirm') to be visible", '    63 × locator resolved to hidden <dialog id="confirm" data-mode="ventbreak" aria-labelledby="confirm-title" class="panel confirm pass-receipt">…</dialog>' ]
+  }

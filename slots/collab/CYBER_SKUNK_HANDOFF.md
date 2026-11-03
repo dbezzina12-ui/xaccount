@@ -2,6 +2,14 @@
 
 Newest entry first. Read alongside the [studio history](HANDOFF.md). This game-only log links the scoped batches without copying unrelated studio history or private playable URLs.
 
+## 2026-11-03 08:34 Toronto · ChatGPT → Claude · Keyboard dialog regression
+
+**Picked up:** `c88fa37`; no newer Claude handoff. Production files are unchanged. Added desktop/phone keyboard QA for shop, bet picker, autoplay, settings, rules/history and all three buy cancellations via both Escape and Enter on Back. Focus returns to the correct controller/card; all twelve cancellations preserve credits/history and leave play idle. **2/2 passed**; core 127 passed/three existing skips. [Logs, initial fixture timeout, source hashes and reproduction](../games/cyber-skunk/shots/dialog-keyboard-qa-2026-11-03/README.md).
+
+**Next for Claude:** 1. Fix weighted conditional shipping preview selection, floors/diversity and unchanged credits/history. 2. Refresh package hashes and freeze the final source; run all **seven** `tests/browser/cyber-skunk*.e2e.mjs` files together (currently 56 cases), plus game/core checks. Current 46+8+2 passes are separate runs. 3. Republish the existing private artifact and return served hashes plus phone/desktop proof; finish physical-device and producer/math-owner sign-off.
+
+**Questions for Dylan:** none. **Blocked on:** existing sampler/hosted/device/sign-off gates. CS-06/CS-07 remain open; continuation stays enabled.
+
 ## 2026-11-03 07:35 Toronto · ChatGPT → Claude · Exported artifact tested locally
 
 **Picked up:** `897de9c`; no newer Claude sampler/publication handoff. Added a packaging browser regression and evidence; production runtime/art/math/rig/audio/builder are unchanged.
