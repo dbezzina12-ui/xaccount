@@ -1,0 +1,131 @@
+{
+  "sourceCommit": "8225f1c608cae0da302d4afd945469c70b35290f",
+  "scope": "read-only current-source audit; no new replay/browser/hosted certification",
+  "appSha256": "23c482cf6bc2d7d5e9dc9df9cab49c2c0b0b9f87a1e9cd8c5479184e5dd16d3e",
+  "mathSources": {
+    "engine.js": {
+      "sha256": "705d3761ef8536828104dc1778fe4fbd116118b6353d553aaa8f9b8d2be371fe",
+      "reportHashMatches": true
+    },
+    "rules.js": {
+      "sha256": "fa4d3b433eea63dc856e762cea46e649b0c0b4bbc7120193a3236b410c400e7f",
+      "reportHashMatches": true
+    },
+    "catalog-data.js": {
+      "sha256": "409df50c64d574c894eefdd01dae5dcb1dedb756458e4b4b24b7eef0618afb9f",
+      "reportHashMatches": true
+    }
+  },
+  "packageInputs": {
+    "assets/ui/splash-desktop.webp": {
+      "sha256": "b446a7bd0d85b1b7587ddbcb273898b42806470799c23ba1695e288286d3ff9f",
+      "manifestHashMatches": true
+    },
+    "assets/ui/splash-mobile.webp": {
+      "sha256": "68d284426b15e09487a8f35ae9ed9d160daf2baaea109e17db691817521101c6",
+      "manifestHashMatches": true
+    },
+    "styles.css": {
+      "sha256": "60a99e44150020d71075ea7548f216db2c3c724aa0d9981678148fba1227c921",
+      "manifestHashMatches": true
+    },
+    "entry-shop.css": {
+      "sha256": "7de123b827c03e2d68665507e36c27b4d0a3a2878b09d615b07d6e6077ea18e7",
+      "manifestHashMatches": true
+    },
+    "launch.js": {
+      "sha256": "48cc50a2b157eded6f0fda25d42d5833e7b343aafa9664539600a4241c0a899e",
+      "manifestHashMatches": true
+    },
+    "app.js": {
+      "sha256": "23c482cf6bc2d7d5e9dc9df9cab49c2c0b0b9f87a1e9cd8c5479184e5dd16d3e",
+      "manifestHashMatches": true
+    }
+  },
+  "preview": {
+    "fixedSeed": 811,
+    "stillPresent": true,
+    "hiddenHundredths": 50740,
+    "shippingHiddenFloorHundredths": 100000,
+    "belowFloor": true
+  },
+  "art": {
+    "sources": 49,
+    "requiredSources": 49,
+    "registeredPieces": 16,
+    "requiredPieces": 16,
+    "reportedProblems": 0
+  },
+  "localLinks": [
+    {
+      "from": "slots/games/cyber-skunk/STYLE.md",
+      "href": "../../collab/CYBER_SKUNK_HANDOFF.md",
+      "exists": true
+    },
+    {
+      "from": "slots/games/cyber-skunk/STYLE.md",
+      "href": "RELEASE_STATUS.md",
+      "exists": true
+    },
+    {
+      "from": "slots/games/cyber-skunk/STYLE.md",
+      "href": "runtime/rules.js",
+      "exists": true
+    },
+    {
+      "from": "slots/games/cyber-skunk/STYLE.md",
+      "href": "MATH.md",
+      "exists": true
+    },
+    {
+      "from": "slots/games/cyber-skunk/STYLE.md",
+      "href": "ART_SPEC.md",
+      "exists": true
+    },
+    {
+      "from": "slots/collab/CYBER_SKUNK_HANDOFF.md",
+      "href": "HANDOFF.md",
+      "exists": true
+    },
+    {
+      "from": "slots/collab/CYBER_SKUNK_HANDOFF.md",
+      "href": "../games/cyber-skunk/shots/coordination-audit-2026-11-03/README.md",
+      "exists": true
+    },
+    {
+      "from": "slots/collab/CYBER_SKUNK_HANDOFF.md",
+      "href": "batches/2026-11-03-0424-cyber-skunk-stakes.md",
+      "exists": true
+    },
+    {
+      "from": "slots/collab/CYBER_SKUNK_HANDOFF.md",
+      "href": "batches/2026-11-03-0226-cyber-skunk-combined-qa.md",
+      "exists": true
+    },
+    {
+      "from": "slots/collab/CYBER_SKUNK_HANDOFF.md",
+      "href": "batches/2026-11-03-0326-cyber-skunk-rare-win-keys.md",
+      "exists": true
+    },
+    {
+      "from": "slots/collab/CYBER_SKUNK_HANDOFF.md",
+      "href": "batches/2026-11-02-2320-cyber-skunk-frozen-qa.md",
+      "exists": true
+    },
+    {
+      "from": "slots/collab/CYBER_SKUNK_HANDOFF.md",
+      "href": "../games/cyber-skunk/RELEASE_STATUS.md",
+      "exists": true
+    },
+    {
+      "from": "slots/games/cyber-skunk/RELEASE_STATUS.md",
+      "href": "../../collab/CYBER_SKUNK_HANDOFF.md",
+      "exists": true
+    },
+    {
+      "from": "slots/games/cyber-skunk/RELEASE_STATUS.md",
+      "href": "shots/coordination-audit-2026-11-03/README.md",
+      "exists": true
+    }
+  ]
+}

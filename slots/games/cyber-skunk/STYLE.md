@@ -1,5 +1,11 @@
 # Cyber Skunk — production brief v1
 
+## Current continuation — 2026-11-03
+
+Start with the [game-specific handoff](../../collab/CYBER_SKUNK_HANDOFF.md) and [release evidence/status](RELEASE_STATUS.md), alongside the studio handoff. Latest source is a playable **playtest**, not a completed release. The fixed-seed free-preview path and hosted/device verification remain open.
+
+The initial provisional mechanics and full-body rig suggestions below are historical design context. Implement current costs/rules from [shipping config](runtime/rules.js) and [MATH.md](MATH.md), and preserve the fitted compact v4.1 contract at the top of [ART_SPEC.md](ART_SPEC.md): sixteen registered pieces, three tail segments plus nozzle, separate far ear, no jaw. Do not restore superseded coordinates or provisional prices/spin counts from this brief. All 49 required art sources and 16 registered pieces are present in the current read-only prep check; availability is not hosted-integration proof.
+
 ## Implemented presentation correction — 2026-10-31
 
 Dylan explicitly assigned this implementation to ChatGPT. The two-sided cards below are now in the runtime: 180 ms landing hold, 300 ms paced flip, complete centred existing vent artwork on reverse, then actual final paying face. Skip and reduced motion settle immediately. FS is plain live ivory lettering with no plate/box/extra artwork, including fallback. The pressure number is above a smaller graphite dial on a cabinet mount. Remove the persistent bonus ladder; keep bonus information in the buy menu, intro/rules and active bonus HUD. Do not reintroduce edge-spout overlays. The fitted v4.1 blink stays unchanged.
@@ -29,7 +35,7 @@ Dylan likes the concept but rejects the general art and the skunk consuming half
 Kickoff: 2026-10-30 08:25 UTC. Target reviewable full build: 2026-10-31 08:25 UTC.
 Owner: Dylan. Art/UI: ChatGPT. Math/engine/rigging/audio: Claude.
 Coordination branch: claude/blissful-rubin-xou20i. Project: slots/games/cyber-skunk.
-Status: design + first style frame; NOT a playable or math-validated release.
+Status: playable source/playtest; release incomplete. Current evidence and open gates are linked above.
 
 ## Authorization and scope
 Dylan requested this new game, autonomous GitHub handoffs and hourly pickup, full art/audio/pay/buy screen/controller, properly rigged mascot, desktop/mobile polish. His follow-up explicitly requires Regular, Super, Hidden, Enhanced Spins and Feature Spins. This new project supersedes the old new-game pause for Cyber Skunk only. Do not alter Zombify/Night Fall math, resurrect embedded AI chat, provision keys or publish real-money functionality.

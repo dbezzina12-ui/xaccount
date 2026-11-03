@@ -1,5 +1,7 @@
 # Cyber Skunk release status
 
+Current ordered continuation tasks: [game-specific handoff](../../collab/CYBER_SKUNK_HANDOFF.md). The studio-wide handoff remains historical context; this scoped log links the newer evidence batches.
+
 | Game | Branch / source | Playable link | Build / audience | Producer | Art | Math / engineering | QA |
 |---|---|---|---|---|---|---|---|
 | Cyber Skunk | `claude/blissful-rubin-xou20i`, frozen 36-case source `d0b6f67` plus scoped `stake-prices-1` follow-up | Existing private artifact; URL intentionally omitted from this public record | Private playtest; newest hosted parity unverified | Dylan | ChatGPT | Claude | ChatGPT + Claude |
@@ -15,6 +17,8 @@ The later `stake-prices-1` desktop shop correction has 10 targeted browser passe
 - [x] Payout units, bonus floors, 25,000× cap and natural trigger rates are documented in `MATH.md`.
 
 ## 2. Art and layout
+
+- [x] Read-only inventory rechecked at `8225f1c`: 49/49 required art sources, 16/16 registered pieces, no reported problems. This proves source availability, not every rig pose or current hosted integration. [Audit and links](shots/coordination-audit-2026-11-03/README.md).
 
 - [x] Art prep reports 49/49 ART_SPEC inputs, 16/16 registered mascot pieces and no problems.
 - [x] Symbols, cabinet, backgrounds, logo, panels, buy cards, wins, effects, intro diagrams, controller texture, icon and opening splashes are shipping assets.
