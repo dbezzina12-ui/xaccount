@@ -7,11 +7,15 @@
 .enamel-symbols .cell:not(.special) img{filter:var(--enamel,) drop-shadow(0 3px 2px #09090899)}
 .enamel-symbols #bonus-menu .card-emblem>img{filter:var(--enamel,) drop-shadow(0 6px 5px #0008)}
 /* Fixed position multipliers are engraved on the bed behind the reel symbols. */
-.cell .multi{inset:0;display:grid;place-items:center;z-index:0;padding:0;background:none;border:0;box-shadow:none;border-radius:0;
- color:var(--multi-ink,#ffcf91);font:950 64cqmin/.9 system-ui,sans-serif;letter-spacing:-.095em;-webkit-text-stroke:1px var(--multi-bed,#43301c);paint-order:stroke fill;
- opacity:0;pointer-events:none}
+@font-face{font-family:BeeDigits;src:url("assets/fonts/BarlowCondensed-ExtraBold.ttf") format("truetype");font-weight:800;font-display:swap}
+.cell .multi{inset:0;display:flex;align-items:center;justify-content:center;gap:.025em;z-index:0;padding:0;background:none;border:0;box-shadow:none;border-radius:0;
+ color:var(--multi-ink,#fff1ce);font:800 78cqmin/1 BeeDigits,"Arial Narrow",sans-serif;font-variant-numeric:lining-nums tabular-nums;letter-spacing:-.02em;
+ text-shadow:0 1px var(--multi-rim,#6a3c1e),0 2px 2px #0005;opacity:0;pointer-events:none}
+.cell .multi small{font:inherit;font-size:.60em;line-height:1;letter-spacing:0}
 .cell .multi[hidden]{display:none}
-.cell .multi[data-long]{font-size:45cqmin}
+.cell:is([data-multi="16"],[data-multi="32"],[data-multi="64"]) .multi{font-size:70cqmin}
+.cell .multi[data-long]{font-size:61cqmin}
+.cell:is([data-multi="16"],[data-multi="32"],[data-multi="64"],[data-multi="128"]){--multi-rim:#ffffff58}
 /* From dark bronze to ivory, every doubling raises the bed's lightness. */
 [data-multi="2"]{--multi-bed:#53402e}
 [data-multi="4"]{--multi-bed:#815032}

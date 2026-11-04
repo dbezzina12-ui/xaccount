@@ -37,7 +37,7 @@ export function heroLayout(stage, canvas) {
     canvas.style.top = 'calc(-70% - ' + above + 'px)';
     canvas.style.height = 'calc(240% + ' + above + 'px)';
     placement = { perched: true, pad, above, dx: targetX - anchorX,
-      dy: targetY - anchorY, scale, seatInClip: 211.29 + (seatY - anchorY) / k };
+      dy: targetY - anchorY, lift: Math.min(16, Math.max(0, (seat-8)/zoom-145*k*scale)), scale, seatInClip: 211.29 + (seatY - anchorY) / k };
     return placement;
   };
 }

@@ -1,5 +1,6 @@
 import {playStinger,flyHiveBees} from './drone-stinger.mjs?v=15';
-import {mountMascot} from './mascot/mascot.mjs?v=8';
+import {spinIdle} from './mascot/spin-idle.mjs';
+import {mountMascot} from './mascot/mascot.mjs?v=9';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
 import {mountWinShow,bonusSummary,tierFor,tiers} from './win-show.mjs?v=37';
@@ -65,7 +66,10 @@ function cell(i,id,spots,hit=false){
  if(id==='FS')addHoney(c);else c.querySelector('.fs-rig')?.remove();
  const url=symbolUrl(id);
  if(c.firstChild.getAttribute('src')!==url)c.firstChild.src=url;
- c.firstChild.alt=id;c.lastChild.className='multi';c.lastChild.textContent=m?m+'×':'';c.lastChild.hidden=!m;c.lastChild.toggleAttribute('data-long',m>=100);
+ c.firstChild.alt=id;c.lastChild.className='multi';if(c.lastChild.dataset.value!==String(m)){
+  const label=c.lastChild;label.dataset.value=m;label.replaceChildren();
+  if(m){const cross=document.createElement('small');cross.textContent='×';label.append(String(m),cross);}
+ }c.lastChild.hidden=!m;c.lastChild.toggleAttribute('data-long',m>=100);
 }
 function draw(board,spots,hits=[]){cells.forEach((_,i)=>cell(i,board[i],spots,hits.includes(i)))}
 function showFlightBank(n){
@@ -123,7 +127,7 @@ async function showCellValues(indices){
  await wait(turbo?240:540);
  for(const i of indices)cells[i].classList.remove('show-value');
 }
-function lock(val){busy=val;labels()}
+function lock(val){busy=val;spinIdle.setBusy(val,performance.now()/1000);labels()}
 async function feature(mode){
  winShow.prepareBonus(mode);
  autoplay.stop();previous=state;state=start(mode,carry);pending=null;carry=0;win=0;stop=false;save();lock(true);

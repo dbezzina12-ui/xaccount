@@ -9,10 +9,10 @@ export function mountMascot(stage){
  function use(m,mode){impl=m;stage.dataset.mascot=mode;impl.setTurbo(turbo);impl.setBank(bank,{animate:false})}
  async function sprites(){
   impl?.dispose();impl=null;
-  const m=await import('./sprites.mjs?v=3');use(m.mountMascot(stage),'sprites');
+  const m=await import('./sprites.mjs?v=4');use(m.mountMascot(stage),'sprites');
  }
  async function live(){
-  const m=await import('./live3d.js?v=4');
+  const m=await import('./live3d.js?v=5');
   use(m.mountMascot(stage,{force:pick==='3d',onFail:reason=>{stage.dataset.mascotFallback=reason;sprites()}}),'3d');
  }
  (pick==='sprites'?sprites():live().catch(e=>{stage.dataset.mascotFallback=e?.message||'no 3D';return sprites()}));

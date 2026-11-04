@@ -1,4 +1,5 @@
-import {heroLayout, hoverWeight} from './hero-layout.mjs?v=2';
+import {spinIdle} from './spin-idle.mjs';
+import {heroLayout, hoverWeight} from './hero-layout.mjs?v=3';
 // RoboBees' mascot, sprite fallback: the hive and the robo-bee in #mascot-stage, drawn from sprites pre-rendered from
 // their 3D models (mascot.json places every frame). mascot.mjs uses it where the live 3D mascot can't run. Presentation only: it follows the game's state and never decides an outcome.
 // Each animation runs on its own clock and gives way to the newest state, so turbo, Stop and skips never wait on it.
@@ -36,7 +37,7 @@ export function mountMascot(stage){
  function hoverFrame(t){const fr=s.meta.clips.hover.frames;return fr[Math.floor((reduced?0:t)*s.meta.clips.hover.fps)%fr.length]}
  // The bee: which sprite frame, where, and whether it is still in the tunnel behind the hive's face.
  function beeAt(t){
-  if(bee.mode==='hover')return {img:s.hover,f:hoverFrame(t)};
+  if(bee.mode==='hover')return {img:s.hover,f:hoverFrame(t*.2)};
   if(bee.mode==='away')return null;
   const p=(t-bee.at)/bee.dur;
   if(bee.mode==='arrive'){
@@ -92,15 +93,22 @@ export function mountMascot(stage){
    ctx.font='800 26px system-ui,sans-serif';ctx.textAlign='left';ctx.lineWidth=6;ctx.strokeStyle='#1b1712';ctx.fillStyle='#ffd27a';
    ctx.strokeText('+'+extra,x+30,y-6);ctx.fillText('+'+extra,x+30,y-6);
   }
-  if(hero.perched && bee.mode==='hover'){
-   // Use the already-rendered resting pose, grounded by its feet instead
-   // of replaying the flight atlas at hover speed.
-   const frames=s.meta.clips.worker.frames;
-   const phase=reduced?0:(1-Math.cos(t*.9))/2;
-   const f=frames[Math.round(phase*(frames.length-1))];
-   const size=hero.scale*1.13;
-   put(s.worker,f,s.meta.anchors.hover[0]+hero.dx/k-f[2]*size/2,
-     hero.seatInClip-f[3]*size,size);
+  if(b && bee.mode==='hover'){
+   const rest=reduced?1:spinIdle.rest(t), flight=1-rest;
+   const scale=hero.scale;
+   const cx=s.meta.anchors.hover[0]+hero.dx/k;
+   const seat=hero.perched?hero.seatInClip:s.meta.anchors.hover[1]+54;
+   const y=seat-(hero.lift??0)*flight/k;
+   if(flight>0){
+    ctx.globalAlpha=flight;
+    put(s.hover,b.f,cx-b.f[2]*scale/2,y-b.f[3]*scale,scale);
+   }
+   if(rest>0){
+    ctx.globalAlpha=rest;
+    const f=s.meta.clips.worker.frames[0],size=scale*1.13;
+    put(s.worker,f,cx-f[2]*size/2,y-f[3]*size,size);
+   }
+   ctx.globalAlpha=1;
   }else if(b&&!b.inside){
    const weight=hoverWeight(bee,t), growth=1+(hero.scale-1)*weight;
    const x=b.x??b.f[4], y=b.y??b.f[5], size=b.k??1;
