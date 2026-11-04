@@ -1,3 +1,4 @@
+import {paintFlightEffects} from './win-effects.mjs';
 // All values entering the presenter are already settled. Nothing here can award a credit.
 export const tiers={
  nice:{label:'Nice Win',min:10,perCost:2,seconds:2.15,hold:.78,bees:1,accent:'#efba72'},
@@ -157,6 +158,7 @@ function paint(ctx,canvas,config,t,sprites,still,scene){
  }
  ctx.restore();
  const placed=swarmFlight(scene.view,level,t,still);
+ paintFlightEffects(ctx,scene,placed,t,still);
  if(scene.painter){
   try{scene.painter.draw(ctx,w,h,scale,placed.map(rigPlacement));return}catch{scene.painter=null}
  }
@@ -190,6 +192,7 @@ export function mountWinShow(dialog,{money,audioContext,muted,swarm}){
  const canvas=dialog.querySelector('canvas'),ctx=canvas.getContext('2d'),amount=dialog.querySelector('.win-cash');
  const title=dialog.querySelector('use'),dismiss=dialog.querySelector('.win-dismiss');
  const reader=dialog.querySelector('.win-reader'),stage=dialog.querySelector('.win-stage');
+ const cells=[...dialog.querySelectorAll('.win-charge i')];
  const scenery=dialog.querySelector('.bonus-landscape img');
  function prepareBonus(mode){
   const url='assets/'+bonusScenery[mode]+'.webp';
@@ -222,6 +225,8 @@ export function mountWinShow(dialog,{money,audioContext,muted,swarm}){
  }
  function update(s,now){
   const counter=s.counter,complete=counter.complete;
+  const charge=complete?cells.length:Math.floor(cells.length*counter.value/Math.max(1,s.total));
+  if(charge!==s.charge){cells.forEach((cell,i)=>cell.classList.toggle('lit',i<charge));s.charge=charge}
   const formatted=money(counter.value);if(amount.textContent!==formatted)amount.textContent=formatted;
   if(ctx)paint(ctx,canvas,s.config,s.still?1:(now-s.start)/1000,sprites,s.still,s);
   if(complete&&!s.announced){
@@ -269,7 +274,7 @@ export function mountWinShow(dialog,{money,audioContext,muted,swarm}){
    reader.textContent='';dismiss.setAttribute('aria-label','Show total');dialog.showModal();dismiss.focus({preventScroll:true});
    return new Promise(resolve=>{
     const config=bonus&&conf.bees===2?{...conf,bees:3}:conf;
-    const s={id,config,bonus,scope,start:now,last:now,counter,resolve,still:reduced,frame:0,cueVersion:0,painter:null,stage,dismiss};active=s;
+    const s={id,total,config,bonus,scope,start:now,last:now,counter,resolve,still:reduced,frame:0,cueVersion:0,painter:null,stage,dismiss};active=s;
     try{s.painter=swarm?.()??null}catch{/* Use the pre-rendered mascot frames when 3D is unavailable. */}
     void swarmArt().then(a=>{sprites=a});if(id)void cue(s);update(s,now);s.frame=requestAnimationFrame(time=>tick(s,time));
    });

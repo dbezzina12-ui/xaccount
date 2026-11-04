@@ -4,7 +4,7 @@ import {spinIdle} from './mascot/spin-idle.mjs';
 import {mountMascot} from './mascot/mascot.mjs?v=10';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
-import {mountWinShow,bonusSummary,tierFor,tiers} from './win-show.mjs?v=37';
+import {mountWinShow,bonusSummary,tierFor,tiers} from './win-show.mjs?v=38';
 import {rollReels,dropTumble,preloadSymbols,symbolClass,symbolUrl} from './reels.mjs?v=36';
 import {addHoney,prepareHoney} from './honey.mjs';
 import {MATH,buys,credit,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=31';

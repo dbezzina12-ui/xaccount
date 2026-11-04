@@ -38,3 +38,29 @@
  #win-show[data-bonus] .win-stage{width:min(100%,94dvh)}
  #win-show[data-bonus][data-phase=total] .bonus-return{bottom:max(1.5dvh,env(safe-area-inset-bottom));padding:.4em .8em}
 }
+
+/* The scene sits behind both the flight canvas and the readable award. */
+#win-show .win-environment{position:absolute;inset:0;overflow:hidden;pointer-events:none;isolation:isolate}
+.win-environment::before,.win-environment::after{content:"";position:absolute;inset:0}
+.win-environment::before{background:var(--win-hall) center/cover;animation:win-hall-in 1.1s ease-out both}
+.win-environment::after{background:radial-gradient(ellipse at 50% 33%,transparent 12%,#0b111289 82%),linear-gradient(0deg,#0b1013e8 0%,#141a1bd9 35%,#141a1b55 64%,#17202366)}
+#win-show[data-tier=nice]{--win-hall:url(assets/woodland-clearing.webp)}
+#win-show[data-tier=nice] .win-environment{opacity:.65}
+#win-show:is([data-tier=big],[data-tier=epic]){--win-hall:url(assets/foundry.webp)}
+#win-show:is([data-tier=mythic],[data-tier=max]){--win-hall:url(assets/queen-vault.webp)}
+#win-show[data-bonus] .win-environment::before,#win-show[data-bonus] .win-environment::after{display:none}
+.vault-half{display:none;position:absolute;z-index:1;top:0;bottom:0;width:50.1%;background:url(assets/wins/vault-leaf.svg) center/100% 100%}
+.vault-half:first-child{left:0;--rest:-96%}
+.vault-half:last-child{right:0;--rest:96%;scale:-1 1;--rest:-96%}
+#win-show:is([data-tier=big],[data-tier=max]) .vault-half{display:block;animation:vault-release .9s cubic-bezier(.45,0,.12,1) both}
+#win-show[data-tier=big] .vault-half{animation-name:foundry-pistons;animation-duration:.54s}
+#win-show[data-phase=total] .vault-half{animation:none;transform:translateX(var(--rest))}
+.win-charge{position:absolute;top:calc(100% + 4px);left:50%;translate:-50% 0;display:flex;gap:4px;pointer-events:none}
+.win-charge i{width:clamp(10px,2cqw,22px);height:clamp(5px,.9cqw,9px);clip-path:polygon(22% 0,100% 0,78% 100%,0 100%);background:#77796755}
+.win-charge i.lit{background:var(--signal)}
+#win-show[data-bonus] .win-charge{display:none}
+#win-show[data-phase=total] .win-charge{filter:drop-shadow(0 0 4px var(--signal))}
+@keyframes win-hall-in{from{transform:scale(1.06);opacity:.3}to{transform:none;opacity:1}}
+@keyframes vault-release{0%,14%{transform:translateX(0)}22%{transform:translateX(-3%)}26%{transform:translateX(-2%)}100%{transform:translateX(var(--rest))}}
+@keyframes foundry-pistons{from{transform:translateX(-35%)}to{transform:translateX(var(--rest))}}
+@media(prefers-reduced-motion:reduce){.win-environment::before{animation:none}.vault-half{animation:none!important;transform:translateX(var(--rest))}}
