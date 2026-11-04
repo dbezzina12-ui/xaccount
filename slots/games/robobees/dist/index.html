@@ -1,4 +1,12 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#181a1b"><title>RoboBees · Gamboligy Games</title><link rel="stylesheet" href="game.css?v=36"><link rel="stylesheet" href="studio-shop.css"><link rel="stylesheet" href="presentation.css?v=40"><link rel="stylesheet" href="win-show.css?v=37"><link rel="stylesheet" href="field-guide.css?v=1"></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#181a1b"><title>RoboBees · Gamboligy Games</title><link rel="stylesheet" href="game.css?v=36"><link rel="stylesheet" href="studio-shop.css"><link rel="stylesheet" href="presentation.css?v=40"><link rel="stylesheet" href="win-show.css?v=37"><link rel="stylesheet" href="field-guide.css?v=2"></head><body>
+<div id="bee-ident" class="loading-screen" role="status" aria-label="Preparing RoboBees">
+  <div class="studio-identity ident-ready ident-neon" aria-label="Gamboligy Games">
+    <div class="neon-sign" aria-hidden="true"><div class="neon-wall"></div>
+      <svg class="neon-mark" viewBox="180 250 900 750" focusable="false"><defs><path id="gg-1" d="M378 266H735L606 416H389A55 55 0 0 0 334 471V600A55 55 0 0 0 389 655H517L399 797H368A175 175 0 0 1 193 622V451A185 185 0 0 1 378 266Z"/><path id="gg-bar" d="M437 477H658L557 602H437Z"/><path id="gg-2" d="M726 440H926A135 135 0 0 1 1061 575V597H759L606 779V817A25 25 0 0 0 631 842H911V777H777V654H1061V855A130 130 0 0 1 931 985H577A145 145 0 0 1 432 840V798Z"/></defs>
+        <g class="neon-tube"><use href="#gg-1"/><use href="#gg-bar"/><use href="#gg-2"/></g><g class="neon-lit neon-l1"><g class="neon-halo2"><use href="#gg-1"/><use href="#gg-bar"/></g><g class="neon-halo1"><use href="#gg-1"/><use href="#gg-bar"/></g><g class="neon-core"><use href="#gg-1"/><use href="#gg-bar"/></g></g><g class="neon-lit neon-l2"><g class="neon-halo2"><use href="#gg-2"/></g><g class="neon-halo1"><use href="#gg-2"/></g><g class="neon-core"><use href="#gg-2"/></g></g></svg></div>
+    <div class="studio-wordmark neon-word" aria-hidden="true"><div><span style="--i:0">G</span><span style="--i:1">A</span><span style="--i:2">M</span><span style="--i:3">B</span><span style="--i:4" class="late">O</span><span style="--i:5">L</span><span style="--i:6">I</span><span style="--i:7">G</span><span style="--i:8">Y</span></div><div><span style="--i:9">G</span><span style="--i:10">A</span><span style="--i:11">M</span><span style="--i:12">E</span><span style="--i:13">S</span></div></div>
+  </div>
+<div class="load-console">Preparing game<div class="neon-progress" aria-hidden="true"></div></div></div>
 <svg width="0" height="0" style="position:absolute;pointer-events:none" aria-hidden="true" focusable="false">
  <defs>
   <!-- Each RGB row sums to one, preserving the original neutral metal and shadows. -->
@@ -52,26 +60,13 @@
  <div class="shop-tabs" aria-label="Shop sections"><button data-tab="features">Feature spins</button><button data-tab="buys">Bonus buys</button></div>
  <div class="shop-options"><section class="bonus-cards" aria-label="Available options"></section></div><p id="bonus-menu-note"></p>
 </dialog>
-<dialog id="field-guide" aria-labelledby="cover-heading">
- <section class="bee-brief" data-page="cover">
-  <span class="brief-label">Gamboligy Games presents</span>
-  <svg class="brief-hero" viewBox="0 0 360 240" aria-hidden="true">
-   <image class="port-wing" href="assets/drone-wing.webp" x="2" y="48" width="155" height="62"/>
-   <image class="starboard-wing" href="assets/drone-wing.webp" x="203" y="48" width="155" height="62"/>
-   <image href="assets/drone-body.webp" x="90" y="25" width="180" height="195"/>
-  </svg>
-  <h1 id="cover-heading"><img class="brief-brand" src="assets/robobees-wordmark.svg" alt="RoboBees"></h1>
-  <p>Charge the cells. Wake the swarm.</p>
-  <button type="button" data-next>Continue →</button>
- </section>
- <section class="bee-brief" data-page="guide" hidden>
-  <span class="brief-label">Apis Industries · Flight manual</span><h2 id="guide-heading">How to play</h2>
-  <div class="brief-cards">
-   <article class="brief-card"><div class="brief-art" aria-hidden="true"><img src="assets/rotor.webp" alt=""><img src="assets/rotor.webp" alt=""><img src="assets/rotor.webp" alt=""></div><span class="brief-label">01 / Match</span><h3>Tumbling wins</h3><p>Match 3 or more on a payline from the leftmost reel. Winning symbols clear and new symbols drop in.</p></article>
-   <article class="brief-card"><div class="brief-art" aria-hidden="true"><b>2×</b><b>4×</b><b>8×</b></div><span class="brief-label">02 / Charge</span><h3>Cell multipliers</h3><p>A winning cell charges to 2×. Hit it again to double its value, up to 128×. The charge stays in the cell as symbols fall.</p></article>
-   <article class="brief-card"><div class="brief-art" aria-hidden="true"><img class="feature-hive" src="assets/hive.webp" alt=""></div><span class="brief-label">03 / Swarm</span><h3>Free spins</h3><p>Land 3, 4 or 5 FS for Worker Shift, Swarm Protocol or Queen Override. In Super and Hidden, bank Wilds for the final spin.</p></article>
-  </div>
-  <div class="brief-controls"><button type="button" data-back>Back</button><button type="button" data-enter>Enter the hive →</button></div>
- </section>
-</dialog>
-<dialog id="menu"><div class="dlg-head"><small>APIS INDUSTRIES &nbsp; / &nbsp; OPERATIONS</small><button class="close" aria-label="Close">×</button></div><div id="content"></div></dialog><script type="module" src="game.mjs?v=41"></script></body></html>
+<dialog id="field-guide" class="intro" aria-labelledby="guide-heading"><div class="intro-inner">
+<h2 id="guide-heading"><img class="intro-mark" src="assets/robobees-wordmark.svg" alt="RoboBees"></h2>
+<div class="intro-cards"><article class="intro-card" data-current><div class="guide-scene"><div class="guide-board" aria-hidden="true"></div><div class="scene-bar"><b class="demo-caption"></b><button type="button" class="demo-toggle" aria-label="Pause free spins demonstration">Pause</button></div></div><div class="feature-copy"><span class="feature-index">01 / SCATTERS</span><h3>Free spins</h3><p>Land 3 FS for Worker Shift, 4 for Swarm Protocol, or 5 for Queen Override.</p></div></article>
+<article class="intro-card"><div class="guide-scene"><div class="guide-board" aria-hidden="true"></div><div class="scene-bar"><b class="demo-caption"></b><button type="button" class="demo-toggle" aria-label="Pause tumbling wins demonstration">Pause</button></div></div><div class="feature-copy"><span class="feature-index">02 / TUMBLES</span><h3>Tumbling wins</h3><p>Match 3 or more on a payline from reel one. Winning symbols clear and new symbols drop in.</p></div></article>
+<article class="intro-card"><div class="guide-scene"><div class="guide-board" aria-hidden="true"></div><div class="scene-bar"><b class="demo-caption"></b><button type="button" class="demo-toggle" aria-label="Pause cell multipliers demonstration">Pause</button></div></div><div class="feature-copy"><span class="feature-index">03 / CHARGES</span><h3>Cell multipliers</h3><p>Winning cells charge to 2×. Hit a charged cell again to double its multiplier, up to 128×.</p></div></article>
+</div>
+<nav class="guide-nav" aria-label="Feature pages"><button type="button" data-prev aria-label="Previous feature">‹</button><div class="guide-dots"><button aria-label="Free spins" aria-current="step"></button><button aria-label="Tumbling wins"></button><button aria-label="Cell multipliers"></button></div><button type="button" data-next aria-label="Next feature">›</button></nav>
+<span class="sr-only" role="status" data-announce></span><button type="button" class="intro-go" data-enter><span class="desktop-cta">CLICK TO CONTINUE</span><span class="phone-cta">TAP TO PLAY</span></button>
+<div class="guide-foot">3 FS · WORKER SHIFT &nbsp; / &nbsp; 4 FS · SWARM PROTOCOL &nbsp; / &nbsp; 5 FS · QUEEN OVERRIDE</div></div></dialog>
+<dialog id="menu"><div class="dlg-head"><small>APIS INDUSTRIES &nbsp; / &nbsp; OPERATIONS</small><button class="close" aria-label="Close">×</button></div><div id="content"></div></dialog><script type="module" src="game.mjs?v=42"></script></body></html>

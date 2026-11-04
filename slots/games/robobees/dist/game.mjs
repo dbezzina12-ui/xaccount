@@ -1,4 +1,4 @@
-import {openFieldGuide} from './field-guide.mjs';
+import {openFieldGuide} from './field-guide.mjs?v=2';
 import {playStinger,flyHiveBees} from './drone-stinger.mjs?v=15';
 import {spinIdle} from './mascot/spin-idle.mjs';
 import {mountMascot} from './mascot/mascot.mjs?v=10';
@@ -372,7 +372,7 @@ function action(name){
  if(name==='turbo'){turbo=!turbo;save();labels();return}
  if(name==='settings'){
   autoplay.stop();labels();choices('Control room',[
-   [mute?'Sound off':'Sound on',toggleSound,!mute],[turbo?'Turbo on':'Turbo off',()=>action('turbo'),turbo],['Flight manual',()=>openFieldGuide($('field-guide'),'guide'),undefined,busy||!!pending||state.mode!=='base'],['Game rules',showRules],
+   [mute?'Sound off':'Sound on',toggleSound,!mute],[turbo?'Turbo on':'Turbo off',()=>action('turbo'),turbo],['Flight manual',()=>openFieldGuide($('field-guide')),undefined,busy||!!pending||state.mode!=='base'],['Game rules',showRules],
    ['Reset demo balance',confirmBalanceReset,undefined,!canResetBalance()]]);
   return;
  }
@@ -393,9 +393,14 @@ document.body.dataset.scene=state.mode;
 labels();
 void prepareHoney();
 const loading=$('symbol-loading'),loadingMessage=loading.querySelector('[role=status]'),retry=loading.querySelector('button');
+const showOpening=!preview && !pending && !bonusResult && state.mode==='base';
+const ident=$('bee-ident');
+ident.hidden=!showOpening;
+const identHold=showOpening ? new Promise(resolve=>requestAnimationFrame(()=>setTimeout(resolve,reduced?1800:3950))) : Promise.resolve();
 for(;;){
  try{await preloadSymbols();break}
  catch{
+  ident.hidden=true;
   loadingMessage.textContent='Couldn’t load all symbols.';
   retry.hidden=false;
   await new Promise(resolve=>retry.addEventListener('click',resolve,{once:true}));
@@ -403,8 +408,8 @@ for(;;){
  }
 }
 draw(face,state.spots);grid.setAttribute('aria-busy','false');
-loading.hidden=true;
-if(!preview && !pending && !bonusResult && state.mode==='base') await openFieldGuide($('field-guide'));
+loading.hidden=true;await identHold;ident.hidden=true;
+if(showOpening) await openFieldGuide($('field-guide'));
 ready=true;labels();
 if(state.mode!=='base')winShow.prepareBonus(state.mode);
 if(bonusResult){lock(true);await presentBonusResult();save();lock(false)}
