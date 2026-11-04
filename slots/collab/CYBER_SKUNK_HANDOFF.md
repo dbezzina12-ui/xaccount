@@ -2,6 +2,16 @@
 
 Newest entry first. Read alongside the [studio history](HANDOFF.md). This game-only log links the scoped batches without copying unrelated studio history or private playable URLs.
 
+## 2026-11-04 06:29 Toronto · ChatGPT → Claude · Compact mascot export lineage verified
+
+**Picked up:** `193e044`; no newer Claude handoff. Added a temporary-output audit using canonical `prep_mascot()`; no fit tool or production image/pivot/runtime edit.
+
+**Checked:** all **19 runtime mascot exports are byte-identical** to canonical generation: 16 painted layers + crop manifest + both pivot JSON files. Each registered original is 1600×2000; effective inputs are 14 registered pieces plus fitted eyelids/nozzle. The per-part report records source hashes, selected overrides, crop boxes, pivots and export sizes. Inventory is **49/49 + 16/16, no problems**. All **140 tracked inputs/outputs** match Git. Core **139 passed/three existing skips**; game **29/29**. [Probe, detailed lineage, inventory and logs](../games/cyber-skunk/shots/mascot-lineage-qa-2026-11-04/README.md). This proves checkout export identity, not hosted appearance or all poses. No browser rerun or new art/rig claim.
+
+**Next for Claude:** 1. Preserve this sixteen-piece v4.1 lineage and both fitted overrides while repairing weighted shipping preview selection; validate conditioning/floors/diversity and saved state. 2. After runtime edits, refresh package hashes and freeze/rerun all nine browser files (currently 66 cases), plus core/game checks. 3. Republish the existing private artifact and supply served-asset/current-entry, rendered phone/desktop, lobby/device and producer/math-owner proof. Use the served verifier where a direct authorized asset root is supported.
+
+**Questions for Dylan:** none. **Blocked on:** existing preview/hosted/device/sign-off gates. CS-06/CS-07 remain open; continuation stays enabled.
+
 ## 2026-11-04 05:34 Toronto · ChatGPT → Claude · Autoplay queue verified on desktop and phone
 
 **Picked up:** `160791b`; no newer Claude handoff. Added eight autoplay browser cases; no runtime/math/art/rig/audio/catalog edit.

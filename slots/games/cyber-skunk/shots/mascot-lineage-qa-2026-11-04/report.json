@@ -1,0 +1,498 @@
+{
+  "source": "193e0449de0f3e21f11ae1bac503baa7234eaf9f",
+  "scope": "Canonical source-to-export identity only; no pose, browser, hosted or physical-device claim",
+  "pillow": "13.0.0",
+  "libwebp": "1.6.0",
+  "prepSha256": "0ba25bafecbc33ee7cfce26b023f106e2e1c8a06f4632e3fea4efb1f379719fa",
+  "contractSha256": "6f3d6b616d7b3f53b091650bc9faa091164634449085ea2841818b17ec859b98",
+  "contractVersion": 4,
+  "registeredPieceCount": 16,
+  "parts": [
+    {
+      "part": "tail-1",
+      "registeredSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/tail-1.png",
+      "registeredSha256": "e8b22622396e7bb9ddc611749d9d627c4d2946f25f595b0a3cdbb91fff8da8ac",
+      "effectiveSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/tail-1.png",
+      "effectiveSha256": "e8b22622396e7bb9ddc611749d9d627c4d2946f25f595b0a3cdbb91fff8da8ac",
+      "fittedOverride": false,
+      "cropRegistration": {
+        "x": 344,
+        "y": 912,
+        "w": 512,
+        "h": 426,
+        "file": "tail-1.webp"
+      },
+      "pivot": [
+        738,
+        1160
+      ],
+      "exportSize": [
+        256,
+        213
+      ]
+    },
+    {
+      "part": "tail-2",
+      "registeredSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/tail-2.png",
+      "registeredSha256": "59d8e72b7b74ab6b786e763f3fbbfdecc44b316d7be122787f3f608304166314",
+      "effectiveSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/tail-2.png",
+      "effectiveSha256": "59d8e72b7b74ab6b786e763f3fbbfdecc44b316d7be122787f3f608304166314",
+      "fittedOverride": false,
+      "cropRegistration": {
+        "x": 284,
+        "y": 369,
+        "w": 472,
+        "h": 681,
+        "file": "tail-2.webp"
+      },
+      "pivot": [
+        480,
+        955
+      ],
+      "exportSize": [
+        236,
+        340
+      ]
+    },
+    {
+      "part": "tail-3",
+      "registeredSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/tail-3.png",
+      "registeredSha256": "ddd3269760f9413316d6e280e1dca223e3925798cd2a784c247024111f6052ea",
+      "effectiveSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/tail-3.png",
+      "effectiveSha256": "ddd3269760f9413316d6e280e1dca223e3925798cd2a784c247024111f6052ea",
+      "fittedOverride": false,
+      "cropRegistration": {
+        "x": 482,
+        "y": 174,
+        "w": 755,
+        "h": 402,
+        "file": "tail-3.webp"
+      },
+      "pivot": [
+        600,
+        415
+      ],
+      "exportSize": [
+        378,
+        201
+      ]
+    },
+    {
+      "part": "nozzle",
+      "registeredSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/nozzle.png",
+      "registeredSha256": "542e3bb07e7879abb42f17fdc4a3623a9a4095e9f45c1d18b09aeca1094da063",
+      "effectiveSource": "games/cyber-skunk/art/rig/fitted/nozzle.png",
+      "effectiveSha256": "f1ae1749dd91e106394bd84d083f51c5e62e8f36b71b76f545636ed88f921355",
+      "fittedOverride": true,
+      "cropRegistration": {
+        "x": 1165,
+        "y": 370,
+        "w": 193,
+        "h": 142,
+        "file": "nozzle.webp"
+      },
+      "pivot": [
+        1190,
+        443
+      ],
+      "exportSize": [
+        96,
+        71
+      ]
+    },
+    {
+      "part": "far-upper-arm",
+      "registeredSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/far-upper-arm.png",
+      "registeredSha256": "e5067920bdbb0da35b9b84a6336feca703f8058b347d05a23a2ffa16220ae75f",
+      "effectiveSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/far-upper-arm.png",
+      "effectiveSha256": "e5067920bdbb0da35b9b84a6336feca703f8058b347d05a23a2ffa16220ae75f",
+      "fittedOverride": false,
+      "cropRegistration": {
+        "x": 984,
+        "y": 931,
+        "w": 222,
+        "h": 208,
+        "file": "far-upper-arm.webp"
+      },
+      "pivot": [
+        1040,
+        1005
+      ],
+      "exportSize": [
+        111,
+        104
+      ]
+    },
+    {
+      "part": "far-forearm",
+      "registeredSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/far-forearm.png",
+      "registeredSha256": "78fd2e0665393bdf1e427b037e1b3f7dd4bdd71ec43d59f502ade49cc2e82a10",
+      "effectiveSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/far-forearm.png",
+      "effectiveSha256": "78fd2e0665393bdf1e427b037e1b3f7dd4bdd71ec43d59f502ade49cc2e82a10",
+      "fittedOverride": false,
+      "cropRegistration": {
+        "x": 1104,
+        "y": 1082,
+        "w": 252,
+        "h": 126,
+        "file": "far-forearm.webp"
+      },
+      "pivot": [
+        1153,
+        1110
+      ],
+      "exportSize": [
+        126,
+        63
+      ]
+    },
+    {
+      "part": "far-hand",
+      "registeredSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/far-hand.png",
+      "registeredSha256": "e75fb5fa20c85b504972c799b7ef29c19fe93e157d98d70849f13a0272f34e9b",
+      "effectiveSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/far-hand.png",
+      "effectiveSha256": "e75fb5fa20c85b504972c799b7ef29c19fe93e157d98d70849f13a0272f34e9b",
+      "fittedOverride": false,
+      "cropRegistration": {
+        "x": 1264,
+        "y": 1075,
+        "w": 252,
+        "h": 179,
+        "file": "far-hand.webp"
+      },
+      "pivot": [
+        1315,
+        1174
+      ],
+      "exportSize": [
+        126,
+        90
+      ]
+    },
+    {
+      "part": "torso",
+      "registeredSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/torso.png",
+      "registeredSha256": "4536b8dbb76758dc6f3a0d79c6a3ebaaf3826fe8c5e5c9b1177b3a54639eb15f",
+      "effectiveSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/torso.png",
+      "effectiveSha256": "4536b8dbb76758dc6f3a0d79c6a3ebaaf3826fe8c5e5c9b1177b3a54639eb15f",
+      "fittedOverride": false,
+      "cropRegistration": {
+        "x": 614,
+        "y": 836,
+        "w": 492,
+        "h": 528,
+        "file": "torso.webp"
+      },
+      "pivot": [
+        850,
+        1250
+      ],
+      "exportSize": [
+        246,
+        264
+      ]
+    },
+    {
+      "part": "head",
+      "registeredSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/head.png",
+      "registeredSha256": "25b8f717d927b9a5f6c719e5232d090f5364092151e7d52e365b0f5c31d7ecc0",
+      "effectiveSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/head.png",
+      "effectiveSha256": "25b8f717d927b9a5f6c719e5232d090f5364092151e7d52e365b0f5c31d7ecc0",
+      "fittedOverride": false,
+      "cropRegistration": {
+        "x": 655,
+        "y": 414,
+        "w": 559,
+        "h": 662,
+        "file": "head.webp"
+      },
+      "pivot": [
+        900,
+        955
+      ],
+      "exportSize": [
+        280,
+        331
+      ]
+    },
+    {
+      "part": "far-ear",
+      "registeredSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/far-ear.png",
+      "registeredSha256": "e9bff481b76efd25045b95f947384c833ac6428f0b71f78fadfdb01a2fd1c703",
+      "effectiveSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/far-ear.png",
+      "effectiveSha256": "e9bff481b76efd25045b95f947384c833ac6428f0b71f78fadfdb01a2fd1c703",
+      "fittedOverride": false,
+      "cropRegistration": {
+        "x": 1034,
+        "y": 413,
+        "w": 132,
+        "h": 163,
+        "file": "far-ear.webp"
+      },
+      "pivot": [
+        1092,
+        530
+      ],
+      "exportSize": [
+        66,
+        82
+      ]
+    },
+    {
+      "part": "ear",
+      "registeredSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/ear.png",
+      "registeredSha256": "6b119e490560c0883a0722594b022c2ce93beb996b78c0325eda0e4e570e9aa0",
+      "effectiveSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/ear.png",
+      "effectiveSha256": "6b119e490560c0883a0722594b022c2ce93beb996b78c0325eda0e4e570e9aa0",
+      "fittedOverride": false,
+      "cropRegistration": {
+        "x": 729,
+        "y": 364,
+        "w": 182,
+        "h": 232,
+        "file": "ear.webp"
+      },
+      "pivot": [
+        825,
+        545
+      ],
+      "exportSize": [
+        91,
+        116
+      ]
+    },
+    {
+      "part": "goggles",
+      "registeredSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/goggles.png",
+      "registeredSha256": "87df1fe3d55c19f17a3c26272104ce10e7a171b8fdb8043dc721def46a6f48fd",
+      "effectiveSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/goggles.png",
+      "effectiveSha256": "87df1fe3d55c19f17a3c26272104ce10e7a171b8fdb8043dc721def46a6f48fd",
+      "fittedOverride": false,
+      "cropRegistration": {
+        "x": 749,
+        "y": 522,
+        "w": 432,
+        "h": 176,
+        "file": "goggles.webp"
+      },
+      "pivot": [
+        940,
+        600
+      ],
+      "exportSize": [
+        216,
+        88
+      ]
+    },
+    {
+      "part": "eyelids",
+      "registeredSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/eyelids.png",
+      "registeredSha256": "37273b88752e24c599266a43e858ee14b1e332956f4161241e15b7096dea3326",
+      "effectiveSource": "games/cyber-skunk/art/rig/fitted/eyelids.png",
+      "effectiveSha256": "f84a0fa07346358ec5d5b316196d11531035d53e526f43a946c1a36bf961e09c",
+      "fittedOverride": true,
+      "cropRegistration": {
+        "x": 874,
+        "y": 702,
+        "w": 308,
+        "h": 122,
+        "file": "eyelids.webp"
+      },
+      "pivot": [
+        920,
+        800
+      ],
+      "exportSize": [
+        154,
+        61
+      ]
+    },
+    {
+      "part": "near-upper-arm",
+      "registeredSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/near-upper-arm.png",
+      "registeredSha256": "864eb73b00f3411a713bf7dd50ecdec949904bc2bd7498d3c0f3f8956dd43702",
+      "effectiveSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/near-upper-arm.png",
+      "effectiveSha256": "864eb73b00f3411a713bf7dd50ecdec949904bc2bd7498d3c0f3f8956dd43702",
+      "fittedOverride": false,
+      "cropRegistration": {
+        "x": 499,
+        "y": 927,
+        "w": 252,
+        "h": 286,
+        "file": "near-upper-arm.webp"
+      },
+      "pivot": [
+        705,
+        975
+      ],
+      "exportSize": [
+        126,
+        143
+      ]
+    },
+    {
+      "part": "near-forearm",
+      "registeredSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/near-forearm.png",
+      "registeredSha256": "7668501de24342fcdc384f71455476c305289d101c4e5441d6003a9059d062d8",
+      "effectiveSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/near-forearm.png",
+      "effectiveSha256": "7668501de24342fcdc384f71455476c305289d101c4e5441d6003a9059d062d8",
+      "fittedOverride": false,
+      "cropRegistration": {
+        "x": 497,
+        "y": 1114,
+        "w": 245,
+        "h": 202,
+        "file": "near-forearm.webp"
+      },
+      "pivot": [
+        550,
+        1150
+      ],
+      "exportSize": [
+        122,
+        101
+      ]
+    },
+    {
+      "part": "near-hand",
+      "registeredSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/near-hand.png",
+      "registeredSha256": "d1aab3e53a966b535743ee30d701f8ee4b7ef829e42572340e43e4e55e9231bf",
+      "effectiveSource": "games/cyber-skunk/art/source/mascot-compact-v4/registered/near-hand.png",
+      "effectiveSha256": "d1aab3e53a966b535743ee30d701f8ee4b7ef829e42572340e43e4e55e9231bf",
+      "fittedOverride": false,
+      "cropRegistration": {
+        "x": 644,
+        "y": 1218,
+        "w": 252,
+        "h": 213,
+        "file": "near-hand.webp"
+      },
+      "pivot": [
+        695,
+        1263
+      ],
+      "exportSize": [
+        126,
+        106
+      ]
+    }
+  ],
+  "exports": [
+    {
+      "file": "ear.webp",
+      "generatedSha256": "1e9ed87bba00a3ba7de647eb03d98c2c10d6b6e02d60fe385abc2760b6fdd701",
+      "shippedSha256": "1e9ed87bba00a3ba7de647eb03d98c2c10d6b6e02d60fe385abc2760b6fdd701",
+      "byteIdentical": true
+    },
+    {
+      "file": "eyelids.webp",
+      "generatedSha256": "c3bfd37a8d43d728764c33ff7a43f7e4b4c0dcb6849bfac30cce8d5ffb4dc7e4",
+      "shippedSha256": "c3bfd37a8d43d728764c33ff7a43f7e4b4c0dcb6849bfac30cce8d5ffb4dc7e4",
+      "byteIdentical": true
+    },
+    {
+      "file": "far-ear.webp",
+      "generatedSha256": "20675c0f7dab985710dec2f2951c0426a2b5f9d9250b7e32484f464ea0de501e",
+      "shippedSha256": "20675c0f7dab985710dec2f2951c0426a2b5f9d9250b7e32484f464ea0de501e",
+      "byteIdentical": true
+    },
+    {
+      "file": "far-forearm.webp",
+      "generatedSha256": "dd3993f2a2030794771fd58cfdca600a581174d0a962470a041d8de774b43f56",
+      "shippedSha256": "dd3993f2a2030794771fd58cfdca600a581174d0a962470a041d8de774b43f56",
+      "byteIdentical": true
+    },
+    {
+      "file": "far-hand.webp",
+      "generatedSha256": "5d03bceaea4d53933398a0ac612289ccc6dd39376e7eb361669b3331f8d04363",
+      "shippedSha256": "5d03bceaea4d53933398a0ac612289ccc6dd39376e7eb361669b3331f8d04363",
+      "byteIdentical": true
+    },
+    {
+      "file": "far-upper-arm.webp",
+      "generatedSha256": "857ab389ccbd2c9ccbfefae01beddd38585bee42e3843ce34b4b41e505c3b4d0",
+      "shippedSha256": "857ab389ccbd2c9ccbfefae01beddd38585bee42e3843ce34b4b41e505c3b4d0",
+      "byteIdentical": true
+    },
+    {
+      "file": "goggles.webp",
+      "generatedSha256": "1f49a38dcb712460445dd177e994245db4234c0f8b13aaff2036a9317b0af5c7",
+      "shippedSha256": "1f49a38dcb712460445dd177e994245db4234c0f8b13aaff2036a9317b0af5c7",
+      "byteIdentical": true
+    },
+    {
+      "file": "head.webp",
+      "generatedSha256": "e438e1d93dfed447ea0c64fc2a286bbc431b5cd9c5c1723879a0ea8cbd5a53a2",
+      "shippedSha256": "e438e1d93dfed447ea0c64fc2a286bbc431b5cd9c5c1723879a0ea8cbd5a53a2",
+      "byteIdentical": true
+    },
+    {
+      "file": "layers.json",
+      "generatedSha256": "b5505927feed24f369054157d0b197f1b81c766e9a925aa9281f7744896ad59a",
+      "shippedSha256": "b5505927feed24f369054157d0b197f1b81c766e9a925aa9281f7744896ad59a",
+      "byteIdentical": true
+    },
+    {
+      "file": "near-forearm.webp",
+      "generatedSha256": "c96b34ba502c8b0eeb2ce996a620681c4d4ffb4a4b9b2f39fec1b2045418dae4",
+      "shippedSha256": "c96b34ba502c8b0eeb2ce996a620681c4d4ffb4a4b9b2f39fec1b2045418dae4",
+      "byteIdentical": true
+    },
+    {
+      "file": "near-hand.webp",
+      "generatedSha256": "5a1c81c7b6285a0f706cff4e22b5e58e23c204a8d105a93ceae14b38ca6327b6",
+      "shippedSha256": "5a1c81c7b6285a0f706cff4e22b5e58e23c204a8d105a93ceae14b38ca6327b6",
+      "byteIdentical": true
+    },
+    {
+      "file": "near-upper-arm.webp",
+      "generatedSha256": "0f4fc10d7630012f8362b89b5c280dba0bce9d87887a2ec498febd7c28069264",
+      "shippedSha256": "0f4fc10d7630012f8362b89b5c280dba0bce9d87887a2ec498febd7c28069264",
+      "byteIdentical": true
+    },
+    {
+      "file": "nozzle.webp",
+      "generatedSha256": "4adce45262a2a4613a5bf683c93463044daac7e075d346608fe091af41a02fc2",
+      "shippedSha256": "4adce45262a2a4613a5bf683c93463044daac7e075d346608fe091af41a02fc2",
+      "byteIdentical": true
+    },
+    {
+      "file": "pivots-v4.json",
+      "generatedSha256": "6f3d6b616d7b3f53b091650bc9faa091164634449085ea2841818b17ec859b98",
+      "shippedSha256": "6f3d6b616d7b3f53b091650bc9faa091164634449085ea2841818b17ec859b98",
+      "byteIdentical": true
+    },
+    {
+      "file": "pivots.json",
+      "generatedSha256": "6f3d6b616d7b3f53b091650bc9faa091164634449085ea2841818b17ec859b98",
+      "shippedSha256": "6f3d6b616d7b3f53b091650bc9faa091164634449085ea2841818b17ec859b98",
+      "byteIdentical": true
+    },
+    {
+      "file": "tail-1.webp",
+      "generatedSha256": "2c41c4ba5edad4719123da4087de3c71511ca253d88e203193d4427f9b8be043",
+      "shippedSha256": "2c41c4ba5edad4719123da4087de3c71511ca253d88e203193d4427f9b8be043",
+      "byteIdentical": true
+    },
+    {
+      "file": "tail-2.webp",
+      "generatedSha256": "7f6d0ff1631919ad09c37b2c893a8bd096cc42c63a9b8ab2f4612eb03b11434a",
+      "shippedSha256": "7f6d0ff1631919ad09c37b2c893a8bd096cc42c63a9b8ab2f4612eb03b11434a",
+      "byteIdentical": true
+    },
+    {
+      "file": "tail-3.webp",
+      "generatedSha256": "48c733ad855fe2033363a88cd00e8ecaeeb24700c7cac9eadce79f2c4f2b1337",
+      "shippedSha256": "48c733ad855fe2033363a88cd00e8ecaeeb24700c7cac9eadce79f2c4f2b1337",
+      "byteIdentical": true
+    },
+    {
+      "file": "torso.webp",
+      "generatedSha256": "f8ec91b1b7029b8462e86bd6df74b757e8d036cb4d6e70d9ea85dcd66aedf71f",
+      "shippedSha256": "f8ec91b1b7029b8462e86bd6df74b757e8d036cb4d6e70d9ea85dcd66aedf71f",
+      "byteIdentical": true
+    }
+  ],
+  "exportCount": 19,
+  "allExportsByteIdentical": true
+}
