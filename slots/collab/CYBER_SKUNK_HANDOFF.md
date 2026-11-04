@@ -2,6 +2,38 @@
 
 Newest entry first. Read alongside the [studio history](HANDOFF.md). This game-only log links the scoped batches without copying unrelated studio history or private playable URLs.
 
+## 2026-11-04 · Claude → ChatGPT · Neon GG studio ident on the loading screen
+
+**Dylan asked** for a few loading animations to pick from for the GG Gamboligy Games screen. I made five beside the current one (Reel Stop, Neon Sign, Blueprint, Coin Toss, Slash Cut) on a private review page. He picked **Neon Sign**.
+
+**Did:**
+- **Mark:** the loading screen now draws the GG as an amber neon sign, from an inline SVG of the mark. I rebuilt the mark from `assets/studio-gg-diagonal.png` (99% overlap with the PNG). The PNG stays; the controller's buy button still uses it.
+- **Sequence:**
+  - the tubes start unlit;
+  - the first G stutters on at 0.2 s and the second at 0.55 s;
+  - GAMBOLIGY and GAMES light letter by letter from 1.45 s, and the O catches late;
+  - everything is lit by about 3.35 s, within the existing 3.95 s hold.
+- **Glow:** the glow is drawn as wider, fainter strokes, not a CSS filter. Dylan saw a box behind the filter version on his device; the stroke version avoids that.
+- **Loading bar:** a thin neon tube.
+- **Background:** the loading hall is a little darker.
+- **Reduced motion:** shows the sign already lit.
+- **Removed:** the old diagonal-join rules. No math, outcome, rig or audio change.
+- **Cache key:** `entry-shop.css` is now `neon-ident-1`.
+
+**Files:** `runtime/index.html` (ident markup), `runtime/entry-shop.css` (neon styles, bar, hall tint), `shots/neon-ident-2026-11-04-sequence.jpg`, `shots/neon-ident-2026-11-04-1366.jpg`.
+
+**Checked:**
+- **Loading screen:** at 1920×1080, 1366×768, 390×844 and 360×800 it is centred, has no page errors, and hides once the game is ready.
+- **Unit tests:** game 29/29; core 137/137.
+- **Browser, all eight Cyber Skunk files together:** 56 of 58 passed. Two tests pinned the old ident, so I updated them to the new one and both now pass on rerun:
+  - the slow-load ident test waited for `.studio-monogram` and now waits for `.neon-sign`;
+  - the artifact test pinned `entry-shop.css?v=stake-prices-1` and now pins `neon-ident-1`.
+- **Not claimed:** a single all-58 run with the updated pins.
+
+**Next for ChatGPT:** Zombify and RoboBees still use the old diagonal-join ident. Dylan may want the same neon sign there.
+
+**Questions for Dylan:** none. **Blocked on:** nothing.
+
 ## 2026-11-03 09:34 Toronto · ChatGPT → Claude · Shared entry reaches shipping runtime
 
 **Picked up:** `c27480d`; no newer Claude handoff. Recovered an isolated checkout after the prior local workspace disappeared. Fixed `slots/index.html?game=cyber-skunk`: it previously invoked the legacy launcher and requested a nonexistent model. It now replaces the page with the standalone runtime, retaining other query values/hash. Other games keep their existing boot path. STYLE links both source entry routes.

@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#101820">
 <title>Cyber Skunk · Gamboligy Games</title>
 <link rel="stylesheet" href="styles.css?v=desktop-rail-1">
-<link rel="stylesheet" href="entry-shop.css?v=stake-prices-1">
+<link rel="stylesheet" href="entry-shop.css?v=neon-ident-1">
 <link rel="preload" href="assets/studio-gg-diagonal.png" as="image">
 <link rel="preload" href="assets/ui/airlock.svg" as="image" fetchpriority="low">
 <link rel="preload" href="assets/ui/splash-desktop.webp" as="image" media="(min-width:760px)" fetchpriority="low">
@@ -14,9 +14,11 @@
 </head>
 <body>
 <div id="loading-screen" class="loading-screen" role="status" aria-live="polite">
-  <div class="studio-identity ident-ready" aria-label="Gamboligy Games">
-    <div class="studio-monogram" aria-hidden="true"><span class="gg-piece gg-first"></span><span class="gg-piece gg-second"></span></div>
-    <div class="studio-wordmark" aria-hidden="true"><div class="studio-main"><b>GAM</b>BOLIGY</div><div class="studio-sub"><span class="studio-gam">GAM</span><span class="studio-es">ES</span></div></div>
+  <div class="studio-identity ident-ready ident-neon" aria-label="Gamboligy Games">
+    <div class="neon-sign" aria-hidden="true"><div class="neon-wall"></div>
+      <svg class="neon-mark" viewBox="180 250 900 750" focusable="false"><defs><path id="gg-1" d="M378 266H735L606 416H389A55 55 0 0 0 334 471V600A55 55 0 0 0 389 655H517L399 797H368A175 175 0 0 1 193 622V451A185 185 0 0 1 378 266Z"/><path id="gg-bar" d="M437 477H658L557 602H437Z"/><path id="gg-2" d="M726 440H926A135 135 0 0 1 1061 575V597H759L606 779V817A25 25 0 0 0 631 842H911V777H777V654H1061V855A130 130 0 0 1 931 985H577A145 145 0 0 1 432 840V798Z"/></defs>
+        <g class="neon-tube"><use href="#gg-1"/><use href="#gg-bar"/><use href="#gg-2"/></g><g class="neon-lit neon-l1"><g class="neon-halo2"><use href="#gg-1"/><use href="#gg-bar"/></g><g class="neon-halo1"><use href="#gg-1"/><use href="#gg-bar"/></g><g class="neon-core"><use href="#gg-1"/><use href="#gg-bar"/></g></g><g class="neon-lit neon-l2"><g class="neon-halo2"><use href="#gg-2"/></g><g class="neon-halo1"><use href="#gg-2"/></g><g class="neon-core"><use href="#gg-2"/></g></g></svg></div>
+    <div class="studio-wordmark neon-word" aria-hidden="true"><div><span style="--i:0">G</span><span style="--i:1">A</span><span style="--i:2">M</span><span style="--i:3">B</span><span style="--i:4" class="late">O</span><span style="--i:5">L</span><span style="--i:6">I</span><span style="--i:7">G</span><span style="--i:8">Y</span></div><div><span style="--i:9">G</span><span style="--i:10">A</span><span style="--i:11">M</span><span style="--i:12">E</span><span style="--i:13">S</span></div></div>
   </div>
   <div class="load-console"><h1 id="load-title">Preparing game</h1>
     <progress id="load-progress" max="4" value="0" aria-label="Game loading progress"></progress>

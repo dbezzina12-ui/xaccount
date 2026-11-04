@@ -457,7 +457,7 @@ test('studio ident advances to a gated guide on slow loads', async () => {
   try {
     await page.route('**/assets/symbols/a.webp*', async route=>{await gate;await route.continue();});
     await page.goto(srv.url+GAME,{waitUntil:'domcontentloaded'});
-    await page.locator('.studio-monogram').waitFor();
+    await page.locator('.neon-sign').waitFor();
     assert.equal(await page.locator('#loading-screen canvas, #studio-mascot').count(),0);
     await page.waitForTimeout(3200);
     await page.screenshot({path:'/tmp/cyber-studio-ident.png'});
