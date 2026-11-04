@@ -1,0 +1,208 @@
+TAP version 13
+# Subtest: every pool and tier table is whole tickets summing to 1e9
+ok 1 - every pool and tier table is whole tickets summing to 1e9
+  ---
+  duration_ms: 44.563568
+  type: 'test'
+  ...
+# Subtest: every paid mode returns 96% of its cost; the report matches the shipped catalogs
+ok 2 - every paid mode returns 96% of its cost; the report matches the shipped catalogs
+  ---
+  duration_ms: 12.347311
+  type: 'test'
+  ...
+# Subtest: max-win odds are Dylan's: base 1 in 1,000,000, bought Overpressure 1 in 50,000, Blackout 1 in 200 and at least 1,000x
+ok 3 - max-win odds are Dylan's: base 1 in 1,000,000, bought Overpressure 1 in 50,000, Blackout 1 in 200 and at least 1,000x
+  ---
+  duration_ms: 2.48682
+  type: 'test'
+  ...
+# Subtest: a triggered bonus averages the same as a bought one
+ok 4 - a triggered bonus averages the same as a bought one
+  ---
+  duration_ms: 22.65195
+  type: 'test'
+  ...
+# Subtest: tier tables carry the natural trigger rates of rules.js
+ok 5 - tier tables carry the natural trigger rates of rules.js
+  ---
+  duration_ms: 0.306945
+  type: 'test'
+  ...
+# Subtest: a sample of every pool replays exactly through the engine
+ok 6 - a sample of every pool replays exactly through the engine
+  ---
+  duration_ms: 189.061918
+  type: 'test'
+  ...
+# Subtest: the game draws rounds from the catalogs and they replay exactly
+ok 7 - the game draws rounds from the catalogs and they replay exactly
+  ---
+  duration_ms: 146.553984
+  type: 'test'
+  ...
+# Subtest: a replay that disagrees with the catalog is refused
+ok 8 - a replay that disagrees with the catalog is refused
+  ---
+  duration_ms: 0.867511
+  type: 'test'
+  ...
+# Subtest: a round is a pure function of its seeds
+ok 9 - a round is a pure function of its seeds
+  ---
+  duration_ms: 27.271632
+  type: 'test'
+  ...
+# Subtest: the route lands on the left-most vent, follows each outlet, and gains 1 pressure per vent
+ok 10 - the route lands on the left-most vent, follows each outlet, and gains 1 pressure per vent
+  ---
+  duration_ms: 0.589718
+  type: 'test'
+  ...
+# Subtest: a route never loops: it ends on a touched cell, at the edge, or after its step limit
+ok 11 - a route never loops: it ends on a touched cell, at the edge, or after its step limit
+  ---
+  duration_ms: 30.222153
+  type: 'test'
+  ...
+# Subtest: touched cells turn wild, vents carry xN, scatters stay scatters
+ok 12 - touched cells turn wild, vents carry xN, scatters stay scatters
+  ---
+  duration_ms: 0.604116
+  type: 'test'
+  ...
+# Subtest: lines: the first real symbol decides, wilds substitute, xN vents add up, six wilds pay as H1
+ok 13 - lines: the first real symbol decides, wilds substitute, xN vents add up, six wilds pay as H1
+  ---
+  duration_ms: 0.72176
+  type: 'test'
+  ...
+# Subtest: every win is a whole 0.1x, every round stays within the 25,000x cap
+ok 14 - every win is a whole 0.1x, every round stays within the 25,000x cap
+  ---
+  duration_ms: 256.169243
+  type: 'test'
+  ...
+# Subtest: Blackout Protocol opens with 4 vents on one route
+ok 15 - Blackout Protocol opens with 4 vents on one route
+  ---
+  duration_ms: 1.163766
+  type: 'test'
+  ...
+# Subtest: bonus rules: sticky vents, Reservoir, retriggers and their caps
+ok 16 - bonus rules: sticky vents, Reservoir, retriggers and their caps
+  ---
+  duration_ms: 188.998992
+  type: 'test'
+  ...
+# Subtest: Spray Job always sprays from reel 1; a natural bonus is its trigger spin plus the bonus
+ok 17 - Spray Job always sprays from reel 1; a natural bonus is its trigger spin plus the bonus
+  ---
+  duration_ms: 97.448542
+  type: 'test'
+  ...
+# Subtest: Mystery reveals Overpressure or Blackout only, 90% / 10% of every ticket
+ok 18 - Mystery reveals Overpressure or Blackout only, 90% / 10% of every ticket
+  ---
+  duration_ms: 3.229701
+  type: 'test'
+  ...
+# Subtest: Mystery returns 96% of its 500x price, to a billionth of the cost
+ok 19 - Mystery returns 96% of its 500x price, to a billionth of the cost
+  ---
+  duration_ms: 16.384324
+  type: 'test'
+  ...
+# Subtest: every Mystery pays at least 40x, every Blackout at least 1,000x
+ok 20 - every Mystery pays at least 40x, every Blackout at least 1,000x
+  ---
+  duration_ms: 5.104017
+  type: 'test'
+  ...
+# Subtest: both ends of each Mystery tier replay the selected catalog bonus
+ok 21 - both ends of each Mystery tier replay the selected catalog bonus
+  ---
+  duration_ms: 9.939232
+  type: 'test'
+  ...
+# Subtest: pressure transfers reveal the whole viewport once, including skip, rotation and low frame rate
+ok 22 - pressure transfers reveal the whole viewport once, including skip, rotation and low frame rate
+  ---
+  duration_ms: 3.42242
+  type: 'test'
+  ...
+# Subtest: fan starts still, accelerates, carries real faces outwards and restores them
+ok 23 - fan starts still, accelerates, carries real faces outwards and restores them
+  ---
+  duration_ms: 2.99741
+  type: 'test'
+  ...
+# Subtest: each preview choice draws the documented shipping pools
+ok 24 - each preview choice draws the documented shipping pools
+  ---
+  duration_ms: 2.018896
+  type: 'test'
+  ...
+# Subtest: both ends of every preview pool replay their positive-weight catalog row
+ok 25 - both ends of every preview pool replay their positive-weight catalog row
+  ---
+  duration_ms: 29.803232
+  type: 'test'
+  ...
+# Subtest: buy and Blackout previews follow their shipping weights (30,000 draws each)
+ok 26 - buy and Blackout previews follow their shipping weights (30,000 draws each)
+  ---
+  duration_ms: 16621.229699
+  type: 'test'
+  ...
+# Subtest: Spray Job previews always spray and keep natural bonuses (200,000 draws)
+ok 27 - Spray Job previews always spray and keep natural bonuses (200,000 draws)
+  ---
+  duration_ms: 3619.959475
+  type: 'test'
+  ...
+# Subtest: the game ships the same pivots as the art contract
+ok 28 - the game ships the same pivots as the art contract
+  ---
+  duration_ms: 2.957025
+  type: 'test'
+  ...
+# Subtest: the spray pose reaches over the head within the ±35° each segment allows
+ok 29 - the spray pose reaches over the head within the ±35° each segment allows
+  ---
+  duration_ms: 0.279812
+  type: 'test'
+  ...
+# Subtest: no joint ever separates: each part turns about a point its parent carries
+ok 30 - no joint ever separates: each part turns about a point its parent carries
+  ---
+  duration_ms: 33.158685
+  type: 'test'
+  ...
+# Subtest: both boots stay planted, flat on the floor, in every clip
+ok 31 - both boots stay planted, flat on the floor, in every clip
+  ---
+  duration_ms: 12.725138
+  type: 'test'
+  ...
+# Subtest: tail segments stay inside their ±35° range in every clip
+ok 32 - tail segments stay inside their ±35° range in every clip
+  ---
+  duration_ms: 2.940059
+  type: 'test'
+  ...
+# Subtest: rig v4.1 (ChatGPT's pieces, waist up): every joint holds and the tail stays in range in every clip
+ok 33 - rig v4.1 (ChatGPT's pieces, waist up): every joint holds and the tail stays in range in every clip
+  ---
+  duration_ms: 14.514668
+  type: 'test'
+  ...
+1..33
+# tests 33
+# suites 0
+# pass 33
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 20727.578734

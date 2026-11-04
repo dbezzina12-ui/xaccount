@@ -1,0 +1,487 @@
+TAP version 13
+# Subtest: artifact manifest: every exported byte matches its source
+ok 1 - artifact manifest: every exported byte matches its source
+  ---
+  duration_ms: 1293.214966
+  type: 'test'
+  ...
+# Subtest: artifact launch and shop: 360×740
+ok 2 - artifact launch and shop: 360×740
+  ---
+  duration_ms: 9011.038165
+  type: 'test'
+  ...
+# Subtest: artifact launch and shop: 390×844
+ok 3 - artifact launch and shop: 390×844
+  ---
+  duration_ms: 8333.139691
+  type: 'test'
+  ...
+# Subtest: artifact launch and shop: 430×932
+ok 4 - artifact launch and shop: 430×932
+  ---
+  duration_ms: 7876.983641
+  type: 'test'
+  ...
+# Subtest: artifact launch and shop: 1366×768
+ok 5 - artifact launch and shop: 1366×768
+  ---
+  duration_ms: 8513.752325
+  type: 'test'
+  ...
+# Subtest: artifact shipping outcomes and settlement: 390×844
+ok 6 - artifact shipping outcomes and settlement: 390×844
+  ---
+  duration_ms: 10551.113445
+  type: 'test'
+  ...
+# Subtest: artifact shipping outcomes and settlement: 1366×768
+ok 7 - artifact shipping outcomes and settlement: 1366×768
+  ---
+  duration_ms: 9790.880853
+  type: 'test'
+  ...
+# Subtest: artifact requests: no missing game dependencies or changed source bytes
+ok 8 - artifact requests: no missing game dependencies or changed source bytes
+  ---
+  duration_ms: 50.413078
+  type: 'test'
+  ...
+# {"name":"desktop-count","width":1366,"height":768,"bank":1000000,"expected":{"draw":{"spin":606},"total":0,"natural":false,"tier":null,"ticketsPerRound":2,"queuedRounds":10},"result":{"balance":999000,"busy":false,"auto":0,"history":[{"t":1793815206879,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}},{"t":1793815206015,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}},{"t":1793815205146,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}},{"t":1793815204279,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}},{"t":1793815203415,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}},{"t":1793815202550,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}},{"t":1793815201679,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}},{"t":1793815200815,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}},{"t":1793815199947,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}},{"t":1793815199043,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}}],"consumed":20,"remainingTickets":0,"unexpectedDraws":0},"errors":[]}
+# Subtest: autoplay desktop: count
+ok 9 - autoplay desktop: count
+  ---
+  duration_ms: 15083.508976
+  type: 'test'
+  ...
+# {"name":"desktop-cancel","width":1366,"height":768,"bank":1000000,"expected":{"draw":{"spin":606},"total":0,"natural":false,"tier":null,"ticketsPerRound":2,"queuedRounds":10},"during":{"auto":0,"busy":true,"skip":false},"result":{"balance":999900,"busy":false,"auto":0,"history":[{"t":1793815213288,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}}],"consumed":2,"remainingTickets":18,"unexpectedDraws":0},"errors":[]}
+# Subtest: autoplay desktop: cancel
+ok 10 - autoplay desktop: cancel
+  ---
+  duration_ms: 6453.282569
+  type: 'test'
+  ...
+# {"name":"desktop-funds","width":1366,"height":768,"bank":250,"expected":{"draw":{"spin":606},"total":0,"natural":false,"tier":null,"ticketsPerRound":2,"queuedRounds":10},"result":{"balance":50,"busy":false,"auto":0,"history":[{"t":1793815220801,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}},{"t":1793815219877,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}}],"consumed":4,"remainingTickets":16,"unexpectedDraws":0},"errors":[]}
+# Subtest: autoplay desktop: funds
+ok 11 - autoplay desktop: funds
+  ---
+  duration_ms: 7796.507047
+  type: 'test'
+  ...
+# {"name":"desktop-bonus","width":1366,"height":768,"bank":1000000,"expected":{"draw":{"entry":77,"bonus":653812,"tier":"regular"},"total":20,"natural":true,"tier":"regular","ticketsPerRound":3,"queuedRounds":1},"result":{"balance":999920,"busy":false,"auto":0,"history":[{"t":1793815227605,"mode":"base","bet":100,"cost":100,"win":20,"tier":"regular","seed":{"entry":77,"bonus":653812,"tier":"regular"}}],"consumed":3,"remainingTickets":0,"unexpectedDraws":0},"errors":[]}
+# Subtest: autoplay desktop: bonus
+ok 12 - autoplay desktop: bonus
+  ---
+  duration_ms: 7529.888744
+  type: 'test'
+  ...
+# {"name":"phone-count","width":390,"height":844,"bank":1000000,"expected":{"draw":{"spin":606},"total":0,"natural":false,"tier":null,"ticketsPerRound":2,"queuedRounds":10},"result":{"balance":999000,"busy":false,"auto":0,"history":[{"t":1793815242879,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}},{"t":1793815241995,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}},{"t":1793815241128,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}},{"t":1793815240264,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}},{"t":1793815239395,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}},{"t":1793815238515,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}},{"t":1793815237629,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}},{"t":1793815236745,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}},{"t":1793815235865,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}},{"t":1793815234983,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}}],"consumed":20,"remainingTickets":0,"unexpectedDraws":0},"errors":[]}
+# Subtest: autoplay phone: count
+ok 13 - autoplay phone: count
+  ---
+  duration_ms: 14221.472898
+  type: 'test'
+  ...
+# {"name":"phone-cancel","width":390,"height":844,"bank":1000000,"expected":{"draw":{"spin":606},"total":0,"natural":false,"tier":null,"ticketsPerRound":2,"queuedRounds":10},"during":{"auto":0,"busy":true,"skip":false},"result":{"balance":999900,"busy":false,"auto":0,"history":[{"t":1793815249316,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}}],"consumed":2,"remainingTickets":18,"unexpectedDraws":0},"errors":[]}
+# Subtest: autoplay phone: cancel
+ok 14 - autoplay phone: cancel
+  ---
+  duration_ms: 6413.831762
+  type: 'test'
+  ...
+# {"name":"phone-funds","width":390,"height":844,"bank":250,"expected":{"draw":{"spin":606},"total":0,"natural":false,"tier":null,"ticketsPerRound":2,"queuedRounds":10},"result":{"balance":50,"busy":false,"auto":0,"history":[{"t":1793815256487,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}},{"t":1793815255600,"mode":"base","bet":100,"cost":100,"win":0,"tier":null,"seed":{"spin":606}}],"consumed":4,"remainingTickets":16,"unexpectedDraws":0},"errors":[]}
+# Subtest: autoplay phone: funds
+ok 15 - autoplay phone: funds
+  ---
+  duration_ms: 7533.318781
+  type: 'test'
+  ...
+# {"name":"phone-bonus","width":390,"height":844,"bank":1000000,"expected":{"draw":{"entry":77,"bonus":653812,"tier":"regular"},"total":20,"natural":true,"tier":"regular","ticketsPerRound":3,"queuedRounds":1},"result":{"balance":999920,"busy":false,"auto":0,"history":[{"t":1793815263150,"mode":"base","bet":100,"cost":100,"win":20,"tier":"regular","seed":{"entry":77,"bonus":653812,"tier":"regular"}}],"consumed":3,"remainingTickets":0,"unexpectedDraws":0},"errors":[]}
+# Subtest: autoplay phone: bonus
+ok 16 - autoplay phone: bonus
+  ---
+  duration_ms: 7560.1493
+  type: 'test'
+  ...
+# desktop: ventbreak cancellation with Escape
+# desktop: ventbreak cancellation with Enter
+# desktop: overpressure cancellation with Escape
+# desktop: overpressure cancellation with Enter
+# desktop: mystery cancellation with Escape
+# desktop: mystery cancellation with Enter
+# Subtest: dialog keys: desktop containment, cancellation and focus restoration
+ok 17 - dialog keys: desktop containment, cancellation and focus restoration
+  ---
+  duration_ms: 12050.853881
+  type: 'test'
+  ...
+# phone: ventbreak cancellation with Escape
+# phone: ventbreak cancellation with Enter
+# phone: overpressure cancellation with Escape
+# phone: overpressure cancellation with Enter
+# phone: mystery cancellation with Escape
+# phone: mystery cancellation with Enter
+# Subtest: dialog keys: phone containment, cancellation and focus restoration
+ok 18 - dialog keys: phone containment, cancellation and focus restoration
+  ---
+  duration_ms: 11183.682577
+  type: 'test'
+  ...
+# Subtest: ordinary entry: desktop launches, settles and resumes credits
+ok 19 - ordinary entry: desktop launches, settles and resumes credits
+  ---
+  duration_ms: 10337.002835
+  type: 'test'
+  ...
+# Subtest: ordinary entry: phone launches, settles and resumes credits
+ok 20 - ordinary entry: phone launches, settles and resumes credits
+  ---
+  duration_ms: 9178.476151
+  type: 'test'
+  ...
+# Subtest: desktop: free previews are shipping draws and leave the session untouched
+ok 21 - desktop: free previews are shipping draws and leave the session untouched
+  ---
+  duration_ms: 152631.436327
+  type: 'test'
+  ...
+# Subtest: phone: free previews are shipping draws and leave the session untouched
+ok 22 - phone: free previews are shipping draws and leave the session untouched
+  ---
+  duration_ms: 142726.508563
+  type: 'test'
+  ...
+# {"label":"desktop-super-max","width":1366,"height":768,"key":"Enter","expected":{"mode":"overpressure","tier":"super","poolName":"bonus-super","seed":614838,"rowWeight":308,"hiddenTickets":null,"totalTickets":1000000000,"cost":25000,"paid":2500000},"spinPopups":[],"before":{"balance":975000,"pending":{"t":1793815611712,"mode":"overpressure","bet":100,"cost":25000,"win":2500000,"tier":"super","seed":{"bonus":614838}},"history":0},"after":{"balance":3475000,"busy":false,"amount":"$25,000.00","history":[{"t":1793815611712,"mode":"overpressure","bet":100,"cost":25000,"win":2500000,"tier":"super","seed":{"bonus":614838}}]}}
+# Subtest: rare win keys: desktop-super-max
+ok 23 - rare win keys: desktop-super-max
+  ---
+  duration_ms: 10260.823333
+  type: 'test'
+  ...
+# {"label":"phone-base-hidden-max","width":390,"height":844,"key":"Escape","expected":{"mode":"base","tier":"hidden","poolName":"bonus-hidden","seed":68471,"rowWeight":40901,"hiddenTickets":6585,"totalTickets":1000000000,"cost":100,"paid":2500000},"spinPopups":[],"before":{"balance":999900,"pending":{"t":1793815619738,"mode":"base","bet":100,"cost":100,"win":2500000,"tier":"hidden","seed":{"entry":40,"bonus":68471,"tier":"hidden"}},"history":0},"after":{"balance":3499900,"busy":false,"amount":"$25,000.00","history":[{"t":1793815619738,"mode":"base","bet":100,"cost":100,"win":2500000,"tier":"hidden","seed":{"entry":40,"bonus":68471,"tier":"hidden"}}]}}
+# Subtest: rare win keys: phone-base-hidden-max
+ok 24 - rare win keys: phone-base-hidden-max
+  ---
+  duration_ms: 8592.637621
+  type: 'test'
+  ...
+# {"name":"desktop-saved","initial":{"balance":1234567,"bet":100,"music":37,"effects":42,"muted":false,"speed":"normal","busy":false,"menu":{"sound":true,"music":"37","effects":"42","speed":"normal"},"bounds":{"x":550.09375,"y":105,"right":815.90625,"bottom":663},"viewport":{"width":1366,"height":768}},"changed":{"balance":1234567,"bet":100,"music":23,"effects":99,"muted":true,"speed":"quick","busy":false,"menu":{"sound":false,"music":"23","effects":"99","speed":"quick"},"bounds":{"x":550.09375,"y":105,"right":815.90625,"bottom":663},"viewport":{"width":1366,"height":768}},"controller":{"balance":1234567,"bet":100,"music":23,"effects":99,"muted":false,"speed":"turbo","busy":false,"menu":{"sound":true,"music":"23","effects":"99","speed":"turbo"},"bounds":{"x":550.09375,"y":105,"right":815.90625,"bottom":663},"viewport":{"width":1366,"height":768}},"beforeReload":{"balance":1234567,"bet":100,"speed":"turbo","muted":false,"music":23,"effects":99,"history":[],"pending":null},"reloaded":{"balance":1234567,"bet":100,"music":23,"effects":99,"muted":false,"speed":"turbo","busy":false,"menu":{"sound":true,"music":"23","effects":"99","speed":"turbo"},"bounds":{"x":550.09375,"y":105,"right":815.90625,"bottom":663},"viewport":{"width":1366,"height":768}},"reset":{"balance":1000000,"bet":100,"music":23,"effects":99,"muted":false,"speed":"turbo","busy":false,"menu":{"sound":true,"music":"23","effects":"99","speed":"turbo"},"bounds":{"x":550.09375,"y":105,"right":815.90625,"bottom":663},"viewport":{"width":1366,"height":768}},"errors":[],"scope":"DOM/state controls only; no audible mix, physical device or hosted verification."}
+# Subtest: settings desktop: saved preferences and reset
+ok 25 - settings desktop: saved preferences and reset
+  ---
+  duration_ms: 16071.963107
+  type: 'test'
+  ...
+# {"name":"desktop-blocked","initial":{"balance":1000000,"bet":100,"music":60,"effects":80,"muted":false,"speed":"normal","busy":false,"menu":{"sound":true,"music":"60","effects":"80","speed":"normal"},"bounds":{"x":550.09375,"y":105,"right":815.90625,"bottom":663},"viewport":{"width":1366,"height":768}},"changed":{"balance":1000000,"bet":100,"music":23,"effects":99,"muted":true,"speed":"quick","busy":false,"menu":{"sound":false,"music":"23","effects":"99","speed":"quick"},"bounds":{"x":550.09375,"y":105,"right":815.90625,"bottom":663},"viewport":{"width":1366,"height":768}},"controller":{"balance":1000000,"bet":100,"music":23,"effects":99,"muted":false,"speed":"turbo","busy":false,"menu":{"sound":true,"music":"23","effects":"99","speed":"turbo"},"bounds":{"x":550.09375,"y":105,"right":815.90625,"bottom":663},"viewport":{"width":1366,"height":768}},"reloaded":{"balance":1000000,"bet":100,"music":60,"effects":80,"muted":false,"speed":"normal","busy":false,"menu":{"sound":true,"music":"60","effects":"80","speed":"normal"},"bounds":{"x":550.09375,"y":105,"right":815.90625,"bottom":663},"viewport":{"width":1366,"height":768}},"errors":[],"scope":"DOM/state controls only; no audible mix, physical device or hosted verification."}
+# Subtest: settings desktop: storage unavailable
+ok 26 - settings desktop: storage unavailable
+  ---
+  duration_ms: 10313.16065
+  type: 'test'
+  ...
+# {"name":"phone-saved","initial":{"balance":1234567,"bet":100,"music":37,"effects":42,"muted":false,"speed":"normal","busy":false,"menu":{"sound":true,"music":"37","effects":"42","speed":"normal"},"bounds":{"x":62.09375,"y":150,"right":327.90625,"bottom":694},"viewport":{"width":390,"height":844}},"changed":{"balance":1234567,"bet":100,"music":23,"effects":99,"muted":true,"speed":"quick","busy":false,"menu":{"sound":false,"music":"23","effects":"99","speed":"quick"},"bounds":{"x":62.09375,"y":150,"right":327.90625,"bottom":694},"viewport":{"width":390,"height":844}},"controller":{"balance":1234567,"bet":100,"music":23,"effects":99,"muted":false,"speed":"turbo","busy":false,"menu":{"sound":true,"music":"23","effects":"99","speed":"turbo"},"bounds":{"x":62.09375,"y":150,"right":327.90625,"bottom":694},"viewport":{"width":390,"height":844}},"beforeReload":{"balance":1234567,"bet":100,"speed":"turbo","muted":false,"music":23,"effects":99,"history":[],"pending":null},"reloaded":{"balance":1234567,"bet":100,"music":23,"effects":99,"muted":false,"speed":"turbo","busy":false,"menu":{"sound":true,"music":"23","effects":"99","speed":"turbo"},"bounds":{"x":62.09375,"y":150,"right":327.90625,"bottom":694},"viewport":{"width":390,"height":844}},"reset":{"balance":1000000,"bet":100,"music":23,"effects":99,"muted":false,"speed":"turbo","busy":false,"menu":{"sound":true,"music":"23","effects":"99","speed":"turbo"},"bounds":{"x":62.09375,"y":150,"right":327.90625,"bottom":694},"viewport":{"width":390,"height":844}},"errors":[],"scope":"DOM/state controls only; no audible mix, physical device or hosted verification."}
+# Subtest: settings phone: saved preferences and reset
+ok 27 - settings phone: saved preferences and reset
+  ---
+  duration_ms: 14827.508986
+  type: 'test'
+  ...
+# {"name":"phone-blocked","initial":{"balance":1000000,"bet":100,"music":60,"effects":80,"muted":false,"speed":"normal","busy":false,"menu":{"sound":true,"music":"60","effects":"80","speed":"normal"},"bounds":{"x":62.09375,"y":150,"right":327.90625,"bottom":694},"viewport":{"width":390,"height":844}},"changed":{"balance":1000000,"bet":100,"music":23,"effects":99,"muted":true,"speed":"quick","busy":false,"menu":{"sound":false,"music":"23","effects":"99","speed":"quick"},"bounds":{"x":62.09375,"y":150,"right":327.90625,"bottom":694},"viewport":{"width":390,"height":844}},"controller":{"balance":1000000,"bet":100,"music":23,"effects":99,"muted":false,"speed":"turbo","busy":false,"menu":{"sound":true,"music":"23","effects":"99","speed":"turbo"},"bounds":{"x":62.09375,"y":150,"right":327.90625,"bottom":694},"viewport":{"width":390,"height":844}},"reloaded":{"balance":1000000,"bet":100,"music":60,"effects":80,"muted":false,"speed":"normal","busy":false,"menu":{"sound":true,"music":"60","effects":"80","speed":"normal"},"bounds":{"x":62.09375,"y":150,"right":327.90625,"bottom":694},"viewport":{"width":390,"height":844}},"errors":[],"scope":"DOM/state controls only; no audible mix, physical device or hosted verification."}
+# Subtest: settings phone: storage unavailable
+ok 28 - settings phone: storage unavailable
+  ---
+  duration_ms: 10058.124335
+  type: 'test'
+  ...
+# {"name":"prices-desktop","limits":{"min":10,"max":10000},"rows":[{"edge":"min","bet":10,"mode":"ventbreak","cost":1000,"cancelBalance":100000000},{"edge":"min","bet":10,"mode":"overpressure","cost":2500,"cancelBalance":100000000},{"edge":"min","bet":10,"mode":"mystery","cost":5000,"cancelBalance":100000000},{"edge":"min","bet":10,"mode":"enhanced","cost":30},{"edge":"min","bet":10,"mode":"sprayjob","cost":100},{"edge":"max","bet":10000,"mode":"ventbreak","cost":1000000,"cancelBalance":100000000},{"edge":"max","bet":10000,"mode":"overpressure","cost":2500000,"cancelBalance":100000000},{"edge":"max","bet":10000,"mode":"mystery","cost":5000000,"cancelBalance":100000000},{"edge":"max","bet":10000,"mode":"enhanced","cost":30000},{"edge":"max","bet":10000,"mode":"sprayjob","cost":100000}]}
+# Subtest: stake prices: desktop minimum and maximum
+ok 29 - stake prices: desktop minimum and maximum
+  ---
+  duration_ms: 18819.870741
+  type: 'test'
+  ...
+# {"name":"prices-phone","limits":{"min":10,"max":10000},"rows":[{"edge":"min","bet":10,"mode":"ventbreak","cost":1000,"cancelBalance":100000000},{"edge":"min","bet":10,"mode":"overpressure","cost":2500,"cancelBalance":100000000},{"edge":"min","bet":10,"mode":"mystery","cost":5000,"cancelBalance":100000000},{"edge":"min","bet":10,"mode":"enhanced","cost":30},{"edge":"min","bet":10,"mode":"sprayjob","cost":100},{"edge":"max","bet":10000,"mode":"ventbreak","cost":1000000,"cancelBalance":100000000},{"edge":"max","bet":10000,"mode":"overpressure","cost":2500000,"cancelBalance":100000000},{"edge":"max","bet":10000,"mode":"mystery","cost":5000000,"cancelBalance":100000000},{"edge":"max","bet":10000,"mode":"enhanced","cost":30000},{"edge":"max","bet":10000,"mode":"sprayjob","cost":100000}]}
+# Subtest: stake prices: phone minimum and maximum
+ok 30 - stake prices: phone minimum and maximum
+  ---
+  duration_ms: 11302.832576
+  type: 'test'
+  ...
+# {"name":"boundary-min-exact","bet":10,"cost":1000,"balance":1000,"disabled":false}
+# Subtest: stake balance boundary: min exact credit
+ok 31 - stake balance boundary: min exact credit
+  ---
+  duration_ms: 6373.595531
+  type: 'test'
+  ...
+# {"name":"boundary-min-short","bet":10,"cost":1000,"balance":999,"disabled":true}
+# Subtest: stake balance boundary: min one cent short
+ok 32 - stake balance boundary: min one cent short
+  ---
+  duration_ms: 5138.062275
+  type: 'test'
+  ...
+# {"name":"boundary-max-exact","bet":10000,"cost":1000000,"balance":1000000,"disabled":false}
+# Subtest: stake balance boundary: max exact credit
+ok 33 - stake balance boundary: max exact credit
+  ---
+  duration_ms: 6235.230472
+  type: 'test'
+  ...
+# {"name":"boundary-max-short","bet":10000,"cost":1000000,"balance":999999,"disabled":true}
+# Subtest: stake balance boundary: max one cent short
+ok 34 - stake balance boundary: max one cent short
+  ---
+  duration_ms: 5318.734762
+  type: 'test'
+  ...
+# {"name":"settlement-min","bet":10,"cost":1000,"paid":2,"expected":{"seed":653812,"hundredths":20},"after":{"balance":99999002,"busy":false,"history":[{"t":1793815733996,"mode":"ventbreak","bet":10,"cost":1000,"win":2,"tier":"regular","seed":{"bonus":653812}}]}}
+# Subtest: stake settlement: min catalog award is whole cents
+ok 35 - stake settlement: min catalog award is whole cents
+  ---
+  duration_ms: 8064.150271
+  type: 'test'
+  ...
+# {"name":"settlement-max","bet":10000,"cost":1000000,"paid":2000,"expected":{"seed":653812,"hundredths":20},"after":{"balance":99002000,"busy":false,"history":[{"t":1793815742589,"mode":"ventbreak","bet":10000,"cost":1000000,"win":2000,"tier":"regular","seed":{"bonus":653812}}]}}
+# Subtest: stake settlement: max catalog award is whole cents
+ok 36 - stake settlement: max catalog award is whole cents
+  ---
+  duration_ms: 8563.291372
+  type: 'test'
+  ...
+# {"label":"desktop","width":1366,"height":768,"mode":"ventbreak","expected":{"seed":653812,"paid":20,"cost":10000},"next":{"spin":"2 / 12","spinning":6,"skip":false,"busy":true,"balance":990000,"history":0},"finalBalance":990020}
+# Subtest: desktop: one Stop only skips the active ventbreak free spin
+ok 37 - desktop: one Stop only skips the active ventbreak free spin
+  ---
+  duration_ms: 17315.01946
+  type: 'test'
+  ...
+# {"label":"desktop","width":1366,"height":768,"mode":"overpressure","expected":{"seed":253677,"paid":0,"cost":25000},"next":{"spin":"2 / 10","spinning":6,"skip":false,"busy":true,"balance":975000,"history":0},"finalBalance":975000}
+# Subtest: desktop: one Stop only skips the active overpressure free spin
+ok 38 - desktop: one Stop only skips the active overpressure free spin
+  ---
+  duration_ms: 19395.203842
+  type: 'test'
+  ...
+# {"label":"phone","width":390,"height":844,"mode":"ventbreak","expected":{"seed":653812,"paid":20,"cost":10000},"next":{"spin":"2 / 12","spinning":6,"skip":false,"busy":true,"balance":990000,"history":0},"finalBalance":990020}
+# Subtest: phone: one Stop only skips the active ventbreak free spin
+ok 39 - phone: one Stop only skips the active ventbreak free spin
+  ---
+  duration_ms: 15725.034687
+  type: 'test'
+  ...
+# {"label":"phone","width":390,"height":844,"mode":"overpressure","expected":{"seed":253677,"paid":0,"cost":25000},"next":{"spin":"2 / 10","spinning":6,"skip":false,"busy":true,"balance":975000,"history":0},"finalBalance":975000}
+# Subtest: phone: one Stop only skips the active overpressure free spin
+ok 40 - phone: one Stop only skips the active overpressure free spin
+  ---
+  duration_ms: 18583.172384
+  type: 'test'
+  ...
+# {"label":"desktop-space","width":1366,"height":768,"key":"Space","controllerFocus":false,"bonus":false,"menu":false,"expected":{"seed":1782064,"paid":2690,"cost":100},"before":{"balance":999900,"history":0},"after":{"balance":1002590,"busy":false,"history":[{"t":1793815821700,"mode":"base","bet":100,"cost":100,"win":2690,"tier":null,"seed":{"spin":1782064}}]}}
+# Subtest: win keys: desktop-space
+ok 41 - win keys: desktop-space
+  ---
+  duration_ms: 12064.662453
+  type: 'test'
+  ...
+# {"label":"desktop-held-enter","width":1366,"height":768,"key":"Enter","controllerFocus":true,"bonus":false,"menu":false,"expected":{"seed":1782064,"paid":2690,"cost":100},"before":{"balance":999900,"history":0},"after":{"balance":1002590,"busy":false,"history":[{"t":1793815833077,"mode":"base","bet":100,"cost":100,"win":2690,"tier":null,"seed":{"spin":1782064}}]}}
+# Subtest: win keys: desktop-held-enter
+ok 42 - win keys: desktop-held-enter
+  ---
+  duration_ms: 11312.528482
+  type: 'test'
+  ...
+# {"label":"desktop-escape","width":1366,"height":768,"key":"Escape","controllerFocus":false,"bonus":false,"menu":false,"expected":{"seed":1782064,"paid":2690,"cost":100},"before":{"balance":999900,"history":0},"after":{"balance":1002590,"busy":false,"history":[{"t":1793815844389,"mode":"base","bet":100,"cost":100,"win":2690,"tier":null,"seed":{"spin":1782064}}]}}
+# Subtest: win keys: desktop-escape
+ok 43 - win keys: desktop-escape
+  ---
+  duration_ms: 11389.997409
+  type: 'test'
+  ...
+# {"label":"phone-escape","width":390,"height":844,"key":"Escape","controllerFocus":false,"bonus":false,"menu":false,"expected":{"seed":1782064,"paid":2690,"cost":100},"before":{"balance":999900,"history":0},"after":{"balance":1002590,"busy":false,"history":[{"t":1793815855682,"mode":"base","bet":100,"cost":100,"win":2690,"tier":null,"seed":{"spin":1782064}}]}}
+# Subtest: win keys: phone-escape
+ok 44 - win keys: phone-escape
+  ---
+  duration_ms: 11272.984851
+  type: 'test'
+  ...
+# {"label":"phone-bonus-total","width":390,"height":844,"key":"Space","controllerFocus":true,"bonus":true,"menu":false,"expected":{"seed":653812,"paid":20,"cost":10000},"before":{"balance":990000,"history":0},"after":{"balance":990020,"busy":false,"history":[{"t":1793815867981,"mode":"ventbreak","bet":100,"cost":10000,"win":20,"tier":"regular","seed":{"bonus":653812}}]}}
+# Subtest: win keys: phone-bonus-total
+ok 45 - win keys: phone-bonus-total
+  ---
+  duration_ms: 14507.821818
+  type: 'test'
+  ...
+# {"label":"desktop-menu-priority","width":1366,"height":768,"key":"Escape","controllerFocus":false,"bonus":false,"menu":true,"expected":{"seed":1782064,"paid":2690,"cost":100},"before":{"balance":999900,"history":0},"after":{"balance":1002590,"busy":false,"history":[{"t":1793815881634,"mode":"base","bet":100,"cost":100,"win":2690,"tier":null,"seed":{"spin":1782064}}]}}
+# Subtest: win keys: desktop-menu-priority
+ok 46 - win keys: desktop-menu-priority
+  ---
+  duration_ms: 11407.987467
+  type: 'test'
+  ...
+# Subtest: desktop: base, Spray Job, Vent Break and Overpressure settle exactly
+ok 47 - desktop: base, Spray Job, Vent Break and Overpressure settle exactly
+  ---
+  duration_ms: 90165.63042
+  type: 'test'
+  ...
+# Subtest: phone: base, Spray Job, Vent Break and Overpressure settle exactly
+ok 48 - phone: base, Spray Job, Vent Break and Overpressure settle exactly
+  ---
+  duration_ms: 89889.804624
+  type: 'test'
+  ...
+# Subtest: phone pressure strip fits the lower casting above the bonus panels
+ok 49 - phone pressure strip fits the lower casting above the bonus panels
+  ---
+  duration_ms: 20273.09683
+  type: 'test'
+  ...
+# Subtest: vents: full symbol lands, centred reverse flips for spray, skip restores the paying face
+ok 50 - vents: full symbol lands, centred reverse flips for spray, skip restores the paying face
+  ---
+  duration_ms: 7747.063285
+  type: 'test'
+  ...
+# Subtest: buy screen: Feature Spins first, Bonus Buys second, Hidden as information; short balance disables confirm
+ok 51 - buy screen: Feature Spins first, Bonus Buys second, Hidden as information; short balance disables confirm
+  ---
+  duration_ms: 5665.854124
+  type: 'test'
+  ...
+# Subtest: the intro shows before the first spin, and returns on reload
+ok 52 - the intro shows before the first spin, and returns on reload
+  ---
+  duration_ms: 9038.910048
+  type: 'test'
+  ...
+# Subtest: the feature guide pages on phones and can be reopened from the menu
+ok 53 - the feature guide pages on phones and can be reopened from the menu
+  ---
+  duration_ms: 20171.06535
+  type: 'test'
+  ...
+# Subtest: the rules show the shipping prices and 96% RTP
+ok 54 - the rules show the shipping prices and 96% RTP
+  ---
+  duration_ms: 5039.469652
+  type: 'test'
+  ...
+# Subtest: audio: nothing clips, the music sits under the reels, the big moments are loudest, phones hear the reels
+ok 55 - audio: nothing clips, the music sits under the reels, the big moments are loudest, phones hear the reels
+  ---
+  duration_ms: 20657.141792
+  type: 'test'
+  ...
+# Subtest: natural FS trigger fits at rest and during its landing pulse (360×640)
+ok 56 - natural FS trigger fits at rest and during its landing pulse (360×640)
+  ---
+  duration_ms: 10485.29742
+  type: 'test'
+  ...
+# Subtest: natural FS trigger fits at rest and during its landing pulse (390×844)
+ok 57 - natural FS trigger fits at rest and during its landing pulse (390×844)
+  ---
+  duration_ms: 10674.320642
+  type: 'test'
+  ...
+# Subtest: natural FS trigger fits at rest and during its landing pulse (430×932)
+ok 58 - natural FS trigger fits at rest and during its landing pulse (430×932)
+  ---
+  duration_ms: 10524.950892
+  type: 'test'
+  ...
+# Subtest: natural FS trigger fits at rest and during its landing pulse (1366×768)
+ok 59 - natural FS trigger fits at rest and during its landing pulse (1366×768)
+  ---
+  duration_ms: 10646.324537
+  type: 'test'
+  ...
+# Subtest: loading precedes the guide, category buttons switch, and Mystery settles once
+ok 60 - loading precedes the guide, category buttons switch, and Mystery settles once
+  ---
+  duration_ms: 26442.706158
+  type: 'test'
+  ...
+# Subtest: Mystery purchase finishes through the controller and credits the exact win
+ok 61 - Mystery purchase finishes through the controller and credits the exact win
+  ---
+  duration_ms: 42055.513853
+  type: 'test'
+  ...
+# Subtest: failed startup offers a working reload
+ok 62 - failed startup offers a working reload
+  ---
+  duration_ms: 4787.622158
+  type: 'test'
+  ...
+# Subtest: rare path, blackout (1920×1080): plays, shows blackout and bigwin-max, settles exactly, and the page never scrolls
+ok 63 - rare path, blackout (1920×1080): plays, shows blackout and bigwin-max, settles exactly, and the page never scrolls
+  ---
+  duration_ms: 38492.237476
+  type: 'test'
+  ...
+# Subtest: rare path, cap (390×844): plays, shows bigwin-max, settles exactly, and the page never scrolls
+ok 64 - rare path, cap (390×844): plays, shows bigwin-max, settles exactly, and the page never scrolls
+  ---
+  duration_ms: 38713.798602
+  type: 'test'
+  ...
+# Subtest: rare path, retrigger (1366×768): plays, shows banner, settles exactly, and the page never scrolls
+ok 65 - rare path, retrigger (1366×768): plays, shows banner, settles exactly, and the page never scrolls
+  ---
+  duration_ms: 39662.747876
+  type: 'test'
+  ...
+# Subtest: a reload mid-bonus loses nothing: the round is paid on the next visit and kept in history
+ok 66 - a reload mid-bonus loses nothing: the round is paid on the next visit and kept in history
+  ---
+  duration_ms: 24563.070179
+  type: 'test'
+  ...
+# Subtest: Zombify shop sections and free previews preserve credits and history
+ok 67 - Zombify shop sections and free previews preserve credits and history
+  ---
+  duration_ms: 84498.689796
+  type: 'test'
+  ...
+# Subtest: studio ident advances to a gated guide on slow loads
+ok 68 - studio ident advances to a gated guide on slow loads
+  ---
+  duration_ms: 4862.02607
+  type: 'test'
+  ...
+# Subtest: polished shop and single unboxed bonus result on phones and desktop
+ok 69 - polished shop and single unboxed bonus result on phones and desktop
+  ---
+  duration_ms: 40391.661185
+  type: 'test'
+  ...
+# Subtest: Studio desktop uses the full shared bar on touch and switches layouts in place
+ok 70 - Studio desktop uses the full shared bar on touch and switches layouts in place
+  ---
+  duration_ms: 5302.665541
+  type: 'test'
+  ...
+# Subtest: scatter landing precedes the held bonus briefing on every entry path
+ok 71 - scatter landing precedes the held bonus briefing on every entry path
+  ---
+  duration_ms: 97250.148398
+  type: 'test'
+  ...
+# Subtest: tier popups use each spin payout on the winning board, and the bonus has a separate total
+ok 72 - tier popups use each spin payout on the winning board, and the bonus has a separate total
+  ---
+  duration_ms: 67075.640236
+  type: 'test'
+  ...
+1..72
+# tests 72
+# suites 0
+# pass 72
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1575811.230644
+exit 0

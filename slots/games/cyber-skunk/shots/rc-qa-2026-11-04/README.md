@@ -1,4 +1,22 @@
-# Release candidate QA: `831f270`, artifact version 27
+# Release candidate QA: `4faebc7`, artifact version 28 (current)
+
+**What changed since `831f270`:** Dylan disliked the GAMBOLIGY GAMES wordmark on the loading screen, which was drawn as hollow, boxy outline letters. `4faebc7` makes them solid letters with the tubes' glow (`entry-shop.css`, cache key `neon-ident-2`); before and after are in `v28/wordmark-before-after.png`. No other runtime change.
+
+**Results on `4faebc7`** (files in `v28/`):
+- **Browser:** all 11 Cyber Skunk files in one run, **72/72**, 0 skips.
+- **Core and game:** core 142/142; game 33/33.
+- **Math:** catalog replay OK; the report regenerates with no diff.
+- **Served version 28:**
+  - all 115 runtime sizes match;
+  - 5 read-back files hash-match (`entry-shop.css`, `app.js`, `catalog-data.js`, `styles.css`, `launch.js`);
+  - the served page hash equals the expected page (tested fragment in the service skeleton). See `v28/served-v28.json`.
+- **Rollback point:** version 27 (`831f270`).
+
+The play-through below ran on version 27, whose game is identical apart from the loading-screen lettering.
+
+---
+
+# Earlier candidate: `831f270`, artifact version 27
 
 **Tested source:** `831f270d5514f31a056e7c138ac8e06beef6aeda` on `claude/blissful-rubin-xou20i`.
 - The runtime is byte-identical to `de024cf`, the free-preview fix. Later commits change handoff text only.

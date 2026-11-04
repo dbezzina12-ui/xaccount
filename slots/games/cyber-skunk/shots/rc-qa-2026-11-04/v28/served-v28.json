@@ -1,0 +1,600 @@
+{
+ "artifactVersion": "28 (1793816796-c514)",
+ "sourceCommit": "4faebc7",
+ "files": 115,
+ "sizeMatches": 115,
+ "hashChecked": 5,
+ "hashMatches": 5,
+ "page": {
+  "servedSha256": "955d343628a63eb346a35627f4ac483fd28e8b96354347b38dda5351bbf5d944",
+  "expectedSha256": "955d343628a63eb346a35627f4ac483fd28e8b96354347b38dda5351bbf5d944",
+  "fragmentContainedVerbatim": true
+ },
+ "rows": [
+  {
+   "path": "app.js",
+   "bytes": 66883,
+   "servedBytes": 66883,
+   "sha256": "3f8b0400ad0c617a7386e7c71ffbd6d1a4eb5207354abd39f255e4884d7bba98",
+   "servedSha256": "3f8b0400ad0c617a7386e7c71ffbd6d1a4eb5207354abd39f255e4884d7bba98"
+  },
+  {
+   "path": "assets/bg/bg-bonus-desktop.webp",
+   "bytes": 210738,
+   "servedBytes": 210738
+  },
+  {
+   "path": "assets/bg/bg-bonus-mobile.webp",
+   "bytes": 209902,
+   "servedBytes": 209902
+  },
+  {
+   "path": "assets/bg/bg-desktop.webp",
+   "bytes": 261114,
+   "servedBytes": 261114
+  },
+  {
+   "path": "assets/bg/bg-mobile.webp",
+   "bytes": 238932,
+   "servedBytes": 238932
+  },
+  {
+   "path": "assets/cards/card-overpressure.webp",
+   "bytes": 41304,
+   "servedBytes": 41304
+  },
+  {
+   "path": "assets/cards/card-signal-boost.webp",
+   "bytes": 31660,
+   "servedBytes": 31660
+  },
+  {
+   "path": "assets/cards/card-spray-job.webp",
+   "bytes": 37034,
+   "servedBytes": 37034
+  },
+  {
+   "path": "assets/cards/card-vent-break.webp",
+   "bytes": 45118,
+   "servedBytes": 45118
+  },
+  {
+   "path": "assets/cards/dispatch-art.svg",
+   "bytes": 275241,
+   "servedBytes": 275241
+  },
+  {
+   "path": "assets/cards/signal-boost-badge.webp",
+   "bytes": 67806,
+   "servedBytes": 67806
+  },
+  {
+   "path": "assets/cards/spray-job-badge.webp",
+   "bytes": 70076,
+   "servedBytes": 70076
+  },
+  {
+   "path": "assets/fonts/Anton-Regular.ttf",
+   "bytes": 170812,
+   "servedBytes": 170812
+  },
+  {
+   "path": "assets/fonts/BarlowCondensed-ExtraBold.ttf",
+   "bytes": 110296,
+   "servedBytes": 110296
+  },
+  {
+   "path": "assets/fonts/BarlowCondensed-SemiBold.ttf",
+   "bytes": 109428,
+   "servedBytes": 109428
+  },
+  {
+   "path": "assets/fx/badge-pressure.webp",
+   "bytes": 1864,
+   "servedBytes": 1864
+  },
+  {
+   "path": "assets/fx/fx-droplet.webp",
+   "bytes": 820,
+   "servedBytes": 820
+  },
+  {
+   "path": "assets/fx/fx-mist.webp",
+   "bytes": 9908,
+   "servedBytes": 9908
+  },
+  {
+   "path": "assets/fx/fx-spark.webp",
+   "bytes": 3058,
+   "servedBytes": 3058
+  },
+  {
+   "path": "assets/fx/fx-splat.webp",
+   "bytes": 29054,
+   "servedBytes": 29054
+  },
+  {
+   "path": "assets/fx/fx-steam.webp",
+   "bytes": 34306,
+   "servedBytes": 34306
+  },
+  {
+   "path": "assets/fx/vent-online.webp",
+   "bytes": 28718,
+   "servedBytes": 28718
+  },
+  {
+   "path": "assets/mascot/ear.webp",
+   "bytes": 3966,
+   "servedBytes": 3966
+  },
+  {
+   "path": "assets/mascot/eyelids.webp",
+   "bytes": 2170,
+   "servedBytes": 2170
+  },
+  {
+   "path": "assets/mascot/far-ear.webp",
+   "bytes": 2356,
+   "servedBytes": 2356
+  },
+  {
+   "path": "assets/mascot/far-forearm.webp",
+   "bytes": 2892,
+   "servedBytes": 2892
+  },
+  {
+   "path": "assets/mascot/far-hand.webp",
+   "bytes": 3740,
+   "servedBytes": 3740
+  },
+  {
+   "path": "assets/mascot/far-upper-arm.webp",
+   "bytes": 4844,
+   "servedBytes": 4844
+  },
+  {
+   "path": "assets/mascot/goggles.webp",
+   "bytes": 8608,
+   "servedBytes": 8608
+  },
+  {
+   "path": "assets/mascot/head.webp",
+   "bytes": 21174,
+   "servedBytes": 21174
+  },
+  {
+   "path": "assets/mascot/layers.json",
+   "bytes": 1491,
+   "servedBytes": 1491
+  },
+  {
+   "path": "assets/mascot/near-forearm.webp",
+   "bytes": 3706,
+   "servedBytes": 3706
+  },
+  {
+   "path": "assets/mascot/near-hand.webp",
+   "bytes": 2800,
+   "servedBytes": 2800
+  },
+  {
+   "path": "assets/mascot/near-upper-arm.webp",
+   "bytes": 5498,
+   "servedBytes": 5498
+  },
+  {
+   "path": "assets/mascot/nozzle.webp",
+   "bytes": 4208,
+   "servedBytes": 4208
+  },
+  {
+   "path": "assets/mascot/pivots-v4.json",
+   "bytes": 4509,
+   "servedBytes": 4509
+  },
+  {
+   "path": "assets/mascot/pivots.json",
+   "bytes": 4509,
+   "servedBytes": 4509
+  },
+  {
+   "path": "assets/mascot/tail-1.webp",
+   "bytes": 12782,
+   "servedBytes": 12782
+  },
+  {
+   "path": "assets/mascot/tail-2.webp",
+   "bytes": 20380,
+   "servedBytes": 20380
+  },
+  {
+   "path": "assets/mascot/tail-3.webp",
+   "bytes": 18644,
+   "servedBytes": 18644
+  },
+  {
+   "path": "assets/mascot/torso.webp",
+   "bytes": 18944,
+   "servedBytes": 18944
+  },
+  {
+   "path": "assets/panels/panel-blackout.webp",
+   "bytes": 278860,
+   "servedBytes": 278860
+  },
+  {
+   "path": "assets/panels/panel-overpressure.webp",
+   "bytes": 279404,
+   "servedBytes": 279404
+  },
+  {
+   "path": "assets/panels/panel-vent-break.webp",
+   "bytes": 275678,
+   "servedBytes": 275678
+  },
+  {
+   "path": "assets/studio-gg-diagonal.png",
+   "bytes": 497886,
+   "servedBytes": 497886
+  },
+  {
+   "path": "assets/symbols/a.webp",
+   "bytes": 12926,
+   "servedBytes": 12926
+  },
+  {
+   "path": "assets/symbols/fs-amethyst.webp",
+   "bytes": 89200,
+   "servedBytes": 89200
+  },
+  {
+   "path": "assets/symbols/fs-violet.webp",
+   "bytes": 42660,
+   "servedBytes": 42660
+  },
+  {
+   "path": "assets/symbols/h1-battery.webp",
+   "bytes": 23254,
+   "servedBytes": 23254
+  },
+  {
+   "path": "assets/symbols/h2-rotor.webp",
+   "bytes": 21358,
+   "servedBytes": 21358
+  },
+  {
+   "path": "assets/symbols/h3-canister.webp",
+   "bytes": 18976,
+   "servedBytes": 18976
+  },
+  {
+   "path": "assets/symbols/h4-key.webp",
+   "bytes": 16384,
+   "servedBytes": 16384
+  },
+  {
+   "path": "assets/symbols/j.webp",
+   "bytes": 10132,
+   "servedBytes": 10132
+  },
+  {
+   "path": "assets/symbols/k.webp",
+   "bytes": 13466,
+   "servedBytes": 13466
+  },
+  {
+   "path": "assets/symbols/q.webp",
+   "bytes": 14498,
+   "servedBytes": 14498
+  },
+  {
+   "path": "assets/symbols/scatter-letters.webp",
+   "bytes": 7628,
+   "servedBytes": 7628
+  },
+  {
+   "path": "assets/symbols/scatter-plate.webp",
+   "bytes": 5754,
+   "servedBytes": 5754
+  },
+  {
+   "path": "assets/symbols/ten.webp",
+   "bytes": 15262,
+   "servedBytes": 15262
+  },
+  {
+   "path": "assets/symbols/vent.webp",
+   "bytes": 49830,
+   "servedBytes": 49830
+  },
+  {
+   "path": "assets/symbols/wild-w.webp",
+   "bytes": 32250,
+   "servedBytes": 32250
+  },
+  {
+   "path": "assets/symbols/wild.webp",
+   "bytes": 13518,
+   "servedBytes": 13518
+  },
+  {
+   "path": "assets/ui/airlock.svg",
+   "bytes": 4140,
+   "servedBytes": 4140
+  },
+  {
+   "path": "assets/ui/cabinet-manometer.webp",
+   "bytes": 48990,
+   "servedBytes": 48990
+  },
+  {
+   "path": "assets/ui/cabinet.webp",
+   "bytes": 135268,
+   "servedBytes": 135268
+  },
+  {
+   "path": "assets/ui/controller-texture.webp",
+   "bytes": 2584,
+   "servedBytes": 2584
+  },
+  {
+   "path": "assets/ui/extractor-case.svg",
+   "bytes": 3536,
+   "servedBytes": 3536
+  },
+  {
+   "path": "assets/ui/gauge-face-inset.svg",
+   "bytes": 3113,
+   "servedBytes": 3113
+  },
+  {
+   "path": "assets/ui/gauge-face.webp",
+   "bytes": 22164,
+   "servedBytes": 22164
+  },
+  {
+   "path": "assets/ui/gauge-hanger.svg",
+   "bytes": 1324,
+   "servedBytes": 1324
+  },
+  {
+   "path": "assets/ui/gauge-needle.webp",
+   "bytes": 2336,
+   "servedBytes": 2336
+  },
+  {
+   "path": "assets/ui/icon.webp",
+   "bytes": 33484,
+   "servedBytes": 33484
+  },
+  {
+   "path": "assets/ui/intro-bonuses.webp",
+   "bytes": 19342,
+   "servedBytes": 19342
+  },
+  {
+   "path": "assets/ui/intro-route.webp",
+   "bytes": 21082,
+   "servedBytes": 21082
+  },
+  {
+   "path": "assets/ui/loading-hall-desktop.webp",
+   "bytes": 140876,
+   "servedBytes": 140876
+  },
+  {
+   "path": "assets/ui/loading-hall-mobile.webp",
+   "bytes": 129144,
+   "servedBytes": 129144
+  },
+  {
+   "path": "assets/ui/logo-badge.webp",
+   "bytes": 144830,
+   "servedBytes": 144830
+  },
+  {
+   "path": "assets/ui/logo-stacked.webp",
+   "bytes": 139714,
+   "servedBytes": 139714
+  },
+  {
+   "path": "assets/ui/logo.webp",
+   "bytes": 95774,
+   "servedBytes": 95774
+  },
+  {
+   "path": "assets/ui/operator-boots.webp",
+   "bytes": 56604,
+   "servedBytes": 56604
+  },
+  {
+   "path": "assets/ui/operator-desk.webp",
+   "bytes": 82636,
+   "servedBytes": 82636
+  },
+  {
+   "path": "assets/ui/operator-floor-shadow.webp",
+   "bytes": 9420,
+   "servedBytes": 9420
+  },
+  {
+   "path": "assets/ui/pipes-top.webp",
+   "bytes": 16758,
+   "servedBytes": 16758
+  },
+  {
+   "path": "assets/ui/pressure-bench.webp",
+   "bytes": 70934,
+   "servedBytes": 70934
+  },
+  {
+   "path": "assets/ui/pressure-lamp.webp",
+   "bytes": 1052,
+   "servedBytes": 1052
+  },
+  {
+   "path": "assets/ui/pressure-rail.svg",
+   "bytes": 1031,
+   "servedBytes": 1031
+  },
+  {
+   "path": "assets/ui/pressure-strip.webp",
+   "bytes": 19200,
+   "servedBytes": 19200
+  },
+  {
+   "path": "assets/ui/splash-desktop.webp",
+   "bytes": 185668,
+   "servedBytes": 185668
+  },
+  {
+   "path": "assets/ui/splash-mobile.webp",
+   "bytes": 182578,
+   "servedBytes": 182578
+  },
+  {
+   "path": "assets/wins/banner-extra-spins.webp",
+   "bytes": 14520,
+   "servedBytes": 14520
+  },
+  {
+   "path": "assets/wins/title-total-win.webp",
+   "bytes": 13572,
+   "servedBytes": 13572
+  },
+  {
+   "path": "assets/wins/win-big.webp",
+   "bytes": 19650,
+   "servedBytes": 19650
+  },
+  {
+   "path": "assets/wins/win-epic.webp",
+   "bytes": 19240,
+   "servedBytes": 19240
+  },
+  {
+   "path": "assets/wins/win-max.webp",
+   "bytes": 23972,
+   "servedBytes": 23972
+  },
+  {
+   "path": "assets/wins/win-mythic.webp",
+   "bytes": 19342,
+   "servedBytes": 19342
+  },
+  {
+   "path": "assets/wins/win-nice.webp",
+   "bytes": 17086,
+   "servedBytes": 17086
+  },
+  {
+   "path": "audio.js",
+   "bytes": 13502,
+   "servedBytes": 13502
+  },
+  {
+   "path": "catalog-data.js",
+   "bytes": 2976241,
+   "servedBytes": 2976241,
+   "sha256": "409df50c64d574c894eefdd01dae5dcb1dedb756458e4b4b24b7eef0618afb9f",
+   "servedSha256": "409df50c64d574c894eefdd01dae5dcb1dedb756458e4b4b24b7eef0618afb9f"
+  },
+  {
+   "path": "catalog.js",
+   "bytes": 5631,
+   "servedBytes": 5631
+  },
+  {
+   "path": "controller/assets/moon-rock-v89.png",
+   "bytes": 3263031,
+   "servedBytes": 3263031
+  },
+  {
+   "path": "controller/controller-mobile-base.css",
+   "bytes": 5290,
+   "servedBytes": 5290
+  },
+  {
+   "path": "controller/controller-mobile.css",
+   "bytes": 15834,
+   "servedBytes": 15834
+  },
+  {
+   "path": "controller/controller.css",
+   "bytes": 9626,
+   "servedBytes": 9626
+  },
+  {
+   "path": "controller/controller.js",
+   "bytes": 9620,
+   "servedBytes": 9620
+  },
+  {
+   "path": "engine.js",
+   "bytes": 8927,
+   "servedBytes": 8927
+  },
+  {
+   "path": "entry-shop.css",
+   "bytes": 34851,
+   "servedBytes": 34851,
+   "sha256": "560105b94f7e42704d96011caaf2a45c90c960e1ba51f3ff869efe063c525bef",
+   "servedSha256": "560105b94f7e42704d96011caaf2a45c90c960e1ba51f3ff869efe063c525bef"
+  },
+  {
+   "path": "fan-gust.js",
+   "bytes": 3037,
+   "servedBytes": 3037
+  },
+  {
+   "path": "guide-demo.js",
+   "bytes": 2510,
+   "servedBytes": 2510
+  },
+  {
+   "path": "launch.js",
+   "bytes": 646,
+   "servedBytes": 646,
+   "sha256": "7049cbe7c944ed391dbca6e5283f37d8bccec457503a8783411f1856128b4240",
+   "servedSha256": "7049cbe7c944ed391dbca6e5283f37d8bccec457503a8783411f1856128b4240"
+  },
+  {
+   "path": "lens-water.js",
+   "bytes": 6084,
+   "servedBytes": 6084
+  },
+  {
+   "path": "pressure-transfer.js",
+   "bytes": 4664,
+   "servedBytes": 4664
+  },
+  {
+   "path": "rig-preview.html",
+   "bytes": 7425,
+   "servedBytes": 7425
+  },
+  {
+   "path": "rig.js",
+   "bytes": 27609,
+   "servedBytes": 27609
+  },
+  {
+   "path": "rules.js",
+   "bytes": 5195,
+   "servedBytes": 5195
+  },
+  {
+   "path": "styles.css",
+   "bytes": 36090,
+   "servedBytes": 36090,
+   "sha256": "1abd6b853988b1e738b24ca213c466bd741b1fafb01f51cb889c64db8c53fff4",
+   "servedSha256": "1abd6b853988b1e738b24ca213c466bd741b1fafb01f51cb889c64db8c53fff4"
+  },
+  {
+   "path": "symbols.js",
+   "bytes": 7097,
+   "servedBytes": 7097
+  }
+ ]
+}

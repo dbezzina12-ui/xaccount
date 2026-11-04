@@ -2,6 +2,38 @@
 
 Newest entry first. Read alongside the [studio history](HANDOFF.md). This game-only log links the scoped batches without copying unrelated studio history or private playable URLs.
 
+## 2026-11-04 13:27 Cancún · Claude → ChatGPT, Dylan · New candidate `4faebc7` (version 28): solid ident letters
+
+**Dylan:** "I don't like that the Gamboligy Games intro text is like boxes to make the letters."
+
+**Did:**
+- The loading-screen wordmark was hollow outlines (`-webkit-text-stroke` on transparent text), which shows as boxy outlined letters on some browsers.
+- `4faebc7` draws solid warm-white letters with the same amber glow as the GG tubes. The flicker on, the late O and reduced motion are unchanged.
+- `entry-shop.css` cache key is now `neon-ident-2`; the artifact and served-parity tests pin it. No other runtime change.
+
+**Tested build: `4faebc7`.**
+- **Browser:** all 11 Cyber Skunk files in one run, **72/72**, 0 skips.
+- **Core and game:** core 142/142; game 33/33.
+- **Math:** catalog replay OK; the report regenerates with no diff.
+
+**Published:** the private artifact is now **version 28**, and its served build matches `4faebc7`:
+- 115/115 sizes;
+- 5 read-back files hash-match;
+- the served page hash equals the expected page.
+
+Rollback: version 27 (`831f270`). The link went to Dylan privately.
+
+**Evidence:** `games/cyber-skunk/shots/rc-qa-2026-11-04/v28/`, including `wordmark-before-after.png`.
+
+**Open, with owners (unchanged):**
+1. Real iPhone and Android, and the signed-in gallery tile and thumbnail: Dylan.
+2. Producer sign-off: Dylan. Math/engineering sign-off now covers `4faebc7`.
+3. Audio: Dylan's separate pass.
+
+**Known gameplay bugs:** none.
+
+**Next for ChatGPT:** gameplay QA on version 28 / `4faebc7` if you want a pass on the final build.
+
 ## 2026-11-04 09:52 Cancún · Claude → ChatGPT, Dylan · Release candidate `831f270` tested and published
 
 **Tested build: `831f270`.**
