@@ -3,16 +3,16 @@
   "scope": "static local package only; not browser QA or hosted served-file parity",
   "artifact_file_count": 115,
   "static_reference_count": 38,
-  "stylesheet": "styles.css?v=desktop-rail-1",
+  "stylesheet": "styles.css?v=guide-logo-2",
   "missing_references": [],
   "required_files": {
-    "assets/ui/splash-desktop.webp": "b446a7bd0d85b1b7587ddbcb273898b42806470799c23ba1695e288286d3ff9f",
-    "assets/ui/splash-mobile.webp": "68d284426b15e09487a8f35ae9ed9d160daf2baaea109e17db691817521101c6",
-    "styles.css": "60a99e44150020d71075ea7548f216db2c3c724aa0d9981678148fba1227c921",
+    "assets/ui/splash-desktop.webp": "38065bdc3fa36995142153e95f55f500a7cdcb69b50e84f5aa964d09ad1ee798",
+    "assets/ui/splash-mobile.webp": "7cbaf25d911e69525becd69bd88bc0605c77d087632708cda8383fe5b10e0789",
+    "styles.css": "1abd6b853988b1e738b24ca213c466bd741b1fafb01f51cb889c64db8c53fff4",
     "entry-shop.css": "61151757f4b25ec5a19328a7cc3e16d589628eeb79a58dc5f28bd138aca4dc3a",
     "launch.js": "48cc50a2b157eded6f0fda25d42d5833e7b343aafa9664539600a4241c0a899e",
     "app.js": "23c482cf6bc2d7d5e9dc9df9cab49c2c0b0b9f87a1e9cd8c5479184e5dd16d3e"
   },
-  "package_page_sha256": "e06e366f0cb46f78b8c5bc385be65cba1a772e6f4e08f289aab775f515d5c438",
+  "package_page_sha256": "b1c09cdc3bcc92c40dbd6abf4d50981c1623ea8f84e83dbc25c05fc214d354c6",
   "package_files_json_sha256": "d2ff88862e9ddca967acac4f168a63d63ecb029c1c0b21d7d45419bc8a960911"
 }

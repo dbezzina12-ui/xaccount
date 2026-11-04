@@ -19,7 +19,6 @@ OUT.mkdir(exist_ok=True)
 
 BG = ART / "backgrounds"
 CABINET = ART / "cabinet" / "cabinet.png"
-LOGO = ART / "logo.png"
 MASCOT = ART / "mascot" / "reference-compact.png"
 SYMBOLS = ART / "symbols"
 
@@ -136,12 +135,10 @@ def compose_desktop() -> Image.Image:
     scene = ImageEnhance.Color(scene).enhance(.88).convert("RGBA")
     cabinet = fit(cropped_rgba(CABINET), width=680)
     mascot = fit(cropped_rgba(MASCOT), height=650)
-    logo = fit(cropped_rgba(LOGO), width=690)
     cbox = (1120, 112, cabinet.width, cabinet.height)
     scene = Image.alpha_composite(scene, glow_panel(size, cbox))
     scene.alpha_composite(cabinet, cbox[:2])
     scene.alpha_composite(mascot, (105, 30))
-    scene.alpha_composite(logo, ((size[0] - logo.width) // 2, 26))
     scene = Image.alpha_composite(scene, spray(size, [(585, 352), (820, 330), (1020, 385), (1194, 375)]))
     return grade(scene, round(size[1] * .60))
 
@@ -152,12 +149,10 @@ def compose_mobile() -> Image.Image:
     scene = ImageEnhance.Color(scene).enhance(.88).convert("RGBA")
     cabinet = fit(cropped_rgba(CABINET), width=600)
     mascot = fit(cropped_rgba(MASCOT), height=710)
-    logo = fit(cropped_rgba(LOGO), width=870)
     cbox = (465, 405, cabinet.width, cabinet.height)
     scene = Image.alpha_composite(scene, glow_panel(size, cbox))
     scene.alpha_composite(cabinet, cbox[:2])
     scene.alpha_composite(mascot, (-45, 245))
-    scene.alpha_composite(logo, ((size[0] - logo.width) // 2, 52))
     scene = Image.alpha_composite(scene, spray(size, [(370, 580), (500, 540), (630, 610), (745, 595)]))
     return grade(scene, round(size[1] * .55))
 
@@ -196,7 +191,7 @@ def main() -> None:
     }
     manifest = {"files": {}, "inputs": [
         "backgrounds/bg-desktop.webp", "backgrounds/bg-mobile.webp", "cabinet/cabinet.png",
-        "logo.png", "mascot/reference-compact.png", "symbols/*.png",
+        "mascot/reference-compact.png", "symbols/*.png",
     ], "method": "Deterministic Pillow composition from approved production art; no generated image."}
     shipping = {}
     for name, (image, calm_start) in files.items():

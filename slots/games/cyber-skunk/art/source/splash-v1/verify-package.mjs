@@ -83,8 +83,8 @@ try {
   const stylesheet = index.match(/<link\b[^>]*href=["'](styles\.css\?v=[^"']+)["']/)?.[1];
   if (!stylesheet) throw new Error('index.html must select a versioned styles.css');
   if (!index.includes('splash-desktop.webp') || !index.includes('splash-mobile.webp')) throw new Error('responsive splash preloads are missing');
-  if (!css.includes('url(assets/ui/splash-desktop.webp)') || !css.includes('url(assets/ui/splash-mobile.webp)')) throw new Error('intro does not select both splash assets');
-  if (!/\.intro-mark\{[^}]*opacity:0/.test(css)) throw new Error('the duplicate live intro logo is not suppressed');
+  if (!css.includes('url(assets/ui/splash-desktop.webp?v=guide-logo-2)') || !css.includes('url(assets/ui/splash-mobile.webp?v=guide-logo-2)')) throw new Error('intro does not select both splash assets');
+  if (!index.includes('class="intro-mark" src="assets/ui/logo-badge.webp"') || /\.intro-mark\{[^}]*opacity:0/.test(css)) throw new Error('the explainer must show the cabinet badge');
 
   const report = {
     status: 'pass',
