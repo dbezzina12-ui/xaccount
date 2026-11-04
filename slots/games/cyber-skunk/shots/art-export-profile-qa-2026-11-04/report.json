@@ -1,0 +1,1661 @@
+{
+  "baseCommit": "fca0890c1811d623d77dc4be6dc36b06ddd384a2",
+  "python": "3.12.14",
+  "pillow": "13.0.0",
+  "webp": "1.6.0",
+  "ordinary": {
+    "h1-battery": "ok",
+    "h2-rotor": "ok",
+    "h3-canister": "ok",
+    "h4-key": "ok",
+    "a": "ok",
+    "k": "ok",
+    "q": "ok",
+    "j": "ok",
+    "ten": "ok",
+    "wild": "ok",
+    "scatter-plate": "ok",
+    "scatter-letters": "ok",
+    "vent": "ok",
+    "cabinet": "ok",
+    "gauge-face": "ok",
+    "gauge-needle": "ok",
+    "pipes-top": "ok",
+    "logo": "ok",
+    "bg-desktop": "ok",
+    "bg-mobile": "ok",
+    "bg-bonus-desktop": "ok",
+    "bg-bonus-mobile": "ok",
+    "panel-vent-break": "ok",
+    "panel-overpressure": "ok",
+    "panel-blackout": "ok",
+    "card-signal-boost": "ok",
+    "card-spray-job": "ok",
+    "card-vent-break": "ok",
+    "card-overpressure": "ok",
+    "win-nice": "ok",
+    "win-big": "ok",
+    "win-epic": "ok",
+    "win-mythic": "ok",
+    "win-max": "ok",
+    "banner-extra-spins": "ok",
+    "title-total-win": "ok",
+    "fx-splat": "ok",
+    "badge-pressure": "ok",
+    "vent-online": "ok",
+    "fx-mist": "ok",
+    "fx-droplet": "ok",
+    "fx-spark": "ok",
+    "fx-steam": "ok",
+    "splash-desktop": "ok",
+    "splash-mobile": "ok",
+    "intro-route": "ok",
+    "intro-bonuses": "ok",
+    "controller-texture": "ok",
+    "icon": "ok"
+  },
+  "mascot": {
+    "tail-1": "ok",
+    "tail-2": "ok",
+    "tail-3": "ok",
+    "nozzle": "ok",
+    "far-upper-arm": "ok",
+    "far-forearm": "ok",
+    "far-hand": "ok",
+    "torso": "ok",
+    "head": "ok",
+    "far-ear": "ok",
+    "ear": "ok",
+    "goggles": "ok",
+    "eyelids": "ok",
+    "near-upper-arm": "ok",
+    "near-forearm": "ok",
+    "near-hand": "ok"
+  },
+  "profileBindings": 12,
+  "exportCount": 68,
+  "byteIdenticalExports": 68,
+  "defaultDifferences": [
+    {
+      "name": "h1-battery",
+      "runtimeSize": [
+        320,
+        320
+      ],
+      "defaultSize": [
+        512,
+        512
+      ],
+      "defaultSha256": "658ffb3dacd3b06f349a8a4f389f58e683549c668eaae336f4e200c7af9a3570",
+      "differsFromRuntime": true
+    },
+    {
+      "name": "h2-rotor",
+      "runtimeSize": [
+        320,
+        320
+      ],
+      "defaultSize": [
+        512,
+        512
+      ],
+      "defaultSha256": "64da0b4a6b4871ef80a3ed9bbe958667960ae663862ad7a61986773c5894270d",
+      "differsFromRuntime": true
+    },
+    {
+      "name": "h3-canister",
+      "runtimeSize": [
+        320,
+        320
+      ],
+      "defaultSize": [
+        512,
+        512
+      ],
+      "defaultSha256": "b65ef7b3a1af929a42f765be2c09dd08cd43427fa21fcb482050663088f0592e",
+      "differsFromRuntime": true
+    },
+    {
+      "name": "h4-key",
+      "runtimeSize": [
+        320,
+        320
+      ],
+      "defaultSize": [
+        512,
+        512
+      ],
+      "defaultSha256": "be1d377a0476f89744a11f35556bea00fb9f54aa46a1964f7c7aa49b3cd3ab0c",
+      "differsFromRuntime": true
+    },
+    {
+      "name": "a",
+      "runtimeSize": [
+        320,
+        320
+      ],
+      "defaultSize": [
+        512,
+        512
+      ],
+      "defaultSha256": "2291277eabc9125482358bf7efc6021d4b672322023915728d4dcd8ef181d735",
+      "differsFromRuntime": true
+    },
+    {
+      "name": "k",
+      "runtimeSize": [
+        320,
+        320
+      ],
+      "defaultSize": [
+        512,
+        512
+      ],
+      "defaultSha256": "585b7943ae2f2922932c8675c8a7b63098be6963659dfb63c8d48cf3dd02ff28",
+      "differsFromRuntime": true
+    },
+    {
+      "name": "q",
+      "runtimeSize": [
+        320,
+        320
+      ],
+      "defaultSize": [
+        512,
+        512
+      ],
+      "defaultSha256": "5f3ca02e7aeb9465ab0f1dc3926ef12e5ba8433ba9aa5596c7ec1cf7d781ee20",
+      "differsFromRuntime": true
+    },
+    {
+      "name": "j",
+      "runtimeSize": [
+        320,
+        320
+      ],
+      "defaultSize": [
+        512,
+        512
+      ],
+      "defaultSha256": "7a83a7eda9a2530fef71cd356b5a9265df8eb56b2753b0ce1ea61842cc4bcb6a",
+      "differsFromRuntime": true
+    },
+    {
+      "name": "ten",
+      "runtimeSize": [
+        320,
+        320
+      ],
+      "defaultSize": [
+        512,
+        512
+      ],
+      "defaultSha256": "f6fd38e4212ab9061528105b00447510763ba47b567847351ac49680d613a3ff",
+      "differsFromRuntime": true
+    },
+    {
+      "name": "wild",
+      "runtimeSize": [
+        320,
+        320
+      ],
+      "defaultSize": [
+        512,
+        512
+      ],
+      "defaultSha256": "fb645375b1391603bd2f333cc07c5fa58ef0ef7d223c8eb6cfc43e8647f18138",
+      "differsFromRuntime": true
+    },
+    {
+      "name": "cabinet",
+      "runtimeSize": [
+        1462,
+        1076
+      ],
+      "defaultSize": [
+        1440,
+        1060
+      ],
+      "defaultSha256": "e5c834e6112036cafc4b30aff1771ba9cf50fb45b94a939198e568686ddf7e84",
+      "differsFromRuntime": true
+    },
+    {
+      "name": "logo",
+      "runtimeSize": [
+        1600,
+        344
+      ],
+      "defaultSize": [
+        1600,
+        560
+      ],
+      "defaultSha256": "4319f5ba188e7eaa5bc343a879ae180cad9ae961d222e4c06aab63663357d546",
+      "differsFromRuntime": true
+    }
+  ],
+  "outputs": [
+    {
+      "file": "bg/bg-bonus-desktop.webp",
+      "sha256": "82f252f50ef6811339d88507cd7d1acc1ec21df5fc6737ca7cc46a3e6cb08ba6",
+      "runtimeSha256": "82f252f50ef6811339d88507cd7d1acc1ec21df5fc6737ca7cc46a3e6cb08ba6",
+      "bytes": 210738,
+      "byteIdentical": true,
+      "size": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "file": "bg/bg-bonus-mobile.webp",
+      "sha256": "7c3b5de76fd90a5a67b26dc3390b765237cfe2667b18e147a8c188adfd0502f4",
+      "runtimeSha256": "7c3b5de76fd90a5a67b26dc3390b765237cfe2667b18e147a8c188adfd0502f4",
+      "bytes": 209902,
+      "byteIdentical": true,
+      "size": [
+        1440,
+        2560
+      ]
+    },
+    {
+      "file": "bg/bg-desktop.webp",
+      "sha256": "b29a5cfbca5a48aa4f804d5fd76514286405f6c3a4f5db4194fa868f33161fa8",
+      "runtimeSha256": "b29a5cfbca5a48aa4f804d5fd76514286405f6c3a4f5db4194fa868f33161fa8",
+      "bytes": 261114,
+      "byteIdentical": true,
+      "size": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "file": "bg/bg-mobile.webp",
+      "sha256": "8d5c5e3ccd12596c6327a675bdf0381682b2cec54cabea5ab8d8252542e5b4a3",
+      "runtimeSha256": "8d5c5e3ccd12596c6327a675bdf0381682b2cec54cabea5ab8d8252542e5b4a3",
+      "bytes": 238932,
+      "byteIdentical": true,
+      "size": [
+        1440,
+        2560
+      ]
+    },
+    {
+      "file": "cards/card-overpressure.webp",
+      "sha256": "fd88187e7f90ad43d955bd6a117bda1dc565edbc01b614e283e9397a7817c81c",
+      "runtimeSha256": "fd88187e7f90ad43d955bd6a117bda1dc565edbc01b614e283e9397a7817c81c",
+      "bytes": 41304,
+      "byteIdentical": true,
+      "size": [
+        720,
+        480
+      ]
+    },
+    {
+      "file": "cards/card-signal-boost.webp",
+      "sha256": "7d8d537de41e9243ce9b7108b4845171d63467eafc60b15f32c7011e63e7daac",
+      "runtimeSha256": "7d8d537de41e9243ce9b7108b4845171d63467eafc60b15f32c7011e63e7daac",
+      "bytes": 31660,
+      "byteIdentical": true,
+      "size": [
+        720,
+        480
+      ]
+    },
+    {
+      "file": "cards/card-spray-job.webp",
+      "sha256": "3bddd1428810ba25eea5acf0bd8a78a78c9fe681bbe6823495e4435a7deaf04d",
+      "runtimeSha256": "3bddd1428810ba25eea5acf0bd8a78a78c9fe681bbe6823495e4435a7deaf04d",
+      "bytes": 37034,
+      "byteIdentical": true,
+      "size": [
+        720,
+        480
+      ]
+    },
+    {
+      "file": "cards/card-vent-break.webp",
+      "sha256": "631d9e7302857e4df2b2c52d8dd4db0465d0e3e37b1da6ba2fc16cfac89f96db",
+      "runtimeSha256": "631d9e7302857e4df2b2c52d8dd4db0465d0e3e37b1da6ba2fc16cfac89f96db",
+      "bytes": 45118,
+      "byteIdentical": true,
+      "size": [
+        720,
+        480
+      ]
+    },
+    {
+      "file": "fx/badge-pressure.webp",
+      "sha256": "16b953728c9882f95757b4a5ac478923f846c6e469188780d94e90abf7475704",
+      "runtimeSha256": "16b953728c9882f95757b4a5ac478923f846c6e469188780d94e90abf7475704",
+      "bytes": 1864,
+      "byteIdentical": true,
+      "size": [
+        256,
+        160
+      ]
+    },
+    {
+      "file": "fx/fx-droplet.webp",
+      "sha256": "4788b53a7ab1e0b5b93de4de1cd27321a8aaaf4e81dd4cf23cd4b151d0d5b5c3",
+      "runtimeSha256": "4788b53a7ab1e0b5b93de4de1cd27321a8aaaf4e81dd4cf23cd4b151d0d5b5c3",
+      "bytes": 820,
+      "byteIdentical": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "file": "fx/fx-mist.webp",
+      "sha256": "d75fb5b83fea01b6a71622178b5f25e5575384b108065579c83dccd06168fe66",
+      "runtimeSha256": "d75fb5b83fea01b6a71622178b5f25e5575384b108065579c83dccd06168fe66",
+      "bytes": 9908,
+      "byteIdentical": true,
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "file": "fx/fx-spark.webp",
+      "sha256": "8c76f57a067f865b11194fa5491bad8d96fed4dd076b05057be334e9f64eb6be",
+      "runtimeSha256": "8c76f57a067f865b11194fa5491bad8d96fed4dd076b05057be334e9f64eb6be",
+      "bytes": 3058,
+      "byteIdentical": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "file": "fx/fx-splat.webp",
+      "sha256": "368fe837e6d572692deab872e95d54633fad727508b357d3154974c173b09706",
+      "runtimeSha256": "368fe837e6d572692deab872e95d54633fad727508b357d3154974c173b09706",
+      "bytes": 29054,
+      "byteIdentical": true,
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "fx/fx-steam.webp",
+      "sha256": "13da0f160a670f10e77c4d5ef0460af025abf9fc0cb4d7f5e68e6d9958793c52",
+      "runtimeSha256": "13da0f160a670f10e77c4d5ef0460af025abf9fc0cb4d7f5e68e6d9958793c52",
+      "bytes": 34306,
+      "byteIdentical": true,
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "fx/vent-online.webp",
+      "sha256": "774e1cb8f1443f031854008cee58f43b396267dcb8c6f8dc59b89d00186b0f96",
+      "runtimeSha256": "774e1cb8f1443f031854008cee58f43b396267dcb8c6f8dc59b89d00186b0f96",
+      "bytes": 28718,
+      "byteIdentical": true,
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "mascot/ear.webp",
+      "sha256": "1e9ed87bba00a3ba7de647eb03d98c2c10d6b6e02d60fe385abc2760b6fdd701",
+      "runtimeSha256": "1e9ed87bba00a3ba7de647eb03d98c2c10d6b6e02d60fe385abc2760b6fdd701",
+      "bytes": 3966,
+      "byteIdentical": true,
+      "size": [
+        91,
+        116
+      ]
+    },
+    {
+      "file": "mascot/eyelids.webp",
+      "sha256": "c3bfd37a8d43d728764c33ff7a43f7e4b4c0dcb6849bfac30cce8d5ffb4dc7e4",
+      "runtimeSha256": "c3bfd37a8d43d728764c33ff7a43f7e4b4c0dcb6849bfac30cce8d5ffb4dc7e4",
+      "bytes": 2170,
+      "byteIdentical": true,
+      "size": [
+        154,
+        61
+      ]
+    },
+    {
+      "file": "mascot/far-ear.webp",
+      "sha256": "20675c0f7dab985710dec2f2951c0426a2b5f9d9250b7e32484f464ea0de501e",
+      "runtimeSha256": "20675c0f7dab985710dec2f2951c0426a2b5f9d9250b7e32484f464ea0de501e",
+      "bytes": 2356,
+      "byteIdentical": true,
+      "size": [
+        66,
+        82
+      ]
+    },
+    {
+      "file": "mascot/far-forearm.webp",
+      "sha256": "dd3993f2a2030794771fd58cfdca600a581174d0a962470a041d8de774b43f56",
+      "runtimeSha256": "dd3993f2a2030794771fd58cfdca600a581174d0a962470a041d8de774b43f56",
+      "bytes": 2892,
+      "byteIdentical": true,
+      "size": [
+        126,
+        63
+      ]
+    },
+    {
+      "file": "mascot/far-hand.webp",
+      "sha256": "5d03bceaea4d53933398a0ac612289ccc6dd39376e7eb361669b3331f8d04363",
+      "runtimeSha256": "5d03bceaea4d53933398a0ac612289ccc6dd39376e7eb361669b3331f8d04363",
+      "bytes": 3740,
+      "byteIdentical": true,
+      "size": [
+        126,
+        90
+      ]
+    },
+    {
+      "file": "mascot/far-upper-arm.webp",
+      "sha256": "857ab389ccbd2c9ccbfefae01beddd38585bee42e3843ce34b4b41e505c3b4d0",
+      "runtimeSha256": "857ab389ccbd2c9ccbfefae01beddd38585bee42e3843ce34b4b41e505c3b4d0",
+      "bytes": 4844,
+      "byteIdentical": true,
+      "size": [
+        111,
+        104
+      ]
+    },
+    {
+      "file": "mascot/goggles.webp",
+      "sha256": "1f49a38dcb712460445dd177e994245db4234c0f8b13aaff2036a9317b0af5c7",
+      "runtimeSha256": "1f49a38dcb712460445dd177e994245db4234c0f8b13aaff2036a9317b0af5c7",
+      "bytes": 8608,
+      "byteIdentical": true,
+      "size": [
+        216,
+        88
+      ]
+    },
+    {
+      "file": "mascot/head.webp",
+      "sha256": "e438e1d93dfed447ea0c64fc2a286bbc431b5cd9c5c1723879a0ea8cbd5a53a2",
+      "runtimeSha256": "e438e1d93dfed447ea0c64fc2a286bbc431b5cd9c5c1723879a0ea8cbd5a53a2",
+      "bytes": 21174,
+      "byteIdentical": true,
+      "size": [
+        280,
+        331
+      ]
+    },
+    {
+      "file": "mascot/layers.json",
+      "sha256": "b5505927feed24f369054157d0b197f1b81c766e9a925aa9281f7744896ad59a",
+      "runtimeSha256": "b5505927feed24f369054157d0b197f1b81c766e9a925aa9281f7744896ad59a",
+      "bytes": 1491,
+      "byteIdentical": true
+    },
+    {
+      "file": "mascot/near-forearm.webp",
+      "sha256": "c96b34ba502c8b0eeb2ce996a620681c4d4ffb4a4b9b2f39fec1b2045418dae4",
+      "runtimeSha256": "c96b34ba502c8b0eeb2ce996a620681c4d4ffb4a4b9b2f39fec1b2045418dae4",
+      "bytes": 3706,
+      "byteIdentical": true,
+      "size": [
+        122,
+        101
+      ]
+    },
+    {
+      "file": "mascot/near-hand.webp",
+      "sha256": "5a1c81c7b6285a0f706cff4e22b5e58e23c204a8d105a93ceae14b38ca6327b6",
+      "runtimeSha256": "5a1c81c7b6285a0f706cff4e22b5e58e23c204a8d105a93ceae14b38ca6327b6",
+      "bytes": 2800,
+      "byteIdentical": true,
+      "size": [
+        126,
+        106
+      ]
+    },
+    {
+      "file": "mascot/near-upper-arm.webp",
+      "sha256": "0f4fc10d7630012f8362b89b5c280dba0bce9d87887a2ec498febd7c28069264",
+      "runtimeSha256": "0f4fc10d7630012f8362b89b5c280dba0bce9d87887a2ec498febd7c28069264",
+      "bytes": 5498,
+      "byteIdentical": true,
+      "size": [
+        126,
+        143
+      ]
+    },
+    {
+      "file": "mascot/nozzle.webp",
+      "sha256": "4adce45262a2a4613a5bf683c93463044daac7e075d346608fe091af41a02fc2",
+      "runtimeSha256": "4adce45262a2a4613a5bf683c93463044daac7e075d346608fe091af41a02fc2",
+      "bytes": 4208,
+      "byteIdentical": true,
+      "size": [
+        96,
+        71
+      ]
+    },
+    {
+      "file": "mascot/pivots-v4.json",
+      "sha256": "6f3d6b616d7b3f53b091650bc9faa091164634449085ea2841818b17ec859b98",
+      "runtimeSha256": "6f3d6b616d7b3f53b091650bc9faa091164634449085ea2841818b17ec859b98",
+      "bytes": 4509,
+      "byteIdentical": true
+    },
+    {
+      "file": "mascot/pivots.json",
+      "sha256": "6f3d6b616d7b3f53b091650bc9faa091164634449085ea2841818b17ec859b98",
+      "runtimeSha256": "6f3d6b616d7b3f53b091650bc9faa091164634449085ea2841818b17ec859b98",
+      "bytes": 4509,
+      "byteIdentical": true
+    },
+    {
+      "file": "mascot/tail-1.webp",
+      "sha256": "2c41c4ba5edad4719123da4087de3c71511ca253d88e203193d4427f9b8be043",
+      "runtimeSha256": "2c41c4ba5edad4719123da4087de3c71511ca253d88e203193d4427f9b8be043",
+      "bytes": 12782,
+      "byteIdentical": true,
+      "size": [
+        256,
+        213
+      ]
+    },
+    {
+      "file": "mascot/tail-2.webp",
+      "sha256": "7f6d0ff1631919ad09c37b2c893a8bd096cc42c63a9b8ab2f4612eb03b11434a",
+      "runtimeSha256": "7f6d0ff1631919ad09c37b2c893a8bd096cc42c63a9b8ab2f4612eb03b11434a",
+      "bytes": 20380,
+      "byteIdentical": true,
+      "size": [
+        236,
+        340
+      ]
+    },
+    {
+      "file": "mascot/tail-3.webp",
+      "sha256": "48c733ad855fe2033363a88cd00e8ecaeeb24700c7cac9eadce79f2c4f2b1337",
+      "runtimeSha256": "48c733ad855fe2033363a88cd00e8ecaeeb24700c7cac9eadce79f2c4f2b1337",
+      "bytes": 18644,
+      "byteIdentical": true,
+      "size": [
+        378,
+        201
+      ]
+    },
+    {
+      "file": "mascot/torso.webp",
+      "sha256": "f8ec91b1b7029b8462e86bd6df74b757e8d036cb4d6e70d9ea85dcd66aedf71f",
+      "runtimeSha256": "f8ec91b1b7029b8462e86bd6df74b757e8d036cb4d6e70d9ea85dcd66aedf71f",
+      "bytes": 18944,
+      "byteIdentical": true,
+      "size": [
+        246,
+        264
+      ]
+    },
+    {
+      "file": "panels/panel-blackout.webp",
+      "sha256": "f37dca77d93852acd49364d832e0e374348300420cfc4f56a959c9392c6f001f",
+      "runtimeSha256": "f37dca77d93852acd49364d832e0e374348300420cfc4f56a959c9392c6f001f",
+      "bytes": 278860,
+      "byteIdentical": true,
+      "size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "panels/panel-overpressure.webp",
+      "sha256": "c0940d094d515397d87390acf050b8617f96362c7618982dd40ab1a76c426cb3",
+      "runtimeSha256": "c0940d094d515397d87390acf050b8617f96362c7618982dd40ab1a76c426cb3",
+      "bytes": 279404,
+      "byteIdentical": true,
+      "size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "panels/panel-vent-break.webp",
+      "sha256": "9604b60238f249f44771fdc448e287ccac2fee031acfe2daabca7255949df433",
+      "runtimeSha256": "9604b60238f249f44771fdc448e287ccac2fee031acfe2daabca7255949df433",
+      "bytes": 275678,
+      "byteIdentical": true,
+      "size": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "symbols/a.webp",
+      "sha256": "59755b25c41fa17ac45fde8a01dfa0cd6ae996a68ae8708f3bcc4df30ff991dc",
+      "runtimeSha256": "59755b25c41fa17ac45fde8a01dfa0cd6ae996a68ae8708f3bcc4df30ff991dc",
+      "bytes": 12926,
+      "byteIdentical": true,
+      "size": [
+        320,
+        320
+      ]
+    },
+    {
+      "file": "symbols/h1-battery.webp",
+      "sha256": "bfbabbef6695fc8a650317b4db8e0f7b9763689db759e8c0a73687d1cfe5c757",
+      "runtimeSha256": "bfbabbef6695fc8a650317b4db8e0f7b9763689db759e8c0a73687d1cfe5c757",
+      "bytes": 23254,
+      "byteIdentical": true,
+      "size": [
+        320,
+        320
+      ]
+    },
+    {
+      "file": "symbols/h2-rotor.webp",
+      "sha256": "9bb5c1cc70987a78c724837daa56155a073082d542e450dfb239566c319560a9",
+      "runtimeSha256": "9bb5c1cc70987a78c724837daa56155a073082d542e450dfb239566c319560a9",
+      "bytes": 21358,
+      "byteIdentical": true,
+      "size": [
+        320,
+        320
+      ]
+    },
+    {
+      "file": "symbols/h3-canister.webp",
+      "sha256": "ff9d30b155865c673e7348fa106332ff6143a0795a84dcd8cadd20025aa7a509",
+      "runtimeSha256": "ff9d30b155865c673e7348fa106332ff6143a0795a84dcd8cadd20025aa7a509",
+      "bytes": 18976,
+      "byteIdentical": true,
+      "size": [
+        320,
+        320
+      ]
+    },
+    {
+      "file": "symbols/h4-key.webp",
+      "sha256": "34863dfda8ddf06e7b9fe814174f7c84c1a4562f03aea8b0cf81edc72a5bc668",
+      "runtimeSha256": "34863dfda8ddf06e7b9fe814174f7c84c1a4562f03aea8b0cf81edc72a5bc668",
+      "bytes": 16384,
+      "byteIdentical": true,
+      "size": [
+        320,
+        320
+      ]
+    },
+    {
+      "file": "symbols/j.webp",
+      "sha256": "bedcceb692fb0e1fe40651fa0511d5ea60565c30aae442383a0433c422a5fe82",
+      "runtimeSha256": "bedcceb692fb0e1fe40651fa0511d5ea60565c30aae442383a0433c422a5fe82",
+      "bytes": 10132,
+      "byteIdentical": true,
+      "size": [
+        320,
+        320
+      ]
+    },
+    {
+      "file": "symbols/k.webp",
+      "sha256": "fb0fcede9c0b38d7bdd2e6abf56c92ed7fd0de531421f2daf93629294858fd90",
+      "runtimeSha256": "fb0fcede9c0b38d7bdd2e6abf56c92ed7fd0de531421f2daf93629294858fd90",
+      "bytes": 13466,
+      "byteIdentical": true,
+      "size": [
+        320,
+        320
+      ]
+    },
+    {
+      "file": "symbols/q.webp",
+      "sha256": "583017ec59878641c8c598ac88367b0c9220ecf40f05f55cd3e98610a82a2506",
+      "runtimeSha256": "583017ec59878641c8c598ac88367b0c9220ecf40f05f55cd3e98610a82a2506",
+      "bytes": 14498,
+      "byteIdentical": true,
+      "size": [
+        320,
+        320
+      ]
+    },
+    {
+      "file": "symbols/scatter-letters.webp",
+      "sha256": "541acfce1640e2f5e54015e26265da404f084cf08c0ad04be41239b653bc1611",
+      "runtimeSha256": "541acfce1640e2f5e54015e26265da404f084cf08c0ad04be41239b653bc1611",
+      "bytes": 7628,
+      "byteIdentical": true,
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "symbols/scatter-plate.webp",
+      "sha256": "18b59ca211417d7b9d3596c2c69deaf0cac1b7a5ab38c069aa10b599085b6de4",
+      "runtimeSha256": "18b59ca211417d7b9d3596c2c69deaf0cac1b7a5ab38c069aa10b599085b6de4",
+      "bytes": 5754,
+      "byteIdentical": true,
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "symbols/ten.webp",
+      "sha256": "d4bf3034b569e2fc23de22d5cebbc1cc051c26649cd1132fc88fa64d9bd33131",
+      "runtimeSha256": "d4bf3034b569e2fc23de22d5cebbc1cc051c26649cd1132fc88fa64d9bd33131",
+      "bytes": 15262,
+      "byteIdentical": true,
+      "size": [
+        320,
+        320
+      ]
+    },
+    {
+      "file": "symbols/vent.webp",
+      "sha256": "f153b8401c2fec7425042a681fa96f1b9158708d3499581f0f606f1e8a452582",
+      "runtimeSha256": "f153b8401c2fec7425042a681fa96f1b9158708d3499581f0f606f1e8a452582",
+      "bytes": 49830,
+      "byteIdentical": true,
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "symbols/wild.webp",
+      "sha256": "d2a5c0fb7afc097876389beedb36a5ec08a39546b00dc063bb39db95e111e6ed",
+      "runtimeSha256": "d2a5c0fb7afc097876389beedb36a5ec08a39546b00dc063bb39db95e111e6ed",
+      "bytes": 13518,
+      "byteIdentical": true,
+      "size": [
+        320,
+        320
+      ]
+    },
+    {
+      "file": "ui/cabinet.webp",
+      "sha256": "a99809e0dc2574b5ce70b616c2eca3193b7bd30af788e3b277b7cc2cbee4fca7",
+      "runtimeSha256": "a99809e0dc2574b5ce70b616c2eca3193b7bd30af788e3b277b7cc2cbee4fca7",
+      "bytes": 135268,
+      "byteIdentical": true,
+      "size": [
+        1462,
+        1076
+      ]
+    },
+    {
+      "file": "ui/controller-texture.webp",
+      "sha256": "05eeb766bdaf06e6201a384f5dc6743a3ab9b4eaff35742476076466812f6ea9",
+      "runtimeSha256": "05eeb766bdaf06e6201a384f5dc6743a3ab9b4eaff35742476076466812f6ea9",
+      "bytes": 2584,
+      "byteIdentical": true,
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "ui/gauge-face.webp",
+      "sha256": "d9b7bd8a915d826f3d89ecbae113bfdf847470cce5d4103625405d6d46d43bcd",
+      "runtimeSha256": "d9b7bd8a915d826f3d89ecbae113bfdf847470cce5d4103625405d6d46d43bcd",
+      "bytes": 22164,
+      "byteIdentical": true,
+      "size": [
+        400,
+        400
+      ]
+    },
+    {
+      "file": "ui/gauge-needle.webp",
+      "sha256": "3afedc0645ef5205ec2fd20e134f0d2492f1134b9c6707fd4cc88ef5356ea675",
+      "runtimeSha256": "3afedc0645ef5205ec2fd20e134f0d2492f1134b9c6707fd4cc88ef5356ea675",
+      "bytes": 2336,
+      "byteIdentical": true,
+      "size": [
+        400,
+        400
+      ]
+    },
+    {
+      "file": "ui/icon.webp",
+      "sha256": "7fca358f6bd5dc750432a1cbe1ccf75794395073d815c34837b4a1fd31561483",
+      "runtimeSha256": "7fca358f6bd5dc750432a1cbe1ccf75794395073d815c34837b4a1fd31561483",
+      "bytes": 33484,
+      "byteIdentical": true,
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "ui/intro-bonuses.webp",
+      "sha256": "ebedb6146549cdd22093e954b24256efe9bc7661572a2811e7c2abafadd853aa",
+      "runtimeSha256": "ebedb6146549cdd22093e954b24256efe9bc7661572a2811e7c2abafadd853aa",
+      "bytes": 19342,
+      "byteIdentical": true,
+      "size": [
+        900,
+        600
+      ]
+    },
+    {
+      "file": "ui/intro-route.webp",
+      "sha256": "815ab2672a799f1aa95e4b97e29655368b673d295e4bf32a5ac187055c165902",
+      "runtimeSha256": "815ab2672a799f1aa95e4b97e29655368b673d295e4bf32a5ac187055c165902",
+      "bytes": 21082,
+      "byteIdentical": true,
+      "size": [
+        900,
+        600
+      ]
+    },
+    {
+      "file": "ui/logo.webp",
+      "sha256": "59bc46fe9895f2404e304acceaf1530a0f0a6b68383aff79c158186bc893f11d",
+      "runtimeSha256": "59bc46fe9895f2404e304acceaf1530a0f0a6b68383aff79c158186bc893f11d",
+      "bytes": 95774,
+      "byteIdentical": true,
+      "size": [
+        1600,
+        344
+      ]
+    },
+    {
+      "file": "ui/pipes-top.webp",
+      "sha256": "76c545f2ed53b33b237aa9265ba8c48513e13896453db8814473f82200ac87cd",
+      "runtimeSha256": "76c545f2ed53b33b237aa9265ba8c48513e13896453db8814473f82200ac87cd",
+      "bytes": 16758,
+      "byteIdentical": true,
+      "size": [
+        1440,
+        300
+      ]
+    },
+    {
+      "file": "ui/splash-desktop.webp",
+      "sha256": "b446a7bd0d85b1b7587ddbcb273898b42806470799c23ba1695e288286d3ff9f",
+      "runtimeSha256": "b446a7bd0d85b1b7587ddbcb273898b42806470799c23ba1695e288286d3ff9f",
+      "bytes": 197524,
+      "byteIdentical": true,
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "ui/splash-mobile.webp",
+      "sha256": "68d284426b15e09487a8f35ae9ed9d160daf2baaea109e17db691817521101c6",
+      "runtimeSha256": "68d284426b15e09487a8f35ae9ed9d160daf2baaea109e17db691817521101c6",
+      "bytes": 194260,
+      "byteIdentical": true,
+      "size": [
+        1080,
+        1920
+      ]
+    },
+    {
+      "file": "wins/banner-extra-spins.webp",
+      "sha256": "2a1345b9da9b34ca5229af8fbc7b189c88a8810a64209f4fc3afcab789f839f1",
+      "runtimeSha256": "2a1345b9da9b34ca5229af8fbc7b189c88a8810a64209f4fc3afcab789f839f1",
+      "bytes": 14520,
+      "byteIdentical": true,
+      "size": [
+        1200,
+        360
+      ]
+    },
+    {
+      "file": "wins/title-total-win.webp",
+      "sha256": "5911b63364c33d28552c9604e841359d30d1a6fc4400ccbdaef90f4acbfda5fe",
+      "runtimeSha256": "5911b63364c33d28552c9604e841359d30d1a6fc4400ccbdaef90f4acbfda5fe",
+      "bytes": 13572,
+      "byteIdentical": true,
+      "size": [
+        1200,
+        360
+      ]
+    },
+    {
+      "file": "wins/win-big.webp",
+      "sha256": "2737281d72ae88335c040a55064fc9db9ab252356edd285d854516a3e92657a8",
+      "runtimeSha256": "2737281d72ae88335c040a55064fc9db9ab252356edd285d854516a3e92657a8",
+      "bytes": 19650,
+      "byteIdentical": true,
+      "size": [
+        1600,
+        560
+      ]
+    },
+    {
+      "file": "wins/win-epic.webp",
+      "sha256": "e2e7c089e7b215eb3c706ec5e1bf8c5060504ead8e4c239a08bef23681c3f32e",
+      "runtimeSha256": "e2e7c089e7b215eb3c706ec5e1bf8c5060504ead8e4c239a08bef23681c3f32e",
+      "bytes": 19240,
+      "byteIdentical": true,
+      "size": [
+        1600,
+        560
+      ]
+    },
+    {
+      "file": "wins/win-max.webp",
+      "sha256": "f3cefd89c874b8ead9d96b7faade61c537dbd100ffcd6aa00a06e9dc89689f2b",
+      "runtimeSha256": "f3cefd89c874b8ead9d96b7faade61c537dbd100ffcd6aa00a06e9dc89689f2b",
+      "bytes": 23972,
+      "byteIdentical": true,
+      "size": [
+        1600,
+        560
+      ]
+    },
+    {
+      "file": "wins/win-mythic.webp",
+      "sha256": "cf494015e601ed08d44ef731b1d68482113e792e2f60cf7879a04302ef7fa2d5",
+      "runtimeSha256": "cf494015e601ed08d44ef731b1d68482113e792e2f60cf7879a04302ef7fa2d5",
+      "bytes": 19342,
+      "byteIdentical": true,
+      "size": [
+        1600,
+        560
+      ]
+    },
+    {
+      "file": "wins/win-nice.webp",
+      "sha256": "577d316bda435f09650c0adb27eec9af9912acf1523ff8c7bee1ef16bab44c97",
+      "runtimeSha256": "577d316bda435f09650c0adb27eec9af9912acf1523ff8c7bee1ef16bab44c97",
+      "bytes": 17086,
+      "byteIdentical": true,
+      "size": [
+        1600,
+        560
+      ]
+    }
+  ],
+  "inputFingerprintCount": 202,
+  "inputsUnchanged": true,
+  "inputFingerprints": {
+    "slots/games/cyber-skunk/ART_SPEC.md": "5a4b183b27598ec020a272877572504126f06012032d420e6c26c3bd597b83f2",
+    "slots/games/cyber-skunk/art/backgrounds/bg-bonus-desktop.webp": "6f16249ed416a754f1b9f79a9163dc334f8441721c6d7aa38b81fcd16bf8c762",
+    "slots/games/cyber-skunk/art/backgrounds/bg-bonus-mobile.webp": "0643a92a324689477bf2058a8311dd090c71ea397d26a969a511c586be3c686c",
+    "slots/games/cyber-skunk/art/backgrounds/bg-desktop.webp": "3c4daa0d0ea465fc42a35ed2d11b4456ac042a5ea53c3c5a84c737323404a0ed",
+    "slots/games/cyber-skunk/art/backgrounds/bg-mobile.webp": "a797bd280149459f744076e7d9503cdfdb23d1c150322213a130344383251b13",
+    "slots/games/cyber-skunk/art/cabinet/cabinet.png": "5d32ad43e7a82c7d928ec2157dc2249af4e8e0dee81524aa013a00017636273c",
+    "slots/games/cyber-skunk/art/cabinet/gauge-face.png": "e29219c3f617986809b04c129dfc200ff497d16e08513452ab9f5dc50e25378a",
+    "slots/games/cyber-skunk/art/cabinet/gauge-needle.png": "18c1cc3912ed0f2cba3d98810c25ccc4f1e2213838da5e3fc8381b83e86d9c99",
+    "slots/games/cyber-skunk/art/cabinet/pipes-top.png": "bc372bda0f8df9594e37f02b655f86064b68af853c84f537a3f5da124e093379",
+    "slots/games/cyber-skunk/art/cards/card-overpressure.png": "4730eddce19680f8aa192360b0b01538daa2ab00eee56ca6b2aa7588fad77d63",
+    "slots/games/cyber-skunk/art/cards/card-signal-boost.png": "d927b2bc6576123a1f5838e2a490e640567f8b7374269080a5c64cfb62da1e3c",
+    "slots/games/cyber-skunk/art/cards/card-spray-job.png": "29159ca9a395e7ec3f479cedafae1f4237ce6f13b85d740baa33f1e4506dfe8f",
+    "slots/games/cyber-skunk/art/cards/card-vent-break.png": "f1ef0ac0f2c822c7758aadb8139b37c6561dfa2ce2f50874fac570aa7b58fdf2",
+    "slots/games/cyber-skunk/art/fx/badge-pressure.png": "7227e2052e3b28e50de303620ae1b1a2d1457e2068d53e2042128abe2211df2b",
+    "slots/games/cyber-skunk/art/fx/fx-droplet.png": "babacdec47bed529422ffd595d2e655d5a6e409b1555031f3e3431182702e689",
+    "slots/games/cyber-skunk/art/fx/fx-mist.png": "0607c031ce7990318e062b168eb16f0d952089ec9af1c06cb82488b39ba90c3f",
+    "slots/games/cyber-skunk/art/fx/fx-spark.png": "42ed483753c67aa1d5ac76b6adcd9b76adbc34117cdcfaed21608bb861268c18",
+    "slots/games/cyber-skunk/art/fx/fx-splat.png": "0d1b296683e247db575ff81bb8381d0749f8d8cc9385fd9f66ee8cb41ea3d812",
+    "slots/games/cyber-skunk/art/fx/fx-steam.png": "27dd1239d8f458c86daa4c907746c45a0c409d8a46e2a42435ee5cc940269fec",
+    "slots/games/cyber-skunk/art/fx/vent-online.png": "9428ac46ede06507a5c202b6e225cf613107067b840b94883c1ddb3d52d6c2e9",
+    "slots/games/cyber-skunk/art/logo.png": "a7e1feaa3736fa033c59dc07c995c6a1e0b5d34a4d82932e35937ba23ecbce42",
+    "slots/games/cyber-skunk/art/panels/panel-blackout.webp": "c9ad1189a6fc0b2baaa4bf327e3f17d647227643c7a07819c6748c89423ec969",
+    "slots/games/cyber-skunk/art/panels/panel-overpressure.webp": "7148e4d5bae9ac364060e35a56f0c1883af4fe755499724d78e9493d60535b3b",
+    "slots/games/cyber-skunk/art/panels/panel-vent-break.webp": "93778ca362f2757cbe8c1d8ba4ba0f74927ea7c2c196f756ab7d70c81ed835ad",
+    "slots/games/cyber-skunk/art/rig/fitted/eyelids.png": "f84a0fa07346358ec5d5b316196d11531035d53e526f43a946c1a36bf961e09c",
+    "slots/games/cyber-skunk/art/rig/fitted/nozzle.png": "f1ae1749dd91e106394bd84d083f51c5e62e8f36b71b76f545636ed88f921355",
+    "slots/games/cyber-skunk/art/rig/pivots-v4.json": "6f3d6b616d7b3f53b091650bc9faa091164634449085ea2841818b17ec859b98",
+    "slots/games/cyber-skunk/art/source/mascot-compact-v4/registered/ear.png": "6b119e490560c0883a0722594b022c2ce93beb996b78c0325eda0e4e570e9aa0",
+    "slots/games/cyber-skunk/art/source/mascot-compact-v4/registered/eyelids.png": "37273b88752e24c599266a43e858ee14b1e332956f4161241e15b7096dea3326",
+    "slots/games/cyber-skunk/art/source/mascot-compact-v4/registered/far-ear.png": "e9bff481b76efd25045b95f947384c833ac6428f0b71f78fadfdb01a2fd1c703",
+    "slots/games/cyber-skunk/art/source/mascot-compact-v4/registered/far-forearm.png": "78fd2e0665393bdf1e427b037e1b3f7dd4bdd71ec43d59f502ade49cc2e82a10",
+    "slots/games/cyber-skunk/art/source/mascot-compact-v4/registered/far-hand.png": "e75fb5fa20c85b504972c799b7ef29c19fe93e157d98d70849f13a0272f34e9b",
+    "slots/games/cyber-skunk/art/source/mascot-compact-v4/registered/far-upper-arm.png": "e5067920bdbb0da35b9b84a6336feca703f8058b347d05a23a2ffa16220ae75f",
+    "slots/games/cyber-skunk/art/source/mascot-compact-v4/registered/goggles.png": "87df1fe3d55c19f17a3c26272104ce10e7a171b8fdb8043dc721def46a6f48fd",
+    "slots/games/cyber-skunk/art/source/mascot-compact-v4/registered/head.png": "25b8f717d927b9a5f6c719e5232d090f5364092151e7d52e365b0f5c31d7ecc0",
+    "slots/games/cyber-skunk/art/source/mascot-compact-v4/registered/near-forearm.png": "7668501de24342fcdc384f71455476c305289d101c4e5441d6003a9059d062d8",
+    "slots/games/cyber-skunk/art/source/mascot-compact-v4/registered/near-hand.png": "d1aab3e53a966b535743ee30d701f8ee4b7ef829e42572340e43e4e55e9231bf",
+    "slots/games/cyber-skunk/art/source/mascot-compact-v4/registered/near-upper-arm.png": "864eb73b00f3411a713bf7dd50ecdec949904bc2bd7498d3c0f3f8956dd43702",
+    "slots/games/cyber-skunk/art/source/mascot-compact-v4/registered/nozzle.png": "542e3bb07e7879abb42f17fdc4a3623a9a4095e9f45c1d18b09aeca1094da063",
+    "slots/games/cyber-skunk/art/source/mascot-compact-v4/registered/tail-1.png": "e8b22622396e7bb9ddc611749d9d627c4d2946f25f595b0a3cdbb91fff8da8ac",
+    "slots/games/cyber-skunk/art/source/mascot-compact-v4/registered/tail-2.png": "59d8e72b7b74ab6b786e763f3fbbfdecc44b316d7be122787f3f608304166314",
+    "slots/games/cyber-skunk/art/source/mascot-compact-v4/registered/tail-3.png": "ddd3269760f9413316d6e280e1dca223e3925798cd2a784c247024111f6052ea",
+    "slots/games/cyber-skunk/art/source/mascot-compact-v4/registered/torso.png": "4536b8dbb76758dc6f3a0d79c6a3ebaaf3826fe8c5e5c9b1177b3a54639eb15f",
+    "slots/games/cyber-skunk/art/source/runtime-export-profile-v1/a.webp": "59755b25c41fa17ac45fde8a01dfa0cd6ae996a68ae8708f3bcc4df30ff991dc",
+    "slots/games/cyber-skunk/art/source/runtime-export-profile-v1/cabinet.webp": "a99809e0dc2574b5ce70b616c2eca3193b7bd30af788e3b277b7cc2cbee4fca7",
+    "slots/games/cyber-skunk/art/source/runtime-export-profile-v1/h1-battery.webp": "bfbabbef6695fc8a650317b4db8e0f7b9763689db759e8c0a73687d1cfe5c757",
+    "slots/games/cyber-skunk/art/source/runtime-export-profile-v1/h2-rotor.webp": "9bb5c1cc70987a78c724837daa56155a073082d542e450dfb239566c319560a9",
+    "slots/games/cyber-skunk/art/source/runtime-export-profile-v1/h3-canister.webp": "ff9d30b155865c673e7348fa106332ff6143a0795a84dcd8cadd20025aa7a509",
+    "slots/games/cyber-skunk/art/source/runtime-export-profile-v1/h4-key.webp": "34863dfda8ddf06e7b9fe814174f7c84c1a4562f03aea8b0cf81edc72a5bc668",
+    "slots/games/cyber-skunk/art/source/runtime-export-profile-v1/j.webp": "bedcceb692fb0e1fe40651fa0511d5ea60565c30aae442383a0433c422a5fe82",
+    "slots/games/cyber-skunk/art/source/runtime-export-profile-v1/k.webp": "fb0fcede9c0b38d7bdd2e6abf56c92ed7fd0de531421f2daf93629294858fd90",
+    "slots/games/cyber-skunk/art/source/runtime-export-profile-v1/logo.webp": "59bc46fe9895f2404e304acceaf1530a0f0a6b68383aff79c158186bc893f11d",
+    "slots/games/cyber-skunk/art/source/runtime-export-profile-v1/manifest.json": "f43c05ab9a87335ffbc2d64fd71d4f26928ebd4ac5da4dbea3b65cc8d860b29d",
+    "slots/games/cyber-skunk/art/source/runtime-export-profile-v1/q.webp": "583017ec59878641c8c598ac88367b0c9220ecf40f05f55cd3e98610a82a2506",
+    "slots/games/cyber-skunk/art/source/runtime-export-profile-v1/ten.webp": "d4bf3034b569e2fc23de22d5cebbc1cc051c26649cd1132fc88fa64d9bd33131",
+    "slots/games/cyber-skunk/art/source/runtime-export-profile-v1/wild.webp": "d2a5c0fb7afc097876389beedb36a5ec08a39546b00dc063bb39db95e111e6ed",
+    "slots/games/cyber-skunk/art/symbols/a.png": "10319e8961e8bf07065c7a102e87c2f54609ed1b8e28bca1a2a29a42789fd770",
+    "slots/games/cyber-skunk/art/symbols/h1-battery.png": "8271067462fe384f54a04304e8e6250eeb6b4ea1cc60c1a2d5c1aac7f9640513",
+    "slots/games/cyber-skunk/art/symbols/h2-rotor.png": "cfa0b5ce3f66d3ac3ef526366bf44208cb10415224891648765b98c85bfb32d5",
+    "slots/games/cyber-skunk/art/symbols/h3-canister.png": "cd2621c113705d420a2bc96b417334487597c046f0e22ad20b068964d17fbc23",
+    "slots/games/cyber-skunk/art/symbols/h4-key.png": "3c93520d518dc98ebf6290501b22dc4b4861b06d059b3399d8e3f5f3480c39a7",
+    "slots/games/cyber-skunk/art/symbols/j.png": "ea07249a05afe56400f23129ff20b096f576690b2de6036869a813c1f79acc00",
+    "slots/games/cyber-skunk/art/symbols/k.png": "ace86611244cfd58554c2c61246cd9a24ec4175ad6283c64667859679e8cab4f",
+    "slots/games/cyber-skunk/art/symbols/q.png": "9eadb85af8b94af043feff6c8507fcbb0470b7059ca64886de9dad127b33b4a9",
+    "slots/games/cyber-skunk/art/symbols/scatter-letters.png": "7047dc65a3f187860b52508cf1d0c3fbfb5a27a37fdab84ba4ebb0ce4b1cd1ec",
+    "slots/games/cyber-skunk/art/symbols/scatter-plate.png": "f7ba6a747e5a49be8ec8004ecd0474dd1d136767971a582f06369f0f7583b2bb",
+    "slots/games/cyber-skunk/art/symbols/ten.png": "2b9201f07fc9bda5c3026bd330653f0fb4e50ab91c6d5b0449a49cf93e21186b",
+    "slots/games/cyber-skunk/art/symbols/vent.png": "b54e5964bcf7a3a054dd8be4326b6f690b907083c2ec50856a793e0942a638e9",
+    "slots/games/cyber-skunk/art/symbols/wild.png": "9579c37b946cee3e27c1293fbb161c959943fdd9fb06a070992586e050ae7c99",
+    "slots/games/cyber-skunk/art/ui/controller-texture.png": "763dd1e3e2cc70f0a3bbe5ddaaba6c71aa8c7a9efaa965b053479e23603c24ec",
+    "slots/games/cyber-skunk/art/ui/icon.png": "4b70bd820811978dfd53b534d52f4934fd5e32bd9629fb97ee8aabf6cc15a84c",
+    "slots/games/cyber-skunk/art/ui/intro-bonuses.png": "fb5b2da2bea5b0cf58da9e215063973dfe36fa23d1199422b7086906d606de66",
+    "slots/games/cyber-skunk/art/ui/intro-route.png": "373a462ae418978903ba2476903678d22228501c64a2851c814219cd54fa9329",
+    "slots/games/cyber-skunk/art/ui/splash-desktop.png": "b196a5ba854597842e2f63e8aa90e2cfa2986c127c218d23a51f8939710712d4",
+    "slots/games/cyber-skunk/art/ui/splash-mobile.png": "095a79c404b76572e0b010ac576add6cea76fa96197a89336b0d5305577fdeca",
+    "slots/games/cyber-skunk/art/wins/banner-extra-spins.png": "8358ff4d07ce410f284d4f885a2a9004d52ddc637590f2455dadb22d515c927f",
+    "slots/games/cyber-skunk/art/wins/title-total-win.png": "203e0b5574c232dd9f8c4f65f231ce9d351a736613b7927fded58ac084ad4982",
+    "slots/games/cyber-skunk/art/wins/win-big.png": "46464bf936c30fe2035d53090d3c751a118d3acc165162682b82953729323173",
+    "slots/games/cyber-skunk/art/wins/win-epic.png": "0450c5255dc5b9fcd34dbd38ee8b5e89e6381e444b1bc88d1a90ec8ead7d5a07",
+    "slots/games/cyber-skunk/art/wins/win-max.png": "1412930424b833b321c0708520ff0417a4b8e60625ee0f87249224e6e5accf8c",
+    "slots/games/cyber-skunk/art/wins/win-mythic.png": "5a940a71e7d1c65eb376559a8f74d2cd02241974c5ffc4e0119b548a3d65445b",
+    "slots/games/cyber-skunk/art/wins/win-nice.png": "cdeaf8daf29812e45cc62e5c50a100f28d588a75ea016d89e7ff5692391c56ff",
+    "slots/games/cyber-skunk/runtime/app.js": "23c482cf6bc2d7d5e9dc9df9cab49c2c0b0b9f87a1e9cd8c5479184e5dd16d3e",
+    "slots/games/cyber-skunk/runtime/assets/bg/bg-bonus-desktop.webp": "82f252f50ef6811339d88507cd7d1acc1ec21df5fc6737ca7cc46a3e6cb08ba6",
+    "slots/games/cyber-skunk/runtime/assets/bg/bg-bonus-mobile.webp": "7c3b5de76fd90a5a67b26dc3390b765237cfe2667b18e147a8c188adfd0502f4",
+    "slots/games/cyber-skunk/runtime/assets/bg/bg-desktop.webp": "b29a5cfbca5a48aa4f804d5fd76514286405f6c3a4f5db4194fa868f33161fa8",
+    "slots/games/cyber-skunk/runtime/assets/bg/bg-mobile.webp": "8d5c5e3ccd12596c6327a675bdf0381682b2cec54cabea5ab8d8252542e5b4a3",
+    "slots/games/cyber-skunk/runtime/assets/cards/card-overpressure.webp": "fd88187e7f90ad43d955bd6a117bda1dc565edbc01b614e283e9397a7817c81c",
+    "slots/games/cyber-skunk/runtime/assets/cards/card-signal-boost.webp": "7d8d537de41e9243ce9b7108b4845171d63467eafc60b15f32c7011e63e7daac",
+    "slots/games/cyber-skunk/runtime/assets/cards/card-spray-job.webp": "3bddd1428810ba25eea5acf0bd8a78a78c9fe681bbe6823495e4435a7deaf04d",
+    "slots/games/cyber-skunk/runtime/assets/cards/card-vent-break.webp": "631d9e7302857e4df2b2c52d8dd4db0465d0e3e37b1da6ba2fc16cfac89f96db",
+    "slots/games/cyber-skunk/runtime/assets/cards/dispatch-art.svg": "7d74b55d8367c3764b7286c2a19cfeb2aa5fa18d150fe3df41a00df176dbdf23",
+    "slots/games/cyber-skunk/runtime/assets/cards/signal-boost-badge.webp": "740b047e4dabc5396755d54596a1d8e7f25d4b6b9b445e5569d5b605f495d94e",
+    "slots/games/cyber-skunk/runtime/assets/cards/spray-job-badge.webp": "0a5f95747e4e647c5b468153d67f64ba513504bf6e8f7d51200f9897c0386ebf",
+    "slots/games/cyber-skunk/runtime/assets/fonts/Anton-Regular.ttf": "a4ba3a92350ebb031da0cb47630ac49eb265082ca1bc0450442f4a83ab947cab",
+    "slots/games/cyber-skunk/runtime/assets/fonts/BarlowCondensed-ExtraBold.ttf": "724c9c25952d5f4a2d87185d9767aa006144c5f0d944dc05bf7d5d603551c260",
+    "slots/games/cyber-skunk/runtime/assets/fonts/BarlowCondensed-SemiBold.ttf": "7b619d14bc2327509a9ef32b0890f709626f7ecc9ff61191c2a4314c5499d2d9",
+    "slots/games/cyber-skunk/runtime/assets/fonts/OFL-Anton.txt": "ee67e6ee22790b7929f1a3769ca2801d565c64b5a9096942c1adf5596de9c9e4",
+    "slots/games/cyber-skunk/runtime/assets/fonts/OFL-Barlow.txt": "186d750eb496a4c17a76385f82be6aea2ac1cf2de074a811d63786cf374ea73f",
+    "slots/games/cyber-skunk/runtime/assets/fx/badge-pressure.webp": "16b953728c9882f95757b4a5ac478923f846c6e469188780d94e90abf7475704",
+    "slots/games/cyber-skunk/runtime/assets/fx/fx-droplet.webp": "4788b53a7ab1e0b5b93de4de1cd27321a8aaaf4e81dd4cf23cd4b151d0d5b5c3",
+    "slots/games/cyber-skunk/runtime/assets/fx/fx-mist.webp": "d75fb5b83fea01b6a71622178b5f25e5575384b108065579c83dccd06168fe66",
+    "slots/games/cyber-skunk/runtime/assets/fx/fx-spark.webp": "8c76f57a067f865b11194fa5491bad8d96fed4dd076b05057be334e9f64eb6be",
+    "slots/games/cyber-skunk/runtime/assets/fx/fx-splat.webp": "368fe837e6d572692deab872e95d54633fad727508b357d3154974c173b09706",
+    "slots/games/cyber-skunk/runtime/assets/fx/fx-steam.webp": "13da0f160a670f10e77c4d5ef0460af025abf9fc0cb4d7f5e68e6d9958793c52",
+    "slots/games/cyber-skunk/runtime/assets/fx/vent-online.webp": "774e1cb8f1443f031854008cee58f43b396267dcb8c6f8dc59b89d00186b0f96",
+    "slots/games/cyber-skunk/runtime/assets/mascot/ear.webp": "1e9ed87bba00a3ba7de647eb03d98c2c10d6b6e02d60fe385abc2760b6fdd701",
+    "slots/games/cyber-skunk/runtime/assets/mascot/eyelids.webp": "c3bfd37a8d43d728764c33ff7a43f7e4b4c0dcb6849bfac30cce8d5ffb4dc7e4",
+    "slots/games/cyber-skunk/runtime/assets/mascot/far-ear.webp": "20675c0f7dab985710dec2f2951c0426a2b5f9d9250b7e32484f464ea0de501e",
+    "slots/games/cyber-skunk/runtime/assets/mascot/far-forearm.webp": "dd3993f2a2030794771fd58cfdca600a581174d0a962470a041d8de774b43f56",
+    "slots/games/cyber-skunk/runtime/assets/mascot/far-hand.webp": "5d03bceaea4d53933398a0ac612289ccc6dd39376e7eb361669b3331f8d04363",
+    "slots/games/cyber-skunk/runtime/assets/mascot/far-upper-arm.webp": "857ab389ccbd2c9ccbfefae01beddd38585bee42e3843ce34b4b41e505c3b4d0",
+    "slots/games/cyber-skunk/runtime/assets/mascot/goggles.webp": "1f49a38dcb712460445dd177e994245db4234c0f8b13aaff2036a9317b0af5c7",
+    "slots/games/cyber-skunk/runtime/assets/mascot/head.webp": "e438e1d93dfed447ea0c64fc2a286bbc431b5cd9c5c1723879a0ea8cbd5a53a2",
+    "slots/games/cyber-skunk/runtime/assets/mascot/layers.json": "b5505927feed24f369054157d0b197f1b81c766e9a925aa9281f7744896ad59a",
+    "slots/games/cyber-skunk/runtime/assets/mascot/near-forearm.webp": "c96b34ba502c8b0eeb2ce996a620681c4d4ffb4a4b9b2f39fec1b2045418dae4",
+    "slots/games/cyber-skunk/runtime/assets/mascot/near-hand.webp": "5a1c81c7b6285a0f706cff4e22b5e58e23c204a8d105a93ceae14b38ca6327b6",
+    "slots/games/cyber-skunk/runtime/assets/mascot/near-upper-arm.webp": "0f4fc10d7630012f8362b89b5c280dba0bce9d87887a2ec498febd7c28069264",
+    "slots/games/cyber-skunk/runtime/assets/mascot/nozzle.webp": "4adce45262a2a4613a5bf683c93463044daac7e075d346608fe091af41a02fc2",
+    "slots/games/cyber-skunk/runtime/assets/mascot/pivots-v4.json": "6f3d6b616d7b3f53b091650bc9faa091164634449085ea2841818b17ec859b98",
+    "slots/games/cyber-skunk/runtime/assets/mascot/pivots.json": "6f3d6b616d7b3f53b091650bc9faa091164634449085ea2841818b17ec859b98",
+    "slots/games/cyber-skunk/runtime/assets/mascot/tail-1.webp": "2c41c4ba5edad4719123da4087de3c71511ca253d88e203193d4427f9b8be043",
+    "slots/games/cyber-skunk/runtime/assets/mascot/tail-2.webp": "7f6d0ff1631919ad09c37b2c893a8bd096cc42c63a9b8ab2f4612eb03b11434a",
+    "slots/games/cyber-skunk/runtime/assets/mascot/tail-3.webp": "48c733ad855fe2033363a88cd00e8ecaeeb24700c7cac9eadce79f2c4f2b1337",
+    "slots/games/cyber-skunk/runtime/assets/mascot/torso.webp": "f8ec91b1b7029b8462e86bd6df74b757e8d036cb4d6e70d9ea85dcd66aedf71f",
+    "slots/games/cyber-skunk/runtime/assets/panels/panel-blackout.webp": "f37dca77d93852acd49364d832e0e374348300420cfc4f56a959c9392c6f001f",
+    "slots/games/cyber-skunk/runtime/assets/panels/panel-overpressure.webp": "c0940d094d515397d87390acf050b8617f96362c7618982dd40ab1a76c426cb3",
+    "slots/games/cyber-skunk/runtime/assets/panels/panel-vent-break.webp": "9604b60238f249f44771fdc448e287ccac2fee031acfe2daabca7255949df433",
+    "slots/games/cyber-skunk/runtime/assets/studio-gg-diagonal.png": "0d943e19f0752912060c85788a54ebc2796112231622d61bb9b1b4828eb539aa",
+    "slots/games/cyber-skunk/runtime/assets/symbols/a.webp": "59755b25c41fa17ac45fde8a01dfa0cd6ae996a68ae8708f3bcc4df30ff991dc",
+    "slots/games/cyber-skunk/runtime/assets/symbols/fs-amethyst.webp": "278e4c1a5e168062c3680428c9223eb1952bb03c3cf60a8ed91a080b587c8561",
+    "slots/games/cyber-skunk/runtime/assets/symbols/fs-violet.webp": "e432a8effca5a73ec41988c1d0d5747f30d5afdefc457db9e2285c977e7d3c9b",
+    "slots/games/cyber-skunk/runtime/assets/symbols/h1-battery.webp": "bfbabbef6695fc8a650317b4db8e0f7b9763689db759e8c0a73687d1cfe5c757",
+    "slots/games/cyber-skunk/runtime/assets/symbols/h2-rotor.webp": "9bb5c1cc70987a78c724837daa56155a073082d542e450dfb239566c319560a9",
+    "slots/games/cyber-skunk/runtime/assets/symbols/h3-canister.webp": "ff9d30b155865c673e7348fa106332ff6143a0795a84dcd8cadd20025aa7a509",
+    "slots/games/cyber-skunk/runtime/assets/symbols/h4-key.webp": "34863dfda8ddf06e7b9fe814174f7c84c1a4562f03aea8b0cf81edc72a5bc668",
+    "slots/games/cyber-skunk/runtime/assets/symbols/j.webp": "bedcceb692fb0e1fe40651fa0511d5ea60565c30aae442383a0433c422a5fe82",
+    "slots/games/cyber-skunk/runtime/assets/symbols/k.webp": "fb0fcede9c0b38d7bdd2e6abf56c92ed7fd0de531421f2daf93629294858fd90",
+    "slots/games/cyber-skunk/runtime/assets/symbols/q.webp": "583017ec59878641c8c598ac88367b0c9220ecf40f05f55cd3e98610a82a2506",
+    "slots/games/cyber-skunk/runtime/assets/symbols/scatter-letters.webp": "541acfce1640e2f5e54015e26265da404f084cf08c0ad04be41239b653bc1611",
+    "slots/games/cyber-skunk/runtime/assets/symbols/scatter-plate.webp": "18b59ca211417d7b9d3596c2c69deaf0cac1b7a5ab38c069aa10b599085b6de4",
+    "slots/games/cyber-skunk/runtime/assets/symbols/ten.webp": "d4bf3034b569e2fc23de22d5cebbc1cc051c26649cd1132fc88fa64d9bd33131",
+    "slots/games/cyber-skunk/runtime/assets/symbols/vent.webp": "f153b8401c2fec7425042a681fa96f1b9158708d3499581f0f606f1e8a452582",
+    "slots/games/cyber-skunk/runtime/assets/symbols/wild-w.webp": "7efa457483da7781176a65a3dbbd8a68c870e5e5803066ce98d7e69b2b9f0871",
+    "slots/games/cyber-skunk/runtime/assets/symbols/wild.webp": "d2a5c0fb7afc097876389beedb36a5ec08a39546b00dc063bb39db95e111e6ed",
+    "slots/games/cyber-skunk/runtime/assets/ui/airlock.svg": "a5b860f83673a30f96b6a598eb4c15632d468cab1daea3f1684ab5845f67be43",
+    "slots/games/cyber-skunk/runtime/assets/ui/cabinet-manometer.webp": "b46a73895626b50f6a5ade178b9a76bac0d5880e984034fbe8747a6c62f68cca",
+    "slots/games/cyber-skunk/runtime/assets/ui/cabinet.webp": "a99809e0dc2574b5ce70b616c2eca3193b7bd30af788e3b277b7cc2cbee4fca7",
+    "slots/games/cyber-skunk/runtime/assets/ui/controller-texture.webp": "05eeb766bdaf06e6201a384f5dc6743a3ab9b4eaff35742476076466812f6ea9",
+    "slots/games/cyber-skunk/runtime/assets/ui/extractor-case.svg": "a3a1493fe7548bc9ebdba528f7b081df34d34368aa0d2cd06d6d8b8fd87c0fec",
+    "slots/games/cyber-skunk/runtime/assets/ui/gauge-face-inset.svg": "d0b356155b013ea8c6e439ec113dfcc7bb0fc6cb7a24028a2c02fd6383a3893c",
+    "slots/games/cyber-skunk/runtime/assets/ui/gauge-face.webp": "d9b7bd8a915d826f3d89ecbae113bfdf847470cce5d4103625405d6d46d43bcd",
+    "slots/games/cyber-skunk/runtime/assets/ui/gauge-hanger.svg": "688e243e9e705a4b10914b9c07a6a942c582b0f864c8c324e62dafcdfd09449e",
+    "slots/games/cyber-skunk/runtime/assets/ui/gauge-needle.webp": "3afedc0645ef5205ec2fd20e134f0d2492f1134b9c6707fd4cc88ef5356ea675",
+    "slots/games/cyber-skunk/runtime/assets/ui/icon.webp": "7fca358f6bd5dc750432a1cbe1ccf75794395073d815c34837b4a1fd31561483",
+    "slots/games/cyber-skunk/runtime/assets/ui/intro-bonuses.webp": "ebedb6146549cdd22093e954b24256efe9bc7661572a2811e7c2abafadd853aa",
+    "slots/games/cyber-skunk/runtime/assets/ui/intro-route.webp": "815ab2672a799f1aa95e4b97e29655368b673d295e4bf32a5ac187055c165902",
+    "slots/games/cyber-skunk/runtime/assets/ui/loading-hall-desktop.webp": "90b88e160931363046a77dc772e0a8bf2a4da472da468e5430c78ac578589e23",
+    "slots/games/cyber-skunk/runtime/assets/ui/loading-hall-mobile.webp": "5d45ea9204eb9f0bb23a979ad5df9613f718f5f8fd4fbfa28373ce64dfde7b51",
+    "slots/games/cyber-skunk/runtime/assets/ui/logo-badge.webp": "9e7c52555c58f7ba7cc1bdeff06b7b40f6467296dfed7b0fa6f928285defddf8",
+    "slots/games/cyber-skunk/runtime/assets/ui/logo-stacked.webp": "22fd58c7da01e02188f776f6f52019d11e31b1fc2a22523832cd2062a3a0b0e1",
+    "slots/games/cyber-skunk/runtime/assets/ui/logo.webp": "59bc46fe9895f2404e304acceaf1530a0f0a6b68383aff79c158186bc893f11d",
+    "slots/games/cyber-skunk/runtime/assets/ui/operator-boots.webp": "536c7f98b94b5de1a2b2ba7200e3811df546b40cc116360f252202f91b4f4741",
+    "slots/games/cyber-skunk/runtime/assets/ui/operator-desk.webp": "14ba1e53f9b156b212cd5c36f839b869f8f29855f20b3a4912373f5b2583bcdf",
+    "slots/games/cyber-skunk/runtime/assets/ui/operator-floor-shadow.webp": "af1ca808c3cb5c4bf32bc6a5f359994204c792e4ea45449f7347f751819e6d7f",
+    "slots/games/cyber-skunk/runtime/assets/ui/pipes-top.webp": "76c545f2ed53b33b237aa9265ba8c48513e13896453db8814473f82200ac87cd",
+    "slots/games/cyber-skunk/runtime/assets/ui/pressure-bench.webp": "787902d8b98d862d6312ad8627199e3bd3e7f28daeb20cbff54d88ffefa258b3",
+    "slots/games/cyber-skunk/runtime/assets/ui/pressure-lamp.webp": "1344697d492a16f63fc7e4d51a2b0b84324d2005b3eaa133172fc4bf5669d6a3",
+    "slots/games/cyber-skunk/runtime/assets/ui/pressure-rail.svg": "79a890c32b62f9c6a52bd6604cb8ec5d37279033e74b0939cf8a3c5864c573d3",
+    "slots/games/cyber-skunk/runtime/assets/ui/pressure-strip.webp": "56b5baa1e26d407341dd873e17ef8824d3232e63533b1b1916bbd0ef4f7be00c",
+    "slots/games/cyber-skunk/runtime/assets/ui/splash-desktop.webp": "b446a7bd0d85b1b7587ddbcb273898b42806470799c23ba1695e288286d3ff9f",
+    "slots/games/cyber-skunk/runtime/assets/ui/splash-mobile.webp": "68d284426b15e09487a8f35ae9ed9d160daf2baaea109e17db691817521101c6",
+    "slots/games/cyber-skunk/runtime/assets/wins/banner-extra-spins.webp": "2a1345b9da9b34ca5229af8fbc7b189c88a8810a64209f4fc3afcab789f839f1",
+    "slots/games/cyber-skunk/runtime/assets/wins/title-total-win.webp": "5911b63364c33d28552c9604e841359d30d1a6fc4400ccbdaef90f4acbfda5fe",
+    "slots/games/cyber-skunk/runtime/assets/wins/win-big.webp": "2737281d72ae88335c040a55064fc9db9ab252356edd285d854516a3e92657a8",
+    "slots/games/cyber-skunk/runtime/assets/wins/win-epic.webp": "e2e7c089e7b215eb3c706ec5e1bf8c5060504ead8e4c239a08bef23681c3f32e",
+    "slots/games/cyber-skunk/runtime/assets/wins/win-max.webp": "f3cefd89c874b8ead9d96b7faade61c537dbd100ffcd6aa00a06e9dc89689f2b",
+    "slots/games/cyber-skunk/runtime/assets/wins/win-mythic.webp": "cf494015e601ed08d44ef731b1d68482113e792e2f60cf7879a04302ef7fa2d5",
+    "slots/games/cyber-skunk/runtime/assets/wins/win-nice.webp": "577d316bda435f09650c0adb27eec9af9912acf1523ff8c7bee1ef16bab44c97",
+    "slots/games/cyber-skunk/runtime/audio.js": "2ecc056672443cc6619e73d9e3d8da58f16b70876c1954e618b5a92a48a3718c",
+    "slots/games/cyber-skunk/runtime/catalog-data.js": "409df50c64d574c894eefdd01dae5dcb1dedb756458e4b4b24b7eef0618afb9f",
+    "slots/games/cyber-skunk/runtime/catalog.js": "f73ef1426214aa5f23d1a668a24517eb33410a76022513e17f5766b51e09ac20",
+    "slots/games/cyber-skunk/runtime/controller/README.md": "282259af78449e3aa29dd8b394b27e503dd36d816817524356feff490d80db3e",
+    "slots/games/cyber-skunk/runtime/controller/assets/moon-rock-v89.png": "86ec5ee0435d6dd248448c6b21b7a5a183247e7c9930fedf949c11b16d772a10",
+    "slots/games/cyber-skunk/runtime/controller/controller-mobile-base.css": "e23080f27056a0790ded712d1f513920bd15b0ddd65e6276ed2d8355c4db80f2",
+    "slots/games/cyber-skunk/runtime/controller/controller-mobile.css": "6e0af3b443fa64277404e73a04440bae637e28fdf60ce99baa3605f71b6201c8",
+    "slots/games/cyber-skunk/runtime/controller/controller.css": "8d98dcf38bb70d1a0a530b0befa06024f614845087658aebdfb8e4e167d80f4e",
+    "slots/games/cyber-skunk/runtime/controller/controller.js": "8ac5356940ea003ae6a0e5bee7964c400f58607351e358914f2510672935be3e",
+    "slots/games/cyber-skunk/runtime/engine.js": "705d3761ef8536828104dc1778fe4fbd116118b6353d553aaa8f9b8d2be371fe",
+    "slots/games/cyber-skunk/runtime/entry-shop.css": "61151757f4b25ec5a19328a7cc3e16d589628eeb79a58dc5f28bd138aca4dc3a",
+    "slots/games/cyber-skunk/runtime/fan-gust.js": "65b3af2952fedbf4a5aca9c0530e0209c08ef967df6ce78e57a49cd36d67d82b",
+    "slots/games/cyber-skunk/runtime/guide-demo.js": "e32a4137e351fd06a9f9261047e0a32f83375c2938342e23536cce51498292c4",
+    "slots/games/cyber-skunk/runtime/index.html": "6c3c8b2b6d8eb9bf594790cef669810ffd48430ee4d288fb1590565592f4b7b9",
+    "slots/games/cyber-skunk/runtime/launch.js": "48cc50a2b157eded6f0fda25d42d5833e7b343aafa9664539600a4241c0a899e",
+    "slots/games/cyber-skunk/runtime/lens-water.js": "d2be41cc7522e37935ac0344b5ad27ccae16933c740d03f7b121cdccc11791e9",
+    "slots/games/cyber-skunk/runtime/pressure-transfer.js": "68f51a8abd796dddcea6626f5fc1accae748e06e5fb711b8838bff5e59d9e4da",
+    "slots/games/cyber-skunk/runtime/rig-preview.html": "a585f565b164928caad0d5533ceb66e503f8879e123cacb3cd46006a7e83d20b",
+    "slots/games/cyber-skunk/runtime/rig.js": "d9583422afa217be00174620506d3cd0ad251202354791cd72fe4a65026cf0c8",
+    "slots/games/cyber-skunk/runtime/rules.js": "fa4d3b433eea63dc856e762cea46e649b0c0b4bbc7120193a3236b410c400e7f",
+    "slots/games/cyber-skunk/runtime/styles.css": "60a99e44150020d71075ea7548f216db2c3c724aa0d9981678148fba1227c921",
+    "slots/games/cyber-skunk/runtime/symbols.js": "48a330494c6ea08a0f6d7818ee3452af1343ee4e66eff944ee2c432640b5561a",
+    "slots/tools/art/cyber-skunk-prep.py": "12cb7ec96c3a6da2d5f1087f10460efbc16e3f7ac9a3c40fe019def719d62bce"
+  },
+  "runtimeGitChecks": [
+    {
+      "file": "slots/games/cyber-skunk/runtime/app.js",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/bg/bg-bonus-desktop.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/bg/bg-bonus-mobile.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/bg/bg-desktop.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/bg/bg-mobile.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/cards/card-overpressure.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/cards/card-signal-boost.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/cards/card-spray-job.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/cards/card-vent-break.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/cards/dispatch-art.svg",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/cards/signal-boost-badge.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/cards/spray-job-badge.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/fonts/Anton-Regular.ttf",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/fonts/BarlowCondensed-ExtraBold.ttf",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/fonts/BarlowCondensed-SemiBold.ttf",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/fonts/OFL-Anton.txt",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/fonts/OFL-Barlow.txt",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/fx/badge-pressure.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/fx/fx-droplet.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/fx/fx-mist.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/fx/fx-spark.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/fx/fx-splat.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/fx/fx-steam.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/fx/vent-online.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/mascot/ear.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/mascot/eyelids.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/mascot/far-ear.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/mascot/far-forearm.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/mascot/far-hand.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/mascot/far-upper-arm.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/mascot/goggles.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/mascot/head.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/mascot/layers.json",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/mascot/near-forearm.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/mascot/near-hand.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/mascot/near-upper-arm.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/mascot/nozzle.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/mascot/pivots-v4.json",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/mascot/pivots.json",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/mascot/tail-1.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/mascot/tail-2.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/mascot/tail-3.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/mascot/torso.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/panels/panel-blackout.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/panels/panel-overpressure.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/panels/panel-vent-break.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/studio-gg-diagonal.png",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/symbols/a.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/symbols/fs-amethyst.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/symbols/fs-violet.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/symbols/h1-battery.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/symbols/h2-rotor.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/symbols/h3-canister.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/symbols/h4-key.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/symbols/j.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/symbols/k.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/symbols/q.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/symbols/scatter-letters.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/symbols/scatter-plate.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/symbols/ten.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/symbols/vent.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/symbols/wild-w.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/symbols/wild.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/airlock.svg",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/cabinet-manometer.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/cabinet.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/controller-texture.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/extractor-case.svg",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/gauge-face-inset.svg",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/gauge-face.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/gauge-hanger.svg",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/gauge-needle.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/icon.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/intro-bonuses.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/intro-route.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/loading-hall-desktop.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/loading-hall-mobile.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/logo-badge.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/logo-stacked.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/logo.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/operator-boots.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/operator-desk.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/operator-floor-shadow.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/pipes-top.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/pressure-bench.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/pressure-lamp.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/pressure-rail.svg",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/pressure-strip.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/splash-desktop.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/ui/splash-mobile.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/wins/banner-extra-spins.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/wins/title-total-win.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/wins/win-big.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/wins/win-epic.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/wins/win-max.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/wins/win-mythic.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/assets/wins/win-nice.webp",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/audio.js",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/catalog-data.js",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/catalog.js",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/controller/README.md",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/controller/assets/moon-rock-v89.png",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/controller/controller-mobile-base.css",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/controller/controller-mobile.css",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/controller/controller.css",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/controller/controller.js",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/engine.js",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/entry-shop.css",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/fan-gust.js",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/guide-demo.js",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/index.html",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/launch.js",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/lens-water.js",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/pressure-transfer.js",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/rig-preview.html",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/rig.js",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/rules.js",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/styles.css",
+      "matchesGit": true
+    },
+    {
+      "file": "slots/games/cyber-skunk/runtime/symbols.js",
+      "matchesGit": true
+    }
+  ],
+  "runtimeFilesMatchGit": true,
+  "problems": [],
+  "scope": "Temporary checkout export identity only; no hosted, visual, rig-pose, sampler or math sign-off."
+}

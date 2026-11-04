@@ -8,6 +8,10 @@
 
 - missing: none
 
+## Bound runtime exports: 12
+
+h1-battery, h2-rotor, h3-canister, h4-key, a, k, q, j, ten, wild, cabinet, logo
+
 ## Problems
 
 - none

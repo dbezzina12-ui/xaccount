@@ -8,6 +8,8 @@ Source entry points: [shared game-selection launch](../../index.html?game=cyber-
 
 Loading identity: Dylan selected Claude's amber **Neon Sign** GG ident. Preserve its inline mark, stroke-based glow (the filter version produced a box on his device), thin neon loading tube and already-lit reduced-motion state. Current `entry-shop.css` key is `neon-ident-1`. The combined 58-case source verification is recorded in the release status; it does not establish hosted parity.
 
+Art export preservation: normal prep uses the [source-bound runtime export profile](art/source/runtime-export-profile-v1/README.md) for ten symbols, cabinet and logo. Keep their current compiled dimensions/crops; PNG masters remain editable. A changed master must have its binding reviewed before prep proceeds. The temporary full rebuild reproduces all 68 ordinary/mascot outputs exactly; [evidence and limits](shots/art-export-profile-qa-2026-11-04/README.md). This is checkout preservation, not new artwork or hosted approval.
+
 The initial provisional mechanics and full-body rig suggestions below are historical design context. Implement current costs/rules from [shipping config](runtime/rules.js) and [MATH.md](MATH.md), and preserve the fitted compact v4.1 contract at the top of [ART_SPEC.md](ART_SPEC.md): sixteen registered pieces, three tail segments plus nozzle, separate far ear, no jaw. Do not restore superseded coordinates or provisional prices/spin counts from this brief. All 49 required art sources and 16 registered pieces are present in the current read-only prep check; availability is not hosted-integration proof.
 
 ## Implemented presentation correction — 2026-10-31

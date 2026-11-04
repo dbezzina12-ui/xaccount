@@ -18,6 +18,8 @@ The playable artifact was verified on an earlier revision. Current source includ
 
 ## 2. Art and layout
 
+- [x] Art export repeatability from `fca0890`: added twelve explicit source-bound compiled exports so normal prep preserves current symbol, cabinet and logo dimensions/crops. Temporary canonical rebuild matches **68/68** ordinary/mascot outputs byte-for-byte; 202 fingerprints unchanged and all 119 runtime files match Git. Six profile failure/preservation tests pass; inventory 49/49 + 16/16, no problems; core 139 passed/three existing skips and game 29/29. No runtime image, PNG master or fitted rig change. [Report and reproduction](shots/art-export-profile-qa-2026-11-04/README.md). No new browser or hosted claim.
+
 - [x] Compact mascot lineage at `193e044`: canonical temporary export matches all 19 runtime mascot files byte-for-byte, using 14 registered pieces plus fitted eyelids/nozzle; all 16 registered originals are separate 1600×2000 inputs. Crop/pivot/source hashes are recorded. [Audit and reproduction](shots/mascot-lineage-qa-2026-11-04/README.md). This is source/export identity, not hosted or all-pose sign-off.
 
 - [x] Studio loading ident is the neon GG sign Dylan picked on 2026-11-04 (inline SVG, glow without CSS filters). Checked at 1920×1080, 1366×768, 390×844 and 360×800. Evidence: `shots/neon-ident-2026-11-04-*.jpg`. Zombify and RoboBees still use the old diagonal join.

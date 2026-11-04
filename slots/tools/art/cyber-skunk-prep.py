@@ -3,6 +3,7 @@
 
   python3 tools/art/cyber-skunk-prep.py            # convert what is there, report the rest
   python3 tools/art/cyber-skunk-prep.py --check    # report only, write nothing
+  --without-export-profile --out REVIEW_DIR     # generate PNG-master defaults for review
   (--art DIR / --out DIR read and write elsewhere, for tests)
 
 Finds each ART_SPEC file by name anywhere under games/cyber-skunk/art/
@@ -12,12 +13,13 @@ transparency, and writes WebP into games/cyber-skunk/runtime/assets/:
   symbols/  ui/  bg/  panels/  cards/   the file as specified, resized if larger
   mascot/   each layer trimmed to its pixels (plus a margin) at half scale, and
             layers.json: where each trimmed layer sits on the 1600 x 2000 canvas,
-            so the rig draws small images instead of 25 full canvases
+            so the rig draws small images instead of full canvases
 
 Writes games/cyber-skunk/art/REPORT.md. Needs Pillow.
 """
 import hashlib
 import json
+import shutil
 import sys
 from pathlib import Path
 
@@ -29,6 +31,7 @@ def _arg(flag, default):
 ART, OUT = _arg("--art", GAME / "art"), _arg("--out", GAME / "runtime" / "assets")
 # --mascot DIR: take the mascot pieces from DIR (rig v4.1: ChatGPT's registered sources).
 MASCOT_DIR = _arg("--mascot", None)
+WITHOUT_EXPORT_PROFILE = '--without-export-profile' in sys.argv
 # Rig v4 (compact, waist up) when its contract exists; v1 otherwise.
 PIVOTS_FILE = GAME / "art" / "rig" / ("pivots-v4.json" if (GAME / "art" / "rig" / "pivots-v4.json").exists() else "pivots.json")
 PIVOTS = json.loads(PIVOTS_FILE.read_text())
@@ -108,12 +111,45 @@ REJECTED = {
     "wild": {"729e3ef9a4db6d39": "Dylan, 2026-10-30: no skunks on reel symbols (this WILD has a skunk-tail stripe)"},
 }
 
+# Retain explicitly pinned runtime optimizations without treating them as masters.
+PROFILE_DIR = ART / 'source' / 'runtime-export-profile-v1'
+PROFILE_FILE = PROFILE_DIR / 'manifest.json'
+EXPORT_PROFILE = json.loads(PROFILE_FILE.read_text()) if PROFILE_FILE.exists() and not WITHOUT_EXPORT_PROFILE else {'version': 1, 'assets': {}}
+
+def profiled_export(name, master):
+    entry = EXPORT_PROFILE['assets'].get(name)
+    if entry is None:
+        return None
+    if name not in SPEC or not master:
+        raise ValueError(f'export profile {name}: missing or unknown master')
+    bound = (ART / entry['master']).resolve()
+    export = (PROFILE_DIR / entry['export']).resolve()
+    if not bound.is_relative_to(ART.resolve()) or not export.is_relative_to(PROFILE_DIR.resolve()):
+        raise ValueError(f'export profile {name}: path outside its art directory')
+    if master.resolve() != bound or hashlib.sha256(master.read_bytes()).hexdigest() != entry['masterSha256']:
+        raise ValueError(f'export profile {name}: master changed; review/update the binding or use --without-export-profile for a separate review output')
+    if not export.is_file() or hashlib.sha256(export.read_bytes()).hexdigest() != entry['exportSha256']:
+        raise ValueError(f'export profile {name}: preserved export is missing or changed')
+    with Image.open(export) as image:
+        if entry['runtime'] != f'{SPEC[name][0]}/{name}.webp' or list(image.size) != entry['size']:
+            raise ValueError(f'export profile {name}: output path or size does not match')
+    return export
+
+def validate_export_profile():
+    if WITHOUT_EXPORT_PROFILE and OUT.resolve() == (GAME / 'runtime/assets').resolve():
+        raise ValueError('--without-export-profile requires a separate --out review directory')
+    if EXPORT_PROFILE.get('version') != 1 or not isinstance(EXPORT_PROFILE.get('assets'), dict):
+        raise ValueError('unsupported art export profile')
+    for name in EXPORT_PROFILE['assets']:
+        profiled_export(name, find(name))
+
 
 def prep_asset(name, check, notes):
     folder, size, alpha, quality = SPEC[name]
     src = find(name)
     if not src:
         return "missing"
+    preserved = profiled_export(name, src)
     why = REJECTED.get(name, {}).get(hashlib.sha256(src.read_bytes()).hexdigest()[:16])
     if why:
         if not check:
@@ -129,17 +165,20 @@ def prep_asset(name, check, notes):
     if alpha and not has_alpha(im):
         problems.append("no transparency (spec: transparent)")
     if not check:
-        im = im.convert("RGBA" if alpha else "RGB")
-        if im.size != size:
-            # Fit inside the spec size, centred: never stretch.
-            fitted = Image.new(im.mode, size, (0, 0, 0, 0) if alpha else (16, 24, 32))
-            scale = min(size[0] / im.size[0], size[1] / im.size[1])
-            scaled = im.resize((max(1, round(im.size[0] * scale)), max(1, round(im.size[1] * scale))), Image.LANCZOS)
-            fitted.paste(scaled, ((size[0] - scaled.size[0]) // 2, (size[1] - scaled.size[1]) // 2))
-            im = fitted
         dest = OUT / folder / f"{name}.webp"
         dest.parent.mkdir(parents=True, exist_ok=True)
-        im.save(dest, "WEBP", quality=quality, method=6)
+        if preserved:
+            shutil.copyfile(preserved, dest)
+        else:
+            im = im.convert("RGBA" if alpha else "RGB")
+            if im.size != size:
+                # Fit inside the spec size, centred: never stretch.
+                fitted = Image.new(im.mode, size, (0, 0, 0, 0) if alpha else (16, 24, 32))
+                scale = min(size[0] / im.size[0], size[1] / im.size[1])
+                scaled = im.resize((max(1, round(im.size[0] * scale)), max(1, round(im.size[1] * scale))), Image.LANCZOS)
+                fitted.paste(scaled, ((size[0] - scaled.size[0]) // 2, (size[1] - scaled.size[1]) // 2))
+                im = fitted
+            im.save(dest, "WEBP", quality=quality, method=6)
     notes.append((name, rel(src), problems))
     return "warn" if problems else "ok"
 
@@ -196,6 +235,7 @@ def prep_mascot(check, notes):
 
 def main():
     check = "--check" in sys.argv
+    validate_export_profile()  # Reject stale bindings before writing any exports.
     notes = []
     status = {name: prep_asset(name, check, notes) for name in SPEC}
     mascot = prep_mascot(check, notes)
@@ -204,6 +244,7 @@ def main():
         done = [n for n, s in group.items() if s != "missing"]
         lines += [f"## {title}: {len(done)} of {len(group)} in", ""]
         lines += [f"- missing: {', '.join(n for n, s in group.items() if s == 'missing') or 'none'}", ""]
+    lines += [f"## Bound runtime exports: {len(EXPORT_PROFILE['assets'])}", "", ", ".join(EXPORT_PROFILE['assets']) or "none", ""]
     issues = [(n, src, p) for n, src, p in notes if p]
     lines += ["## Problems", ""] + ([f"- `{src}`: {'; '.join(p)}" for n, src, p in issues] or ["- none"]) + [""]
     if not check:

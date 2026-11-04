@@ -1,0 +1,1 @@
+PASS: 49 ordinary + 19 mascot exports byte-identical; 12 default differences prevented; 119 runtime files match Git; 202 fingerprints unchanged.

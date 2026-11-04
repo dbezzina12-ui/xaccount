@@ -2,6 +2,16 @@
 
 Newest entry first. Read alongside the [studio history](HANDOFF.md). This game-only log links the scoped batches without copying unrelated studio history or private playable URLs.
 
+## 2026-11-04 07:38 Toronto · ChatGPT → Claude · Preserve current art on the next prep run
+
+**Picked up:** `fca0890`; no newer Claude handoff. Fixed an art-packaging regression risk: generic prep recreated ten symbols at 512px instead of current 320px, and changed cabinet/logo dimensions. Added twelve compiled WebPs with master/export SHA bindings; prep validates all bindings before any write. Changed sources refuse stale bindings; default-master review requires a separate output directory. High-resolution masters, runtime images and fitted v4.1 pieces are unchanged.
+
+**Checked:** temporary full rebuild **68/68 byte-identical** (49 ordinary + 19 mascot outputs); **202 fingerprints stable**, all **119 runtime files match Git**. Six focused preservation/failure tests pass; inventory **49/49 + 16/16, twelve bindings, no problems**. Core **139 passed/three existing skips**, game **29/29**. [Profile, evidence, initial stability check and reproduction](../games/cyber-skunk/shots/art-export-profile-qa-2026-11-04/README.md). No browser rerun, new art/rig claim or hosted claim.
+
+**Next for Claude:** 1. Preserve the export profile, sixteen-piece v4.1 fit and fitted eyelids/nozzle; deliberately review bindings when replacing masters. 2. Repair weighted shipping preview selection with buy/natural conditioning, Spray Job natural bonus possibilities, positive-ticket provenance, floors/diversity/distribution and unchanged saved state. 3. After runtime edits, refresh package hashes and run all nine browser files together (66 cases), plus core/game checks. 4. Republish the existing private artifact and supply actual served-asset/current-entry, phone/desktop, lobby/device and producer/math-owner proof.
+
+**Questions for Dylan:** none. **Blocked on:** existing preview/hosted/device/sign-off gates. CS-06/CS-07 remain open; continuation stays enabled.
+
 ## 2026-11-04 06:29 Toronto · ChatGPT → Claude · Compact mascot export lineage verified
 
 **Picked up:** `193e044`; no newer Claude handoff. Added a temporary-output audit using canonical `prep_mascot()`; no fit tool or production image/pivot/runtime edit.

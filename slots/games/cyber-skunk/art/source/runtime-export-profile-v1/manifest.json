@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "baselineRuntimeCommit": "fca0890c1811d623d77dc4be6dc36b06ddd384a2",
+  "purpose": "Preserve current compiled runtime exports; these WebPs are not editable PNG masters.",
+  "assets": {
+    "h1-battery": {
+      "master": "symbols/h1-battery.png",
+      "masterSha256": "8271067462fe384f54a04304e8e6250eeb6b4ea1cc60c1a2d5c1aac7f9640513",
+      "export": "h1-battery.webp",
+      "exportSha256": "bfbabbef6695fc8a650317b4db8e0f7b9763689db759e8c0a73687d1cfe5c757",
+      "runtime": "symbols/h1-battery.webp",
+      "size": [
+        320,
+        320
+      ]
+    },
+    "h2-rotor": {
+      "master": "symbols/h2-rotor.png",
+      "masterSha256": "cfa0b5ce3f66d3ac3ef526366bf44208cb10415224891648765b98c85bfb32d5",
+      "export": "h2-rotor.webp",
+      "exportSha256": "9bb5c1cc70987a78c724837daa56155a073082d542e450dfb239566c319560a9",
+      "runtime": "symbols/h2-rotor.webp",
+      "size": [
+        320,
+        320
+      ]
+    },
+    "h3-canister": {
+      "master": "symbols/h3-canister.png",
+      "masterSha256": "cd2621c113705d420a2bc96b417334487597c046f0e22ad20b068964d17fbc23",
+      "export": "h3-canister.webp",
+      "exportSha256": "ff9d30b155865c673e7348fa106332ff6143a0795a84dcd8cadd20025aa7a509",
+      "runtime": "symbols/h3-canister.webp",
+      "size": [
+        320,
+        320
+      ]
+    },
+    "h4-key": {
+      "master": "symbols/h4-key.png",
+      "masterSha256": "3c93520d518dc98ebf6290501b22dc4b4861b06d059b3399d8e3f5f3480c39a7",
+      "export": "h4-key.webp",
+      "exportSha256": "34863dfda8ddf06e7b9fe814174f7c84c1a4562f03aea8b0cf81edc72a5bc668",
+      "runtime": "symbols/h4-key.webp",
+      "size": [
+        320,
+        320
+      ]
+    },
+    "a": {
+      "master": "symbols/a.png",
+      "masterSha256": "10319e8961e8bf07065c7a102e87c2f54609ed1b8e28bca1a2a29a42789fd770",
+      "export": "a.webp",
+      "exportSha256": "59755b25c41fa17ac45fde8a01dfa0cd6ae996a68ae8708f3bcc4df30ff991dc",
+      "runtime": "symbols/a.webp",
+      "size": [
+        320,
+        320
+      ]
+    },
+    "k": {
+      "master": "symbols/k.png",
+      "masterSha256": "ace86611244cfd58554c2c61246cd9a24ec4175ad6283c64667859679e8cab4f",
+      "export": "k.webp",
+      "exportSha256": "fb0fcede9c0b38d7bdd2e6abf56c92ed7fd0de531421f2daf93629294858fd90",
+      "runtime": "symbols/k.webp",
+      "size": [
+        320,
+        320
+      ]
+    },
+    "q": {
+      "master": "symbols/q.png",
+      "masterSha256": "9eadb85af8b94af043feff6c8507fcbb0470b7059ca64886de9dad127b33b4a9",
+      "export": "q.webp",
+      "exportSha256": "583017ec59878641c8c598ac88367b0c9220ecf40f05f55cd3e98610a82a2506",
+      "runtime": "symbols/q.webp",
+      "size": [
+        320,
+        320
+      ]
+    },
+    "j": {
+      "master": "symbols/j.png",
+      "masterSha256": "ea07249a05afe56400f23129ff20b096f576690b2de6036869a813c1f79acc00",
+      "export": "j.webp",
+      "exportSha256": "bedcceb692fb0e1fe40651fa0511d5ea60565c30aae442383a0433c422a5fe82",
+      "runtime": "symbols/j.webp",
+      "size": [
+        320,
+        320
+      ]
+    },
+    "ten": {
+      "master": "symbols/ten.png",
+      "masterSha256": "2b9201f07fc9bda5c3026bd330653f0fb4e50ab91c6d5b0449a49cf93e21186b",
+      "export": "ten.webp",
+      "exportSha256": "d4bf3034b569e2fc23de22d5cebbc1cc051c26649cd1132fc88fa64d9bd33131",
+      "runtime": "symbols/ten.webp",
+      "size": [
+        320,
+        320
+      ]
+    },
+    "wild": {
+      "master": "symbols/wild.png",
+      "masterSha256": "9579c37b946cee3e27c1293fbb161c959943fdd9fb06a070992586e050ae7c99",
+      "export": "wild.webp",
+      "exportSha256": "d2a5c0fb7afc097876389beedb36a5ec08a39546b00dc063bb39db95e111e6ed",
+      "runtime": "symbols/wild.webp",
+      "size": [
+        320,
+        320
+      ]
+    },
+    "cabinet": {
+      "master": "cabinet/cabinet.png",
+      "masterSha256": "5d32ad43e7a82c7d928ec2157dc2249af4e8e0dee81524aa013a00017636273c",
+      "export": "cabinet.webp",
+      "exportSha256": "a99809e0dc2574b5ce70b616c2eca3193b7bd30af788e3b277b7cc2cbee4fca7",
+      "runtime": "ui/cabinet.webp",
+      "size": [
+        1462,
+        1076
+      ]
+    },
+    "logo": {
+      "master": "logo.png",
+      "masterSha256": "a7e1feaa3736fa033c59dc07c995c6a1e0b5d34a4d82932e35937ba23ecbce42",
+      "export": "logo.webp",
+      "exportSha256": "59bc46fe9895f2404e304acceaf1530a0f0a6b68383aff79c158186bc893f11d",
+      "runtime": "ui/logo.webp",
+      "size": [
+        1600,
+        344
+      ]
+    }
+  }
+}

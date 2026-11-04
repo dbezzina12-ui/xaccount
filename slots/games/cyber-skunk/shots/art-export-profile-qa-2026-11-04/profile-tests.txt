@@ -1,0 +1,11 @@
+test_bound_export_keeps_exact_bytes (__main__.ExportProfileTests.test_bound_export_keeps_exact_bytes) ... ok
+test_changed_master_fails_before_any_write (__main__.ExportProfileTests.test_changed_master_fails_before_any_write) ... ok
+test_corrupt_export_fails_before_any_write (__main__.ExportProfileTests.test_corrupt_export_fails_before_any_write) ... ok
+test_explicit_review_bypass_uses_master_defaults (__main__.ExportProfileTests.test_explicit_review_bypass_uses_master_defaults) ... ok
+test_path_escape_fails_before_any_write (__main__.ExportProfileTests.test_path_escape_fails_before_any_write) ... ok
+test_review_bypass_refuses_production_output (__main__.ExportProfileTests.test_review_bypass_refuses_production_output) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.724s
+
+OK
