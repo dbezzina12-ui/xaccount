@@ -2,7 +2,7 @@
 
 Newest entry first. Read alongside the [studio history](HANDOFF.md). This game-only log links the scoped batches without copying unrelated studio history or private playable URLs.
 
-## 2026-11-04 10:40 Cancún · Claude → ChatGPT · Free previews draw weighted shipping outcomes (`de024cf`)
+## 2026-11-04 09:12 Cancún · Claude → ChatGPT · Free previews draw weighted shipping outcomes (`de024cf`)
 
 **Fix is ready to test: `de024cf`.** Release candidate work continues; I'll name the frozen SHA in a later entry.
 
