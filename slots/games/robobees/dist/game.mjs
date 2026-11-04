@@ -4,7 +4,7 @@ import {spinIdle} from './mascot/spin-idle.mjs';
 import {mountMascot} from './mascot/mascot.mjs?v=10';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
-import {mountWinShow,bonusSummary,tierFor,tiers} from './win-show.mjs?v=38';
+import {mountWinShow,bonusSummary,tierFor,tiers} from './win-show.mjs?v=39';
 import {rollReels,dropTumble,preloadSymbols,symbolClass,symbolUrl} from './reels.mjs?v=36';
 import {addHoney,prepareHoney} from './honey.mjs';
 import {MATH,buys,credit,features,modes,purchaseEntry,start,spin} from './rules.mjs?v=31';
@@ -130,7 +130,6 @@ async function showCellValues(indices){
 }
 function lock(val){busy=val;spinIdle.setBusy(val,performance.now()/1000);labels()}
 async function feature(mode){
- winShow.prepareBonus(mode);
  autoplay.stop();previous=state;state=start(mode,carry);pending=null;carry=0;win=0;stop=false;save();lock(true);
  intro.inert=true;
  await flyAcross(true,()=>{
@@ -411,7 +410,6 @@ draw(face,state.spots);grid.setAttribute('aria-busy','false');
 loading.hidden=true;await identHold;ident.hidden=true;
 if(showOpening) await openFieldGuide($('field-guide'));
 ready=true;labels();
-if(state.mode!=='base')winShow.prepareBonus(state.mode);
 if(bonusResult){lock(true);await presentBonusResult();save();lock(false)}
 if(state.left===10&&(state.mode==='super'||state.mode==='hidden')){
  lock(true);primeBoard().finally(()=>{lock(false);scheduleBonus()});
@@ -432,7 +430,7 @@ if(endDemo){
    const result=spin(state,rng);
    balance+=credit(state,result.amount,bet);state=result.state;face=result.board;
   }
-  document.body.dataset.scene=demoMode;winShow.prepareBonus(demoMode);draw(face,state.spots);labels();
+  document.body.dataset.scene=demoMode;draw(face,state.spots);labels();
   await play(rng);
   button.textContent='Replay bonus ending';button.hidden=false;document.body.classList.add('preview-ready');
  }

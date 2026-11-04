@@ -174,7 +174,6 @@ function paint(ctx,canvas,config,t,sprites,still,scene){
 
 }
 
-const bonusScenery={regular:'woodland-clearing',super:'foundry',hidden:'queen-vault'};
 const ordinaryTotal={seconds:1.15,bees:1,accent:'#ffaa51'};
 
 const recordings=new Map();
@@ -193,11 +192,6 @@ export function mountWinShow(dialog,{money,audioContext,muted,swarm}){
  const title=dialog.querySelector('use'),dismiss=dialog.querySelector('.win-dismiss');
  const reader=dialog.querySelector('.win-reader'),stage=dialog.querySelector('.win-stage');
  const cells=[...dialog.querySelectorAll('.win-charge i')];
- const scenery=dialog.querySelector('.bonus-landscape img');
- function prepareBonus(mode){
-  const url='assets/'+bonusScenery[mode]+'.webp';
-  if(scenery.getAttribute('src')!==url)scenery.src=url;
- }
  let active=null,sprites=null;
 
  function stopCue(s){
@@ -253,7 +247,6 @@ export function mountWinShow(dialog,{money,audioContext,muted,swarm}){
  dialog.addEventListener('cancel',e=>{e.preventDefault();advance()});
  document.addEventListener('visibilitychange',()=>{if(document.hidden&&!active?.bonus)close()});
  return {
-  prepareBonus,
   show(id,total,context,{quick=false,reduced=false,holdForReview=false,bonus=null}={}){
    if(!bonus&&(!id||document.hidden))return Promise.resolve();
    close();
@@ -262,7 +255,7 @@ export function mountWinShow(dialog,{money,audioContext,muted,swarm}){
    const counter=createWinCount(total,seconds,bonus||holdForReview?Infinity:reduced?1.05:conf.hold*(quick?.65:1));
    let heading=conf.label,scope=context;
    if(bonus){
-    prepareBonus(bonus.mode);dialog.dataset.bonus=bonus.mode;
+    dialog.dataset.bonus=bonus.mode;
     const played=bonus.spins+' free spin'+(bonus.spins===1?'':'s');
     dialog.querySelector('.bonus-signature').textContent=context+' complete';
     dialog.querySelector('.bonus-detail').textContent=played+(id?' · '+conf.label:'');
