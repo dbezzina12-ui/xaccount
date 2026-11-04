@@ -1,0 +1,205 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> test
+> node --test tests/*.test.mjs
+
+✔ super opens with all five jars full without mutating the round infection state (3.059367ms)
+✔ hidden opens with all five jars full without mutating the round infection state (0.831505ms)
+✔ regular bonus preserves earned jar progress and leaving the bonus hides the rack (0.770203ms)
+✔ legacy frames stay intact while desktop and mobile can diverge and round-trip (3.982439ms)
+✔ uploaded frame assignment stays scoped and cabinet overrides reject math or missing assets (0.833678ms)
+node:internal/modules/package_json_reader:331
+  throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+        ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@anthropic-ai/sdk' imported from /workspace/scratch/f97daebb795a/cyber-parity/slots/server/claude.js
+    at Object.getPackageJSONURL (node:internal/modules/package_json_reader:331:9)
+    at packageResolve (node:internal/modules/esm/resolve:784:25)
+    at moduleResolve (node:internal/modules/esm/resolve:873:18)
+    at defaultResolve (node:internal/modules/esm/resolve:1006:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)
+    at #resolve (node:internal/modules/esm/loader:687:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {
+  code: 'ERR_MODULE_NOT_FOUND'
+}
+
+Node.js v24.22.1
+✖ tests/chat.test.mjs (92.02545ms)
+node:internal/modules/package_json_reader:331
+  throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+        ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@anthropic-ai/sdk' imported from /workspace/scratch/f97daebb795a/cyber-parity/slots/tests/claude.test.mjs
+    at Object.getPackageJSONURL (node:internal/modules/package_json_reader:331:9)
+    at packageResolve (node:internal/modules/esm/resolve:784:25)
+    at moduleResolve (node:internal/modules/esm/resolve:873:18)
+    at defaultResolve (node:internal/modules/esm/resolve:1006:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)
+    at #resolve (node:internal/modules/esm/loader:687:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {
+  code: 'ERR_MODULE_NOT_FOUND'
+}
+
+Node.js v24.22.1
+✖ tests/claude.test.mjs (79.256743ms)
+✔ seeded rng is reproducible and save/restore round-trips (3.111655ms)
+✔ rng int(n) is uniform (chi-square) for both sources (77.569491ms)
+✔ line evaluation: plain, wild substitution, multipliers, scatter (1.750972ms)
+✔ spin reads the window from the strips at the drawn stops (0.856212ms)
+✔ detail and fast paths agree round for round (90.63005ms)
+✔ max-win cap ends the round at exactly the cap (46.436251ms)
+✔ model compiler rejects rule breaks (2.61114ms)
+✔ strip builder keeps counts, spaces scatters, is deterministic (0.849952ms)
+✔ exact math matches simulation (base game, hit rate, trigger rate, bonus buy) (2102.203211ms)
+✔ game-001 headline math stays on target (82.764481ms)
+✔ engine stays generic: a different game passes exact-vs-sim (307.781769ms)
+✔ Cyber Skunk entry routing: plain (2.327662ms)
+✔ Cyber Skunk entry routing: nested directory (0.858265ms)
+✔ Cyber Skunk entry routing: parameters and fragment (0.954671ms)
+✔ legacy entry preserved: default (0.709541ms)
+✔ legacy entry preserved: ?game=game-001 (0.592434ms)
+✔ legacy entry preserved: ?game=zombify (0.539754ms)
+✔ legacy entry preserved: ?game=nightfall (0.864474ms)
+✔ served parity: all exported files and shipped version URLs match (624.470504ms)
+✔ served parity: stale versioned CSS fails even when the bare URL matches (4.361651ms)
+✔ served parity: missing modules and incorrect module MIME fail (4.921777ms)
+✔ served parity: access walls, HTML and redirects fail without publishing target data (8.503011ms)
+✔ served parity: request errors omit URL-bearing exceptions and dirty source cannot pass (1.307953ms)
+node:internal/modules/package_json_reader:331
+  throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+        ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@anthropic-ai/sdk' imported from /workspace/scratch/f97daebb795a/cyber-parity/slots/server/claude.js
+    at Object.getPackageJSONURL (node:internal/modules/package_json_reader:331:9)
+    at packageResolve (node:internal/modules/esm/resolve:784:25)
+    at moduleResolve (node:internal/modules/esm/resolve:873:18)
+    at defaultResolve (node:internal/modules/esm/resolve:1006:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)
+    at #resolve (node:internal/modules/esm/loader:687:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {
+  code: 'ERR_MODULE_NOT_FOUND'
+}
+
+Node.js v24.22.1
+✖ tests/dispatch.test.mjs (99.418883ms)
+✔ intro uses a canvas-only host and discards the old portrait on every restart (1.745313ms)
+✔ linked descendants preserve offsets through movement, import and Undo; locked descendants stop the group (8.810375ms)
+✔ links reject missing parents/cycles and deleting a parent detaches children (2.085447ms)
+✔ alignment uses canvas or safe margins, and snap honours the toggle and excludes moving descendants (4.067708ms)
+✔ cabinet presets round-trip with asset collision remapping, fit another canvas and preserve math settings (5.436874ms)
+✔ sound packs replace overrides, remap audio IDs, preserve scenes and reject missing audio (3.414232ms)
+✔ bonus presets replace only bonus screens and cannot carry math, live value text or injected styles (1.677802ms)
+✔ mentions route to the right assistant, typos included (2.247251ms)
+✔ display segments and the mention being typed (0.489489ms)
+✔ frame summaries count drops against the display refresh, at 60 and 120 Hz (2.241944ms)
+✔ anticipation respects all playback speeds, never mutates the board, and ends on exact symbols (3.947917ms)
+✔ tease copy confirms only the already-landed tier (0.3382ms)
+✔ tease HUD and dimming are removed on normal finish and skip; late callbacks cannot recreate them (2.895009ms)
+✔ RoboBees rules: tumbles, banks, the cap and cents (1632.254383ms)
+✔ RoboBees win celebrations (106.20312ms)
+✔ RoboBees MATH.md matches the shipped MATH and prices, and every mode returns 96% (1.668588ms)
+✔ screen adjustments survive export/import and undo without changing desktop or math (5.944219ms)
+✔ panel offsets preserve native vertical centering and scope intro/result separately (0.839667ms)
+✔ jar position and scale survive save and Undo independently of the hand (2.353291ms)
+✔ art-only scaling and typography round-trip without changing live values (1.529769ms)
+✔ label overrides restore the latest game wording and remain plain text (0.855831ms)
+✔ focused screen edits enter save history before blur, once only (3.324767ms)
+✔ audio assignments survive JSON, undo/redo, and old projects remain valid (4.542294ms)
+✔ rejects invalid audio sources, assignments, values and audio used as art (3.308853ms)
+✔ real audio director swaps recordings, applies gain/fade/loop and restores defaults (8.284095ms)
+✔ Engine launch parameters, with and without a replay (2.055141ms)
+✔ the bet modes Engine publishes cost what the game charges (0.373043ms)
+✔ money in Engine currencies, and Stake.us words (17.157281ms)
+✔ every kind of book replays to its payout, and a wrong payout is refused (180.808438ms)
+✔ the RGS session: bet levels, debits, payouts, refusals and the jurisdiction minimum round time (5.034146ms)
+✔ an unfinished round from authenticate is resumed, then settled (3.303184ms)
+✔ project round-trips with independent mobile and desktop scenes (4.580042ms)
+✔ grid changes gate Zombify gameplay and reject fractional or extreme grids (7.975324ms)
+✔ agent batches validate atomically and reject prototype/unknown-property edits (0.690441ms)
+✔ undo and redo restore complete projects and clear abandoned future (1.47793ms)
+✔ commands drive the same operations and reject unsupported requests honestly (4.959585ms)
+✔ uploads and import sources cannot introduce executable markup (0.521968ms)
+✔ Claude reel animation lands on requested symbols for all studio presets (1.509057ms)
+✔ undo history shares uploaded image bytes instead of copying them per step (29.522278ms)
+✔ validation rejects mistyped names, flags, asset kinds and layer order (1.915791ms)
+✔ blob: image URLs are accepted only for the live preview, never in saved or imported projects (0.66224ms)
+✔ history change detection ignores nothing but is cheap for large images (17.52169ms)
+✔ regular: reduced-motion entry and exit swap the subway scene only while covered (11.146019ms)
+✔ super: reduced-motion entry and exit swap the subway scene only while covered (3.763289ms)
+✔ hidden: reduced-motion entry and exit swap the subway scene only while covered (3.741936ms)
+✔ Skip before the bonus cannot switch rooms before both doors close or bypass Continue (6.564185ms)
+✔ delayed door completion resumes the scene lifecycle without a stale base/lab swap (3.485009ms)
+✔ cancelling during closure prevents a delayed callback from switching to the lab (3.610228ms)
+✔ idle stays subtle, only greeting waves, reduced motion is still (7.454419ms)
+✔ actor keeps one loop, stops while hidden or paused, and cleans up (1.365731ms)
+✔ reduced motion draws a still character without scheduling animation (0.498072ms)
+✔ a host removed while artwork loads cannot start an orphan loop (0.266122ms)
+✔ base and bonus placements remain on screen, and follow background zoom and pan (0.246952ms)
+✔ subway preset supplies both layouts with original controller proportions (3.263085ms)
+✔ infected portraits and FS use dedicated atlas cells in game and guide (1.415436ms)
+✔ custom portrait assignments are preserved by the theme (0.67601ms)
+✔ desktop cabinet nearly matches controller width and leaves bonus UI clear (0.321035ms)
+✔ detached effects retain the resolved atlas crop, mask and infection treatment (1.765774ms)
+✔ individual image assets keep their contain layout on detached effects (0.234473ms)
+✔ a 5-scatter tease: a swell per waiting reel, a semitone up per tier, and a ping per tier secured (2.090465ms)
+✔ a two-scatter miss swells under every waiting reel and secures nothing (0.419473ms)
+✔ no tease, no anticipation audio; and nothing new starts while skipping (0.42394ms)
+✔ the Sounds tab can override both anticipation cues (0.175455ms)
+✔ the director plays swells on their own bus, ducks them under scatters, and stops only them (15.691679ms)
+✔ no push before two FS; then it grows with every tier and landed reel, up to the full push (0.851214ms)
+✔ the phone push, punch included, leaves at most a sliver of the board off screen (0.145189ms)
+✔ without the Studio scene layers the camera does nothing (0.314785ms)
+﹣ a horizontal step keeps the zombie's feet on the floor (0.793948ms) # needs the rig data: npm run studio:prepare
+﹣ the lunge leans toward the block and is upright again at contact (0.105869ms) # needs the rig data: npm run studio:prepare
+✔ a hit-stop holds the contact pose for a beat and moves later events (0.785575ms)
+✔ a jump stays put through the crouch and lands moving fast (0.379132ms)
+﹣ a downward jump lands on the block at contact, then steps into the cell (0.111968ms) # needs the rig data: npm run studio:prepare
+✔ a full vertical up award does not paint over the horizontal portrait (3.723839ms)
+✔ a full vertical down award does not paint over the horizontal portrait (0.751835ms)
+✔ leftward claims are masked by the same authoritative ownership rule (0.345251ms)
+✔ moving rigs mask other heads/claims but never mask their own trail (0.26468ms)
+✔ motion masks use stationary normalized board coordinates and clamp edge cells (0.296287ms)
+✔ a left horizontal portrait fits its contiguous head segment without a chopped body (0.410409ms)
+✔ a right horizontal portrait fits its contiguous head segment without a chopped body (0.128544ms)
+✔ a vertical portrait remains in the contiguous owned segment around its head (0.222285ms)
+✔ a crossing expansion stays visible in the cell it takes from another claim (0.786316ms)
+✔ a real Outbreak crossing: every move is masked only out of cells another zombie keeps (7.96593ms)
+✔ the runtime draws bonuses with the odds the math sheet assumes (149.989593ms)
+✔ every mode returns exactly 96%, with the measured hit rates, spread and cap odds (484.709921ms)
+✔ every Hidden bonus pays at least 1,000x and averages exactly 2,256x (5.230464ms)
+✔ every outcome pays a whole 0.1x, as Stake Engine requires (512.464402ms)
+✔ the committed math sheet matches the catalogs it was measured from (381.467766ms)
+✔ each preview is the natural bonus for its tickets: trigger spin plus bonus, capped (94.727293ms)
+✔ a Hidden preview averages the real 2,256x (never under 1,000x), not the cap; Super averages 240x (777.308881ms)
+✔ previews never change credits; the scripted demonstrations are still available to the generator (8.220765ms)
+ℹ tests 121
+ℹ suites 0
+ℹ pass 115
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 3
+ℹ todo 0
+ℹ duration_ms 2840.6014
+
+✖ failing tests:
+
+test at tests/chat.test.mjs:1:1
+✖ tests/chat.test.mjs (92.02545ms)
+  'test failed'
+
+test at tests/claude.test.mjs:1:1
+✖ tests/claude.test.mjs (79.256743ms)
+  'test failed'
+
+test at tests/dispatch.test.mjs:1:1
+✖ tests/dispatch.test.mjs (99.418883ms)
+  'test failed'

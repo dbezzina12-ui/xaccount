@@ -1,0 +1,32 @@
+{
+  "scope": "Asset bytes and JS/CSS/SVG MIME only; entry document/wrapper, rendering, audio and physical devices are not verified",
+  "source": "39f283ceb9a4958f0eb262780423216f95e45f3e",
+  "manifestSha256": "b7f5acfd22c6d5bec6ca50276d86d76f0c700295e35bfd96da03aab686d0103e",
+  "expectedEntryFragmentSha256": "e06e366f0cb46f78b8c5bc385be65cba1a772e6f4e08f289aab775f515d5c438",
+  "expectedAssets": 1,
+  "expectedRequests": 2,
+  "checkedRequests": 2,
+  "passedRequests": 0,
+  "failedRequests": 2,
+  "uncheckedRequests": 0,
+  "blocked": null,
+  "status": "fail",
+  "rows": [
+    {
+      "path": "launch.js",
+      "cacheKey": null,
+      "expectedSha256": "48cc50a2b157eded6f0fda25d42d5833e7b343aafa9664539600a4241c0a899e",
+      "pass": false,
+      "httpStatus": 404,
+      "reason": "http-status"
+    },
+    {
+      "path": "launch.js",
+      "cacheKey": "?v=win-keys-1",
+      "expectedSha256": "48cc50a2b157eded6f0fda25d42d5833e7b343aafa9664539600a4241c0a899e",
+      "pass": false,
+      "httpStatus": 404,
+      "reason": "http-status"
+    }
+  ]
+}

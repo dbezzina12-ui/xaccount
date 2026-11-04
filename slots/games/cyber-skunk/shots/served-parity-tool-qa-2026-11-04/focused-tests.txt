@@ -1,0 +1,13 @@
+✔ served parity: all exported files and shipped version URLs match (354.200957ms)
+✔ served parity: stale versioned CSS fails even when the bare URL matches (2.770942ms)
+✔ served parity: missing modules and incorrect module MIME fail (4.872499ms)
+✔ served parity: access walls, HTML and redirects fail without publishing target data (7.794825ms)
+✔ served parity: request errors omit URL-bearing exceptions and dirty source cannot pass (2.375185ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 502.919917

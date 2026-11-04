@@ -1,0 +1,37 @@
+{
+  "scope": "Asset bytes and JS/CSS/SVG MIME only; entry document/wrapper, rendering, audio and physical devices are not verified",
+  "source": "39f283ceb9a4958f0eb262780423216f95e45f3e",
+  "manifestSha256": "b7f5acfd22c6d5bec6ca50276d86d76f0c700295e35bfd96da03aab686d0103e",
+  "expectedEntryFragmentSha256": "e06e366f0cb46f78b8c5bc385be65cba1a772e6f4e08f289aab775f515d5c438",
+  "expectedAssets": 1,
+  "expectedRequests": 2,
+  "checkedRequests": 2,
+  "passedRequests": 1,
+  "failedRequests": 1,
+  "uncheckedRequests": 0,
+  "blocked": null,
+  "status": "fail",
+  "rows": [
+    {
+      "path": "entry-shop.css",
+      "cacheKey": null,
+      "expectedSha256": "61151757f4b25ec5a19328a7cc3e16d589628eeb79a58dc5f28bd138aca4dc3a",
+      "pass": true,
+      "httpStatus": 200,
+      "actualSha256": "61151757f4b25ec5a19328a7cc3e16d589628eeb79a58dc5f28bd138aca4dc3a",
+      "bytes": 35001,
+      "mimeValid": true
+    },
+    {
+      "path": "entry-shop.css",
+      "cacheKey": "?v=neon-ident-1",
+      "expectedSha256": "61151757f4b25ec5a19328a7cc3e16d589628eeb79a58dc5f28bd138aca4dc3a",
+      "pass": false,
+      "httpStatus": 200,
+      "actualSha256": "356f2e567570dfc2d64b933f765821121a111bde153cf2aed5472b5b255e191a",
+      "bytes": 29,
+      "mimeValid": true,
+      "reason": "byte-mismatch"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "scope": "Asset bytes and JS/CSS/SVG MIME only; entry document/wrapper, rendering, audio and physical devices are not verified",
+  "source": "39f283ceb9a4958f0eb262780423216f95e45f3e",
+  "manifestSha256": "b7f5acfd22c6d5bec6ca50276d86d76f0c700295e35bfd96da03aab686d0103e",
+  "expectedEntryFragmentSha256": "e06e366f0cb46f78b8c5bc385be65cba1a772e6f4e08f289aab775f515d5c438",
+  "expectedAssets": 1,
+  "expectedRequests": 2,
+  "checkedRequests": 0,
+  "passedRequests": 0,
+  "failedRequests": 0,
+  "uncheckedRequests": 2,
+  "blocked": "local-runtime-has-uncommitted-changes",
+  "status": "fail",
+  "rows": []
+}

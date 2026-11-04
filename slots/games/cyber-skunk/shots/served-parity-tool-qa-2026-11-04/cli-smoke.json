@@ -1,0 +1,21 @@
+{
+  "scope": "Local fixtures only; no hosted artifact checked",
+  "cases": [
+    {
+      "fixture": "clean",
+      "exit": 0,
+      "status": "pass",
+      "assets": 115,
+      "checkedRequests": 132,
+      "failedRequests": 0
+    },
+    {
+      "fixture": "stale",
+      "exit": 1,
+      "status": "fail",
+      "assets": 115,
+      "checkedRequests": 132,
+      "failedRequests": 1
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "scope": "Asset bytes and JS/CSS/SVG MIME only; entry document/wrapper, rendering, audio and physical devices are not verified",
+  "source": "39f283ceb9a4958f0eb262780423216f95e45f3e",
+  "manifestSha256": "b7f5acfd22c6d5bec6ca50276d86d76f0c700295e35bfd96da03aab686d0103e",
+  "expectedEntryFragmentSha256": "e06e366f0cb46f78b8c5bc385be65cba1a772e6f4e08f289aab775f515d5c438",
+  "expectedAssets": 115,
+  "expectedRequests": 132,
+  "checkedRequests": 4,
+  "passedRequests": 0,
+  "failedRequests": 4,
+  "uncheckedRequests": 128,
+  "blocked": "asset-root-redirected",
+  "status": "fail",
+  "rows": [
+    {
+      "path": "app.js",
+      "cacheKey": null,
+      "expectedSha256": "23c482cf6bc2d7d5e9dc9df9cab49c2c0b0b9f87a1e9cd8c5479184e5dd16d3e",
+      "pass": false,
+      "httpStatus": 302,
+      "reason": "redirect"
+    },
+    {
+      "path": "assets/bg/bg-bonus-desktop.webp",
+      "cacheKey": null,
+      "expectedSha256": "82f252f50ef6811339d88507cd7d1acc1ec21df5fc6737ca7cc46a3e6cb08ba6",
+      "pass": false,
+      "httpStatus": 302,
+      "reason": "redirect"
+    },
+    {
+      "path": "assets/bg/bg-bonus-mobile.webp",
+      "cacheKey": null,
+      "expectedSha256": "7c3b5de76fd90a5a67b26dc3390b765237cfe2667b18e147a8c188adfd0502f4",
+      "pass": false,
+      "httpStatus": 302,
+      "reason": "redirect"
+    },
+    {
+      "path": "assets/bg/bg-desktop.webp",
+      "cacheKey": null,
+      "expectedSha256": "b29a5cfbca5a48aa4f804d5fd76514286405f6c3a4f5db4194fa868f33161fa8",
+      "pass": false,
+      "httpStatus": 302,
+      "reason": "redirect"
+    }
+  ]
+}

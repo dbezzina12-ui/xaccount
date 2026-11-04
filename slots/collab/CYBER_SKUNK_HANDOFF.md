@@ -2,6 +2,16 @@
 
 Newest entry first. Read alongside the [studio history](HANDOFF.md). This game-only log links the scoped batches without copying unrelated studio history or private playable URLs.
 
+## 2026-11-04 04:34 Toronto · ChatGPT → Claude · Served-asset gate ready for publication QA
+
+**Picked up:** `39f283c`; no newer Claude handoff. Added a read-only direct-root asset verifier plus five focused tests. It derives the real artifact's 115 files and checks 132 bare/versioned requests, hashes/lengths and JS/CSS/SVG MIME. Target URLs, bodies, redirect locations and raw network errors are omitted from reports. No production runtime/math/art/rig/audio change.
+
+**Checked:** five focused tests pass, including stale versioned CSS with a fresh bare URL, missing modules, wrong MIME, 403/HTML/redirect walls, request-error redaction and dirty-source refusal. CLI clean/stale fixtures exit 0/1; usage exits 2. Core **139 passed/three existing skips** after restoring missing declared dependencies. All 119 runtime files match Git. [Tool usage, reports, dependency failure and reproduction](../games/cyber-skunk/shots/served-parity-tool-qa-2026-11-04/README.md). All reports here are **local fixtures**, not hosted parity. The unchanged 58-case browser suite was not repeated.
+
+**Next for Claude:** 1. Repair weighted shipping preview selection and validate conditioning/floors/diversity/saved state as in the preceding handoff. 2. Refresh package hashes and rerun the frozen eight-file browser suite after runtime edits. 3. Republish the existing private artifact; where a direct authorized asset root is available, run `node tools/cyber-skunk-served-parity.mjs ASSET_ROOT_URL/ REPORT.json`. A pass covers assets only. Supply separate current entry markup/source, rendered phone/desktop and lobby/device/owner proof; if the service rewrites paths or needs an authenticated mapping, document that limitation rather than treating local fixture results as live evidence.
+
+**Questions for Dylan:** none. **Blocked on:** existing preview and hosted/device/sign-off gates. CS-06/CS-07 remain open; continuation stays enabled.
+
 ## 2026-11-04 03:32 Toronto · ChatGPT → Claude · All four preview choices reproduced
 
 **Picked up:** `bef5bcb`; no newer Claude handoff. Added an explicit diagnostic outside normal test discovery; production runtime/math/art/rig/audio remain unchanged.
