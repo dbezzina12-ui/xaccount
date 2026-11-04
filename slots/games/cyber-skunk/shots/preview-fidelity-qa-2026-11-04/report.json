@@ -1,0 +1,146 @@
+{
+  "source": "bef5bcb0f2c3f13b6b906bea731af9cea15399cb",
+  "appSha256": "23c482cf6bc2d7d5e9dc9df9cab49c2c0b0b9f87a1e9cd8c5479184e5dd16d3e",
+  "catalogVersion": "cs-2m",
+  "scope": "Known-path UI diagnostic; no distribution/frequency estimate or acceptance of a future sampler",
+  "pools": {
+    "bonus-regular": {
+      "name": "bonus-regular",
+      "positiveRows": 15521,
+      "tickets": 1000000000,
+      "minHundredths": 20,
+      "maxHundredths": 2500000,
+      "seed811HasPositiveWeight": false
+    },
+    "bonus-super": {
+      "name": "bonus-super",
+      "positiveRows": 15559,
+      "tickets": 1000000000,
+      "minHundredths": 0,
+      "maxHundredths": 2500000,
+      "seed811HasPositiveWeight": false
+    },
+    "bonus-regular-natural": {
+      "name": "bonus-regular-natural",
+      "positiveRows": 15521,
+      "tickets": 1000000000,
+      "minHundredths": 20,
+      "maxHundredths": 2500000,
+      "seed811HasPositiveWeight": false
+    },
+    "bonus-super-natural": {
+      "name": "bonus-super-natural",
+      "positiveRows": 15559,
+      "tickets": 1000000000,
+      "minHundredths": 0,
+      "maxHundredths": 2500000,
+      "seed811HasPositiveWeight": false
+    },
+    "bonus-hidden": {
+      "name": "bonus-hidden",
+      "positiveRows": 15500,
+      "tickets": 1000000000,
+      "minHundredths": 100000,
+      "maxHundredths": 2500000,
+      "seed811HasPositiveWeight": false
+    },
+    "spin-sprayjob": {
+      "name": "spin-sprayjob",
+      "positiveRows": 14800,
+      "tickets": 1000000000,
+      "minHundredths": 0,
+      "maxHundredths": 45380,
+      "seed811HasPositiveWeight": false
+    }
+  },
+  "runs": [
+    {
+      "tier": "sprayjob",
+      "repeat": 1,
+      "peakDisplayedWin": 0,
+      "catalogEntropyCalls": 0,
+      "legacyTotalHundredths": 0,
+      "balanceUnchanged": true,
+      "savedSessionUnchanged": true,
+      "returnsToShop": true
+    },
+    {
+      "tier": "sprayjob",
+      "repeat": 2,
+      "peakDisplayedWin": 0,
+      "catalogEntropyCalls": 0,
+      "legacyTotalHundredths": 0,
+      "balanceUnchanged": true,
+      "savedSessionUnchanged": true,
+      "returnsToShop": true
+    },
+    {
+      "tier": "regular",
+      "repeat": 1,
+      "peakDisplayedWin": 820,
+      "catalogEntropyCalls": 0,
+      "legacyTotalHundredths": 820,
+      "balanceUnchanged": true,
+      "savedSessionUnchanged": true,
+      "returnsToShop": true
+    },
+    {
+      "tier": "regular",
+      "repeat": 2,
+      "peakDisplayedWin": 820,
+      "catalogEntropyCalls": 0,
+      "legacyTotalHundredths": 820,
+      "balanceUnchanged": true,
+      "savedSessionUnchanged": true,
+      "returnsToShop": true
+    },
+    {
+      "tier": "super",
+      "repeat": 1,
+      "peakDisplayedWin": 960,
+      "catalogEntropyCalls": 0,
+      "legacyTotalHundredths": 960,
+      "balanceUnchanged": true,
+      "savedSessionUnchanged": true,
+      "returnsToShop": true
+    },
+    {
+      "tier": "super",
+      "repeat": 2,
+      "peakDisplayedWin": 960,
+      "catalogEntropyCalls": 0,
+      "legacyTotalHundredths": 960,
+      "balanceUnchanged": true,
+      "savedSessionUnchanged": true,
+      "returnsToShop": true
+    },
+    {
+      "tier": "hidden",
+      "repeat": 1,
+      "peakDisplayedWin": 50740,
+      "catalogEntropyCalls": 0,
+      "legacyTotalHundredths": 50740,
+      "balanceUnchanged": true,
+      "savedSessionUnchanged": true,
+      "returnsToShop": true
+    },
+    {
+      "tier": "hidden",
+      "repeat": 2,
+      "peakDisplayedWin": 50740,
+      "catalogEntropyCalls": 0,
+      "legacyTotalHundredths": 50740,
+      "balanceUnchanged": true,
+      "savedSessionUnchanged": true,
+      "returnsToShop": true
+    }
+  ],
+  "pageErrors": [],
+  "findings": {
+    "allEightUseNoCatalogEntropy": true,
+    "eachChoiceRepeats": true,
+    "hiddenBelowShippingFloor": true,
+    "walletAndHistoryPreserved": true
+  },
+  "previewFidelityAccepted": false
+}

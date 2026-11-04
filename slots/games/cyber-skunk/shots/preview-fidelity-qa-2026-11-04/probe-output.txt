@@ -1,0 +1,9 @@
+{"tier":"sprayjob","repeat":1,"peakDisplayedWin":0,"catalogEntropyCalls":0,"legacyTotalHundredths":0,"balanceUnchanged":true,"savedSessionUnchanged":true,"returnsToShop":true}
+{"tier":"sprayjob","repeat":2,"peakDisplayedWin":0,"catalogEntropyCalls":0,"legacyTotalHundredths":0,"balanceUnchanged":true,"savedSessionUnchanged":true,"returnsToShop":true}
+{"tier":"regular","repeat":1,"peakDisplayedWin":820,"catalogEntropyCalls":0,"legacyTotalHundredths":820,"balanceUnchanged":true,"savedSessionUnchanged":true,"returnsToShop":true}
+{"tier":"regular","repeat":2,"peakDisplayedWin":820,"catalogEntropyCalls":0,"legacyTotalHundredths":820,"balanceUnchanged":true,"savedSessionUnchanged":true,"returnsToShop":true}
+{"tier":"super","repeat":1,"peakDisplayedWin":960,"catalogEntropyCalls":0,"legacyTotalHundredths":960,"balanceUnchanged":true,"savedSessionUnchanged":true,"returnsToShop":true}
+{"tier":"super","repeat":2,"peakDisplayedWin":960,"catalogEntropyCalls":0,"legacyTotalHundredths":960,"balanceUnchanged":true,"savedSessionUnchanged":true,"returnsToShop":true}
+{"tier":"hidden","repeat":1,"peakDisplayedWin":50740,"catalogEntropyCalls":0,"legacyTotalHundredths":50740,"balanceUnchanged":true,"savedSessionUnchanged":true,"returnsToShop":true}
+{"tier":"hidden","repeat":2,"peakDisplayedWin":50740,"catalogEntropyCalls":0,"legacyTotalHundredths":50740,"balanceUnchanged":true,"savedSessionUnchanged":true,"returnsToShop":true}
+{"allEightUseNoCatalogEntropy":true,"eachChoiceRepeats":true,"hiddenBelowShippingFloor":true,"walletAndHistoryPreserved":true}

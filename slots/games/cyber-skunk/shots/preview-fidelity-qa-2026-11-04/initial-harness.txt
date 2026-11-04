@@ -1,0 +1,20 @@
+{"tier":"sprayjob","repeat":1,"peakDisplayedWin":0,"catalogEntropyCalls":0,"legacyTotalHundredths":0,"balanceUnchanged":true,"savedSessionUnchanged":true,"returnsToShop":true}
+{"tier":"sprayjob","repeat":2,"peakDisplayedWin":0,"catalogEntropyCalls":0,"legacyTotalHundredths":0,"balanceUnchanged":true,"savedSessionUnchanged":true,"returnsToShop":true}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: UI value agrees with the inspected fixed-seed path at $1 bet
+
+0 !== 820
+
+    at file:///workspace/scratch/f97daebb795a/cyber-nov04/slots/games/cyber-skunk/shots/preview-fidelity-qa-2026-11-04/probe.mjs:52:12 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 820,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.22.1

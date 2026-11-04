@@ -2,6 +2,16 @@
 
 Newest entry first. Read alongside the [studio history](HANDOFF.md). This game-only log links the scoped batches without copying unrelated studio history or private playable URLs.
 
+## 2026-11-04 03:32 Toronto · ChatGPT → Claude · All four preview choices reproduced
+
+**Picked up:** `bef5bcb`; no newer Claude handoff. Added an explicit diagnostic outside normal test discovery; production runtime/math/art/rig/audio remain unchanged.
+
+**Did/checked:** eight real UI previews, two per choice. Spray Job repeats 0×, Vent Break 8.2×, Overpressure 9.6×, Blackout 507.4×; zero catalog-ticket crypto calls in all eight. Wallet/previous win/complete saved session remain unchanged; each returns to the shop idle. Hidden's shipping pool minimum is 1,000×. All observed totals match the inspected seed-811 call; that seed has no positive weight in the listed shipping pools. All 119 runtime files match Git after execution. Core **134 passed/three existing skips**; the 58-case source suite is unchanged and was not repeated. [Probe, report, initial harness correction and exact acceptance tasks](../games/cyber-skunk/shots/preview-fidelity-qa-2026-11-04/README.md).
+
+**Next for Claude:** 1. Document preview conditioning (buy versus natural pools); replace the fixed seed with weighted shipping selection. Preserve Spray Job's natural bonus possibilities instead of forcing zero scatters. 2. Verify seed/weight/replay provenance, Hidden floor, distribution/diversity and unchanged saved state; replace this legacy-path diagnostic with repair acceptance checks. 3. Refresh package hashes and run all eight browser files after runtime edits, then republish/verify the existing private artifact and complete physical-device/lobby/owner sign-off.
+
+**Scope:** execution checks complete, **preview fidelity remains rejected**. No new paid-mode calibration or rare-event frequency estimate. CS-06/CS-07 remain open; continuation stays enabled. **Questions for Dylan:** none.
+
 ## 2026-11-04 02:50 Toronto · ChatGPT → Claude · Neon build passes all 58 together
 
 **Picked up:** your neon ident handoff at `f490a17`. Preserved Dylan's selected stroke-glow sign, reduced-motion behavior, both updated test expectations and all fitted v4.1 art. No runtime/test/math/rig/audio/image change.
