@@ -68,7 +68,7 @@ test('artifact manifest: every exported byte matches its source',async()=>{
     const response=await fetch(url+path);assert.equal(response.status,200,path);
     assert.equal(hash(Buffer.from(await response.arrayBuffer())),expected,path);
   }
-  for(const value of ['entry-shop.css?v=neon-ident-1','launch.js?v=preview-1'])assert.ok(fragment.includes(value));
+  for(const value of ['entry-shop.css?v=neon-ident-2','launch.js?v=preview-1'])assert.ok(fragment.includes(value));
   assert.ok(!fragment.includes('<head>')&&!fragment.includes('<body>'));
 });
 

@@ -9,7 +9,7 @@
 .neon-halo1{stroke:#ffb14a;stroke-width:30;stroke-opacity:.3}
 .neon-core{stroke:#ffe4b8;stroke-width:8}
 .neon-wall{position:absolute;left:50%;top:50%;z-index:-1;width:calc(var(--m)*2.6);aspect-ratio:1.4;translate:-50% -40%;background:radial-gradient(closest-side,#ff9a2a30,transparent);pointer-events:none}
-.neon-word{font-size:calc(var(--m)*.19);letter-spacing:.01em;color:transparent;-webkit-text-stroke:calc(var(--m)*.0065) #ffe4b8;text-shadow:0 0 .06em #ffb14a,0 0 .28em #ff8a1c}
+.neon-word{font-size:calc(var(--m)*.19);letter-spacing:-.02em;color:#fff1d8;text-shadow:0 0 .03em #fff7e6,0 0 .1em #ffb14a,0 0 .32em #ff8a1c}
 .neon-word span{display:inline-block}
 .ident-ready .neon-l1{animation:neon-flick-a 1.3s .2s step-end both,neon-buzz 3.2s 3s infinite step-end}
 .ident-ready .neon-l2,.ident-ready .neon-wall{animation:neon-flick-b 1.25s .55s step-end both}
@@ -18,8 +18,8 @@
 @keyframes neon-flick-a{0%{opacity:0}14%{opacity:.85}18%{opacity:0}34%{opacity:1}38%{opacity:.15}44%{opacity:1}100%{opacity:1}}
 @keyframes neon-flick-b{0%{opacity:0}20%{opacity:.7}24%{opacity:0}46%{opacity:1}50%{opacity:.2}56%{opacity:1}100%{opacity:1}}
 @keyframes neon-buzz{0%{opacity:1}91%{opacity:.82}93%{opacity:1}96%{opacity:.9}97%{opacity:1}}
-@keyframes neon-letter{0%{-webkit-text-stroke-color:#3a3129;text-shadow:none}30%{-webkit-text-stroke-color:#ffe4b8;text-shadow:0 0 .06em #ffb14a,0 0 .28em #ff8a1c}45%{-webkit-text-stroke-color:#3a3129;text-shadow:none}60%,100%{-webkit-text-stroke-color:#ffe4b8;text-shadow:0 0 .06em #ffb14a,0 0 .28em #ff8a1c}}
-@keyframes neon-letter-late{0%{-webkit-text-stroke-color:#3a3129;text-shadow:none}55%{-webkit-text-stroke-color:#ffe4b8;text-shadow:0 0 .06em #ffb14a,0 0 .28em #ff8a1c}62%{-webkit-text-stroke-color:#3a3129;text-shadow:none}70%{-webkit-text-stroke-color:#ffe4b8;text-shadow:0 0 .06em #ffb14a,0 0 .28em #ff8a1c}74%{-webkit-text-stroke-color:#3a3129;text-shadow:none}80%,100%{-webkit-text-stroke-color:#ffe4b8;text-shadow:0 0 .06em #ffb14a,0 0 .28em #ff8a1c}}
+@keyframes neon-letter{0%{color:#3a3129;text-shadow:none}30%{color:#fff1d8;text-shadow:0 0 .03em #fff7e6,0 0 .1em #ffb14a,0 0 .32em #ff8a1c}45%{color:#3a3129;text-shadow:none}60%,100%{color:#fff1d8;text-shadow:0 0 .03em #fff7e6,0 0 .1em #ffb14a,0 0 .32em #ff8a1c}}
+@keyframes neon-letter-late{0%{color:#3a3129;text-shadow:none}55%{color:#fff1d8;text-shadow:0 0 .03em #fff7e6,0 0 .1em #ffb14a,0 0 .32em #ff8a1c}62%{color:#3a3129;text-shadow:none}70%{color:#fff1d8;text-shadow:0 0 .03em #fff7e6,0 0 .1em #ffb14a,0 0 .32em #ff8a1c}74%{color:#3a3129;text-shadow:none}80%,100%{color:#fff1d8;text-shadow:0 0 .03em #fff7e6,0 0 .1em #ffb14a,0 0 .32em #ff8a1c}}
 /* The loading hall behind the ident, darkened a little so the neon reads. */
 .loading-screen{display:grid;place-items:center;background:linear-gradient(#070d10c4,#080e12e6),url(assets/bg/bg-desktop.webp) center/cover}
 .studio-identity{display:flex;align-items:center;flex-direction:column;justify-content:center;padding-bottom:8vh}
