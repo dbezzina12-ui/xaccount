@@ -1,6 +1,6 @@
 // The reel strip starts on the outgoing four symbols and finishes on the
 // committed layout. The ramp follows Gnome Mercy's reelPosition profile.
-import {premiums,ranks} from './rules.mjs?v=31';
+import {premiums,ranks} from './rules.mjs?v=33';
 import {addHoney,honeyStill} from './honey.mjs';
 const regular=[...premiums,...ranks];
 export function symbolClass(id){

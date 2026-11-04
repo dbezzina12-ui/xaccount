@@ -5,6 +5,7 @@
 //   node tools/math/robobees-fit.mjs            print the fitted MATH
 //   node tools/math/robobees-fit.mjs --write    and write them into rules.mjs
 //   node tools/math/robobees-fit.mjs --refine super,random,full32 [--scale 4] --write
+//                                               (knobs: base, regular, super, hidden, enhanced, random, full32)
 //                                               re-solve only those knobs from the shipped MATH, on 4x the spins
 //
 // 1. Bonus averages are pinned by their buy prices: Regular 96x (100x buy), Super 240x (250x buy), and Hidden 2,400x,
@@ -72,7 +73,8 @@ export async function fit() {
     pays: SHAPE,
     weights: {base: [2, 3], random: [2, 3], full32: [4, 2], regular: [4, 2], super: [2, 3], hidden: [2, 3]},
     wilds: {base: [0.33, 0.08], random: [0.95, 0], full32: [1, 0.07], regular: [1, 0.3], super: [0.4, 0.1], hidden: [1, 0.03]},
-    refillWild: {base: 0.02, random: 0.08, full32: 0.1766, regular: 0.02, super: 0.02, hidden: 0.02},
+    // base 5% (Dylan, 2026-11-04: better mid wins): more tumble Wilds, more multiplied mid-size hits, a rarer base bonus
+    refillWild: {base: 0.05, random: 0.08, full32: 0.1766, regular: 0.02, super: 0.02, hidden: 0.02},
     scatter: {base: 0.075, enhanced: 0.115},
     boosts: [1, 0.5, 0.5 / 3],
     pollen: [0.05, 0.08, 0.12, 0.35, 0.4],
@@ -104,8 +106,8 @@ export async function fit() {
   math.boosts = [1, b, b / 3];
   // 4. the paid features
   math.scatter.enhanced = await solve(async (p) => modeReturn(await paid(tuned({'scatter.enhanced': p}), 'enhanced', 12)) / PRICE.enhanced - RTP, 0.08, 0.3, 2e-6, 'signal boost FS chance');
-  // Hive Overdrive keeps the base FS chance; Pollen Charge's is 5%
-  math.scatter.full32 = math.scatter.base;
+  // Hive Overdrive's FS chance is 7.5056%; Pollen Charge's is 5%
+  math.scatter.full32 = 0.075056; // Hive Overdrive's own (the base chance until the 2026-11-04 mid-win change)
   math.scatter.random = 0.05;
   math.wilds.random[0] = await solve(async (x) => (await whole(tuned({'wilds.random': [x, 0]}), 'random', 14)) / PRICE.random - RTP, 0.5, 1, 1e-5, 'pollen opening wild');
   math.wilds.full32[1] = await solve(async (x) => (await whole(tuned({'wilds.full32': [1, x]}), 'full32', 15)) / PRICE.full32 - RTP, 0, 0.4, 1e-5, 'overdrive 2nd wild');
@@ -130,6 +132,8 @@ export async function refine(names, done = () => {}, scale = 4) {
   const whole = async (m, feature, seed) => (await simulate('rounds', m, {feature, n: big(feature), seed})).mean;
   const bonus = async (m, mode, seed) => (await simulate('bonus', m, {mode, n: big(mode), seed})).mean;
   const knobs = {
+    // the base FS chance, so base spins return 96% with each bonus at its target
+    base: {get: () => math.scatter.base, set: (m, x) => (m.scatter.base = x), f: (m) => paid(m, null, 37).then((v) => v - RTP), range: [0.05, 0.09], wide: true},
     regular: {get: () => math.wilds.regular[1], set: (m, x) => (m.wilds.regular[1] = x), f: (m) => bonus(m, 'regular', 31).then((v) => v - TARGET.regular), range: [0, 1]},
     super: {get: () => math.wilds.super[0], set: (m, x) => (m.wilds.super[0] = x), f: (m) => bonus(m, 'super', 32).then((v) => v - TARGET.super), range: [0.15, 1]},
     hidden: {get: () => math.boosts[1], set: (m, x) => (m.boosts = [1, x, Math.round((x / 3) * 1e6) / 1e6]), f: (m) => bonus(m, 'hidden', 33).then((v) => v - TARGET.hidden), range: [0.001, 1.5]},

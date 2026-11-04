@@ -1,4 +1,4 @@
-import {symbolUrl} from './reels.mjs?v=36';
+import {symbolUrl} from './reels.mjs?v=37';
 
 // Instructional 5×4 boards are independent of the wallet and outcome generator.
 const board=['A','rotor','hive','K','Q','nectar','J','Q','stinger','10','K','A','beacon','J','rotor','hive','10','K','nectar','A'];
