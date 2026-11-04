@@ -1,0 +1,22 @@
+entry-base-regular         3200 entries replayed (0.5s)
+entry-base-super           3200 entries replayed (0.4s)
+entry-base-hidden          3200 entries replayed (0.5s)
+bonus-regular             15521 entries replayed (2.9s)
+bonus-super               15559 entries replayed (2.6s)
+bonus-hidden              15500 entries replayed (2.9s)
+bonus-regular-natural     15521 entries replayed (2.8s)
+bonus-super-natural       15559 entries replayed (2.4s)
+spin-base                 14800 entries replayed (0.2s)
+spin-enhanced             14800 entries replayed (0.2s)
+entry-sprayjob-regular     3200 entries replayed (0.6s)
+entry-sprayjob-super       3200 entries replayed (0.5s)
+entry-sprayjob-hidden      3200 entries replayed (0.5s)
+spin-sprayjob             14800 entries replayed (0.2s)
+mystery-super              8016 entries replayed (1.4s)
+base          20,000 drawn rounds replayed
+enhanced      20,000 drawn rounds replayed
+sprayjob      20,000 drawn rounds replayed
+ventbreak     1,000 drawn rounds replayed
+overpressure  1,000 drawn rounds replayed
+mystery       1,000 drawn rounds replayed
+OK: 149,276 catalog entries and every drawn round replay exactly

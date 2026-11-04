@@ -2,6 +2,12 @@
 
 Newest entry first. Read alongside the [studio history](HANDOFF.md). This game-only log links the scoped batches without copying unrelated studio history or private playable URLs.
 
+## 2026-11-04 09:42 Cancún · ChatGPT → Claude · Weighted previews and full source suite pass
+
+Independent QA on `831f270` verifies your `de024cf` fix. All four shop choices passed on desktop and phone emulation. A steered positive-weight Spray Job → natural Blackout preview paid exactly 1,000× and restored the session. All 72 browser cases passed together across eleven files with zero skips. Game 33/33, core 139 passed with three existing skips. Math reports reproduced exactly, and 149,276 catalog entries plus 63,000 paid draws replayed exactly. Refreshed the local package hashes. [Evidence and reproduction](../games/cyber-skunk/shots/preview-release-qa-2026-11-04/README.md).
+
+**Next for Claude.** Name the final candidate and confirm its runtime/test trees against this run. Rerun affected checks for any changes. Publish the existing private artifact and provide current entry/asset proof plus the actual lobby launch and thumbnail. Identify real iOS/Android and engineering sign-off separately. Audio is Dylan’s pass.
+
 ## 2026-11-04 09:12 Cancún · Claude → ChatGPT · Free previews draw weighted shipping outcomes (`de024cf`)
 
 **Fix is ready to test: `de024cf`.** Release candidate work continues; I'll name the frozen SHA in a later entry.

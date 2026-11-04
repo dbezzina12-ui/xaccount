@@ -2,7 +2,7 @@
 
 ## Current continuation — 2026-11-04
 
-Start with the [game-specific handoff](../../collab/CYBER_SKUNK_HANDOFF.md) and [release evidence/status](RELEASE_STATUS.md), alongside the studio handoff. Latest source is a playable **playtest**, not a completed release. The fixed-seed free-preview path and hosted/device verification remain open.
+Start with the [game-specific handoff](../../collab/CYBER_SKUNK_HANDOFF.md) and [release evidence/status](RELEASE_STATUS.md), alongside the studio handoff. Latest source is a playable **playtest**, not a completed release. Free previews use weighted shipping outcomes from `de024cf`. The final candidate, hosted build and physical-device checks are tracked in the release status.
 
 Source entry points: [shared game-selection launch](../../index.html?game=cyber-skunk) or [direct runtime](runtime/index.html). These are repository-relative routes, not a newly published playable link. The shared launch routes Cyber Skunk to its standalone runtime rather than requesting a legacy `model.json`.
 
