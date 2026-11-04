@@ -3,7 +3,7 @@ import { drawPressureTransfer } from './pressure-transfer.js?v=scatter-focus-1';
 // anything moves (playRound returns its total and every event); this file only
 // presents those events, so skip, turbo and frame timing never change a result.
 import { playRound, drawBoard, lineWins, seeded, at } from './engine.js';
-import { drawRound, freeSpinsChance, CATALOG_VERSION } from './catalog.js?v=8';
+import { drawRound, drawPreview, freeSpinsChance, CATALOG_VERSION } from './catalog.js?v=preview-1';
 import { REELS, ROWS, CELLS, LINES, PAYTABLE, NAMES, PLAY_OPTIONS, BONUSES, MYSTERY_TIERS, MYSTERY, mysteryShare, CAP, RETRIGGER, MAX_SPINS, MAX_STICKY, MAX_RESERVOIR } from './rules.js?v=8';
 import { loadArt, symbolHTML, ventHTML, fillerStrip } from './symbols.js?v=7';
 import { mountController } from './controller/controller.js?v=mobile-spin-2';
@@ -705,13 +705,17 @@ async function play(mode = state.feature || 'base') {
     update();
   }
 }
+// A free preview shows one shipping outcome of the chosen play (catalog.js
+// drawPreview: the pool each choice draws is documented there). It never
+// touches credits, the bet, the previous win, the history or the saved session.
 async function freePreview(tier) {
   if (state.busy) return;
+  let round;
+  try { round = drawPreview(tier); } catch (err) { console.error(err); toast('That preview could not be verified, so it was not shown.'); openBuy('preview'); return; }
   const savedBoard = board.slice(), lastWin = state.win;
-  const round = playRound({rng:seeded(811), ...(tier === 'sprayjob' ? {mode:tier, triggerScatters:0} : {forceBonus:tier})});
   state.busy = true; state.skip = false; state.win = 0;
   app.dataset.preview = ''; app.dataset.busy = ''; update();
-  try { await present(round); }
+  try { await present(round, round.mode ?? undefined); }
   finally {
     delete app.dataset.preview; delete app.dataset.busy; delete app.dataset.bonus; delete app.dataset.blackout;
     state.busy = state.skip = false; state.tier = null; state.win = lastWin;

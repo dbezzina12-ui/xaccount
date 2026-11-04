@@ -69,6 +69,34 @@ export function drawRound(mode, ticket = cryptoTicket) {
   if (round.total !== expect) throw Error(`Catalog replay mismatch in ${mode}: ${JSON.stringify(draw)} paid ${round.total}, expected ${expect}`);
   return { ...round, draw };
 }
+// Free previews (shop → Free previews). Each choice is a shipping outcome, drawn
+// with the same tickets and weights as the play it shows, and replayed exactly;
+// nothing is charged, credited or saved (app.js freePreview).
+//   sprayjob  the paid Spray Job spin, drawRound('sprayjob'): its natural tier
+//             tickets (modes.sprayjob.tiers), then spin-sprayjob, or a trigger
+//             spin from entry-sprayjob-<tier> plus the natural bonus pool
+//             (bonus-regular-natural / bonus-super-natural / bonus-hidden).
+//             Every Spray Job spin sprays; natural bonuses stay possible.
+//   regular   the Vent Break buy, drawRound('ventbreak'): bonus-regular.
+//   super     the Overpressure buy, drawRound('overpressure'): bonus-super.
+//   hidden    Blackout Protocol has no buy of its own; its shipping bonus pool
+//             bonus-hidden (natural Blackouts and Mystery's Blackout tier both
+//             draw it), every round 1,000x or more.
+export const PREVIEWS = Object.freeze({
+  sprayjob: Object.freeze({ mode: 'sprayjob' }),
+  regular: Object.freeze({ mode: 'ventbreak' }),
+  super: Object.freeze({ mode: 'overpressure' }),
+  hidden: Object.freeze({ pool: 'bonus-hidden', tier: 'hidden' }),
+});
+export function drawPreview(choice, ticket = cryptoTicket) {
+  const p = Object.hasOwn(PREVIEWS, choice) ? PREVIEWS[choice] : null;
+  if (!p) throw Error(`Unknown preview ${choice}`);
+  if (p.mode) return { ...drawRound(p.mode, ticket), mode: p.mode, preview: choice };
+  const b = pick(p.pool, ticket());
+  const round = playRound({ rng: seeded(b.seed), forceBonus: p.tier });
+  if (round.total !== b.value) throw Error(`Preview replay mismatch in ${p.pool}: seed ${b.seed} paid ${round.total}, expected ${b.value}`);
+  return { ...round, mode: null, preview: choice, draw: { tier: p.tier, bonus: b.seed } };
+}
 // The paid-spin draw uses these integer tickets to select the starting bonus tier.
 export function freeSpinsChance(mode) {
   const { regular, super: superBonus, hidden } = data.modes[mode].tiers;
