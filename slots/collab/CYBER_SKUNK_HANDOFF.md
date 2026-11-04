@@ -2,6 +2,55 @@
 
 Newest entry first. Read alongside the [studio history](HANDOFF.md). This game-only log links the scoped batches without copying unrelated studio history or private playable URLs.
 
+## 2026-11-04 10:40 Cancún · Claude → ChatGPT · Free previews draw weighted shipping outcomes (`de024cf`)
+
+**Fix is ready to test: `de024cf`.** Release candidate work continues; I'll name the frozen SHA in a later entry.
+
+**Did:**
+- The seed-811 bypass is gone. `catalog.js` `drawPreview(choice)` draws each preview the way the play it shows is drawn, with ordinary catalog tickets (`cryptoTicket`), and replays the pick exactly.
+- `freePreview()` presents that round. It still restores the board, previous win and controls, and never touches credits, the bet, the history or the saved session.
+- A pick that fails its replay is not shown.
+- Cache keys: catalog, app and launch are now `preview-1`.
+
+**Pool mapping** (documented in `catalog.js` above `PREVIEWS`):
+
+| Shop choice | Draw | Shipping pools |
+|---|---|---|
+| Spray Job | the paid Spray Job spin, `drawRound('sprayjob')` | the natural tier tickets (`modes.sprayjob.tiers`), then `spin-sprayjob`, or `entry-sprayjob-<tier>` + `bonus-regular-natural` / `bonus-super-natural` / `bonus-hidden` |
+| Vent Break | the buy, `drawRound('ventbreak')` | `bonus-regular` |
+| Overpressure | the buy, `drawRound('overpressure')` | `bonus-super` |
+| Blackout Protocol | no buy of its own | `bonus-hidden`, the pool natural Blackouts and Mystery's Blackout tier draw; every row is 1,000× or more |
+
+Spray Job keeps its guaranteed spray (every sampled spin sprays) and its natural bonuses.
+
+**Checked:**
+- **`games/cyber-skunk/tests/preview.test.mjs` (4/4):**
+  - the mapping;
+  - the lowest and highest ticket of each pool replay their positive-weight rows;
+  - 30,000 seeded draws per buy and Blackout pool match the exact weighted quantiles, within 5σ;
+  - every Blackout preview is 1,000× or more;
+  - 200,000 Spray Job draws all spray, and their natural bonus rates and no-bonus mean match the shipping law.
+- **`tests/browser/cyber-skunk-preview.e2e.mjs` (2/2, desktop 1366×768 and phone 390×844):**
+  - every choice draws catalog tickets;
+  - an injected first Blackout ticket shows exactly that row's total;
+  - completing, Stop and reload mid-preview leave credits, bet, previous win, history and the saved session unchanged (a reload always shows the previous win as $0.00, preview or not);
+  - a charged round afterwards settles exactly.
+- **Other suites:** game 33/33, core 142/142, artifact package 8/8, the existing shop/preview case 1/1.
+- **Not yet run:** all browser files together. That is the release-candidate run.
+
+**Reproduce** (from `slots/`):
+```sh
+node --test games/cyber-skunk/tests/preview.test.mjs
+node --test tests/browser/cyber-skunk-preview.e2e.mjs
+```
+In the game: shop → Free previews → any choice, several times. Blackout totals vary and are never below 1,000× the bet, and Spray Job can trigger a natural bonus. Credits, bet, previous win and history are unchanged afterwards.
+
+**Your `preview-fidelity-qa-2026-11-04/probe.mjs`:** it targets the removed seed-811 path, so expect it to refuse. The two new test files replace it as acceptance.
+
+**Next for ChatGPT:** independent gameplay QA of the four previews on `de024cf` or later.
+
+**Questions for Dylan:** none. **Blocked on:** nothing.
+
 ## 2026-11-04 08:33 Toronto · ChatGPT → Claude · Settings and optional storage verified
 
 **Picked up:** `255b8ec`; no newer Claude handoff. Added four desktop/phone browser cases covering real settings, reload persistence, free-play credit reset and storage throwing SecurityError. No production runtime/art/rig/math/audio change.
