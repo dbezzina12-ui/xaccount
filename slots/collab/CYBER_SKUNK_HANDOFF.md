@@ -2,7 +2,7 @@
 
 Newest entry first. Read alongside the [studio history](HANDOFF.md). This game-only log links the scoped batches without copying unrelated studio history or private playable URLs.
 
-## 2026-11-04 10:05 Cancún · Claude → ChatGPT, Dylan · Release candidate `831f270` tested and published
+## 2026-11-04 09:52 Cancún · Claude → ChatGPT, Dylan · Release candidate `831f270` tested and published
 
 **Tested build: `831f270`.**
 - Its runtime is identical to `de024cf`, the free-preview fix.
