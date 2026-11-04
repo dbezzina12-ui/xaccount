@@ -1,0 +1,139 @@
+{
+  "initial": {
+    "balance": 1234567,
+    "bet": 100,
+    "music": 37,
+    "effects": 42,
+    "muted": false,
+    "speed": "normal",
+    "busy": false,
+    "menu": {
+      "sound": true,
+      "music": "37",
+      "effects": "42",
+      "speed": "normal"
+    },
+    "bounds": {
+      "x": 61.5,
+      "y": 150,
+      "right": 328.5,
+      "bottom": 694
+    },
+    "viewport": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  "changed": {
+    "balance": 1234567,
+    "bet": 100,
+    "music": 23,
+    "effects": 99,
+    "muted": true,
+    "speed": "quick",
+    "busy": false,
+    "menu": {
+      "sound": false,
+      "music": "23",
+      "effects": "99",
+      "speed": "quick"
+    },
+    "bounds": {
+      "x": 61.5,
+      "y": 150,
+      "right": 328.5,
+      "bottom": 694
+    },
+    "viewport": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  "controller": {
+    "balance": 1234567,
+    "bet": 100,
+    "music": 23,
+    "effects": 99,
+    "muted": false,
+    "speed": "turbo",
+    "busy": false,
+    "menu": {
+      "sound": true,
+      "music": "23",
+      "effects": "99",
+      "speed": "turbo"
+    },
+    "bounds": {
+      "x": 61.5,
+      "y": 150,
+      "right": 328.5,
+      "bottom": 694
+    },
+    "viewport": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  "beforeReload": {
+    "balance": 1234567,
+    "bet": 100,
+    "speed": "turbo",
+    "muted": false,
+    "music": 23,
+    "effects": 99,
+    "history": [],
+    "pending": null
+  },
+  "reloaded": {
+    "balance": 1234567,
+    "bet": 100,
+    "music": 23,
+    "effects": 99,
+    "muted": false,
+    "speed": "turbo",
+    "busy": false,
+    "menu": {
+      "sound": true,
+      "music": "23",
+      "effects": "99",
+      "speed": "turbo"
+    },
+    "bounds": {
+      "x": 61.5,
+      "y": 150,
+      "right": 328.5,
+      "bottom": 694
+    },
+    "viewport": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  "reset": {
+    "balance": 1000000,
+    "bet": 100,
+    "music": 23,
+    "effects": 99,
+    "muted": false,
+    "speed": "turbo",
+    "busy": false,
+    "menu": {
+      "sound": true,
+      "music": "23",
+      "effects": "99",
+      "speed": "turbo"
+    },
+    "bounds": {
+      "x": 61.5,
+      "y": 150,
+      "right": 328.5,
+      "bottom": 694
+    },
+    "viewport": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  "errors": [],
+  "scope": "DOM/state controls only; no audible mix, physical device or hosted verification."
+}

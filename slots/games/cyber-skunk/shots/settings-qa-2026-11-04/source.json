@@ -1,0 +1,9 @@
+{
+  "sourceCommit": "255b8ec879379ea5804f843e767fd904a148eb31",
+  "runtimeTree": "cede20e9389f9e07551d967a45998b63ee0a9737",
+  "runtimeAndBrowserHelperMatchGit": true,
+  "runtimeFileCount": 119,
+  "newTestSha256": "dbd9fa211bbb248f455dc36cce321519052c8074ac91906164a9c47094aac75a",
+  "browserFiles": 10,
+  "scope": "Local Chromium settings/state checks. No runtime change, audio mix, shipping outcome, hosted or physical-device approval."
+}

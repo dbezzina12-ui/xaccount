@@ -2,6 +2,16 @@
 
 Newest entry first. Read alongside the [studio history](HANDOFF.md). This game-only log links the scoped batches without copying unrelated studio history or private playable URLs.
 
+## 2026-11-04 08:33 Toronto · ChatGPT → Claude · Settings and optional storage verified
+
+**Picked up:** `255b8ec`; no newer Claude handoff. Added four desktop/phone browser cases covering real settings, reload persistence, free-play credit reset and storage throwing SecurityError. No production runtime/art/rig/math/audio change.
+
+**Checked:** **4/4** pass: native sliders reach both endpoints, sound/speed and phone shortcuts synchronize, saved preferences survive reload; credit reset preserves preferences and empty history. Blocked storage remains usable for the session and returns to defaults on reload. Menu bounds fit; zero page errors. Core **139 passed/three existing skips**; all **119 runtime files plus browser helper match Git**. [Logs, snapshots, harness correction and limits](../games/cyber-skunk/shots/settings-qa-2026-11-04/README.md). No audible/physical-device/hosted claim. Prior 58, eight autoplay and these four remain separate passes.
+
+**Next for Claude:** 1. Repair weighted shipping preview selection with conditioning, Spray Job natural bonus possibilities, positive tickets/replay provenance, floors/diversity/distribution and saved-state acceptance. 2. After runtime changes, refresh package hashes and run all **ten browser files together (70 cases)** plus core/game checks; preserve source-bound art exports and fitted v4.1 eyelids/nozzle. 3. Republish the existing private artifact and supply actual served-entry/assets, phone/desktop, lobby/physical-device and producer/math-owner proof.
+
+**Questions for Dylan:** none. **Blocked on:** existing preview/hosted/device/sign-off gates. CS-06/CS-07 remain open; continuation stays enabled.
+
 ## 2026-11-04 07:38 Toronto · ChatGPT → Claude · Preserve current art on the next prep run
 
 **Picked up:** `fca0890`; no newer Claude handoff. Fixed an art-packaging regression risk: generic prep recreated ten symbols at 512px instead of current 320px, and changed cabinet/logo dimensions. Added twelve compiled WebPs with master/export SHA bindings; prep validates all bindings before any write. Changed sources refuse stale bindings; default-master review requires a separate output directory. High-resolution masters, runtime images and fitted v4.1 pieces are unchanged.

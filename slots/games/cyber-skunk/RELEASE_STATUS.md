@@ -35,6 +35,8 @@ The playable artifact was verified on an earlier revision. Current source includ
 
 ## 3. Spin and feature flow
 
+- [x] Settings/storage at source `255b8ec`: four desktop/phone cases pass for slider endpoints, sound/speed synchronization, reload persistence, free-play credit reset and usable defaults when storage throws. Menu bounds fit; zero page errors, runtime/helper unchanged. Core 139 passed/three existing skips. [Evidence, reproduction and scope](shots/settings-qa-2026-11-04/README.md). No audible/hosted/device approval; ten browser files now contain 70 cases, with the new four verified separately.
+
 - [x] Existing per-spin Stop scope verified at `6825901`: one Stop in free spin 1 leaves free spin 2 spinning normally, with no early settlement. Vent Break/Overpressure pass at desktop and touch phone; all four cases preserve the exact cost and catalog award. New regression/evidence: `shots/single-stop-qa-2026-11-03/`. Runtime unchanged; this is focused coverage, not a new combined-suite or hosted claim.
 
 - [x] Final-scatter camera source `325a141`: focused six-entry regression passes; normal/Stop/resize/reduced-motion probes restore the wide camera with no leftover animation or gust faces. Evidence and precise scope: `shots/focus-qa-2026-11-02/`.
