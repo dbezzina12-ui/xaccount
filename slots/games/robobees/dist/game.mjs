@@ -1,5 +1,5 @@
 import {playStinger,flyHiveBees} from './drone-stinger.mjs?v=15';
-import {mountMascot} from './mascot/mascot.mjs?v=6';
+import {mountMascot} from './mascot/mascot.mjs?v=7';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
 import {mountWinShow,bonusSummary,tierFor,tiers} from './win-show.mjs?v=37';
