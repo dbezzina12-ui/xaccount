@@ -8,6 +8,22 @@ export function symbolClass(id){
  return 'sym-'+id+' '+type;
 }
 export function symbolUrl(id){return id==='FS'?honeyStill:'assets/'+id+'.webp'}
+// Keep a decoded image for every possible landing, including symbols missing
+// from a restored board. Concurrent loads and retries share successful decodes.
+const symbolImages=new Map();
+export function preloadSymbols(){
+ return Promise.all([...regular,'W','FS'].map(id=>{
+  if(!symbolImages.has(id)){
+   const image=new Image();
+   image.src=symbolUrl(id);
+   symbolImages.set(id,image.decode().then(()=>image).catch(error=>{
+    symbolImages.delete(id);
+    throw error;
+   }));
+  }
+  return symbolImages.get(id);
+ }));
+}
 // Keep strip travel on the compositor while the camera zooms. The four
 // stops describe the same acceleration, cruise and braking distances.
 function stripTransform(rows){

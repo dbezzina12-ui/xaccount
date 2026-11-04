@@ -1,3 +1,5 @@
+import {spinIdle} from './spin-idle.mjs';
+import {heroLayout, hoverWeight} from './hero-layout.mjs?v=3';
 // RoboBees' mascot, sprite fallback: the hive and the robo-bee in #mascot-stage, drawn from sprites pre-rendered from
 // their 3D models (mascot.json places every frame). mascot.mjs uses it where the live 3D mascot can't run. Presentation only: it follows the game's state and never decides an outcome.
 // Each animation runs on its own clock and gives way to the newest state, so turbo, Stop and skips never wait on it.
@@ -24,6 +26,7 @@ export function mountMascot(stage){
  // The canvas reaches past the stage, so the bee can leave over its edges.
  canvas.style.cssText='position:absolute;left:-50%;top:-70%;width:200%;height:240%;pointer-events:none';
  stage.style.overflow='visible';stage.append(canvas);
+ const measureHero=heroLayout(stage,canvas);
  const ctx=canvas.getContext('2d');
  let s=null,speed=1,bee={mode:'hover',at:0},back=false,extra=0,frame=0,inView=true,dived=null,disposed=false;
  const workers=[];
@@ -34,7 +37,7 @@ export function mountMascot(stage){
  function hoverFrame(t){const fr=s.meta.clips.hover.frames;return fr[Math.floor((reduced?0:t)*s.meta.clips.hover.fps)%fr.length]}
  // The bee: which sprite frame, where, and whether it is still in the tunnel behind the hive's face.
  function beeAt(t){
-  if(bee.mode==='hover')return {img:s.hover,f:hoverFrame(t)};
+  if(bee.mode==='hover')return {img:s.hover,f:hoverFrame(t*.2)};
   if(bee.mode==='away')return null;
   const p=(t-bee.at)/bee.dur;
   if(bee.mode==='arrive'){
@@ -69,13 +72,14 @@ export function mountMascot(stage){
  function draw(){
   frame=0;
   if(!s)return;
+  const hero=measureHero();
   const t=now(),w=canvas.clientWidth,h=canvas.clientHeight,dpr=Math.min(devicePixelRatio||1,2);
   if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr)}
   ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
   // Fit the composition into the stage, standing on its floor. A tall stage (beside the cabinet on desktop) lets it
   // grow a quarter wider than the stage, spilling right, away from the cabinet; otherwise it is centred.
   const sw=stage.clientWidth,sh=stage.clientHeight,k=Math.min(sw*1.25/FRAME[2],sh/FRAME[3]),cw=FRAME[2]*k;
-  ctx.translate(sw*.5+Math.max(0,(sw-cw)/2)-FRAME[0]*k,sh*1.7-(FRAME[1]+FRAME[3])*k);ctx.scale(k,k);
+  ctx.translate(hero.pad+sw*.5+Math.max(0,(sw-cw)/2)-FRAME[0]*k,hero.above+sh*1.7-(FRAME[1]+FRAME[3])*k);ctx.scale(k,k);
   const b=beeAt(t);
   put(s.hive,s.meta.hive);
   if(b?.inside){put(b.img,b.f);put(s.front,s.meta['hive-front'])}
@@ -89,7 +93,28 @@ export function mountMascot(stage){
    ctx.font='800 26px system-ui,sans-serif';ctx.textAlign='left';ctx.lineWidth=6;ctx.strokeStyle='#1b1712';ctx.fillStyle='#ffd27a';
    ctx.strokeText('+'+extra,x+30,y-6);ctx.fillText('+'+extra,x+30,y-6);
   }
-  if(b&&!b.inside)put(b.img,b.f,b.x,b.y,b.k);
+  if(b && bee.mode==='hover'){
+   const rest=reduced?1:spinIdle.rest(t), flight=1-rest;
+   const scale=hero.scale;
+   const cx=s.meta.anchors.hover[0]+hero.dx/k;
+   const seat=hero.perched?hero.seatInClip:s.meta.anchors.hover[1]+54;
+   const y=seat-(hero.lift??0)*flight/k;
+   if(flight>0){
+    ctx.globalAlpha=flight;
+    put(s.hover,b.f,cx-b.f[2]*scale/2,y-b.f[3]*scale,scale);
+   }
+   if(rest>0){
+    ctx.globalAlpha=rest;
+    const f=s.meta.clips.worker.frames[0],size=scale*1.13;
+    put(s.worker,f,cx-f[2]*size/2,y-f[3]*size,size);
+   }
+   ctx.globalAlpha=1;
+  }else if(b&&!b.inside){
+   const weight=hoverWeight(bee,t), growth=1+(hero.scale-1)*weight;
+   const x=b.x??b.f[4], y=b.y??b.f[5], size=b.k??1;
+   put(b.img,b.f,x+hero.dx*weight/k-b.f[2]*size*(growth-1)/2,
+     y+hero.dy*weight/k-b.f[3]*size*(growth-1)/2,size*growth);
+  }
   if(!reduced||busy())wake();
  }
  const busy=()=>bee.mode!=='hover'&&bee.mode!=='away'||workers.some(w=>w.gone!=null||now()-w.at<LAND);

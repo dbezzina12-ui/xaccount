@@ -1,4 +1,12 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#181a1b"><title>RoboBees · Gamboligy Games</title><link rel="stylesheet" href="game.css?v=21"><link rel="stylesheet" href="studio-shop.css"><link rel="stylesheet" href="presentation.css?v=32"><link rel="stylesheet" href="win-show.css?v=35"></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#181a1b"><title>RoboBees · Gamboligy Games</title><link rel="stylesheet" href="game.css?v=36"><link rel="stylesheet" href="studio-shop.css"><link rel="stylesheet" href="presentation.css?v=40"><link rel="stylesheet" href="win-show.css?v=39"><link rel="stylesheet" href="field-guide.css?v=2"></head><body>
+<div id="bee-ident" class="loading-screen" role="status" aria-label="Preparing RoboBees">
+  <div class="studio-identity ident-ready ident-neon" aria-label="Gamboligy Games">
+    <div class="neon-sign" aria-hidden="true"><div class="neon-wall"></div>
+      <svg class="neon-mark" viewBox="180 250 900 750" focusable="false"><defs><path id="gg-1" d="M378 266H735L606 416H389A55 55 0 0 0 334 471V600A55 55 0 0 0 389 655H517L399 797H368A175 175 0 0 1 193 622V451A185 185 0 0 1 378 266Z"/><path id="gg-bar" d="M437 477H658L557 602H437Z"/><path id="gg-2" d="M726 440H926A135 135 0 0 1 1061 575V597H759L606 779V817A25 25 0 0 0 631 842H911V777H777V654H1061V855A130 130 0 0 1 931 985H577A145 145 0 0 1 432 840V798Z"/></defs>
+        <g class="neon-tube"><use href="#gg-1"/><use href="#gg-bar"/><use href="#gg-2"/></g><g class="neon-lit neon-l1"><g class="neon-halo2"><use href="#gg-1"/><use href="#gg-bar"/></g><g class="neon-halo1"><use href="#gg-1"/><use href="#gg-bar"/></g><g class="neon-core"><use href="#gg-1"/><use href="#gg-bar"/></g></g><g class="neon-lit neon-l2"><g class="neon-halo2"><use href="#gg-2"/></g><g class="neon-halo1"><use href="#gg-2"/></g><g class="neon-core"><use href="#gg-2"/></g></g></svg></div>
+    <div class="studio-wordmark neon-word" aria-hidden="true"><div><span style="--i:0">G</span><span style="--i:1">A</span><span style="--i:2">M</span><span style="--i:3">B</span><span style="--i:4" class="late">O</span><span style="--i:5">L</span><span style="--i:6">I</span><span style="--i:7">G</span><span style="--i:8">Y</span></div><div><span style="--i:9">G</span><span style="--i:10">A</span><span style="--i:11">M</span><span style="--i:12">E</span><span style="--i:13">S</span></div></div>
+  </div>
+<div class="load-console">Preparing game<div class="neon-progress" aria-hidden="true"></div></div></div>
 <svg width="0" height="0" style="position:absolute;pointer-events:none" aria-hidden="true" focusable="false">
  <defs>
   <!-- Each RGB row sums to one, preserving the original neutral metal and shadows. -->
@@ -17,7 +25,7 @@
 </div>
 <div class="cab"><div id="bonus-hud" hidden>
  <div class="instrument spins"><div class="instrument-label"><small>FREE SPINS</small><span>REMAINING</span></div><output id="spin-count" aria-label="Free spins remaining">10</output></div>
-</div><div id="board" role="img" aria-label="Five reels, four rows"></div><div id="cab-feedback" hidden aria-hidden="true"></div></div>
+</div><div id="board" aria-busy="true" role="img" aria-label="Five reels, four rows"></div><div id="symbol-loading"><span role="status">Loading symbols…</span> <button type="button" hidden>Retry</button></div><div id="cab-feedback" hidden aria-hidden="true"></div></div>
 <div id="notice" class="sr-only" role="status" aria-atomic="true"></div>
 <button id="preview-stinger" hidden>▶ Play bonus stinger</button>
 <footer id="controller" aria-label="Game controller"></footer></div></main></div>
@@ -34,12 +42,17 @@
  </div>
 </section></div></div>
 <dialog id="win-show" aria-labelledby="win-name" aria-describedby="win-reader">
+ <div class="win-environment" aria-hidden="true"><i class="vault-half"></i><i class="vault-half"></i></div>
  <canvas class="win-flight" aria-hidden="true"></canvas>
  <div class="win-stage">
   <h2 id="win-name" class="win-name sr-only"></h2>
+  <span class="bonus-signature" aria-hidden="true"></span>
   <svg class="win-type" aria-hidden="true"><use width="100%" height="100%"/></svg>
   <span class="win-cash" aria-hidden="true"></span>
+  <div class="win-charge" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <span class="bonus-detail" aria-hidden="true"></span>
  </div><span id="win-reader" class="win-reader sr-only" role="status"></span>
+ <span class="bonus-return" aria-hidden="true">Return to reels <b>→</b></span>
  <button type="button" class="win-dismiss" aria-label="Show total"></button>
 </dialog>
 <nav class="win-gallery" aria-label="Preview a win animation" hidden></nav>
@@ -48,4 +61,13 @@
  <div class="shop-tabs" aria-label="Shop sections"><button data-tab="features">Feature spins</button><button data-tab="buys">Bonus buys</button></div>
  <div class="shop-options"><section class="bonus-cards" aria-label="Available options"></section></div><p id="bonus-menu-note"></p>
 </dialog>
-<dialog id="menu"><div class="dlg-head"><small>APIS INDUSTRIES &nbsp; / &nbsp; OPERATIONS</small><button class="close" aria-label="Close">×</button></div><div id="content"></div></dialog><script type="module" src="game.mjs?v=35"></script></body></html>
+<dialog id="field-guide" class="intro" aria-labelledby="guide-heading"><div class="intro-inner">
+<h2 id="guide-heading"><img class="intro-mark" src="assets/robobees-wordmark.svg" alt="RoboBees"></h2>
+<div class="intro-cards"><article class="intro-card" data-current><div class="guide-scene"><div class="guide-board" aria-hidden="true"></div><div class="scene-bar"><b class="demo-caption"></b><button type="button" class="demo-toggle" aria-label="Pause free spins demonstration">Pause</button></div></div><div class="feature-copy"><span class="feature-index">01 / SCATTERS</span><h3>Free spins</h3><p>Land 3 FS for Worker Shift, 4 for Swarm Protocol, or 5 for Queen Override.</p></div></article>
+<article class="intro-card"><div class="guide-scene"><div class="guide-board" aria-hidden="true"></div><div class="scene-bar"><b class="demo-caption"></b><button type="button" class="demo-toggle" aria-label="Pause tumbling wins demonstration">Pause</button></div></div><div class="feature-copy"><span class="feature-index">02 / TUMBLES</span><h3>Tumbling wins</h3><p>Match 3 or more on a payline from reel one. Winning symbols clear and new symbols drop in.</p></div></article>
+<article class="intro-card"><div class="guide-scene"><div class="guide-board" aria-hidden="true"></div><div class="scene-bar"><b class="demo-caption"></b><button type="button" class="demo-toggle" aria-label="Pause cell multipliers demonstration">Pause</button></div></div><div class="feature-copy"><span class="feature-index">03 / CHARGES</span><h3>Cell multipliers</h3><p>Winning cells charge to 2×. Hit a charged cell again to double its multiplier, up to 128×.</p></div></article>
+</div>
+<nav class="guide-nav" aria-label="Feature pages"><button type="button" data-prev aria-label="Previous feature">‹</button><div class="guide-dots"><button aria-label="Free spins" aria-current="step"></button><button aria-label="Tumbling wins"></button><button aria-label="Cell multipliers"></button></div><button type="button" data-next aria-label="Next feature">›</button></nav>
+<span class="sr-only" role="status" data-announce></span><button type="button" class="intro-go" data-enter><span class="desktop-cta">CLICK TO CONTINUE</span><span class="phone-cta">TAP TO PLAY</span></button>
+<div class="guide-foot">3 FS · WORKER SHIFT &nbsp; / &nbsp; 4 FS · SWARM PROTOCOL &nbsp; / &nbsp; 5 FS · QUEEN OVERRIDE</div></div></dialog>
+<dialog id="menu"><div class="dlg-head"><small>APIS INDUSTRIES &nbsp; / &nbsp; OPERATIONS</small><button class="close" aria-label="Close">×</button></div><div id="content"></div></dialog><script type="module" src="game.mjs?v=44"></script></body></html>

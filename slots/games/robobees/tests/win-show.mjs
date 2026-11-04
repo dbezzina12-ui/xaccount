@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {tiers,tierFor,createWinCount,swarmFlight} from '../dist/win-show.mjs';
+import {tiers,tierFor,createWinCount,swarmFlight,bonusSummary} from '../dist/win-show.mjs';
 for(const [n,id] of [[0,null],[9.99,null],[10,'nice'],[24.99,'nice'],[25,'big'],[99.99,'big'],[100,'epic'],[499.99,'epic'],[500,'mythic'],[25000,'mythic']])assert.equal(tierFor(n),id);
 assert.equal(tierFor(25000,true),'max');
 for(const price of [20,250]){
@@ -12,6 +12,15 @@ for(const price of [20,250]){
 assert.equal(tierFor(500,false,250),'nice');
 assert.equal(tierFor(500,false,20),'epic');
 
+// Even a zero/low result has a receipt. The display uses credited cents, not
+// the base-bet multiple or the amount of the last individual free spin.
+for(const [mode,left,total,awardedCents,maxWin,tier] of [
+ ['regular',1,0,0,false,null],['regular',1,6.58,66,false,null],
+ ['super',1,78.94,7894,false,'big'],['hidden',7,24998,249980,true,'max']
+]){
+ assert.deepEqual(bonusSummary({mode,left},{state:{total,awardedCents},maxWin}),
+  {mode,spins:11-left,cents:awardedCents,tier});
+}
 const svg=readFileSync(new URL('../dist/assets/wins/titles.svg',import.meta.url),'utf8');
 for(const [id,config] of Object.entries(tiers)){
  assert.ok(svg.includes('<symbol id="'+id+'"'));

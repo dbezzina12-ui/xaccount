@@ -92,8 +92,8 @@ dialog.shop{width:min(735px,94vw);max-height:92svh;overflow:auto}
    tiles and moving strips use the same cell-relative scale. */
 .cell{container-type:size;--art-height:74cqmin}
 .cell img{width:var(--art-width,96%);height:var(--art-height)}
-.sym-10{--art-height:67cqmin}.sym-J{--art-height:80cqmin}
-.sym-K{--art-height:73cqmin}.sym-nectar{--art-height:84cqmin}
+/* The five trimmed rank sprites share a cap height and keep their native widths. */
+.sym-nectar{--art-height:84cqmin}
 .sym-hive{--art-height:80cqmin}.sym-stinger{--art-height:94cqmin}
 .sym-beacon{--art-height:72cqmin}.sym-W{--art-height:69cqmin}
 .sym-FS{--art-height:88cqmin;--art-width:91%}.swarm{left:0;top:0}

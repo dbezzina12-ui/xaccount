@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="900" viewBox="0 0 560 900" preserveAspectRatio="none">
+<defs>
+ <linearGradient id="shell" x2="1" y2=".6" gradientUnits="objectBoundingBox"><stop stop-color="#142020"/><stop offset=".40" stop-color="#39413b"/><stop offset=".55" stop-color="#272e2c"/><stop offset="1" stop-color="#111a19"/></linearGradient>
+ <pattern id="comb" width="52" height="90" patternUnits="userSpaceOnUse"><path d="m0 15 26-15 26 15v30L26 60 0 45Zm26 45v30m0-30 26-15" fill="none" stroke="#ad9a68" stroke-width="2" opacity=".20"/></pattern>
+ <pattern id="warning" width="34" height="34" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="34" height="34" fill="#272a25"/><rect width="14" height="34" fill="#b5813e"/></pattern>
+</defs>
+<path fill="url(#shell)" d="M0 0h560v900H0z"/><path fill="url(#comb)" d="M0 0h560v900H0z"/>
+<g fill="#131c1c" stroke="#5b6051" stroke-width="4"><path d="M-10 70h308l134 154v35H296L157 142H-10zM-10 830h308l134-154v-35H296L157 758H-10z"/><path d="M450 0h60v288l-46 78v168l46 78v288h-60V624l-49-78V354l49-78z"/></g>
+<path d="M510 0h22v900h-22z" fill="url(#warning)"/><path d="M544 0h16v900h-16z" fill="#141710"/><path d="M554 0h6v900h-6z" fill="#ffba61"/>
+<g fill="#c6a36a"><circle cx="426" cy="236" r="5"/><circle cx="426" cy="666" r="5"/><circle cx="478" cy="36" r="6"/><circle cx="478" cy="864" r="6"/></g>
+</svg>

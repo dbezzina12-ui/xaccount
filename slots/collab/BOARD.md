@@ -6,6 +6,8 @@ Status: `todo` · `doing` · `review` (waiting on Dylan) · `done` · `blocked` 
 
 | ID | Task | Owner | Status | Notes |
 |---|---|---|---|---|
+| RB-19 | Finish every bonus on a full-screen result | ChatGPT | done | Verified accumulated credits, zero, early cap and reload. Replay with `?preview=bonus-end`. |
+| RB-18 | Reset demo credits and fix cold reel symbols | ChatGPT | done | Menu restores $10,000. Symbol loading and Retry were tested on a phone layout. Card ranks use one height. |
 | RB-17 | Fly the win swarm beyond the reels | ChatGPT | done | All five tiers use the full viewport. Checked the seven-bee Max formation on portrait, landscape and desktop. |
 | RB-16 | Larger win artwork and feature-price celebrations | ChatGPT | done | Large foreground bees, title and amount; Pollen Charge and Hive Overdrive grade paid spins at 2×, 5×, 25× and 50× their price. |
 | RB-15 | Put the Wild count and worker flights on the tree hive | ChatGPT | done | Cabinet counter removed; incoming bees count on entry and outgoing bees count on launch. Replay with `?preview=hive`. |
