@@ -1,10 +1,12 @@
 # Cyber Skunk — production brief v1
 
-## Current continuation — 2026-11-03
+## Current continuation — 2026-11-04
 
 Start with the [game-specific handoff](../../collab/CYBER_SKUNK_HANDOFF.md) and [release evidence/status](RELEASE_STATUS.md), alongside the studio handoff. Latest source is a playable **playtest**, not a completed release. The fixed-seed free-preview path and hosted/device verification remain open.
 
 Source entry points: [shared game-selection launch](../../index.html?game=cyber-skunk) or [direct runtime](runtime/index.html). These are repository-relative routes, not a newly published playable link. The shared launch routes Cyber Skunk to its standalone runtime rather than requesting a legacy `model.json`.
+
+Loading identity: Dylan selected Claude's amber **Neon Sign** GG ident. Preserve its inline mark, stroke-based glow (the filter version produced a box on his device), thin neon loading tube and already-lit reduced-motion state. Current `entry-shop.css` key is `neon-ident-1`. The combined 58-case source verification is recorded in the release status; it does not establish hosted parity.
 
 The initial provisional mechanics and full-body rig suggestions below are historical design context. Implement current costs/rules from [shipping config](runtime/rules.js) and [MATH.md](MATH.md), and preserve the fitted compact v4.1 contract at the top of [ART_SPEC.md](ART_SPEC.md): sixteen registered pieces, three tail segments plus nozzle, separate far ear, no jaw. Do not restore superseded coordinates or provisional prices/spin counts from this brief. All 49 required art sources and 16 registered pieces are present in the current read-only prep check; availability is not hosted-integration proof.
 

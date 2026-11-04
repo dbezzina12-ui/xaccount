@@ -1,0 +1,98 @@
+✔ artifact manifest: every exported byte matches its source (820.913562ms)
+✔ artifact launch and shop: 360×740 (7569.141142ms)
+✔ artifact launch and shop: 390×844 (7510.073391ms)
+✔ artifact launch and shop: 430×932 (7488.594967ms)
+✔ artifact launch and shop: 1366×768 (8149.503905ms)
+✔ artifact shipping outcomes and settlement: 390×844 (9947.046639ms)
+✔ artifact shipping outcomes and settlement: 1366×768 (10319.801ms)
+✔ artifact requests: no missing game dependencies or changed source bytes (52.600966ms)
+desktop: ventbreak cancellation with Escape
+desktop: ventbreak cancellation with Enter
+desktop: overpressure cancellation with Escape
+desktop: overpressure cancellation with Enter
+desktop: mystery cancellation with Escape
+desktop: mystery cancellation with Enter
+✔ dialog keys: desktop containment, cancellation and focus restoration (11041.6944ms)
+phone: ventbreak cancellation with Escape
+phone: ventbreak cancellation with Enter
+phone: overpressure cancellation with Escape
+phone: overpressure cancellation with Enter
+phone: mystery cancellation with Escape
+phone: mystery cancellation with Enter
+✔ dialog keys: phone containment, cancellation and focus restoration (10503.042666ms)
+✔ ordinary entry: desktop launches, settles and resumes credits (9374.87957ms)
+✔ ordinary entry: phone launches, settles and resumes credits (9000.621608ms)
+{"label":"desktop-super-max","width":1366,"height":768,"key":"Enter","expected":{"mode":"overpressure","tier":"super","poolName":"bonus-super","seed":614838,"rowWeight":308,"hiddenTickets":null,"totalTickets":1000000000,"cost":25000,"paid":2500000},"spinPopups":[],"before":{"balance":975000,"pending":{"t":1793777550067,"mode":"overpressure","bet":100,"cost":25000,"win":2500000,"tier":"super","seed":{"bonus":614838}},"history":0},"after":{"balance":3475000,"busy":false,"amount":"$25,000.00","history":[{"t":1793777550067,"mode":"overpressure","bet":100,"cost":25000,"win":2500000,"tier":"super","seed":{"bonus":614838}}]}}
+✔ rare win keys: desktop-super-max (9622.474609ms)
+{"label":"phone-base-hidden-max","width":390,"height":844,"key":"Escape","expected":{"mode":"base","tier":"hidden","poolName":"bonus-hidden","seed":68471,"rowWeight":40901,"hiddenTickets":6585,"totalTickets":1000000000,"cost":100,"paid":2500000},"spinPopups":[],"before":{"balance":999900,"pending":{"t":1793777557915,"mode":"base","bet":100,"cost":100,"win":2500000,"tier":"hidden","seed":{"entry":40,"bonus":68471,"tier":"hidden"}},"history":0},"after":{"balance":3499900,"busy":false,"amount":"$25,000.00","history":[{"t":1793777557915,"mode":"base","bet":100,"cost":100,"win":2500000,"tier":"hidden","seed":{"entry":40,"bonus":68471,"tier":"hidden"}}]}}
+✔ rare win keys: phone-base-hidden-max (8011.969134ms)
+{"name":"prices-desktop","limits":{"min":10,"max":10000},"rows":[{"edge":"min","bet":10,"mode":"ventbreak","cost":1000,"cancelBalance":100000000},{"edge":"min","bet":10,"mode":"overpressure","cost":2500,"cancelBalance":100000000},{"edge":"min","bet":10,"mode":"mystery","cost":5000,"cancelBalance":100000000},{"edge":"min","bet":10,"mode":"enhanced","cost":30},{"edge":"min","bet":10,"mode":"sprayjob","cost":100},{"edge":"max","bet":10000,"mode":"ventbreak","cost":1000000,"cancelBalance":100000000},{"edge":"max","bet":10000,"mode":"overpressure","cost":2500000,"cancelBalance":100000000},{"edge":"max","bet":10000,"mode":"mystery","cost":5000000,"cancelBalance":100000000},{"edge":"max","bet":10000,"mode":"enhanced","cost":30000},{"edge":"max","bet":10000,"mode":"sprayjob","cost":100000}]}
+✔ stake prices: desktop minimum and maximum (17227.90728ms)
+{"name":"prices-phone","limits":{"min":10,"max":10000},"rows":[{"edge":"min","bet":10,"mode":"ventbreak","cost":1000,"cancelBalance":100000000},{"edge":"min","bet":10,"mode":"overpressure","cost":2500,"cancelBalance":100000000},{"edge":"min","bet":10,"mode":"mystery","cost":5000,"cancelBalance":100000000},{"edge":"min","bet":10,"mode":"enhanced","cost":30},{"edge":"min","bet":10,"mode":"sprayjob","cost":100},{"edge":"max","bet":10000,"mode":"ventbreak","cost":1000000,"cancelBalance":100000000},{"edge":"max","bet":10000,"mode":"overpressure","cost":2500000,"cancelBalance":100000000},{"edge":"max","bet":10000,"mode":"mystery","cost":5000000,"cancelBalance":100000000},{"edge":"max","bet":10000,"mode":"enhanced","cost":30000},{"edge":"max","bet":10000,"mode":"sprayjob","cost":100000}]}
+✔ stake prices: phone minimum and maximum (10805.373548ms)
+{"name":"boundary-min-exact","bet":10,"cost":1000,"balance":1000,"disabled":false}
+✔ stake balance boundary: min exact credit (6096.509568ms)
+{"name":"boundary-min-short","bet":10,"cost":1000,"balance":999,"disabled":true}
+✔ stake balance boundary: min one cent short (5086.452206ms)
+{"name":"boundary-max-exact","bet":10000,"cost":1000000,"balance":1000000,"disabled":false}
+✔ stake balance boundary: max exact credit (6037.492566ms)
+{"name":"boundary-max-short","bet":10000,"cost":1000000,"balance":999999,"disabled":true}
+✔ stake balance boundary: max one cent short (5066.675961ms)
+{"name":"settlement-min","bet":10,"cost":1000,"paid":2,"expected":{"seed":653812,"hundredths":20},"after":{"balance":99999002,"busy":false,"history":[{"t":1793777617657,"mode":"ventbreak","bet":10,"cost":1000,"win":2,"tier":"regular","seed":{"bonus":653812}}]}}
+✔ stake settlement: min catalog award is whole cents (8331.64636ms)
+{"name":"settlement-max","bet":10000,"cost":1000000,"paid":2000,"expected":{"seed":653812,"hundredths":20},"after":{"balance":99002000,"busy":false,"history":[{"t":1793777626012,"mode":"ventbreak","bet":10000,"cost":1000000,"win":2000,"tier":"regular","seed":{"bonus":653812}}]}}
+✔ stake settlement: max catalog award is whole cents (8169.990893ms)
+{"label":"desktop","width":1366,"height":768,"mode":"ventbreak","expected":{"seed":653812,"paid":20,"cost":10000},"next":{"spin":"2 / 12","spinning":6,"skip":false,"busy":true,"balance":990000,"history":0},"finalBalance":990020}
+✔ desktop: one Stop only skips the active ventbreak free spin (16212.671ms)
+{"label":"desktop","width":1366,"height":768,"mode":"overpressure","expected":{"seed":253677,"paid":0,"cost":25000},"next":{"spin":"2 / 10","spinning":6,"skip":false,"busy":true,"balance":975000,"history":0},"finalBalance":975000}
+✔ desktop: one Stop only skips the active overpressure free spin (18639.79068ms)
+{"label":"phone","width":390,"height":844,"mode":"ventbreak","expected":{"seed":653812,"paid":20,"cost":10000},"next":{"spin":"2 / 12","spinning":6,"skip":false,"busy":true,"balance":990000,"history":0},"finalBalance":990020}
+✔ phone: one Stop only skips the active ventbreak free spin (15270.697702ms)
+{"label":"phone","width":390,"height":844,"mode":"overpressure","expected":{"seed":253677,"paid":0,"cost":25000},"next":{"spin":"2 / 10","spinning":6,"skip":false,"busy":true,"balance":975000,"history":0},"finalBalance":975000}
+✔ phone: one Stop only skips the active overpressure free spin (18281.730504ms)
+{"label":"desktop-space","width":1366,"height":768,"key":"Space","controllerFocus":false,"bonus":false,"menu":false,"expected":{"seed":1782064,"paid":2690,"cost":100},"before":{"balance":999900,"history":0},"after":{"balance":1002590,"busy":false,"history":[{"t":1793777701885,"mode":"base","bet":100,"cost":100,"win":2690,"tier":null,"seed":{"spin":1782064}}]}}
+✔ win keys: desktop-space (11527.871131ms)
+{"label":"desktop-held-enter","width":1366,"height":768,"key":"Enter","controllerFocus":true,"bonus":false,"menu":false,"expected":{"seed":1782064,"paid":2690,"cost":100},"before":{"balance":999900,"history":0},"after":{"balance":1002590,"busy":false,"history":[{"t":1793777713209,"mode":"base","bet":100,"cost":100,"win":2690,"tier":null,"seed":{"spin":1782064}}]}}
+✔ win keys: desktop-held-enter (11362.337538ms)
+{"label":"desktop-escape","width":1366,"height":768,"key":"Escape","controllerFocus":false,"bonus":false,"menu":false,"expected":{"seed":1782064,"paid":2690,"cost":100},"before":{"balance":999900,"history":0},"after":{"balance":1002590,"busy":false,"history":[{"t":1793777724414,"mode":"base","bet":100,"cost":100,"win":2690,"tier":null,"seed":{"spin":1782064}}]}}
+✔ win keys: desktop-escape (11237.654068ms)
+{"label":"phone-escape","width":390,"height":844,"key":"Escape","controllerFocus":false,"bonus":false,"menu":false,"expected":{"seed":1782064,"paid":2690,"cost":100},"before":{"balance":999900,"history":0},"after":{"balance":1002590,"busy":false,"history":[{"t":1793777735592,"mode":"base","bet":100,"cost":100,"win":2690,"tier":null,"seed":{"spin":1782064}}]}}
+✔ win keys: phone-escape (11173.132913ms)
+{"label":"phone-bonus-total","width":390,"height":844,"key":"Space","controllerFocus":true,"bonus":true,"menu":false,"expected":{"seed":653812,"paid":20,"cost":10000},"before":{"balance":990000,"history":0},"after":{"balance":990020,"busy":false,"history":[{"t":1793777747809,"mode":"ventbreak","bet":100,"cost":10000,"win":20,"tier":"regular","seed":{"bonus":653812}}]}}
+✔ win keys: phone-bonus-total (14118.760132ms)
+{"label":"desktop-menu-priority","width":1366,"height":768,"key":"Escape","controllerFocus":false,"bonus":false,"menu":true,"expected":{"seed":1782064,"paid":2690,"cost":100},"before":{"balance":999900,"history":0},"after":{"balance":1002590,"busy":false,"history":[{"t":1793777760927,"mode":"base","bet":100,"cost":100,"win":2690,"tier":null,"seed":{"spin":1782064}}]}}
+✔ win keys: desktop-menu-priority (11248.486318ms)
+✔ desktop: base, Spray Job, Vent Break and Overpressure settle exactly (92579.882386ms)
+✔ phone: base, Spray Job, Vent Break and Overpressure settle exactly (91886.970107ms)
+✔ phone pressure strip fits the lower casting above the bonus panels (19821.040808ms)
+✔ vents: full symbol lands, centred reverse flips for spray, skip restores the paying face (7010.487799ms)
+✔ buy screen: Feature Spins first, Bonus Buys second, Hidden as information; short balance disables confirm (5420.861077ms)
+✔ the intro shows before the first spin, and returns on reload (8878.597022ms)
+✔ the feature guide pages on phones and can be reopened from the menu (19510.905539ms)
+✔ the rules show the shipping prices and 96% RTP (4926.322656ms)
+✔ audio: nothing clips, the music sits under the reels, the big moments are loudest, phones hear the reels (14438.064364ms)
+✔ natural FS trigger fits at rest and during its landing pulse (360×640) (10310.577122ms)
+✔ natural FS trigger fits at rest and during its landing pulse (390×844) (10426.716713ms)
+✔ natural FS trigger fits at rest and during its landing pulse (430×932) (10372.570433ms)
+✔ natural FS trigger fits at rest and during its landing pulse (1366×768) (10438.973367ms)
+✔ loading precedes the guide, category buttons switch, and Mystery settles once (25895.674371ms)
+✔ Mystery purchase finishes through the controller and credits the exact win (42263.799114ms)
+✔ failed startup offers a working reload (4746.08364ms)
+✔ rare path, blackout (1920×1080): plays, shows blackout and bigwin-max, settles exactly, and the page never scrolls (37907.023894ms)
+✔ rare path, cap (390×844): plays, shows bigwin-max, settles exactly, and the page never scrolls (38372.143825ms)
+✔ rare path, retrigger (1366×768): plays, shows banner, settles exactly, and the page never scrolls (38770.733447ms)
+✔ a reload mid-bonus loses nothing: the round is paid on the next visit and kept in history (23869.63095ms)
+✔ Zombify shop sections and free previews preserve credits and history (82122.863955ms)
+✔ studio ident advances to a gated guide on slow loads (4739.52326ms)
+✔ polished shop and single unboxed bonus result on phones and desktop (37438.179921ms)
+✔ Studio desktop uses the full shared bar on touch and switches layouts in place (4930.201833ms)
+✔ scatter landing precedes the held bonus briefing on every entry path (93500.31726ms)
+✔ tier popups use each spin payout on the winning board, and the bonus has a separate total (66348.297296ms)
+ℹ tests 58
+ℹ suites 0
+ℹ pass 58
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1123214.86397

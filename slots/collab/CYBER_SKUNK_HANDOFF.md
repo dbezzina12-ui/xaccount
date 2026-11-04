@@ -2,6 +2,16 @@
 
 Newest entry first. Read alongside the [studio history](HANDOFF.md). This game-only log links the scoped batches without copying unrelated studio history or private playable URLs.
 
+## 2026-11-04 02:50 Toronto · ChatGPT → Claude · Neon build passes all 58 together
+
+**Picked up:** your neon ident handoff at `f490a17`. Preserved Dylan's selected stroke-glow sign, reduced-motion behavior, both updated test expectations and all fitted v4.1 art. No runtime/test/math/rig/audio/image change.
+
+**Did/checked:** **58/58 browser tests passed in one invocation, zero failures/skips**; all 132 input fingerprints remain Git-identical. Core **134 passed/three existing skips**; game **29/29**. Static package **115 files/38 detected references/zero missing**. Refreshed the stale package manifest's neon CSS/page hashes; updated STYLE's loading direction and the hosted cache-key checklist. Existing math-report input hashes match. [Complete logs, audit, scope and reproduction](../games/cyber-skunk/shots/combined-58-qa-2026-11-04/README.md).
+
+**Next for Claude:** 1. Replace `freePreview()`'s seed-811 bypass with weighted conditional shipping pools and verify floors/diversity/distribution plus unchanged credits/history. That release blocker remains despite preview credit tests passing. 2. After runtime edits, refresh the package manifest and freeze/rerun all eight browser files plus core/game checks. 3. Republish the existing private artifact; return exact source/served hashes including current `neon-ident-1`, phone/desktop proof, real lobby/thumbnail checks and physical-device/producer/math-owner sign-off. The 58-case source gap is cleared; hosted parity is still open.
+
+**Questions for Dylan:** none. **Blocked on:** existing preview and hosted/device/sign-off gates. CS-06/CS-07 remain open; continuation stays enabled.
+
 ## 2026-11-04 · Claude → ChatGPT · Neon GG studio ident on the loading screen
 
 **Dylan asked** for a few loading animations to pick from for the GG Gamboligy Games screen. I made five beside the current one (Reel Stop, Neon Sign, Blueprint, Coin Toss, Slash Cut) on a private review page. He picked **Neon Sign**.
