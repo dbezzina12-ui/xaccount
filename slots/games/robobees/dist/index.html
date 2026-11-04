@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#181a1b"><title>RoboBees · Gamboligy Games</title><link rel="stylesheet" href="game.css?v=36"><link rel="stylesheet" href="studio-shop.css"><link rel="stylesheet" href="presentation.css?v=40"><link rel="stylesheet" href="win-show.css?v=37"></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#181a1b"><title>RoboBees · Gamboligy Games</title><link rel="stylesheet" href="game.css?v=36"><link rel="stylesheet" href="studio-shop.css"><link rel="stylesheet" href="presentation.css?v=40"><link rel="stylesheet" href="win-show.css?v=37"><link rel="stylesheet" href="field-guide.css?v=1"></head><body>
 <svg width="0" height="0" style="position:absolute;pointer-events:none" aria-hidden="true" focusable="false">
  <defs>
   <!-- Each RGB row sums to one, preserving the original neutral metal and shadows. -->
@@ -52,4 +52,26 @@
  <div class="shop-tabs" aria-label="Shop sections"><button data-tab="features">Feature spins</button><button data-tab="buys">Bonus buys</button></div>
  <div class="shop-options"><section class="bonus-cards" aria-label="Available options"></section></div><p id="bonus-menu-note"></p>
 </dialog>
-<dialog id="menu"><div class="dlg-head"><small>APIS INDUSTRIES &nbsp; / &nbsp; OPERATIONS</small><button class="close" aria-label="Close">×</button></div><div id="content"></div></dialog><script type="module" src="game.mjs?v=40"></script></body></html>
+<dialog id="field-guide" aria-labelledby="cover-heading">
+ <section class="bee-brief" data-page="cover">
+  <span class="brief-label">Gamboligy Games presents</span>
+  <svg class="brief-hero" viewBox="0 0 360 240" aria-hidden="true">
+   <image class="port-wing" href="assets/drone-wing.webp" x="2" y="48" width="155" height="62"/>
+   <image class="starboard-wing" href="assets/drone-wing.webp" x="203" y="48" width="155" height="62"/>
+   <image href="assets/drone-body.webp" x="90" y="25" width="180" height="195"/>
+  </svg>
+  <h1 id="cover-heading"><img class="brief-brand" src="assets/robobees-wordmark.svg" alt="RoboBees"></h1>
+  <p>Charge the cells. Wake the swarm.</p>
+  <button type="button" data-next>Continue →</button>
+ </section>
+ <section class="bee-brief" data-page="guide" hidden>
+  <span class="brief-label">Apis Industries · Flight manual</span><h2 id="guide-heading">How to play</h2>
+  <div class="brief-cards">
+   <article class="brief-card"><div class="brief-art" aria-hidden="true"><img src="assets/rotor.webp" alt=""><img src="assets/rotor.webp" alt=""><img src="assets/rotor.webp" alt=""></div><span class="brief-label">01 / Match</span><h3>Tumbling wins</h3><p>Match 3 or more on a payline from the leftmost reel. Winning symbols clear and new symbols drop in.</p></article>
+   <article class="brief-card"><div class="brief-art" aria-hidden="true"><b>2×</b><b>4×</b><b>8×</b></div><span class="brief-label">02 / Charge</span><h3>Cell multipliers</h3><p>A winning cell charges to 2×. Hit it again to double its value, up to 128×. The charge stays in the cell as symbols fall.</p></article>
+   <article class="brief-card"><div class="brief-art" aria-hidden="true"><img class="feature-hive" src="assets/hive.webp" alt=""></div><span class="brief-label">03 / Swarm</span><h3>Free spins</h3><p>Land 3, 4 or 5 FS for Worker Shift, Swarm Protocol or Queen Override. In Super and Hidden, bank Wilds for the final spin.</p></article>
+  </div>
+  <div class="brief-controls"><button type="button" data-back>Back</button><button type="button" data-enter>Enter the hive →</button></div>
+ </section>
+</dialog>
+<dialog id="menu"><div class="dlg-head"><small>APIS INDUSTRIES &nbsp; / &nbsp; OPERATIONS</small><button class="close" aria-label="Close">×</button></div><div id="content"></div></dialog><script type="module" src="game.mjs?v=41"></script></body></html>

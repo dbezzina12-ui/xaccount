@@ -1,6 +1,7 @@
+import {openFieldGuide} from './field-guide.mjs';
 import {playStinger,flyHiveBees} from './drone-stinger.mjs?v=15';
 import {spinIdle} from './mascot/spin-idle.mjs';
-import {mountMascot} from './mascot/mascot.mjs?v=9';
+import {mountMascot} from './mascot/mascot.mjs?v=10';
 import {mountController} from './controller/controller.js';
 import {Autoplay,AUTOPLAY_AMOUNTS} from './autoplay.js';
 import {mountWinShow,bonusSummary,tierFor,tiers} from './win-show.mjs?v=37';
@@ -364,14 +365,14 @@ function choices(title,items){
  modal.showModal();
 }
 function action(name){
- if(!ready||winDemo||$('win-show').open)return;
+ if(!ready||winDemo||$('win-show').open||$('field-guide').open)return;
  if(document.body.classList.contains('preview-ready')){if(name==='play')$('preview-stinger').click();return}
  if(!mute&&audio?.state!=='running')prepareFlightSound();
  if(name==='sound'){toggleSound();return}
  if(name==='turbo'){turbo=!turbo;save();labels();return}
  if(name==='settings'){
   autoplay.stop();labels();choices('Control room',[
-   [mute?'Sound off':'Sound on',toggleSound,!mute],[turbo?'Turbo on':'Turbo off',()=>action('turbo'),turbo],['Game rules',showRules],
+   [mute?'Sound off':'Sound on',toggleSound,!mute],[turbo?'Turbo on':'Turbo off',()=>action('turbo'),turbo],['Flight manual',()=>openFieldGuide($('field-guide'),'guide'),undefined,busy||!!pending||state.mode!=='base'],['Game rules',showRules],
    ['Reset demo balance',confirmBalanceReset,undefined,!canResetBalance()]]);
   return;
  }
@@ -385,7 +386,7 @@ function action(name){
 }
 modal.addEventListener('close',()=>{if(!modal.open)modal.classList.remove('shop');scheduleBonus()});
 document.addEventListener('keydown',e=>{
- if(e.code!=='Space'||e.repeat||winDemo||$('win-show').open||modal.open||shop.open||playStage.inert||e.composedPath().some(el=>el.tagName==='BUTTON'))return;
+ if(e.code!=='Space'||e.repeat||$('field-guide').open||winDemo||$('win-show').open||modal.open||shop.open||playStage.inert||e.composedPath().some(el=>el.tagName==='BUTTON'))return;
  e.preventDefault();action('play');
 });
 document.body.dataset.scene=state.mode;
@@ -402,7 +403,9 @@ for(;;){
  }
 }
 draw(face,state.spots);grid.setAttribute('aria-busy','false');
-ready=true;loading.hidden=true;labels();
+loading.hidden=true;
+if(!preview && !pending && !bonusResult && state.mode==='base') await openFieldGuide($('field-guide'));
+ready=true;labels();
 if(state.mode!=='base')winShow.prepareBonus(state.mode);
 if(bonusResult){lock(true);await presentBonusResult();save();lock(false)}
 if(state.left===10&&(state.mode==='super'||state.mode==='hidden')){

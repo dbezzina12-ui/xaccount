@@ -4318,7 +4318,10 @@ ${n?"totalEmissiveRadiance += paintGlow(vObj, vTex);":""}`)},r.customProgramCach
  pose.fold=.87*rest;
  pose.wing*=flight;
  pose.feather*=flight;
- pose.head=pe.head.turn;
+ // One small look toward the hive, with a long still interval between looks.
+ const phase=time%10;
+ const glance=n||phase>=2.4?0:Math.sin(Math.PI*phase/2.4)**2;
+ pose.head=pe.head.turn+5*glance;
  pose.antenna*=flight;
  pose.legs=pose.legs.map(angle=>angle*flight);
  return hero;

@@ -1,0 +1,27 @@
+#field-guide{position:fixed;inset:0;margin:0;width:100%;height:100dvh;max-width:none;max-height:none;border:0;border-radius:0;padding:0;overflow:auto;color:#fff7e9;background:#141c1c;font:500 16px/1.4 system-ui,sans-serif;isolation:isolate}
+#field-guide::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(0deg,#0b1113ed,#172023aa 60%,#17202359),url(assets/woodland-clearing.webp) center/cover}
+#field-guide [hidden]{display:none!important}
+.bee-brief{width:min(100%,1080px);margin:auto;min-height:100%;padding:max(24px,env(safe-area-inset-top)) 5% max(24px,env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:clamp(12px,2.3vh,25px)}
+.bee-brief h1,.bee-brief h2,.bee-brief h3,.bee-brief p{margin:0}
+.bee-brief .brief-label{color:#ffc071;font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase}
+.bee-brief h2{color:#fff8eb;font:800 clamp(29px,5vw,60px)/1 BeeDigits,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.015em}
+.bee-brief .brief-brand{width:min(440px,78vw);height:auto;display:block}
+.brief-hero{width:clamp(150px,31vh,305px);height:auto;overflow:visible;filter:drop-shadow(0 12px 10px #0007)}
+.brief-hero image{transform-box:fill-box;transform-origin:center}
+.brief-hero .port-wing{transform:rotate(-16deg)}
+.brief-hero .starboard-wing{transform:scaleX(-1) rotate(-16deg)}
+.brief-controls{display:flex;justify-content:center;align-items:center;gap:12px}
+#field-guide button{min-height:46px;padding:10px 23px;border-radius:8px;border:1px solid #ffc478;background:#ef9b42;color:#171a1a;font:800 16px/1.2 system-ui,sans-serif;cursor:pointer}
+#field-guide button:focus-visible{outline:3px solid white;outline-offset:3px}
+#field-guide [data-back]{color:#fff4df;background:#242c2d;border-color:#718083}
+.brief-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;width:100%;text-align:left}
+.brief-card{display:flex;flex-direction:column;gap:10px;padding:18px;border:1px solid #53605b;border-top:3px solid #ed9c48;border-radius:10px;background:linear-gradient(150deg,#293331f2,#171c1df5);box-shadow:0 6px 18px #0003}
+.brief-card h3{font:800 clamp(23px,2.8vw,34px)/1.05 BeeDigits,system-ui,sans-serif;color:white}
+.brief-card p{font-size:clamp(14px,1.6vw,17px);color:#e6e6db;line-height:1.4}
+.brief-art{height:clamp(56px,10vh,98px);display:flex;align-items:center;justify-content:center;gap:4px}
+.brief-art img{object-fit:contain;width:31%;height:85%}
+.brief-art b{display:grid;place-items:center;width:30%;height:66%;border-radius:5px;background:#795632;color:#fff4da;font:800 clamp(20px,3vw,34px)/1 BeeDigits,system-ui}
+.brief-art b:nth-child(2){background:#ae6b36}.brief-art b:nth-child(3){color:#2a2117;background:#e7b267}
+.brief-art .feature-hive{width:auto;max-width:75%;height:100%}
+@media(max-width:680px){.brief-cards{grid-template-columns:1fr;gap:9px}.brief-card{display:grid;grid-template-columns:80px 1fr;gap:4px 12px;padding:12px}.brief-art{height:62px;grid-row:1/4;align-self:center}.brief-card .brief-label{font-size:9px}.brief-card h3{font-size:24px}.brief-card p{font-size:14px}.brief-card .brief-art b{font-size:18px}.bee-brief{padding-inline:16px}}
+@media(max-height:470px) and (orientation:landscape){.bee-brief{padding-block:12px;gap:9px}.brief-hero{width:120px}.bee-brief .brief-brand{width:230px}.brief-art{height:40px}.brief-card{padding:10px;gap:5px}.brief-card p{font-size:13px}.bee-brief h2{font-size:30px}}

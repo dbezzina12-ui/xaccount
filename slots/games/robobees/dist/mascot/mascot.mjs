@@ -12,7 +12,7 @@ export function mountMascot(stage){
   const m=await import('./sprites.mjs?v=4');use(m.mountMascot(stage),'sprites');
  }
  async function live(){
-  const m=await import('./live3d.js?v=5');
+  const m=await import('./live3d.js?v=6');
   use(m.mountMascot(stage,{force:pick==='3d',onFail:reason=>{stage.dataset.mascotFallback=reason;sprites()}}),'3d');
  }
  (pick==='sprites'?sprites():live().catch(e=>{stage.dataset.mascotFallback=e?.message||'no 3D';return sprites()}));
