@@ -2,6 +2,50 @@
 
 Newest entry first. Read alongside the [studio history](HANDOFF.md). This game-only log links the scoped batches without copying unrelated studio history or private playable URLs.
 
+## 2026-11-04 10:05 Cancún · Claude → ChatGPT, Dylan · Release candidate `831f270` tested and published
+
+**Tested build: `831f270`.**
+- Its runtime is identical to `de024cf`, the free-preview fix.
+- `68d2eef` (your QA) and this entry change records only: runtime, tests and tools match `831f270` (`git diff 831f270 HEAD` over them is empty).
+
+**Playable link:** the existing private artifact, now **version 27** of `831f270`. The URL went to Dylan privately; this repository is public. Rollback point: version 26 (`f490a17`).
+
+**Evidence:** [shots/rc-qa-2026-11-04](../games/cyber-skunk/shots/rc-qa-2026-11-04/README.md)
+- **Browser:** all 11 Cyber Skunk files in one run, **72/72**, 0 skips.
+- **Core and game:** core 142/142; game 33/33.
+- **Math:** 149,276 catalog entries plus 630,000 drawn rounds replay exactly. The report regenerates with **zero diff**: 96.000000% against each mode's real cost, with natural rates and max-win odds as in MATH.md.
+- **Credits and debits:** buys, Stop, Auto, bonus settlement and reload are each covered by named passing cases (table in the README).
+- **Served build:**
+  - all 115 runtime file sizes match `831f270`;
+  - 7 read-back files hash-match (`app.js`, `catalog.js`, `catalog-data.js`, `launch.js`, `styles.css`, both splashes);
+  - the served page carries the tested page verbatim, with `styles.css?v=guide-logo-2`, `entry-shop.css?v=neon-ident-1` and `launch.js?v=preview-1` (`served-v27.json`).
+- **Play-through on the served build:** I served the served page and the tested files locally and played:
+  - the loading ident, and the intro with the 0f83c69 explainer logo (loaded);
+  - every control on screen (44 px or larger on phones);
+  - a Spray Job spray;
+  - a full Vent Break bonus at normal speed, then a reload.
+
+  Credits were exact at every step, with no page errors and no failed requests, on desktop 1920×1080, an iPhone emulation (390×844) and an Android emulation (412×915). The contact sheets are `playthrough-*.jpg`.
+
+**Hardware versus emulation:** all of it is headless Chromium emulation. No physical iPhone or Android device was used, and the phone emulations run Chromium's engine, not Safari's.
+
+**Open, with owners:**
+1. **Hosted look on real devices: Dylan.** Open the private link signed in, on an iPhone (Safari) and an Android phone (Chrome). Check:
+   - the gallery tile ("lobby") and its thumbnail;
+   - the intro, explainer logo and controls;
+   - one spray and one bonus.
+
+   I can't open the hosted page or gallery from here; both need his sign-in.
+2. **Thumbnail risk: Claude, if Dylan wants it changed.** The page's first frame is the dim, unlit neon sign (frame 01 of each sheet), so a gallery thumbnail captured at load may look dark.
+3. **Producer sign-off: Dylan.** Math/engineering sign-off for `831f270` is given in RELEASE_STATUS.
+4. **Audio: Dylan's separate pass.**
+
+**Known gameplay bugs:** none.
+
+**Next for ChatGPT:** any further gameplay QA against version 27 / `831f270`. Report anything with steps and I'll fix it on a new candidate.
+
+**Questions for Dylan:** item 1, then sign-off. **Blocked on:** nothing on Claude's side.
+
 ## 2026-11-04 09:42 Cancún · ChatGPT → Claude · Weighted previews and full source suite pass
 
 Independent QA on `831f270` verifies your `de024cf` fix. All four shop choices passed on desktop and phone emulation. A steered positive-weight Spray Job → natural Blackout preview paid exactly 1,000× and restored the session. All 72 browser cases passed together across eleven files with zero skips. Game 33/33, core 139 passed with three existing skips. Math reports reproduced exactly, and 149,276 catalog entries plus 63,000 paid draws replayed exactly. Refreshed the local package hashes. [Evidence and reproduction](../games/cyber-skunk/shots/preview-release-qa-2026-11-04/README.md).

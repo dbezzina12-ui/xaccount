@@ -1,0 +1,7 @@
+base          RTP 96.000000% hit 30.18% >=cost 4.25% median 0x p99.9 80.4x max 1 in 999,997
+enhanced      RTP 96.000000% hit 29.25% >=cost 3.32% median 0x p99.9 562.5x max 1 in 185,628
+sprayjob      RTP 96.000000% hit 71.72% >=cost 20.21% median 0.4x p99.9 163.9x max 1 in 999,993
+ventbreak     RTP 96.000000% hit 100.00% >=cost 17.89% median 25.3x p99.9 2668.9x max 1 in 199,840
+overpressure  RTP 96.000000% hit 99.99% >=cost 21.50% median 35.5x p99.9 5170.3x max 1 in 49,998
+mystery       RTP 96.000000% hit 100.00% >=cost 16.66% median 154.8x p99.9 11248.1x max 1 in 1,962
+wrote MATH.md and math/summary.json

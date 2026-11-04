@@ -1,0 +1,88 @@
+{
+ "device": "android",
+ "seconds": 112,
+ "intro": {
+  "visible": true,
+  "logo": "assets/ui/logo-badge.webp",
+  "logoLoaded": true
+ },
+ "controls": [
+  {
+   "a": "buy",
+   "w": 56,
+   "h": 54,
+   "in": true
+  },
+  {
+   "a": "settings",
+   "w": 44,
+   "h": 44,
+   "in": true
+  },
+  {
+   "a": "turbo",
+   "w": 44,
+   "h": 44,
+   "in": true
+  },
+  {
+   "a": "bet",
+   "w": 127,
+   "h": 44,
+   "in": true
+  },
+  {
+   "a": "play",
+   "w": 115,
+   "h": 115,
+   "in": true
+  },
+  {
+   "a": "betPlus",
+   "w": 44,
+   "h": 44,
+   "in": true
+  },
+  {
+   "a": "betMinus",
+   "w": 44,
+   "h": 44,
+   "in": true
+  },
+  {
+   "a": "sound",
+   "w": 44,
+   "h": 44,
+   "in": true
+  },
+  {
+   "a": "auto",
+   "w": 44,
+   "h": 44,
+   "in": true
+  }
+ ],
+ "spray": {
+  "shot": true,
+  "cost": 1000,
+  "win": 0,
+  "mode": "sprayjob"
+ },
+ "bonus": {
+  "cost": 10000,
+  "win": 2520,
+  "mode": "ventbreak",
+  "tier": "regular",
+  "midShot": true,
+  "totalShot": true
+ },
+ "balances": {
+  "start": 1000000,
+  "afterSpray": 999000,
+  "afterBonus": 991520,
+  "afterReload": 991520
+ },
+ "exact": true,
+ "errors": [],
+ "failed": []
+}

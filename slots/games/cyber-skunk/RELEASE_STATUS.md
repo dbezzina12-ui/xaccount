@@ -4,9 +4,18 @@ Current ordered continuation tasks: [game-specific handoff](../../collab/CYBER_S
 
 | Game | Branch / source | Playable link | Build / audience | Producer | Art | Math / engineering | QA |
 |---|---|---|---|---|---|---|---|
-| Cyber Skunk | `claude/blissful-rubin-xou20i`, 72-case tested source `831f270` | Existing private artifact; URL intentionally omitted from this public record | Private playtest; newest hosted parity unverified | Dylan | ChatGPT | Claude | ChatGPT + Claude |
+| Cyber Skunk | `claude/blissful-rubin-xou20i`, release candidate `831f270` (runtime = `de024cf`) | Existing private artifact, version 27; URL is in the private handoff, not in this public record | Private playtest; served files match the tested commit | Dylan | ChatGPT | Claude | ChatGPT + Claude |
 
-Source `831f270` passed all 72 browser cases together with zero skips. Independent preview QA confirms all four shop choices use shipping outcomes, including natural Spray Job → Blackout. Exact reports reproduced and every catalog entry replayed. The existing private artifact was verified on an earlier revision. Publication of the final candidate, hosted lobby/device checks and sign-off are open. [Release evidence and commands](shots/preview-release-qa-2026-11-04/README.md).
+**Release candidate `831f270`, published (2026-11-04, Claude):**
+- **Published:** the private artifact is version 27 of the tested commit. The runtime is identical to `de024cf`. Later commits change records only. Rollback point: version 26 (`f490a17`).
+- **Tests (Claude's run):** all 11 Cyber Skunk browser files passed together (**72/72**); core 142/142; game 33/33.
+- **Math:** all 149,276 catalog entries plus 630,000 drawn rounds replay. The report regenerates with no diff.
+- **Served build:** all 115 runtime file sizes match the tested source; 7 read-back files hash-match, including both splash WebPs and the 3 MB catalog; the served page carries the tested page verbatim.
+- **Play-through on the served build:** a spray and a full Vent Break bonus on desktop and two phone emulations, with exact credits after the spray, the bonus and a reload.
+- **Evidence:** [rc-qa-2026-11-04](shots/rc-qa-2026-11-04/README.md).
+- **Still open:** physical devices; the hosted page, gallery tile and thumbnail as seen when signed in; Dylan's sign-off.
+
+Source `831f270` passed all 72 browser cases together with zero skips. Independent preview QA confirms all four shop choices use shipping outcomes, including natural Spray Job → Blackout. Exact reports reproduced and every catalog entry replayed. Publication of this candidate is recorded above. Hosted lobby and device checks, and Dylan's sign-off, remain open. [Release evidence and commands](shots/preview-release-qa-2026-11-04/README.md).
 
 **Local artifact export:** source `897de9c` additionally passes eight new manifest-only package browser checks: 115 exported files byte-match source and HTTP, 621 requests succeed, four viewport launches/shops and eight ordinary shipping rounds settle exactly. All 119 runtime files plus builder match Git. [Evidence and reproduction](shots/artifact-local-qa-2026-11-03/README.md). This uses a minimal local skeleton; the hosted service remains unverified. The new eight cases passed separately from the earlier 46; no combined 54-case run is claimed.
 
@@ -106,6 +115,7 @@ Source `831f270` passed all 72 browser cases together with zero skips. Independe
 - [x] Current source packages locally with both splash WebPs and all detected HTML/CSS/JS dependencies. This is not hosted parity.
 - [x] Current source inspected at 360×800, 390×844, 430×932, 1366×768 and 1920×1080, with no intro scroll; controller targets and interactions measured. Source browser suite passes guide open/close/reload. The shipping guide intentionally reappears on reload and has no “don't show again” setting.
 - [ ] Physical safe areas, iOS/Android performance and reduced-motion/keyboard checks on the hosted build remain open.
-- [ ] Republish the existing artifact, verify served source/file hashes include both splash WebPs, `styles.css?v=guide-logo-2` and `entry-shop.css?v=neon-ident-1`, and record the rollback point.
+- [x] Republished as version 27 of `831f270`. The served page loads `styles.css?v=guide-logo-2`, `entry-shop.css?v=neon-ident-1` and `launch.js?v=preview-1`. Both splash WebPs and every changed file hash-match the source, and all 115 sizes match. Rollback point: version 26 (`f490a17`). Evidence: `shots/rc-qa-2026-11-04/served-v27.json`.
 - Direct-root served-asset checker is available: `node tools/cyber-skunk-served-parity.mjs ASSET_ROOT_URL/ REPORT.json`. It covers 115 files/132 bare and versioned requests plus required JS/CSS/SVG MIME; five local fixture tests and CLI exit checks pass. [Scope and evidence](shots/served-parity-tool-qa-2026-11-04/README.md). It has not checked the hosted artifact and does not verify its entry document, wrapper, rendering or devices.
-- [ ] Dylan and Claude math/engineering sign-off remain the release decision.
+- [x] Claude math/engineering sign-off for `831f270` (2026-11-04). Exact 96% RTP, the floors and the max-win odds match shipping data, and every catalog entry replays. 72/72 browser cases pass, and the served build matches. This sign-off does not cover physical devices or audio.
+- [ ] Dylan's producer sign-off remains the release decision, after his look at the hosted link on his own devices.
