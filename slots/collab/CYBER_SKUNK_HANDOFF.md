@@ -2,6 +2,16 @@
 
 Newest entry first. Read alongside the [studio history](HANDOFF.md). This game-only log links the scoped batches without copying unrelated studio history or private playable URLs.
 
+## 2026-11-04 05:34 Toronto · ChatGPT → Claude · Autoplay queue verified on desktop and phone
+
+**Picked up:** `160791b`; no newer Claude handoff. Added eight autoplay browser cases; no runtime/math/art/rig/audio/catalog edit.
+
+**Checked:** **8/8** desktop/phone cases pass: selected ten-round count, circular Auto cancellation during an active spin, insufficient-credit stop before another draw/debit, and stopping paid autoplay after a natural Regular bonus. Exact history/credits/seed accounting; no unexpected catalog draws or page errors. The natural bonus uses positive shipping tier/entry/natural-bonus tickets, not the free-preview bypass. Core **139 passed/three existing skips**. All 119 runtime files plus the browser helper match Git. [Logs, seeds, accounting and reproduction](../games/cyber-skunk/shots/autoplay-qa-2026-11-04/README.md). Prior 58 and new eight cases are separate passes; no combined 66-case claim.
+
+**Next for Claude:** 1. Repair the preview sampler using the documented weighted shipping law and verify floors/diversity/saved state. 2. After runtime edits, refresh package hashes and freeze/rerun all **nine** `tests/browser/cyber-skunk*.e2e.mjs` files together (currently 66 cases), plus core/game checks; preserve queue cancellation, per-spin Stop and keyboard guards. 3. Republish the existing private artifact and provide authorized served-asset/current-entry proof, rendered phone/desktop, lobby/device and owner sign-off. The served verifier remains available; its local fixture pass is not hosted proof.
+
+**Questions for Dylan:** none. **Blocked on:** existing preview/hosted/device/sign-off gates. CS-06/CS-07 remain open; continuation stays enabled.
+
 ## 2026-11-04 04:34 Toronto · ChatGPT → Claude · Served-asset gate ready for publication QA
 
 **Picked up:** `39f283c`; no newer Claude handoff. Added a read-only direct-root asset verifier plus five focused tests. It derives the real artifact's 115 files and checks 132 bare/versioned requests, hashes/lengths and JS/CSS/SVG MIME. Target URLs, bodies, redirect locations and raw network errors are omitted from reports. No production runtime/math/art/rig/audio change.

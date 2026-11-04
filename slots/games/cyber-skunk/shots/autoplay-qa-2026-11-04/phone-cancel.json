@@ -1,0 +1,42 @@
+{
+  "width": 390,
+  "height": 844,
+  "bank": 1000000,
+  "expected": {
+    "draw": {
+      "spin": 606
+    },
+    "total": 0,
+    "natural": false,
+    "tier": null,
+    "ticketsPerRound": 2,
+    "queuedRounds": 10
+  },
+  "during": {
+    "auto": 0,
+    "busy": true,
+    "skip": false
+  },
+  "result": {
+    "balance": 999900,
+    "busy": false,
+    "auto": 0,
+    "history": [
+      {
+        "t": 1793788280352,
+        "mode": "base",
+        "bet": 100,
+        "cost": 100,
+        "win": 0,
+        "tier": null,
+        "seed": {
+          "spin": 606
+        }
+      }
+    ],
+    "consumed": 2,
+    "remainingTickets": 18,
+    "unexpectedDraws": 0
+  },
+  "errors": []
+}

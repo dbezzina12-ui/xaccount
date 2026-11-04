@@ -1,0 +1,136 @@
+{
+  "width": 1366,
+  "height": 768,
+  "bank": 1000000,
+  "expected": {
+    "draw": {
+      "spin": 606
+    },
+    "total": 0,
+    "natural": false,
+    "tier": null,
+    "ticketsPerRound": 2,
+    "queuedRounds": 10
+  },
+  "result": {
+    "balance": 999000,
+    "busy": false,
+    "auto": 0,
+    "history": [
+      {
+        "t": 1793788239150,
+        "mode": "base",
+        "bet": 100,
+        "cost": 100,
+        "win": 0,
+        "tier": null,
+        "seed": {
+          "spin": 606
+        }
+      },
+      {
+        "t": 1793788238300,
+        "mode": "base",
+        "bet": 100,
+        "cost": 100,
+        "win": 0,
+        "tier": null,
+        "seed": {
+          "spin": 606
+        }
+      },
+      {
+        "t": 1793788237450,
+        "mode": "base",
+        "bet": 100,
+        "cost": 100,
+        "win": 0,
+        "tier": null,
+        "seed": {
+          "spin": 606
+        }
+      },
+      {
+        "t": 1793788236600,
+        "mode": "base",
+        "bet": 100,
+        "cost": 100,
+        "win": 0,
+        "tier": null,
+        "seed": {
+          "spin": 606
+        }
+      },
+      {
+        "t": 1793788235750,
+        "mode": "base",
+        "bet": 100,
+        "cost": 100,
+        "win": 0,
+        "tier": null,
+        "seed": {
+          "spin": 606
+        }
+      },
+      {
+        "t": 1793788234900,
+        "mode": "base",
+        "bet": 100,
+        "cost": 100,
+        "win": 0,
+        "tier": null,
+        "seed": {
+          "spin": 606
+        }
+      },
+      {
+        "t": 1793788234050,
+        "mode": "base",
+        "bet": 100,
+        "cost": 100,
+        "win": 0,
+        "tier": null,
+        "seed": {
+          "spin": 606
+        }
+      },
+      {
+        "t": 1793788233200,
+        "mode": "base",
+        "bet": 100,
+        "cost": 100,
+        "win": 0,
+        "tier": null,
+        "seed": {
+          "spin": 606
+        }
+      },
+      {
+        "t": 1793788232350,
+        "mode": "base",
+        "bet": 100,
+        "cost": 100,
+        "win": 0,
+        "tier": null,
+        "seed": {
+          "spin": 606
+        }
+      },
+      {
+        "t": 1793788231439,
+        "mode": "base",
+        "bet": 100,
+        "cost": 100,
+        "win": 0,
+        "tier": null,
+        "seed": {
+          "spin": 606
+        }
+      }
+    ],
+    "consumed": 20,
+    "remainingTickets": 0,
+    "unexpectedDraws": 0
+  },
+  "errors": []
+}
