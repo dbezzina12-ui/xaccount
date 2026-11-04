@@ -1,4 +1,4 @@
-import {heroLayout, hoverWeight} from './hero-layout.mjs';
+import {heroLayout, hoverWeight} from './hero-layout.mjs?v=2';
 // RoboBees' mascot, sprite fallback: the hive and the robo-bee in #mascot-stage, drawn from sprites pre-rendered from
 // their 3D models (mascot.json places every frame). mascot.mjs uses it where the live 3D mascot can't run. Presentation only: it follows the game's state and never decides an outcome.
 // Each animation runs on its own clock and gives way to the newest state, so turbo, Stop and skips never wait on it.
@@ -78,7 +78,7 @@ export function mountMascot(stage){
   // Fit the composition into the stage, standing on its floor. A tall stage (beside the cabinet on desktop) lets it
   // grow a quarter wider than the stage, spilling right, away from the cabinet; otherwise it is centred.
   const sw=stage.clientWidth,sh=stage.clientHeight,k=Math.min(sw*1.25/FRAME[2],sh/FRAME[3]),cw=FRAME[2]*k;
-  ctx.translate(hero.pad+sw*.5+Math.max(0,(sw-cw)/2)-FRAME[0]*k,sh*1.7-(FRAME[1]+FRAME[3])*k);ctx.scale(k,k);
+  ctx.translate(hero.pad+sw*.5+Math.max(0,(sw-cw)/2)-FRAME[0]*k,hero.above+sh*1.7-(FRAME[1]+FRAME[3])*k);ctx.scale(k,k);
   const b=beeAt(t);
   put(s.hive,s.meta.hive);
   if(b?.inside){put(b.img,b.f);put(s.front,s.meta['hive-front'])}
@@ -92,7 +92,16 @@ export function mountMascot(stage){
    ctx.font='800 26px system-ui,sans-serif';ctx.textAlign='left';ctx.lineWidth=6;ctx.strokeStyle='#1b1712';ctx.fillStyle='#ffd27a';
    ctx.strokeText('+'+extra,x+30,y-6);ctx.fillText('+'+extra,x+30,y-6);
   }
-  if(b&&!b.inside){
+  if(hero.perched && bee.mode==='hover'){
+   // Use the already-rendered resting pose, grounded by its feet instead
+   // of replaying the flight atlas at hover speed.
+   const frames=s.meta.clips.worker.frames;
+   const phase=reduced?0:(1-Math.cos(t*.9))/2;
+   const f=frames[Math.round(phase*(frames.length-1))];
+   const size=hero.scale*1.13;
+   put(s.worker,f,s.meta.anchors.hover[0]+hero.dx/k-f[2]*size/2,
+     hero.seatInClip-f[3]*size,size);
+  }else if(b&&!b.inside){
    const weight=hoverWeight(bee,t), growth=1+(hero.scale-1)*weight;
    const x=b.x??b.f[4], y=b.y??b.f[5], size=b.k??1;
    put(b.img,b.f,x+hero.dx*weight/k-b.f[2]*size*(growth-1)/2,
