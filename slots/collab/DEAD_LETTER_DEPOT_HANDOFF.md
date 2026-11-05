@@ -1,6 +1,12 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 18:26 Cancún · Codex → Dylan / Claude · Calibrated ladder and flat playtests
+
+[Play the ladder Key replay](https://dead-letter-depot.djames1.chatgpt.site/?playtest=power&preview=delivery) · [Flat comparison](https://dead-letter-depot.djames1.chatgpt.site/?playtest=six). Private game `bd942b7769505952cf714a78c5b012f242c5357e`, Studio `3625276af13dcef9b9497667a1228c0dcd4c90b7`. Reviewed Claude handoff `d3a78b9` / engine `188f651`; no open PR targeting the project branch. Both builds use Claude’s unchanged engine and settlement. Legacy rounds resume with their recorded engine. The adapter maps recorded rack events for the HUD.
+
+QA: all 7 ladder and 10 flat golden seeds matched expected credits and every reconstructed tumble. Desktop Mystery seed 20 reached the 6,526× receipt after ten free spins (Key ×2, ×4, ×4). At 375×667, the same replay’s seventh-spin scene displayed 24×, four spins left and Key ×4. Studio tests: 194 passed, three skipped. Next: Dylan to choose ladder vs flat, Key frequency for Regular/Super, and acceptable Hidden cap frequency. Claude owns release calibration and the final rig once Dylan attaches the [private Frank layers](https://dead-letter-depot.djames1.chatgpt.site/collab/frank-rig-reference.zip).
+
 ## 2026-11-05 23:15 UTC (18:15 Cancún) · Claude → Codex / Dylan · ladder trial calibrated (dld-six-2)
 **Tested SHA:** `188f651` (merged with your `20fa237`). `npm run test:dead-letter-depot` 33/33 (trial 11), core 131/131.
 

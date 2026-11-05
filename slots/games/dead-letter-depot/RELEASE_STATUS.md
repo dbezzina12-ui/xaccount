@@ -34,3 +34,5 @@
 2026-11-05 22:43 UTC · Private Studio layout editor `44ead68` deployed. [Phone editor](https://gamboligy-studio.djames1.chatgpt.site/dead-letter-depot-studio/index.html?view=phone&scene=base) · [QA evidence and next owner](../../collab/DEAD_LETTER_DEPOT_HANDOFF.md).
 
 2026-11-05 23:07 UTC · **Return to Sender** title, parcel impact and shared bonus counters deployed to private game `82d8533` and Studio `5d85163`. [Playable QA and next owner](../../collab/DEAD_LETTER_DEPOT_HANDOFF.md).
+
+2026-11-05 18:26 Cancún · Calibrated ladder and flat trials deployed to private game `bd942b7` and Studio `3625276`; 17 golden settlements matched. [Evidence and release decisions](../../collab/DEAD_LETTER_DEPOT_HANDOFF.md).

@@ -1,0 +1,53 @@
+diff --git a/dist/reels.mjs b/dist/reels.mjs
+index ba1cc53..ca02fa2 100644
+--- a/dist/reels.mjs
++++ b/dist/reels.mjs
+@@ -1,3 +1,4 @@
++import { sixView } from './presentation/six-view.mjs';
+ import { trialRound } from './presentation/six-trial.mjs';
+ import { winShow, titles } from './presentation/win-show.mjs';
+ import { LOWS } from './reel-engine/rules.js';
+@@ -22,7 +23,7 @@ const blank = Object.fromEntries(PAYING.map(s => [s,0]));
+ const variant = new URLSearchParams(location.search).get('playtest');
+ const power = variant === 'power';
+ const trial = power || variant === 'six';
+-const generateRound = trial ? options=>trialRound({...options,ladders:power}) : playRound;
++const generateRound = trial ? options=>sixView({...options,variant:power?'ladder':'flat'}) : playRound;
+ const descriptions = { base:'Standard reels',priority:'More frequent free spins',special:'One opening multiplier stamp',exposure:'Two opening multiplier stamps',nightshift:'A stamp or collection activates the meter',doublepost:'Start at 10×, active every spin',mystery:'Reveal Night Shift, Double Post or Lost & Found' };
+ const tierCopy = {regular:'A stamp or completed collection activates your meter for that spin.',super:'Your meter starts at 10× and applies on every free spin.',hidden:'Half-size collections double your entire meter, up to 64×.'};
+ if(trial){
+@@ -184,7 +185,7 @@ function guide(intro){
+   const actions=document.createElement('div');actions.className='trial-actions';$('paper').append(actions);
+   const option=(label,click)=>{const b=document.createElement('button');b.textContent=label;b.onclick=click;actions.append(b)};
+   if(trial){
+-    option(power?'Play ladder replay':'Play Key replay',()=>{modal.close();begin('mystery',power?10145:21737,true)});
++    option(power?'Play ladder replay':'Play Key replay',()=>{modal.close();begin('mystery',power?20:4,true)});
+     option('Random Night Shift',()=>{modal.close();begin('nightshift',undefined,true)});
+     option('Random Double Post',()=>{modal.close();begin('doublepost',undefined,true)});
+   }else{
+@@ -264,8 +265,8 @@ async function runSpin(spin,targets,signal){
+     grid=step.after;counts=step.collections;rack(counts,targets);draw(grid);
+   }
+   const paid=spin.paid ?? spin.win;
+-  if(spin.stampSum || spin.clears.length)frankCue('stamp',{value:spin.meter?.after ?? spin.multiplier});
+-  meter(spin.meter?.after ?? spin.multiplier,spin.meter?.active ?? (spin.multiplier>1 || spin.clears.length>0 || spin.stampSum>0));
++  if(spin.stampSum || spin.clears?.length)frankCue('stamp',{value:spin.meter?.after ?? spin.multiplier});
++  meter(spin.meter?.after ?? spin.multiplier,spin.meter?.active ?? (spin.multiplier>1 || spin.clears?.length>0 || spin.stampSum>0));
+   win=credits(paid*session.bet/100);paint();
+   readout((paid?'Spin win '+win+' · '+spin.multiplier+'× applied':'No win'));
+   const spinRank=session.pending.stage==='bonus' && tierOf(paid);
+@@ -346,8 +347,12 @@ document.addEventListener('keydown',e=>{if(e.code==='Space'&&!modal.open&&!e.rep
+ modal.addEventListener('cancel',e=>{if(session.pending)e.preventDefault()});
+ draw(generateRound({mode:'base',rng:seeded(1)}).spin.board);rack(blank,targetsFor('base'));meter(1,false);paint();
+ if(session.pending){
+-  const p=session.pending;round=generateRound({mode:p.mode,rng:seeded(p.seed)});
++  const p=session.pending;const options={mode:p.mode,rng:seeded(p.seed)};
++  // An interrupted producer trial must finish with the same seed AND engine.
++  round=trial && ['six-trial-1','six-ladders-1'].includes(p.version)
++    ? trialRound({...options,ladders:p.version==='six-ladders-1'})
++    : generateRound(options);
+   play();
+ }else if(power && new URLSearchParams(location.search).get('preview')==='delivery'){
+-  begin('mystery',10145,true);
++  begin('mystery',20,true);
+ }else if(trial || !sessionStorage.getItem('depot-guide-v2')){guide(true);sessionStorage.setItem('depot-guide-v2','1')}
