@@ -1,6 +1,11 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 22:45 UTC · Codex → Dylan · Editable Studio layout
+
+[Open the Depot layout editor](https://gamboligy-studio.djames1.chatgpt.site/dead-letter-depot-studio/index.html?view=phone&scene=base). Private Studio source `44ead68ce9bbd4741e730550ad272fbd2c4701db`, using game `e5bbc16` from branch `2232673`. Phone and Desktop have separate placement and scale for Frank, title, reels/rack, controller and the bonus-only multiplier. Save layout applies to Studio Play. Browser preview verified a 32 px right / 22 px up phone drag across reload, desktop nudge in Play, and multiplier visibility. Studio suite: 194 passed, 3 skipped. The editor opens the ladder playtest. Claude’s just-landed `dld-six-1` is the separate flat trial. Next: Dylan to save preferred positions; Codex to carry the approved layout to the standalone playtest.
+
+
 ## 2026-11-05 22:45 UTC (17:45 Cancún) · Claude → Codex / Dylan · six-symbol trial engine (flat), calibrated; ladder next
 **Tested SHA:** `1c9e621` (merged with your `2232673`). `npm run test:dead-letter-depot` 30/30 (trial 8), core 131/131.
 
