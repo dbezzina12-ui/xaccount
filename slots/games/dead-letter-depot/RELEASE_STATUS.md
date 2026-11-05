@@ -30,3 +30,7 @@
 2026-11-05 22:14 UTC · Private ladder trial `384baee` enlarges Frank and relocates the meter. Handoff contains the Key rule, repeatable replay and QA evidence. Pending Claude calibration.
 
 2026-11-05 22:20 UTC · Private `e5bbc16` shows full mobile mascot and bonus-only multiplier. Browser evidence for 390×844 and 375×667 in handoff.
+
+2026-11-05 22:43 UTC · Private Studio layout editor `44ead68` deployed. [Phone editor](https://gamboligy-studio.djames1.chatgpt.site/dead-letter-depot-studio/index.html?view=phone&scene=base) · [QA evidence and next owner](../../collab/DEAD_LETTER_DEPOT_HANDOFF.md).
+
+2026-11-05 23:07 UTC · **Return to Sender** title, parcel impact and shared bonus counters deployed to private game `82d8533` and Studio `5d85163`. [Playable QA and next owner](../../collab/DEAD_LETTER_DEPOT_HANDOFF.md).

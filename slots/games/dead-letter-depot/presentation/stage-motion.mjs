@@ -1,5 +1,6 @@
 import { mountFrankMotion } from './frank-motion.mjs';
-import { dwell, dispatchFlights } from './dispatch.mjs';
+import { knockOffBadge } from './return-delivery.mjs';
+import { dwell } from './dispatch.mjs';
 
 const stylesheet=document.createElement('link');
 stylesheet.rel='stylesheet';
@@ -48,7 +49,7 @@ function label(tag,className,copy){
   return el;
 }
 
-export async function enterDispatch({bonus,scatters,trigger,description,spins,show,onReveal}){
+export async function enterDispatch({bonus,scatters,trigger,description,spins,show,onImpact,onReveal}){
   const anchor=document.createComment('Frank stage position');
   frank.before(anchor);
   const cover=makeCover();
@@ -59,23 +60,23 @@ export async function enterDispatch({bonus,scatters,trigger,description,spins,sh
   ticket.append(label('small','dispatch-origin',trigger),label('h2','',bonus.title),label('p','',description),button);
   const scene=document.createElement('div');
   scene.className='dispatch-scene';scene.dataset.tier=bonus.tier;
+  let restoreParcel=()=>{};
   try {
     scatters.forEach(tile=>tile.classList.add('dispatch-scatter'));
     if(scatters.length)await dwell(reduced.matches?150:280);
-    frank.dispatchEvent(new CustomEvent('depot:frank',{bubbles:true,detail:{action:'bonus',tier:bonus.tier}}));
-    await Promise.all([
-      dwell(930),
-      dispatchFlights(scatters,frank)
-    ]);
-    const box=frank.getBoundingClientRect();
-    const x=box.left+box.width*.45-window.innerWidth/2;
-    const y=box.top+box.height*.58-window.innerHeight/2;
+    restoreParcel=await knockOffBadge(frank,onImpact);
+    await dwell(reduced.matches?100:400);
+    const box=document.getElementById('held').getBoundingClientRect();
+    const x=box.left+box.width/2-window.innerWidth/2;
+    const y=box.top+box.height/2-window.innerHeight/2;
     document.body.append(cover);
     await animate(cover,[
       {transform:'translate('+x+'px,'+y+'px) rotate(-24deg) scale(.035)',opacity:.8},
       {transform:'translate('+x*.43+'px,'+y*.43+'px) rotate(-10deg) scale(.25)',offset:.4},
       {transform:'rotate(0deg) scale(1)',opacity:1}
     ],460,'cubic-bezier(.4,.05,.56,1)');
+    restoreParcel();
+    frank.dispatchEvent(new CustomEvent('depot:frank',{bubbles:true,detail:{action:'bonus',tier:bonus.tier}}));
     syncShift(bonus.tier);
     show('','dispatch-dialog');
     scene.append(frank,ticket);
@@ -95,6 +96,7 @@ export async function enterDispatch({bonus,scatters,trigger,description,spins,sh
     anchor.after(frank);
     modal.close();
   } finally {
+    restoreParcel();
     anchor.replaceWith(frank);
     cover.remove();
     scatters.forEach(tile=>tile.classList.remove('dispatch-scatter'));
