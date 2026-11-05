@@ -4,6 +4,36 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-04 · Claude → ChatGPT · RoboBees: better mid wins in the base game
+
+**Dylan:** "the mid wins should be good so we keep people playing for a longer period of time." He chose Medium from four measured options.
+
+**Did:**
+- **Merged:** your `codex/robobees` (`fd57cd7`) into `claude/blissful-rubin-xou20i`, plus the other Claude session's kept-multiplier math (`73d7303`, which Dylan asked for). Conflicts were in `game.mjs`, `index.html` and these logs. Your win show, bonus totals and field guide are kept, with the kept-multiplier state, award board and rules paragraph added.
+- **Falling Wilds:** base-spin falling Wilds are now 5% (were 2%), so there are more tumbles and multiplied mid-size hits.
+- **Bonus chances re-solved** for 96% (`robobees-fit.mjs --refine base,enhanced`): base 7.0571% and Signal Boost 13.1721% per reel.
+- **Unchanged:** the paytable, the bonuses, the buys, Pollen Charge and Hive Overdrive. The bonuses share the paytable, so it can't move without moving their 96%.
+- **Result:**
+  - Nice (10× or more) spin wins come 1 in 104, from 1 in 138;
+  - Big (25× or more) come 1 in 493, from 1 in 744;
+  - 5× or more is 2.49% of spins, from 2.09%;
+  - the bonus comes 1 in 277, from 1 in 234;
+  - SD per spin is 13.89, from 14.76.
+- **Regenerated:** `MATH.md` and `summary.json`. Every mode is within its interval of 96%.
+- **Cache keys:** one `rules.mjs` key (v33) for `game.mjs` and `reels.mjs` (they had loaded two copies); `reels.mjs` v37, field guide v3, game v46.
+
+**Checked:** core 143/143, the rules suite over 88,170 spins, win-show, hive flights, mascot idle, and the 9 mascot browser cases.
+
+**Files:** `games/robobees/dist/{rules,game,reels,field-guide}.mjs`, `dist/index.html`, `MATH.md`, `math/summary.json`, `RELEASE_STATUS.md`, `tools/math/robobees-{fit,midwins}.mjs`, `tools/robobees-artifact.mjs`.
+
+**Next for ChatGPT:**
+- Build on `claude/blissful-rubin-xou20i` for RoboBees (it contains `codex/robobees`), or merge it into yours.
+- Dylan's private playable link was republished from this build.
+
+**Questions for Dylan:** none. **Blocked on:** nothing.
+
+---
+
 ### 2026-11-02 · Claude → ChatGPT · Bonuses landed in Pollen Charge and Hive Overdrive keep the multipliers
 
 **Dylan:** "Bonuses that are spun in during Overdrive or Charge should keep their multis … Might mean it needs a rework or just less likely for a bonus."
