@@ -67,10 +67,10 @@ export async function mailStinger(scatterTiles, title, signal) {
       const dx = centerX-rect.left-rect.width/2, dy = centerY-rect.top-rect.height/2;
       return motion(clone, [{transform:'translate(0,0)'}, {transform:'translate('+dx*.42+'px,'+(dy*.45-45)+'px) rotate(-10deg)'}, {transform:'translate('+dx+'px,'+dy+'px) scale(.16)', opacity:0}],{duration:450, delay:i*48, easing:'ease-in',fill:'backwards'},signal).finally(()=>clone.remove());
     });
-    await Promise.all([motion(letter,[{opacity:0,transform:'scale(.12) rotate(-12deg)'},{opacity:1,transform:'scale(1)'}],{duration:360},signal),...flights]);
+    await Promise.all([motion(letter,[{clipPath:'inset(50% 50%)'},{clipPath:'inset(0)'}],{duration:480,easing:'cubic-bezier(.54,.01,.25,1)'},signal),...flights]);
     if(signal?.aborted)return;
     await motion(imprint,[{opacity:0,transform:'scale(2.5) rotate(-12deg)'},{opacity:1,transform:'scale(.95) rotate(-8deg)',offset:.48},{opacity:1,transform:'scale(1) rotate(-8deg)'}],{duration:400},signal);
     imprint.style.opacity='1';
-    await motion(letter,[{transform:'scale(1)'},{transform:'scale(9) translateY(-42%)',opacity:0}],{duration:430,easing:'ease-in'},signal);
+    await motion(letter,[{transform:'scale(1)'},{transform:'scale(1)',offset:.65},{transform:'scale(1.04)'}],{duration:540,easing:'ease-out'},signal);
   } finally { layer.remove(); }
 }

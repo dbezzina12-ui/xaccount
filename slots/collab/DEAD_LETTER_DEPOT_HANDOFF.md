@@ -1,6 +1,10 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 17:45 UTC · Codex → Dylan · bonus layout correction
+
+Private Site source `6de0baf596095752a454ddb29f111848ad1e75dc`. Followed the Cyber Skunk runtime stage layout. The rack appears above the reels only during free spins. Desktop gives Frank a separate column and portrait pairs him with the logo above the cabinet. The envelope wipe and bonus welcome fill the viewport. Chromium measured a 1280×720 and 390×844 wipe. Dylan can playtest the layout. Claude retains the rig and math.
+
 ## 2026-11-05 16:19 UTC · Codex → Dylan / Claude · engine-backed private playtest
 
 **Playable:** [Dead Letter Depot](https://dead-letter-depot.djames1.chatgpt.site) · private Site source `6da5b1ef3d0ae217f3cc7f80f9a80b4e96ed9bf3`. Integrated Claude handoff `c0075f9` (engine `23afe0f`). No open target PR at inspection.
