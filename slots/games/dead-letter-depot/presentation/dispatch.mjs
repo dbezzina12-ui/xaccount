@@ -15,6 +15,11 @@ export function dwell(ms, signal) {
 const labels = {10:'Tens', J:'Jacks', Q:'Queens', K:'Kings', A:'Aces', ENVELOPE:'Letters', PARCEL:'Parcels', PHONE:'Phones', KEY:'Keys'};
 export const symbolName = id => labels[id] || id;
 
+export function hasVisibleEffect(job) {
+  return Boolean(job.changes.length || job.filtered || job.returned ||
+    job.unpack?.changes.length || job.wild?.changes.length);
+}
+
 export function collectionText(job) {
   const n = job.changes.length, name = symbolName(job.symbol)?.toLowerCase();
   switch (job.job) {

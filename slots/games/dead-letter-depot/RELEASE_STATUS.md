@@ -20,3 +20,5 @@
 2026-11-05 20:15 UTC · Whole-round motion candidate staged for private source `829de76`. Visual verification and private deployment blocked by workspace loss. See the dated handoff; the previous playable remains active.
 
 2026-11-05 15:40 Cancún · Private motion pass `9be382f` published and browser-verified on desktop/phone layouts; seed 52 settled to 1,812.60 demo credits. See handoff for next owners and device QA.
+
+2026-11-05 16:25 Cancún · Private `650b649` published with dedicated global multiplier, large stamp values and quieter mail cards. Seeds 2443 and 52 verified on phone and desktop browser layouts.

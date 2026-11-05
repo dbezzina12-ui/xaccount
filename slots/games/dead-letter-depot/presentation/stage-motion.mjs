@@ -1,5 +1,5 @@
 import { mountFrankMotion } from './frank-motion.mjs';
-import { dwell, dispatchFlights, featureBeat } from './dispatch.mjs';
+import { dwell, dispatchFlights } from './dispatch.mjs';
 
 const stylesheet=document.createElement('link');
 stylesheet.rel='stylesheet';
@@ -48,7 +48,7 @@ function label(tag,className,copy){
   return el;
 }
 
-export async function enterDispatch({bonus,scatters,trigger,description,spins,icon,show,onReveal}){
+export async function enterDispatch({bonus,scatters,trigger,description,spins,show,onReveal}){
   const anchor=document.createComment('Frank stage position');
   frank.before(anchor);
   const cover=makeCover();
@@ -64,7 +64,7 @@ export async function enterDispatch({bonus,scatters,trigger,description,spins,ic
     if(scatters.length)await dwell(reduced.matches?150:280);
     frank.dispatchEvent(new CustomEvent('depot:frank',{bubbles:true,detail:{action:'bonus',tier:bonus.tier}}));
     await Promise.all([
-      featureBeat(icon,trigger,scatters.length?'Free spins awarded.':'Opening the bonus dispatch…',930),
+      dwell(930),
       dispatchFlights(scatters,frank)
     ]);
     const box=frank.getBoundingClientRect();
