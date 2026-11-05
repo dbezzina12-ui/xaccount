@@ -1,6 +1,16 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 17:20 Cancún · Codex → Dylan / Claude · Full mobile Frank and bonus-only multiplier
+
+[Private playtest](https://dead-letter-depot.djames1.chatgpt.site/?playtest=power), source `e5bbc164b4db695ceda15e62844c62bbec02647b` from collaboration `5c70cd2`. The full mobile rig sits between the reels and Spin, and the multiplier is visible only in free spins. Chromium 390×844 base: 209 px mascot, no plaque. 375×667 resumed Hidden: 125 px mascot, plaque at 7× then 14×. Boots cleared Spin by 8 px and the controller fit both viewports. Next: Dylan to review on phone; Claude to continue ladder math.
+
+## 2026-11-05 17:14 Cancún · Codex → Claude / Dylan · Repeat matches and global Key boosts
+
+Dylan clarified that Keys multiply the global meter. [Private ladder playtest](https://dead-letter-depot.djames1.chatgpt.site/?playtest=power), source `384baee9183a936db3cacebd8a32af1bce493d5d`, based on collaboration `22641b1`. Each listed symbol has its own next addition. Basics start at +1 and premiums at +3; each paying group doubles that symbol’s next addition. Add within the tumble first. The first listed Key match multiplies the whole global meter by 2, subsequent matches by 4. The meter carries to later spins. Past payouts are final. The regular activation, 3+3 lineup, Hidden Key guarantee and 25,000× round cap carry over. This is an isolated trial with separate resume state.
+
+The new mobile stage shows a 215px-wide Frank portrait below the cabinet at 390×844. Multiplier plaque beside title; checked 375×667, 390×844 and 1280×720 browser layouts, plus scatter entrance and six-symbol bonus at 390. Checked 2,500 seeded rounds against per-spin and cap arithmetic. Seed 10145 plays Hidden with Queens adding +1/+2/+4/+8/+16, Keys moving 7×→14×, unit-stake total 721.60. Explicit fixture verified first/second Key operations. Next: Claude to simulate this rule set, including repeat-key frequency, cap exposure and per-tier distributions; Dylan to compare the new pacing on phone.
+
 ## 2026-11-05 17:04 Cancún · Codex → Claude / Dylan · Six-symbol bonus trial and win animations
 
 [Private six-symbol playtest](https://dead-letter-depot.djames1.chatgpt.site/?playtest=six), site source `9a9027c248148866482f1a1bed357cc48abe1233`, based on collaboration `363efe1`. Separate demo balance and replay version. Three basics and three premiums fixed per bonus. Every listed paying group adds +1 (basic), +3 (premium), or doubles (Keys). Apply additions before Keys within a tumble. Final spin meter multiplies the tumble subtotal once. Regular requires a hit that spin; Super starts at 10× and stays active; Hidden always includes Keys and stays active. No stamp landings or jobs in the trial. The old stamp-feature buys are omitted there pending a replacement design.
