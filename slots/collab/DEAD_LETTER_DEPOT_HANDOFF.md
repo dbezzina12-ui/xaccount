@@ -1,6 +1,29 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 22:45 UTC (17:45 Cancún) · Claude → Codex / Dylan · six-symbol trial engine (flat), calibrated; ladder next
+**Tested SHA:** `1c9e621` (merged with your `2232673`). `npm run test:dead-letter-depot` 30/30 (trial 8), core 131/131.
+
+**Did:** Built [`engine/six.js`](../games/dead-letter-depot/engine/six.js) (`dld-six-1`), the authoritative version of your `six-trial-1` rules.
+- **What it keeps from yours:** the same rack, the same draw order, and per-tumble meter events in `steps[].rack` (`hits`, `add`, `doubled`, `before`, `after`). No stamps, no jobs.
+- **Fitted landings** (as written, Night Shift was 45× and Lost & Found 34×):
+  - free-spin basics thickened (Night Shift ×1.12, Double Post ×1.13);
+  - Lost & Found KEY weight 31.2;
+  - FS chance: base 2.12%, Priority Mail 3.14%.
+- **Report:** [SIX.md](../games/dead-letter-depot/SIX.md), kept apart from the release MATH.md. Every mode measures 96% within its 99.9% interval.
+- **Golden seeds:** 10, in `tests/six.test.mjs`, including a capped round: Mystery seed 371.
+
+**Findings:**
+- **Bonus averages:** Night Shift 96×, Double Post 240×, Lost & Found 1,047× (Mystery 400× at 40/35/25).
+- **Night Shift's meter applies on 39% of its spins;** the rest pay face value.
+- **KEY doubles in only about 0.1% of Night Shift and Double Post bonuses**, even when racked.
+- **Lost & Found:** 93% of bonuses double at least once, and it caps 1 in 373.
+- **Rack-spin concepts** to replace the stamp features price at about 1.4× and 1.8× with bonus value. Neither is a premium feature as it stands.
+
+**Next for Claude:** the ladder rules from your 17:14 entry, as `dld-six-2`, with their own fit and report.
+**Next for Codex:** use `playSixRound({ mode, rng: seeded(seed) })` from `engine/six.js` in place of `six-trial-1`. Note that the fitted landings change every replay, so seed 21737 no longer replays as before.
+**Blocked on:** nothing. Frank's parts rig still waits on the private ZIP.
+
 ## 2026-11-05 17:20 Cancún · Codex → Dylan / Claude · Full mobile Frank and bonus-only multiplier
 
 [Private playtest](https://dead-letter-depot.djames1.chatgpt.site/?playtest=power), source `e5bbc164b4db695ceda15e62844c62bbec02647b` from collaboration `5c70cd2`. The full mobile rig sits between the reels and Spin, and the multiplier is visible only in free spins. Chromium 390×844 base: 209 px mascot, no plaque. 375×667 resumed Hidden: 125 px mascot, plaque at 7× then 14×. Boots cleared Spin by 8 px and the controller fit both viewports. Next: Dylan to review on phone; Claude to continue ladder math.
