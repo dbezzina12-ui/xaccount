@@ -11,8 +11,9 @@
 .cell .multi{inset:0;display:flex;align-items:center;justify-content:center;gap:.025em;z-index:0;padding:0;background:none;border:0;box-shadow:none;border-radius:0;
  color:var(--multi-ink,#fff1ce);font:800 78cqmin/1 BeeDigits,"Arial Narrow",sans-serif;font-variant-numeric:lining-nums tabular-nums;letter-spacing:-.02em;
  text-shadow:0 1px var(--multi-rim,#6a3c1e),0 2px 2px #0005;opacity:0;pointer-events:none}
-.cell .multi small{font:inherit;font-size:.60em;line-height:1;letter-spacing:0}
-.cell .multi[hidden]{display:none}
+.charge-label{display:inline-flex;align-items:center;justify-content:center;gap:.025em;font-family:BeeDigits,'Arial Narrow',sans-serif;font-weight:800;font-style:normal;line-height:1;letter-spacing:-.02em;font-variant-numeric:lining-nums tabular-nums}
+.charge-label small{font:inherit;font-size:.60em;line-height:1;letter-spacing:0}
+.charge-label[hidden]{display:none}
 .cell:is([data-multi="16"],[data-multi="32"],[data-multi="64"]) .multi{font-size:70cqmin}
 .cell .multi[data-long]{font-size:61cqmin}
 .cell:is([data-multi="16"],[data-multi="32"],[data-multi="64"],[data-multi="128"]){--multi-rim:#ffffff58}
@@ -32,6 +33,7 @@
 #board .reel-viewport,#board .reel-strip .cell{background:transparent;box-shadow:none}
 #board .reel-viewport{mask-image:linear-gradient(to bottom,#000 calc(100% - 2px),transparent 0);mask-size:100% calc(25% + .5px);mask-repeat:repeat-y}
 .multi-key{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:0;list-style:none}
+.multi-key li .charge-label{font-size:15px}
 .multi-key li{padding:6px 0;text-align:center;border-radius:3px;color:var(--multi-ink,#fff1db);font:bold 12px/1.2 ui-monospace,monospace}
 .cell img{transition:opacity .13s ease}
 .cell.show-value img{opacity:.1}
@@ -145,8 +147,8 @@ body.present-award #camera-track{transform:translate3d(-100%,0,0)}
 #bonus-intro[inert]{pointer-events:none}
 .cab{transform-origin:76% 48%;transform:translate3d(0,0,0) scale(1);transition:transform 1.65s cubic-bezier(.43,0,.29,1)}
 .cab.tease-zoom{transform:translate3d(0,0,0) scale(1.105)}
-body:not([data-scene=base]) .cell .multi{opacity:0}
-body:not([data-scene=base]) .cell.show-value .multi{opacity:1}
+.cell.charged:not(.show-value) .multi{opacity:.55}
+#board.feature-seeding .cell.charged .multi{opacity:1}
 /* Three inks, a flat printed swarm and one deliberate focal point. */
 #bonus-intro{background:#252821;color:#f4ebd5}
 .award-stage{isolation:isolate;position:relative;overflow:hidden;display:grid;place-items:center;min-height:100%;padding:24px 18px;text-align:center;

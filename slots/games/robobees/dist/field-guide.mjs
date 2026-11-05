@@ -1,3 +1,4 @@
+import {chargeLabel} from './charge-label.mjs';
 import {symbolUrl} from './reels.mjs?v=36';
 
 // Instructional 5×4 boards are independent of the wallet and outcome generator.
@@ -10,13 +11,13 @@ function demonstration(card,index,reduced){
   let step=0,paused=reduced;
   function draw(){
     cells.forEach((cell,i)=>{
-      let id=board[i],lit=false,charge='';
+      let id=board[i],lit=false,charge=0;
       if(index===0 && [0,6,12,8,19].slice(0,step+3).includes(i)){id='FS';lit=true}
       if(index===1 && i>=5 && i<=7){id=step===0?'rotor':step===1?null:['A','hive','J'][i-5];lit=step!==2}
-      if(index===2 && [5,6,7].includes(i)){charge=[2,4,8][step]+'×';lit=true}
+      if(index===2 && [5,6,7].includes(i)){charge=[2,4,8][step];lit=true}
       cell.classList.toggle('lit',lit);cell.classList.toggle('charged',!!charge);
       const img=cell.firstChild;img.alt='';img.hidden=!id||!!charge;if(id && !charge)img.src=symbolUrl(id);
-      const label=cell.lastChild;label.hidden=!charge;label.textContent=charge;
+      cell.dataset.multi=charge;chargeLabel(cell.lastChild,charge);
     });
     caption.textContent=captions[index][step];button.textContent=paused?'Play':'Pause';
     button.setAttribute('aria-label',button.textContent+' '+card.querySelector('h3').textContent+' demonstration');

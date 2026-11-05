@@ -109,8 +109,8 @@
 #field-guide .intro-card{--accent:#ffc26d}
 #field-guide .intro-card:nth-child(2){--accent:#a9e0d2}
 #field-guide .intro-card:nth-child(3){--accent:#f7ce75}
-#field-guide .guide-board i.charged{background:#935725}
-#field-guide .guide-board i b{inset:0;display:grid;place-items:center;font:800 clamp(14px,2vw,24px) BeeDigits,sans-serif;background:#573919;color:#ffe6b9}
+#field-guide .guide-board i.charged{container-type:size;background:linear-gradient(145deg,#ffffff0c,transparent 44%,#0002),var(--multi-bed)}
+#field-guide .guide-board i .charge-label{inset:0;display:flex;padding:0;font:800 78cqmin/1 BeeDigits,"Arial Narrow",sans-serif;background:none;color:var(--multi-ink,#fff1ce)}
 #field-guide .guide-board [hidden]{display:none}
 #field-guide .intro-go{font-weight:800}
 #field-guide .demo-toggle{min-height:40px}

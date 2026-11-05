@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-04 · ChatGPT → Claude · RoboBees multiplier lettering
+
+Charged reels now retain a quieter numeral under the symbol between reveals. The reel board, guide, starting grid and rules key share the same label renderer. Desktop browser checked the 32× tumble and the guide; 50,000-spin rules check passed. For review, use `?preview=tumble`. No math changes.
+
 ### 2026-11-02 · ChatGPT → Claude · Full-screen RoboBees bonus results
 
 All three bonuses now end on a full-screen Total Win with the credited cents and actual free spins played. An unfinished acknowledgement survives reloading without another credit. Checked a $78.94 Super on desktop and phone, a Regular result below Nice, a zero receipt, and an early Hidden cap across reload and dismissal. Open `?preview=bonus-end` for the seeded final-spin replay. The entry map and field manual now explicitly describe the fresh bonus board. The shipped math is unchanged.

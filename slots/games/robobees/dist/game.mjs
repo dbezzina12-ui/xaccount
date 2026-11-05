@@ -1,4 +1,5 @@
-import {openFieldGuide} from './field-guide.mjs?v=2';
+import {chargeLabel} from './charge-label.mjs';
+import {openFieldGuide} from './field-guide.mjs?v=3';
 import {playStinger,flyHiveBees} from './drone-stinger.mjs?v=15';
 import {spinIdle} from './mascot/spin-idle.mjs';
 import {mountMascot} from './mascot/mascot.mjs?v=10';
@@ -67,10 +68,7 @@ function cell(i,id,spots,hit=false){
  if(id==='FS')addHoney(c);else c.querySelector('.fs-rig')?.remove();
  const url=symbolUrl(id);
  if(c.firstChild.getAttribute('src')!==url)c.firstChild.src=url;
- c.firstChild.alt=id;c.lastChild.className='multi';if(c.lastChild.dataset.value!==String(m)){
-  const label=c.lastChild;label.dataset.value=m;label.replaceChildren();
-  if(m){const cross=document.createElement('small');cross.textContent='×';label.append(String(m),cross);}
- }c.lastChild.hidden=!m;c.lastChild.toggleAttribute('data-long',m>=100);
+ c.firstChild.alt=id;c.lastChild.classList.add('multi');chargeLabel(c.lastChild,m);
 }
 function draw(board,spots,hits=[]){cells.forEach((_,i)=>cell(i,board[i],spots,hits.includes(i)))}
 function showFlightBank(n){
@@ -180,8 +178,8 @@ async function showAward(){
  $('charge-map').replaceChildren(...initial.map((v,i)=>{
   const square=document.createElement('i');
   square.style.setProperty('--reel',i%5);
-  square.textContent=v?v+'×':'';
-  if(square.textContent){square.classList.add('lit');square.dataset.multi=2}return square;
+  const label=document.createElement('span');chargeLabel(label,v);square.append(label);
+  if(v){square.classList.add('lit');square.dataset.multi=v}return square;
  }));
  $('charge-caption').textContent=mode==='regular'?'Starts uncharged · Wins charge cells to 2×':'Fresh board · All 20 cells start at 2×';
  intro.dataset.tier=mode;
@@ -332,8 +330,9 @@ async function buy(id){
 const pct=x=>(Math.round(x*1000)/10)+'%';
 function showRules(){
  const cap=MATH.cap.toLocaleString('en-US');
- $('content').innerHTML='<h2>Field manual</h2><p>Match three or more symbols from reel one on a fixed payline. Wilds substitute for paying symbols. Winning symbols clear together, the rest fall straight down, and new symbols fill from above. Each new board can pay again on the same spin.</p><p>Winning cells charge to 2×, then double on repeat hits up to 128×. Add the values on a winning line. A shared cell upgrades once per drop. Normal and Signal Boost wins carry their charges into the next paid spin. Free spins keep all charges throughout the bonus.</p><ul class="multi-key" aria-label="Cell multiplier colours">'+[2,4,8,16,32,64,128].map(n=>'<li data-multi="'+n+'">'+n+'×</li>').join('')+'</ul><p>Signal Boost costs '+features.enhanced.price+'× and raises the FS chance per reel from '+pct(MATH.scatter.base)+' to '+pct(MATH.scatter.enhanced)+'. Pollen Charge costs '+features.random.price+'× and seeds 6–12 cells at 2× to 32×. Hive Overdrive costs '+features.full32.price+'× and starts all 20 cells at 32×. Both seeded boards reset each paid spin. All wins use your base bet. On these two paid spins, Nice, Big, Epic and Mythic celebrate returns of 2×, 5×, 25× and 50× the spin price. A capped round plays Max.</p><p>FS survive tumbles. Finish with 3, 4 or 5 FS to trigger Regular, Super or Hidden. All give 10 free spins. Super and Hidden start at 2× and bank each newly landed Wild once on spins 1–9. On spin 10 the hive turns cells Wild. If the bank fills the board, remaining bees deploy on the next refill. Hidden also guarantees one opening Wild and upgrades up to three cells per spin.</p><p>Every mode returns 96% of what it costs over the long run. A round, its trigger spin and free spins included, pays at most '+cap+'× the base bet; reaching it ends the round.</p><small>PLAY MONEY · RTP 96% IN EVERY MODE · MAX WIN '+cap+'×</small>';
+ $('content').innerHTML='<h2>Field manual</h2><p>Match three or more symbols from reel one on a fixed payline. Wilds substitute for paying symbols. Winning symbols clear together, the rest fall straight down, and new symbols fill from above. Each new board can pay again on the same spin.</p><p>Winning cells charge to 2×, then double on repeat hits up to 128×. Add the values on a winning line. A shared cell upgrades once per drop. Normal and Signal Boost wins carry their charges into the next paid spin. Free spins keep all charges throughout the bonus.</p><ul class="multi-key" aria-label="Cell multiplier colours">'+[2,4,8,16,32,64,128].map(n=>'<li data-multi="'+n+'">'+'<span></span></li>').join('')+'</ul><p>Signal Boost costs '+features.enhanced.price+'× and raises the FS chance per reel from '+pct(MATH.scatter.base)+' to '+pct(MATH.scatter.enhanced)+'. Pollen Charge costs '+features.random.price+'× and seeds 6–12 cells at 2× to 32×. Hive Overdrive costs '+features.full32.price+'× and starts all 20 cells at 32×. Both seeded boards reset each paid spin. All wins use your base bet. On these two paid spins, Nice, Big, Epic and Mythic celebrate returns of 2×, 5×, 25× and 50× the spin price. A capped round plays Max.</p><p>FS survive tumbles. Finish with 3, 4 or 5 FS to trigger Regular, Super or Hidden. All give 10 free spins. Super and Hidden start at 2× and bank each newly landed Wild once on spins 1–9. On spin 10 the hive turns cells Wild. If the bank fills the board, remaining bees deploy on the next refill. Hidden also guarantees one opening Wild and upgrades up to three cells per spin.</p><p>Every mode returns 96% of what it costs over the long run. A round, its trigger spin and free spins included, pays at most '+cap+'× the base bet; reaching it ends the round.</p><small>PLAY MONEY · RTP 96% IN EVERY MODE · MAX WIN '+cap+'×</small>';
  modal.showModal();
+ for(const li of $('content').querySelectorAll('.multi-key li'))chargeLabel(li.firstChild,Number(li.dataset.multi));
 }
 modal.querySelector('.close').onclick=()=>modal.close();
 function setBet(value){
