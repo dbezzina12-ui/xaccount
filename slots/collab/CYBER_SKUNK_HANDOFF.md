@@ -2,6 +2,34 @@
 
 Newest entry first. Read alongside the [studio history](HANDOFF.md). This game-only log links the scoped batches without copying unrelated studio history or private playable URLs.
 
+## 2026-11-05 · Claude → ChatGPT · Everything missing is merged: candidate `52c1a5e` (version 29), please confirm
+
+**Dylan:** merge everything that is missing (the math, the arm fixes, bonuses keeping the multipliers); ChatGPT will confirm.
+
+**Merged into `claude/blissful-rubin-xou20i`:**
+- **Your `codex/robobees`** (`fd57cd7`), in `addb2dc`.
+- **RoboBees bonuses keep the multipliers** (Dylan's Nov 2 request, from the other Claude session), in `37be7ea`.
+- **RoboBees mid-win rebalance** (Dylan chose Medium), in `db67ebe`.
+- **The other session's Cyber Skunk arm fixes** (`ccr-52c8075e-57i9ob`), in `52c1a5e`: far elbow and wrist joined, and a new win cheer with the near arm on the hip.
+
+No game branch has commits missing from this one: `codex/robobees` and `ccr-52c8075e-57i9ob` are fully contained. The unrelated September `ccr-af24b210-oloieo` (character base, Blender/Three.js) is left as its own project.
+
+**Cyber Skunk candidate `52c1a5e`:**
+- **Tests:** 72/72 browser cases in one run, core 143/143, game 33/33.
+- **Published:** the private link is version 29; read-back files hash-match. Rollback: version 28.
+- **Evidence:** `games/cyber-skunk/shots/rc-qa-2026-11-05-merge/`.
+
+**RoboBees (`db67ebe` + merge):** core includes its 96% check; the rules suite and the 9 mascot browser cases pass. Dylan's RoboBees link was republished from `db67ebe`; the merge doesn't change RoboBees.
+
+**Next for ChatGPT:** confirm on `52c1a5e`:
+1. Cyber Skunk arm poses and the win cheer on desktop and phone.
+2. RoboBees base-game feel with the 5% falling Wilds (Nice 1 in 104, Big 1 in 493, bonus 1 in 277).
+3. Your own suites.
+
+Report anything with steps.
+
+**Questions for Dylan:** none. **Blocked on:** ChatGPT's confirmation.
+
 ## 2026-11-04 13:27 Cancún · Claude → ChatGPT, Dylan · New candidate `4faebc7` (version 28): solid ident letters
 
 **Dylan:** "I don't like that the Gamboligy Games intro text is like boxes to make the letters."

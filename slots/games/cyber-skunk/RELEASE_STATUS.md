@@ -4,7 +4,15 @@ Current ordered continuation tasks: [game-specific handoff](../../collab/CYBER_S
 
 | Game | Branch / source | Playable link | Build / audience | Producer | Art | Math / engineering | QA |
 |---|---|---|---|---|---|---|---|
-| Cyber Skunk | `claude/blissful-rubin-xou20i`, release candidate `4faebc7` | Existing private artifact, version 28; URL is in the private handoff, not in this public record | Private playtest; served files match the tested commit | Dylan | ChatGPT | Claude | ChatGPT + Claude |
+| Cyber Skunk | `claude/blissful-rubin-xou20i`, release candidate `52c1a5e` | Existing private artifact, version 29; URL is in the private handoff, not in this public record | Private playtest; served files match the tested commit | Dylan | ChatGPT | Claude | ChatGPT + Claude |
+
+**Release candidate `52c1a5e`, published as version 29 (2026-11-05, Claude):**
+- **Change:** `4faebc7` plus the other Claude session's Cyber Skunk arm fixes, merged at Dylan's request: far elbow and wrist joined, and a new win cheer with the near arm on the hip.
+- **Results:** 72/72 browser cases in one run, core 143/143, game 33/33.
+- **Served build:** read-back files hash-match.
+- **Rollback:** version 28 (`4faebc7`).
+- **Evidence:** `shots/rc-qa-2026-11-05-merge/`.
+- **Waiting on:** ChatGPT's confirmation.
 
 **Release candidate `4faebc7`, published as version 28 (2026-11-04, Claude):**
 - **Change:** the same game as `831f270`, with solid glowing GAMBOLIGY GAMES letters on the loading screen (Dylan found the outlined letters boxy).
@@ -124,5 +132,5 @@ Source `831f270` passed all 72 browser cases together with zero skips. Independe
 - [ ] Physical safe areas, iOS/Android performance and reduced-motion/keyboard checks on the hosted build remain open.
 - [x] Republished as version 27 of `831f270`. The served page loads `styles.css?v=guide-logo-2`, `entry-shop.css?v=neon-ident-1` and `launch.js?v=preview-1`. Both splash WebPs and every changed file hash-match the source, and all 115 sizes match. Rollback point: version 26 (`f490a17`). Evidence: `shots/rc-qa-2026-11-04/served-v27.json`.
 - Direct-root served-asset checker is available: `node tools/cyber-skunk-served-parity.mjs ASSET_ROOT_URL/ REPORT.json`. It covers 115 files/132 bare and versioned requests plus required JS/CSS/SVG MIME; five local fixture tests and CLI exit checks pass. [Scope and evidence](shots/served-parity-tool-qa-2026-11-04/README.md). It has not checked the hosted artifact and does not verify its entry document, wrapper, rendering or devices.
-- [x] Claude math/engineering sign-off for `4faebc7` (and `831f270`, same game) (2026-11-04). Exact 96% RTP, the floors and the max-win odds match shipping data, and every catalog entry replays. 72/72 browser cases pass, and the served build matches. This sign-off does not cover physical devices or audio.
+- [x] Claude math/engineering sign-off for `52c1a5e` (and `4faebc7`/`831f270`; the math is the same) (2026-11-05). Exact 96% RTP, the floors and the max-win odds match shipping data, and every catalog entry replays. 72/72 browser cases pass, and the served build matches. This sign-off does not cover physical devices or audio.
 - [ ] Dylan's producer sign-off remains the release decision, after his look at the hosted link on his own devices.

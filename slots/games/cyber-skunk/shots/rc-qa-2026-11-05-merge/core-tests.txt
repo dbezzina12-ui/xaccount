@@ -1,0 +1,878 @@
+
+> test
+> node --test tests/*.test.mjs
+
+TAP version 13
+# Subtest: super opens with all five jars full without mutating the round infection state
+ok 1 - super opens with all five jars full without mutating the round infection state
+  ---
+  duration_ms: 3.917441
+  type: 'test'
+  ...
+# Subtest: hidden opens with all five jars full without mutating the round infection state
+ok 2 - hidden opens with all five jars full without mutating the round infection state
+  ---
+  duration_ms: 1.435433
+  type: 'test'
+  ...
+# Subtest: regular bonus preserves earned jar progress and leaving the bonus hides the rack
+ok 3 - regular bonus preserves earned jar progress and leaving the bonus hides the rack
+  ---
+  duration_ms: 1.092309
+  type: 'test'
+  ...
+# Subtest: legacy frames stay intact while desktop and mobile can diverge and round-trip
+ok 4 - legacy frames stay intact while desktop and mobile can diverge and round-trip
+  ---
+  duration_ms: 5.92173
+  type: 'test'
+  ...
+# Subtest: uploaded frame assignment stays scoped and cabinet overrides reject math or missing assets
+ok 5 - uploaded frame assignment stays scoped and cabinet overrides reject math or missing assets
+  ---
+  duration_ms: 1.158249
+  type: 'test'
+  ...
+# (node:3496) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: chat validates project, messages and attachment IDs before spending
+ok 6 - chat validates project, messages and attachment IDs before spending
+  ---
+  duration_ms: 3.006439
+  type: 'test'
+  ...
+# Subtest: chat endpoints require identity and reject cross-origin writes
+ok 7 - chat endpoints require identity and reject cross-origin writes
+  ---
+  duration_ms: 32.575575
+  type: 'test'
+  ...
+# Subtest: paid request deduplication, one writer, owner isolation, and handoff acknowledgment
+ok 8 - paid request deduplication, one writer, owner isolation, and handoff acknowledgment
+  ---
+  duration_ms: 46.338408
+  type: 'test'
+  ...
+# Subtest: discarding a result releases its lock and never advances a handoff
+ok 9 - discarding a result releases its lock and never advances a handoff
+  ---
+  duration_ms: 8.271228
+  type: 'test'
+  ...
+# Subtest: connected adapters continue once and stop at the configured handoff limit
+ok 10 - connected adapters continue once and stop at the configured handoff limit
+  ---
+  duration_ms: 11.237265
+  type: 'test'
+  ...
+# Subtest: SSE parser accepts chunked events and ignores comments
+ok 11 - SSE parser accepts chunked events and ignores comments
+  ---
+  duration_ms: 3.789259
+  type: 'test'
+  ...
+# Subtest: OpenAI adapter stages edits atomically, preserves scene isolation, and checks a completed turn
+ok 12 - OpenAI adapter stages edits atomically, preserves scene isolation, and checks a completed turn
+  ---
+  duration_ms: 2.780273
+  type: 'test'
+  ...
+# Subtest: idle or disconnected OpenAI streams never count as completed work
+ok 13 - idle or disconnected OpenAI streams never count as completed work
+  ---
+  duration_ms: 1.135358
+  type: 'test'
+  ...
+# (node:3510) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Claude stages validated edits and replays its own turns unchanged
+ok 14 - Claude stages validated edits and replays its own turns unchanged
+  ---
+  duration_ms: 5.695276
+  type: 'test'
+  ...
+# Subtest: invalid Claude tool input is returned as an error and never staged
+ok 15 - invalid Claude tool input is returned as an error and never staged
+  ---
+  duration_ms: 1.076178
+  type: 'test'
+  ...
+# Subtest: Claude hands off to OpenAI and keeps to the 50-edit limit across a turn
+ok 16 - Claude hands off to OpenAI and keeps to the 50-edit limit across a turn
+  ---
+  duration_ms: 3.524975
+  type: 'test'
+  ...
+# Subtest: refusals, truncated tool calls and the step limit stage nothing
+ok 17 - refusals, truncated tool calls and the step limit stage nothing
+  ---
+  duration_ms: 8.376915
+  type: 'test'
+  ...
+# Subtest: Claude stops on abort, maps API errors safely, and re-issues an unparseable stream at most twice
+ok 18 - Claude stops on abort, maps API errors safely, and re-issues an unparseable stream at most twice
+  ---
+  duration_ms: 25.704794
+  type: 'test'
+  ...
+# Subtest: Claude sees an attached upload and respects model configuration
+ok 19 - Claude sees an attached upload and respects model configuration
+  ---
+  duration_ms: 0.949042
+  type: 'test'
+  ...
+# Subtest: seeded rng is reproducible and save/restore round-trips
+ok 20 - seeded rng is reproducible and save/restore round-trips
+  ---
+  duration_ms: 2.553824
+  type: 'test'
+  ...
+# Subtest: rng int(n) is uniform (chi-square) for both sources
+ok 21 - rng int(n) is uniform (chi-square) for both sources
+  ---
+  duration_ms: 69.884
+  type: 'test'
+  ...
+# Subtest: line evaluation: plain, wild substitution, multipliers, scatter
+ok 22 - line evaluation: plain, wild substitution, multipliers, scatter
+  ---
+  duration_ms: 2.096094
+  type: 'test'
+  ...
+# Subtest: spin reads the window from the strips at the drawn stops
+ok 23 - spin reads the window from the strips at the drawn stops
+  ---
+  duration_ms: 1.642677
+  type: 'test'
+  ...
+# Subtest: detail and fast paths agree round for round
+ok 24 - detail and fast paths agree round for round
+  ---
+  duration_ms: 103.107018
+  type: 'test'
+  ...
+# Subtest: max-win cap ends the round at exactly the cap
+ok 25 - max-win cap ends the round at exactly the cap
+  ---
+  duration_ms: 75.48443
+  type: 'test'
+  ...
+# Subtest: model compiler rejects rule breaks
+ok 26 - model compiler rejects rule breaks
+  ---
+  duration_ms: 3.309079
+  type: 'test'
+  ...
+# Subtest: strip builder keeps counts, spaces scatters, is deterministic
+ok 27 - strip builder keeps counts, spaces scatters, is deterministic
+  ---
+  duration_ms: 0.773504
+  type: 'test'
+  ...
+# Subtest: exact math matches simulation (base game, hit rate, trigger rate, bonus buy)
+ok 28 - exact math matches simulation (base game, hit rate, trigger rate, bonus buy)
+  ---
+  duration_ms: 1769.899817
+  type: 'test'
+  ...
+# Subtest: game-001 headline math stays on target
+ok 29 - game-001 headline math stays on target
+  ---
+  duration_ms: 111.930559
+  type: 'test'
+  ...
+# Subtest: engine stays generic: a different game passes exact-vs-sim
+ok 30 - engine stays generic: a different game passes exact-vs-sim
+  ---
+  duration_ms: 383.02509
+  type: 'test'
+  ...
+# Subtest: Cyber Skunk entry routing: plain
+ok 31 - Cyber Skunk entry routing: plain
+  ---
+  duration_ms: 3.684263
+  type: 'test'
+  ...
+# Subtest: Cyber Skunk entry routing: nested directory
+ok 32 - Cyber Skunk entry routing: nested directory
+  ---
+  duration_ms: 2.88253
+  type: 'test'
+  ...
+# Subtest: Cyber Skunk entry routing: parameters and fragment
+ok 33 - Cyber Skunk entry routing: parameters and fragment
+  ---
+  duration_ms: 1.21432
+  type: 'test'
+  ...
+# Subtest: legacy entry preserved: default
+ok 34 - legacy entry preserved: default
+  ---
+  duration_ms: 1.154483
+  type: 'test'
+  ...
+# Subtest: legacy entry preserved: ?game=game-001
+ok 35 - legacy entry preserved: ?game=game-001
+  ---
+  duration_ms: 0.981195
+  type: 'test'
+  ...
+# Subtest: legacy entry preserved: ?game=zombify
+ok 36 - legacy entry preserved: ?game=zombify
+  ---
+  duration_ms: 0.951293
+  type: 'test'
+  ...
+# Subtest: legacy entry preserved: ?game=nightfall
+ok 37 - legacy entry preserved: ?game=nightfall
+  ---
+  duration_ms: 1.151995
+  type: 'test'
+  ...
+# Subtest: served parity: all exported files and shipped version URLs match
+ok 38 - served parity: all exported files and shipped version URLs match
+  ---
+  duration_ms: 624.947213
+  type: 'test'
+  ...
+# Subtest: served parity: stale versioned CSS fails even when the bare URL matches
+ok 39 - served parity: stale versioned CSS fails even when the bare URL matches
+  ---
+  duration_ms: 3.58016
+  type: 'test'
+  ...
+# Subtest: served parity: missing modules and incorrect module MIME fail
+ok 40 - served parity: missing modules and incorrect module MIME fail
+  ---
+  duration_ms: 4.10882
+  type: 'test'
+  ...
+# Subtest: served parity: access walls, HTML and redirects fail without publishing target data
+ok 41 - served parity: access walls, HTML and redirects fail without publishing target data
+  ---
+  duration_ms: 10.264096
+  type: 'test'
+  ...
+# Subtest: served parity: request errors omit URL-bearing exceptions and dirty source cannot pass
+ok 42 - served parity: request errors omit URL-bearing exceptions and dirty source cannot pass
+  ---
+  duration_ms: 1.155974
+  type: 'test'
+  ...
+# (node:3549) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: history keeps who said what
+ok 43 - history keeps who said what
+  ---
+  duration_ms: 3.386791
+  type: 'test'
+  ...
+# Subtest: cancellation goes to the provider that owns the run
+ok 44 - cancellation goes to the provider that owns the run
+  ---
+  duration_ms: 67.113851
+  type: 'test'
+  ...
+# Subtest: a provider that cannot be stopped keeps the project lock
+ok 45 - a provider that cannot be stopped keeps the project lock
+  ---
+  duration_ms: 10.539932
+  type: 'test'
+  ...
+# Subtest: a late completion from a reclaimed run is rejected
+ok 46 - a late completion from a reclaimed run is rejected
+  ---
+  duration_ms: 14.775297
+  type: 'test'
+  ...
+# Subtest: concurrent writers: one chat and one handoff claimant win
+ok 47 - concurrent writers: one chat and one handoff claimant win
+  ---
+  duration_ms: 12.043149
+  type: 'test'
+  ...
+# Subtest: a lost handoff connection is reclaimed once, then the chain stops
+ok 48 - a lost handoff connection is reclaimed once, then the chain stops
+  ---
+  duration_ms: 45.41715
+  type: 'test'
+  ...
+# Subtest: signed dispatch runs background hops from stored snapshots and stops at the handoff limit
+ok 49 - signed dispatch runs background hops from stored snapshots and stops at the handoff limit
+  ---
+  duration_ms: 34.142735
+  type: 'test'
+  ...
+# Subtest: discarding a result stops background work derived from it
+ok 50 - discarding a result stops background work derived from it
+  ---
+  duration_ms: 9.068264
+  type: 'test'
+  ...
+# Subtest: the dispatch trigger is off without a secret and rejects bad signatures
+ok 51 - the dispatch trigger is off without a secret and rejects bad signatures
+  ---
+  duration_ms: 6.13416
+  type: 'test'
+  ...
+# Subtest: a queued handoff can be stopped before it runs
+ok 52 - a queued handoff can be stopped before it runs
+  ---
+  duration_ms: 5.001425
+  type: 'test'
+  ...
+# Subtest: intro uses a canvas-only host and discards the old portrait on every restart
+ok 53 - intro uses a canvas-only host and discards the old portrait on every restart
+  ---
+  duration_ms: 1.774796
+  type: 'test'
+  ...
+# Subtest: linked descendants preserve offsets through movement, import and Undo; locked descendants stop the group
+ok 54 - linked descendants preserve offsets through movement, import and Undo; locked descendants stop the group
+  ---
+  duration_ms: 5.965432
+  type: 'test'
+  ...
+# Subtest: links reject missing parents/cycles and deleting a parent detaches children
+ok 55 - links reject missing parents/cycles and deleting a parent detaches children
+  ---
+  duration_ms: 2.830432
+  type: 'test'
+  ...
+# Subtest: alignment uses canvas or safe margins, and snap honours the toggle and excludes moving descendants
+ok 56 - alignment uses canvas or safe margins, and snap honours the toggle and excludes moving descendants
+  ---
+  duration_ms: 1.437792
+  type: 'test'
+  ...
+# Subtest: cabinet presets round-trip with asset collision remapping, fit another canvas and preserve math settings
+ok 57 - cabinet presets round-trip with asset collision remapping, fit another canvas and preserve math settings
+  ---
+  duration_ms: 5.886204
+  type: 'test'
+  ...
+# Subtest: sound packs replace overrides, remap audio IDs, preserve scenes and reject missing audio
+ok 58 - sound packs replace overrides, remap audio IDs, preserve scenes and reject missing audio
+  ---
+  duration_ms: 1.827528
+  type: 'test'
+  ...
+# Subtest: bonus presets replace only bonus screens and cannot carry math, live value text or injected styles
+ok 59 - bonus presets replace only bonus screens and cannot carry math, live value text or injected styles
+  ---
+  duration_ms: 1.268217
+  type: 'test'
+  ...
+# Subtest: mentions route to the right assistant, typos included
+ok 60 - mentions route to the right assistant, typos included
+  ---
+  duration_ms: 2.102405
+  type: 'test'
+  ...
+# Subtest: display segments and the mention being typed
+ok 61 - display segments and the mention being typed
+  ---
+  duration_ms: 0.436316
+  type: 'test'
+  ...
+# Subtest: frame summaries count drops against the display refresh, at 60 and 120 Hz
+ok 62 - frame summaries count drops against the display refresh, at 60 and 120 Hz
+  ---
+  duration_ms: 1.804275
+  type: 'test'
+  ...
+# Subtest: anticipation respects all playback speeds, never mutates the board, and ends on exact symbols
+ok 63 - anticipation respects all playback speeds, never mutates the board, and ends on exact symbols
+  ---
+  duration_ms: 6.714803
+  type: 'test'
+  ...
+# Subtest: tease copy confirms only the already-landed tier
+ok 64 - tease copy confirms only the already-landed tier
+  ---
+  duration_ms: 0.47325
+  type: 'test'
+  ...
+# Subtest: tease HUD and dimming are removed on normal finish and skip; late callbacks cannot recreate them
+ok 65 - tease HUD and dimming are removed on normal finish and skip; late callbacks cannot recreate them
+  ---
+  duration_ms: 3.017254
+  type: 'test'
+  ...
+# Subtest: RoboBees rules: tumbles, banks, the cap and cents
+ok 66 - RoboBees rules: tumbles, banks, the cap and cents
+  ---
+  duration_ms: 3219.156335
+  type: 'test'
+  ...
+# Subtest: RoboBees win celebrations
+ok 67 - RoboBees win celebrations
+  ---
+  duration_ms: 112.092925
+  type: 'test'
+  ...
+# Subtest: every reel symbol decodes before play and retry only reloads a failed image
+ok 68 - every reel symbol decodes before play and retry only reloads a failed image
+  ---
+  duration_ms: 9.510221
+  type: 'test'
+  ...
+# Subtest: RoboBees MATH.md matches the shipped MATH and prices, and every mode returns 96%
+ok 69 - RoboBees MATH.md matches the shipped MATH and prices, and every mode returns 96%
+  ---
+  duration_ms: 1.216325
+  type: 'test'
+  ...
+# Subtest: screen adjustments survive export/import and undo without changing desktop or math
+ok 70 - screen adjustments survive export/import and undo without changing desktop or math
+  ---
+  duration_ms: 6.204502
+  type: 'test'
+  ...
+# Subtest: panel offsets preserve native vertical centering and scope intro/result separately
+ok 71 - panel offsets preserve native vertical centering and scope intro/result separately
+  ---
+  duration_ms: 0.764076
+  type: 'test'
+  ...
+# Subtest: jar position and scale survive save and Undo independently of the hand
+ok 72 - jar position and scale survive save and Undo independently of the hand
+  ---
+  duration_ms: 2.166347
+  type: 'test'
+  ...
+# Subtest: art-only scaling and typography round-trip without changing live values
+ok 73 - art-only scaling and typography round-trip without changing live values
+  ---
+  duration_ms: 1.396423
+  type: 'test'
+  ...
+# Subtest: label overrides restore the latest game wording and remain plain text
+ok 74 - label overrides restore the latest game wording and remain plain text
+  ---
+  duration_ms: 0.749418
+  type: 'test'
+  ...
+# Subtest: focused screen edits enter save history before blur, once only
+ok 75 - focused screen edits enter save history before blur, once only
+  ---
+  duration_ms: 2.959223
+  type: 'test'
+  ...
+# Subtest: audio assignments survive JSON, undo/redo, and old projects remain valid
+ok 76 - audio assignments survive JSON, undo/redo, and old projects remain valid
+  ---
+  duration_ms: 4.001488
+  type: 'test'
+  ...
+# Subtest: rejects invalid audio sources, assignments, values and audio used as art
+ok 77 - rejects invalid audio sources, assignments, values and audio used as art
+  ---
+  duration_ms: 2.893175
+  type: 'test'
+  ...
+# Subtest: real audio director swaps recordings, applies gain/fade/loop and restores defaults
+ok 78 - real audio director swaps recordings, applies gain/fade/loop and restores defaults
+  ---
+  duration_ms: 5.837825
+  type: 'test'
+  ...
+# Subtest: Engine launch parameters, with and without a replay
+ok 79 - Engine launch parameters, with and without a replay
+  ---
+  duration_ms: 3.472431
+  type: 'test'
+  ...
+# Subtest: the bet modes Engine publishes cost what the game charges
+ok 80 - the bet modes Engine publishes cost what the game charges
+  ---
+  duration_ms: 0.448073
+  type: 'test'
+  ...
+# Subtest: money in Engine currencies, and Stake.us words
+ok 81 - money in Engine currencies, and Stake.us words
+  ---
+  duration_ms: 24.438651
+  type: 'test'
+  ...
+# Subtest: every kind of book replays to its payout, and a wrong payout is refused
+ok 82 - every kind of book replays to its payout, and a wrong payout is refused
+  ---
+  duration_ms: 170.438487
+  type: 'test'
+  ...
+# Subtest: the RGS session: bet levels, debits, payouts, refusals and the jurisdiction minimum round time
+ok 83 - the RGS session: bet levels, debits, payouts, refusals and the jurisdiction minimum round time
+  ---
+  duration_ms: 4.253721
+  type: 'test'
+  ...
+# Subtest: an unfinished round from authenticate is resumed, then settled
+ok 84 - an unfinished round from authenticate is resumed, then settled
+  ---
+  duration_ms: 1.956143
+  type: 'test'
+  ...
+# Subtest: project round-trips with independent mobile and desktop scenes
+ok 85 - project round-trips with independent mobile and desktop scenes
+  ---
+  duration_ms: 4.710117
+  type: 'test'
+  ...
+# Subtest: grid changes gate Zombify gameplay and reject fractional or extreme grids
+ok 86 - grid changes gate Zombify gameplay and reject fractional or extreme grids
+  ---
+  duration_ms: 2.762729
+  type: 'test'
+  ...
+# Subtest: agent batches validate atomically and reject prototype/unknown-property edits
+ok 87 - agent batches validate atomically and reject prototype/unknown-property edits
+  ---
+  duration_ms: 0.803035
+  type: 'test'
+  ...
+# Subtest: undo and redo restore complete projects and clear abandoned future
+ok 88 - undo and redo restore complete projects and clear abandoned future
+  ---
+  duration_ms: 0.942932
+  type: 'test'
+  ...
+# Subtest: commands drive the same operations and reject unsupported requests honestly
+ok 89 - commands drive the same operations and reject unsupported requests honestly
+  ---
+  duration_ms: 2.545722
+  type: 'test'
+  ...
+# Subtest: uploads and import sources cannot introduce executable markup
+ok 90 - uploads and import sources cannot introduce executable markup
+  ---
+  duration_ms: 0.364295
+  type: 'test'
+  ...
+# Subtest: Claude reel animation lands on requested symbols for all studio presets
+ok 91 - Claude reel animation lands on requested symbols for all studio presets
+  ---
+  duration_ms: 2.051389
+  type: 'test'
+  ...
+# Subtest: undo history shares uploaded image bytes instead of copying them per step
+ok 92 - undo history shares uploaded image bytes instead of copying them per step
+  ---
+  duration_ms: 23.09679
+  type: 'test'
+  ...
+# Subtest: validation rejects mistyped names, flags, asset kinds and layer order
+ok 93 - validation rejects mistyped names, flags, asset kinds and layer order
+  ---
+  duration_ms: 1.61731
+  type: 'test'
+  ...
+# Subtest: blob: image URLs are accepted only for the live preview, never in saved or imported projects
+ok 94 - blob: image URLs are accepted only for the live preview, never in saved or imported projects
+  ---
+  duration_ms: 0.962928
+  type: 'test'
+  ...
+# Subtest: history change detection ignores nothing but is cheap for large images
+ok 95 - history change detection ignores nothing but is cheap for large images
+  ---
+  duration_ms: 16.360656
+  type: 'test'
+  ...
+# Subtest: regular: reduced-motion entry and exit swap the subway scene only while covered
+ok 96 - regular: reduced-motion entry and exit swap the subway scene only while covered
+  ---
+  duration_ms: 10.48887
+  type: 'test'
+  ...
+# Subtest: super: reduced-motion entry and exit swap the subway scene only while covered
+ok 97 - super: reduced-motion entry and exit swap the subway scene only while covered
+  ---
+  duration_ms: 2.272787
+  type: 'test'
+  ...
+# Subtest: hidden: reduced-motion entry and exit swap the subway scene only while covered
+ok 98 - hidden: reduced-motion entry and exit swap the subway scene only while covered
+  ---
+  duration_ms: 2.074826
+  type: 'test'
+  ...
+# Subtest: Skip before the bonus cannot switch rooms before both doors close or bypass Continue
+ok 99 - Skip before the bonus cannot switch rooms before both doors close or bypass Continue
+  ---
+  duration_ms: 4.426232
+  type: 'test'
+  ...
+# Subtest: delayed door completion resumes the scene lifecycle without a stale base/lab swap
+ok 100 - delayed door completion resumes the scene lifecycle without a stale base/lab swap
+  ---
+  duration_ms: 3.089746
+  type: 'test'
+  ...
+# Subtest: cancelling during closure prevents a delayed callback from switching to the lab
+ok 101 - cancelling during closure prevents a delayed callback from switching to the lab
+  ---
+  duration_ms: 2.704824
+  type: 'test'
+  ...
+# Subtest: idle stays subtle, only greeting waves, reduced motion is still
+ok 102 - idle stays subtle, only greeting waves, reduced motion is still
+  ---
+  duration_ms: 4.912709
+  type: 'test'
+  ...
+# Subtest: actor keeps one loop, stops while hidden or paused, and cleans up
+ok 103 - actor keeps one loop, stops while hidden or paused, and cleans up
+  ---
+  duration_ms: 1.34981
+  type: 'test'
+  ...
+# Subtest: reduced motion draws a still character without scheduling animation
+ok 104 - reduced motion draws a still character without scheduling animation
+  ---
+  duration_ms: 0.575858
+  type: 'test'
+  ...
+# Subtest: a host removed while artwork loads cannot start an orphan loop
+ok 105 - a host removed while artwork loads cannot start an orphan loop
+  ---
+  duration_ms: 0.284879
+  type: 'test'
+  ...
+# Subtest: base and bonus placements remain on screen, and follow background zoom and pan
+ok 106 - base and bonus placements remain on screen, and follow background zoom and pan
+  ---
+  duration_ms: 0.272835
+  type: 'test'
+  ...
+# Subtest: subway preset supplies both layouts with original controller proportions
+ok 107 - subway preset supplies both layouts with original controller proportions
+  ---
+  duration_ms: 3.251302
+  type: 'test'
+  ...
+# Subtest: infected portraits and FS use dedicated atlas cells in game and guide
+ok 108 - infected portraits and FS use dedicated atlas cells in game and guide
+  ---
+  duration_ms: 1.536871
+  type: 'test'
+  ...
+# Subtest: custom portrait assignments are preserved by the theme
+ok 109 - custom portrait assignments are preserved by the theme
+  ---
+  duration_ms: 0.55079
+  type: 'test'
+  ...
+# Subtest: desktop cabinet nearly matches controller width and leaves bonus UI clear
+ok 110 - desktop cabinet nearly matches controller width and leaves bonus UI clear
+  ---
+  duration_ms: 0.383096
+  type: 'test'
+  ...
+# Subtest: detached effects retain the resolved atlas crop, mask and infection treatment
+ok 111 - detached effects retain the resolved atlas crop, mask and infection treatment
+  ---
+  duration_ms: 1.645772
+  type: 'test'
+  ...
+# Subtest: individual image assets keep their contain layout on detached effects
+ok 112 - individual image assets keep their contain layout on detached effects
+  ---
+  duration_ms: 0.288708
+  type: 'test'
+  ...
+# Subtest: a 5-scatter tease: a swell per waiting reel, a semitone up per tier, and a ping per tier secured
+ok 113 - a 5-scatter tease: a swell per waiting reel, a semitone up per tier, and a ping per tier secured
+  ---
+  duration_ms: 1.865499
+  type: 'test'
+  ...
+# Subtest: a two-scatter miss swells under every waiting reel and secures nothing
+ok 114 - a two-scatter miss swells under every waiting reel and secures nothing
+  ---
+  duration_ms: 0.396624
+  type: 'test'
+  ...
+# Subtest: no tease, no anticipation audio; and nothing new starts while skipping
+ok 115 - no tease, no anticipation audio; and nothing new starts while skipping
+  ---
+  duration_ms: 0.420219
+  type: 'test'
+  ...
+# Subtest: the Sounds tab can override both anticipation cues
+ok 116 - the Sounds tab can override both anticipation cues
+  ---
+  duration_ms: 0.140064
+  type: 'test'
+  ...
+# Subtest: the director plays swells on their own bus, ducks them under scatters, and stops only them
+ok 117 - the director plays swells on their own bus, ducks them under scatters, and stops only them
+  ---
+  duration_ms: 8.161868
+  type: 'test'
+  ...
+# Subtest: no push before two FS; then it grows with every tier and landed reel, up to the full push
+ok 118 - no push before two FS; then it grows with every tier and landed reel, up to the full push
+  ---
+  duration_ms: 0.908194
+  type: 'test'
+  ...
+# Subtest: the phone push, punch included, leaves at most a sliver of the board off screen
+ok 119 - the phone push, punch included, leaves at most a sliver of the board off screen
+  ---
+  duration_ms: 0.246608
+  type: 'test'
+  ...
+# Subtest: without the Studio scene layers the camera does nothing
+ok 120 - without the Studio scene layers the camera does nothing
+  ---
+  duration_ms: 0.316162
+  type: 'test'
+  ...
+# Subtest: a horizontal step keeps the zombie's feet on the floor
+ok 121 - a horizontal step keeps the zombie's feet on the floor
+  ---
+  duration_ms: 36.862458
+  type: 'test'
+  ...
+# Subtest: the lunge leans toward the block and is upright again at contact
+ok 122 - the lunge leans toward the block and is upright again at contact
+  ---
+  duration_ms: 6.898568
+  type: 'test'
+  ...
+# Subtest: a hit-stop holds the contact pose for a beat and moves later events
+ok 123 - a hit-stop holds the contact pose for a beat and moves later events
+  ---
+  duration_ms: 0.452383
+  type: 'test'
+  ...
+# Subtest: a jump stays put through the crouch and lands moving fast
+ok 124 - a jump stays put through the crouch and lands moving fast
+  ---
+  duration_ms: 0.472842
+  type: 'test'
+  ...
+# Subtest: a downward jump lands on the block at contact, then steps into the cell
+ok 125 - a downward jump lands on the block at contact, then steps into the cell
+  ---
+  duration_ms: 1.005696
+  type: 'test'
+  ...
+# Subtest: a full vertical up award does not paint over the horizontal portrait
+ok 126 - a full vertical up award does not paint over the horizontal portrait
+  ---
+  duration_ms: 4.033165
+  type: 'test'
+  ...
+# Subtest: a full vertical down award does not paint over the horizontal portrait
+ok 127 - a full vertical down award does not paint over the horizontal portrait
+  ---
+  duration_ms: 0.997261
+  type: 'test'
+  ...
+# Subtest: leftward claims are masked by the same authoritative ownership rule
+ok 128 - leftward claims are masked by the same authoritative ownership rule
+  ---
+  duration_ms: 0.411155
+  type: 'test'
+  ...
+# Subtest: moving rigs mask other heads/claims but never mask their own trail
+ok 129 - moving rigs mask other heads/claims but never mask their own trail
+  ---
+  duration_ms: 6.058379
+  type: 'test'
+  ...
+# Subtest: motion masks use stationary normalized board coordinates and clamp edge cells
+ok 130 - motion masks use stationary normalized board coordinates and clamp edge cells
+  ---
+  duration_ms: 0.624477
+  type: 'test'
+  ...
+# Subtest: a left horizontal portrait fits its contiguous head segment without a chopped body
+ok 131 - a left horizontal portrait fits its contiguous head segment without a chopped body
+  ---
+  duration_ms: 0.333403
+  type: 'test'
+  ...
+# Subtest: a right horizontal portrait fits its contiguous head segment without a chopped body
+ok 132 - a right horizontal portrait fits its contiguous head segment without a chopped body
+  ---
+  duration_ms: 0.317205
+  type: 'test'
+  ...
+# Subtest: a vertical portrait remains in the contiguous owned segment around its head
+ok 133 - a vertical portrait remains in the contiguous owned segment around its head
+  ---
+  duration_ms: 0.275489
+  type: 'test'
+  ...
+# Subtest: a crossing expansion stays visible in the cell it takes from another claim
+ok 134 - a crossing expansion stays visible in the cell it takes from another claim
+  ---
+  duration_ms: 0.839453
+  type: 'test'
+  ...
+# Subtest: a real Outbreak crossing: every move is masked only out of cells another zombie keeps
+ok 135 - a real Outbreak crossing: every move is masked only out of cells another zombie keeps
+  ---
+  duration_ms: 5.554098
+  type: 'test'
+  ...
+# Subtest: the runtime draws bonuses with the odds the math sheet assumes
+ok 136 - the runtime draws bonuses with the odds the math sheet assumes
+  ---
+  duration_ms: 178.841837
+  type: 'test'
+  ...
+# Subtest: every mode returns exactly 96%, with the measured hit rates, spread and cap odds
+ok 137 - every mode returns exactly 96%, with the measured hit rates, spread and cap odds
+  ---
+  duration_ms: 693.882116
+  type: 'test'
+  ...
+# Subtest: every Hidden bonus pays at least 1,000x and averages exactly 2,256x
+ok 138 - every Hidden bonus pays at least 1,000x and averages exactly 2,256x
+  ---
+  duration_ms: 6.912636
+  type: 'test'
+  ...
+# Subtest: every outcome pays a whole 0.1x, as Stake Engine requires
+ok 139 - every outcome pays a whole 0.1x, as Stake Engine requires
+  ---
+  duration_ms: 724.745946
+  type: 'test'
+  ...
+# Subtest: the committed math sheet matches the catalogs it was measured from
+ok 140 - the committed math sheet matches the catalogs it was measured from
+  ---
+  duration_ms: 570.976567
+  type: 'test'
+  ...
+# Subtest: each preview is the natural bonus for its tickets: trigger spin plus bonus, capped
+ok 141 - each preview is the natural bonus for its tickets: trigger spin plus bonus, capped
+  ---
+  duration_ms: 194.823381
+  type: 'test'
+  ...
+# Subtest: a Hidden preview averages the real 2,256x (never under 1,000x), not the cap; Super averages 240x
+ok 142 - a Hidden preview averages the real 2,256x (never under 1,000x), not the cap; Super averages 240x
+  ---
+  duration_ms: 759.846688
+  type: 'test'
+  ...
+# Subtest: previews never change credits; the scripted demonstrations are still available to the generator
+ok 143 - previews never change credits; the scripted demonstrations are still available to the generator
+  ---
+  duration_ms: 9.729735
+  type: 'test'
+  ...
+1..143
+# tests 143
+# suites 0
+# pass 143
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4875.342983
