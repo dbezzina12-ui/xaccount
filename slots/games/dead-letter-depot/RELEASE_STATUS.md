@@ -1,6 +1,6 @@
 # Dead Letter Depot · release status
 
-2026-11-05 18:15 UTC · [Private collection playtest](https://dead-letter-depot.djames1.chatgpt.site) · Site source `d2584580f7a9b31ac77864a1413ac32abf324f59` · Claude handoff `c0075f9` / engine `23afe0f`.
+2026-11-05 19:37 UTC · [Private collection playtest](https://dead-letter-depot.djames1.chatgpt.site) · Site source `63eff5c586d4e16dce442a340fddff3a9bb6841a` · Claude handoff `c0075f9` / engine `23afe0f`.
 
 | Studio gate | Evidence / next owner |
 |---|---|
@@ -12,3 +12,5 @@
 | Remaining release gates | Final rig and audio, win-tier presentation, wider controller/device and release regression. Private producer playtest only. |
 
 2026-11-05 18:15 UTC · Studio mobile/desktop controller and ticket shop integrated. Raised stage, reduced-motion-aware idle, receipt and feature activation verified in Chromium. See latest handoff for Claude’s rig cues and private source pack.
+
+2026-11-05 19:37 UTC · Claude’s hero rig integrated and checked at desktop and phone sizes. Articulated parts fitting awaits direct transfer of the updated private ZIP. See newest handoff.
