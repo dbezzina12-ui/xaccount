@@ -13,18 +13,40 @@ async function motion(node, frames, timing, signal) {
 
 // Call after draw(..., landing=false). distances uses row-major engine coordinates.
 // Omit distances for a new board. Pass them for a tumble so stationary tiles stay put.
-export async function dropReels(board, distances, signal) {
-  const columns = Array.from(board.children);
-  const drops = columns.flatMap((col, x) => Array.from(col.children).map((tile, y) => {
-    const cells = distances ? distances[y * columns.length + x] : col.children.length;
-    if (!(cells > 0)) return;
-    return motion(tile, [
-      { transform: 'translateY(-' + cells * 100 + '%)', easing: 'cubic-bezier(.38,.02,.84,.56)' },
-      { transform: 'translateY(1.8%)', offset: .91 },
-      { transform: 'translateY(0)' }
-    ], { duration: 165 + Math.min(cells, 5) * 38, delay: x * (distances ? 12 : 48), fill: 'backwards' }, signal);
-  }));
-  await Promise.all(drops);
+export async function liftSymbols(board, hitOnly, signal) {
+  const tiles = board.querySelectorAll(hitOnly ? '.tile.hit' : '.tile');
+  await Promise.all(Array.from(tiles, tile => motion(tile, [
+    {opacity:1, transform:'translateY(0) scale(1)'},
+    {opacity:hitOnly ? .9 : .6, transform:hitOnly ? 'scale(1.07)' : 'translateY(16%)', offset:.32},
+    {opacity:0, transform:hitOnly ? 'scale(.72)' : 'translateY(104%)'}
+  ], {duration:hitOnly ? 205 : 165, easing:'cubic-bezier(.42,0,.77,.52)',fill:'forwards'}, signal)));
+}
+
+// Count visible scatters only after their column lands. The same pause plays on
+// misses and hits. Tumbles use only the distances recorded by the engine.
+export async function dropReels(board, distances, signal, {anticipation=0, onLand}={}) {
+  const columns=Array.from(board.children);
+  let seen=0, held=false;
+  const pending=columns.map((column,x)=>{
+    const tiles=Array.from(column.children);
+    if(!distances && anticipation && seen>=anticipation) held=true;
+    const delay=distances ? x*12 : x*67+(held?410:0);
+    const scatters=tiles.filter(tile=>tile.dataset.symbol==='fs');
+    seen+=scatters.length;
+    const moves=tiles.map((tile,y)=>{
+      const count=distances ? distances[y*columns.length+x] : tiles.length;
+      if(!count)return;
+      return motion(tile, [
+        {transform:'translateY(-'+count*100+'%)',easing:'cubic-bezier(.38,.02,.84,.56)'},
+        {transform:'translateY(2%)',offset:.89},
+        {transform:'translateY(0)'}
+      ],{duration:170+Math.min(5,count)*36, delay, fill:'backwards'},signal);
+    });
+    return Promise.all(moves).then(()=>{
+      if(!distances && !signal?.aborted && !reduced())onLand?.(x,scatters);
+    });
+  });
+  await Promise.all(pending);
 }
 
 export function paintCollectionRack(rack, entries, symbolUrl) {

@@ -1,0 +1,80 @@
+diff --git a/dist/reels.mjs b/dist/reels.mjs
+--- a/dist/reels.mjs
++++ b/dist/reels.mjs
+@@ -1,2 +1,2 @@
+-import "./presentation/frank-host.mjs";
++import { enterDispatch, revealReceipt, syncShift } from './presentation/stage-motion.mjs';
+ import { mountController } from './controller/controller.js';
+@@ -7,2 +7,2 @@
+-import { dropReels, paintCollectionRack } from './presentation/landing.mjs';
+-import { dwell, dispatchFlights, featureBeat, collectionText, symbolName } from './presentation/dispatch.mjs';
++import { dropReels, liftSymbols, paintCollectionRack } from './presentation/landing.mjs';
++import { dwell, featureBeat, collectionText, symbolName } from './presentation/dispatch.mjs';
+@@ -59,3 +59,5 @@
+ function paint(){
+   const pending=!!session.pending;
++  if(session.pending?.stage==='bonus')syncShift(round?.bonus?.tier);
++  else if(!pending)syncShift(null);
+   $('help').disabled=pending;
+@@ -120,3 +122,14 @@
+-  win='0';paint();readout('Sorting the mail…');draw(grid);
+-  if(!session.turbo) await dropReels(board,null,signal);
++  win='0';paint();readout('Sorting the mail…');
++  if(!session.turbo)await liftSymbols(board,false,signal);
++  draw(grid);
++  if(!session.turbo){
++    let landed=0;
++    await dropReels(board,null,signal,{anticipation:spin.meter?2:3,onLand:(_column,tiles)=>{
++      if(!tiles.length)return;
++      landed+=tiles.length;
++      tiles.forEach(tile=>tile.classList.add('fs-arrival'));
++      readout(landed+' FS landed');
++    }});
++    if(spin.steps.length && !signal.aborted)await pause(160,signal);
++  }
+   for(const step of spin.steps){
+@@ -126,2 +139,3 @@
+     rack(filled,targets);await pause(420,signal);
++    if(!session.turbo)await liftSymbols(board,true,signal);
+     for(const frame of frames(grid,step)){
+@@ -159,2 +173,3 @@
+-    show('<small class="kicker">'+round.bonus.title.toUpperCase()+' · '+round.bonus.spins.length+' FREE SPINS</small><h2>Total win '+credits(result.win)+'</h2><button class="cta" id="return">Back to reels</button>');
++    show('<small class="kicker">'+round.bonus.title.toUpperCase()+' · '+round.bonus.spins.length+' FREE SPINS</small><h2>Total win <span class="receipt-amount" aria-label="'+credits(result.win)+'">'+credits(result.win)+'</span></h2><button class="cta" id="return">Back to reels</button>');
++    revealReceipt(result.win,credits);
+     $('return').onclick=()=>{modal.close();rack(blank,targetsFor('base'));meter(1,false)};
+@@ -184,23 +199,14 @@
+       auto=0;
+-      // Stop affects the current reel only. The bonus has its own reveal clock.
+-      frankCue('bonus',{tier:round.bonus.tier});
+-      const bonus=round.bonus;
+-      const trigger=round.spin ? round.spin.fs+' FS landed' : p.mode==='mystery'?'Mystery ticket opened':'Bonus ticket accepted';
+-      const scatters=round.spin ? [...board.querySelectorAll('[data-symbol="fs"]')] : [];
+-      scatters.forEach(tile=>tile.classList.add('dispatch-scatter'));
+-      readout(trigger);
+-      const frankHost=document.querySelector('.postmaster');
+-      frankHost.classList.add('dispatch-saluting');
+-      try {
+-        await Promise.all([
+-          featureBeat(imageUrl(round.spin?'FS':'ENVELOPE'),trigger,round.spin?'Free spins awarded.':'Opening the bonus dispatch…',1100),
+-          dispatchFlights(scatters,frankHost)
+-        ]);
+-      } finally { frankHost.classList.remove('dispatch-saluting'); }
+-      scatters.forEach(tile=>tile.classList.remove('dispatch-scatter'));
+-      show('<div class="dispatch-scene" data-tier="'+bonus.tier+'"><img class="dispatch-frank" src="art/night-mail/frank-salute.webp" alt="Frank salutes with his wing against his cap"><section class="dispatch-ticket"><small class="dispatch-origin">'+trigger+'</small><h2>'+bonus.title+'</h2><p>'+tierCopy[bonus.tier]+'</p><button class="cta" id="startBonus" disabled>Start '+BONUSES[bonus.tier].spins+' free spins</button></section></div>','dispatch-dialog');
+-      await dwell(1200);
+-      $('startBonus').disabled=false;
+-      $('startBonus').focus({preventScroll:true});
+-      $('startBonus').onclick=()=>{p.stage='bonus';save();modal.close();play()};
++      const bonus=round.bonus;
++      const trigger=round.spin ? round.spin.fs+' FS landed' : p.mode==='mystery'?'Mystery ticket opened':'Bonus ticket accepted';
++      const scatters=round.spin ? [...board.querySelectorAll('[data-symbol="fs"]')] : [];
++      readout(trigger);
++      await enterDispatch({bonus,trigger,scatters,description:tierCopy[bonus.tier],spins:BONUSES[bonus.tier].spins,
++        icon:imageUrl(round.spin?'FS':'ENVELOPE'),show,onReveal:()=>{
++          p.stage='bonus';save();paint();
++          rack(blank,bonus.targets);
++          meter(BONUSES[bonus.tier].meter,BONUSES[bonus.tier].when==='always');
++          $('mode').textContent=bonus.title.toUpperCase()+' · '+BONUSES[bonus.tier].spins+' FS';
++        }});
++      timer=setTimeout(play,0);
+     }else if(p.stage==='end')finish();

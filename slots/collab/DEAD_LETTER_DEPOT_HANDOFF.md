@@ -1,6 +1,14 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 20:15 UTC · Codex → Codex / Claude · Whole-round motion pass staged; private visual QA open
+
+Dylan wants the Cyber Skunk transition quality through the full round. Only bonus entry gets a full-screen stinger. In-round jobs, meter changes and extra spins use a small, readable mail card in the cabinet footer. This candidate adds a bottom-docked controller, separate head/eyelid/shoulder/elbow motion, anticipation after three visible base scatters, win holds and tumble exits, a physical envelope cover and reveal, tier lighting, and a count-up of the settled bonus total. The same Frank instance travels from stage into the bonus screen.
+
+**Evidence:** Inspected Cyber Skunk's runtime app, rig and CSS; its natural hold, cover and release are 900/460/520 ms. Tested the new rig joint tracks and listener teardown, column-stop timing (0/67/134/611/678/745 ms after three qualifying columns), and card entry/dwell/exit (240/1350/145 ms; reduced-motion and skip paths checked). Engine reference balances at 100-cent stake and 100000-cent start: natural base seed 52 = 181260; Double Post seed 1 = 116480; Mystery hidden seed 20 = 138640. These are source checks, not an integrated visual pass.
+
+**Next — Codex:** Private site remains at `829de764c07650c4dbed1b950ca32e2ccac65007`. Workspace and browser disconnected before integration. Copy `presentation/{frank-motion,stage-motion,landing,dispatch}.mjs` and `presentation/stage-motion.css` to `dist/presentation/` in that source checkout. Apply `presentation/private-playtest.patch` there with `git apply --check --unidiff-zero` first. Verify actual wing seams and cap contact, no board/card overlap, portrait and desktop deck baselines, and real-time entry/exit plus single settlement. Fix issues before publishing to Dylan's private playtest. Keep private artwork there. Claude retains final rig/sound and engine ownership. No production merge.
+
 ## 2026-11-05 20:05 UTC · Codex → Dylan / Claude · Salute and collection timing
 
 [Private playable build](https://dead-letter-depot.djames1.chatgpt.site), source `829de764c07650c4dbed1b950ca32e2ccac65007`, checked against `ae98ab3`. Frank now has a drawn wing-to-cap pose on the stage and on the full-screen bonus ticket. Natural entries lift the actual FS tiles toward Frank. Bought and Mystery entries identify the ticket. Acknowledging the ticket starts the free spins. Collections now identify the completed symbol and the actual engine effect before board changes. Meter events and retriggers get separate beats. Read time is independent of reduced motion.

@@ -1,0 +1,43 @@
+/* Loaded after stage.css and dispatch.css. The deck is in flow so small
+   landscape screens can scroll rather than hiding the bottom row of buttons. */
+main{min-height:100dvh}
+#controller{margin-block-start:auto;flex:none}
+main>.floor{margin-bottom:clamp(12px,3svh,32px)}
+.floor .postmaster{aspect-ratio:550/695}
+@media(orientation:portrait){
+  main{padding-bottom:0}
+  main>.floor{flex:none;margin-bottom:12px}
+  .floor .postmaster{aspect-ratio:auto}
+  #controller{width:min(100vw,650px)}
+}
+@media(orientation:portrait) and (max-height:700px){
+  main>.floor{grid-template-rows:clamp(45px,9svh,65px) auto;width:min(100%,57svh)}
+}
+@media(orientation:landscape) and (max-height:540px){main>.floor{margin-bottom:8px}}
+.dispatch-scene>.postmaster{grid-area:1/2;position:relative;inset:auto;align-self:end;justify-self:center;width:100%;height:78svh;pointer-events:none;filter:drop-shadow(0 8px 6px #08141c80)}
+.dispatch-scene>.postmaster img{width:100%;height:100%;object-fit:contain}
+.dispatch-scene>.postmaster:before{display:none}
+.dispatch-scene .dispatch-ticket{box-shadow:0 15px 40px #06131d78}
+@media(orientation:portrait){.dispatch-scene>.postmaster{grid-area:1/1;height:100%}}
+#modal.dispatch-dialog:has(#startBonus){background:transparent}
+.dispatch-dialog::backdrop{background:transparent;backdrop-filter:none}
+.dispatch-dialog .dispatch-scene{animation:none}
+.dispatch-cover{position:fixed;inset:-6vmax;z-index:100;display:grid;place-content:center;pointer-events:none;background:linear-gradient(25deg,#ccb58f,#f8e9c9 60%,#ead7b4);border:clamp(12px,3vmin,32px) solid transparent;border-image:repeating-linear-gradient(125deg,#983f39 0 25px,#f0e4cb 25px 48px,#375762 48px 73px,#f0e4cb 73px 96px) 28}
+.dispatch-cover::before{content:'';position:absolute;inset:0;background:linear-gradient(155deg,#fdf0d6,#d3b68b);clip-path:polygon(0 0,100% 0,50% 68%);filter:drop-shadow(0 4px 2px #745c46)}
+.dispatch-cover img{position:relative;width:min(35vmin,245px);height:auto;filter:drop-shadow(0 8px 8px #73543d66)}
+body[data-shift] .bezel{box-shadow:0 0 0 1px #e4bc78,0 0 22px #dea6592b}
+body[data-shift=hidden] #board{background:radial-gradient(ellipse at 50% 35%,#493f50,#242436 82%)}
+body[data-shift=super] #board{background:radial-gradient(ellipse at 50% 35%,#314755,#192935 82%)}
+@media(prefers-reduced-motion:no-preference){
+ .tile.fs-arrival img{animation:fs-postmark .38s ease-out both}
+ @keyframes fs-postmark{0%,100%{scale:1}45%{scale:1.12;filter:brightness(1.24) drop-shadow(0 0 6px #ffd89a)}}
+}
+.receipt-amount{font-variant-numeric:tabular-nums}
+
+.dispatch-pocket{position:relative;display:grid;grid-template-areas:"card";align-items:stretch;min-height:clamp(47px,7svh,65px);overflow:hidden;background:#17363a;isolation:isolate}
+.dispatch-pocket>*{grid-area:card}
+.dispatch-pocket:has(#dispatch-note:not([hidden])) .ribbon{visibility:hidden}
+.dispatch-pocket #dispatch-note{position:relative;inset:auto;justify-self:center;align-self:center;min-height:40px;width:min(99%,530px);gap:8px;padding:4px 12px 4px 8px;justify-content:flex-start;color:#392b23;background:linear-gradient(108deg,#f7e8c5,#e2c9a2);border:1px solid #84694e;border-left:5px solid #94413a;border-radius:2px;box-shadow:0 2px 6px #071b22a6;animation:none}
+.dispatch-pocket #dispatch-note img{width:clamp(30px,4.8svh,45px);height:clamp(30px,4.8svh,45px)}
+.dispatch-pocket #dispatch-note strong{color:#723831;font:800 clamp(14px,2.2svh,20px)/1.06 Georgia,serif}
+.dispatch-pocket #dispatch-note span{margin-top:2px;font:600 clamp(12px,1.65svh,16px)/1.15 system-ui,sans-serif}

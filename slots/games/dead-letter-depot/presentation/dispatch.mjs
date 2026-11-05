@@ -36,15 +36,34 @@ export function collectionText(job) {
   }
 }
 
+async function moveCard(note, frames, options, signal){
+  if(signal?.aborted || matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const animation=note.animate(frames,options);
+  const cancel=()=>animation.cancel();
+  signal?.addEventListener('abort',cancel,{once:true});
+  try {await animation.finished;} catch(error){if(error.name!=='AbortError')throw error;}
+  finally {signal?.removeEventListener('abort',cancel);animation.cancel();}
+}
+
 export async function featureBeat(icon, heading, detail, ms, signal) {
   if (signal?.aborted) return;
-  const note = document.querySelector('#dispatch-note');
-  note.querySelector('img').src = icon;
-  note.querySelector('strong').textContent = heading;
-  note.querySelector('span').textContent = detail;
-  note.hidden = false;
-  try { await dwell(ms, signal); }
-  finally { note.hidden = true; }
+  const note=document.querySelector('#dispatch-note');
+  note.querySelector('img').src=icon;
+  note.querySelector('strong').textContent=heading;
+  note.querySelector('span').textContent=detail;
+  note.hidden=false;
+  try {
+    await moveCard(note,[
+      {transform:'translateX(105%) rotate(2.2deg)',opacity:.35},
+      {transform:'translateX(-1.5%) rotate(-.4deg)',opacity:1,offset:.82},
+      {transform:'none',opacity:1}
+    ],{duration:240,easing:'cubic-bezier(.18,.75,.25,1)'},signal);
+    await dwell(ms,signal);
+    await moveCard(note,[
+      {transform:'none',opacity:1},
+      {transform:'translateX(-22%) rotate(-1.5deg)',opacity:0}
+    ],{duration:145,easing:'ease-in'},signal);
+  } finally {note.hidden=true;}
 }
 
 // Fly copies of the settled scatters into Frank's dispatch. Never move a reel tile.
