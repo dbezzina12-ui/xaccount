@@ -1,0 +1,124 @@
+diff --git a/dist/index.html b/dist/index.html
+index 3fa667e..f2cb8df 100644
+--- a/dist/index.html
++++ b/dist/index.html
+@@ -1,10 +1,15 @@
+ <!doctype html>
+-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101e25"><title>Dead Letter Depot • Night Shift</title><link rel="stylesheet" href="reels.css"><link rel="stylesheet" href="presentation/landing.css"><link rel="stylesheet" href="feature-shop.css"><link rel="stylesheet" href="stage.css"><link rel="preload" as="image" href="art/night-mail/frank-salute.webp"><link rel="stylesheet" href="presentation/dispatch.css"><link rel="stylesheet" href="presentation/win-show.css"></head>
++<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101e25"><title>Return to Sender • Night Shift</title><link rel="stylesheet" href="reels.css"><link rel="stylesheet" href="presentation/landing.css"><link rel="stylesheet" href="feature-shop.css"><link rel="stylesheet" href="stage.css"><link rel="preload" as="image" href="art/night-mail/frank-salute.webp"><link rel="stylesheet" href="presentation/dispatch.css"><link rel="stylesheet" href="presentation/win-show.css"><link rel="preload" as="image" href="art/night-mail/return-parcel.webp"><link rel="preload" as="image" href="art/night-mail/frank-motion/torso-released.webp"></head>
+ <body><main>
+ <header><b><i>✦</i> GAMBOLIGY <span>GAMES</span></b><button id="help" aria-label="Open three-panel game guide">ⓘ &nbsp; HOW TO PLAY</button></header>
+ <section class="floor">
+-<div class="sign"><h1><img src="art/night-mail/marquee.webp" width="1200" height="400" alt="Dead Letter Depot"></h1></div>
+-<div hidden id="held" class="multi-dial" role="group" aria-label="Global multiplier"><span class="multi-caption">MULTIPLIER</span><strong id="multi-value">1×</strong></div>
++<div class="sign">
++  <h1><img src="art/night-mail/return-to-sender.webp" width="960" height="343" alt="Return to Sender"></h1>
++  <div hidden id="held" class="register" role="group" aria-label="Bonus counters">
++    <div class="register-field global-field"><span>GLOBAL MULTI</span><strong id="multi-value">1×</strong></div>
++    <div class="register-field spins-field"><span>SPINS LEFT</span><strong id="spins-left">10</strong></div>
++  </div>
++</div>
+ <div class="rig"><div class="cabinet"><div class="bezel"><div class="topline"><b id="mode">BASE GAME</b></div><div id="rack" hidden aria-label="Symbol collections"></div><div id="board" role="img" aria-label="Six reels with five rows"></div><div id="dispatch-note" role="status" hidden><img alt=""><div><strong></strong><span></span></div></div><div class="ribbon" id="readout" aria-live="polite">8 matching symbols anywhere pay</div></div></div>
+ </div>
+ <div class="postmaster"><img src="art/night-mail/frank.webp" alt="Frank the pigeon postmaster" onerror="this.style.display='none'"></div>
+diff --git a/dist/reels.mjs b/dist/reels.mjs
+index 58f0f06..ba1cc53 100644
+--- a/dist/reels.mjs
++++ b/dist/reels.mjs
+@@ -91,9 +91,24 @@ function frankCue(action,detail={}) {
+ }
+ function meter(value,active) {
+   $('multi-value').textContent=value+'×';
+-  $('held').setAttribute('aria-label','Global multiplier '+value+' times, '+(active?'active':'stored'));
++  $('multi-value').setAttribute('aria-label','Global multiplier '+value+' times, '+(active?'active':'stored'));
++  $('multi-value').dataset.digits=String(value).length;
+   $('held').classList.toggle('active',active);
+ }
++function spinsLeft(bonus, completed) {
++  return BONUSES[bonus.tier].spins - completed +
++    bonus.spins.slice(0, completed).reduce((total, spin) => total + spin.retrigger, 0);
++}
++function updateRegister(visible) {
++  $('held').hidden = !visible;
++  document.querySelector('.sign h1').hidden = visible;
++}
++function openRegister(bonus) {
++  const rules = BONUSES[bonus.tier];
++  meter(rules.meter, rules.when === 'always');
++  $('spins-left').textContent = rules.spins;
++  updateRegister(true);
++}
+ let win = '0', audio;
+ const deck = mountController($('controller'), { onAction: act });
+ function paint(){
+@@ -103,7 +118,9 @@ function paint(){
+   $('help').disabled=pending;
+   const showBonus = session.pending?.stage === 'bonus';
+   $('rack').hidden = !showBonus;
+-  $('held').hidden = !showBonus;
++  // Entry owns the two sign faces from impact until the bonus starts.
++  if (session.pending?.stage !== 'entry') updateRegister(showBonus);
++  if (showBonus && round?.bonus) $('spins-left').textContent = spinsLeft(round.bonus, session.pending.next);
+   const cost=costOf(session.mode,session.bet);
+   deck.update({ready:true,busy,autoActive:auto>0,remaining:auto,
+     buyActive:session.mode!=='base',featureColor:session.mode==='base'?null:'#efac66',
+@@ -163,7 +180,7 @@ function guide(intro){
+     panels[1]=['J','Build the multi','A basic adds +1, then +2, +4, +8. A premium starts at +3. Each listed symbol builds separately.'];
+     panels[2]=['KEY','Multiply the meter','Listed Keys double the global meter on their first match. Later Key matches multiply it by four.'];
+   }
+-  show('<img class="guide-logo" src="art/night-mail/marquee.webp" alt="Dead Letter Depot"><h2 class="guide-title">'+(power?'Multiplier ladders':trial?'Six-symbol playtest':intro?'Welcome to the depot':'How to play')+'</h2><div class="panels">'+panels.map(([s,t,d])=>'<section><img src="'+imageUrl(s)+'" alt=""><b>'+t+'</b><p>'+d+'</p></section>').join('')+'</div><button class="cta" id="continue">'+(intro?'Open the depot':'Back to reels')+'</button>');
++  show('<img class="guide-logo" src="art/night-mail/return-to-sender.webp" alt="Return to Sender"><h2 class="guide-title">'+(power?'Multiplier ladders':trial?'Six-symbol playtest':intro?'Welcome to the depot':'How to play')+'</h2><div class="panels">'+panels.map(([s,t,d])=>'<section><img src="'+imageUrl(s)+'" alt=""><b>'+t+'</b><p>'+d+'</p></section>').join('')+'</div><button class="cta" id="continue">'+(intro?'Open the depot':'Back to reels')+'</button>');
+   const actions=document.createElement('div');actions.className='trial-actions';$('paper').append(actions);
+   const option=(label,click)=>{const b=document.createElement('button');b.textContent=label;b.onclick=click;actions.append(b)};
+   if(trial){
+@@ -279,8 +296,7 @@ async function play(){
+       p.stage=round.bonus?'entry':'end';save();
+     }else if(p.stage==='bonus'){
+       const b=round.bonus, spin=b.spins[p.next];
+-      const remaining=BONUSES[b.tier].spins + b.spins.slice(0,p.next).reduce((n,s)=>n+s.retrigger,0)-p.next;
+-      $('mode').textContent=b.title.toUpperCase()+' · '+remaining+' FS';
++      $('mode').textContent=b.title.toUpperCase();
+       await runSpin(spin,b.targets,controller.signal);
+       p.next++;p.stage=p.next===b.spins.length?'end':'bonus';save();
+     }
+@@ -301,11 +317,11 @@ async function play(){
+       const scatters=[...board.querySelectorAll('[data-symbol="fs"]')];
+       readout(trigger);
+       await enterDispatch({bonus,trigger,scatters,description:tierCopy[bonus.tier],spins:BONUSES[bonus.tier].spins,
+-        show,onReveal:()=>{
++        show,onImpact:()=>openRegister(bonus),onReveal:()=>{
+           p.stage='bonus';save();paint();
+           rack(blank,bonus.targets);
+           meter(BONUSES[bonus.tier].meter,BONUSES[bonus.tier].when==='always');
+-          $('mode').textContent=bonus.title.toUpperCase()+' · '+BONUSES[bonus.tier].spins+' FS';
++          $('mode').textContent=bonus.title.toUpperCase();
+         }});
+       timer=setTimeout(play,0);
+     }else if(p.stage==='end')await finish();
+@@ -332,4 +348,6 @@ draw(generateRound({mode:'base',rng:seeded(1)}).spin.board);rack(blank,targetsFo
+ if(session.pending){
+   const p=session.pending;round=generateRound({mode:p.mode,rng:seeded(p.seed)});
+   play();
++}else if(power && new URLSearchParams(location.search).get('preview')==='delivery'){
++  begin('mystery',10145,true);
+ }else if(trial || !sessionStorage.getItem('depot-guide-v2')){guide(true);sessionStorage.setItem('depot-guide-v2','1')}
+diff --git a/dist/shop.mjs b/dist/shop.mjs
+index d158aaa..7a02aa8 100644
+--- a/dist/shop.mjs
++++ b/dist/shop.mjs
+@@ -8,13 +8,13 @@ export function openShop({ allowed=null, modal, session, credits, descriptions,
+   function card([id,m]) {
+     const disabled=costOf(id,session.bet)>session.balance?'disabled':'';
+     if(isBuy) return `<article class="offer pass" data-mode="${id}">
+-      <div class="pass-body"><small class="pass-issuer">Dead Letter Depot · Airmail</small><div class="pass-info"><h3>${m.title}</h3><strong>10 free spins</strong><p>${descriptions[id]}</p></div><div class="pass-serial"><i></i> Night dispatch</div></div>
++      <div class="pass-body"><small class="pass-issuer">Return to Sender · Airmail</small><div class="pass-info"><h3>${m.title}</h3><strong>10 free spins</strong><p>${descriptions[id]}</p></div><div class="pass-serial"><i></i> Night dispatch</div></div>
+       <button class="pass-stub" data-choice="${id}" ${disabled}><small>Claim ticket</small><span class="stub-price">${cost(id)}<small>${m.cost}× base bet</small></span><b>Buy ›</b></button></article>`;
+     const symbol={priority:'fs',special:'stamp',exposure:'parcel'}[id];
+     return `<article class="offer"><div class="offer-main"><div class="offer-art"><img src="art/night-mail/symbols/${symbol}.webp" alt=""></div><div class="offer-details"><div class="offer-copy"><strong>${m.title}</strong><p>${descriptions[id]}</p></div></div></div><button class="offer-cta" data-choice="${id}" ${disabled}><span class="offer-price">${cost(id)} <small>${m.cost}× bet</small></span> Activate ›</button></article>`;
+   }
+   function open(next){openShop({allowed,modal,session,credits,descriptions,show,setBet,select,buy},next)}
+-  show(`<div class="shop-wrap"><div class="shop-head"><div><small>DEAD LETTER DEPOT</small><h2>Feature shop</h2></div><div class="buy-bet"><button data-step="-1" aria-label="Lower base bet">−</button><div><small>BASE BET</small><b>${credits(session.bet)}</b></div><button data-step="1" aria-label="Raise base bet">+</button></div><button class="close" aria-label="Close shop">×</button></div><nav class="buy-switch"><button data-tab="bonus" aria-pressed="${isBuy}">Bonus Buys</button><button data-tab="feature" aria-pressed="${!isBuy}">Feature Spins</button></nav><div class="shop-options"><div class="cards" id="${isBuy?'bonus':'feature'}-cards">${modes.map(card).join('')}</div></div></div>`,'buy-menu');
++  show(`<div class="shop-wrap"><div class="shop-head"><div><small>RETURN TO SENDER</small><h2>Feature shop</h2></div><div class="buy-bet"><button data-step="-1" aria-label="Lower base bet">−</button><div><small>BASE BET</small><b>${credits(session.bet)}</b></div><button data-step="1" aria-label="Raise base bet">+</button></div><button class="close" aria-label="Close shop">×</button></div><nav class="buy-switch"><button data-tab="bonus" aria-pressed="${isBuy}">Bonus Buys</button><button data-tab="feature" aria-pressed="${!isBuy}">Feature Spins</button></nav><div class="shop-options"><div class="cards" id="${isBuy?'bonus':'feature'}-cards">${modes.map(card).join('')}</div></div></div>`,'buy-menu');
+   modal.querySelector('.close').onclick=()=>modal.close();
+   for(const b of modal.querySelectorAll('[data-tab]'))b.onclick=()=>open(b.dataset.tab);
+   for(const b of modal.querySelectorAll('[data-step]')){

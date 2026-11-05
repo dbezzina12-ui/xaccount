@@ -109,3 +109,71 @@ body[data-shift=super] #board{background:radial-gradient(ellipse at 50% 35%,#314
   .floor #rack.six-rack{padding:2px}
   .floor .six-cubby img{height:22px}
 }
+
+/* Both faces share one physical mount. A Studio placement moves the complete sign. */
+.floor>.sign{
+  position:relative;display:grid;place-items:center;justify-self:center;align-self:center;
+  width:min(100%,380px);height:auto;aspect-ratio:960/343;isolation:isolate;z-index:3;
+}
+.floor>.sign h1{grid-area:1/1;width:100%;max-width:none;margin:0}
+.floor>.sign h1 img{display:block;width:100%;height:auto}
+.floor>.sign [hidden]{display:none}
+.register{
+  --brass:#cca36a;
+  position:absolute;inset:6% 2% 5%;display:grid;grid-template-columns:1.18fr 1fr;
+  gap:2.8%;align-items:stretch;padding:3.2% 6%;border-radius:14% 7% / 24% 18%;
+  background:linear-gradient(174deg,#ffe1a1 0%,#d1a76b 7%,#7d5b42 15%,#233e45 18%,#22464c 45%,#132d35 78%,#866042 82%,#d4aa75 91%,#554431 96%);
+  border:1px solid #3a3631;box-shadow:inset 0 0 0 1px #f3cf92,0 3px 0 #302623,0 7px 12px #07131c9c;
+  container-type:inline-size;text-shadow:0 2px 2px #142027;
+}
+.register::before,.register::after{
+  content:'';position:absolute;top:47%;width:2.6%;aspect-ratio:1;border-radius:50%;box-shadow:0 1px 1px #050f16;
+  background:linear-gradient(140deg,#edcf96 26%,#a78250 43%,#513e2e 45% 57%,#d8b682 61%,#755a40);
+}
+.register::before{left:1.7%}.register::after{right:1.7%}
+.register-field{
+  position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;
+  background:linear-gradient(#24383d,#152b32 48%,#203c40 49%,#244247);border:1px solid #ab8a60;border-radius:5px;
+  box-shadow:inset 0 2px 4px #071520;overflow:hidden;
+}
+.register-field span{color:#ebd7ae;font:800 clamp(8px,4cqw,14px)/1.2 'Trebuchet MS',Arial,sans-serif;letter-spacing:.11em}
+.register-field strong{
+  color:#fff1cb;font:900 clamp(23px,17cqw,65px)/.99 Georgia,serif;letter-spacing:-.055em;font-variant-numeric:lining-nums tabular-nums;
+}
+.spins-field{background:linear-gradient(#583232,#422627 48%,#5d3333 49%,#623a38)}
+.spins-field strong{color:#fff1da}
+.register.active .global-field strong{color:#ffdb88}
+#multi-value[data-digits="4"]{font-size:14cqw}
+#multi-value[data-digits="5"],#multi-value[data-digits="6"]{font-size:11cqw}
+.return-parcel,.loose-badge{position:fixed;z-index:30;pointer-events:none;object-fit:contain;filter:drop-shadow(1px 4px 3px #07131e99)}
+.return-parcel{height:auto;will-change:transform}
+.loose-badge{max-width:none;transform-origin:26% 8%;will-change:transform}
+@media(orientation:portrait){
+ .floor>.sign{grid-column:1/-1;width:min(92%,22.2svh,325px);height:auto}
+}
+@media(orientation:portrait) and (max-height:700px){
+ .floor>.sign{width:min(88%,18.4svh)}
+ .register-field span{font-size:max(7px,4cqw);letter-spacing:.025em}
+}
+@media(orientation:portrait){
+ .floor>.sign{width:min(92%,260px);height:100%;max-height:90px;aspect-ratio:auto}
+ .floor>.sign h1{height:100%;min-height:0;display:grid;place-items:center}
+ .floor>.sign h1[hidden]{display:none}
+ .floor>.sign h1 img{width:auto;max-width:100%;height:100%;object-fit:contain}
+ .register{inset:3% 3% 6%;padding:clamp(2px,.55svh,6px) 6%}
+ .register-field strong{font-size:min(16cqw,4.8svh)}
+ #multi-value[data-digits="4"]{font-size:min(13.5cqw,4.8svh)}
+ #multi-value:is([data-digits="5"],[data-digits="6"]){font-size:min(10.8cqw,4.8svh)}
+}
+@media(orientation:portrait) and (max-height:700px){
+ .register-field span{font-size:8px}
+ .register-field strong{font-size:min(13cqw,3.9svh)}
+}
+@media(orientation:portrait) and (max-height:700px){
+ main>.floor{grid-template-rows:56px auto minmax(74px,1fr)}
+ .register-field span{font-size:9px;letter-spacing:.08em}
+}
+@media(orientation:portrait){
+ .floor>.sign h1{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+ .floor>.sign h1 img{display:block;width:auto;height:auto;max-height:100%;max-width:100%}
+}

@@ -1,6 +1,12 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 23:07 UTC · Codex → Dylan / Claude · Return to Sender
+
+Dylan selected **Return to Sender** as the display title. The branch, game directory, round versions and save keys retain their existing identifiers. [Replay the parcel entry](https://dead-letter-depot.djames1.chatgpt.site/?playtest=power&preview=delivery) · [Move the shared title/counter mount in Studio](https://gamboligy-studio.djames1.chatgpt.site/dead-letter-depot-studio/index.html?view=phone&scene=bonus). Game source `82d8533bd6aa4f70408c50718615224f0ac716f3`, Studio source `5d85163697cbd10cfed541beebec0564f7910d90`, based on collaboration `8d85c23`.
+
+Six landed scatters → Frank winds up and releases the red-wax parcel → the badge swings off its left pin → global multiplier and spins left appear on the same mount → bonus ticket. Browser checks: desktop and 390×844 phone; initial Hidden 1×/10, then 5×/8. Reload restored 7×/4 without replaying entry. Short-phone 375×667 register clears the cabinet; Studio suite 194 passed, 3 skipped. The entry sequence reads the existing bonus cursor. Art lives in the private game source under `dist/art/night-mail/`. Next: Dylan to play the entry; Claude to continue the ladder calibration and carry the release cue into the final rig.
+
 ## 2026-11-05 22:45 UTC · Codex → Dylan · Editable Studio layout
 
 [Open the Depot layout editor](https://gamboligy-studio.djames1.chatgpt.site/dead-letter-depot-studio/index.html?view=phone&scene=base). Private Studio source `44ead68ce9bbd4741e730550ad272fbd2c4701db`, using game `e5bbc16` from branch `2232673`. Phone and Desktop have separate placement and scale for Frank, title, reels/rack, controller and the bonus-only multiplier. Save layout applies to Studio Play. Browser preview verified a 32 px right / 22 px up phone drag across reload, desktop nudge in Play, and multiplier visibility. Studio suite: 194 passed, 3 skipped. The editor opens the ladder playtest. Claude’s just-landed `dld-six-1` is the separate flat trial. Next: Dylan to save preferred positions; Codex to carry the approved layout to the standalone playtest.
