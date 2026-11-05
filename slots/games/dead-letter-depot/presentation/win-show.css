@@ -1,0 +1,31 @@
+.win-show{margin:auto;border:0;padding:0;background:transparent;color:#feecc3;max-width:100vw;width:min(92vw,600px);overflow:visible;text-align:center;--ink:#2d524e;--foil:#a68a59}
+.win-show::backdrop{background:#07161bcb}
+.win-show section{position:relative;isolation:isolate}
+.win-letter{position:relative;overflow:hidden;display:grid;justify-items:center;gap:8px;padding:clamp(18px,4vh,40px) 14px;border:5px double var(--foil);outline:1px solid #674a30;border-radius:8px;background:radial-gradient(ellipse at 50% 28%,var(--ink),#12272e 86%);box-shadow:0 17px 35px #0008,inset 0 0 0 6px #ffffff0a}
+.win-letter:before,.win-letter:after{content:'';position:absolute;inset:12px;pointer-events:none;border:1px solid #ebc89054}
+.win-letter:after{inset:17px;border-style:dotted}
+.win-letter img{width:clamp(65px,13vmin,112px);aspect-ratio:1;object-fit:contain;filter:drop-shadow(0 4px 3px #0008)}
+.win-letter small{letter-spacing:.25em;font:bold 10px/1.6 system-ui;color:#e8d2a9}
+.win-letter h2,.win-letter strong{margin:0;font:900 clamp(34px,8vmin,72px)/1 Georgia,serif;color:#ffe0a1;text-shadow:0 2px #60401e}
+.win-letter h2{text-transform:uppercase;letter-spacing:-.035em}
+.win-letter strong{font-variant-numeric:tabular-nums;color:#fff5dd;font-size:clamp(30px,7vmin,66px)}
+.win-letter button,.trial-actions button{position:relative;z-index:1;min-height:40px;padding:6px 18px;border:1px solid #bf9b63;border-radius:4px;background:#182f33;color:#ffe9bc}
+.win-letter button{margin-top:10px}
+.win-show[data-rank=big]{--ink:#634733;--foil:#d6ac71}.win-show[data-rank=epic]{--ink:#503550;--foil:#ecba87}.win-show[data-rank=mythic]{--ink:#733632;--foil:#edc079}.win-show[data-rank=max]{--ink:#8c602e;--foil:#ffe59e}
+.win-rays{position:absolute;z-index:-1;inset:-22%;background:repeating-conic-gradient(from 5deg,#ffc77b42 0 3deg,transparent 4deg 17deg);mask-image:radial-gradient(ellipse,#000 10%,transparent 70%)}
+@media(prefers-reduced-motion:no-preference){.win-letter{animation:letter-arrives .46s cubic-bezier(.2,.88,.26,1) both}.win-letter img{animation:foil-strike .55s .1s backwards}.win-rays{animation:fan 12s linear infinite}.win-show[data-rank=nice] .win-rays{display:none}.win-show[data-rank=mythic] .win-letter:after,.win-show[data-rank=max] .win-letter:after{animation:foil-strike .8s alternate infinite}.six-cubby.lit{animation:foil-strike .48s ease-out}.ribbon.paid{animation:win-ink .53s ease-out}}
+@keyframes letter-arrives{from{transform:translateY(24%) rotate(-6deg);opacity:0}70%{transform:translateY(-1%) rotate(1deg)}to{transform:none;opacity:1}}
+@keyframes foil-strike{0%{scale:1.25;filter:brightness(1.65)}100%{scale:1;filter:brightness(1)}}
+@keyframes fan{to{transform:rotate(1turn)}}@keyframes win-ink{40%{color:#fff6d8;text-shadow:0 0 8px #eaaa5e}}
+#rack.six-rack{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px;padding:3px;background:#112929}
+#rack.six-rack[hidden]{display:none}
+#rack .six-cubby{display:flex;align-items:center;justify-content:center;gap:2px;min-width:0;border:1px solid #7b6a4a;border-radius:3px;background:linear-gradient(#34484a,#203135);color:#f4d8a2;font:800 clamp(10px,1.6vmin,16px)/1 system-ui}
+.six-cubby img{width:48%;max-width:38px;height:clamp(24px,4vh,40px);object-fit:contain}
+#rack .six-cubby.lit{background:#775128;border-color:#ffd18a}
+.trial-actions{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;margin:12px auto 0}.trial-actions a{color:#ffdba1}.trial-actions button{min-height:38px;font-size:14px}
+
+.mail-burst{position:absolute;inset:0;pointer-events:none;z-index:-1}.mail-burst i{display:none}
+@media(prefers-reduced-motion:no-preference){
+ .mail-burst i{display:block;position:absolute;top:50%;left:50%;width:clamp(24px,6vmin,55px);aspect-ratio:1.55;background:linear-gradient(145deg,transparent 49%,#826c4e 50%,transparent 53%) top left/51% 55% no-repeat,linear-gradient(215deg,transparent 49%,#826c4e 50%,transparent 53%) top right/51% 55% no-repeat,#e6cf9e;border:1px solid #b59161;opacity:0;animation:airmail-burst 1.3s var(--delay) ease-out both}
+ @keyframes airmail-burst{0%{transform:scale(.24);opacity:0}22%{opacity:1}100%{transform:translate(var(--flight-x),var(--flight-y)) rotate(var(--tilt));opacity:0}}
+}

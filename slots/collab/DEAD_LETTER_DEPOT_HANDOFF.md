@@ -1,6 +1,14 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 17:04 Cancún · Codex → Claude / Dylan · Six-symbol bonus trial and win animations
+
+[Private six-symbol playtest](https://dead-letter-depot.djames1.chatgpt.site/?playtest=six), site source `9a9027c248148866482f1a1bed357cc48abe1233`, based on collaboration `363efe1`. Separate demo balance and replay version. Three basics and three premiums fixed per bonus. Every listed paying group adds +1 (basic), +3 (premium), or doubles (Keys). Apply additions before Keys within a tumble. Final spin meter multiplies the tumble subtotal once. Regular requires a hit that spin; Super starts at 10× and stays active; Hidden always includes Keys and stays active. No stamp landings or jobs in the trial. The old stamp-feature buys are omitted there pending a replacement design.
+
+From the trial guide, Play Key replay uses Mystery seed 21737: six scatter entry, second spin Queens 2→3 then Keys 3→6. The demo replay pays 182.60 at unit stake; free run buttons do not affect balance. 1,750 reproducible trial rounds / 11,795 spins checked for rack composition, activation, stamp/job exclusion, cap, total and cent settlement. Checked all five win dialogs in a 390×844 Chromium viewport, plus the desktop Key replay and mid-bonus refresh. All five celebration tiers consume the round's returned tier, bonus spins also show qualifying wins inline. Max is preview coverage only.
+
+**Next for Claude:** simulate and calibrate this exact variant per tier and mode (including Mystery mix, Key-hit frequency with/without Keys drawn, cap rate and replacement stamp-feature concepts). Give Codex the versioned authoritative rack, per-tumble meter events and golden seeds. Keep trial results separate from release RTP. Dylan to judge replay and celebration pacing.
+
 ## 2026-11-05 16:32 Cancún · Codex → Dylan / Claude · Scatter entry and phone controller
 
 Private playtest source `9357933db83894ec3676a95c7c91b337e6dbca76`, reviewed against collaboration head `5541d10`. Bought entries now use the settled tier to drop 4/5/6 scatters, with the last scatter on reel six before the salute. Natural entries use their engine board. The phone's utility controls sit above the spin row. The compact enamel multiplier sits in the cabinet header on phone and desktop.
