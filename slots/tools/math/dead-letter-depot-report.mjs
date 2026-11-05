@@ -1,118 +1,137 @@
 #!/usr/bin/env node
-// Dead Letter Depot: the math report. Regenerates games/dead-letter-depot/MATH.md
-// and math/summary.json from the exact calculator, plus a Monte Carlo
-// cross-check through the engine.
-//   node tools/math/dead-letter-depot-report.mjs [--n 1e7] [--buys 1e6] [--seed 20261105] [--no-sim]
+// Dead Letter Depot (reels): the math report. Regenerates
+// games/dead-letter-depot/MATH.md and math/summary.json from Monte Carlo runs
+// through the game's own engine.
+//   node tools/math/dead-letter-depot-report.mjs [--spins 1e7] [--bonus 1e6] [--rounds 1e7] [--buys 1e6] [--seed 20261105]
+//
+// Each spin mode's RTP is measured two ways: decomposed (its own pay from
+// --spins spin-only rounds, plus its trigger rates times the bonus averages
+// from --bonus bought bonuses), which is the tighter figure; and whole rounds
+// through playRound (--rounds, --buys) as an independent cross-check.
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import * as RULES from '../../games/dead-letter-depot/engine/rules.js';
+import * as R from '../../games/dead-letter-depot/engine/rules.js';
 import { ENGINE_VERSION } from '../../games/dead-letter-depot/engine/engine.js';
-import { measure, mean, moment2, tail, roundDist } from './dead-letter-depot-exact.mjs';
-import { simulate } from './dead-letter-depot-sim.mjs';
+import { run } from './dead-letter-depot-sim.mjs';
 
 const GAME = new URL('../../games/dead-letter-depot/', import.meta.url);
 const arg = (k, d) => (process.argv.includes(k) ? Number(process.argv[process.argv.indexOf(k) + 1]) : d);
-const pct = (x, d = 2) => (100 * x).toFixed(d) + '%';
-const every = (p) => (p <= 0 ? 'never' : 1 / p > 1e12 ? `under 1 in 10<sup>${Math.floor(Math.log10(1 / p))}</sup>` : '1 in ' + (1 / p >= 100 ? Math.round(1 / p).toLocaleString('en-US') : (1 / p).toFixed(1)));
-const xs = (h) => (h / 100).toLocaleString('en-US', { maximumFractionDigits: 2 }) + '×';
+const Z = 3.29; // 99.9% two-sided
 
-// The files whose contents decide every outcome.
 export function sourceHash() {
   const h = createHash('sha256');
-  for (const f of ['engine/sorter.js', 'engine/resolver.js', 'engine/rules.js', 'engine/engine.js']) h.update(readFileSync(new URL(f, GAME)));
+  for (const f of ['engine/rules.js', 'engine/engine.js']) h.update(readFileSync(new URL(f, GAME)));
   return h.digest('hex').slice(0, 16);
 }
 
-const quantile = (d, q) => { const s = [...d].sort((a, b) => a[0] - b[0]); let c = 0; for (const [v, p] of s) { c += p; if (c >= q) return v; } return s.at(-1)[0]; };
-
-export function build({ sim = null } = {}) {
-  const m = measure();
-  const out = { game: 'dead-letter-depot', engine: ENGINE_VERSION, source: sourceHash(), cap: RULES.CAP / 100, rtpTarget: RULES.TARGETS.rtp, modes: {}, bonuses: {} };
-  const bonusRows = [];
-  for (const [tier, d] of Object.entries(m.bonuses)) {
-    const b = RULES.BONUSES[tier], mu = mean(d), sd = Math.sqrt(moment2(d) - mu * mu);
-    out.bonuses[tier] = { title: b.title, mean: mu / 100, sd: sd / 100, zero: d.get(0) ?? 0, median: quantile(d, 0.5) / 100, p90: quantile(d, 0.9) / 100, p99: quantile(d, 0.99) / 100, capped: tail(d, RULES.CAP), start: b.start, lift: b.lift, under: [10, 25, 50, 100].map((x) => [x, 1 - tail(d, x * 100)]) };
-    bonusRows.push(b);
+export async function build({ spinN = 1e7, bonusN = 1e6, roundN = 1e7, buyN = 1e6, seed = 20261105 } = {}) {
+  const out = { game: 'dead-letter-depot', engine: ENGINE_VERSION, source: sourceHash(), seed, cap: R.CAP / 100, rtpTarget: R.RTP_TARGET, bonuses: {}, modes: {}, mystery: R.MYSTERY };
+  for (const [tier, b] of Object.entries(R.BONUSES)) {
+    const s = await run({ job: 'bonus', tier, n: bonusN, seed: seed + 1 });
+    out.bonuses[tier] = { title: b.title, n: s.n, mean: s.mean, se: s.se, sd: s.sd, median: s.median, p90: s.p90, p99: s.p99, zero: s.zero, under25: 1 - s.over[25], max: s.max, capped: s.capped, spins: s.spins / s.n, retriggerChance: s.retrigBonuses / s.n, retriggersPerBonus: s.retrigPerBonus / s.n, stamp: R.LAND[tier].stamp, meter: b.meter, when: b.when, grow: b.grow, ceiling: b.ceiling ?? R.MAX_METER, clearsBy: s.clearsBy, clearHist: s.clearHist, meterHist: s.meterHist, activePayingShare: s.activePaying / Math.max(1, s.spins) };
+    if (b.grow === 'add') {
+      const f = await run({ job: 'bonus', tier, n: Math.round(bonusN / 2), seed: seed + 4, scheme: 'flat' });
+      out.bonuses[tier].flat = { mean: f.mean, se: f.se, sd: f.sd, p99: f.p99, max: f.max, capped: f.capped, n: f.n };
+    }
   }
-  for (const [id, x] of Object.entries(m.modes)) {
-    const mode = RULES.MODES[id];
-    let dist;
-    if (mode.kind === 'spin') dist = roundDist(x.X, x.rates, m.bonuses, RULES.CAP);
-    else { dist = new Map(); for (const [tier, w] of Object.entries(x.weights)) for (const [v, p] of m.bonuses[tier]) dist.set(v, (dist.get(v) ?? 0) + w * p); }
-    const mu = mean(dist), sd = Math.sqrt(moment2(dist) - mu * mu);
-    const basis = mode.kind === 'buy' ? (t) => RULES.TIERS[t].perCost * mode.cost : (t) => RULES.TIERS[t].min;
-    const tiers = Object.fromEntries(Object.keys(RULES.TIERS).map((t) => [t, tail(dist, basis(t) * 100)]));
-    tiers.max = tail(dist, RULES.CAP);
-    const row = { title: mode.title, kind: mode.kind, cost: mode.cost, rtp: x.rtp, sd: sd / 100 / mode.cost, hit: 1 - (dist.get(0) ?? 0), tiers, over: Object.fromEntries([1, 2, 5, 10, 25, 100, 500, 1000, 5000].map((v) => [v, tail(dist, v * 100)])) };
-    if (mode.kind === 'spin') Object.assign(row, { fs: RULES.FS[mode.fs], spinRtp: x.spinRtp, bonusRtp: x.rtp - x.spinRtp, rates: x.rates, bonusEvery: 1 / Object.values(x.rates).reduce((a, b) => a + b, 0), spinHit: 1 - (x.X.get(0) ?? 0), deliveredBins: [...x.route].reduce((t, [k, p]) => t + k.length * p, 0), capLoss: x.capLoss / 100 / mode.cost });
-    else row.weights = x.weights;
+  const B = out.bonuses;
+  for (const [id, m] of Object.entries(R.MODES)) {
+    const row = { title: m.title, kind: m.kind, cost: m.cost };
+    if (m.kind === 'spin') {
+      const s = await run({ job: 'spins', mode: id, n: spinN, seed: seed + 2 });
+      const bonus = Object.entries(s.trig).reduce((a, [t, r]) => a + r * B[t].mean, 0);
+      const varBonus = Object.entries(s.trig).reduce((a, [t, r]) => a + (B[t].mean ** 2) * r * (1 - r) / s.n + r * r * B[t].se ** 2, 0);
+      Object.assign(row, { fs: R.LAND[m.land].fs, opening: m.opening, spinRtp: s.mean / m.cost, bonusRtp: bonus / m.cost, rtp: (s.mean + bonus) / m.cost, ci999: Z * Math.sqrt(s.se ** 2 + varBonus) / m.cost, spinHit: s.hit, tumbles: s.tumbles, trig: s.trig, bonusEvery: 1 / Object.values(s.trig).reduce((a, b) => a + b, 0), spinN: s.n, clearsBy: s.clearsBy, clearHist: s.clearHist });
+      if (id === 'base') { const f = await run({ job: 'spins', mode: id, n: Math.round(spinN / 2), seed: seed + 5, scheme: 'flat' }); row.flatSpinRtp = f.mean / m.cost; }
+    } else {
+      const w = m.bonus ? { [m.bonus]: 1 } : R.MYSTERY;
+      const mean = Object.entries(w).reduce((a, [t, p]) => a + p * B[t].mean, 0), se = Math.sqrt(Object.entries(w).reduce((a, [t, p]) => a + (p * B[t].se) ** 2, 0));
+      Object.assign(row, { weights: w, rtp: mean / m.cost, ci999: Z * se / m.cost });
+    }
+    const r = await run({ job: 'rounds', mode: id, n: m.kind === 'buy' ? buyN : roundN, seed: seed + 3 });
+    row.rounds = { n: r.n, rtp: r.mean / m.cost, ci999: Z * r.se / m.cost, sd: r.sd / m.cost, hit: r.hit, max: r.max, capped: r.capped, over: r.over, tiers: r.tiers, retriggerChance: r.retrigBonuses / Math.max(1, Object.values(r.trig).reduce((a, b) => a + b, 0) + Object.values(r.drawn).reduce((a, b) => a + b, 0)) };
     out.modes[id] = row;
   }
-  const all = (id) => Object.values(out.modes[id].rates).reduce((a, b) => a + b, 0);
+  const all = (id) => Object.values(out.modes[id].trig).reduce((a, b) => a + b, 0);
   out.priorityEntryRatio = all('priority') / all('base');
-  if (sim) out.sim = sim;
   return out;
 }
 
-function markdown(s) {
-  const L = [];
-  const modeRows = Object.entries(s.modes);
-  L.push('# Dead Letter Depot · math sheet', '');
-  L.push(`Generated by \`tools/math/dead-letter-depot-report.mjs\` · engine \`${s.engine}\` · source \`${s.source}\` · **prototype math, not release-approved**.`, '');
-  L.push('Every figure below is **exact**. It is computed over the whole state space with the game\'s own resolver, with no sampling. The Monte Carlo section replays whole rounds through `playRound` as an independent cross-check. Target: 96% of the cost of every mode. Cap: 25,000× the base bet across the whole round.', '');
+const pct = (x, d = 2) => (100 * x).toFixed(d) + '%';
+const every = (p, n) => (p > 0 ? '1 in ' + (1 / p >= 100 ? Math.round(1 / p).toLocaleString('en-US') : (1 / p).toFixed(1)) : n ? `not seen in ${n.toLocaleString('en-US')}` : 'never');
+const x = (v) => v.toLocaleString('en-US', { maximumFractionDigits: 2 }) + '×';
+
+export function markdown(s) {
+  const L = [], modes = Object.entries(s.modes);
+  L.push('# Dead Letter Depot · math sheet (reels v2: collections and the meter)', '');
+  L.push(`Generated by \`tools/math/dead-letter-depot-report.mjs\` · engine \`${s.engine}\` · source \`${s.source}\` · seed ${s.seed} · **prototype math for producer review, not release-approved**.`, '');
+  L.push('Every figure is simulated through the game\'s own engine. The 99.9% intervals are sampling uncertainty. The sorter prototype that came before is archived in [archive/sorter](archive/sorter/MATH.md); none of its figures apply here.', '');
   L.push('## How a round settles', '');
-  L.push('- **The sorter.** It has 5 stages × 3 lanes, with lane 0 at the top. A spin\'s letter enters the middle lane. Each cell holds one stamp:', '  - **Up**, **Straight** or **Down** moves the letter one lane into the next stage.', '  - **Fork** sends one copy up and one copy down.', '  - **Jam** kills that branch.', '  - A move past the top or bottom lane is lost at the edge.', '  - Copies that arrive in the same lane are reunited and count once.', '- **Delivery.** Letters that leave stage 5 are delivered to the bin of the lane they leave into. Each bin receives at most one delivery per spin.');
-  L.push('- **Base and paid spins.** Each bin shows a fresh postage value before the letter drops. A spin pays the postage of every bin it delivers to.');
-  L.push('- **FS seals.** Each stage independently carries at most one FS seal, on a random lane. A seal sits over the stamp and never changes the route. Seals on 3, 4 or 5 stages award Night Shift, Double Dispatch or Lost & Found. The bonus plays after the spin pays.');
-  L.push('- **Bonuses** (10 spins, no seals, no retriggers). The bins keep their value for the whole bonus. A delivery pays its bin\'s current value; after the spin pays, upgrades apply:');
-  L.push('  - **Night Shift:** one letter in the middle lane. Each bin that received a delivery rises one rung.');
-  L.push('  - **Double Dispatch:** letters enter the top and bottom lanes. Upgrades are shared: every bin rises one rung per delivery.');
-  L.push('  - **Lost & Found:** letters enter all three lanes, with one automatic rescue per spin (the first branch that would be lost carries straight on). Upgrades are shared.');
-  L.push('  - **Starting values:** the outer bins start one rung above the middle bin.');
-  L.push('- **Paid spins:**', '  - **Priority Mail** (3×) is the same spin with more FS seals.', '  - **Carbon Copy** (1.5×) opens every spin with a forced Fork in stage 1.', '  - **Registered Mail** (2.5×) protects the route: every jam and edge loss is rescued.', '  - Each paid spin\'s FS chance is solved for 96%.');
-  L.push('- **Buys:** Night Shift 100×, Double Dispatch 250×, Mystery Delivery 400×. Mystery Delivery draws ' + Object.entries(RULES.MYSTERY).map(([t, w]) => `${RULES.BONUSES[t].title} ${pct(w, 0)}`).join(', ') + '.');
-  L.push('- **The cap** counts the whole round, the spin included. The bonus ends on the spin that reaches it, and that spin is paid only up to the remaining budget.', '');
-  L.push('## Every mode', '');
-  L.push('| Mode | Cost | RTP (exact) | Spin / bonus share | Hit | Bonus entry | SD per cost | Max (25,000×) |', '|---|---|---|---|---|---|---|---|');
-  for (const [id, r] of modeRows) L.push(`| ${r.title} | ${r.cost}× | **${pct(r.rtp, 4)}** | ${r.kind === 'spin' ? `${pct(r.spinRtp)} / ${pct(r.bonusRtp)}` : 'bonus'} | ${pct(r.hit)} | ${r.kind === 'spin' ? every(1 / r.bonusEvery) : '—'} | ${r.sd.toFixed(1)} | ${every(r.tiers.max)} |`);
-  L.push('', `Priority Mail enters a bonus **${s.priorityEntryRatio.toFixed(2)}×** as often as a base spin (target 5×) at 3× the cost.`, '');
-  L.push('### Bonus entry by tier', '', '| Mode | FS chance per stage | Night Shift | Double Dispatch | Lost & Found |', '|---|---|---|---|---|');
-  for (const [, r] of modeRows) if (r.kind === 'spin') L.push(`| ${r.title} | ${pct(r.fs, 3)} | ${every(r.rates.regular)} | ${every(r.rates.super)} | ${every(r.rates.hidden)} |`);
-  L.push('', '## Bonuses', '', '| Bonus | Average | SD | Median | 90th | 99th | Pays 0 | Under 25× | Reaches cap | Start (middle bin) |', '|---|---|---|---|---|---|---|---|---|---|');
-  for (const b of Object.values(s.bonuses)) L.push(`| ${b.title} | **${b.mean.toFixed(2)}×** | ${b.sd.toFixed(1)} | ${b.median}× | ${b.p90}× | ${b.p99}× | ${every(b.zero)} | ${pct(b.under[1][1], 1)} | ${every(b.capped)} | ${xs(RULES.LADDER[b.start])} (${xs(RULES.LADDER[b.start + 1])} ${pct(b.lift, 1)}) |`);
-  L.push('', 'Bonus ladder (each rung, ×): ' + RULES.LADDER.map((v) => v / 100).join(' · ') + '.', '');
-  L.push('## Base spin', '');
-  const b = s.modes.base;
-  L.push(`A base letter is delivered on **${pct(b.spinHit)}** of spins, with ${b.deliveredBins.toFixed(3)} bins per spin on average. Stamp weights: ${Object.entries(RULES.BASE_STAMPS).map(([k, w]) => `${k} ${w}`).join(', ')}. Bonus stamps: ${Object.entries(RULES.BONUS_STAMPS).map(([k, w]) => `${k} ${w}`).join(', ')}.`, '');
-  const pw = RULES.BASE_POSTAGE.reduce((t, [, w]) => t + w, 0);
-  L.push('Postage per bin: ' + RULES.BASE_POSTAGE.map(([v, w]) => `${v / 100}× ${pct(w / pw, 3)}`).join(' · ') + '.', '');
-  L.push('### How often a round pays at least', '', '| Mode | ≥1× | ≥2× | ≥5× | ≥10× | ≥25× | ≥100× | ≥500× | ≥1,000× | ≥5,000× |', '|---|---|---|---|---|---|---|---|---|---|');
-  for (const [, r] of modeRows) L.push(`| ${r.title} | ${Object.values(r.over).map((p) => (p >= 0.01 ? pct(p) : every(p))).join(' | ')} |`);
-  L.push('', '### Win tiers', '', 'Base and paid spins compare with the base bet (Nice 10×, Big 25×, Epic 100×, Mythic 500×). Buys compare with their price (2×, 5×, 25× and 50× the price).', '', '| Mode | Nice+ | Big+ | Epic+ | Mythic+ | Max |', '|---|---|---|---|---|---|');
-  for (const [, r] of modeRows) L.push(`| ${r.title} | ${every(r.tiers.nice)} | ${every(r.tiers.big)} | ${every(r.tiers.epic)} | ${every(r.tiers.mythic)} | ${every(r.tiers.max)} |`);
-  if (s.sim) {
-    L.push('', '## Monte Carlo cross-check', '', `Seed ${s.sim.seed}. Whole rounds through \`playRound\`, one fresh 32-bit seed per round.`, '', '| Mode | Rounds | Simulated RTP | 99.9% interval | Exact | Inside |', '|---|---|---|---|---|---|');
-    for (const [id, r] of Object.entries(s.sim.results)) {
-      const e = s.modes[id].rtp, inside = Math.abs(r.rtp - e) <= r.ci999;
-      L.push(`| ${s.modes[id].title} | ${r.n.toLocaleString('en-US')} | ${pct(r.rtp, 3)} | ±${pct(r.ci999, 3)} | ${pct(e, 3)} | ${inside ? 'yes' : '**no**'} |`);
-    }
-  }
-  const ns = s.bonuses.regular;
-  L.push('', '## Open design questions', '', '- These are prototype interpretations of the kickoff for Dylan to confirm: shared upgrades are per delivery; Lost & Found inherits shared upgrades; Registered Mail rescues everything; no retriggers in bonuses; the Carbon Copy and Registered Mail prices of 1.5× and 2.5×; and the Mystery chances of 40/35/25.', '- Lost & Found\'s average is set by Mystery Delivery (400× at 96% with those chances). Changing the chances moves it.', `- Night Shift has no floor. It pays nothing ${every(ns.zero)} and under 25× ${pct(ns.under[1][1], 1)} of the time. A guarantee (for example, the last spin always delivers) would need a re-fit.`, '');
+  L.push('- **The board.** 6 reels × 5 rows. Each cell lands a pay symbol, an FS or a multiplier stamp. Pay symbols by rank: KEY, PHONE, PARCEL, ENVELOPE (premiums), then A, K, Q, J, 10.');
+  L.push('- **Pays.** 8 or more of a pay symbol anywhere pay. All winners clear together, survivors drop in order and refills fall from the top, until a check pays nothing.');
+  L.push('- **Collections.** Every real symbol cleared in a win adds to its collection. Reaching the target is a **clear**: the symbol performs its job and the meter grows. Excess carries. Base collections last one spin; bonus collections carry across free spins.');
+  L.push('- **Jobs** run on the settled board, in rank order. Each symbol fires at most 3 times a spin; later clears still grow the meter.');
+  L.push('  - 10 sweeps every 10 off the board.');
+  L.push('  - J converts every J to the most common visible premium.');
+  L.push('  - Q copies the row with the most of the commonest symbol onto the row with the fewest.');
+  L.push('  - K turns the reel with the fewest of the commonest symbol wild for the next check.');
+  L.push('  - A stops the next low (10, then J, then Q) landing for the rest of the spin.');
+  L.push('  - ENVELOPE pays the spin\'s biggest win again.');
+  L.push('  - PARCEL unpacks four copies of the most common visible premium.');
+  L.push('  - PHONE delivers the copies missing from the nearest match.');
+  L.push('  - KEY opens the vault: a PARCEL unpack, a K wild reel and a multiplier stamp.');
+  L.push('  - Wilds join only the most common symbol and leave after one check. Tie-breaks are higher rank, then reel order, top to bottom.');
+  L.push('- **The meter.** Stamps add their value as they land. A clear adds its increment (KEY/PHONE +3, PARCEL/ENVELOPE +2, lows +1; *tiered*) or, in Lost & Found, doubles the meter. Per spin: stamps first, then clears, then the final meter multiplies the spin\'s tumble sum once.');
+  L.push('  - **Base and paid spins:** a spin-local meter starting at 1×.');
+  L.push(`  - **Night Shift:** the meter starts at ${R.BONUSES.regular.meter}×, carries through the bonus and applies only on a spin with a clear or a stamp. Otherwise wins pay face value.`);
+  L.push(`  - **Double Post:** starts at ${R.BONUSES.super.meter}× and applies to every spin.`);
+  L.push(`  - **Lost & Found:** halves the targets, applies to every spin, and doubles per clear up to ${R.BONUSES.hidden.ceiling}×.`);
+  L.push('- **FS** on the final board: 4, 5 or 6+ award Night Shift, Double Post or Lost & Found (10 spins). In a bonus, 3+ FS add 5 spins.');
+  L.push('- **Paid spins:** Priority Mail (3×) has a higher FS chance. Special Delivery (2×) and Double Exposure (2.5×) open with one or two previewed 2×–25× stamps. Buys: Night Shift 100×, Double Post 250×, Mystery 400× (' + Object.entries(s.mystery).map(([t, w]) => `${R.BONUSES[t].title} ${pct(w, 0)}`).join(', ') + ').');
+  L.push('- **The cap** is 25,000× the base bet across the whole round. The round ends on the spin that reaches it.', '');
+  L.push('## Every mode', '', '| Mode | Cost | RTP (99.9%) | Spin / bonus share | Whole-round check (99.9%) | Hit | Bonus entry | SD per cost | Capped |', '|---|---|---|---|---|---|---|---|---|');
+  for (const [, r] of modes) L.push(`| ${r.title} | ${r.cost}× | **${pct(r.rtp)}** ± ${pct(r.ci999)} | ${r.kind === 'spin' ? `${pct(r.spinRtp)} / ${pct(r.bonusRtp)}` : 'bonus'} | ${pct(r.rounds.rtp)} ± ${pct(r.rounds.ci999)} | ${pct(r.rounds.hit)} | ${r.kind === 'spin' ? every(1 / r.bonusEvery) : '—'} | ${r.rounds.sd.toFixed(1)} | ${every(r.rounds.capped / r.rounds.n, r.rounds.n)} |`);
+  L.push('', `Priority Mail enters a bonus **${s.priorityEntryRatio.toFixed(2)}×** as often as a base spin, at 3× the cost.`, '');
+  L.push('### Bonus entry by tier', '', '| Mode | FS chance per cell | Night Shift (4 FS) | Double Post (5 FS) | Lost & Found (6+ FS) | Tumbles per spin |', '|---|---|---|---|---|---|');
+  for (const [, r] of modes) if (r.kind === 'spin') L.push(`| ${r.title} | ${pct(r.fs, 3)} | ${every(r.trig.regular)} | ${every(r.trig.super)} | ${every(r.trig.hidden)} | ${r.tumbles.toFixed(3)} |`);
+  L.push('', '## Bonuses', '', '| Bonus | Average (99.9%) | SD | Median | 90th | 99th | Pays 0 | Under 25× | Max seen | Reaches cap | Retrigger | Spins | Stamp chance |', '|---|---|---|---|---|---|---|---|---|---|---|---|---|');
+  for (const b of Object.values(s.bonuses)) L.push(`| ${b.title} | **${x(b.mean)}** ± ${(Z * b.se).toFixed(2)} | ${b.sd.toFixed(0)} | ${x(b.median)} | ${x(b.p90)} | ${x(b.p99)} | ${every(b.zero, b.n)} | ${pct(b.under25, 1)} | ${x(b.max)} | ${every(b.capped / b.n, b.n)} | ${pct(b.retriggerChance, 2)} | ${b.spins.toFixed(2)} | ${pct(b.stamp, 2)} |`);
+  L.push('', '### Collections: how often each clears', '', 'Clears per base spin come from 10M spin-only rounds. Clears per bonus come from bought bonuses. Both include symbols that jobs create.', '', '| Symbol (job) | Base target | Base: clears per spin | Bonus target | Night Shift per bonus | Double Post per bonus | Lost & Found (half target) per bonus |', '|---|---|---|---|---|---|---|');
+  for (const sym of R.PAYING) L.push(`| ${sym} (${R.JOBS[sym]}) | ${R.TARGETS.base[sym]} | ${every(s.modes.base.clearsBy[sym], s.modes.base.spinN)} | ${R.TARGETS.bonus[sym]} | ${s.bonuses.regular.clearsBy[sym].toFixed(3)} | ${s.bonuses.super.clearsBy[sym].toFixed(3)} | ${s.bonuses.hidden.clearsBy[sym].toFixed(3)} |`);
+  L.push('', '### Multi-clear tail: clears per bonus', '', '| Clears | 0 | 1 | 2 | 3 | 4 | 5 | 6–9 | 10+ |', '|---|---|---|---|---|---|---|---|---|');
+  for (const b of Object.values(s.bonuses)) { const h = b.clearHist; L.push(`| ${b.title} | ${[0, 1, 2, 3, 4, 5].map((k) => pct(h[k], 1)).join(' | ')} | ${pct(h.slice(6, 10).reduce((a, c) => a + c, 0), 2)} | ${pct(h.slice(10).reduce((a, c) => a + c, 0), 3)} |`); }
+  const mh = s.bonuses.hidden.meterHist;
+  L.push('', `Lost & Found's final meter: ${mh.map((p, k) => (p > 0 ? `${2 ** k}–${2 ** (k + 1) - 1}×: ${pct(p, 2)}` : null)).filter(Boolean).join(' · ')} (ceiling ${s.bonuses.hidden.ceiling}×).`, '');
+  L.push('### Flat versus tiered increments', '', 'This uses the same stamp chances and seeds family. Tiered is the shipped scheme; flat gives every clear +1. Lost & Found doubles, so it is unaffected.', '', '| | Tiered average | Flat average | Flat 99th | Flat max seen |', '|---|---|---|---|---|');
+  for (const b of Object.values(s.bonuses)) if (b.flat) L.push(`| ${b.title} | ${x(b.mean)} | ${x(b.flat.mean)} ± ${(Z * b.flat.se).toFixed(2)} | ${x(b.flat.p99)} | ${x(b.flat.max)} |`);
+  L.push(`| Base spin RTP (spin only) | ${pct(s.modes.base.spinRtp)} | ${pct(s.modes.base.flatSpinRtp)} | | |`, '');
+  L.push(`Stamp values (×, weight): ${R.STAMP_VALUES.map(([v, w]) => `${v} (${w})`).join(' · ')}. Opening stamps: ${R.OPENING_VALUES.map(([v, w]) => `${v} (${w})`).join(' · ')}.`, '');
+  L.push('Paytable (× bet for 8–9 / 10–11 / 12+): ' + R.PAYING.map((k) => `${k} ${R.PAYTABLE[k].map((v) => v / 100).join('/')}`).join(' · ') + '.', '');
+  L.push('## How often a round pays at least', '', '| Mode | ≥1× | ≥2× | ≥5× | ≥10× | ≥25× | ≥100× | ≥500× | ≥1,000× | ≥5,000× |', '|---|---|---|---|---|---|---|---|---|---|');
+  for (const [, r] of modes) L.push(`| ${r.title} | ${[1, 2, 5, 10, 25, 100, 500, 1000, 5000].map((v) => (r.rounds.over[v] >= 0.01 ? pct(r.rounds.over[v]) : every(r.rounds.over[v], r.rounds.n))).join(' | ')} |`);
+  L.push('', '### Win tiers', '', 'Base and paid spins compare with the base bet (Nice 10×, Big 25×, Epic 100×, Mythic 500×). Buys compare with their price (2×, 5×, 25× and 50× the price).', '', '| Mode | Nice | Big | Epic | Mythic | Max |', '|---|---|---|---|---|---|');
+  for (const [, r] of modes) L.push(`| ${r.title} | ${['nice', 'big', 'epic', 'mythic', 'max'].map((t) => every(r.rounds.tiers[t], r.rounds.n)).join(' | ')} |`);
+  L.push('', '## Open questions for the producer', '');
+  L.push('- **Prototype choices to confirm:**');
+  L.push(`  - Meter starts: Night Shift ${R.BONUSES.regular.meter}×, Double Post ${R.BONUSES.super.meter}×, Lost & Found ${R.BONUSES.hidden.meter}×.`);
+  L.push(`  - Lost & Found's doubling ceiling is ${R.BONUSES.hidden.ceiling}×. Without one it averaged far above its price and capped in most bonuses.`);
+  L.push('  - A filters last one spin. A filter kept for the whole bonus thinned the refills for good and ran away.');
+  L.push('  - Bonus targets and the tiered increments.');
+  L.push('  - Prices, and Mystery at 40/35/25.');
+  L.push('- **Night Shift versus Double Post.** With rare stamps, Night Shift\'s meter grows mostly through clears, and those also activate it. Its event rule therefore costs little, and Double Post needs a higher starting meter to be worth 2.5× the price.');
+  const prem = Math.max(...R.PREMIUMS.map((p) => Math.max(s.bonuses.regular.clearsBy[p], s.bonuses.super.clearsBy[p])));
+  if (prem < 0.01) L.push(`- **Premium collections almost never clear in Night Shift or Double Post** (KEY, PHONE, PARCEL and ENVELOPE under ${prem.toFixed(3)} clears per bonus). Premiums rarely make 8+ in the free-spin mix, so the vault, deliver, unpack and return jobs effectively never fire there. That is also why flat and tiered increments measure the same: almost every clear is a low, which is +1 either way. Lowering premium bonus targets to about 8–10, or weighting premiums up in free spins, would make them appear. Either needs a re-fit.`);
+  L.push(`- **Night Shift is swingy.** ${pct(s.bonuses.regular.clearHist[0], 0)} of bonuses see no clear, the median is ${s.bonuses.regular.median}×, and ${pct(s.bonuses.regular.under25, 0)} pay under 25×. Lost & Found reaches its ${s.bonuses.hidden.ceiling}× meter ceiling in ${pct(s.bonuses.hidden.meterHist.slice(Math.log2(s.bonuses.hidden.ceiling)).reduce((a, c) => a + c, 0), 0)} of bonuses and the 25,000× cap in ${every(s.bonuses.hidden.capped / s.bonuses.hidden.n, s.bonuses.hidden.n)}.`);
+  L.push('- **Job tie-breaks** are listed in `engine/engine.js` and ENGINE.md. Fixtures cover each job, and the example payloads Codex asked for: inactive Night Shift, late activation, Double Post with no event, and Lost & Found with a stamp and a clear in one spin.', '');
   return L.join('\n');
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const t0 = Date.now();
-  let sim = null;
-  if (!process.argv.includes('--no-sim')) {
-    const seed = arg('--seed', 20261105);
-    sim = { seed, results: await simulate({ n: arg('--n', 1e7), buys: arg('--buys', 1e6), seed }) };
-  }
-  const s = build({ sim });
+  const s = await build({ spinN: arg('--spins', 1e7), bonusN: arg('--bonus', 1e6), roundN: arg('--rounds', 1e7), buyN: arg('--buys', 1e6), seed: arg('--seed', 20261105) });
   mkdirSync(new URL('math/', GAME), { recursive: true });
   writeFileSync(new URL('math/summary.json', GAME), JSON.stringify(s, null, 1) + '\n');
   writeFileSync(new URL('MATH.md', GAME), markdown(s));
   console.log(`wrote MATH.md and math/summary.json (${((Date.now() - t0) / 1000).toFixed(0)} s)`);
-  for (const [id, r] of Object.entries(s.modes)) console.log(`${id.padEnd(15)} ${pct(r.rtp, 4)}${s.sim ? `  sim ${pct(s.sim.results[id].rtp, 3)} ± ${pct(s.sim.results[id].ci999, 3)}` : ''}`);
+  for (const [id, r] of Object.entries(s.modes)) console.log(`${id.padEnd(11)} ${pct(r.rtp, 3)} ± ${pct(r.ci999, 3)} · rounds ${pct(r.rounds.rtp, 3)} ± ${pct(r.rounds.ci999, 3)}`);
 }

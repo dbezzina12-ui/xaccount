@@ -1,4 +1,4 @@
-// Dead Letter Depot: settlement. Turns a settled round into credits. The
+// Dead Letter Depot (reels): settlement. Turns a settled round into credits. The
 // screen debits the cost, plays the presentation, then credits exactly this
 // win once; nothing in the presentation can change either amount.
 import { BETS, CAP, MODES } from './rules.js';

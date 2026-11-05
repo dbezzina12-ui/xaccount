@@ -1,6 +1,6 @@
 // Route fixtures for the mail-routing resolver: edge loss, forks, merges,
 // jams and exactly-once delivery, plus rescues and input checks.
-//   node --test games/dead-letter-depot/tests/*.test.mjs
+//   npm run test:dead-letter-depot-sorter
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { resolveRoute, stepStage } from '../engine/resolver.js';

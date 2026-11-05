@@ -5,11 +5,11 @@
 // and postage are independent of the route, and a bonus's bins depend only on
 // which bins were delivered, so the bonus totals follow from a walk over spins.
 //
-// tools/math/dead-letter-depot-sim.mjs replays rounds through the engine to
-// cross-check these figures; tools/math/dead-letter-depot-report.mjs prints them.
-import { stepStage } from '../../games/dead-letter-depot/engine/resolver.js';
-import { STAGES, LANES, ENTRY, STAMPS } from '../../games/dead-letter-depot/engine/sorter.js';
-import * as RULES from '../../games/dead-letter-depot/engine/rules.js';
+// tools/math/dead-letter-depot-sorter-sim.mjs replays rounds through the engine to
+// cross-check these figures; tools/math/dead-letter-depot-sorter-report.mjs prints them.
+import { stepStage } from '../../games/dead-letter-depot/archive/sorter/engine/resolver.js';
+import { STAGES, LANES, ENTRY, STAMPS } from '../../games/dead-letter-depot/archive/sorter/engine/sorter.js';
+import * as RULES from '../../games/dead-letter-depot/archive/sorter/engine/rules.js';
 
 const keyOf = (lanes) => lanes.join('');
 const lanesOfKey = (k) => (k === '' ? [] : [...k].map(Number));
