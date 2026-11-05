@@ -9,7 +9,7 @@
 | Spin and feature flow | Intro and three panels, two-clear base spin, Regular, Super, Mystery/Hidden, one-/two-stamp feature spin and enhanced-trigger samples. Browser checked Regular blank → held 5× → 3 × 5 = 15. 560 authored board cases checked. Live triggers, retriggers and settled round recovery await Claude. |
 | Controls | Spin/Stop, stake and Auto ×5 available in preview. Charge confirmation, wallet, turbo, fullscreen and release regression checks open. |
 | Win tiers and audio | Nice, Big, Epic, Mythic and Max all open. No settled threshold or cap evidence for this reel game yet. Final audio and rig pending. |
-| Math and settlement | New version required. Old sorter evidence belongs to the archived prototype only. Claude owns simulator, RTP, purchase prices, cap, seed, settlement and recovery. |
+| Math and settlement | Prototype `dld-reels-2` at `23afe0f`: every mode 96% within its 99.9% interval ([MATH.md](MATH.md)), 28 replayable fixtures, exact-cents settlement, 25,000× cap reached in the fixtures. Provisional pending Dylan's targets and meter starts; not release-approved. Claude owns simulator, RTP, prices, cap, seed, settlement and recovery. |
 | Release | Private prototype only. No production merge. Next: Claude simulates the collection rules, then Codex integrates the settled payload. |
 
 Presentation staging, 2026-11-05: conventional drop, collection rack and scatter-to-envelope entrance prepared on the collaboration branch. Codex owns private Site integration and browser checks. See the game handoff. The private playtest still shows the earlier presentation.

@@ -1,6 +1,52 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 15:56 UTC (10:56 Cancún) · Claude → Codex / Dylan · collections, jobs and the meter: engine and prototype math
+**Tested SHA:** `23afe0f`. Suites: `npm run test:dead-letter-depot` 13/13, `npm run test:dead-letter-depot-sorter` 34/34, core `npm test` 131/131.
+
+**Did:**
+- **Engine:** `dld-reels-2`, in [`engine/`](../games/dead-letter-depot/engine/), built to the collection brief:
+  - 6×5 pay-anywhere tumbles.
+  - The nine jobs, with deterministic tie-breaks.
+  - Collections: base targets last one spin; bonus targets carry across free spins; Lost & Found halves them.
+  - The meter: stamps first, then clears, then the final meter once on the tumble sum. Base is spin-local; Night Shift applies on clear or stamp spins only; Double Post applies always, starting at 10×; Lost & Found doubles per clear, up to 64×.
+  - Retriggers, the 25,000× round cap and exact-cents settlement.
+- **Contract and tie-breaks:** in [ENGINE.md](../games/dead-letter-depot/ENGINE.md). The payload now includes `targets` and per-step `collections`, for your rack.
+- **Math:** simulator, fit and report in [MATH.md](../games/dead-letter-depot/MATH.md):
+  - every mode at 96% within its 99.9% interval, two ways;
+  - completion rates per symbol, including job-made symbols;
+  - the clears-per-bonus tail;
+  - flat versus tiered;
+  - cap rates.
+- **Sorter:** archived in `archive/sorter`, with its tests intact.
+
+**Fixtures** ([fixtures/rounds.json](../games/dead-letter-depot/fixtures/rounds.json)): 28 replayable rounds, each with board, winning cells, drops and refills, collections, jobs, meter, award and settlement:
+- Your four examples: `regular-inactive`, `regular-late`, `super-no-event` and `hidden-clear-and-stamp`.
+- One per job: `job-sweep` … `job-vault`.
+- A capped round: Mystery seed 6776.
+
+**Measured (provisional prototype):**
+- **Base:** 96.4% (spin 62%, bonus 34%), hit 22%, bonus 1 in 344.
+- **Priority Mail (3×):** bonus entry 5.8× as often as base.
+- **Feature spins:** Special Delivery 2.5×, Double Exposure 3×.
+- **Night Shift (100×):** averages 96.7×, median 32×.
+- **Double Post (250×):** 240×.
+- **Lost & Found:** 1,052× (Mystery 400× at 40/35/25).
+- **Cap:** Lost & Found 1 in 1,344; Mystery 1 in 5,618.
+
+**Findings for Dylan:**
+1. **Premium collections almost never clear in Night Shift or Double Post** (under 0.002 per bonus), so the vault, deliver, unpack and return jobs effectively don't happen there. As a result, flat and tiered increments measure the same, because nearly every clear is a low worth +1 either way. Fix: premium bonus targets of about 8–10, or more premiums in free spins; either needs a re-fit.
+2. **Night Shift is swingy:** 42% of bonuses have no clear and 44% pay under 25×.
+3. **Lost & Found sits on its 64× ceiling in 51% of bonuses.** Without the ceiling, doubling ran to the cap in most bonuses.
+4. **Two of my prototype choices to confirm:**
+   - A's filter lasts one spin. Kept for the whole bonus, it thinned the refills for good and ran away.
+   - Double Post starts its meter at 10×, so it's worth its 2.5× price.
+
+**Next for Codex:** bind the payload. Use `targets` plus the `step.collections` snapshots for the cubbies. A drop's distance is `toRow - fromRow`. Play job `changes` after each refill. Light the meter only when `meter.active`. Replay the fixtures for QA.
+**Next for Claude:** re-fit once Dylan picks targets and starting meters; rig Frank's bank/return/consume actions when his layered art lands.
+**Questions for Dylan:** findings 1–4 above. Also confirm the prices (feature spins 2.5× and 3×) and Mystery at 40/35/25.
+**Blocked on:** nothing for the engine.
+
 ## 2026-11-05 · Codex → Codex / Claude · Drops, collection rack and bonus entrance
 
 Prepared presentation/landing.mjs and landing.css against private Site source fe07e35, branch baseline 58fd18a. The renderer takes supplied progress counts and targets. Claude owns those counts and activation events; preview values are illustrative. No new engine handoff was present at inspection.
