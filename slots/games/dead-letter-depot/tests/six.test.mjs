@@ -5,7 +5,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { playSixRound, playSixBonus, selectRack, meterStep, SIX, SIX_VERSION, seeded } from '../engine/six.js';
+import { playSixRound, playSixBonus, selectRack, meterStep, ladderStep, ladderState, SIX, SIX_LADDER, VARIANTS, SIX_VERSION, LADDER_VERSION, seeded } from '../engine/six.js';
 import { settle, winOf } from '../engine/settle.js';
 import { PREMIUMS, LOWS, CAP } from '../engine/rules.js';
 import { sixHash } from '../../../tools/math/dead-letter-depot-six.mjs';
@@ -96,13 +96,55 @@ export const GOLDEN = [
   ['mystery', 4, 71800], ['mystery', 7, 10060], ['mystery', 1, 16900], // Lost & Found with 2 KEY doubles; Night Shift; Double Post
   ['mystery', 371, CAP],                                         // Lost & Found reaches the 25,000x cap
 ];
+// Ladder golden replays (dld-six-2).
+export const LADDER_GOLDEN = [
+  ['base', 52, 3180],                                            // natural Night Shift
+  ['nightshift', 8, 8560], ['nightshift', 4, 22280],             // first rack hit on spin 7+; the ladder climbs to 36x
+  ['mystery', 20, 652600], ['mystery', 7, 1440], ['mystery', 1, 17620], // Lost & Found KEY x2 then x4 (3 matches); Night Shift; Double Post
+  ['mystery', 432, CAP],                                         // Lost & Found reaches the cap
+];
 test('golden replays settle to these totals', () => {
   for (const [mode, seed, total] of GOLDEN) assert.equal(playSixRound({ mode, rng: seeded(seed), record: false }).total, total, `${mode} ${seed}`);
+  for (const [mode, seed, total] of LADDER_GOLDEN) assert.equal(playSixRound({ mode, rng: seeded(seed), record: false, variant: 'ladder' }).total, total, `ladder ${mode} ${seed}`);
 });
 
-test('SIX.md and math/six-summary.json were regenerated after the last trial change', () => {
-  const s = JSON.parse(readFileSync(new URL('../math/six-summary.json', import.meta.url), 'utf8'));
-  assert.equal(s.source, sixHash(), 'run node tools/math/dead-letter-depot-six.mjs');
-  assert.deepEqual(s.spec, JSON.parse(JSON.stringify(SIX)));
-  for (const [id, r] of Object.entries(s.modes)) assert.ok(Math.abs(r.rtp - 0.96) <= r.ci999, `${id} ${r.rtp} ± ${r.ci999}`);
+test('ladder events: each racked symbol\'s addition doubles after it pays; KEY multiplies by 2, then 4', () => {
+  const w = (...x) => x.map((s) => ({ s }));
+  const rack = ['Q', 'K', '10', 'PHONE', 'PARCEL', 'KEY'], st = ladderState(rack);
+  assert.deepEqual(st, { next: { Q: 1, K: 1, 10: 1, PHONE: 3, PARCEL: 3 }, nextKey: 2 });
+  let e = ladderStep(1, w('Q', 'PHONE'), rack, st);
+  assert.deepEqual([e.add, e.after, e.next.Q, e.next.PHONE], [4, 5, 2, 6]);
+  e = ladderStep(e.after, w('Q', 'J'), rack, st);
+  assert.deepEqual([e.add, e.after, e.next.Q], [2, 7, 4], 'unracked J pays but never moves the meter');
+  e = ladderStep(e.after, w('KEY'), rack, st);
+  assert.deepEqual([e.keyFactor, e.after, e.nextKey], [2, 14, 4]);
+  e = ladderStep(e.after, w('K', 'KEY'), rack, st);
+  assert.deepEqual([e.add, e.keyFactor, e.after], [1, 4, 60], 'additions first, then the later KEY quadruples');
+  assert.equal(ladderStep(200, w('KEY'), rack, st, 250).after, 250);
+});
+
+test('ladder bonuses replay their events from a fresh ladder per bonus', () => {
+  let keys = 0;
+  for (const tier of ['regular', 'super', 'hidden']) for (let seed = 1; seed <= 200; seed++) {
+    const b = playSixBonus(tier, seeded(seed), CAP, { spec: VARIANTS.ladder.spec, lands: VARIANTS.ladder.lands }), t = SIX_LADDER[tier], st = ladderState(b.rack);
+    let meter = t.start, total = 0;
+    for (const s of b.spins) {
+      for (const step of s.steps) { const e = ladderStep(meter, step.wins, b.rack, st, t.ceiling); assert.deepEqual(step.rack, e); meter = e.after; if (e.doubled) keys += 1; }
+      assert.equal(s.meter.after, meter);
+      assert.equal(s.multiplier, s.meter.active ? meter : 1);
+      total += s.paid;
+    }
+    assert.equal(b.total, total);
+  }
+  assert.ok(keys > 0);
+  const r = playSixRound({ mode: 'mystery', rng: seeded(4), variant: 'ladder' });
+  assert.equal(r.version, LADDER_VERSION);
+  assert.equal(playSixRound({ mode: 'mystery', rng: seeded(4) }).version, SIX_VERSION);
+});
+
+for (const [variant, file, spec] of [['flat', 'six-summary.json', SIX], ['ladder', 'six-ladder-summary.json', SIX_LADDER]]) test(`the ${variant} trial report was regenerated after the last trial change`, () => {
+  const s = JSON.parse(readFileSync(new URL(`../math/${file}`, import.meta.url), 'utf8'));
+  assert.equal(s.source, sixHash(), `run node tools/math/dead-letter-depot-six.mjs --variant ${variant}`);
+  assert.deepEqual(s.spec, JSON.parse(JSON.stringify(spec)));
+  for (const [id, r] of Object.entries(s.modes)) assert.ok(Math.abs(r.rtp - 0.96) <= r.ci999, `${variant} ${id} ${r.rtp} ± ${r.ci999}`);
 });

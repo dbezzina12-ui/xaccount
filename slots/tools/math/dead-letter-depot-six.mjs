@@ -2,7 +2,7 @@
 // Dead Letter Depot: the six-symbol bonus trial (engine/six.js). Simulates,
 // fits and reports it APART from the release math (MATH.md), on worker
 // threads, through the trial engine itself.
-//   node tools/math/dead-letter-depot-six.mjs [--fit] [--write] [--render] [--bonus 4e5] [--spins 6e6]
+//   node tools/math/dead-letter-depot-six.mjs [--variant flat|ladder] [--fit] [--write] [--render] [--bonus 4e5] [--spins 6e6]
 // --fit solves Night Shift and Double Post lowScale, Lost & Found keyWeight
 // (Mystery 400x at 96%) and the base and Priority Mail FS chances; --write
 // stores them in engine/six.js. Without --fit it measures and writes
@@ -12,18 +12,18 @@ import { availableParallelism } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { playSixBonus, playSixRound, sixLands, selectRack, SIX, SIX_MODES, SIX_MYSTERY, SIX_VERSION, seeded } from '../../games/dead-letter-depot/engine/six.js';
+import { playSixBonus, playSixRound, sixLands, selectRack, VARIANTS, SIX_MODES, SIX_MYSTERY, seeded } from '../../games/dead-letter-depot/engine/six.js';
 import { spinBoard } from '../../games/dead-letter-depot/engine/engine.js';
 import { CAP, PAYING, LOWS, bonusFor } from '../../games/dead-letter-depot/engine/rules.js';
 
 const GAME = new URL('../../games/dead-letter-depot/', import.meta.url);
 const RTP = 0.96, Z = 3.29, NEVER = Object.fromEntries(PAYING.map((s) => [s, Infinity]));
 const OVER = [1, 5, 10, 25, 100, 500, 1000, 5000, 25000];
-const specWith = (patch = {}) => Object.fromEntries(Object.entries(SIX).map(([k, v]) => [k, { ...v, ...(patch[k] ?? {}) }]));
+const specWith = (patch = {}, variant = 'flat') => Object.fromEntries(Object.entries(VARIANTS[variant].spec).map(([k, v]) => [k, { ...v, ...(patch[k] ?? {}) }]));
 
 // ---- worker jobs ----
 export function chunk(job) {
-  const spec = specWith(job.patch), lands = sixLands(spec), g = seeded(job.seed);
+  const variant = job.variant ?? 'flat', spec = specWith(job.patch, variant), lands = sixLands(spec), g = seeded(job.seed);
   const o = { n: 0, sum: 0, sum2: 0, max: 0, capped: 0, zero: 0, over: OVER.map(() => 0), trig: { regular: 0, super: 0, hidden: 0 }, keyRack: 0, keyBonus: 0, keyHits: 0, hitSpins: 0, spins: 0, retrig: 0, meterHist: new Array(12).fill(0), tiers: {} };
   const add = (x) => { o.n++; o.sum += x; o.sum2 += x * x; if (x > o.max) o.max = x; if (!x) o.zero++; for (let j = 0; j < OVER.length; j++) if (x >= OVER[j]) o.over[j]++; };
   const noteBonus = (b) => {
@@ -35,7 +35,7 @@ export function chunk(job) {
     const rng = seeded(Math.floor(g() * 4294967296));
     if (job.job === 'bonus') { const b = playSixBonus(job.tier, rng, CAP, { lands, spec, record: false }); add(b.total / 100); if (b.capped) o.capped++; noteBonus(b); }
     else if (job.job === 'spins') { const m = SIX_MODES[job.mode], r = spinBoard(m.land, rng, { lands, targets: NEVER }); add(Math.min(CAP, r.subtotal) / 100); const t = bonusFor(r.fs); if (t) o.trig[t]++; }
-    else { const r = playSixRound({ mode: job.mode, rng, lands, spec, record: false }); add(r.total / 100); if (r.capped) o.capped++; if (r.bonus) { noteBonus(r.bonus); o.tiers[r.bonus.tier] = (o.tiers[r.bonus.tier] ?? 0) + 1; } }
+    else { const r = playSixRound({ mode: job.mode, rng, variant, lands, spec, record: false }); add(r.total / 100); if (r.capped) o.capped++; if (r.bonus) { noteBonus(r.bonus); o.tiers[r.bonus.tier] = (o.tiers[r.bonus.tier] ?? 0) + 1; } }
   }
   return o;
 }
@@ -61,33 +61,36 @@ async function solve(g, lo, hi, tol) {
   for (let i = 0; i < 14; i++) { x = (lo * fhi - hi * flo) / (fhi - flo); const fx = sign * (await g(x)); if (Math.abs(fx) < tol) break; if (fx > 0) { hi = x; fhi = fx; flo /= 2; } else { lo = x; flo = fx; fhi /= 2; } }
   return Math.round(x * 1e4) / 1e4;
 }
-export async function fit({ bonusN = 4e5, spinN = 6e6, seed = 913 } = {}) {
+export async function fit({ bonusN = 4e5, spinN = 6e6, seed = 913, variant = 'flat' } = {}) {
   const target = { regular: RTP * 100, super: RTP * 250 };
   target.hidden = (RTP * 400 - SIX_MYSTERY.regular * target.regular - SIX_MYSTERY.super * target.super) / SIX_MYSTERY.hidden;
   const patch = {}, means = {};
-  for (const [tier, knob, lo, hi] of [['regular', 'lowScale', 0.8, 1.6], ['super', 'lowScale', 0.8, 1.6], ['hidden', 'keyWeight', 20, 45]]) {
-    const f = async (v) => (await run({ job: 'bonus', tier, n: bonusN, seed, patch: { ...patch, [tier]: { [knob]: v } } })).mean - target[tier];
+  const ranges = variant === 'ladder' ? [['regular', 'lowScale', 0.3, 1.6], ['super', 'lowScale', 0.3, 1.6], ['hidden', 'keyWeight', 3, 45]] : [['regular', 'lowScale', 0.8, 1.6], ['super', 'lowScale', 0.8, 1.6], ['hidden', 'keyWeight', 20, 45]];
+  for (const [tier, knob, lo, hi] of ranges) {
+    const f = async (v) => (await run({ job: 'bonus', tier, n: bonusN, seed, variant, patch: { ...patch, [tier]: { [knob]: v } } })).mean - target[tier];
     patch[tier] = { [knob]: await solve(f, lo, hi, 0.002 * target[tier]) };
-    means[tier] = (await run({ job: 'bonus', tier, n: bonusN, seed, patch })).mean;
+    means[tier] = (await run({ job: 'bonus', tier, n: bonusN, seed, variant, patch })).mean;
     console.log(`${tier} ${knob} ${patch[tier][knob]} -> ${means[tier].toFixed(2)}x (target ${target[tier].toFixed(2)})`);
   }
   for (const mode of ['base', 'priority']) {
     const cost = SIX_MODES[mode].cost;
-    const f = async (fs) => { const s = await run({ job: 'spins', mode, n: spinN, seed, patch: { ...patch, [mode]: { fs } } }); return (s.mean + Object.entries(s.trig).reduce((a, [t, c]) => a + (c / s.n) * means[t], 0)) / cost - RTP; };
+    const f = async (fs) => { const s = await run({ job: 'spins', mode, n: spinN, seed, variant, patch: { ...patch, [mode]: { fs } } }); return (s.mean + Object.entries(s.trig).reduce((a, [t, c]) => a + (c / s.n) * means[t], 0)) / cost - RTP; };
     patch[mode] = { fs: await solve(f, 0.002, 0.08, 0.0005) };
     console.log(`${mode} fs ${patch[mode].fs}`);
   }
   return { target, patch, means };
 }
-function write(patch) {
-  const path = new URL('engine/six.js', GAME);
-  let src = readFileSync(path, 'utf8');
+function write(patch, variant = 'flat') {
+  const path = new URL('engine/six.js', GAME), src = readFileSync(path, 'utf8');
+  const head = `export const ${variant === 'ladder' ? 'SIX_LADDER' : 'SIX'} = Object.freeze({`, a = src.indexOf(head), b = src.indexOf('\n});', a);
+  if (a < 0) throw Error(`no ${head} in six.js`);
+  let block = src.slice(a, b);
   for (const [tier, p] of Object.entries(patch)) for (const [k, v] of Object.entries(p)) {
     const re = new RegExp(`(  ${tier}: Object\\.freeze\\(\\{[^\\n]*?${k}: )([0-9.]+)`);
-    if (!re.test(src)) throw Error(`no ${tier}.${k} in six.js`);
-    src = src.replace(re, `$1${v}`);
+    if (!re.test(block)) throw Error(`no ${tier}.${k} in ${head}`);
+    block = block.replace(re, `$1${v}`);
   }
-  writeFileSync(path, src);
+  writeFileSync(path, src.slice(0, a) + block + src.slice(b));
 }
 
 // ---- report ----
@@ -115,42 +118,44 @@ async function concepts(seed) {
   return out;
 }
 
-async function report({ bonusN = 1e6, spinN = 1e7, roundN = 1e7, buyN = 1e6, seed = 20261106 } = {}) {
-  const s = { version: SIX_VERSION, source: sixHash(), seed, spec: SIX, mystery: SIX_MYSTERY, bonuses: {}, modes: {} };
+async function report({ bonusN = 1e6, spinN = 1e7, roundN = 1e7, buyN = 1e6, seed = 20261106, variant = 'flat' } = {}) {
+  const s = { variant, version: VARIANTS[variant].version, source: sixHash(), seed, spec: VARIANTS[variant].spec, mystery: SIX_MYSTERY, bonuses: {}, modes: {} };
   for (const tier of ['regular', 'super', 'hidden']) {
-    const r = await run({ job: 'bonus', tier, n: bonusN, seed: seed + 1 });
+    const r = await run({ job: 'bonus', tier, n: bonusN, seed: seed + 1, variant });
     s.bonuses[tier] = { n: r.n, mean: r.mean, se: r.se, sd: r.sd, zero: r.zero / r.n, max: r.max, capped: r.capped, over: Object.fromEntries(OVER.map((x, j) => [x, r.over[j] / r.n])), keyInRack: r.keyRack / r.n, keyBonusShare: r.keyRack ? r.keyBonus / r.keyRack : 0, keyHitsPerKeyBonus: r.keyRack ? r.keyHits / r.keyRack : 0, hitSpinShare: r.hitSpins / r.spins, spins: r.spins / r.n, retriggerPerBonus: r.retrig / r.n, meterHist: r.meterHist.map((v) => v / r.n) };
   }
   const B = s.bonuses;
   for (const [id, m] of Object.entries(SIX_MODES)) {
     const row = { title: m.title, cost: m.cost };
     if (m.kind === 'spin') {
-      const sp = await run({ job: 'spins', mode: id, n: spinN, seed: seed + 2 });
+      const sp = await run({ job: 'spins', mode: id, n: spinN, seed: seed + 2, variant });
       const rates = Object.fromEntries(Object.entries(sp.trig).map(([t, c]) => [t, c / sp.n]));
       const bonus = Object.entries(rates).reduce((a, [t, r]) => a + r * B[t].mean, 0);
       const v = sp.se ** 2 + Object.entries(rates).reduce((a, [t, r]) => a + B[t].mean ** 2 * r * (1 - r) / sp.n + r * r * B[t].se ** 2, 0);
-      Object.assign(row, { fs: SIX[m.land].fs, spinRtp: sp.mean / m.cost, rtp: (sp.mean + bonus) / m.cost, ci999: Z * Math.sqrt(v) / m.cost, rates });
+      Object.assign(row, { fs: s.spec[m.land].fs, spinRtp: sp.mean / m.cost, rtp: (sp.mean + bonus) / m.cost, ci999: Z * Math.sqrt(v) / m.cost, rates });
     } else {
       const w = m.bonus ? { [m.bonus]: 1 } : SIX_MYSTERY, mean = Object.entries(w).reduce((a, [t, p]) => a + p * B[t].mean, 0);
       Object.assign(row, { weights: w, rtp: mean / m.cost, ci999: Z * Math.sqrt(Object.entries(w).reduce((a, [t, p]) => a + (p * B[t].se) ** 2, 0)) / m.cost });
     }
-    const r = await run({ job: 'rounds', mode: id, n: m.kind === 'buy' ? buyN : roundN, seed: seed + 3 });
+    const r = await run({ job: 'rounds', mode: id, n: m.kind === 'buy' ? buyN : roundN, seed: seed + 3, variant });
     row.rounds = { n: r.n, rtp: r.mean / m.cost, ci999: Z * r.se / m.cost, hit: 1 - r.zero / r.n, capped: r.capped, max: r.max };
     s.modes[id] = row;
   }
-  s.concepts = await concepts(seed);
+  s.concepts = variant === 'flat' ? await concepts(seed) : [];
   return s;
 }
 
 function markdown(s) {
   const L = [], b = s.bonuses;
-  L.push('# Dead Letter Depot · six-symbol bonus trial (separate from release math)', '');
+  const ladder = s.variant === 'ladder';
+  L.push(`# Dead Letter Depot · six-symbol bonus trial${ladder ? ', ladder variant' : ''} (separate from release math)`, '');
   L.push(`Generated by \`tools/math/dead-letter-depot-six.mjs\` · trial engine \`${s.version}\` · source \`${s.source}\` · seed ${s.seed}. **This is a producer trial.** These figures are not the release RTP in [MATH.md](MATH.md).`, '');
   L.push('## Rules as the trial engine settles them', '');
   L.push('- **Board.** The same 6×5 pay-anywhere tumbles. There are no stamps and no collection jobs.');
   L.push('- **Base and Priority Mail spins** have no rack and pay face value. Their FS chance is fitted for 96%.');
   L.push('- **The rack.** Each bonus draws six symbols: three basics and three premiums. Lost & Found always has KEY plus two other premiums. The rack is fixed for the whole bonus.');
-  L.push('- **The meter.** In each tumble, every paying group of a rack symbol moves the meter: a basic adds +1, a premium adds +3, and KEY doubles. Additions apply before the doubling. The meter carries through the bonus and multiplies each spin\'s tumble subtotal once.');
+  if (ladder) L.push('- **The meter (ladder).** Every rack symbol has its own next addition: basics start at +1 and premiums at +3. Each time that symbol pays, its addition goes on the meter and then doubles for next time. The first KEY match multiplies the whole meter by 2, and every later one by 4. Additions apply before the KEY. The meter carries through the bonus and multiplies each spin\'s tumble subtotal once.');
+  else L.push('- **The meter.** In each tumble, every paying group of a rack symbol moves the meter: a basic adds +1, a premium adds +3, and KEY doubles. Additions apply before the doubling. The meter carries through the bonus and multiplies each spin\'s tumble subtotal once.');
   L.push(`  - **Night Shift** starts at ${s.spec.regular.start}× and applies only on a spin with a rack hit.`);
   L.push(`  - **Double Post** starts at ${s.spec.super.start}× and applies every spin.`);
   L.push(`  - **Lost & Found** starts at ${s.spec.hidden.start}× and applies every spin.`);
@@ -163,30 +168,32 @@ function markdown(s) {
   for (const [t, x] of Object.entries(b)) L.push(`| ${t} | **${x.mean.toFixed(2)}×** ± ${(Z * x.se).toFixed(2)} | ${x.sd.toFixed(0)} | ${every(x.zero, x.n)} | ${pct(x.over[100], 1)} | ${pct(x.over[1000], 2)} | ${x.max.toLocaleString('en-US')}× | ${every(x.capped / x.n, x.n)} | ${pct(x.keyInRack, 0)} | ${pct(x.keyBonusShare, 2)} | ${x.keyHitsPerKeyBonus.toFixed(3)} | ${pct(x.hitSpinShare, 0)} |`);
   L.push('', `Lost & Found's final meter: ${b.hidden.meterHist.map((p, k) => (p > 0.0005 ? `${2 ** k}–${2 ** (k + 1) - 1}×: ${pct(p, 1)}` : null)).filter(Boolean).join(' · ')}.`, '');
   const baseBonus = (s.modes.base.rtp - s.modes.base.spinRtp) * s.modes.base.cost;
-  L.push('## Replacement stamp-feature concepts', '', `Paid spins that carry a spin-local rack (no carry-over), measured at the base FS chance. A spin at that chance also carries ${baseBonus.toFixed(3)}× of bonus value.`, '', '| Concept | Spin value (99.9%) | Price for 96% with bonus value |', '|---|---|---|');
+  if (s.concepts.length) L.push('## Replacement stamp-feature concepts', '', `Paid spins that carry a spin-local rack (no carry-over), measured at the base FS chance. A spin at that chance also carries ${baseBonus.toFixed(3)}× of bonus value.`, '', '| Concept | Spin value (99.9%) | Price for 96% with bonus value |', '|---|---|---|');
   for (const c of s.concepts) L.push(`| ${c.name} | ${c.spinValue.toFixed(3)}× ± ${(Z * c.se).toFixed(3)} | ${((c.spinValue + baseBonus) / RTP).toFixed(2)}× |`);
-  L.push('', 'At these values neither concept can replace Special Delivery or Double Exposure as a premium-priced spin. A paid version would need a higher starting meter or more spins.');
+  if (s.concepts.length) L.push('', 'At these values neither concept can replace Special Delivery or Double Exposure as a premium-priced spin. A paid version would need a higher starting meter or more spins.');
   L.push('', '## Findings for the producer', '');
   L.push(`- **KEY almost never doubles in Night Shift or Double Post** (${pct(b.regular.keyBonusShare, 1)} and ${pct(b.super.keyBonusShare, 1)} of bonuses with KEY racked). Their meters grow from basics and a few premiums. Making KEY land more there would add the doubling, but also variance.`);
   L.push(`- **Lost & Found's value comes from KEY doubles.** ${pct(b.hidden.keyBonusShare, 0)} of its bonuses double at least once, it reaches the cap ${every(b.hidden.capped / b.hidden.n, b.hidden.n)}, and its free spins land KEY at weight ${s.spec.hidden.keyWeight} to get there.`);
   L.push(`- **Night Shift activates on ${pct(b.regular.hitSpinShare, 0)} of its spins.** The rest pay face value.`);
-  L.push('- **Golden seeds** are in `tests/six.test.mjs`. Each free spin\'s per-tumble meter events are in `steps[].rack` (`hits`, `add`, `doubled`, `before`, `after`).', '');
+  L.push(`- **Golden seeds** are in \`tests/six.test.mjs\`. Each free spin's per-tumble meter events are in \`steps[].rack\` (\`hits\`, \`add\`, \`doubled\`, \`before\`, \`after\`${ladder ? ', plus `keyFactor`, `next` and `nextKey` for the ladder' : ''}).`, '');
   return L.join('\n');
 }
 
 if (!isMainThread) parentPort.postMessage(chunk(workerData));
 else if (import.meta.url === `file://${process.argv[1]}`) {
   const arg = (k, d) => (process.argv.includes(k) ? Number(process.argv[process.argv.indexOf(k) + 1]) : d), t0 = Date.now();
+  const variant = process.argv.includes('--variant') ? process.argv[process.argv.indexOf('--variant') + 1] : 'flat';
+  const files = variant === 'ladder' ? ['math/six-ladder-summary.json', 'SIX-LADDER.md'] : ['math/six-summary.json', 'SIX.md'];
   if (process.argv.includes('--render')) {
-    writeFileSync(new URL('SIX.md', GAME), markdown(JSON.parse(readFileSync(new URL('math/six-summary.json', GAME), 'utf8'))));
-    console.log('re-rendered SIX.md from math/six-summary.json');
+    writeFileSync(new URL(files[1], GAME), markdown(JSON.parse(readFileSync(new URL(files[0], GAME), 'utf8'))));
+    console.log(`re-rendered ${files[1]} from ${files[0]}`);
   } else if (process.argv.includes('--fit')) {
-    const r = await fit({ bonusN: arg('--bonus', 4e5), spinN: arg('--spins', 6e6) });
-    if (process.argv.includes('--write')) { write(r.patch); console.log('wrote engine/six.js'); }
+    const r = await fit({ bonusN: arg('--bonus', 4e5), spinN: arg('--spins', 6e6), variant });
+    if (process.argv.includes('--write')) { write(r.patch, variant); console.log('wrote engine/six.js'); }
   } else {
-    const s = await report({ bonusN: arg('--bonus', 1e6), spinN: arg('--spins', 1e7) });
-    writeFileSync(new URL('math/six-summary.json', GAME), JSON.stringify(s, null, 1) + '\n');
-    writeFileSync(new URL('SIX.md', GAME), markdown(s));
+    const s = await report({ bonusN: arg('--bonus', 1e6), spinN: arg('--spins', 1e7), variant });
+    writeFileSync(new URL(files[0], GAME), JSON.stringify(s, null, 1) + '\n');
+    writeFileSync(new URL(files[1], GAME), markdown(s));
     for (const [id, r] of Object.entries(s.modes)) console.log(`${id.padEnd(10)} ${pct(r.rtp, 3)} ± ${pct(r.ci999, 3)} · rounds ${pct(r.rounds.rtp, 3)} ± ${pct(r.rounds.ci999, 3)}`);
   }
   console.log(`${((Date.now() - t0) / 1000).toFixed(0)} s`);
