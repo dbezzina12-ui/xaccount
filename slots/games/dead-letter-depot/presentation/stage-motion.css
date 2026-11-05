@@ -51,6 +51,7 @@ body[data-shift=super] #board{background:radial-gradient(ellipse at 50% 35%,#314
   --cut:polygon(8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px),0 8px);
   clip-path:var(--cut);background:linear-gradient(160deg,#f7dba1,#98704b 18%,#efcd98 37%,#734d36 64%,#cbac79 87%,#8b613d);
 }
+.floor>.multi-dial[hidden]{display:none}
 .multi-dial::before,.multi-dial::after{content:"";position:absolute;pointer-events:none;clip-path:var(--cut);z-index:-1}
 .multi-dial::before{inset:2px;background:linear-gradient(145deg,#172a2a,#80674e 60%,#e2c59a)}
 .multi-dial::after{inset:4px;background:
@@ -66,10 +67,16 @@ body[data-shift=super] #board{background:radial-gradient(ellipse at 50% 35%,#314
 }
 @media(orientation:portrait){
   main{display:grid;grid-template-rows:1fr auto;justify-content:stretch;align-items:stretch}
-  main>.floor{align-self:stretch;align-content:stretch;margin:0 auto;grid-template-rows:clamp(65px,12svh,128px) auto minmax(46px,1fr)}
+  main>.floor{align-self:stretch;align-content:stretch;margin:0 auto;grid-template-rows:clamp(56px,8svh,95px) auto minmax(95px,1fr)}
   .floor>.multi-dial{grid-area:1/2;align-self:center;justify-self:center;width:min(84%,155px);height:clamp(49px,8svh,80px);margin:0}
-  .floor>.postmaster{grid-area:3/1/4/-1;justify-self:center;align-self:stretch;width:min(39vw,154px);height:0;min-height:100%;max-height:none}
-  .floor>.postmaster::before{display:none}
+  /* The rig shares only the empty center between the utility buttons.
+     Scale its full artboard to that space, including the parcel and boots. */
+  .floor>.postmaster{
+    grid-area:3/1/4/-1;position:absolute;inset:auto auto -38px 50%;translate:-50% 0;
+    width:min(52vw,220px);height:calc(100% + 38px);max-height:260px;
+    margin:0;min-height:0;z-index:2;pointer-events:none;
+  }
+  .floor>.postmaster>img{width:100%;height:100%;object-fit:contain;object-position:center bottom}
   #controller{width:min(100%,650px);margin:0 auto}
 }
 @media(orientation:portrait) and (max-height:700px){
@@ -79,28 +86,26 @@ body[data-shift=super] #board{background:radial-gradient(ellipse at 50% 35%,#314
 .tile[data-symbol=stamp] img{width:76%;height:70%;align-self:start;object-position:center top}
 .stamp-value{position:absolute;bottom:4%;left:5%;right:5%;padding:1px 0 2px;border:1px solid #ffe0a2;border-radius:4px;background:#542b27;box-shadow:0 2px 2px #10121b;color:#fff3cf;text-align:center;font:900 clamp(13px,32cqw,34px)/1 system-ui;letter-spacing:-.055em;font-variant-numeric:tabular-nums}
 @media(orientation:portrait){
-  .floor>.postmaster{
-    --overhang:37px;
-    align-self:start;justify-self:center;min-height:0;
-    height:calc(100% + var(--overhang));width:min(55vw,238px);
-    overflow:hidden;z-index:2;
-    mask-image:linear-gradient(black 90%,transparent);
-  }
-  .floor>.postmaster>svg,.floor>.postmaster>img{
-    position:absolute;inset:0;margin:auto auto 0;
-    width:100%!important;height:auto!important;aspect-ratio:564/711;
-    max-height:none;top:0;bottom:auto;object-position:top center;
-  }
   .dispatch-pocket{min-height:32px}
   .dispatch-pocket>.ribbon{padding-block:4px;min-height:32px}
   main>.floor{min-width:0}
 }
-@media(orientation:portrait) and (max-height:700px){
-  main>.floor{width:min(100%,51svh);grid-template-rows:clamp(45px,9svh,65px) auto minmax(45px,1fr)}
-  .floor>.postmaster{width:min(43vw,166px)}
-}
-
-@media(orientation:portrait) and (max-height:700px){
+@media(orientation:portrait) and (max-height:740px){
   main{padding-top:36px}
-  .floor:has(#rack:not([hidden]))>.rig{width:min(100%,45svh);justify-self:center}
+  main>.floor{width:min(100%,49svh);grid-template-rows:clamp(41px,7.5svh,55px) auto minmax(91px,1fr)}
+  .floor>.sign h1{max-height:100%}
+}
+@media(orientation:portrait) and (max-height:700px){
+  main{padding-top:40px}
+  main>header{top:4px}
+  .floor .sign h1{width:min(100%,21svh)}
+  .floor>.multi-dial{height:min(6.5svh,45px)}
+  .multi-caption{font-size:8px;line-height:1.1}
+  .multi-dial strong{font-size:25px}
+  main>.floor{grid-template-rows:clamp(38px,6.8svh,45px) auto minmax(82px,1fr)}
+  .floor #board{aspect-ratio:6/3.85}
+  .floor .topline{min-height:21px;padding-block:2px}
+  .floor .dispatch-pocket,.floor .dispatch-pocket>.ribbon{min-height:26px}
+  .floor #rack.six-rack{padding:2px}
+  .floor .six-cubby img{height:22px}
 }

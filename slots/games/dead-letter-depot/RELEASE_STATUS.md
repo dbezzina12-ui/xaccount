@@ -28,3 +28,5 @@
 2026-11-05 22:04 UTC · Six-symbol experiment and five win celebrations in private source `9a9027c`. See top handoff for playable, verified replay and uncalibrated math status. Max Win checked in preview only.
 
 2026-11-05 22:14 UTC · Private ladder trial `384baee` enlarges Frank and relocates the meter. Handoff contains the Key rule, repeatable replay and QA evidence. Pending Claude calibration.
+
+2026-11-05 22:20 UTC · Private `e5bbc16` shows full mobile mascot and bonus-only multiplier. Browser evidence for 390×844 and 375×667 in handoff.
