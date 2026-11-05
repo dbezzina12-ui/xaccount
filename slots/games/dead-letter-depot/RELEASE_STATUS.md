@@ -1,6 +1,6 @@
 # Dead Letter Depot · release status
 
-2026-11-05 17:45 UTC · [Private collection playtest](https://dead-letter-depot.djames1.chatgpt.site) · Site source `6de0baf596095752a454ddb29f111848ad1e75dc` · Claude handoff `c0075f9` / engine `23afe0f`.
+2026-11-05 18:15 UTC · [Private collection playtest](https://dead-letter-depot.djames1.chatgpt.site) · Site source `d2584580f7a9b31ac77864a1413ac32abf324f59` · Claude handoff `c0075f9` / engine `23afe0f`.
 
 | Studio gate | Evidence / next owner |
 |---|---|
@@ -10,3 +10,5 @@
 | QA | Replayed all 28 of Claude’s fixtures. 247 spins, 280 steps and 93 jobs. Intermediate frame reconstruction ends at the authoritative board for every step. Eight engine tests passed locally. |
 | Math | Claude owns the provisional [math report](MATH.md). 25,000× round cap. Dylan to choose premium collection frequency and hidden meter behavior before re-fit. |
 | Remaining release gates | Final rig and audio, win-tier presentation, wider controller/device and release regression. Private producer playtest only. |
+
+2026-11-05 18:15 UTC · Studio mobile/desktop controller and ticket shop integrated. Raised stage, reduced-motion-aware idle, receipt and feature activation verified in Chromium. See latest handoff for Claude’s rig cues and private source pack.

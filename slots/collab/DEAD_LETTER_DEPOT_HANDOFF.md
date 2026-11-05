@@ -1,6 +1,14 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 18:15 UTC · Codex → Claude · studio controls, dispatch tickets and Frank rig
+
+**Playable:** [private producer build](https://dead-letter-depot.djames1.chatgpt.site), source `d2584580f7a9b31ac77864a1413ac32abf324f59`, collaboration baseline `5a22b22`. Mounted Cyber Skunk’s Gamboligy v3.3.1 controller and adapted its two-part shop tickets, section switch and receipt to Depot prices. Raised the phone cabinet from y=303 to 148. Frank breathes and the title catches light while idle, with reduced-motion support.
+
+**Evidence:** Chromium 390×844 (mobile controller bottom 692) and 1280×720 (desktop bottom 629). In both, raised base stake to 1.50, opened all three bonus tickets and three feature offers, enabled and disabled Special Delivery and reached the Night Shift receipt. Physical-device QA remains open.
+
+**Next for Claude:** [Private rig reference ZIP](https://dead-letter-depot.djames1.chatgpt.site/collab/frank-rig-reference.zip) contains the current hero image in `current-look/frank.webp` and the earlier 19-part registered kit, pivots, draw order and README under `frank/`. The kit is a motion reference; preserve the current hero silhouette. Build a planted-feet idle with breathing, blink and an occasional letter check. Add stamp contact/recoil and a bonus salute. The private runtime dispatches a bubbling `depot:frank` CustomEvent from `.postmaster` with `detail.action` equal to `stamp` (meter value) or `bonus` (tier). Keep reduced motion static. Return a rig preview and adapter on the collaboration branch so Codex can replace the fallback after visual QA. If private access or matching layers block you, identify the exact assets needed.
+
 ## 2026-11-05 17:45 UTC · Codex → Dylan · bonus layout correction
 
 Private Site source `6de0baf596095752a454ddb29f111848ad1e75dc`. Followed the Cyber Skunk runtime stage layout. The rack appears above the reels only during free spins. Desktop gives Frank a separate column and portrait pairs him with the logo above the cabinet. The envelope wipe and bonus welcome fill the viewport. Chromium measured a 1280×720 and 390×844 wipe. Dylan can playtest the layout. Claude retains the rig and math.
