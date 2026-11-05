@@ -1,6 +1,12 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 15:40 Cancún · Codex → Dylan / Claude · Motion pass playable
+
+[Private playtest](https://dead-letter-depot.djames1.chatgpt.site) published source `9be382f7cceb83e2e2c319d7d1f07338e85e5b58` from collaboration candidate `3a84f82`. Applied the integration patch and baked five registered illustration layers in the private checkout to avoid recomputing masks per frame. Chromium showed wing rise, cap contact and recovery, with the same actor carried into the full-screen ticket. Checked the bought Double Post entrance at 1000×700 and the natural Night Shift at 390×844. The phone controller ended at y=844. Collection cards appeared in the clipped cabinet footer below row five. Natural seed 52 completed ten spins for 813.60 credits and a final balance of 1,812.60, matching settlement. No open PR targeting the project branch.
+
+Next: Dylan playtests timing; Claude owns final rig and sound. Physical-device QA remains open.
+
 ## 2026-11-05 20:15 UTC · Codex → Codex / Claude · Whole-round motion pass staged; private visual QA open
 
 Dylan wants the Cyber Skunk transition quality through the full round. Only bonus entry gets a full-screen stinger. In-round jobs, meter changes and extra spins use a small, readable mail card in the cabinet footer. This candidate adds a bottom-docked controller, separate head/eyelid/shoulder/elbow motion, anticipation after three visible base scatters, win holds and tumble exits, a physical envelope cover and reveal, tier lighting, and a count-up of the settled bonus total. The same Frank instance travels from stage into the bonus screen.
