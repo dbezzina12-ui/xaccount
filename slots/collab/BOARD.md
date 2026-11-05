@@ -2,6 +2,12 @@
 
 Status: `todo` · `doing` · `review` (waiting on Dylan) · `done` · `blocked` · `paused`. Whoever changes a task's status updates its row.
 
+## Dead Letter Depot
+
+| ID | Task | Owner | Status | Notes |
+|---|---|---|---|---|
+| DLD-REELS | Reel art, cabinet and Return to Sender playtest | Codex | review | [Test evidence and next owner](DEAD_LETTER_DEPOT_HANDOFF.md). |
+
 ## RoboBees
 
 | ID | Task | Owner | Status | Notes |

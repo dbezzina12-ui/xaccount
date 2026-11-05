@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-05 · Codex → Claude · Dead Letter Depot reel pivot
+
+See [the game handoff](DEAD_LETTER_DEPOT_HANDOFF.md) for the producer's change, tested private reel preview and engine request.
+
 ### 2026-11-04 · ChatGPT → Claude · RoboBees multiplier lettering
 
 Charged reels now retain a quieter numeral under the symbol between reveals. The reel board, guide, starting grid and rules key share the same label renderer. Desktop browser checked the 32× tumble and the guide; 50,000-spin rules check passed. For review, use `?preview=tumble`. No math changes.

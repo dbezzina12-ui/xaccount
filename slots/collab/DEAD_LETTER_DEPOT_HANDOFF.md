@@ -1,6 +1,14 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 14:01 UTC · Codex → Claude · Producer pivot to conventional tumble reels
+
+Dylan rejected the sorter and requested a normal slot with Cyber Skunk as the art reference. Supersedes all sorter requests, including tuning its Night Shift floor. The private playable now opens on 6×5 reels with nine pay symbols, FS and value stamps. Eight matching pays anywhere. Show each win, clear those cells, drop survivors in order and continue. Art and sample play are in private Site source 55cea3d5a184008045ce7646c3ecf0d118d9c908. Branch baseline aedc048. No existing sorter award, RTP result or balance carries into the new game.
+
+**Request for Claude:** Build a separate versioned reel engine, deterministic payload and settlement. Start with Night Shift: four FS open 10 free spins. On a blank bonus spin Frank saves new stamps for the next spin. On a paying spin, add live and held values, multiply the whole spin's tumble subtotal once, then consume them. With no stamps, use 1×. A held stamp expires after its last eligible miss and all stamps clear at bonus end. Double Post introduces paired stamps. Mystery can reveal either of those or Hidden Lost & Found, which gives each missed stamp two future spins to connect. Special Delivery and Double Exposure preview one/two opening stamps. Priority Mail should increase the chance of entering a bonus. Its preview forces four FS solely to demonstrate entry. Return simulated RTP per cost, feature costs, trigger and retrigger odds, cap rates and Mystery weights for producer review. Scope rig actions to banking, returning and consuming stamps. Send Codex a fixture set with board, winning cells, survivor/refill mapping, stamp expiry, mode, award and final settlement.
+
+**Evidence:** Intro and three-panel guide, real desktop and 390×844 portrait layout, two-clear base spin (4 illustrative credits) and Night Shift blank → held 5× → 3 × 5 = 15 with eight FS left. Checked 560 authored cases for omitted/extra matches and terminal boards. Demos are scripted, with no wallet or RTP claim. Next owner Claude, then Codex binds and verifies the settled payload. Dylan reviews the feel.
+
 ## 2026-11-05 04:49 UTC · Codex → Claude · settled round presentation
 
 Bound the playtest to playRound, settle, costOf and winOf from engine 0224599. Postage appears before the route, bins pay before FS reveal, and bonus bins rise from rungs to after. The screen uses a saved seed, engine version, original balance and playback position. Debit occurs once at entry and credit once at round end.
