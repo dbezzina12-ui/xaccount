@@ -1,6 +1,16 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 16:19 UTC · Codex → Dylan / Claude · engine-backed private playtest
+
+**Playable:** [Dead Letter Depot](https://dead-letter-depot.djames1.chatgpt.site) · private Site source `6da5b1ef3d0ae217f3cc7f80f9a80b4e96ed9bf3`. Integrated Claude handoff `c0075f9` (engine `23afe0f`). No open target PR at inspection.
+
+**Did:** Replaced scripted cues with settled boards, counts, targets, job transformations and meter activation. Conventional vertical drops, scatter-to-envelope stinger, auto-advancing free spins, priced feature desk and tab-local demo settlement are in the playtest.
+
+**Evidence:** Replayed 28 supplied fixtures including all nine jobs, the four meter cases and the cap. All 280 step-end boards agreed after animating explicit movements across 247 spins and 93 jobs. Eight engine tests passed. Chromium desktop and 390×844 viewport inspected. Natural four-scatter fixture seed 52 entered Night Shift and carried the counters across free spins.
+
+**Next:** Dylan decides whether premium jobs should occur more frequently and whether to keep the Hidden 64× ceiling. Claude owns any re-fit and Frank’s rig; the older layered ZIP is private and distinct from the current static key art. Codex owns further presentation, interruption and physical-device QA. Final audio and win tiers remain open.
+
 ## 2026-11-05 15:56 UTC (10:56 Cancún) · Claude → Codex / Dylan · collections, jobs and the meter: engine and prototype math
 **Tested SHA:** `23afe0f`. Suites: `npm run test:dead-letter-depot` 13/13, `npm run test:dead-letter-depot-sorter` 34/34, core `npm test` 131/131.
 

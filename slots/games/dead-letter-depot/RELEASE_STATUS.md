@@ -1,15 +1,12 @@
 # Dead Letter Depot · release status
 
-2026-11-05 · Private reel presentation playtest · Site source `fe07e3539acacb41f9f6dcf54d78b4bafe079da2` · GitHub baseline `44a141d`. Producer Dylan. Presentation Codex. Rig, math and settlement Claude.
+2026-11-05 16:19 UTC · [Private collection playtest](https://dead-letter-depot.djames1.chatgpt.site) · Site source `6da5b1ef3d0ae217f3cc7f80f9a80b4e96ed9bf3` · Claude handoff `c0075f9` / engine `23afe0f`.
 
 | Studio gate | Evidence / next owner |
 |---|---|
-| Brief | Dylan requested a regular slot. 6×5 pay-anywhere tumbles with Return to Sender now available for producer playtest. New design brief: each completed symbol collection performs its own job and builds the global multiplier. Claude owns the math prototype. See the [collection and multiplier handoff](../../collab/DEAD_LETTER_DEPOT_HANDOFF.md). |
-| Art and layout | Art pass 14:48 UTC: eleven new illustrated symbols, winged title, enamel cabinet, street scene and static Frank key art. Desktop and 390×844 viewport inspected in Chromium with full board and controls visible. Frank's private layered asset pack is separate. Final rig and real-device checks open. |
-| Spin and feature flow | Intro and three panels, two-clear base spin, Regular, Super, Mystery/Hidden, one-/two-stamp feature spin and enhanced-trigger samples. Browser checked Regular blank → held 5× → 3 × 5 = 15. 560 authored board cases checked. Live triggers, retriggers and settled round recovery await Claude. |
-| Controls | Spin/Stop, stake and Auto ×5 available in preview. Charge confirmation, wallet, turbo, fullscreen and release regression checks open. |
-| Win tiers and audio | Nice, Big, Epic, Mythic and Max all open. No settled threshold or cap evidence for this reel game yet. Final audio and rig pending. |
-| Math and settlement | Prototype `dld-reels-2` at `23afe0f`: every mode 96% within its 99.9% interval ([MATH.md](MATH.md)), 28 replayable fixtures, exact-cents settlement, 25,000× cap reached in the fixtures. Provisional pending Dylan's targets and meter starts; not release-approved. Claude owns simulator, RTP, prices, cap, seed, settlement and recovery. |
-| Release | Private prototype only. No production merge. Next: Claude simulates the collection rules, then Codex integrates the settled payload. |
-
-Presentation staging, 2026-11-05: conventional drop, collection rack and scatter-to-envelope entrance prepared on the collaboration branch. Codex owns private Site integration and browser checks. See the game handoff. The private playtest still shows the earlier presentation.
+| Game and art | 6×5 pay-anywhere tumbles. Three-panel intro, illustrated cabinet and Frank key art, nine illustrated collection counters, straight drops and postal bonus entrance. Codex inspected desktop and 390×844 Chromium phone viewport. Physical-device QA and final rig are open. |
+| Features | Base, Priority Mail, both opening-stamp modes, Night Shift, Double Post and Mystery Delivery (including Lost & Found) run Claude’s settled results. The rack and job animations use engine step data. Free spins advance automatically, carry collections and honor retriggers. |
+| Controls and settlement | Stake, Spin/Stop, Auto ×5, priced buy confirmation and tab-local demo balance. The playback checkpoint stores the seed, original balance and spin cursor for reload. Independent interruption, low-balance and platform recovery regression still open. |
+| QA | Replayed all 28 of Claude’s fixtures. 247 spins, 280 steps and 93 jobs. Intermediate frame reconstruction ends at the authoritative board for every step. Eight engine tests passed locally. |
+| Math | Claude owns the provisional [math report](MATH.md). 25,000× round cap. Dylan to choose premium collection frequency and hidden meter behavior before re-fit. |
+| Remaining release gates | Final rig and audio, win-tier presentation, wider controller/device and release regression. Private producer playtest only. |
