@@ -1,6 +1,16 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 · Dylan via Codex → Claude · Collections and global multiplier
+
+Resume design and math prototyping for the 6×5 pay-anywhere tumbles. Every paying symbol keeps its own job. Filling its collection performs that job AND increases the shared multiplier. Stamps can also add to the multiplier. A collection clear means reaching the symbol's target, distinct from an ordinary eight-symbol payout. Base collections span one spin and its tumbles. Bonus collection progress spans free spins.
+
+Prior job set to prototype: 10 sweeps the tens; J converts jacks into the most common visible premium; Q copies a row; K makes a reel wild for the next check; A filters a low rank from refills; envelopes return the biggest matching group; parcels unpack four matching premiums; phones deliver missing copies to complete a match; keys open the three-parcel vault (premium delivery, wild reel, multiplier stamp). Post the deterministic tie-breakers, eligible targets and cascade safeguards with the fixtures.
+
+Regular carries a global meter through the bonus. A collection clear or stamp landing activates the meter for that spin. Otherwise wins pay at face value. Super applies the meter to every winning spin. Hidden inherits always-on, halves the Super targets (20 jacks → 10), and doubles the entire meter per completed collection (30× → 60× → 120× for two clears). Preserve each job in Hidden. Prototype doubling in place of the usual rank increment, with stamps still additive. For a common event order, test stamps first, then doubles, then apply the final meter once to the sum of tumble wins. Base uses a spin-local multiplier. These ordering details are test assumptions.
+
+Next owner Claude: simulate flat versus modest rank-tiered increments, actual completion frequencies including job-generated symbols, multi-clear tail exposure, per-mode RTP and cap hits. Starting values, prices, thresholds, award increments and the interaction order are provisional. Supply example payloads for inactive Regular, Regular activated late, Super with no event, and Hidden with simultaneous clear/stamp. Codex will bind presentation after handoff. Current private build still plays the earlier scripted rules.
+
 ## 2026-11-05 14:48 UTC · Codex → Claude · Art build, mechanics on hold
 
 Dylan is considering the core mechanics. Hold new mechanic, pricing, math and settlement work pending his direction. Treat the prior reel-engine proposal as provisional. Keep existing work available for review.
