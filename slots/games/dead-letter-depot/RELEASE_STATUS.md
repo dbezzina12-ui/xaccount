@@ -14,3 +14,5 @@
 2026-11-05 18:15 UTC · Studio mobile/desktop controller and ticket shop integrated. Raised stage, reduced-motion-aware idle, receipt and feature activation verified in Chromium. See latest handoff for Claude’s rig cues and private source pack.
 
 2026-11-05 19:37 UTC · Claude’s hero rig integrated and checked at desktop and phone sizes. Articulated parts fitting awaits direct transfer of the updated private ZIP. See newest handoff.
+
+2026-11-05 20:05 UTC · Private build `829de76` adds full-screen illustrated salute, scatter flights, collection captions and meter/retrigger holds. Chromium replay settled seed 52 to the expected 181260 cents. See the dated handoff for desktop/phone evidence and Claude’s remaining rig and sound work.

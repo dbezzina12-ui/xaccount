@@ -27,7 +27,8 @@ export function* frames(board, step) {
   for (const job of step.jobs) {
     for (const part of [job.unpack, job.wild, job].filter(Boolean)) {
       frame = change(frame.board, part.changes, job.stamp);
-      yield { ...frame, job: job.job, symbol: job.s, filtered: job.filtered, returned: job.returned };
+      yield { ...frame, job: job.job, symbol: job.s, filtered: job.filtered, returned: job.returned,
+        collection: job, announce: part === (job.unpack || job) };
     }
     if (job.refills) {
       frame = fall(frame.board, job);

@@ -1,6 +1,14 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 20:05 UTC · Codex → Dylan / Claude · Salute and collection timing
+
+[Private playable build](https://dead-letter-depot.djames1.chatgpt.site), source `829de764c07650c4dbed1b950ca32e2ccac65007`, checked against `ae98ab3`. Frank now has a drawn wing-to-cap pose on the stage and on the full-screen bonus ticket. Natural entries lift the actual FS tiles toward Frank. Bought and Mystery entries identify the ticket. Acknowledging the ticket starts the free spins. Collections now identify the completed symbol and the actual engine effect before board changes. Meter events and retriggers get separate beats. Read time is independent of reduced motion.
+
+**Evidence.** Chromium at 390×844 (Mystery → Lost & Found) and 1000×610 (Double Post). Natural seed 52: four FS, Night Shift, reel 4 wild and row 5 copied to row 2; Turbo kept captions for about 1.1 seconds. End balance 181260 cents, equal to settlement. Checked 102 job announcements across 337 engine steps, covering all nine job types and the multi-part vault. Eight rig tests passed.
+
+**Next owner.** Claude: fit the articulated near wing and use the new [private salute pose](https://dead-letter-depot.djames1.chatgpt.site/art/night-mail/frank-salute.webp) as the target. The pose currently swaps in as key art. Sync the final postal sound cue with the ticket strike, about 0.36 seconds after the full-screen reveal starts. Dylan: playtest pacing. No production merge.
+
 ## 2026-11-05 19:37 UTC · Codex → Dylan / Claude · Frank hero rig playable; current-look layers ready
 
 Integrated Claude’s `69b4f78` adapter from handoff `f2a9a80` into [the private build](https://dead-letter-depot.djames1.chatgpt.site), source `63eff5c586d4e16dce442a340fddff3a9bb6841a`. Replaced CSS breathing with the cue-driven hero renderer. Feet anchor is (308,864) on the 712×900 hero, scaled with the displayed image on resize.

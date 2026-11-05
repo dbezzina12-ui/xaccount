@@ -1,0 +1,33 @@
+#dispatch-note{position:absolute;z-index:4;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:.7em;padding:clamp(7px,1.6vh,15px) 10px;color:#fff2ce;background:linear-gradient(110deg,#193c41,#10252f 74%);border-block:2px solid #d5aa70;box-shadow:0 -5px 16px #09121bb0;text-align:left;pointer-events:none}
+#dispatch-note[hidden]{display:none}
+#dispatch-note img{width:clamp(38px,6.8vh,64px);height:clamp(38px,6.8vh,64px);object-fit:contain}
+#dispatch-note strong,#dispatch-note span{display:block}
+#dispatch-note strong{font:bold clamp(17px,3vh,28px)/1.05 Georgia,serif;color:#ffe1a6}
+#dispatch-note span{margin-top:4px;font:600 clamp(13px,1.85vh,18px)/1.28 system-ui,sans-serif}
+.dispatch-scatter{background:#775133;box-shadow:inset 0 0 0 2px #ffcb77}
+#modal.dispatch-dialog:has(#startBonus){padding:0;border:0;overflow:auto;color:#ffebc3;background:#102b36;text-align:left}
+.dispatch-dialog #paper{width:100%;height:100%;padding:0}
+.dispatch-scene{--ink:#a33b38;--sky:#0d3743;isolation:isolate;overflow:hidden;position:relative;width:100%;min-height:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;padding:5vh 6vw;background:linear-gradient(90deg,#0c20256e,var(--sky)),url(../art/night-mail/depot-at-dusk.webp) center/cover}
+.dispatch-scene[data-tier=super]{--sky:#243e56;--ink:#315071}
+.dispatch-scene[data-tier=hidden]{--sky:#392a48;--ink:#6c3e64}
+.dispatch-scene:before,.dispatch-scene:after{content:'';position:absolute;inset:0 0 auto;height:clamp(6px,1.5vmin,16px);background:repeating-linear-gradient(125deg,#a13c36 0 17px,#e5d3b1 17px 32px,#365962 32px 49px,#e5d3b1 49px 64px);z-index:3}
+.dispatch-scene:after{inset:auto 0 0}
+.dispatch-frank{grid-column:2;grid-row:1;align-self:end;justify-self:center;width:100%;height:78svh;object-fit:contain;object-position:bottom;filter:drop-shadow(0 12px 12px #07171fc9)}
+.dispatch-ticket{grid-column:1;grid-row:1;justify-self:end;width:min(100%,580px);padding:clamp(18px,4vmin,56px);border:1px solid #ad926a;outline:1px solid #ad926a;outline-offset:-7px;background:linear-gradient(125deg,#fff1cf,#e2c9a0);box-shadow:0 14px 30px #06151e94;text-align:center;color:#302c27}
+.dispatch-origin{display:block;font:800 clamp(11px,1.7vmin,18px)/1.4 system-ui;letter-spacing:.17em;text-transform:uppercase}
+#modal.dispatch-dialog:has(#startBonus) h2{margin:.3em 0;color:var(--ink);font:900 clamp(36px,7.2vmin,92px)/.98 Georgia;letter-spacing:-.045em}
+#modal.dispatch-dialog:has(#startBonus) p{margin:15px auto 22px;max-width:28em;font:600 clamp(14px,2.2vmin,21px)/1.4 system-ui}
+.dispatch-ticket button{min-height:44px;cursor:pointer}.dispatch-ticket button:disabled{cursor:default}
+@media(orientation:portrait){.dispatch-scene{align-content:center;grid-template: minmax(0,37svh) auto / 1fr;padding:28px 7vw}.dispatch-frank{grid-area:1/1;width:100%;height:100%;object-position:bottom}.dispatch-ticket{grid-area:2/1;justify-self:center;margin-top:-3px;z-index:1}}
+@media(prefers-reduced-motion:no-preference){
+ .dispatch-scene{animation:dispatch-open .38s cubic-bezier(.16,.75,.19,1) both}
+ .dispatch-frank{animation:salute-in .5s cubic-bezier(.18,.76,.23,1) both}
+ .dispatch-ticket{animation:ticket-strike .42s .36s cubic-bezier(.2,.78,.24,1) both}
+ #dispatch-note:not([hidden]){animation:note-in .16s ease-out both}
+ @keyframes dispatch-open{from{clip-path:polygon(0 0,0 0,0 100%,0 100%)}to{clip-path:polygon(0 0,115% 0,100% 100%,0 100%)}}
+ @keyframes salute-in{from{transform:translate(9%,5%) scale(.96);opacity:0}to{transform:none;opacity:1}}
+ @keyframes ticket-strike{0%{opacity:0;transform:scale(1.17) rotate(-4deg)}72%{opacity:1;transform:scale(.985) rotate(.4deg)}100%{opacity:1;transform:none}}
+ @keyframes note-in{from{transform:translateY(12%);opacity:0}to{transform:none;opacity:1}}
+}
+.postmaster.dispatch-saluting img{content:url(../art/night-mail/frank-salute.webp)}
+.dispatch-flight{position:fixed;z-index:8;object-fit:contain;pointer-events:none;filter:drop-shadow(0 3px 4px #0c1929b0)}
