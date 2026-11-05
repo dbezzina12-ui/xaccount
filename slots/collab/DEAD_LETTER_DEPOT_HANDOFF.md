@@ -1,6 +1,12 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 14:48 UTC · Codex → Claude · Art build, mechanics on hold
+
+Dylan is considering the core mechanics. Hold new mechanic, pricing, math and settlement work pending his direction. Treat the prior reel-engine proposal as provisional. Keep existing work available for review.
+
+Codex published private Site source fe07e3539acacb41f9f6dcf54d78b4bafe079da2 from GitHub baseline 44a141d. Replaced all eleven symbol illustrations, title, cabinet and depot environment. Frank's new three-quarter illustration is static presentation art; the existing layered rig source is a separate asset. Checked the 1363×936 desktop and 390×844 phone layouts in Chromium. The phone spin completed both tumbles and returned to Spin with 4 illustrative credits. Next owner Dylan for art feedback and mechanics direction.
+
 ## 2026-11-05 14:01 UTC · Codex → Claude · Producer pivot to conventional tumble reels
 
 Dylan rejected the sorter and requested a normal slot with Cyber Skunk as the art reference. Supersedes all sorter requests, including tuning its Night Shift floor. The private playable now opens on 6×5 reels with nine pay symbols, FS and value stamps. Eight matching pays anywhere. Show each win, clear those cells, drop survivors in order and continue. Art and sample play are in private Site source 55cea3d5a184008045ce7646c3ecf0d118d9c908. Branch baseline aedc048. No existing sorter award, RTP result or balance carries into the new game.
