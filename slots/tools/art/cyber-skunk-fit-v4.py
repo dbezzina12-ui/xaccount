@@ -25,7 +25,7 @@ RIG = GAME / "art" / "rig"
 J = {
     "base": (850, 1250), "neck": (900, 955), "ear": (825, 545), "far_ear": (1092, 530), "goggles": (940, 600), "eyes": (920, 800),
     "near_shoulder": (705, 975), "near_elbow": (550, 1150), "near_wrist": (695, 1263),
-    "far_shoulder": (1040, 1005), "far_elbow": (1153, 1110), "far_wrist": (1315, 1174),
+    "far_shoulder": (1040, 1005), "far_elbow": (1178, 1093), "far_wrist": (1370, 1138),
     "tail_root": (738, 1160), "tail_1": (480, 955), "tail_2": (600, 415), "tail_tip": (1190, 443),
 }
 JOINT_OF = {
@@ -48,6 +48,21 @@ LID_FIT = [((933, 802), (955, 749)), ((1095, 835), (1128, 789))]
 # joint is the rim's centre; the jet leaves from the mouth's opening.
 NOZZLE_FIT = (-8, 26)
 NOZZLE_MOUTH = (1339, 427)  # the opening's centre, as delivered
+# Far arm (Dylan, 2026-11-03: "the arm isn't connected properly on desktop" ...
+# "the forearm should cover the round part of the elbow only leaving the metal ring
+# for the elbow showing"): the upper arm ends in a metal ring (with its rivet) and a
+# round cap. As delivered, the far forearm sat below that cap, so its rounded end
+# stuck out toward the body and the forearm read as a separate tube. The fitted
+# forearm and hand move 42 px in and 32 px up ("slightly down" from 38 up, so the
+# forearm's top meets the ring's): drawn in front of the upper arm (as delivered),
+# the forearm's end covers the cap (88% of it, 4% of the ring) and comes out of the
+# ring. far_elbow is the cap's centre, so a bent forearm keeps covering it.
+# The wrist ("look at the hand now") had the same fault: the hand hung 25 px below the
+# forearm's wrist ring and covered most of it. The hand moves a further 44 px out and
+# 22 px up ("slightly off" at 52 out: the stub showed between ring and hand), so its
+# wrist meets the ring: it covers the forearm's fur stub past the ring (all but 2 px)
+# and none of the ring's gold. far_wrist is where the hand covers that stub.
+ARM_FIT = {"far-forearm": (42, -32), "far-hand": (86, -54)}
 
 
 def fit_nozzle():
@@ -100,6 +115,17 @@ def fit_nozzle():
     return (round(rim(cy) + dx + 5), round(cy + dy))
 
 
+def fit_arm():
+    """The far forearm over the elbow's round cap, the far hand out of the wrist ring."""
+    for name, (dx, dy) in ARM_FIT.items():
+        src = np.array(Image.open(SRC / "registered" / f"{name}.png").convert("RGBA"))
+        h, w = src.shape[:2]
+        out = np.zeros_like(src)
+        out[max(0, dy):h + min(0, dy), max(0, dx):w + min(0, dx)] = src[max(0, -dy):h - max(0, dy), max(0, -dx):w - max(0, dx)]
+        (RIG / "fitted").mkdir(exist_ok=True)
+        Image.fromarray(out).save(RIG / "fitted" / f"{name}.png")
+
+
 def fit_eyelids():
     """Each lid blob moved by its own offset onto its eye."""
     src = np.array(Image.open(SRC / "registered" / "eyelids.png").convert("RGBA"))
@@ -120,6 +146,7 @@ def fit_eyelids():
 
 def main():
     fit_eyelids()
+    fit_arm()
     seat = fit_nozzle()
     assert seat == J["tail_tip"], f"the nozzle's rim centre is {seat}, J says {J['tail_tip']}"
     proposal = json.loads((SRC / "assembly-proposal.json").read_text())
@@ -139,8 +166,10 @@ def main():
         # The spray: the nozzle joint lifts to here (every tail segment within +-35 degrees),
         # the nozzle stays level and the jet leaves from its mouth.
         "sprayTarget": [1250, 260], "nozzleMouth": [NOZZLE_MOUTH[0] + NOZZLE_FIT[0], NOZZLE_MOUTH[1] + NOZZLE_FIT[1]], "tuck": [0, 0, 0],
-        # Wins pump the near arm: the far one would rise behind the head.
-        "cheer": {"near-upper-arm": 100, "near-forearm": -75, "near-hand": -20, "far-upper-arm": -25, "far-forearm": -15},
+        # Wins raise the far arm's open palm beside the head, toward the reels; the near arm
+        # stays on the hip. (Dylan, 2026-11-03: the near arm's cheer folded it across the chest
+        # and pumped the fist up and down in front of the body, and read as a lewd gesture.)
+        "cheer": {"far-upper-arm": -40, "far-forearm": -20, "far-hand": -10},
         "notes": "Fitted to ChatGPT's 16 painted pieces as delivered: 3 tail segments, a separate far ear, no jaw yet (the grin is painted on the head).",
     }
     rows = []

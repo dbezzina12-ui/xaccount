@@ -35,16 +35,16 @@
   "file": "far-upper-arm.webp"
  },
  "far-forearm": {
-  "x": 1104,
-  "y": 1082,
+  "x": 1146,
+  "y": 1050,
   "w": 252,
   "h": 126,
   "file": "far-forearm.webp"
  },
  "far-hand": {
-  "x": 1264,
-  "y": 1075,
-  "w": 252,
+  "x": 1350,
+  "y": 1021,
+  "w": 250,
   "h": 179,
   "file": "far-hand.webp"
  },

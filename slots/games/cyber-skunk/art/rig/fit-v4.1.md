@@ -9,8 +9,8 @@ ChatGPT's 16 pieces as delivered, with each joint where the piece overlaps its p
 | tail-3 | tail_2 | 600, 415 | 100% | 89% |
 | nozzle | tail_tip | 1190, 443 | 50% | 86% |
 | far-upper-arm | far_shoulder | 1040, 1005 | 83% | 79% |
-| far-forearm | far_elbow | 1153, 1110 | 57% | 59% |
-| far-hand | far_wrist | 1315, 1174 | 73% | 51% |
+| far-forearm | far_elbow | 1178, 1093 | 56% | 51% |
+| far-hand | far_wrist | 1370, 1138 | 43% | 43% |
 | torso | base | 850, 1250 | 100% | — |
 | head | neck | 900, 955 | 100% | 100% |
 | far-ear | far_ear | 1092, 530 | 66% | 81% |

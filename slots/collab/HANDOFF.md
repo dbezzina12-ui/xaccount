@@ -33,6 +33,58 @@ Newest on top. Format is in `AGENTS.md`.
 **Questions for Dylan:** none. **Blocked on:** nothing.
 
 ---
+### 2026-11-03 · Claude → ChatGPT · Cyber Skunk: new win cheer (the near arm stays on the hip)
+
+**Dylan:** "Her right arm during celebrations looks weird (our right) … almost like she's jerking someone off."
+
+**Did** (branch `ccr-52c8075e-57i9ob`):
+- **The cause:** wins and bonuses played the contract's cheer, which swung the near arm (the hip arm) forward and bent it back. The fist then pumped up and down in front of her body.
+  - That arm is painted with its fist on the hip, so a raised fist would need the elbow bent backwards. It can't make that pose.
+- **The new cheer** (`cheer` in the contract, written by the fit tool):
+  - The near arm stays on her hip, a confident stance.
+  - The far arm raises its open palm beside her head, toward the reels, with the same gentle bob: `far-upper-arm` −40°, `far-forearm` −20°, `far-hand` −10°. It's checked clear of the head and goggles in every frame.
+  - The win, big win and bonus clips are otherwise unchanged; `rig.js` only had its comment updated.
+- **Checked:**
+  - The game's own mascot playing win and big win on desktop and phone.
+  - The three clips sampled every 0.15–0.25 s.
+  - Cyber Skunk tests 27/27, the browser suite 25/25, and `npm test` pass.
+  - Shots: `games/cyber-skunk/shots/cheer-far-arm-game.jpg`, `cheer-far-arm-clips.jpg`.
+
+**Files:** `tools/art/cyber-skunk-fit-v4.py`, `games/cyber-skunk/art/rig/pivots-v4.json`, `games/cyber-skunk/runtime/assets/mascot/{pivots.json, pivots-v4.json}`, `games/cyber-skunk/runtime/rig.js` (comment), `games/cyber-skunk/ART_SPEC.md`, `games/cyber-skunk/shots/cheer-far-arm-*.jpg`, `collab/BOARD.md`.
+
+**Next for ChatGPT:**
+1. If a raised-fist cheer is wanted later, it needs a near-arm piece painted raised. Say so and the contract gains it.
+
+**Questions for Dylan:** none.
+
+**Blocked on:** nothing.
+
+### 2026-11-03 · Claude → ChatGPT · Cyber Skunk: the reaching arm's elbow and wrist are joined
+
+**Dylan:** "The arm isn't connected properly on desktop." Then: "The forearm should cover the round part of the elbow only leaving the metal ring for the elbow showing … SLIGHTLY down … Look at the hand now." This is the skunk's far arm, which reaches toward the reels because the mascot is mirrored.
+
+**Did** (branch `ccr-52c8075e-57i9ob`):
+- **The cause:** the upper arm ends in a metal ring (with a rivet) and a round cap, and the forearm ends in a wrist ring. As delivered, the forearm sat below the cap with its rounded end sticking out toward the body, and the hand hung below the wrist ring and covered most of it. Both joints read as loose pieces, which the large desktop mascot made obvious.
+- **The fix,** the same way as the nozzle: the fit tool writes moved copies to `art/rig/fitted/`, and the draw order is unchanged.
+  - `far-forearm` moves 42 px in and 32 px up. Its end covers the round cap, so only the elbow ring shows.
+  - `far-hand` moves 86 px out and 54 px up, so its wrist meets the ring. It covers the forearm's fur stub past the ring and none of the ring's gold. Dylan: "The hand is slightly off as well"; at 94 out, a sliver of the stub showed.
+  - The joints moved too: `far_elbow` is the cap's centre (1178, 1093), so a bent forearm keeps covering it, and `far_wrist` is where the hand covers the stub (1370, 1138).
+- **Checked:**
+  - In the game at 1920×1080, 1366×768 and 390×844.
+  - Every clip (idle, anticipate, spray, recoil, release, win, bigwin, bonus), each at four moments: both rings show and the forearm and hand come out of them.
+  - The prep report is clean. Cyber Skunk tests 27/27, the browser suite 25/25, and `npm test` pass.
+  - Shots: `games/cyber-skunk/shots/far-arm-elbow-game.jpg`, `far-arm-elbow-zoom.jpg`, `far-arm-elbow-poses.jpg`.
+- The prep run also re-encoded some symbol and cabinet WebPs with no change of art. I left those as they were.
+
+**Files:** `tools/art/cyber-skunk-fit-v4.py`, `games/cyber-skunk/art/rig/{pivots-v4.json, fit-v4.1.md, guide-v3.jpg, fitted/far-forearm.png, fitted/far-hand.png}`, `games/cyber-skunk/runtime/assets/mascot/{layers.json, pivots.json, pivots-v4.json, far-hand.webp}`, `games/cyber-skunk/ART_SPEC.md`, `games/cyber-skunk/shots/far-arm-elbow-*.jpg`, `collab/BOARD.md`.
+
+**Next for ChatGPT:**
+1. If you repaint the far arm, paint the forearm covering the elbow's round cap and the hand coming out of the wrist ring, and say so. Claude then retires the fitted copies.
+2. Nothing else to change.
+
+**Questions for Dylan:** none.
+
+**Blocked on:** nothing.
 
 ### 2026-11-02 · Claude → ChatGPT · Bonuses landed in Pollen Charge and Hive Overdrive keep the multipliers
 

@@ -158,9 +158,10 @@ function idle(t, P, amp = 1) {
   const b = t % 4.6, double = Math.floor(t / 4.6) % 3 === 2;
   P.eyelids = { alpha: b < 0.13 || (double && b > 0.26 && b < 0.38) ? 1 : 0 };
 }
-// The cheer for wins: a contract can name the arm that shows it (rig v4.1's
-// far arm would rise behind the head, so its near arm pumps). Returns false
-// when the contract has none and the clip keeps its own far-arm cheer.
+// The cheer for wins: a contract can name the arm that shows it (rig v4.1
+// raises its far arm's open palm beside the head and keeps the near arm on the
+// hip). Returns false when the contract has none and the clip keeps its own
+// far-arm cheer.
 function cheer(P, rig, up, pump) {
   const c = rig?.rig?.cheer;
   if (!c) return false;

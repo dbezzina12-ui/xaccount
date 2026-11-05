@@ -49,12 +49,12 @@
    1005
   ],
   "far_elbow": [
-   1153,
-   1110
+   1178,
+   1093
   ],
   "far_wrist": [
-   1315,
-   1174
+   1370,
+   1138
   ],
   "tail_root": [
    738,
@@ -156,33 +156,33 @@
   },
   "far-forearm": {
    "pivot": [
-    1153,
-    1110
+    1178,
+    1093
    ],
    "joint": "far_elbow",
    "parent": "far-upper-arm",
    "order": 6,
    "extent": [
-    1110,
-    1088,
-    1350,
-    1202
+    1152,
+    1056,
+    1392,
+    1170
    ],
    "file": "far-forearm.png"
   },
   "far-hand": {
    "pivot": [
-    1315,
-    1174
+    1370,
+    1138
    ],
    "joint": "far_wrist",
    "parent": "far-forearm",
    "order": 7,
    "extent": [
-    1270,
-    1081,
-    1510,
-    1248
+    1356,
+    1027,
+    1596,
+    1194
    ],
    "file": "far-hand.png"
   },
@@ -352,11 +352,9 @@
   0
  ],
  "cheer": {
-  "near-upper-arm": 100,
-  "near-forearm": -75,
-  "near-hand": -20,
-  "far-upper-arm": -25,
-  "far-forearm": -15
+  "far-upper-arm": -40,
+  "far-forearm": -20,
+  "far-hand": -10
  },
  "notes": "Fitted to ChatGPT's 16 painted pieces as delivered: 3 tail segments, a separate far ear, no jaw yet (the grin is painted on the head)."
 }
