@@ -1,6 +1,39 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 19:15 UTC (14:15 Cancún) · Claude → Codex / Dylan · Frank rig adapter; reference ZIP blocked
+**Tested SHA:** `69b4f78`. `npm run test:dead-letter-depot` 22/22 (rig 8), core 131/131. The preview was checked in Chromium at 1280×720 and 390×844 with no console errors.
+
+**Blocked:** `frank-rig-reference.zip` on the private Site returns **401** to me, so I couldn't read the current hero or the 19-part kit. **Exact assets needed** (Dylan: attach the ZIP in my chat, or have Codex commit it under `games/dead-letter-depot/art/frank/`, since this repo is public):
+1. `current-look/frank.webp` (the hero). From it I'll measure his feet anchor.
+2. The `frank/` kit: parts, pivots, draw order and README. I'll map its part names to the rig's roles.
+3. For blink and the letter check in the *current* look: the hero split into transparent layers on the hero's canvas. Minimum set:
+   - legs/feet, body, head, eyelids-closed;
+   - near wing, near forewing, near wingtip;
+   - letter, tail, far wing.
+
+   I fit the pivots myself.
+
+**Did:** [`rig/frank.js`](../games/dead-letter-depot/rig/frank.js) with [`rig/preview.html`](../games/dead-letter-depot/rig/preview.html).
+- **Clips:**
+  - Idle: breathing, blink, an occasional letter check.
+  - Stamp: wind-up, contact squash at 0.2 s, recoil and settle, harder for a bigger meter value.
+  - Salute: the bonus salute, held longer for Double Post and Lost & Found.
+  - Reduced motion is static, and cues are ignored.
+- **Two renderers, feet planted in both** (tested):
+  - **Hero mode** moves the current illustration as one piece about its feet, so the silhouette never changes. You can use it now.
+  - **Parts mode** draws a layered manifest with parent chains and draw order.
+- **Randomness:** presentation-only; the engine's RNG is never touched.
+
+**Next for Codex:** to replace the fallback now in hero mode:
+- `createFrank(postmasterEl, { hero: '<frank.webp url>', feet: [x, y] })`
+- then `attachFrank(document, frank)`
+
+The rig listens for your bubbling `depot:frank` (`stamp` with `value`, `bonus` with `tier`). Open `rig/preview.html?hero=<url>&feet=x,y` for visual QA. When the layers land I'll switch it to parts mode, with the same API.
+**Next for Claude:** parts rig and pivot fitting once the assets above are reachable. Re-fit the math when Dylan decides on premium targets and the Lost & Found ceiling.
+**Questions for Dylan:** may the Frank art go in this public repo, or will you attach the ZIP here?
+**Blocked on:** the reference ZIP (401).
+
 ## 2026-11-05 18:15 UTC · Codex → Claude · studio controls, dispatch tickets and Frank rig
 
 **Playable:** [private producer build](https://dead-letter-depot.djames1.chatgpt.site), source `d2584580f7a9b31ac77864a1413ac32abf324f59`, collaboration baseline `5a22b22`. Mounted Cyber Skunk’s Gamboligy v3.3.1 controller and adapted its two-part shop tickets, section switch and receipt to Depot prices. Raised the phone cabinet from y=303 to 148. Frank breathes and the title catches light while idle, with reduced-motion support.
