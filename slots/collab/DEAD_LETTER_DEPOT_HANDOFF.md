@@ -1,6 +1,41 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 23:15 UTC (18:15 Cancún) · Claude → Codex / Dylan · ladder trial calibrated (dld-six-2)
+**Tested SHA:** `188f651` (merged with your `20fa237`). `npm run test:dead-letter-depot` 33/33 (trial 11), core 131/131.
+
+**Did:** Added your 17:14 ladder rules to [`engine/six.js`](../games/dead-letter-depot/engine/six.js) as `dld-six-2`. Call it with `playSixRound({ mode, rng: seeded(seed), variant: 'ladder' })`.
+- **Ladder rules:** each rack symbol's next addition (basics +1, premiums +3) doubles after it pays. The first KEY match multiplies the meter by 2, and every later one by 4. Additions come before the KEY.
+- **Per-tumble events** are in `steps[].rack`: `hits`, `add`, `keyFactor`, `before`, `after`, `next`, `nextKey`. These match your `advanceLadders`.
+- **Fitted landings** (`SIX_LADDER`): Night Shift basics ×0.89, Double Post ×0.96, Lost & Found KEY weight 25.2. FS chance: base 2.12%, Priority Mail 3.14%.
+- **Report:** [SIX-LADDER.md](../games/dead-letter-depot/SIX-LADDER.md). Every mode measures 96% within its 99.9% interval.
+- **Flat trial:** `dld-six-1` ([SIX.md](../games/dead-letter-depot/SIX.md)) is kept for comparison, regenerated unchanged.
+- **Golden seeds:** 7 ladder seeds in `tests/six.test.mjs`. Mystery seed 432 reaches the cap.
+
+**Ladder versus flat** (same prices, both at 96%):
+
+| | Ladder | Flat |
+|---|---|---|
+| Night Shift SD | 200 | 92 |
+| Night Shift bonuses at 1,000×+ | 0.74% | 0.02% |
+| Lost & Found cap | 1 in 114 | 1 in 373 |
+| Lost & Found pays 0 | 1 in 39 | 1 in 85 |
+
+- **Spins with a rack hit:** Night Shift 31% (flat 39%).
+- **KEY in Night Shift and Double Post:** still almost never matches (under 0.2% of racked bonuses), and Double Post never matched KEY twice in 400,000 bonuses. If Dylan wants KEY moments there, KEY must land more often in those free spins.
+
+**Next for Codex:** bind the ladder playtest to `variant: 'ladder'` in place of `six-ladders-1`. The fitted landings change replays, so use the golden seeds.
+**Next for Claude:**
+- Frank's final rig, carrying the parcel-release cue, once the private layers reach me. Dylan: attach the ZIP here.
+- The release math, whichever trial Dylan keeps.
+
+**Questions for Dylan:**
+1. Do you keep the ladder or the flat rules?
+2. Should KEY appear in Night Shift and Double Post?
+3. Is Lost & Found capping 1 in 114 bonuses acceptable?
+
+**Blocked on:** the Frank layers (private).
+
 ## 2026-11-05 23:07 UTC · Codex → Dylan / Claude · Return to Sender
 
 Dylan selected **Return to Sender** as the display title. The branch, game directory, round versions and save keys retain their existing identifiers. [Replay the parcel entry](https://dead-letter-depot.djames1.chatgpt.site/?playtest=power&preview=delivery) · [Move the shared title/counter mount in Studio](https://gamboligy-studio.djames1.chatgpt.site/dead-letter-depot-studio/index.html?view=phone&scene=bonus). Game source `82d8533bd6aa4f70408c50718615224f0ac716f3`, Studio source `5d85163697cbd10cfed541beebec0564f7910d90`, based on collaboration `8d85c23`.
