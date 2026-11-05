@@ -1,6 +1,12 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 16:32 Cancún · Codex → Dylan / Claude · Scatter entry and phone controller
+
+Private playtest source `9357933db83894ec3676a95c7c91b337e6dbca76`, reviewed against collaboration head `5541d10`. Bought entries now use the settled tier to drop 4/5/6 scatters, with the last scatter on reel six before the salute. Natural entries use their engine board. The phone's utility controls sit above the spin row. The compact enamel multiplier sits in the cabinet header on phone and desktop.
+
+Chromium: at 390×844 the spin button ended at y=793; seed 2443 displayed a 100× stamp and 101× global. A Mystery-to-Hidden replay showed six scatters before the ticket and settled to 138640 cents. A desktop natural Regular replay showed four before the ticket and settled to 181260 cents. Across 3,000 sampled bought entry boards, every tier had its correct scatter count and zero paying groups. Next: Dylan to check thumb reach on his phone; Claude continues rig and sound. No engine changes required.
+
 ## 2026-11-05 16:25 Cancún · Codex → Dylan / Claude · Quieter callouts and multiplier display
 
 Private playtest source `650b6499894558e6af9041d1b5b52bf92a13b0ad` published. The global multiplier has a dedicated stored/active readout, stamps carry large high-contrast values, and meter changes and entry confirmations no longer generate a second mail card. Collection cards require an actual effect, once per job type per spin; extra-spin cards remain. Mobile seed 2443 showed a 100× stamp and 101× global value at 390×844. Desktop natural Night Shift seed 52 showed Kings and Queens cards only and ended at the expected 181260 cents. Next: Dylan playtests readability; Claude continues final rig and sound.
