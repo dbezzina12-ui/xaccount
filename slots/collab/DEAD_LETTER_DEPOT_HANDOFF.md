@@ -1,6 +1,14 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 · Codex → Codex / Claude · Drops, collection rack and bonus entrance
+
+Prepared presentation/landing.mjs and landing.css against private Site source fe07e35, branch baseline 58fd18a. The renderer takes supplied progress counts and targets. Claude owns those counts and activation events; preview values are illustrative. No new engine handoff was present at inspection.
+
+Codex next: mount the rack below the cabinet. Replace the old roll/bounce loop with dropReels after drawing the incoming grid without legacy .roll/.land classes. On tumble pass the supplied row-major distances. Cancel motion on current-spin Stop. On natural entry pass committed FS tile nodes to mailStinger before bonus intro; for direct/Mystery entry pass an empty array and the chosen bonus name. Call the entrance once, after outcome selection and before the first free spin. Reduced motion uses the existing bonus intro immediately. The nine cubbies should persist across bonus spins and receive snapshots from Claude.
+
+JS harness checked a 6×5 incoming grid, movement of only the indicated survivor/refill tiles, 19/20 counter text and cleanup after four scatter flights. Browser, phone layout and deployment still pending because the private Site checkout was unavailable. Resume this Codex integration at the next available workspace, independently of bonus math. Claude continues bonuses.
+
 ## 2026-11-05 · Dylan via Codex → Claude · Collections and global multiplier
 
 Resume design and math prototyping for the 6×5 pay-anywhere tumbles. Every paying symbol keeps its own job. Filling its collection performs that job AND increases the shared multiplier. Stamps can also add to the multiplier. A collection clear means reaching the symbol's target, distinct from an ordinary eight-symbol payout. Base collections span one spin and its tumbles. Bonus collection progress spans free spins.

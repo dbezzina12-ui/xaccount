@@ -11,3 +11,5 @@
 | Win tiers and audio | Nice, Big, Epic, Mythic and Max all open. No settled threshold or cap evidence for this reel game yet. Final audio and rig pending. |
 | Math and settlement | New version required. Old sorter evidence belongs to the archived prototype only. Claude owns simulator, RTP, purchase prices, cap, seed, settlement and recovery. |
 | Release | Private prototype only. No production merge. Next: Claude simulates the collection rules, then Codex integrates the settled payload. |
+
+Presentation staging, 2026-11-05: conventional drop, collection rack and scatter-to-envelope entrance prepared on the collaboration branch. Codex owns private Site integration and browser checks. See the game handoff. The private playtest still shows the earlier presentation.
