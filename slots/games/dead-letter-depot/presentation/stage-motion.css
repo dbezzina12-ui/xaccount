@@ -42,14 +42,65 @@ body[data-shift=super] #board{background:radial-gradient(ellipse at 50% 35%,#314
 .dispatch-pocket #dispatch-note strong{color:#723831;font:800 clamp(14px,2.2svh,20px)/1.06 Georgia,serif}
 .dispatch-pocket #dispatch-note span{margin-top:2px;font:600 clamp(12px,1.65svh,16px)/1.15 system-ui,sans-serif}
 
-.topline{padding-block:3px;gap:8px}
-.multi-dial{display:inline-grid;grid-template-columns:auto minmax(3ch,auto);align-items:center;gap:6px;padding:4px 13px;position:relative;isolation:isolate;color:#f7dca8;background:linear-gradient(#e3c194,#937352 38%,#634831 68%,#c3a27a);clip-path:polygon(5px 0,calc(100% - 5px) 0,100% 5px,100% calc(100% - 5px),calc(100% - 5px) 100%,5px 100%,0 calc(100% - 5px),0 5px)}
-.multi-dial::before{content:'';position:absolute;inset:2px;z-index:-1;background:linear-gradient(180deg,#0b2027,#284344);clip-path:inherit}
-.topline .multi-caption{font:800 9px/1 system-ui;letter-spacing:.13em;color:#c8c7ad;text-shadow:none}
-.multi-dial strong{font:bold clamp(20px,2.7vh,28px)/1 Georgia,serif;letter-spacing:-.055em;text-align:right;color:#e2d9bd;font-variant-numeric:tabular-nums;text-shadow:0 2px #161e20}
-.multi-dial.active strong{color:#ffdb91}
-.multi-dial.active::before{background:linear-gradient(#251f1d,#56382e)}
-@media(orientation:portrait){#controller{width:min(100%,650px)}.topline{padding-inline:8px}.multi-dial{padding:3px 10px}}
+/* A brass registration plate occupies the mascot's old bay. */
+.topline{min-height:26px;padding-block:4px;justify-content:center}
+.floor>.multi-dial{
+  grid-area:1/3;justify-self:center;align-self:start;margin-top:14%;
+  position:relative;isolation:isolate;display:grid;justify-items:center;align-content:center;
+  width:min(88%,210px);height:clamp(65px,11svh,115px);color:#f7e5bf;
+  --cut:polygon(8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px),0 8px);
+  clip-path:var(--cut);background:linear-gradient(160deg,#f7dba1,#98704b 18%,#efcd98 37%,#734d36 64%,#cbac79 87%,#8b613d);
+}
+.multi-dial::before,.multi-dial::after{content:"";position:absolute;pointer-events:none;clip-path:var(--cut);z-index:-1}
+.multi-dial::before{inset:2px;background:linear-gradient(145deg,#172a2a,#80674e 60%,#e2c59a)}
+.multi-dial::after{inset:4px;background:
+  radial-gradient(circle at 7px 50%,#f1d293 1px,#675947 2px,transparent 3px),
+  radial-gradient(circle at calc(100% - 7px) 50%,#f1d293 1px,#675947 2px,transparent 3px),
+  linear-gradient(160deg,#34585a,#122e34 52%,#0b2027)}
+.multi-caption{font:800 clamp(9px,1.3svh,13px)/1.4 system-ui;letter-spacing:.17em;color:#dfcba0}
+.multi-dial strong{font:900 clamp(28px,5.2svh,58px)/1 Georgia,serif;letter-spacing:-.055em;color:#f4e6c4;font-variant-numeric:tabular-nums;text-shadow:0 2px #121d1f}
+.multi-dial.active strong{color:#ffe0a0}
+.multi-dial.active::after{background-color:#57402f;background-blend-mode:normal,normal,luminosity}
+@media(orientation:landscape){
+  .floor>.postmaster{justify-self:center;max-height:57%;max-width:min(90%,33svh)}
+}
+@media(orientation:portrait){
+  main{display:grid;grid-template-rows:1fr auto;justify-content:stretch;align-items:stretch}
+  main>.floor{align-self:stretch;align-content:stretch;margin:0 auto;grid-template-rows:clamp(65px,12svh,128px) auto minmax(46px,1fr)}
+  .floor>.multi-dial{grid-area:1/2;align-self:center;justify-self:center;width:min(84%,155px);height:clamp(49px,8svh,80px);margin:0}
+  .floor>.postmaster{grid-area:3/1/4/-1;justify-self:center;align-self:stretch;width:min(39vw,154px);height:0;min-height:100%;max-height:none}
+  .floor>.postmaster::before{display:none}
+  #controller{width:min(100%,650px);margin:0 auto}
+}
+@media(orientation:portrait) and (max-height:700px){
+  main>.floor{grid-template-rows:clamp(45px,9svh,65px) auto minmax(40px,1fr)}
+}
 .tile[data-symbol=stamp]{container-type:inline-size}
 .tile[data-symbol=stamp] img{width:76%;height:70%;align-self:start;object-position:center top}
 .stamp-value{position:absolute;bottom:4%;left:5%;right:5%;padding:1px 0 2px;border:1px solid #ffe0a2;border-radius:4px;background:#542b27;box-shadow:0 2px 2px #10121b;color:#fff3cf;text-align:center;font:900 clamp(13px,32cqw,34px)/1 system-ui;letter-spacing:-.055em;font-variant-numeric:tabular-nums}
+@media(orientation:portrait){
+  .floor>.postmaster{
+    --overhang:37px;
+    align-self:start;justify-self:center;min-height:0;
+    height:calc(100% + var(--overhang));width:min(55vw,238px);
+    overflow:hidden;z-index:2;
+    mask-image:linear-gradient(black 90%,transparent);
+  }
+  .floor>.postmaster>svg,.floor>.postmaster>img{
+    position:absolute;inset:0;margin:auto auto 0;
+    width:100%!important;height:auto!important;aspect-ratio:564/711;
+    max-height:none;top:0;bottom:auto;object-position:top center;
+  }
+  .dispatch-pocket{min-height:32px}
+  .dispatch-pocket>.ribbon{padding-block:4px;min-height:32px}
+  main>.floor{min-width:0}
+}
+@media(orientation:portrait) and (max-height:700px){
+  main>.floor{width:min(100%,51svh);grid-template-rows:clamp(45px,9svh,65px) auto minmax(45px,1fr)}
+  .floor>.postmaster{width:min(43vw,166px)}
+}
+
+@media(orientation:portrait) and (max-height:700px){
+  main{padding-top:36px}
+  .floor:has(#rack:not([hidden]))>.rig{width:min(100%,45svh);justify-self:center}
+}
