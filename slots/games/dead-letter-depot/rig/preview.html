@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frank rig preview</title>
+<style>
+  :root { --bg: #14161b; --panel: #1e2128; --ink: #ece6d8; --dim: #a39e93; --accent: #e4b25b; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink); font: 15px/1.4 system-ui, sans-serif; display: grid; grid-template-rows: auto 1fr auto; }
+  header, footer { padding: 12px 16px; }
+  h1 { margin: 0; font-size: 18px; }
+  p { margin: 4px 0 0; color: var(--dim); }
+  .stage { display: grid; place-items: end center; padding: 16px; }
+  .postmaster { width: min(360px, 80vw); aspect-ratio: 3 / 4; display: grid; place-items: end center; position: relative; }
+  .postmaster img, .postmaster canvas { max-width: 100%; max-height: 100%; display: block; }
+  .floor { position: absolute; bottom: 0; left: 10%; right: 10%; height: 2px; background: #3a3f48; }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 16px; background: var(--panel); }
+  button, label { background: #2b2f38; color: var(--ink); border: 1px solid #3c414c; border-radius: 8px; padding: 8px 12px; font: inherit; cursor: pointer; }
+  button:focus-visible, label:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+  label { display: inline-flex; gap: 6px; align-items: center; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Frank rig preview</h1>
+  <p>Hero mode: the illustration moves as one piece about his feet. Add <code>?hero=URL</code> for the real art and <code>?feet=x,y</code> (image pixels) for the anchor. The stand-in silhouette is a placeholder only.</p>
+</header>
+<main class="stage"><div class="postmaster" id="frank"><div class="floor"></div></div></main>
+<div class="controls" role="group" aria-label="Cues">
+  <button data-action="stamp" data-value="2">Stamp 2×</button>
+  <button data-action="stamp" data-value="10">Stamp 10×</button>
+  <button data-action="stamp" data-value="100">Stamp 100×</button>
+  <button data-action="bonus" data-tier="regular">Night Shift salute</button>
+  <button data-action="bonus" data-tier="super">Double Post salute</button>
+  <button data-action="bonus" data-tier="hidden">Lost &amp; Found salute</button>
+  <label><input type="checkbox" id="reduced"> Reduced motion</label>
+</div>
+<footer><p>Each button dispatches the runtime's bubbling <code>depot:frank</code> event from <code>.postmaster</code>.</p></footer>
+<script type="module">
+  import { createFrank, attachFrank } from './frank.js';
+  const q = new URLSearchParams(location.search);
+  // An original stand-in pigeon silhouette, used only when no hero URL is given.
+  const standIn = 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400"><g fill="#6d7686" stroke="#0d0f12" stroke-width="5" stroke-linejoin="round"><path d="M120 395 L128 340 M168 395 L162 340" fill="none"/><path d="M150 120 C215 120 238 205 230 270 C222 330 190 350 150 350 C108 350 76 328 70 270 C64 205 88 120 150 120 Z"/><path d="M196 190 C238 214 252 262 236 300 C214 290 196 250 196 190 Z" fill="#59616f"/><circle cx="150" cy="95" r="52" fill="#7c8696"/><path d="M196 92 L232 102 L196 112 Z" fill="#d79a3c"/><rect x="104" y="36" width="92" height="20" rx="4" fill="#2e3b55"/><rect x="118" y="14" width="64" height="30" rx="6" fill="#2e3b55"/></g><circle cx="168" cy="88" r="7" fill="#f3e6c4"/><circle cx="170" cy="88" r="3" fill="#111"/><rect x="88" y="248" width="56" height="38" rx="3" fill="#efe4c8" stroke="#0d0f12" stroke-width="4" transform="rotate(-8 116 267)"/></svg>`);
+  const host = document.getElementById('frank'), feet = q.get('feet')?.split(',').map(Number);
+  let frank = null, detach = null;
+  function mount() {
+    detach?.(); frank?.destroy(); host.querySelector('img')?.remove();
+    frank = createFrank(host, { hero: q.get('hero') || standIn, feet: feet?.length === 2 ? feet : null, reduced: document.getElementById('reduced').checked });
+    detach = attachFrank(document, frank);
+    window.__frank = frank;
+  }
+  mount();
+  document.getElementById('reduced').addEventListener('change', mount);
+  for (const b of document.querySelectorAll('button[data-action]')) b.addEventListener('click', () => {
+    const detail = b.dataset.action === 'stamp' ? { action: 'stamp', value: Number(b.dataset.value) } : { action: 'bonus', tier: b.dataset.tier };
+    host.dispatchEvent(new CustomEvent('depot:frank', { detail, bubbles: true }));
+  });
+</script>
+</body>
+</html>
