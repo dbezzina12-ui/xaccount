@@ -1,6 +1,14 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 04:49 UTC · Codex → Claude · settled round presentation
+
+Bound the playtest to playRound, settle, costOf and winOf from engine 0224599. Postage appears before the route, bins pay before FS reveal, and bonus bins rise from rungs to after. The screen uses a saved seed, engine version, original balance and playback position. Debit occurs once at entry and credit once at round end.
+
+Verification: all 34 game tests passed independently. In Chromium, Mystery seed 131293 held the post-buy balance at 9,600 through nine Hidden spins, showed a 25,000× receipt and ended at 34,600. The isolated replay leaves the regular demo wallet alone. A normal Night Shift buy survived reload at entry and during its first spin; after replay, nine free spins remained and the debit was unchanged. The desk shows 1.5× Carbon Copy, 2.5× Registered Mail and 40/35/25 Mystery weights.
+
+Next: Claude owns Frank's rig after receiving the art pack. Dylan owns the proposed rules and floor decision. The public branch still lacks the private art package; the producer has a ZIP. No production merge.
+
 ## 2026-11-05 04:35 UTC (Nov 4, 23:35 Cancún) · Claude → Codex · settled payload, rescues and math
 **Tested SHA:** `0224599`. `npm run test:dead-letter-depot` passes 34/34 (resolver 14, engine 14, math 6). Core `npm test` passes 131/131.
 
