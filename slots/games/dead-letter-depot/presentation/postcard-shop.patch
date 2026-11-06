@@ -1,0 +1,145 @@
+diff --git a/postcards.css b/postcards.css
+new file mode 100644
+index 0000000..8d44505
+--- /dev/null
++++ b/postcards.css
+@@ -0,0 +1,83 @@
++/* Illustrated postcards are scoped to Return to Sender bonus purchases. */
++.buy-menu .shop-wrap{max-width:1180px}
++.buy-menu .shop-head h2{font-family:PostWin,Impact,sans-serif;font-weight:800;font-size:clamp(34px,4.8vw,62px);letter-spacing:.01em}
++.buy-menu .shop-options{padding:8px 5px 20px}
++#bonus-cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;align-items:start}
++.postcard,.postcard-receipt-face{--paper:#f4e8cb;--ink:#24464b;--postage:#2f6776;--stripe-a:#b74b40;--stripe-b:#376c80;--wash:#a6c7bf}
++.postcard[data-mode=doublepost],.postcard-receipt-face[data-mode=doublepost]{--paper:#fff0c9;--ink:#603a25;--postage:#98572b;--stripe-a:#bd913c;--stripe-b:#834736;--wash:#e4bb61}
++.postcard[data-mode=mystery],.postcard-receipt-face[data-mode=mystery]{--paper:#e7dce9;--ink:#44344e;--postage:#684c80;--stripe-a:#6c4b80;--stripe-b:#a17b9c;--wash:#b9a0cb}
++.offer.postcard{display:block;isolation:isolate;overflow:visible;border:0;border-radius:3px;background:repeating-linear-gradient(135deg,var(--stripe-a) 0 12px,var(--paper) 12px 24px,var(--stripe-b) 24px 36px,var(--paper) 36px 48px);padding:7px;box-shadow:0 2px 0 #cbbfa6,0 14px 24px #0005;color:var(--ink);transform:rotate(-.8deg);transition:transform .2s ease,box-shadow .2s ease}
++.offer.postcard:nth-child(2){transform:rotate(.8deg)}
++.offer.postcard:nth-child(3){transform:rotate(-.6deg)}
++.offer.postcard::before{content:none}
++.postcard-face{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 66px;grid-template-rows:27px 160px auto 64px;column-gap:12px;padding:12px 16px 3px;background:radial-gradient(#91734b12 .55px,transparent .8px),linear-gradient(115deg,#ffffff3b,transparent 55%),var(--paper);background-size:4px 4px,auto,auto;border-radius:1px;min-height:385px}
++.postcard-top{grid-area:1/1/2/3;display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid color-mix(in srgb,var(--ink) 30%,transparent);padding-bottom:8px;font:800 9px/1.2 system-ui;letter-spacing:.13em;color:var(--ink)}
++.postcard-service{border:1px solid currentColor;padding:3px 5px;white-space:nowrap;transform:rotate(-2deg)}
++.postcard-brand{font-size:8px;text-align:right;max-width:105px;opacity:.7}
++.postcard-picture{grid-area:2/1/3/3;position:relative;min-width:0;display:grid;place-items:center;background:radial-gradient(ellipse,color-mix(in srgb,var(--wash) 55%,transparent),transparent 68%)}
++.postcard-picture>img{width:100%;height:100%;max-height:165px;object-fit:contain;filter:drop-shadow(0 4px 2px #32241630)}
++.postcard-cancel{position:absolute;left:0;bottom:4px;display:grid;place-items:center;width:58px;height:58px;padding:9px;border:2px solid currentColor;border-radius:50%;outline:1px solid currentColor;outline-offset:-5px;font:800 9px/1.2 system-ui;text-align:center;letter-spacing:.09em;transform:rotate(-16deg);opacity:.5}
++.postcard-cancel::after{content:'';position:absolute;left:100%;top:16px;width:35px;height:20px;background:repeating-linear-gradient(0deg,transparent 0 4px,currentColor 4px 5px,transparent 5px 7px)}
++.postcard-copy{grid-area:3/1;align-self:start;padding:4px 0 12px;min-width:0}
++.postcard-copy h3{font:800 clamp(25px,2.6vw,34px)/1.02 PostWin,Impact,sans-serif;text-transform:uppercase;letter-spacing:.01em;color:var(--ink);margin:0 0 7px}
++.postcard-copy>strong{display:block;font:800 10px/1.25 system-ui;letter-spacing:.12em;margin-bottom:7px}
++.postcard-copy p{margin:0;font:600 13px/1.35 system-ui;color:var(--ink);text-wrap:pretty}
++.postcard-postage{grid-area:3/2;align-self:start;display:grid;place-items:center;gap:4px;min-height:74px;margin-top:4px;padding:9px 4px;color:var(--paper);background:var(--postage);outline:1px solid var(--paper);outline-offset:-6px;clip-path:polygon(0 0,100% 0,100% 8%,95% 13%,100% 18%,100% 28%,95% 33%,100% 38%,100% 48%,95% 53%,100% 58%,100% 68%,95% 73%,100% 78%,100% 88%,95% 93%,100% 98%,100% 100%,0 100%,0 98%,5% 93%,0 88%,0 78%,5% 73%,0 68%,0 58%,5% 53%,0 48%,0 38%,5% 33%,0 28%,0 18%,5% 13%,0 8%);transform:rotate(6deg)}
++.postcard-postage b{font:800 26px/1 PostWin,Impact,sans-serif}
++.offer.postcard .postcard-postage small{color:var(--paper);font:800 7px/1 system-ui;letter-spacing:.08em}
++.postcard-buy{grid-area:4/1/5/3;display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:54px;padding:8px 0 5px;border:0;border-top:1px solid color-mix(in srgb,var(--ink) 38%,transparent);border-radius:0;background:none;color:var(--ink);text-align:left}
++.postcard-price{font:800 clamp(24px,2.8vw,30px)/1 PostWin,Impact,sans-serif;letter-spacing:.02em}
++.offer.postcard .postcard-price small{display:inline-block;margin-left:6px;font:700 8px/1 system-ui;letter-spacing:.09em;color:var(--ink)}
++.postcard-buy-label{display:flex;align-items:center;justify-content:center;gap:15px;min-width:83px;min-height:38px;border:1px solid var(--ink);border-radius:2px;background:var(--ink);color:var(--paper);padding:8px 10px;font:800 12px/1 system-ui;text-transform:uppercase;letter-spacing:.08em}
++.postcard-buy-label i{font:normal 19px/1 system-ui}
++.postcard-buy:focus-visible{outline:3px solid var(--postage);outline-offset:1px}
++.postcard-buy:disabled{opacity:.5;cursor:not-allowed}
++@media(hover:hover){.offer.postcard:has(.postcard-buy:enabled):hover{transform:translateY(-5px) rotate(0);box-shadow:0 2px 0 #cbbfa6,0 18px 30px #0007}.postcard-buy:hover:enabled .postcard-buy-label{background:var(--postage)}}
++#modal.postcard-receipt{padding:7px;border:0;border-radius:3px;background:repeating-linear-gradient(135deg,#a17b9c 0 12px,#f4e8cb 12px 24px,#376c80 24px 36px,#f4e8cb 36px 48px);box-shadow:0 14px 50px #0008;overflow:auto}
++.postcard-receipt-face{padding:20px 24px;background:radial-gradient(#91734b14 .55px,transparent .8px),var(--paper);background-size:4px 4px;color:var(--ink)}
++.postcard-confirm-art{height:135px;text-align:center;background:radial-gradient(ellipse,var(--wash),transparent 68%)}
++.postcard-confirm-art img{height:100%;width:100%;object-fit:contain}
++.postcard-receipt #confirm-kind{display:block;font:800 10px/1.3 system-ui;letter-spacing:.13em;color:var(--ink);opacity:.8;margin:12px 0 8px}
++.postcard-receipt #confirm-title{position:static;clip-path:none;width:auto;height:auto;font:800 clamp(30px,5vw,43px)/1 PostWin,Impact,sans-serif;text-transform:uppercase;color:var(--ink);margin:0}
++.postcard-receipt p{font:600 14px/1.4 system-ui;color:var(--ink);margin:12px 0}
++.postcard-receipt dl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;border-block:1px solid color-mix(in srgb,var(--ink) 35%,transparent);padding:14px 0;font:600 14px/1.35 system-ui}
++.postcard-receipt dd{margin:0;font-weight:800;text-align:right}
++.postcard-receipt .confirm-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}
++.postcard-receipt .confirm-actions .secondary{color:var(--ink);border-color:var(--ink);background:transparent}
++.postcard-receipt .confirm-actions .primary{background:var(--ink);color:var(--paper);border:0;font:800 14px system-ui;min-height:48px}
++@media(max-width:1000px){#bonus-cards{grid-template-columns:1fr;gap:18px;max-width:670px;margin:auto}.postcard-face{grid-template-columns:42% minmax(0,1fr) 56px;grid-template-rows:26px minmax(102px,auto) 53px;min-height:0;padding:9px 11px 2px;column-gap:12px}.postcard-top{grid-area:1/1/2/4}.postcard-picture{grid-area:2/1/4/2}.postcard-picture>img{height:100%;max-height:175px;width:119%;max-width:none}.postcard-cancel{bottom:5px;left:0;width:45px;height:45px;font-size:7px;outline-offset:-4px;padding:5px}.postcard-cancel::after{width:23px;top:11px}.postcard-copy{grid-area:2/2/3/4;padding:12px 62px 8px 0}.postcard-copy h3{font-size:26px}.postcard-copy>strong{font-size:9px}.postcard-copy p{font-size:12px;line-height:1.3}.postcard-postage{grid-area:2/3;min-height:61px;margin-top:14px;padding:10px 4px;align-self:start}.postcard-postage b{font-size:23px}.postcard-buy{grid-area:3/2/4/4;min-height:48px}.postcard-price{font-size:24px}.postcard-buy-label{min-width:65px;gap:6px;padding:7px;font-size:11px;min-height:36px}.offer.postcard .postcard-price small{display:block;margin:3px 0 0;font-size:7px}}
++@media(max-width:600px){.buy-menu .shop-options{padding-inline:5px}#bonus-cards{gap:14px}.offer.postcard{padding:5px}.postcard-face{grid-template-columns:37% minmax(0,1fr) 46px;column-gap:9px;grid-template-rows:23px minmax(118px,auto) 52px;padding-inline:8px}.postcard-top{font-size:7px;letter-spacing:.08em}.postcard-brand{font-size:7px;max-width:none}.postcard-service{padding:3px}.postcard-copy{padding-right:0}.postcard-copy h3{font-size:25px;padding-right:35px;margin-bottom:6px}.postcard-copy>strong{padding-right:30px;font-size:8px;letter-spacing:.06em}.postcard-copy p{font-size:11.5px;padding-right:0;margin-top:5px}.postcard-postage{align-self:start;margin:10px -1px 0 0;min-height:48px;padding:7px 3px;transform:rotate(7deg);z-index:1}.postcard-postage b{font-size:19px}.offer.postcard .postcard-postage small{font-size:5.5px}.postcard-picture>img{width:133%;max-height:155px;transform:translateX(-3%)}.postcard-cancel{bottom:10px;width:38px;height:38px;font-size:6px}.postcard-cancel::after{width:18px;top:9px}.postcard-receipt-face{padding:16px}.postcard-receipt dl{font-size:12px}.postcard-confirm-art{height:105px}}
++@media(prefers-reduced-motion:reduce){.offer.postcard{transition:none;transform:none!important}}
++
++/* Printed scene panels: the illustration belongs to the postcard stock. */
++#bonus-cards{max-width:none}
++.postcard-face{grid-template-columns:37% minmax(0,1fr) 46px;grid-template-rows:25px minmax(126px,auto) 54px;gap:0 10px;min-height:0;padding:9px 10px 3px}
++.postcard-top{grid-area:1/1/2/4;font-size:8px;letter-spacing:.08em}
++.postcard-brand{font-size:7px;max-width:none}
++.postcard-picture{grid-area:2/1/4/2;display:block;overflow:hidden;margin:9px 0 9px;min-height:170px;background:var(--wash);border:1px solid color-mix(in srgb,var(--ink) 23%,transparent)}
++.postcard-picture>img{display:block;position:absolute;inset:0;width:100%;height:100%;max-width:100%;max-height:none;object-fit:cover;object-position:center;transform:none;filter:none;mix-blend-mode:multiply}
++.postcard-cancel{left:4px;bottom:5px;width:37px;height:37px;font-size:6px;outline-offset:-4px;padding:5px;background:var(--paper);opacity:.78}
++.postcard-cancel::after{width:20px;top:9px}
++.postcard-copy{grid-area:2/2/3/4;padding:12px 0 9px}
++.postcard-copy h3{font-size:26px;padding-right:40px;margin-bottom:6px}
++.postcard-copy>strong{padding-right:35px;font-size:8px;letter-spacing:.06em}
++.postcard-copy p{font-size:12px;line-height:1.32;padding:0;margin-top:6px}
++.postcard-postage{grid-area:2/3;margin:10px -2px 0 0;min-height:48px;padding:7px 3px;transform:rotate(7deg);z-index:1}
++.postcard-postage b{font-size:20px}.offer.postcard .postcard-postage small{font-size:5.5px}
++.postcard-buy{grid-area:3/2/4/4;min-height:50px;gap:6px}
++.postcard-price{font-size:26px}.offer.postcard .postcard-price small{display:block;margin:3px 0 0;font-size:7px}
++.postcard-buy-label{min-width:66px;gap:7px;padding:7px;font-size:11px;min-height:38px}
++.postcard-confirm-art{height:140px;overflow:hidden;margin:14px 0;border:1px solid color-mix(in srgb,var(--ink) 30%,transparent)}
++.postcard-confirm-art img{width:100%;height:100%;object-fit:cover;object-position:center 42%;mix-blend-mode:multiply}
++@media(max-width:1000px){#bonus-cards{max-width:470px}.postcard-picture>img{width:100%;transform:none}.postcard-copy h3{font-size:27px}}
++@media(max-width:600px){.postcard-face{grid-template-columns:35% minmax(0,1fr) 46px;gap:0 9px;padding-inline:8px}.postcard-copy h3{font-size:25px}.postcard-copy p{font-size:12px}.postcard-top{font-size:7px}.postcard-picture{min-height:168px}.postcard-confirm-art{height:115px}.postcard-price{font-size:25px}}
++@media(max-width:350px){.postcard-face{grid-template-columns:30% minmax(0,1fr) 43px;gap:0 8px}.postcard-copy h3{font-size:23px}.postcard-price{font-size:22px}.postcard-buy-label{min-width:58px}}
++@media(max-width:600px){.postcard-face{grid-template-rows:23px minmax(110px,auto) 48px}.postcard-picture{min-height:140px}.postcard-buy{min-height:46px}.postcard-copy{padding-block:10px 7px}}
++#modal.postcard-receipt{width:min(560px,94vw);--receipt-a:#b74b40;--receipt-b:#376c80;background:repeating-linear-gradient(135deg,var(--receipt-a) 0 12px,#f4e8cb 12px 24px,var(--receipt-b) 24px 36px,#f4e8cb 36px 48px)}
++#modal.postcard-receipt:has([data-mode=doublepost]){--receipt-a:#bd913c;--receipt-b:#834736}
++#modal.postcard-receipt:has([data-mode=mystery]){--receipt-a:#6c4b80;--receipt-b:#a17b9c}
++.postcard-confirm-main{display:grid;grid-template-columns:36% minmax(0,1fr);gap:22px;align-items:center;margin-top:16px}
++.postcard-confirm-art{margin:0;height:auto;aspect-ratio:2/3;max-height:none}
++.postcard-confirm-art img{display:block;width:100%;height:100%;object-fit:contain;object-position:center}
++.postcard-receipt #confirm-title{font-size:36px}.postcard-receipt #confirm-kind{font-size:9px}
++@media(max-width:600px){.postcard-confirm-main{gap:14px}.postcard-receipt #confirm-title{font-size:30px}.postcard-receipt p{font-size:12px}.postcard-receipt #confirm-kind{font-size:8px}.postcard-confirm-art{height:auto}}
+diff --git a/shop.mjs b/shop.mjs
+index 7a02aa8..fe3b95b 100644
+--- a/shop.mjs
++++ b/shop.mjs
+@@ -1,15 +1,29 @@
+ import { MODES, BETS } from './reel-engine/rules.js';
+ import { costOf } from './reel-engine/settle.js';
+ 
++const postcardCSS=document.createElement('link');
++postcardCSS.rel='stylesheet';postcardCSS.href=new URL('./postcards.css',import.meta.url).href;
++document.head.append(postcardCSS);
++const postcards={
++  nightshift:{service:'AIR MAIL',stamp:'NIGHT MAIL'},
++  doublepost:{service:'EXPRESS POST',stamp:'EXPRESS'},
++  mystery:{service:'SEALED DELIVERY',stamp:'MYSTERY'}
++};
++const postcardArt=id=>new URL('./art/night-mail/postcards-v1/'+id+'.webp',import.meta.url).href;
++
+ export function openShop({ allowed=null, modal, session, credits, descriptions, show, setBet, select, buy }, section='bonus') {
+   const isBuy = section==='bonus';
+   const modes = Object.entries(MODES).filter(([id,m])=>(!allowed || allowed.includes(id)) && id!=='base' && (m.kind==='buy')===isBuy);
+   const cost = id => credits(costOf(id,session.bet));
+   function card([id,m]) {
+     const disabled=costOf(id,session.bet)>session.balance?'disabled':'';
+-    if(isBuy) return `<article class="offer pass" data-mode="${id}">
+-      <div class="pass-body"><small class="pass-issuer">Return to Sender · Airmail</small><div class="pass-info"><h3>${m.title}</h3><strong>10 free spins</strong><p>${descriptions[id]}</p></div><div class="pass-serial"><i></i> Night dispatch</div></div>
+-      <button class="pass-stub" data-choice="${id}" ${disabled}><small>Claim ticket</small><span class="stub-price">${cost(id)}<small>${m.cost}× base bet</small></span><b>Buy ›</b></button></article>`;
++    if(isBuy) return `<article class="offer postcard" data-mode="${id}" aria-labelledby="postcard-${id}"><div class="postcard-face">
++      <div class="postcard-top"><span class="postcard-service">${postcards[id].service}</span><span class="postcard-brand">RETURN TO SENDER</span></div>
++      <div class="postcard-picture" aria-hidden="true"><img src="${postcardArt(id)}" alt=""><span class="postcard-cancel">${postcards[id].stamp}</span></div>
++      <div class="postcard-copy"><h3 id="postcard-${id}">${m.title}</h3><strong>10 FREE SPINS</strong><p>${descriptions[id]}</p></div>
++      <div class="postcard-postage" aria-label="${m.cost} times base bet"><b>${m.cost}×</b><small>BASE BET</small></div>
++      <button class="postcard-buy" data-choice="${id}" aria-label="Review ${m.title} for ${cost(id)} credits" ${disabled}><span class="postcard-price">${cost(id)}<small>CREDITS</small></span><span class="postcard-buy-label">Buy <i aria-hidden="true">↗</i></span></button>
++      </div></article>`;
+     const symbol={priority:'fs',special:'stamp',exposure:'parcel'}[id];
+     return `<article class="offer"><div class="offer-main"><div class="offer-art"><img src="art/night-mail/symbols/${symbol}.webp" alt=""></div><div class="offer-details"><div class="offer-copy"><strong>${m.title}</strong><p>${descriptions[id]}</p></div></div></div><button class="offer-cta" data-choice="${id}" ${disabled}><span class="offer-price">${cost(id)} <small>${m.cost}× bet</small></span> Activate ›</button></article>`;
+   }
+@@ -25,12 +39,14 @@ export function openShop({ allowed=null, modal, session, credits, descriptions,
+     const id=b.dataset.choice,m=MODES[id];
+     if(!isBuy){select(id);modal.close();return}
+     if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+-      b.disabled=true;b.closest('article').classList.add('tearing');
+-      await b.animate([{transform:'none'},{transform:'translate(12%,9%) rotate(7deg)',opacity:.2}],{duration:250}).finished;
++      b.disabled=true;
++      await b.closest('article').animate([{transform:'none'},{transform:'translateY(-7px) rotate(-1.5deg)',opacity:.6}],{duration:220,easing:'ease-out'}).finished;
+       if(!modal.open || !b.isConnected)return;
+     }
+-    show(`<small id="confirm-kind">DISPATCH TICKET</small><h2 id="confirm-title">${m.title}</h2><p>${descriptions[id]}</p><dl><dt>Base bet</dt><dd>${credits(session.bet)}</dd><dt>Ticket price · ${m.cost}×</dt><dd>${cost(id)} credits</dd></dl><div class="confirm-actions"><button class="secondary">Back</button><button id="confirm-ok" class="primary">Confirm buy</button></div>`,'confirm pass-receipt');
+-    modal.querySelector('.secondary').onclick=()=>open('bonus');
++    show(`<div class="postcard-receipt-face" data-mode="${id}"><div class="postcard-top"><span class="postcard-service">${postcards[id].service}</span><span class="postcard-brand">RETURN TO SENDER</span></div><div class="postcard-confirm-main"><div class="postcard-confirm-art" aria-hidden="true"><img src="${postcardArt(id)}" alt=""></div><div class="postcard-confirm-copy"><small id="confirm-kind">CONFIRM BONUS BUY</small><h2 id="confirm-title">${m.title}</h2><p>${descriptions[id]}</p></div></div><dl><dt>Base bet</dt><dd>${credits(session.bet)}</dd><dt>Postage · ${m.cost}× base bet</dt><dd>${cost(id)} credits</dd></dl><div class="confirm-actions"><button class="secondary">Back</button><button id="confirm-ok" class="primary">Confirm buy</button></div></div>`,'confirm postcard-receipt');
++    const back=modal.querySelector('.secondary');
++    back.onclick=()=>{open('bonus');modal.querySelector('[data-choice="'+id+'"]')?.focus()};
++    back.focus();
+     modal.querySelector('#confirm-ok').onclick=()=>{modal.close();buy(id)};
+   };
+ }
