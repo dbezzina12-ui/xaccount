@@ -1,6 +1,49 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-06 17:04 UTC (12:04 Cancún) · Claude → Codex / Dylan · Key ring (dld-six-5): KEY acts in nearly every bonus, smoother payouts
+**Tested SHA:** `c3b9f74` (on your `1df8198`). Game suite 48/48, core 131/131.
+
+**Dylan asked for:** smoother payouts and meaningful Key action. In steady, a KEY match happened in only 1% of Lost & Found bonuses. Built as `variant: 'keyring'` (`dld-six-5`) in [`engine/six.js`](../games/dead-letter-depot/engine/six.js). It keeps the steady base game, the Lost & Found 1,000× minimum and Mystery Double Post 90% / Lost & Found 10%.
+- **KEY is in every rack:** three basics, two of PHONE/PARCEL/ENVELOPE, and KEY, in all three bonuses.
+- **Key ring:** every KEY that lands (first board and refills) turns one notch. A full ring of 5 notches adds to the meter: Night Shift +3, Double Post +6, Lost & Found +25. Notches carry across spins.
+- **Vault:** the first KEY match (8+ KEYs) opens it. The meter goes to its ceiling (60 / 100 / 1,000) for the rest of the bonus. This is Lost & Found's max-win path.
+- **Capped ladder:** additions double once (basics +1 then +2, premiums +3 then +6). KEY no longer multiplies.
+- **Meters** start at 3× / 15× / 40×. Night Shift applies its meter on a spin with a rack hit, a ring fill or an open vault.
+
+**Result** ([SIX-KEYRING.md](../games/dead-letter-depot/SIX-KEYRING.md); every mode 96% within its 99.9% interval):
+
+| | Steady | Key ring |
+|---|---|---|
+| Lost & Found with KEY action | 1% | **100%** (2.9 ring fills on average) |
+| Night Shift / Double Post with KEY action | 0.2% | **99.1%** (2.0 fills) |
+| Lost & Found past 1,000× by itself | 51% | **63%** |
+| Lost & Found median · middle half | 1,024× · 1,000–1,637× | **1,249× · 1,000–1,926×** |
+| Lost & Found reaches the max | 1 in 858 | **1 in 517** |
+| Lost & Found 5,000×+ | 3.4% | 1.5% |
+| Night Shift median · middle half · SD | 55× · 24–117× · 121 | **66× · 31–127× · 102** |
+| Double Post median · middle half · SD | 183× · 104–310× · 207 | **193× · 107–318× · 196** |
+| Bonus pays 0 (Night Shift / Double Post) | 1 in 161 / 1 in 200 | 1 in 124 / 1 in 127 |
+
+- **Base game and bonus frequency are unchanged:** any bonus 1 in 380 base spins, 1 in 66 Priority Mail.
+- **The earlier reports** (SIX, SIX-LADDER, SIX-BALANCED, SIX-STEADY) are regenerated for the new source hash. Their figures are unchanged, and they now list each bonus's median and middle half.
+
+**Payload changes for Codex** (key ring only; other variants unchanged):
+- `bonus.rack` always contains KEY. `bonus.ringFills` and `bonus.vault` are new.
+- Each free spin has `land`: the ring event for its first board. The meter can rise there before any tumble, even on a spin with no tumbles.
+- `steps[].rack` is a ring event: `hits`, `add`, `keys` (KEYs in that tumble's refills), `fills`, `notches` (after), `opened`, `vault`, `before`, `after`, `next`. There is no `keyFactor` or `nextKey`.
+- `spin.meter` adds `fills`, `vault` and `notches`. Ring size is `spec[tier].ring` (5); the boost is `spec[tier].ringAdd`.
+- Golden seeds: `KEYRING_GOLDEN` in `tests/six.test.mjs`. Mystery 7407 opens the Lost & Found vault on its third spin and caps. Double Post 2913 opens its vault. Night Shift 1 has a ring fill that activates a spin with no rack hit.
+
+**Next for Codex:** bind a `keyring` playtest next to `steady`. Show the 5-notch ring filling as KEYs land, the meter boost on each fill, and the vault opening. The bonus brief needs key-ring copy.
+**Next for Claude:** release math once Dylan picks; Frank's final rig once the private layers reach me.
+**Questions for Dylan:**
+1. Key ring or steady?
+2. Are 1 in 517 Lost & Found max wins and 1.5% at 5,000×+ the right balance? Both can move: more KEYs in Lost & Found raise the vault rate and lower the median.
+3. Night Shift and Double Post pay nothing slightly more often (about 1 in 125 bonuses). Should they have a small minimum?
+
+**Blocked on:** the Frank layers (private). Hourly checks are paused (Dylan, 2026-11-06).
+
 ## 2026-11-06 04:32 UTC (23:32 Cancún Nov 5) · Codex → Dylan / Claude · Balanced and Steady playtests integrated
 
 Picked up Claude’s 03:00 and 03:48 handoffs. Verified branch `794288ac894f4d622ec163fa741384fcaa66f004` since `0d4e06f`; no open PR targeting this branch or new linked PR. Both [Balanced](https://dead-letter-depot.djames1.chatgpt.site/?playtest=balanced) and [Steady](https://dead-letter-depot.djames1.chatgpt.site/?playtest=steady) now run Claude’s exact `engine/six.js`, with separate versioned resume state. The two-basic base rack appears before drops, bonus ladders use recorded events, entry meters use the variant’s starts, Mystery lists only Double Post/Lost & Found, and the final count-up names any engine minimum adjustment. Existing default/power routes remain unchanged.
