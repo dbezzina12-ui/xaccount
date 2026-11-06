@@ -20,7 +20,7 @@
 import { compileLands, spinBoard, tierOf, seeded } from './engine.js';
 import { PAYING, PREMIUMS, LOWS, CAP, BONUSES, RETRIGGER, MAX_FREE_SPINS, MYSTERY, LAND, bonusFor } from './rules.js';
 
-export const SIX_VERSION = 'dld-six-1', LADDER_VERSION = 'dld-six-2';
+export const SIX_VERSION = 'dld-six-1', LADDER_VERSION = 'dld-six-2', BALANCED_VERSION = 'dld-six-3';
 export { seeded };
 
 // The trial's landings: no stamps. Free spins land thick basics so rack hits
@@ -47,6 +47,22 @@ export const SIX_LADDER = Object.freeze({
   super: Object.freeze({ pays: FREE, fs: 0.012, lowScale: 0.956, start: 10, ceiling: 250, when: 'always', ladder: true }),
   hidden: Object.freeze({ pays: HIDDEN, fs: 0.012, lowScale: 1, keyWeight: 25.2363, start: 1, ceiling: 1000, when: 'always', ladder: true }),
 });
+// The balanced ladder (Dylan, 2026-11-06: "everything super balanced, mid
+// wins", a 1,000x minimum on Lost & Found with a decent max rate, Mystery
+// Double Post 90% / Lost & Found 10%; dld-six-3). Ladder rules, plus:
+//   floor    Lost & Found pays at least this (hundredths) when it ends
+//   ceiling  Night Shift and Double Post meters stop lower, trimming rare spikes
+//   rack     base and Priority Mail spins draw this many basics before landing;
+//            each paying group of one adds +1 to that spin's own meter (from 1x)
+// Its own fitted landings.
+export const SIX_BALANCED = Object.freeze({
+  base: Object.freeze({ pays: LAND.base.pays, fs: 0.0179, lowScale: 1, rack: 2 }),
+  priority: Object.freeze({ pays: LAND.base.pays, fs: 0.0298, lowScale: 1, rack: 2 }),
+  regular: Object.freeze({ pays: FREE, fs: 0.012, lowScale: 0.9011, start: 1, ceiling: 100, when: 'hit', ladder: true }),
+  super: Object.freeze({ pays: FREE, fs: 0.012, lowScale: 0.9656, start: 10, ceiling: 100, when: 'always', ladder: true }),
+  hidden: Object.freeze({ pays: HIDDEN, fs: 0.012, lowScale: 1, keyWeight: 25.096, start: 1, ceiling: 1000, when: 'always', ladder: true, floor: 100000 }),
+});
+export const BALANCED_MYSTERY = Object.freeze({ regular: 0, super: 0.9, hidden: 0.1 });
 export const SIX_MODES = Object.freeze({
   base: Object.freeze({ title: 'Base Spin', cost: 1, kind: 'spin', land: 'base' }),
   priority: Object.freeze({ title: 'Priority Mail', cost: 3, kind: 'spin', land: 'priority' }),
@@ -64,6 +80,7 @@ const LANDS = sixLands();
 export const VARIANTS = Object.freeze({
   flat: Object.freeze({ version: SIX_VERSION, spec: SIX, lands: LANDS }),
   ladder: Object.freeze({ version: LADDER_VERSION, spec: SIX_LADDER, lands: sixLands(SIX_LADDER) }),
+  balanced: Object.freeze({ version: BALANCED_VERSION, spec: SIX_BALANCED, lands: sixLands(SIX_BALANCED), mystery: BALANCED_MYSTERY }),
 });
 const NEVER = Object.freeze(Object.fromEntries(PAYING.map((s) => [s, Infinity])));
 
@@ -117,10 +134,29 @@ export function playSixBonus(tier, rng, budget = CAP, { lands = LANDS, spec = SI
     if (s.fs >= RETRIGGER.fs && awarded < MAX_FREE_SPINS) { s.retrigger = Math.min(RETRIGGER.spins, MAX_FREE_SPINS - awarded); awarded += s.retrigger; }
     total += s.paid; spins.push(s);
   }
-  return { tier, title: BONUSES[tier].title, rack, spins, awarded, meter, total, capped: total >= budget, keyHits: spins.reduce((t, s) => t + s.keyHits, 0) };
+  // a guaranteed minimum tops the bonus up when it ends (never past the cap)
+  const floorTopUp = spec[tier].floor && total < Math.min(spec[tier].floor, budget) ? Math.min(spec[tier].floor, budget) - total : 0;
+  total += floorTopUp;
+  return { tier, title: BONUSES[tier].title, rack, spins, awarded, meter, total, floorTopUp, capped: total >= budget, keyHits: spins.reduce((t, s) => t + s.keyHits, 0) };
 }
 
-// variant 'flat' (dld-six-1) or 'ladder' (dld-six-2); tools may pass spec and lands.
+// One base or Priority Mail spin. With a spin rack (balanced), the rack is
+// drawn first, then the board; each paying group of a racked basic adds +1 to
+// the spin's meter, which multiplies the tumble subtotal once.
+export function playSixSpin(land, rng, { lands, spec, record = false }) {
+  const k = spec[land].rack ?? 0, rack = k ? sample(LOWS, k, rng) : null;
+  const r = spinBoard(land, rng, { lands, targets: NEVER, record: record || !!rack });
+  let meter = 1;
+  if (rack) for (const step of r.steps) {
+    const hits = step.wins.map((w) => w.s).filter((s) => rack.includes(s)), e = { hits, add: hits.length, before: meter, after: meter + hits.length };
+    meter = e.after; if (record) step.rack = e;
+  }
+  const spin = { rack, subtotal: r.subtotal, multiplier: meter, win: Math.min(CAP, r.subtotal * meter), fs: r.fs };
+  if (record) Object.assign(spin, { board: r.board, steps: r.steps });
+  return spin;
+}
+
+// variant 'flat' (dld-six-1), 'ladder' (dld-six-2) or 'balanced' (dld-six-3); tools may pass spec and lands.
 export function playSixRound({ mode = 'base', rng, variant = 'flat', lands = null, spec = null, record = true } = {}) {
   const v = VARIANTS[variant];
   if (!v) throw Error(`Unknown trial variant ${variant}`);
@@ -130,11 +166,11 @@ export function playSixRound({ mode = 'base', rng, variant = 'flat', lands = nul
   if (typeof rng !== 'function') throw Error('playSixRound needs a seeded rng');
   let spin = null, tier = m.bonus ?? null, total = 0;
   if (m.kind === 'spin') {
-    const r = spinBoard(m.land, rng, { lands, targets: NEVER, record });
-    spin = { subtotal: r.subtotal, multiplier: 1, win: Math.min(CAP, r.subtotal), fs: r.fs, ...(record ? { board: r.board, steps: r.steps } : {}) };
-    total = spin.win; tier = bonusFor(r.fs);
+    spin = playSixSpin(m.land, rng, { lands, spec, record });
+    if (!spin.rack) delete spin.rack;
+    total = spin.win; tier = bonusFor(spin.fs);
   } else if (mode === 'mystery') {
-    const u = rng(); tier = u < SIX_MYSTERY.regular ? 'regular' : u < SIX_MYSTERY.regular + SIX_MYSTERY.super ? 'super' : 'hidden';
+    const w = v.mystery ?? SIX_MYSTERY, u = rng(); tier = u < w.regular ? 'regular' : u < w.regular + w.super ? 'super' : 'hidden';
   }
   const bonus = tier && total < CAP ? playSixBonus(tier, rng, CAP - total, { lands, spec, record }) : null;
   if (bonus) total += bonus.total;

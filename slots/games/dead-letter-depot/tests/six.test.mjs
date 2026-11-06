@@ -5,7 +5,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { playSixRound, playSixBonus, selectRack, meterStep, ladderStep, ladderState, SIX, SIX_LADDER, VARIANTS, SIX_VERSION, LADDER_VERSION, seeded } from '../engine/six.js';
+import { playSixRound, playSixBonus, selectRack, meterStep, ladderStep, ladderState, SIX, SIX_LADDER, SIX_BALANCED, BALANCED_MYSTERY, VARIANTS, SIX_VERSION, LADDER_VERSION, BALANCED_VERSION, seeded } from '../engine/six.js';
 import { settle, winOf } from '../engine/settle.js';
 import { PREMIUMS, LOWS, CAP } from '../engine/rules.js';
 import { sixHash } from '../../../tools/math/dead-letter-depot-six.mjs';
@@ -103,7 +103,16 @@ export const LADDER_GOLDEN = [
   ['mystery', 20, 652600], ['mystery', 7, 1440], ['mystery', 1, 17620], // Lost & Found KEY x2 then x4 (3 matches); Night Shift; Double Post
   ['mystery', 432, CAP],                                         // Lost & Found reaches the cap
 ];
+// Balanced golden replays (dld-six-3).
+export const BALANCED_GOLDEN = [
+  ['base', 134, 1440], ['base', 1672, 460],                      // the spin rack lifts a base win; natural Night Shift
+  ['priority', 1845, 100000],                                    // natural Lost & Found, topped up to 1,000x
+  ['nightshift', 8, 8560], ['doublepost', 3, 66340],             // first rack hit on spin 7+; Double Post
+  ['mystery', 4, 100000], ['mystery', 170, 188580], ['mystery', 1, 23040], // Lost & Found at the minimum; above it; Double Post
+  ['mystery', 916, CAP],                                         // Lost & Found reaches the cap
+];
 test('golden replays settle to these totals', () => {
+  for (const [mode, seed, total] of BALANCED_GOLDEN) assert.equal(playSixRound({ mode, rng: seeded(seed), record: false, variant: 'balanced' }).total, total, `balanced ${mode} ${seed}`);
   for (const [mode, seed, total] of GOLDEN) assert.equal(playSixRound({ mode, rng: seeded(seed), record: false }).total, total, `${mode} ${seed}`);
   for (const [mode, seed, total] of LADDER_GOLDEN) assert.equal(playSixRound({ mode, rng: seeded(seed), record: false, variant: 'ladder' }).total, total, `ladder ${mode} ${seed}`);
 });
@@ -142,7 +151,41 @@ test('ladder bonuses replay their events from a fresh ladder per bonus', () => {
   assert.equal(playSixRound({ mode: 'mystery', rng: seeded(4) }).version, SIX_VERSION);
 });
 
-for (const [variant, file, spec] of [['flat', 'six-summary.json', SIX], ['ladder', 'six-ladder-summary.json', SIX_LADDER]]) test(`the ${variant} trial report was regenerated after the last trial change`, () => {
+test('balanced: base spins draw a two-basic rack that adds +1 per paying group to the spin meter', () => {
+  let lifted = 0;
+  for (let seed = 1; seed <= 3000; seed++) {
+    const r = playSixRound({ mode: 'base', rng: seeded(seed), variant: 'balanced' });
+    assert.equal(r.version, BALANCED_VERSION);
+    assert.equal(r.spin.rack.length, SIX_BALANCED.base.rack);
+    assert.ok(r.spin.rack.every((s) => LOWS.includes(s)) && new Set(r.spin.rack).size === r.spin.rack.length);
+    let m = 1;
+    for (const st of r.spin.steps) { const hits = st.wins.map((w) => w.s).filter((s) => r.spin.rack.includes(s)); assert.deepEqual(st.rack, { hits, add: hits.length, before: m, after: m + hits.length }); m += hits.length; }
+    assert.equal(r.spin.multiplier, m);
+    assert.equal(r.spin.win, Math.min(CAP, r.spin.subtotal * m));
+    if (m > 1) lifted += 1;
+  }
+  assert.ok(lifted > 50);
+});
+
+test('balanced: Lost & Found pays at least 1,000x; Mystery draws Double Post or Lost & Found only', () => {
+  let topped = 0;
+  for (let seed = 1; seed <= 400; seed++) {
+    const b = playSixBonus('hidden', seeded(seed), CAP, { spec: VARIANTS.balanced.spec, lands: VARIANTS.balanced.lands, record: false });
+    assert.ok(b.total >= SIX_BALANCED.hidden.floor);
+    const natural = b.spins.reduce((t, s) => t + s.paid, 0);
+    assert.equal(b.floorTopUp, Math.max(0, SIX_BALANCED.hidden.floor - natural));
+    if (b.floorTopUp) topped += 1;
+  }
+  assert.ok(topped > 0);
+  const capped = playSixBonus('hidden', seeded(3), 50000, { spec: VARIANTS.balanced.spec, lands: VARIANTS.balanced.lands, record: false });
+  assert.equal(capped.total, 50000, 'the minimum never pays past the cap budget');
+  assert.equal(BALANCED_MYSTERY.regular, 0);
+  const tiers = new Set();
+  for (let seed = 1; seed <= 300; seed++) tiers.add(playSixRound({ mode: 'mystery', rng: seeded(seed), variant: 'balanced', record: false }).bonus.tier);
+  assert.deepEqual([...tiers].sort(), ['hidden', 'super']);
+});
+
+for (const [variant, file, spec] of [['flat', 'six-summary.json', SIX], ['ladder', 'six-ladder-summary.json', SIX_LADDER], ['balanced', 'six-balanced-summary.json', SIX_BALANCED]]) test(`the ${variant} trial report was regenerated after the last trial change`, () => {
   const s = JSON.parse(readFileSync(new URL(`../math/${file}`, import.meta.url), 'utf8'));
   assert.equal(s.source, sixHash(), `run node tools/math/dead-letter-depot-six.mjs --variant ${variant}`);
   assert.deepEqual(s.spec, JSON.parse(JSON.stringify(spec)));
