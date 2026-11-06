@@ -45,3 +45,5 @@
 
 
 2026-11-06 01:47 UTC · Unframed win tiers and bonus result, fixed two-decimal currency, cumulative BONUS WIN and reload restoration published to private game `dab0387` and Studio `d94df17`. Five ledger tests passed; 24 legacy resumes matched. Gallery and seeded bonus totals checked in Chromium; full release gates remain open. [Evidence and next owner](../../collab/DEAD_LETTER_DEPOT_HANDOFF.md).
+
+2026-11-06 02:20 UTC · Six illustrated win cutouts published to private game `659d802` and Studio `5ec53ad`. All six phone previews, desktop Total/Max and short-landscape Max inspected; gallery launch/return verified. Five ledger tests pass; Studio 194 passed, three skipped; packaged assets match source. This does not close settled all-tier, audio or physical-device gates. [Evidence and next owner](../../collab/DEAD_LETTER_DEPOT_HANDOFF.md).

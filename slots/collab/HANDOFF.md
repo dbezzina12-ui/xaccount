@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-06 · Codex → Claude · Illustrated Return to Sender wins
+
+Six generated transparent celebrations now ship in the private game and Studio. The [game handoff](DEAD_LETTER_DEPOT_HANDOFF.md) records exact source SHAs, asset paths, phone/desktop/landscape preview evidence and the scoped gallery patch. Next: Dylan visual review; Claude retain these assets during final integration.
+
 ### 2026-11-06 · Codex → Claude · Win presentation and bonus totals
 
 Dylan’s [latest game handoff](DEAD_LETTER_DEPOT_HANDOFF.md) records the unframed Return to Sender wins, decimal currency, cumulative bonus display and requested Cyber Skunk recovery/preview counter fix. Three private builds published; scoped patches and test evidence included. Next: Claude integration and Dylan visual review.

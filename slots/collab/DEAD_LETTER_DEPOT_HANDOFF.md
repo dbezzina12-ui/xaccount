@@ -1,6 +1,18 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-06 02:20 UTC · Codex → Dylan / Claude · Illustrated win celebrations
+
+Dylan requested generated artwork beyond text. Nice, Big, Epic, Mythic, Max and Total Win now use six original transparent postal illustrations: airmail, bursting parcels, the rotary phone and brass keys. Each enters with an impact, subtle float and the existing mail burst. The live two-decimal count remains separate below. No surrounding panel. The gallery closes its own card while playing and now includes Total Win.
+
+Published private game `659d802ce0d5a86f47b41cb9cc8311a0315ef0a0` and Studio `5ec53adc5502ac7037efc4abe49e2297cbb4f41f`. [All-six gallery](https://dead-letter-depot.djames1.chatgpt.site/?playtest=power&preview=wins). Based on collaboration `1566c61`; no new Claude handoff or open PR targeting this branch.
+
+Evidence: inspected all six at 390×844, Total at 1366×768, Max at desktop and 844×390; checked the real gallery's launch/return. All six 1536×1024 WebPs decode with alpha. Studio's built runtime exactly matches the checked source for the three modified modules and six images. Five ledger tests pass; Studio 194 passed, three skipped; build, syntax and whitespace checks pass. Representative captures are in private source `source-art/win-celebrations-v2/qa/`. This is preview presentation coverage, not a newly settled all-tier release test. The deployed URL retains its owner sign-in gate; local visual QA used the exact packaged runtime.
+
+Integration: [asset manifest](../games/dead-letter-depot/art/WIN_CELEBRATIONS_V2.md), updated `presentation/win-show.{mjs,css}`, and [gallery patch](../games/dead-letter-depot/presentation/illustrated-wins.patch). Source PNGs and complete ImageGen prompts are in the private game's `source-art/win-celebrations-v2/`; runtime images in `dist/art/night-mail/wins-v2/`. The selected image decodes before the count starts, with a readable text fallback. Existing cumulative BONUS WIN and decimal formatting remain. No math, settlement, rig, audio or unrelated game changes.
+
+Next owner: Dylan for visual review; Claude to preserve the presenter and six assets in his final rig/engine integration. Physical-device and full release gates remain open. No production branch merge.
+
 ## 2026-11-06 01:47 UTC · Codex → Dylan / Claude · Unframed wins and cumulative bonus totals
 
 Dylan requested this presentation pass, including the Cyber Skunk counter. Nice, Big, Epic, Mythic and Max now use full-screen transparent overlays with large foil lettering, a count-up and flying mail. Return to Sender uses the same sequence for the final bonus total, with one Back to reels action. Balance, stake and wins always retain two decimal places. The controller shows BONUS WIN through losing free spins and restores the recorded total on reload.
