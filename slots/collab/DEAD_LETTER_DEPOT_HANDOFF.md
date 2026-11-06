@@ -1,6 +1,53 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-06 23:42 UTC (18:42 Cancún) · Claude → Codex / Dylan · Vault 2 (dld-six-7): rarer Night Shift and Double Post max wins, bigger ordinary hits
+**Tested SHA:** `ea9ed2c`, merged with your `2720557` as `4713e06`. Game suite 57/57, core 131/131. Key Ring and Vault outcomes are unchanged, and every earlier golden total still passes.
+
+**Dylan asked for:**
+- much rarer Night Shift and Double Post max wins (about 1 in 250,000 and 1 in 100,000) in exchange for bigger hits in their other rounds;
+- Lost & Found max about 1 in 250;
+- decent wins while spinning, because the game won't get played if it rarely pays outside Lost & Found.
+
+Built as `variant: 'vault2'` (`dld-six-7`) in [`engine/six.js`](../games/dead-letter-depot/engine/six.js). It keeps the Vault rules (thick basics, small steady meters, base rack doubling, 1,000× Lost & Found minimum, Mystery 90/10), plus:
+- **Two-step vault in Night Shift and Double Post.** The first KEY match opens the vault at the bonus ceiling: Night Shift 60×, Double Post 120×. A second KEY match in the same bonus opens the **inner vault** at 1,000× for the rest of the bonus; that is their max-win path.
+- **More KEYs on a 7-notch ring** in Night Shift and Double Post (KEY weight 8.5 / 9). The first vault opens about 1 in 370 bonuses, and ring fills stay about 2 per bonus.
+- **Lost & Found** has KEY weight 8.5 (Vault: 9). Its vault opens straight at 1,000×.
+
+**Result** ([SIX-VAULT2.md](../games/dead-letter-depot/SIX-VAULT2.md); every mode 96% within its 99.9% interval; Night Shift and Double Post max wins measured over 4,000,000 extra bonuses each):
+
+| | Vault | Vault 2 |
+|---|---|---|
+| Night Shift max win | 1 in 6,369 | **1 in 285,714** |
+| Night Shift 500×+ | 1 in 959 | **1 in 298** |
+| Night Shift median · under half its price | 80× · 21% | 77× · 23% |
+| Double Post max win | 1 in 5,263 | 1 in 571,429 |
+| Double Post 1,000×+ · 5,000×+ | 1 in 620 · 1 in 6,410 | **1 in 281 · 1 in 645** |
+| Double Post median · under half its price | 209× · 16% | 200× · 19% |
+| Lost & Found max win | 1 in 159 | **1 in 215** |
+| Lost & Found median · past 1,000× by itself | 1,132× · 57% | 1,179× · 59% |
+| Base 25×+ · 100×+ · any bonus | 1 in 244 · 1 in 877 · 1 in 372 | 1 in 245 · 1 in 920 · 1 in 372 |
+
+- **Night Shift lands on target.** Double Post's max is rarer than the 1 in 100,000 asked: its inner vault needs two KEY matches, which is rarer there.
+- **To bring Double Post to about 1 in 100,000:** open its first vault at 250× instead of 120×. That also makes its vault hits bigger, but moves more value into them, so its under-half-price share rises a few points. This is not built; Dylan decides.
+
+**Payload changes for Codex** (vault2 only; earlier variants keep their event shape):
+- The ring event gains `innerOpened` and `inner`. `spin.meter.inner` and `bonus.inner` are new.
+- `spec[tier].ceiling` is the first vault's value (60 / 120 / 1,000), and `spec[tier].innerAt` (1,000) is the inner vault's. The ring is `spec[tier].ring` (7 in Night Shift and Double Post, 5 in Lost & Found).
+- Golden seeds: `VAULT2_GOLDEN` in `tests/six.test.mjs`:
+  - Night Shift 284 opens the 60× vault and pays 4,476.6×.
+  - Double Post 422 opens the 120× vault and pays 4,185×.
+  - Night Shift 14287 opens its vault on spin 3 and the inner vault on spin 5, then caps.
+  - Double Post 646910 opens its vault on spin 1 and the inner vault on spin 10, then caps.
+
+**Next for Codex:** bind a `vault2` playtest next to Vault. Show the vault at 60× / 120×, the second KEY match opening the inner vault at 1,000×, and the 7-notch ring.
+**Next for Claude:** release math once Dylan picks; Frank's final rig once the private layers reach me.
+**Questions for Dylan:**
+1. Vault 2 or Vault?
+2. Double Post max: keep 1 in about 570,000, or open its first vault at 250× to bring the max to about 1 in 100,000? Its hits get bigger and its losing buys rise a few points.
+
+**Blocked on:** the Frank layers (private). Hourly checks are paused.
+
 ## 2026-11-06 20:35 UTC (15:35 Cancún) · Codex → Dylan / Claude · Vault playtest integrated
 
 Picked up Claude’s `5a15536fa005ad9f5df53a8a2cc034191ea71abb` handoff (engine `c880a60`, merge `1ba3f95`) since verified `bdcc7ad8a8ee07f7b4eee87287f2b2e028de1c46`. Reviewed changes, release checklist/status, shared board and handoff. No open PR targeting this branch or linked in the new handoff.
