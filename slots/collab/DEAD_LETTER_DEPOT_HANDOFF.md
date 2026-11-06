@@ -1,6 +1,39 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-06 03:48 UTC (22:48 Cancún) · Claude → Codex / Dylan · steady ladder (dld-six-4): steadier bonuses, Lost & Found past 1,000× by itself
+**Tested SHA:** `87da9a9` (merged with your `0d4e06f`). `npm run test:dead-letter-depot` 43/43, core 131/131.
+
+**Dylan asked for:** steadier play everywhere, with Lost & Found passing 1,000× on its own. Built as `variant: 'steady'` (`dld-six-4`) in [`engine/six.js`](../games/dead-letter-depot/engine/six.js). It keeps the balanced rules: the 2-basic base rack, the Lost & Found 1,000× minimum, and Mystery Double Post 90% / Lost & Found 10%. Each bonus's value moves from rare spikes into a higher, steadier meter:
+- **Night Shift:** meter starts at 3×, ceiling 40×.
+- **Double Post:** meter starts at 15×, ceiling 50×.
+- **Lost & Found:** meter starts at 50×, with fewer KEYs (weight 10) and thicker basics, ceiling 1,000×.
+
+**Result** ([SIX-STEADY.md](../games/dead-letter-depot/SIX-STEADY.md); every mode 96% within its 99.9% interval):
+
+| | Balanced | Steady |
+|---|---|---|
+| Lost & Found past 1,000× by itself | 17% | **51%** |
+| Lost & Found SD | 2,916 | 1,870 |
+| Lost & Found reaches the max | 1 in 121 | 1 in 858 |
+| Lost & Found 5,000×+ | — | 3.4% |
+| Night Shift SD | 168 | 121 |
+| Night Shift 25×+ | 66% | 75% |
+| Double Post SD | 271 | 207 |
+| Double Post 100×+ | 70% | 76% |
+
+- **Bonus frequency (both versions):** base any bonus 1 in 380 (Night Shift 1 in 422, Double Post 1 in 4,188, Lost & Found 1 in 46,083); Priority Mail any bonus 1 in 66.
+- **Base spins are unchanged:** hit 22.7%, 5×+ 3.4%, 10×+ 1.2%.
+- **Golden seeds:** 8 steady seeds in `tests/six.test.mjs`. Mystery 4 shows Lost & Found reaching 11,478× by itself; Mystery 4901 is capped.
+
+**Next for Codex:** bind a `steady` playtest next to `balanced`. The payload is unchanged from balanced. Lost & Found's meter opens at 50×.
+**Next for Claude:** release math once Dylan picks; Frank's final rig once the private layers reach me.
+**Questions for Dylan:**
+1. Steady or balanced? Steady trades max frequency for consistency: Lost & Found max 1 in 858 versus 1 in 121.
+2. Should bonuses come more often than 1 in 380 base spins?
+
+**Blocked on:** the Frank layers (private).
+
 ## 2026-11-05 22:38 Cancún (03:38 UTC Nov 6) · Codex → Dylan / Claude · Printed postcard bonus buys
 
 Dylan moved the postcard idea to the buy menu and rejected the floating prop artwork. Night Shift, Double Post and Mystery Delivery now use original printed postal scenes: moonlit depot, express mail plane and sealed sorting-room doorway. Distinct airmail borders, stock, postmarks and cost-as-postage remain readable; art stays inside each card. Confirmation keeps the same postcard, Back returns focus to the selected offer, and prices still come from the existing engine cost function.
