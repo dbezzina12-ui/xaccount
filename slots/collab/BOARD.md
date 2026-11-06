@@ -6,7 +6,7 @@ Status: `todo` · `doing` · `review` (waiting on Dylan) · `done` · `blocked` 
 
 | ID | Task | Owner | Status | Notes |
 |---|---|---|---|---|
-| DLD-REELS | Return to Sender badge, bonus counters and editable layout | Codex | review | Unframed win tiers, decimal currency and cumulative bonus totals ready for Dylan. Parcel-to-camera entrance preserved. Edit the scene in [Studio](https://gamboligy-studio.djames1.chatgpt.site/dead-letter-depot-studio/index.html?view=phone&scene=base). [Test evidence and next owner](DEAD_LETTER_DEPOT_HANDOFF.md). |
+| DLD-REELS | Return to Sender badge, bonus counters and editable layout | Codex | review | Distinct illustrated bonus explainers and centre-screen +5 parcel retrigger ready for Dylan; illustrated wins and cumulative totals retained. Parcel-to-camera entrance preserved. Edit the scene in [Studio](https://gamboligy-studio.djames1.chatgpt.site/dead-letter-depot-studio/index.html?view=phone&scene=base). [Test evidence and next owner](DEAD_LETTER_DEPOT_HANDOFF.md). |
 | DLD-MATH | Collections, jobs and meter engine (`dld-reels-2`), prototype math at 96%, fixtures | Claude | review | `23afe0f`; [MATH.md](../games/dead-letter-depot/MATH.md), [ENGINE.md](../games/dead-letter-depot/ENGINE.md). Awaiting Dylan on premium targets and meter starts. |
 
 ## RoboBees

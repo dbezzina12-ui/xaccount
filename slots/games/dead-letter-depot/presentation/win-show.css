@@ -41,3 +41,17 @@
 .six-cubby img{width:48%;max-width:38px;height:clamp(24px,4vh,40px);object-fit:contain}
 #rack .six-cubby.lit{background:#775128;border-color:#ffd18a}
 .trial-actions{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;margin:12px auto 0}.trial-actions a{color:#ffdba1}.trial-actions button{min-height:38px;font-size:14px}
+
+/* Generated postal cutouts remain unframed; the live amount sits below them. */
+.win-show.win-illustrated .win-content h2{width:min(92vw,74vh,850px);margin:0 0 -3px;font-size:0;line-height:0;transform:none;filter:drop-shadow(0 9px 13px #0007)}
+.win-illustration{display:block;width:100%;height:auto;object-fit:contain;pointer-events:none}
+.win-show.win-illustrated[data-rank=nice] .win-content h2{width:min(86vw,68vh,780px)}
+.win-show.win-illustrated .win-context{margin-bottom:10px}
+.win-show.win-illustrated .win-amount{margin-top:9px}
+@media(prefers-reduced-motion:no-preference){
+ .win-show.win-illustrated .win-content h2{animation:win-art-arrives .7s cubic-bezier(.18,.8,.22,1) both}
+ .win-illustration{animation:win-art-hover 4s .7s ease-in-out infinite}
+}
+@keyframes win-art-arrives{from{opacity:0;transform:translateY(32px) rotate(-7deg) scale(.65)}65%{opacity:1;transform:translateY(-4px) rotate(1deg) scale(1.055)}to{opacity:1;transform:none}}
+@keyframes win-art-hover{0%,100%{transform:translateY(0) rotate(-.3deg)}50%{transform:translateY(-5px) rotate(.3deg)}}
+@media(max-height:460px){.win-show.win-illustrated .win-context{margin-bottom:2px}.win-show.win-illustrated .win-content h2{width:min(68vw,66vh,850px)}.win-show.win-illustrated .win-amount{margin-top:2px}}

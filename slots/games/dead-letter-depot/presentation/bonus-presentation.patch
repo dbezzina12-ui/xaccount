@@ -1,0 +1,73 @@
+diff --git a/dist/reels.mjs b/dist/reels.mjs
+index fad8645..9cf2a32 100644
+--- a/dist/reels.mjs
++++ b/dist/reels.mjs
+@@ -5,6 +5,7 @@ import { winShow, titles } from './presentation/win-show.mjs';
+ import { LOWS } from './reel-engine/rules.js';
+ import { boughtEntryBoard } from './presentation/entry-board.mjs';
+ import { enterDispatch, syncShift } from './presentation/stage-motion.mjs';
++import { throwRetriggerParcel } from './presentation/return-delivery.mjs';
+ import { mountController } from './controller/controller.js';
+ import { openShop } from './shop.mjs';
+ import { ENGINE_VERSION, playRound, seeded, tierOf } from './reel-engine/engine.js';
+@@ -193,8 +194,33 @@ function guide(intro){
+     const link=document.createElement('a');link.href='?playtest=power';link.textContent='Try the six-symbol playtest';actions.append(link);
+   }
+   option('Preview win animations',gallery);
++  option('Preview bonus animations',bonusGallery);
+   $('continue').onclick=()=>modal.close();
+ }
++function bonusGallery(){
++  show('<small class="kicker">PRESENTATION PREVIEW</small><h2>Bonus animations</h2><div class="trial-actions" id="bonusPreviews"></div><button class="cta" id="backGuide">Back</button>');
++  for(const [tier,rules] of Object.entries(BONUSES)){
++    const button=document.createElement('button');button.textContent=rules.title;
++    button.onclick=async()=>{
++      modal.close();busy=true;paint();
++      try{
++        await liftSymbols(board,false);
++        draw(boughtEntryBoard(tier,seeded(28)));
++        await dropReels(board,null,undefined,{anticipation:3});
++        const bonus={tier,title:rules.title};
++        await enterDispatch({bonus,scatters:[...board.querySelectorAll('[data-symbol="fs"]')],trigger:'Presentation preview',spins:rules.spins,variant:power?'ladder':trial?'flat':'collections',preview:true,show,
++          onImpact:()=>openRegister(bonus),onReveal:()=>{}});
++      }finally{
++        busy=false;syncShift();updateRegister(false);draw(generateRound({mode:'base',rng:seeded(1)}).spin.board);paint();bonusGallery();
++      }
++    };
++    $('bonusPreviews').append(button);
++  }
++  const retrigger=document.createElement('button');retrigger.textContent='+5 free spins';
++  retrigger.onclick=async()=>{modal.close();busy=true;paint();try{await throwRetriggerParcel(document.querySelector('.postmaster'),{spins:5,preview:true});}finally{busy=false;paint();bonusGallery()}};
++  $('bonusPreviews').append(retrigger);
++  $('backGuide').onclick=()=>guide(false);
++}
+ function gallery(){
+   show('<small class="kicker">PRESENTATION PREVIEW</small><h2>Win animations</h2><div class="trial-actions" id="tiers"></div><button class="cta" id="backGuide">Back</button>');
+   for(const [rank,title] of Object.entries(titles)){
+@@ -277,7 +303,7 @@ async function runSpin(spin,targets,signal){
+   if(spinRank)readout(titles[spinRank]+' · '+spinWin);
+   $('readout').classList.toggle('paid',paid>0);
+   if(spinRank && session.pending.next < round.bonus.spins.length-1 && !signal.aborted)await winShow(spinRank,winOf(paid,session.bet));
+-  if(spin.retrigger) await featureBeat(imageUrl('FS'),'+'+spin.retrigger+' free spins',spin.fs+' FS landed. Your shift continues.',session.turbo?1100:1700,signal);
++  if(spin.retrigger) await throwRetriggerParcel(document.querySelector('.postmaster'),{spins:spin.retrigger,quick:session.turbo || signal.aborted});
+ }
+ async function finish(){
+   const p=session.pending, result=settle(round,session.bet,p.fixture?costOf(p.mode,session.bet):p.before);
+@@ -322,7 +348,7 @@ async function play(){
+       }
+       const scatters=[...board.querySelectorAll('[data-symbol="fs"]')];
+       readout(trigger);
+-      await enterDispatch({bonus,trigger,scatters,description:tierCopy[bonus.tier],spins:BONUSES[bonus.tier].spins,
++      await enterDispatch({bonus,trigger,scatters,variant:power?'ladder':trial?'flat':'collections',spins:BONUSES[bonus.tier].spins,
+         show,onImpact:()=>openRegister(bonus),onReveal:()=>{
+           p.stage='bonus';save();paint();
+           rack(blank,bonus.targets);
+@@ -360,6 +386,8 @@ if(session.pending){
+     : generateRound(options);
+   win=credits(winOf(shownTotal(round,p),session.bet));
+   play();
++}else if(new URLSearchParams(location.search).get('preview')==='bonuses'){
++  bonusGallery();
+ }else if(new URLSearchParams(location.search).get('preview')==='wins'){
+   gallery();
+ }else if(power && new URLSearchParams(location.search).get('preview')==='delivery'){

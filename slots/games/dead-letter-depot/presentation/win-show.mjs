@@ -2,8 +2,17 @@ import { TIERS } from '../reel-engine/rules.js';
 import { credits } from './win-ledger.mjs';
 export const titles = {...Object.fromEntries(Object.entries(TIERS).map(([id,t])=>[id,t.title])),max:'MAX WIN'};
 
+const artSources = Object.fromEntries([...Object.keys(titles),'total'].map(rank=>[
+  rank, new URL('../art/night-mail/wins-v2/'+rank+'.webp',import.meta.url).href
+]));
+// Warm the small alpha cutouts while the reels are idle. Decode the selected
+// image before opening its animation so there is no empty title on slow loads.
+const warmArt = () => Object.values(artSources).forEach(src=>{const img=new Image();img.fetchPriority='low';img.src=src;});
+if('requestIdleCallback' in window)requestIdleCallback(warmArt,{timeout:3000});
+else setTimeout(warmArt,1000);
+
 // The final bonus count-up and tier share one unframed celebration.
-export function winShow(tier, cents, preview=false, summary='') {
+export async function winShow(tier, cents, preview=false, summary='') {
   if(!titles[tier] && !summary)return Promise.resolve();
   const rank=titles[tier]?tier:'total', title=titles[tier] || 'TOTAL WIN';
   const dialog=document.createElement('dialog');
@@ -13,8 +22,15 @@ export function winShow(tier, cents, preview=false, summary='') {
   dialog.innerHTML='<section class="win-stage"><div class="win-rays" aria-hidden="true"></div><div class="mail-burst" aria-hidden="true"></div><div class="win-content"><p class="win-context"></p><h2><span></span></h2><strong class="win-amount"></strong><p class="win-caption"></p><button type="button"></button></div></section>';
   dialog.querySelector('.win-context').textContent=summary || (preview?'ANIMATION PREVIEW':'');
   dialog.querySelector('h2 span').textContent=title;
+  const art=new Image();art.className='win-illustration';art.alt=title;
+  art.width=1536;art.height=1024;art.draggable=false;art.src=artSources[rank];
+  try {
+    await art.decode();
+    dialog.classList.add('win-illustrated');
+    dialog.querySelector('h2').replaceChildren(art);
+  } catch { /* Keep the readable heading if the image could not load. */ }
   dialog.querySelector('.win-caption').textContent=summary?'TOTAL BONUS WIN':'';
-  const button=dialog.querySelector('button');button.textContent=summary?'Back to reels':'Continue';
+  const button=dialog.querySelector('button');button.textContent=preview?'Continue':summary?'Back to reels':'Continue';
   const value=dialog.querySelector('.win-amount');
   value.setAttribute('aria-label',credits(cents));
   const count={total:0,nice:6,big:10,epic:16,mythic:22,max:30}[rank];

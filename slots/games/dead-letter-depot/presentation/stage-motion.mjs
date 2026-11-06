@@ -1,6 +1,7 @@
 import { mountFrankMotion } from './frank-motion.mjs';
 import { throwParcelAtCamera, clearParcelCover } from './return-delivery.mjs';
 import { dwell } from './dispatch.mjs';
+import { buildBonusBrief } from './bonus-brief.mjs';
 
 const stylesheet=document.createElement('link');
 stylesheet.rel='stylesheet';
@@ -31,24 +32,11 @@ async function animate(element,frames,duration,easing){
   finally {animation.cancel();}
 }
 
-function label(tag,className,copy){
-  const el=document.createElement(tag);
-  el.className=className;
-  el.textContent=copy;
-  return el;
-}
-
-export async function enterDispatch({bonus,scatters,trigger,description,spins,show,onImpact,onReveal}){
+export async function enterDispatch({bonus,scatters,trigger,spins,show,onImpact,onReveal,variant='collections',preview=false}){
   const anchor=document.createComment('Frank stage position');
   frank.before(anchor);
   let cover;
-  const ticket=document.createElement('section');
-  ticket.className='dispatch-ticket';
-  const button=label('button','cta','Start '+spins+' free spins');
-  button.id='startBonus';button.disabled=true;
-  ticket.append(label('small','dispatch-origin',trigger),label('h2','',bonus.title),label('p','',description),button);
-  const scene=document.createElement('div');
-  scene.className='dispatch-scene';scene.dataset.tier=bonus.tier;
+  const {scene,visual,button,ready}=buildBonusBrief({tier:bonus.tier,title:bonus.title,spins,trigger,variant,preview});
   let restoreParcel=()=>{};
   try {
     scatters.forEach(tile=>tile.classList.add('dispatch-scatter'));
@@ -60,8 +48,10 @@ export async function enterDispatch({bonus,scatters,trigger,description,spins,sh
     frank.dispatchEvent(new CustomEvent('depot:frank',{bubbles:true,detail:{action:'bonus',tier:bonus.tier}}));
     syncShift(bonus.tier);
     show('','dispatch-dialog');
-    scene.append(frank,ticket);
+    visual.append(frank);
     document.getElementById('paper').replaceChildren(scene,cover);
+    modal.setAttribute('aria-labelledby','bonus-title');
+    await ready;
     // The same actor stays alive across the cut, finishing the salute and breathing.
     await clearParcelCover(cover);
     cover?.remove();
@@ -71,13 +61,14 @@ export async function enterDispatch({bonus,scatters,trigger,description,spins,sh
     button.disabled=true;
     // Retain the modal focus trap during the physical exit. The first free spin
     // starts only after the completed exit, through the normal resume cursor.
-    const stage=frank.parentNode;
+    const stage=scene;
     onReveal();
     await animate(stage,[{transform:'translateY(0)',opacity:1},{transform:'translateY(-8%)',opacity:0}],500,'cubic-bezier(.4,0,.55,1)');
     anchor.after(frank);
     modal.close();
   } finally {
     restoreParcel();
+    modal.removeAttribute('aria-labelledby');
     anchor.replaceWith(frank);
     cover?.remove();
     scatters.forEach(tile=>tile.classList.remove('dispatch-scatter'));

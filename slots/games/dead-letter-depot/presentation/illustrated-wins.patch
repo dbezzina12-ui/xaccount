@@ -1,0 +1,18 @@
+diff --git a/dist/reels.mjs b/dist/reels.mjs
+index 4eceaa6..fad8645 100644
+--- a/dist/reels.mjs
++++ b/dist/reels.mjs
+@@ -200,9 +200,12 @@ function gallery(){
+   for(const [rank,title] of Object.entries(titles)){
+     const button=document.createElement('button');button.textContent=title;
+     const sample={nice:10,big:25,epic:100,mythic:500,max:25000}[rank];
+-    button.onclick=()=>winShow(rank,sample*session.bet,true);
++    button.onclick=async()=>{modal.close();await winShow(rank,sample*session.bet,true);gallery()};
+     $('tiers').append(button);
+   }
++  const total=document.createElement('button');total.textContent='TOTAL WIN';
++  total.onclick=async()=>{modal.close();await winShow(null,8*session.bet,true,'BONUS COMPLETE · 10 FREE SPINS');gallery()};
++  $('tiers').append(total);
+   $('backGuide').onclick=()=>guide(false);
+ }
+ async function pause(ms,signal){
