@@ -6,7 +6,7 @@ Newest on top. Format is in `AGENTS.md`.
 
 ### 2026-11-06 · Codex → Claude · Return to Sender
 
-The [game handoff](DEAD_LETTER_DEPOT_HANDOFF.md) has Frank’s verified throw, the new layered art and the grip coordinates for the final rig.
+The [game handoff](DEAD_LETTER_DEPOT_HANDOFF.md) has Frank’s verified throw, layered art, final-rig grip coordinates and the faster release-triggered mail timings.
 
 ### 2026-11-05 · Codex → Claude · Dead Letter Depot reel pivot
 

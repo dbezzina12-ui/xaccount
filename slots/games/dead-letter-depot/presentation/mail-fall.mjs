@@ -1,8 +1,11 @@
+import { finishEntryBeat } from './entry-timing.mjs';
+
 // A staggered pile spans the viewport at rest. Swap the scene while all the
 // letters are resting, then let the bottom of the pile spill away first.
 const art = new Image();
 art.src = new URL('../art/night-mail/falling-airmail.webp', import.meta.url).href;
-const decoded = art.decode().then(() => true, () => false);
+let textured = false;
+art.decode().then(() => { textured = true; }, () => {});
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 
 export function mailCover() {
@@ -15,7 +18,6 @@ export function mailCover() {
 export async function fallMail(cover, leaving = false) {
   if (reduced.matches) return;
   if (!leaving) {
-    const textured = await decoded;
     const columns = innerWidth > innerHeight ? 5 : 3;
     const rows = Math.max(2, Math.ceil(innerHeight / (innerWidth / columns * .55)));
     for (let row = 0; row < rows; row++) {
@@ -42,20 +44,22 @@ export async function fallMail(cover, leaving = false) {
     const tilt = letter.style.getPropertyValue('--tilt');
     const rest = 'translate(-50%, -50%) rotate(' + tilt + ')';
     const fly = (x,y,angle) => 'translate(-50%, -50%) translate(' + x + 'vw,' + y + 'vh) rotate(' + angle + 'deg)';
+    // Each incoming envelope starts at the top edge, regardless of its landing row.
+    const width = innerWidth * parseFloat(letter.style.width) / 100;
+    const entryY = -parseFloat(letter.style.top) - 35 * width / innerHeight;
     const motion = letter.animate(leaving ? [
       {transform:rest}, {transform:fly(phase * 8, 138, phase * 46)}
     ] : [
-      {transform:fly(phase * 15, -140, phase * 64)},
-      {transform:fly(phase * 4, -19, -phase * 18), offset:.7},
+      {transform:fly(phase * 12, entryY, phase * 22)},
       {transform:rest}
     ], {
-      duration: leaving ? 530 : 690, delay:(1 - row) * 255 + ((i * 29) % 133),
-      easing:leaving ? 'cubic-bezier(.47,.02,.85,.5)' : 'cubic-bezier(.44,.08,.37,1)',
+      duration: leaving ? 215 : 355, delay:(1 - row) * 75 + ((i * 29) % 43),
+      easing:leaving ? 'cubic-bezier(.4,.12,.75,.68)' : 'cubic-bezier(.3,.48,.38,1)',
       fill:'both'
     });
     return motion;
   });
-  try { await Promise.all(motions.map(m => m.finished)); }
+  try { await finishEntryBeat(motions); }
   finally {
     if (leaving) cover.hidden = true;
     for (const m of motions) m.cancel();

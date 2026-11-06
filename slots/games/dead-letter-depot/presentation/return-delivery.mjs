@@ -1,3 +1,5 @@
+import { finishEntryBeat } from './entry-timing.mjs';
+
 // Use the painted parcel's coordinates on Frank's artboard, so the throw
 // still connects after a Studio move, resize or phone rotation.
 const parcelArt=new URL('../art/night-mail/return-parcel.webp',import.meta.url).href;
@@ -12,7 +14,7 @@ const ready=Promise.all([parcelReady.decode(), ...Object.values(assets).map(url 
 
 async function move(node,frames,ms,easing='linear'){
   const motion=node.animate(frames,{duration:ms,easing,fill:'both'});
-  try{await motion.finished;}catch(error){if(error.name!=='AbortError')throw error;}
+  try{await finishEntryBeat([motion]);}catch(error){if(error.name!=='AbortError')throw error;}
   finally{motion.cancel();}
 }
 
@@ -62,20 +64,19 @@ function parcelFlight(start,end){
   return frames;
 }
 
-export async function knockOffBadge(actor,onImpact){
+export async function knockOffBadge(actor,{onRelease,onImpact}){
   const mount=document.querySelector('.floor > .sign');
   const badge=mount.querySelector('h1 img');
   const counter=mount.querySelector('#held');
-  if(reduced.matches){onImpact();return ()=>{};}
-  const rig=await ready && mountThrowWing(actor);
-  if(!rig){onImpact();return ()=>{};}
+  const rig=!reduced.matches && await ready && mountThrowWing(actor);
+  if(!rig){onImpact();await onRelease();return ()=>{};}
   const face=badge.getBoundingClientRect();
   const end={x:face.left+face.width*.73,y:face.top+face.height*.31};
   // Hold the final pose while measuring the grip and swapping out the parcel.
   const releasePose='rotate(100deg)';
   rig.wing.style.transform=releasePose;
   await move(rig.wing,[{transform:'rotate(0)'},{transform:'rotate(-17deg)',offset:.52},
-    {transform:'rotate(-14deg)',offset:.65},{transform:releasePose}],470,'cubic-bezier(.4,0,.55,1)');
+    {transform:'rotate(-14deg)',offset:.65},{transform:releasePose}],330,'cubic-bezier(.4,0,.55,1)');
   const start=handPosition(rig.artboard);
   const parcel=Object.assign(new Image(),{src:parcelArt,alt:'',className:'return-parcel'});
   parcel.style.width=start.width+'px';
@@ -83,17 +84,8 @@ export async function knockOffBadge(actor,onImpact){
   parcel.style.top=(start.y-start.width*(parcelReady.naturalHeight/Math.max(1,parcelReady.naturalWidth))/2)+'px';
   const signCopy=badge.cloneNode(false);
   signCopy.alt='';signCopy.className='loose-badge';
-  try{
-    rig.release();
-    rig.wing.style.transform='rotate(12deg)';
-    document.body.append(parcel);
-    await Promise.all([
-      move(rig.wing,[{transform:releasePose},{transform:'rotate(124deg)',offset:.20},
-        {transform:'rotate(8deg)',offset:.82},{transform:'rotate(12deg)'}],480,'ease-out'),
-      move(parcel,parcelFlight(start,end),560)
-    ]);
-    // The cut is on contact: the loose sign carries the art away while
-    // the mechanical register is already visible behind it.
+  async function hitTitle(){
+    await move(parcel,parcelFlight(start,end),290);
     parcel.remove();
     Object.assign(signCopy.style,{left:face.x+'px',top:face.y+'px',width:face.width+'px',height:face.height+'px'});
     document.body.append(signCopy);
@@ -101,14 +93,24 @@ export async function knockOffBadge(actor,onImpact){
     const distance=Math.min(innerHeight-face.top+face.height,innerHeight*.86);
     await Promise.all([
       move(signCopy,[
-        {transform:'rotate(0)',offset:0},
-        {transform:'translate(3px,-3px) rotate(-5deg)',offset:.13},
-        {transform:'rotate(12deg)',offset:.32},
-        {transform:'rotate(8deg)',offset:.46},
-        {transform:'translate(4px,12px) rotate(19deg)',offset:.60},
-        {transform:'translate(28px,'+distance+'px) rotate(67deg)',opacity:0,offset:1}
-      ],690,'linear'),
-      move(counter,[{filter:'brightness(1.5)'},{filter:'brightness(1)'}],460,'ease-out'),
+        {transform:'rotate(0)'},
+        {transform:'translate(3px,-3px) rotate(-6deg)',offset:.15},
+        {transform:'translate(4px,10px) rotate(18deg)',offset:.43},
+        {transform:'translate(28px,'+distance+'px) rotate(67deg)',opacity:0}
+      ],185,'ease-in'),
+      move(counter,[{filter:'brightness(1.5)'},{filter:'brightness(1)'}],150,'ease-out')
+    ]);
+  }
+  try{
+    rig.release();
+    rig.wing.style.transform='rotate(12deg)';
+    document.body.append(parcel);
+    // Release starts the flight and the mail together. Swap scenes under full cover.
+    await Promise.all([
+      hitTitle(),
+      onRelease(),
+      move(rig.wing,[{transform:releasePose},{transform:'rotate(124deg)',offset:.20},
+        {transform:'rotate(8deg)',offset:.82},{transform:'rotate(12deg)'}],300,'ease-out')
     ]);
     return rig.restore;
   }catch(error){rig.restore();throw error}

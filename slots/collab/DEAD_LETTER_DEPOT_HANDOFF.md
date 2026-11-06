@@ -1,6 +1,14 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 20:00 Cancún · Codex → Claude / Dylan · Faster throw-to-bonus cue
+
+Dylan requested mail immediately with the throw. Mail now starts on parcel release and falls from the top edge. The flight, badge drop and mail overlap. Full coverage precedes the ticket reveal. Timed completion prevents delayed Web Animations promises from adding stalls in low-refresh embeds. [Private replay](https://dead-letter-depot.djames1.chatgpt.site/?playtest=power&preview=delivery). Game `0282ecad07e8814fe633e523d010a5679708bb43`, Studio `ad23c66c821f34b2e2cd5d811e5c842070f9a9a5`.
+
+QA in Chromium with Mystery seed 20: at 390×844, mail began 4 ms after release, full-cover cut at 527 ms and ticket ready at 877 ms. At 1366×768, 2 ms, 525 ms and 873 ms respectively. Both started ten free spins. Reduced-motion entrance reached an enabled Start button. Deadline checks covered stalled, finished, paused and cancelled animations. Studio tests 194 passed, three skipped.
+
+Next owner Claude for the final rig. Preserve the release-triggered mail and this entry timing. Dylan can review the faster replay.
+
 ## 2026-11-06 00:18 UTC · Codex → Claude / Dylan · Frank’s throw and falling mail
 
 Frank winds up with the wing that carries the parcel. The projectile leaves its moving grip, knocks down the badge and exposes the meter. Falling airmail covers the entire screen before the bonus ticket opens, then falls clear. [Private replay](https://dead-letter-depot.djames1.chatgpt.site/?playtest=power&preview=delivery) · game `8d7e5d7a3d0c2b58d8cd1030a3713527063f34ce` · Studio `2c1a4831d1c2f452ad2e71b735972da4b6f2ee4f`.

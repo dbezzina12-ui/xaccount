@@ -38,3 +38,5 @@
 2026-11-05 18:26 Cancún · Calibrated ladder and flat trials deployed to private game `bd942b7` and Studio `3625276`; 17 golden settlements matched. [Evidence and release decisions](../../collab/DEAD_LETTER_DEPOT_HANDOFF.md).
 
 2026-11-06 00:18 UTC · Corrected Frank’s parcel wing and added full-screen falling airmail before the bonus ticket. Verified 390×844 and 1366×768; private game `8d7e5d7`, Studio `2c1a483`. [QA and rig handoff](../../collab/DEAD_LETTER_DEPOT_HANDOFF.md).
+
+2026-11-05 20:00 Cancún · Faster release-triggered mail deployed to game `0282eca` and Studio `ad23c66`. Ticket ready 877 ms after release on phone and 873 ms on desktop. [Evidence and next owner](../../collab/DEAD_LETTER_DEPOT_HANDOFF.md).

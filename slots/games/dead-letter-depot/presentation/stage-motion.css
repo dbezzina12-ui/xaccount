@@ -29,6 +29,7 @@ body[data-shift] .bezel{box-shadow:0 0 0 1px #e4bc78,0 0 22px #dea6592b}
 body[data-shift=hidden] #board{background:radial-gradient(ellipse at 50% 35%,#493f50,#242436 82%)}
 body[data-shift=super] #board{background:radial-gradient(ellipse at 50% 35%,#314755,#192935 82%)}
 @media(prefers-reduced-motion:no-preference){
+ .dispatch-scene .dispatch-ticket{animation-delay:0s;animation-duration:.2s}
  .tile.fs-arrival img{animation:fs-postmark .38s ease-out both}
  @keyframes fs-postmark{0%,100%{scale:1}45%{scale:1.12;filter:brightness(1.24) drop-shadow(0 0 6px #ffd89a)}}
 }
@@ -145,7 +146,7 @@ body[data-shift=super] #board{background:radial-gradient(ellipse at 50% 35%,#314
 .register.active .global-field strong{color:#ffdb88}
 #multi-value[data-digits="4"]{font-size:14cqw}
 #multi-value[data-digits="5"],#multi-value[data-digits="6"]{font-size:11cqw}
-.return-parcel,.loose-badge{position:fixed;z-index:30;pointer-events:none;object-fit:contain;filter:drop-shadow(1px 4px 3px #07131e99)}
+.return-parcel,.loose-badge{position:fixed;z-index:101;pointer-events:none;object-fit:contain;filter:drop-shadow(1px 4px 3px #07131e99)}
 .return-parcel{height:auto;will-change:transform}
 .loose-badge{max-width:none;transform-origin:26% 8%;will-change:transform}
 @media(orientation:portrait){

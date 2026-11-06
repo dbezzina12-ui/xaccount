@@ -54,10 +54,13 @@ export async function enterDispatch({bonus,scatters,trigger,description,spins,sh
   try {
     scatters.forEach(tile=>tile.classList.add('dispatch-scatter'));
     if(scatters.length)await dwell(reduced.matches?150:280);
-    restoreParcel=await knockOffBadge(frank,onImpact);
-    await dwell(reduced.matches?100:400);
-    document.body.append(cover);
-    await fallMail(cover);
+    restoreParcel=await knockOffBadge(frank,{
+      onImpact,
+      onRelease(){
+        document.body.append(cover);
+        return fallMail(cover);
+      }
+    });
     restoreParcel();
     frank.dispatchEvent(new CustomEvent('depot:frank',{bubbles:true,detail:{action:'bonus',tier:bonus.tier}}));
     syncShift(bonus.tier);
