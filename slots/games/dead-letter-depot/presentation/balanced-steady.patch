@@ -1,0 +1,181 @@
+diff --git a/presentation/bonus-brief.mjs b/presentation/bonus-brief.mjs
+index feafb5b..20dc752 100644
+--- a/presentation/bonus-brief.mjs
++++ b/presentation/bonus-brief.mjs
+@@ -11,12 +11,12 @@ const art=Object.fromEntries(Object.keys(looks).map(tier=>[tier,new URL('../art/
+ const make=(tag,cls,text)=>{const el=document.createElement(tag);el.className=cls;if(text)el.textContent=text;return el};
+ 
+ function feature(tier,variant){
+-  if(tier==='super')return 'Start at 10× with your global multiplier active on every winning spin.';
++  if(tier==='super')return 'Start at '+(variant==='steady'?15:10)+'× with your global multiplier active on every winning spin.';
+   if(variant==='collections')return tier==='hidden'
+     ? 'Half-size collections double your entire multiplier, up to 64×.'
+     : 'Complete a collection or land a stamp to activate your growing multiplier.';
+   if(tier==='regular')return 'Match 8+ of a listed symbol to build and activate your global multiplier.';
+-  return variant==='ladder'||variant==='balanced'
++  return ['ladder','balanced','steady'].includes(variant)
+     ? 'Key matches multiply your entire global multiplier: ×2 first, then ×4.'
+     : 'Match 8+ listed Keys to double your entire global multiplier.';
+ }
+diff --git a/presentation/six-view.mjs b/presentation/six-view.mjs
+index 1c81b33..c1fc1ab 100644
+--- a/presentation/six-view.mjs
++++ b/presentation/six-view.mjs
+@@ -1,12 +1,15 @@
+ // Translate recorded engine events into the shapes used by the reel presenter.
+-import {playSixRound, ladderState} from '../reel-engine/six.js';
++import {playSixRound, ladderState, VARIANTS} from '../reel-engine/six.js';
+ 
+ export function sixView(options) {
+   const round = playSixRound(options);
++  if(round.spin?.rack)for(const step of round.spin.steps){
++    step.rackHits=step.rack.hits;step.meterAfter=step.rack.after;
++  }
+   if (round.bonus) {
+     const bonus = round.bonus;
+     bonus.selected = bonus.rack;
+-    let nextAward = options.variant === 'ladder' ? ladderState(bonus.rack) : null;
++    let nextAward = VARIANTS[options.variant ?? 'flat'].spec[bonus.tier].ladder ? ladderState(bonus.rack) : null;
+     for (const spin of bonus.spins) {
+       spin.ladderBefore = nextAward;
+       for (const step of spin.steps) {
+diff --git a/presentation/win-show.css b/presentation/win-show.css
+index ee4247d..0a74ca2 100644
+--- a/presentation/win-show.css
++++ b/presentation/win-show.css
+@@ -55,3 +55,6 @@
+ @keyframes win-art-arrives{from{opacity:0;transform:translateY(32px) rotate(-7deg) scale(.65)}65%{opacity:1;transform:translateY(-4px) rotate(1deg) scale(1.055)}to{opacity:1;transform:none}}
+ @keyframes win-art-hover{0%,100%{transform:translateY(0) rotate(-.3deg)}50%{transform:translateY(-5px) rotate(.3deg)}}
+ @media(max-height:460px){.win-show.win-illustrated .win-context{margin-bottom:2px}.win-show.win-illustrated .win-content h2{width:min(68vw,66vh,850px)}.win-show.win-illustrated .win-amount{margin-top:2px}}
++
++#rack.six-rack.base-rack{grid-template-columns:repeat(2,minmax(0,1fr));width:min(45%,240px);justify-self:center}
++.trial-note{max-width:640px;margin:12px auto;color:#ead6b4;font-size:13px;line-height:1.5;text-wrap:balance}
+diff --git a/reels.mjs b/reels.mjs
+index 9cf2a32..cf5784c 100644
+--- a/reels.mjs
++++ b/reels.mjs
+@@ -1,3 +1,4 @@
++import { VARIANTS } from './reel-engine/six.js';
+ import { sixView } from './presentation/six-view.mjs';
+ import { trialRound } from './presentation/six-trial.mjs';
+ import { credits, paidOf, shownTotal } from './presentation/win-ledger.mjs';
+@@ -22,9 +23,12 @@ const symbolId = s => assets[s] || s.toLowerCase();
+ const imageUrl = s => 'art/night-mail/symbols/' + symbolId(s) + '.webp';
+ const blank = Object.fromEntries(PAYING.map(s => [s,0]));
+ const variant = new URLSearchParams(location.search).get('playtest');
+-const power = variant === 'power';
++const modern = ['balanced','steady'].includes(variant);
++const power = variant === 'power' || modern;
++const engineVariant = modern ? variant : power ? 'ladder' : 'flat';
++const spec = VARIANTS[engineVariant].spec;
+ const trial = power || variant === 'six';
+-const generateRound = trial ? options=>sixView({...options,variant:power?'ladder':'flat'}) : playRound;
++const generateRound = trial ? options=>sixView({...options,variant:engineVariant}) : playRound;
+ const descriptions = { base:'Standard reels',priority:'More frequent free spins',special:'One opening multiplier stamp',exposure:'Two opening multiplier stamps',nightshift:'A stamp or collection activates the meter',doublepost:'Start at 10×, active every spin',mystery:'Reveal Night Shift, Double Post or Lost & Found' };
+ const tierCopy = {regular:'A stamp or completed collection activates your meter for that spin.',super:'Your meter starts at 10× and applies on every free spin.',hidden:'Half-size collections double your entire meter, up to 64×.'};
+ if(trial){
+@@ -35,8 +39,13 @@ if(trial){
+   });
+   Object.assign(descriptions,{nightshift:tierCopy.regular,doublepost:tierCopy.super});
+ }
++if(modern){
++  descriptions.mystery='Reveal Double Post or Lost & Found';
++  descriptions.doublepost=tierCopy.super='Start at '+spec.super.start+'×. The global multi applies to every win.';
++  tierCopy.hidden='Start at '+spec.hidden.start+'×. Keys multiply the meter; bonus pays at least 1,000×.';
++}
+ // Playtest credit and resume state are scoped to this tab.
+-const key = 'depot-session-' + (power ? 'six-ladders-1' : trial ? 'six-trial-1' : ENGINE_VERSION);
++const key = 'depot-session-' + (modern ? VARIANTS[engineVariant].version : power ? 'six-ladders-1' : trial ? 'six-trial-1' : ENGINE_VERSION);
+ let session = JSON.parse(sessionStorage.getItem(key) || 'null') || {balance:trial?1000000:100000,bet:100,mode:'base',pending:null};
+ const save = () => sessionStorage.setItem(key, JSON.stringify(session));
+ let round, controller, auto = 0, timer, busy = false;
+@@ -62,13 +71,14 @@ function draw(grid,hits=[]) {
+   board.replaceChildren(fragment);
+ }
+ function rack(counts,targets) {
+-  if (session.pending?.stage !== 'bonus' || !round?.bonus) return;
++  const baseRack=modern && session.pending?.stage==='base' ? round?.spin?.rack : null;
++  if(!baseRack && (session.pending?.stage!=='bonus'||!round?.bonus))return;
+   if(trial){
+-    const selected=round.bonus.selected, host=$('rack');
++    const selected=baseRack||round.bonus.selected, host=$('rack');
+     if(host.dataset.lineup===selected.join(','))return;
+-    host.className='six-rack';
++    host.className='six-rack'+(baseRack?' base-rack':'');
+     host.dataset.lineup=selected.join(',');
+-    host.setAttribute('aria-label','Six multiplier symbols');
++    host.setAttribute('aria-label',baseRack?'Two base-spin multiplier symbols':'Six multiplier symbols');
+     host.replaceChildren(...selected.map(id=>{
+       const item=document.createElement('div'), icon=new Image(), award=document.createElement('b');
+       item.className='six-cubby';item.dataset.id=id;
+@@ -107,7 +117,7 @@ function updateRegister(visible) {
+ }
+ function openRegister(bonus) {
+   const rules = BONUSES[bonus.tier];
+-  meter(rules.meter, rules.when === 'always');
++  meter(trial?spec[bonus.tier].start:rules.meter, rules.when === 'always');
+   $('spins-left').textContent = rules.spins;
+   updateRegister(true);
+ }
+@@ -120,7 +130,7 @@ function paint(){
+   $('help').disabled=pending;
+   const showBonus = session.pending?.stage === 'bonus';
+   deck.element('winReadout').querySelector('span').textContent = showBonus || session.lastWinBonus && !pending ? 'BONUS WIN' : 'WIN';
+-  $('rack').hidden = !showBonus;
++  $('rack').hidden = !(showBonus || modern && session.pending?.stage==='base');
+   // Entry owns the two sign faces from impact until the bonus starts.
+   if (session.pending?.stage !== 'entry') updateRegister(showBonus);
+   if (showBonus && round?.bonus) $('spins-left').textContent = spinsLeft(round.bonus, session.pending.next);
+@@ -183,11 +193,18 @@ function guide(intro){
+     panels[1]=['J','Build the multi','A basic adds +1, then +2, +4, +8. A premium starts at +3. Each listed symbol builds separately.'];
+     panels[2]=['KEY','Multiply the meter','Listed Keys double the global meter on their first match. Later Key matches multiply it by four.'];
+   }
+-  show('<img class="guide-logo" src="art/night-mail/return-to-sender.webp" alt="Return to Sender"><h2 class="guide-title">'+(power?'Multiplier ladders':trial?'Six-symbol playtest':intro?'Welcome to the depot':'How to play')+'</h2><div class="panels">'+panels.map(([s,t,d])=>'<section><img src="'+imageUrl(s)+'" alt=""><b>'+t+'</b><p>'+d+'</p></section>').join('')+'</div><button class="cta" id="continue">'+(intro?'Open the depot':'Back to reels')+'</button>');
++  if(modern)panels[0]=['PARCEL','Match eight','Eight alike pay and tumble. In base play, each listed basic that pays adds +1 to the spin multi.'];
++  show('<img class="guide-logo" src="art/night-mail/return-to-sender.webp" alt="Return to Sender"><h2 class="guide-title">'+(modern?(variant==='steady'?'Steady ladders':'Balanced ladders'):power?'Multiplier ladders':trial?'Six-symbol playtest':intro?'Welcome to the depot':'How to play')+'</h2><div class="panels">'+panels.map(([s,t,d])=>'<section><img src="'+imageUrl(s)+'" alt=""><b>'+t+'</b><p>'+d+'</p></section>').join('')+'</div><button class="cta" id="continue">'+(intro?'Open the depot':'Back to reels')+'</button>');
+   const actions=document.createElement('div');actions.className='trial-actions';$('paper').append(actions);
+   const option=(label,click)=>{const b=document.createElement('button');b.textContent=label;b.onclick=click;actions.append(b)};
++  for(const choice of ['balanced','steady']){const link=document.createElement('a');link.href='?playtest='+choice;link.textContent=choice==='steady'?'Try Steady':'Try Balanced';actions.append(link);}
++  if(modern){
++    const note=document.createElement('p');note.className='trial-note';note.textContent='Bonus starts: '+spec.regular.start+'× / '+spec.super.start+'× / '+spec.hidden.start+'×. Lost & Found pays at least 1,000×. Mystery: 90% Double Post, 10% Lost & Found.';actions.before(note);
++    option('Base rack replay',()=>{modal.close();begin('base',134,true)});
++    option('Minimum award replay',()=>{modal.close();begin('mystery',variant==='steady'?89:4,true)});
++  }
+   if(trial){
+-    option(power?'Play ladder replay':'Play Key replay',()=>{modal.close();begin('mystery',power?20:4,true)});
++    option(power?'Play ladder replay':'Play Key replay',()=>{modal.close();begin('mystery',modern?4:power?20:4,true)});
+     option('Random Night Shift',()=>{modal.close();begin('nightshift',undefined,true)});
+     option('Random Double Post',()=>{modal.close();begin('doublepost',undefined,true)});
+   }else{
+@@ -208,7 +225,7 @@ function bonusGallery(){
+         draw(boughtEntryBoard(tier,seeded(28)));
+         await dropReels(board,null,undefined,{anticipation:3});
+         const bonus={tier,title:rules.title};
+-        await enterDispatch({bonus,scatters:[...board.querySelectorAll('[data-symbol="fs"]')],trigger:'Presentation preview',spins:rules.spins,variant:power?'ladder':trial?'flat':'collections',preview:true,show,
++        await enterDispatch({bonus,scatters:[...board.querySelectorAll('[data-symbol="fs"]')],trigger:'Presentation preview',spins:rules.spins,variant:trial?engineVariant:'collections',preview:true,show,
+           onImpact:()=>openRegister(bonus),onReveal:()=>{}});
+       }finally{
+         busy=false;syncShift();updateRegister(false);draw(generateRound({mode:'base',rng:seeded(1)}).spin.board);paint();bonusGallery();
+@@ -311,7 +328,7 @@ async function finish(){
+   session.pending=null;session.lastWin=result.win;session.lastWinBonus=!!round.bonus;
+   win=credits(result.win);save();paint();
+   if(round.bonus){
+-    await winShow(round.tier,result.win,false,round.bonus.title+' · '+round.bonus.spins.length+' FREE SPINS');
++    await winShow(round.tier,result.win,false,round.bonus.title+' · '+round.bonus.spins.length+' FREE SPINS'+(round.bonus.floorTopUp?' · MINIMUM AWARD +'+credits(winOf(round.bonus.floorTopUp,session.bet)):''));
+     rack(blank,targetsFor('base'));meter(1,false);
+   }else if(round.tier)await winShow(round.tier,result.win);
+   if(!round.bonus && auto && --auto){timer=setTimeout(()=>begin(session.mode),650)}
+@@ -348,11 +365,11 @@ async function play(){
+       }
+       const scatters=[...board.querySelectorAll('[data-symbol="fs"]')];
+       readout(trigger);
+-      await enterDispatch({bonus,trigger,scatters,variant:power?'ladder':trial?'flat':'collections',spins:BONUSES[bonus.tier].spins,
++      await enterDispatch({bonus,trigger,scatters,variant:trial?engineVariant:'collections',spins:BONUSES[bonus.tier].spins,
+         show,onImpact:()=>openRegister(bonus),onReveal:()=>{
+           p.stage='bonus';save();paint();
+           rack(blank,bonus.targets);
+-          meter(BONUSES[bonus.tier].meter,BONUSES[bonus.tier].when==='always');
++          meter(trial?spec[bonus.tier].start:BONUSES[bonus.tier].meter,BONUSES[bonus.tier].when==='always');
+           $('mode').textContent=bonus.title.toUpperCase();
+         }});
+       timer=setTimeout(play,0);

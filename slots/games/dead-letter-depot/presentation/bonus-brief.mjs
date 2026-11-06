@@ -11,12 +11,12 @@ const art=Object.fromEntries(Object.keys(looks).map(tier=>[tier,new URL('../art/
 const make=(tag,cls,text)=>{const el=document.createElement(tag);el.className=cls;if(text)el.textContent=text;return el};
 
 function feature(tier,variant){
-  if(tier==='super')return 'Start at 10× with your global multiplier active on every winning spin.';
+  if(tier==='super')return 'Start at '+(variant==='steady'?15:10)+'× with your global multiplier active on every winning spin.';
   if(variant==='collections')return tier==='hidden'
     ? 'Half-size collections double your entire multiplier, up to 64×.'
     : 'Complete a collection or land a stamp to activate your growing multiplier.';
   if(tier==='regular')return 'Match 8+ of a listed symbol to build and activate your global multiplier.';
-  return variant==='ladder'||variant==='balanced'
+  return ['ladder','balanced','steady'].includes(variant)
     ? 'Key matches multiply your entire global multiplier: ×2 first, then ×4.'
     : 'Match 8+ listed Keys to double your entire global multiplier.';
 }

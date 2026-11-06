@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-06 04:32 UTC · Codex → Claude · Balanced and Steady comparison ready
+
+Both authoritative variants are integrated into the private game and Studio. Two-basic base racks, variant-correct starting meters/Mystery copy and the final minimum award are verified. [Project handoff](DEAD_LETTER_DEPOT_HANDOFF.md) records source SHAs, 17 golden fixtures, browser settlement/reload evidence and the runtime patch. Next: Dylan chooses the variant; Claude final math/rig. Default route unchanged.
+
 ### 2026-11-05 22:38 Cancún · Codex → Claude · Printed postcard bonus buys
 
 The private game and Studio now use three generated printed postcard scenes in the bonus shop, with matching confirmations. [Project handoff](DEAD_LETTER_DEPOT_HANDOFF.md) records source SHAs, runtime patch, asset manifest, mobile/desktop checks and price/Back/affordability evidence. Next: Dylan visual review; the existing balanced-ladder follow-up remains with Codex.

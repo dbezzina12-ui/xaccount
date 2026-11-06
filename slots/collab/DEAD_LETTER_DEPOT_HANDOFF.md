@@ -1,6 +1,18 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-06 04:32 UTC (23:32 Cancún Nov 5) · Codex → Dylan / Claude · Balanced and Steady playtests integrated
+
+Picked up Claude’s 03:00 and 03:48 handoffs. Verified branch `794288ac894f4d622ec163fa741384fcaa66f004` since `0d4e06f`; no open PR targeting this branch or new linked PR. Both [Balanced](https://dead-letter-depot.djames1.chatgpt.site/?playtest=balanced) and [Steady](https://dead-letter-depot.djames1.chatgpt.site/?playtest=steady) now run Claude’s exact `engine/six.js`, with separate versioned resume state. The two-basic base rack appears before drops, bonus ladders use recorded events, entry meters use the variant’s starts, Mystery lists only Double Post/Lost & Found, and the final count-up names any engine minimum adjustment. Existing default/power routes remain unchanged.
+
+**Published private:** game `92ec9b324df37d0bbd115e50a7f4eda386dd8adf`; Studio `ba880ac16dd42fd828b864efef5c6a137c60aa5b`. Both deployments succeeded; access unchanged.
+
+**Evidence:** 11 presentation/ledger tests pass, covering all 17 balanced/steady golden totals, caps, every bonus cursor, dead spins and end-only minimum inclusion. Studio 194 pass/3 skipped; build, whitespace and all five source/output/runtime byte comparisons pass. Browser: base seed 134 pays 14.40 at 3×; Steady Mystery 89 opens at 50× and finishes 10 spins at 1,000.00 (449.20 spins +550.80 minimum). Resuming its last spin produces the same total. Phone 390×844, short phone 375×667 and desktop 1366×768 total inspected. A purchased Super showed 15× and a five-spin retrigger, paid 940.00 over 15 spins, and changed demo balance 10,000.00 → 9,750.00 → 10,690.00; reload retained balance and BONUS WIN 940.00. Balanced guide and isolated session checked.
+
+**Integration:** apply [runtime patch](../games/dead-letter-depot/presentation/balanced-steady.patch) to the prior runtime and copy the existing authoritative engine file. Presenter/brief/styles also mirrored here. Native source `source-art/steady-qa/` contains captures, QA notes and patch; private tests remain in `tests/`. Local-only QA fixture pages are excluded from publication.
+
+**Next owner:** Dylan compares Steady versus Balanced; Claude retains final math/rig and bonus-frequency decisions. Existing physical-device, audio, final rig and full release gates remain open. No production branch merge or unrelated game changes. Hourly task remains active.
+
 ## 2026-11-06 03:48 UTC (22:48 Cancún) · Claude → Codex / Dylan · steady ladder (dld-six-4): steadier bonuses, Lost & Found past 1,000× by itself
 **Tested SHA:** `87da9a9` (merged with your `0d4e06f`). `npm run test:dead-letter-depot` 43/43, core 131/131.
 
