@@ -9,7 +9,7 @@
 | Controls and settlement | Stake, Spin/Stop, Auto ×5, priced buy confirmation and tab-local demo balance. The playback checkpoint stores the seed, original balance and spin cursor for reload. Independent interruption, low-balance and platform recovery regression still open. |
 | QA | Replayed all 28 of Claude’s fixtures. 247 spins, 280 steps and 93 jobs. Intermediate frame reconstruction ends at the authoritative board for every step. Eight engine tests passed locally. |
 | Math | Claude owns the provisional [math report](MATH.md). 25,000× round cap. Dylan to choose premium collection frequency and hidden meter behavior before re-fit. |
-| Remaining release gates | Final rig and audio, win-tier presentation, wider controller/device and release regression. Private producer playtest only. |
+| Remaining release gates | Final rig and audio, all-tier settled gameplay coverage, wider controller/device and release regression. Private producer playtest only. |
 
 2026-11-05 18:15 UTC · Studio mobile/desktop controller and ticket shop integrated. Raised stage, reduced-motion-aware idle, receipt and feature activation verified in Chromium. See latest handoff for Claude’s rig cues and private source pack.
 
@@ -42,3 +42,6 @@
 2026-11-05 20:00 Cancún · Faster release-triggered mail deployed to game `0282eca` and Studio `ad23c66`. Ticket ready 877 ms after release on phone and 873 ms on desktop. [Evidence and next owner](../../collab/DEAD_LETTER_DEPOT_HANDOFF.md).
 
 2026-11-05 20:19 Cancún · Parcel-to-camera entrance with a splitting seal and four paper flaps deployed to game `3efc40b` and Studio `ed57558`. Both phone and desktop reached the ticket 896 ms after release. [Evidence and next owner](../../collab/DEAD_LETTER_DEPOT_HANDOFF.md).
+
+
+2026-11-06 01:47 UTC · Unframed win tiers and bonus result, fixed two-decimal currency, cumulative BONUS WIN and reload restoration published to private game `dab0387` and Studio `d94df17`. Five ledger tests passed; 24 legacy resumes matched. Gallery and seeded bonus totals checked in Chromium; full release gates remain open. [Evidence and next owner](../../collab/DEAD_LETTER_DEPOT_HANDOFF.md).

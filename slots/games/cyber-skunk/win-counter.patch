@@ -1,0 +1,116 @@
+diff --git a/dist/vent-hall/app.js b/dist/vent-hall/app.js
+index 0c1149e..4e26d58 100644
+--- a/dist/vent-hall/app.js
++++ b/dist/vent-hall/app.js
+@@ -52,22 +52,24 @@ const state = {
+   speed: ['normal', 'quick', 'turbo'].includes(saved?.speed) ? saved.speed : 'normal',
+   muted: !!saved?.muted, music: level(saved?.music, 60), effects: level(saved?.effects, 80),
+   history: Array.isArray(saved?.history) ? saved.history.slice(0, 30) : [],
+-  busy: false, ready: false, auto: 0, skip: false, win: 0, debit: 0, tier: null,
++  busy: false, ready: false, auto: 0, skip: false,
++  win: Number.isSafeInteger(saved?.lastWin) && saved.lastWin >= 0 ? saved.lastWin : Number.isSafeInteger(saved?.history?.[0]?.win) ? saved.history[0].win : 0,
++  winIsBonus: saved?.lastWinBonus ?? !!saved?.history?.[0]?.tier, winIsPreview: !!saved?.lastWinPreview, debit: 0, tier: null,
+   pending: null, // the round being shown: already decided, saved so a reload cannot lose its win
+ };
+ function persist() {
+-  try { localStorage.setItem(KEY, JSON.stringify({ balance: state.balance, bet: state.bet, speed: state.speed, muted: state.muted, music: state.music, effects: state.effects, history: state.history, pending: state.pending })); } catch { /* storage is optional */ }
++  try { localStorage.setItem(KEY, JSON.stringify({ balance: state.balance, bet: state.bet, speed: state.speed, muted: state.muted, music: state.music, effects: state.effects, history: state.history, pending: state.pending, lastWin: state.win, lastWinBonus: state.winIsBonus, lastWinPreview: state.winIsPreview })); } catch { /* storage is optional */ }
+ }
+ // A round the page closed on mid-presentation is paid on the next visit.
+ const resumed = saved?.pending && Number.isSafeInteger(saved.pending.win) && saved.pending.win >= 0 ? saved.pending : null;
+-if (resumed) { state.balance += resumed.win; state.history.unshift(resumed); state.history.length = Math.min(state.history.length, 30); persist(); }
++if (resumed) { state.balance += resumed.win; state.win = resumed.win; state.winIsBonus = !!resumed.tier; state.winIsPreview = false; state.history.unshift(resumed); state.history.length = Math.min(state.history.length, 30); persist(); }
+ 
+ const audio = new GameAudio();
+ audio.setMuted(state.muted); audio.setLevels(state.music / 100, state.effects / 100);
+ const skunk = new Skunk($('mascot'));
+ 
+ const controller = mountController($('controller'), {
+-  initial: { balance: money(state.balance), bet: money(state.bet), win: money(0) },
++  initial: { balance: money(state.balance), bet: money(state.bet), win: money(state.win) },
+   layoutTargets: { desktop: $('controller-dock'), mobile: app },
+   // Studio sizes a virtual game screen. A touch device can display either preview.
+   layoutMedia: new URLSearchParams(location.search).get('studioLayout') === 'viewport'
+@@ -83,6 +85,7 @@ function update() {
+     featureColor: state.feature === 'sprayjob' ? '#68c8c3' : state.feature === 'enhanced' ? '#eda83c' : null,
+     canDecrease: !state.busy && STAKES.indexOf(state.bet) > 0, canIncrease: !state.busy && STAKES.indexOf(state.bet) < STAKES.length - 1,
+   });
++  labelWin();
+   app.dataset.feature = state.feature || '';
+   if (!state.busy) status(state.feature ? `ON · ${PLAY_OPTIONS[state.feature].cost}× PER SPIN` : '', state.feature);
+ }
+@@ -517,7 +520,8 @@ async function countTo(target, ms) {
+   }
+   state.win = target; paintWin();
+ }
+-const paintWin = () => { controller.update({ win: money(state.win) }); if (state.tier) $('hud-win').textContent = money(state.win); };
++function labelWin() { controller.element('winReadout').querySelector('span').textContent = state.winIsPreview ? 'PREVIEW WIN' : state.tier || state.winIsBonus ? 'BONUS WIN' : 'WIN'; }
++const paintWin = () => { controller.update({ win: money(state.win) }); labelWin(); if (state.tier) $('hud-win').textContent = money(state.win); };
+ 
+ // ---- Bonuses ----
+ async function bonusStart(e, result, mode) {
+@@ -676,7 +680,7 @@ async function play(mode = state.feature || 'base') {
+   // disagrees with the catalog is refused and costs nothing.
+   let result;
+   try { result = drawRound(mode); } catch (err) { console.error(err); state.auto = 0; update(); toast('That round could not be verified, so it was not played. Nothing was charged.'); return; }
+-  state.busy = true; state.skip = false; state.win = 0; state.debit = cost;
++  state.busy = true; state.skip = false; state.win = 0; state.winIsBonus = false; state.winIsPreview = false; state.debit = cost;
+   state.balance -= cost;
+   state.pending = { t: Date.now(), mode, bet: state.bet, cost, win: payOf(result.total), tier: result.tier, seed: result.draw };
+   persist();
+@@ -685,7 +689,7 @@ async function play(mode = state.feature || 'base') {
+   finally {
+     // Settlement is the engine's total, whatever the presentation did.
+     const won = state.pending.win, skipped = state.skip;
+-    state.balance += won; state.win = won; state.busy = false; state.skip = false;
++    state.balance += won; state.win = won; state.winIsBonus = !!result.tier; state.busy = false; state.skip = false;
+     delete app.dataset.busy; delete app.dataset.bonus; delete app.dataset.blackout;
+     $('bonus-panel').hidden = true; $('bigwin').hidden = true; $('bonus-hud').hidden = true; state.tier = null; gauge(0); clearFx();
+     $('reels').querySelectorAll('.reverse').forEach((el) => el.classList.remove('reverse'));
+@@ -704,14 +708,20 @@ async function play(mode = state.feature || 'base') {
+ }
+ async function freePreview(tier) {
+   if (state.busy) return;
+-  const savedBoard = board.slice(), lastWin = state.win;
++  const savedBoard = board.slice(), lastWin = state.win, lastWinBonus = state.winIsBonus, lastPreview = state.winIsPreview;
++  let completed = false;
+   const round = playRound({rng:seeded(811), ...(tier === 'sprayjob' ? {mode:tier, triggerScatters:0} : {forceBonus:tier})});
+-  state.busy = true; state.skip = false; state.win = 0;
++  state.busy = true; state.skip = false; state.win = 0; state.winIsBonus = false; state.winIsPreview = false;
+   app.dataset.preview = ''; app.dataset.busy = ''; update();
+-  try { await present(round); }
++  try { await present(round); completed = true; }
+   finally {
+     delete app.dataset.preview; delete app.dataset.busy; delete app.dataset.bonus; delete app.dataset.blackout;
+-    state.busy = state.skip = false; state.tier = null; state.win = lastWin;
++    state.busy = state.skip = false; state.tier = null;
++    // Retain the completed demo's total until another round starts. This is
++    // display only: previews never change the wallet or paid-round history.
++    state.win = completed ? payOf(round.total) : lastWin;
++    state.winIsBonus = completed ? !!round.tier : lastWinBonus;
++    state.winIsPreview = completed || lastPreview;
+     $('bonus-panel').hidden = $('bonus-hud').hidden = $('bigwin').hidden = true;
+     gauge(0); clearFx(); setBoard(savedBoard); skunk.play('idle'); audio.duck(false); audio.music('base');
+     update(); openBuy('preview');
+@@ -934,7 +944,7 @@ $('menu-effects').addEventListener('input', (ev) => { state.effects = Number(ev.
+ $('menu-speed').addEventListener('change', (ev) => { state.speed = ev.target.value; persist(); update(); });
+ $('menu-rules').addEventListener('click', () => { $('menu').close(); renderRules(); open('rules'); });
+ $('menu-history').addEventListener('click', () => { $('menu').close(); renderHistory(); open('history'); });
+-$('menu-reset').addEventListener('click', () => { if (state.busy) return; state.balance = START; state.win = 0; persist(); update(); $('menu').close(); toast(`Free-play credits reset to ${money(START)}.`); });
++$('menu-reset').addEventListener('click', () => { if (state.busy) return; state.balance = START; state.win = 0; state.winIsBonus = false; state.winIsPreview = false; persist(); update(); $('menu').close(); toast(`Free-play credits reset to ${money(START)}.`); });
+ document.addEventListener('click', (ev) => { const id = ev.target.closest('[data-close]')?.dataset.close; if (id) $(id).close(); });
+ 
+ const lineSVG = (line, k) => `<figure><svg viewBox="0 0 60 40" aria-label="Line ${k + 1}">${Array.from({ length: 24 }, (_, i) => `<rect x="${(i % 6) * 10 + 1}" y="${Math.floor(i / 6) * 10 + 1}" width="8" height="8" rx="1.5" fill="${line[i % 6] === Math.floor(i / 6) ? '#eda83c' : '#252d31'}"/>`).join('')}</svg><figcaption>${k + 1}</figcaption></figure>`;
+diff --git a/dist/vent-hall/index.html b/dist/vent-hall/index.html
+index 028bd21..07b60cd 100644
+--- a/dist/vent-hall/index.html
++++ b/dist/vent-hall/index.html
+@@ -45,7 +45,7 @@
+         <div class="shelf"><span id="status" class="status" role="status" aria-live="polite"></span></div>
+       </div>
+       <div class="machine-base" aria-hidden="true"></div>
+-      <div id="bonus-hud" class="bonus-hud" hidden><span><b id="hud-tier"></b><span>SPINS <b id="hud-spins">0</b></span></span><span class="hud-gap"></span><span>WIN <b id="hud-win">0.00</b></span></div>
++      <div id="bonus-hud" class="bonus-hud" hidden><span><b id="hud-tier"></b><span>SPINS <b id="hud-spins">0</b></span></span><span class="hud-gap"></span><span>BONUS WIN <b id="hud-win">0.00</b></span></div>
+     </div>
+   </div>
+   </div>

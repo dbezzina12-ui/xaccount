@@ -1,0 +1,113 @@
+diff --git a/dist/reels.mjs b/dist/reels.mjs
+index ca02fa2..4eceaa6 100644
+--- a/dist/reels.mjs
++++ b/dist/reels.mjs
+@@ -1,14 +1,15 @@
+ import { sixView } from './presentation/six-view.mjs';
+ import { trialRound } from './presentation/six-trial.mjs';
++import { credits, paidOf, shownTotal } from './presentation/win-ledger.mjs';
+ import { winShow, titles } from './presentation/win-show.mjs';
+ import { LOWS } from './reel-engine/rules.js';
+ import { boughtEntryBoard } from './presentation/entry-board.mjs';
+-import { enterDispatch, revealReceipt, syncShift } from './presentation/stage-motion.mjs';
++import { enterDispatch, syncShift } from './presentation/stage-motion.mjs';
+ import { mountController } from './controller/controller.js';
+ import { openShop } from './shop.mjs';
+ import { ENGINE_VERSION, playRound, seeded, tierOf } from './reel-engine/engine.js';
+ import { BETS, BONUSES, MODES, PAYING, targetsFor } from './reel-engine/rules.js';
+-import { costOf, settle } from './reel-engine/settle.js';
++import { costOf, settle, winOf } from './reel-engine/settle.js';
+ import { dropReels, liftSymbols, paintCollectionRack } from './presentation/landing.mjs';
+ import { dwell, featureBeat, collectionText, hasVisibleEffect, symbolName } from './presentation/dispatch.mjs';
+ import { frames } from './presentation/frames.mjs';
+@@ -18,7 +19,6 @@ const modal = $('modal'), board = $('board');
+ const assets = { ST:'stamp', ENVELOPE:'letter' };
+ const symbolId = s => assets[s] || s.toLowerCase();
+ const imageUrl = s => 'art/night-mail/symbols/' + symbolId(s) + '.webp';
+-const credits = cents => (cents / 100).toLocaleString(undefined,{maximumFractionDigits:2});
+ const blank = Object.fromEntries(PAYING.map(s => [s,0]));
+ const variant = new URLSearchParams(location.search).get('playtest');
+ const power = variant === 'power';
+@@ -110,7 +110,7 @@ function openRegister(bonus) {
+   $('spins-left').textContent = rules.spins;
+   updateRegister(true);
+ }
+-let win = '0', audio;
++let win = credits(session.lastWin || 0), audio;
+ const deck = mountController($('controller'), { onAction: act });
+ function paint(){
+   const pending=!!session.pending;
+@@ -118,6 +118,7 @@ function paint(){
+   else if(!pending)syncShift(null);
+   $('help').disabled=pending;
+   const showBonus = session.pending?.stage === 'bonus';
++  deck.element('winReadout').querySelector('span').textContent = showBonus || session.lastWinBonus && !pending ? 'BONUS WIN' : 'WIN';
+   $('rack').hidden = !showBonus;
+   // Entry owns the two sign faces from impact until the bonus starts.
+   if (session.pending?.stage !== 'entry') updateRegister(showBonus);
+@@ -216,7 +217,7 @@ async function runSpin(spin,targets,signal){
+   rack(counts,targets);meter(spin.meter?.start || 1,spin.meter && session.pending.stage==='bonus' && BONUSES[round.bonus.tier].when==='always');
+   showLadders(spin.ladderBefore);
+   $('readout').classList.remove('paid');
+-  win='0';paint();readout('Sorting the mail…');
++  win=credits(winOf(shownTotal(round,session.pending),session.bet));paint();readout('Sorting the mail…');
+   if(!session.turbo)await liftSymbols(board,false,signal);
+   draw(grid);
+   if(!session.turbo){
+@@ -264,26 +265,27 @@ async function runSpin(spin,targets,signal){
+     if(trial)for(const cell of $('rack').children)cell.classList.remove('lit');
+     grid=step.after;counts=step.collections;rack(counts,targets);draw(grid);
+   }
+-  const paid=spin.paid ?? spin.win;
++  const paid=paidOf(spin), spinWin=credits(winOf(paid,session.bet));
+   if(spin.stampSum || spin.clears?.length)frankCue('stamp',{value:spin.meter?.after ?? spin.multiplier});
+   meter(spin.meter?.after ?? spin.multiplier,spin.meter?.active ?? (spin.multiplier>1 || spin.clears?.length>0 || spin.stampSum>0));
+-  win=credits(paid*session.bet/100);paint();
+-  readout((paid?'Spin win '+win+' · '+spin.multiplier+'× applied':'No win'));
++  win=credits(winOf(shownTotal(round,session.pending)+paid,session.bet));paint();
++  readout((paid?'Spin win '+spinWin+' · '+spin.multiplier+'× applied':'No win'));
+   const spinRank=session.pending.stage==='bonus' && tierOf(paid);
+-  if(spinRank)readout(titles[spinRank]+' · '+win);
++  if(spinRank)readout(titles[spinRank]+' · '+spinWin);
+   $('readout').classList.toggle('paid',paid>0);
++  if(spinRank && session.pending.next < round.bonus.spins.length-1 && !signal.aborted)await winShow(spinRank,winOf(paid,session.bet));
+   if(spin.retrigger) await featureBeat(imageUrl('FS'),'+'+spin.retrigger+' free spins',spin.fs+' FS landed. Your shift continues.',session.turbo?1100:1700,signal);
+ }
+ async function finish(){
+   const p=session.pending, result=settle(round,session.bet,p.fixture?costOf(p.mode,session.bet):p.before);
+   if(!p.fixture)session.balance=result.balance;
+-  session.pending=null;save();paint();
+-  if(round.tier)await winShow(round.tier,result.win);
++  session.pending=null;session.lastWin=result.win;session.lastWinBonus=!!round.bonus;
++  win=credits(result.win);save();paint();
+   if(round.bonus){
+-    show('<small class="kicker">'+round.bonus.title.toUpperCase()+' · '+round.bonus.spins.length+' FREE SPINS</small><h2>Total win <span class="receipt-amount" aria-label="'+credits(result.win)+'">'+credits(result.win)+'</span></h2><button class="cta" id="return">Back to reels</button>');
+-    revealReceipt(result.win,credits);
+-    $('return').onclick=()=>{modal.close();rack(blank,targetsFor('base'));meter(1,false)};
+-  }else if(auto && --auto){timer=setTimeout(()=>begin(session.mode),650)}
++    await winShow(round.tier,result.win,false,round.bonus.title+' · '+round.bonus.spins.length+' FREE SPINS');
++    rack(blank,targetsFor('base'));meter(1,false);
++  }else if(round.tier)await winShow(round.tier,result.win);
++  if(!round.bonus && auto && --auto){timer=setTimeout(()=>begin(session.mode),650)}
+ }
+ async function play(){
+   if(busy || !session.pending)return;
+@@ -340,6 +342,7 @@ function begin(mode,fixtureSeed,fixture=false){
+   round=generateRound({mode,rng:seeded(seed)});
+   const settlement=settle(round,session.bet,fixture?cost:session.balance);
+   session.pending={mode,seed,fixture,version:round.version,before:session.balance,next:0,stage:round.spin?'base':'entry'};
++  win=credits(0);session.lastWin=0;session.lastWinBonus=false;
+   if(!fixture)session.balance-=settlement.cost;save();play();
+ }
+ $('help').onclick=()=>{if(!session.pending && !busy)guide(false)};
+@@ -352,7 +355,10 @@ if(session.pending){
+   round=trial && ['six-trial-1','six-ladders-1'].includes(p.version)
+     ? trialRound({...options,ladders:p.version==='six-ladders-1'})
+     : generateRound(options);
++  win=credits(winOf(shownTotal(round,p),session.bet));
+   play();
++}else if(new URLSearchParams(location.search).get('preview')==='wins'){
++  gallery();
+ }else if(power && new URLSearchParams(location.search).get('preview')==='delivery'){
+   begin('mystery',20,true);
+ }else if(trial || !sessionStorage.getItem('depot-guide-v2')){guide(true);sessionStorage.setItem('depot-guide-v2','1')}

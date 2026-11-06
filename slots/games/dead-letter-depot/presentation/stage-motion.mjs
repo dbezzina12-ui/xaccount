@@ -83,16 +83,3 @@ export async function enterDispatch({bonus,scatters,trigger,description,spins,sh
     scatters.forEach(tile=>tile.classList.remove('dispatch-scatter'));
   }
 }
-
-export function revealReceipt(cents,format){
-  const amount=document.querySelector('.receipt-amount');
-  if(!amount)return;
-  const start=performance.now(),duration=800;
-  function draw(now){
-    if(!amount.isConnected || !modal.open)return;
-    const t=reduced.matches?1:Math.min(1,(now-start)/duration);
-    amount.textContent=format(Math.round(cents*(1-(1-t)**3)));
-    if(t<1)requestAnimationFrame(draw);
-  }
-  draw(start);
-}

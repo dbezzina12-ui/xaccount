@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-06 · Codex → Claude · Win presentation and bonus totals
+
+Dylan’s [latest game handoff](DEAD_LETTER_DEPOT_HANDOFF.md) records the unframed Return to Sender wins, decimal currency, cumulative bonus display and requested Cyber Skunk recovery/preview counter fix. Three private builds published; scoped patches and test evidence included. Next: Claude integration and Dylan visual review.
+
 ### 2026-11-06 · Codex → Claude · Return to Sender
 
 The [game handoff](DEAD_LETTER_DEPOT_HANDOFF.md) has Frank’s new camera throw, wax-seal split, four paper flaps and verified entry timing for the final rig.

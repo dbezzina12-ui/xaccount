@@ -1,6 +1,20 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-06 01:47 UTC · Codex → Dylan / Claude · Unframed wins and cumulative bonus totals
+
+Dylan requested this presentation pass, including the Cyber Skunk counter. Nice, Big, Epic, Mythic and Max now use full-screen transparent overlays with large foil lettering, a count-up and flying mail. Return to Sender uses the same sequence for the final bonus total, with one Back to reels action. Balance, stake and wins always retain two decimal places. The controller shows BONUS WIN through losing free spins and restores the recorded total on reload.
+
+Published private game `dab0387256e858e0ae3822801dabfa42fa822dbf`, Studio `d94df179b642a3d31fa7ead66f8330cee82abbd8`, Cyber Skunk `58aac74387a4c80c6a5f29d419d7febb3af57c8c`. [Win gallery](https://dead-letter-depot.djames1.chatgpt.site/?playtest=power&preview=wins) · [Return to Sender](https://dead-letter-depot.djames1.chatgpt.site/?playtest=power) · [Cyber Skunk](https://cyber-skunk.djames1.chatgpt.site/vent-hall/). Based on collaboration `9d6561e`; no new Claude handoff or open PR targeting the branch.
+
+Evidence: five counter tests pass across the collections, flat and ladder engines, all stake values, dead spins, capped awards and restored cursors; 24 old trial resume totals also match. Browser gallery checked all five tiers at 390×844 and Max/Epic at 1366×768. Below-tier Total Win and the bonus summary also checked. Mystery seed 20 restored at spin nine, retained 6,526.00 through its last two losing spins, finished at 6,526.00 and retained that win after reload. The count-up is clamped at zero even when a browser supplies an older animation timestamp. Its overlay measured 390×844, transparent background, zero border. These are producer fixtures and tier previews, not full release certification.
+
+Cyber Skunk already uses cumulative engine events while playing. Its preview completion and page initialization were resetting the displayed win. The final preview now retains its total as PREVIEW WIN; paid recovery restores BONUS WIN. Browser Vent Break seed 811 retained $4.50 on dead spins seven/eight and $8.20 on eleven/twelve, ending at PREVIEW WIN $8.20 with the balance unchanged. A synthetic interrupted $123.45 award recovered once and stayed $123.45 after another reload. Cyber's nine existing tests pass. Studio: 194 passed, three skipped; build, syntax and whitespace checks passed. Math, outcome selection and settlement were not changed.
+
+Integration: [Return to Sender adapter patch](../games/dead-letter-depot/presentation/win-display.patch), updated presentation modules and [counter tests](../games/dead-letter-depot/tests/win-display.test.mjs). The Barlow Condensed ExtraBold font and its OFL license are in the private source's `dist/fonts/`. [Cyber counter patch](../games/cyber-skunk/win-counter.patch) is intentionally scoped to the private runtime's presentation; it does not replace Claude's newer repository catalog or engine.
+
+Next owner: Dylan for visual review; Claude to carry the scoped display patch into his current Cyber Skunk artifact and retain these presentation changes when integrating the final rig/math. No production branch merge. Remaining release gates remain open.
+
 ## 2026-11-05 20:19 Cancún · Codex → Dylan / Claude · Parcel opens at the camera
 
 Dylan’s entrance sends Frank’s parcel toward the viewer. Its wax seal splits, the paper grows across the screen, and four paper flaps open around the bonus ticket. [Private replay](https://dead-letter-depot.djames1.chatgpt.site/?playtest=power&preview=delivery). Published game `3efc40b0e9f2c56e69085b3f2934623bf66c3338` and Studio `ed575581d3227caa49fea3540f81cfdf40a9da7c`.
