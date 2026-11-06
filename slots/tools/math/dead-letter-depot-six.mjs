@@ -2,7 +2,7 @@
 // Dead Letter Depot: the six-symbol bonus trial (engine/six.js). Simulates,
 // fits and reports it APART from the release math (MATH.md), on worker
 // threads, through the trial engine itself.
-//   node tools/math/dead-letter-depot-six.mjs [--variant flat|ladder|balanced|steady|keyring|vault] [--fit] [--write] [--render] [--bonus 4e5] [--spins 6e6]
+//   node tools/math/dead-letter-depot-six.mjs [--variant flat|ladder|balanced|steady|keyring|vault|vault2] [--fit] [--write] [--render] [--bonus 4e5] [--spins 6e6]
 // --fit solves Night Shift and Double Post lowScale, Lost & Found keyWeight
 // (Mystery 400x at 96%) and the base and Priority Mail FS chances; --write
 // stores them in engine/six.js. Without --fit it measures and writes
@@ -25,7 +25,7 @@ const specWith = (patch = {}, variant = 'flat') => Object.fromEntries(Object.ent
 // ---- worker jobs ----
 export function chunk(job) {
   const variant = job.variant ?? 'flat', spec = specWith(job.patch, variant), lands = sixLands(spec), g = seeded(job.seed);
-  const o = { n: 0, floored: 0, sum: 0, sum2: 0, max: 0, capped: 0, zero: 0, over: OVER.map(() => 0), trig: { regular: 0, super: 0, hidden: 0 }, keyRack: 0, keyBonus: 0, keyHits: 0, hitSpins: 0, spins: 0, retrig: 0, meterHist: new Array(12).fill(0), tiers: {}, vals: job.job === 'bonus' ? new Float64Array(job.n) : null, ringFills: 0, ringBonus: 0, vaults: 0, fillHist: new Array(8).fill(0), activeSpins: 0 };
+  const o = { n: 0, floored: 0, sum: 0, sum2: 0, max: 0, capped: 0, zero: 0, over: OVER.map(() => 0), trig: { regular: 0, super: 0, hidden: 0 }, keyRack: 0, keyBonus: 0, keyHits: 0, hitSpins: 0, spins: 0, retrig: 0, meterHist: new Array(12).fill(0), tiers: {}, vals: job.job === 'bonus' && !job.noVals ? new Float64Array(job.n) : null, inners: 0, ringFills: 0, ringBonus: 0, vaults: 0, fillHist: new Array(8).fill(0), activeSpins: 0 };
   const add = (x) => { o.n++; o.sum += x; o.sum2 += x * x; if (x > o.max) o.max = x; if (!x) o.zero++; for (let j = 0; j < OVER.length; j++) if (x >= OVER[j]) o.over[j]++; };
   const noteBonus = (b) => {
     if (b.rack.includes('KEY')) { o.keyRack++; if (b.keyHits) o.keyBonus++; o.keyHits += b.keyHits; }
@@ -35,7 +35,7 @@ export function chunk(job) {
   };
   for (let i = 0; i < job.n; i++) {
     const rng = seeded(Math.floor(g() * 4294967296));
-    if (job.job === 'bonus') { const b = playSixBonus(job.tier, rng, CAP, { lands, spec, record: false }); add(b.total / 100); o.vals[i] = b.total / 100; if (b.capped) o.capped++; if (b.floorTopUp) o.floored++; noteBonus(b); }
+    if (job.job === 'bonus') { const b = playSixBonus(job.tier, rng, CAP, { lands, spec, record: false }); add(b.total / 100); if (o.vals) o.vals[i] = b.total / 100; if (b.inner) o.inners++; if (b.capped) o.capped++; if (b.floorTopUp) o.floored++; noteBonus(b); }
     else if (job.job === 'spins') { const m = SIX_MODES[job.mode], r = playSixSpin(m.land, rng, { lands, spec }); add(r.win / 100); const t = bonusFor(r.fs); if (t) o.trig[t]++; }
     else { const r = playSixRound({ mode: job.mode, rng, variant, lands, spec, record: false }); add(r.total / 100); if (r.capped) o.capped++; if (r.bonus) { noteBonus(r.bonus); o.tiers[r.bonus.tier] = (o.tiers[r.bonus.tier] ?? 0) + 1; } }
   }
@@ -43,7 +43,7 @@ export function chunk(job) {
 }
 const merge = (a, b) => ({ ...a, n: a.n + b.n, floored: a.floored + b.floored, sum: a.sum + b.sum, sum2: a.sum2 + b.sum2, max: Math.max(a.max, b.max), capped: a.capped + b.capped, zero: a.zero + b.zero, over: a.over.map((v, j) => v + b.over[j]),
   trig: Object.fromEntries(Object.keys(a.trig).map((k) => [k, a.trig[k] + b.trig[k]])), keyRack: a.keyRack + b.keyRack, keyBonus: a.keyBonus + b.keyBonus, keyHits: a.keyHits + b.keyHits, hitSpins: a.hitSpins + b.hitSpins, spins: a.spins + b.spins, retrig: a.retrig + b.retrig,
-  meterHist: a.meterHist.map((v, j) => v + b.meterHist[j]), vals: a.vals && b.vals ? Float64Array.from([...a.vals, ...b.vals]) : null, ringFills: a.ringFills + b.ringFills, ringBonus: a.ringBonus + b.ringBonus, vaults: a.vaults + b.vaults, fillHist: a.fillHist.map((v, j) => v + b.fillHist[j]), activeSpins: (a.activeSpins ?? 0) + (b.activeSpins ?? 0), tiers: Object.fromEntries([...new Set([...Object.keys(a.tiers), ...Object.keys(b.tiers)])].map((k) => [k, (a.tiers[k] ?? 0) + (b.tiers[k] ?? 0)])) });
+  meterHist: a.meterHist.map((v, j) => v + b.meterHist[j]), vals: a.vals && b.vals ? Float64Array.from([...a.vals, ...b.vals]) : null, ringFills: a.ringFills + b.ringFills, ringBonus: a.ringBonus + b.ringBonus, vaults: a.vaults + b.vaults, fillHist: a.fillHist.map((v, j) => v + b.fillHist[j]), activeSpins: (a.activeSpins ?? 0) + (b.activeSpins ?? 0), inners: (a.inners ?? 0) + (b.inners ?? 0), tiers: Object.fromEntries([...new Set([...Object.keys(a.tiers), ...Object.keys(b.tiers)])].map((k) => [k, (a.tiers[k] ?? 0) + (b.tiers[k] ?? 0)])) });
 export async function run(job, threads = availableParallelism()) {
   const per = Math.ceil(job.n / threads);
   const parts = await Promise.all(Array.from({ length: threads }, (_, w) => new Promise((resolve, reject) => {
@@ -67,7 +67,7 @@ export async function fit({ bonusN = 4e5, spinN = 6e6, seed = 913, variant = 'fl
   const target = { regular: RTP * 100, super: RTP * 250 }, w = VARIANTS[variant].mystery ?? SIX_MYSTERY;
   target.hidden = (RTP * 400 - w.regular * target.regular - w.super * target.super) / w.hidden;
   const patch = {}, means = {};
-  const ranges = variant === 'vault' ? [['regular', 'lowScale', 1.3, 2.3], ['super', 'lowScale', 1.5, 2.6], ['hidden', 'lowScale', 1.2, 1.8]] : variant === 'keyring' ? [['regular', 'lowScale', 0.65, 0.9], ['super', 'lowScale', 0.65, 0.9], ['hidden', 'lowScale', 1.25, 1.45]] : variant === 'steady' ? [['regular', 'lowScale', 0.4, 2], ['super', 'lowScale', 0.4, 2], ['hidden', 'lowScale', 0.8, 2.5]] : variant === 'balanced' ? [['regular', 'lowScale', 0.4, 2], ['super', 'lowScale', 0.4, 2], ['hidden', 'keyWeight', 10, 45]] : variant === 'ladder' ? [['regular', 'lowScale', 0.3, 1.6], ['super', 'lowScale', 0.3, 1.6], ['hidden', 'keyWeight', 3, 45]] : [['regular', 'lowScale', 0.8, 1.6], ['super', 'lowScale', 0.8, 1.6], ['hidden', 'keyWeight', 20, 45]];
+  const ranges = variant === 'vault2' ? [['regular', 'lowScale', 1.65, 1.95], ['super', 'lowScale', 1.95, 2.3], ['hidden', 'lowScale', 1.35, 1.65]] : variant === 'vault' ? [['regular', 'lowScale', 1.3, 2.3], ['super', 'lowScale', 1.5, 2.6], ['hidden', 'lowScale', 1.2, 1.8]] : variant === 'keyring' ? [['regular', 'lowScale', 0.65, 0.9], ['super', 'lowScale', 0.65, 0.9], ['hidden', 'lowScale', 1.25, 1.45]] : variant === 'steady' ? [['regular', 'lowScale', 0.4, 2], ['super', 'lowScale', 0.4, 2], ['hidden', 'lowScale', 0.8, 2.5]] : variant === 'balanced' ? [['regular', 'lowScale', 0.4, 2], ['super', 'lowScale', 0.4, 2], ['hidden', 'keyWeight', 10, 45]] : variant === 'ladder' ? [['regular', 'lowScale', 0.3, 1.6], ['super', 'lowScale', 0.3, 1.6], ['hidden', 'keyWeight', 3, 45]] : [['regular', 'lowScale', 0.8, 1.6], ['super', 'lowScale', 0.8, 1.6], ['hidden', 'keyWeight', 20, 45]];
   for (const [tier, knob, lo, hi] of ranges) {
     const f = async (v) => (await run({ job: 'bonus', tier, n: bonusN, seed, variant, patch: { ...patch, [tier]: { [knob]: v } } })).mean - target[tier];
     patch[tier] = { [knob]: await solve(f, lo, hi, 0.002 * target[tier]) };
@@ -84,7 +84,7 @@ export async function fit({ bonusN = 4e5, spinN = 6e6, seed = 913, variant = 'fl
 }
 function write(patch, variant = 'flat') {
   const path = new URL('engine/six.js', GAME), src = readFileSync(path, 'utf8');
-  const block = { flat: 'SIX', ladder: 'SIX_LADDER', balanced: 'SIX_BALANCED', steady: 'SIX_STEADY', keyring: 'SIX_KEYRING', vault: 'SIX_VAULT' }[variant];
+  const block = { flat: 'SIX', ladder: 'SIX_LADDER', balanced: 'SIX_BALANCED', steady: 'SIX_STEADY', keyring: 'SIX_KEYRING', vault: 'SIX_VAULT', vault2: 'SIX_VAULT2' }[variant];
   if (!block) throw Error(`Unknown variant ${variant}`);
   const head = `export const ${block} = Object.freeze({`, a = src.indexOf(head), b = src.indexOf('\n});', a);
   if (a < 0) throw Error(`no ${head} in six.js`);
@@ -128,6 +128,10 @@ async function report({ bonusN = 1e6, spinN = 1e7, roundN = 1e7, buyN = 1e6, see
   for (const tier of ['regular', 'super', 'hidden']) {
     const r = await run({ job: 'bonus', tier, n: bonusN, seed: seed + 1, variant });
     s.bonuses[tier] = { floorShare: r.floored / r.n, n: r.n, mean: r.mean, se: r.se, sd: r.sd, zero: r.zero / r.n, max: r.max, capped: r.capped, over: Object.fromEntries(OVER.map((x, j) => [x, r.over[j] / r.n])), keyInRack: r.keyRack / r.n, keyBonusShare: r.keyRack ? r.keyBonus / r.keyRack : 0, keyHitsPerKeyBonus: r.keyRack ? r.keyHits / r.keyRack : 0, hitSpinShare: r.hitSpins / r.spins, spins: r.spins / r.n, retriggerPerBonus: r.retrig / r.n, meterHist: r.meterHist.map((v) => v / r.n), quantiles: quantiles(r.vals) };
+    if (VARIANTS[variant].spec[tier].innerAt) {
+      const big = await run({ job: 'bonus', tier, n: 4e6, seed: seed + 5, variant, noVals: true });
+      s.bonuses[tier].maxRun = { n: big.n, capped: big.capped, inners: big.inners, vaults: big.vaults };
+    }
     if (VARIANTS[variant].spec[tier].ring) Object.assign(s.bonuses[tier], { activeSpinShare: r.activeSpins / r.spins, ringFillsPerBonus: r.ringFills / r.n, ringShare: r.ringBonus / r.n, vaultShare: r.vaults / r.n, fillHist: r.fillHist.map((v) => v / r.n) });
   }
   const B = s.bonuses;
@@ -153,8 +157,8 @@ async function report({ bonusN = 1e6, spinN = 1e7, roundN = 1e7, buyN = 1e6, see
 
 function markdown(s) {
   const L = [], b = s.bonuses;
-  const ladder = s.variant !== 'flat', vault = s.variant === 'vault', ring = s.variant === 'keyring' || vault, balanced = s.variant === 'balanced' || s.variant === 'steady' || ring;
-  L.push(`# Dead Letter Depot · six-symbol bonus trial${vault ? ', the vault' : ring ? ', key ring' : s.variant === 'steady' ? ', steady ladder' : balanced ? ', balanced ladder' : ladder ? ', ladder variant' : ''} (separate from release math)`, '');
+  const ladder = s.variant !== 'flat', inner = s.variant === 'vault2', vault = s.variant === 'vault' || inner, ring = s.variant === 'keyring' || vault, balanced = s.variant === 'balanced' || s.variant === 'steady' || ring;
+  L.push(`# Dead Letter Depot · six-symbol bonus trial${inner ? ', vault 2' : vault ? ', the vault' : ring ? ', key ring' : s.variant === 'steady' ? ', steady ladder' : balanced ? ', balanced ladder' : ladder ? ', ladder variant' : ''} (separate from release math)`, '');
   L.push(`Generated by \`tools/math/dead-letter-depot-six.mjs\` · trial engine \`${s.version}\` · source \`${s.source}\` · seed ${s.seed}. **This is a producer trial.** These figures are not the release RTP in [MATH.md](MATH.md).`, '');
   L.push('## Rules as the trial engine settles them', '');
   L.push('- **Board.** The same 6×5 pay-anywhere tumbles. There are no stamps and no collection jobs.');
@@ -167,7 +171,8 @@ function markdown(s) {
     if (vault) L.push(`- **The meter.** Each racked basic or premium that pays adds to the meter: Night Shift ${adds(s.spec.regular)}; Double Post ${adds(s.spec.super)}; Lost & Found ${adds(s.spec.hidden)}. KEY never multiplies. The meter carries through the bonus and multiplies each spin's tumble subtotal once.`);
     else L.push(`- **The meter (capped ladder).** Each racked basic or premium that pays adds its next addition, which then doubles, but only up to +${r.addCap[0]} for basics and +${r.addCap[1]} for premiums (basics +1, then +${r.addCap[0]}; premiums +3, then +${r.addCap[1]}). KEY no longer multiplies the meter. The meter carries through the bonus and multiplies each spin's tumble subtotal once.`);
     L.push(`- **The key ring.** Every KEY that lands in a bonus, on the first board or in a refill, turns one notch. Each full ring of ${r.ring} notches adds to the meter: Night Shift +${s.spec.regular.ringAdd}, Double Post +${s.spec.super.ringAdd}, Lost & Found +${s.spec.hidden.ringAdd}. Notches carry across free spins.`);
-    L.push(`- **The vault.** The first KEY match (8 or more KEYs paying) opens the vault: the meter goes to its ceiling${vault ? ` (${s.spec.regular.ceiling.toLocaleString('en-US')}× in every bonus)` : ''} and stays there for the rest of the bonus.`);
+    if (inner) L.push(`- **The vault.** The first KEY match (8 or more KEYs paying) opens the vault: the meter goes to its ceiling (Night Shift ${s.spec.regular.ceiling}×, Double Post ${s.spec.super.ceiling}×, Lost & Found ${s.spec.hidden.ceiling.toLocaleString('en-US')}×) and stays there. In Night Shift and Double Post a second KEY match opens the **inner vault**: ${s.spec.regular.innerAt.toLocaleString('en-US')}× for the rest of the bonus.`);
+    else L.push(`- **The vault.** The first KEY match (8 or more KEYs paying) opens the vault: the meter goes to its ceiling${vault ? ` (${s.spec.regular.ceiling.toLocaleString('en-US')}× in every bonus)` : ''} and stays there for the rest of the bonus.`);
   } else L.push('- **The rack.** Each bonus draws six symbols: three basics and three premiums. Lost & Found always has KEY plus two other premiums. The rack is fixed for the whole bonus.');
   if (ring) {} else if (ladder) L.push('- **The meter (ladder).** Every rack symbol has its own next addition: basics start at +1 and premiums at +3. Each time that symbol pays, its addition goes on the meter and then doubles for next time. The first KEY match multiplies the whole meter by 2, and every later one by 4. Additions apply before the KEY. The meter carries through the bonus and multiplies each spin\'s tumble subtotal once.');
   else L.push('- **The meter.** In each tumble, every paying group of a rack symbol moves the meter: a basic adds +1, a premium adds +3, and KEY doubles. Additions apply before the doubling. The meter carries through the bonus and multiplies each spin\'s tumble subtotal once.');
@@ -202,10 +207,12 @@ function markdown(s) {
     L.push(`- **KEY acts in almost every bonus.** The ring fills at least once in ${pct(b.regular.ringShare, 1)} of Night Shift, ${pct(b.super.ringShare, 1)} of Double Post and ${pct(b.hidden.ringShare, 1)} of Lost & Found bonuses (${b.regular.ringFillsPerBonus.toFixed(1)}, ${b.super.ringFillsPerBonus.toFixed(1)} and ${b.hidden.ringFillsPerBonus.toFixed(1)} fills on average).`);
     const buy = (x, cost) => `pays back at least its price in ${pct(x.over[cost], 0)} of buys and less than half of it in ${pct(1 - x.over[cost / 2], 0)}`;
     if (b.regular.over[50] !== undefined) L.push(`- **Buys:** Night Shift (100×) ${buy(b.regular, 100)}; Double Post (250×) ${buy(b.super, 250)}.`);
+    const mr = (x) => (x.maxRun.capped ? `1 in ${Math.round(x.maxRun.n / x.maxRun.capped).toLocaleString('en-US')}` : `not seen in ${x.maxRun.n.toLocaleString('en-US')}`);
+    if (inner) L.push(`- **Max wins** (${b.regular.maxRun.n.toLocaleString('en-US')} more bonuses each): Night Shift reaches the cap ${mr(b.regular)} (inner vault ${every(b.regular.maxRun.inners / b.regular.maxRun.n, b.regular.maxRun.n)}), Double Post ${mr(b.super)} (inner vault ${every(b.super.maxRun.inners / b.super.maxRun.n, b.super.maxRun.n)}). Their first vault opens ${every(b.regular.vaultShare, b.regular.n)} and ${every(b.super.vaultShare, b.super.n)}: that is where their biggest ordinary hits come from (${pct(b.regular.over[500], 2)} of Night Shift pay 500×+, ${pct(b.super.over[1000], 2)} of Double Post pay 1,000×+).`);
     L.push(`- **The vault is the max-win path.** A KEY match opens it in 1 of every ${Math.round(1 / b.hidden.vaultShare).toLocaleString('en-US')} Lost & Found bonuses, and Lost & Found reaches the cap ${every(b.hidden.capped / b.hidden.n, b.hidden.n)}. Night Shift and Double Post open it ${every(b.regular.vaultShare, b.regular.n)} and ${every(b.super.vaultShare, b.super.n)}.`);
     L.push(`- **Lost & Found:** ${pct(1 - b.hidden.floorShare, 0)} of bonuses pass 1,000× by themselves, and the 1,000× minimum pays the other ${pct(b.hidden.floorShare, 0)}. The median bonus pays ${b.hidden.quantiles[0.5].toLocaleString('en-US')}×.`);
     L.push(`- **Night Shift applies its meter on ${pct(b.regular.activeSpinShare, 0)} of its spins** (${pct(b.regular.hitSpinShare, 0)} have a rack hit; the rest of them a ring fill or an open vault). The others pay face value.`);
-    L.push('- **Golden seeds** are in `tests/six.test.mjs`. Each free spin records its first board\'s ring event in `land` and each tumble\'s in `steps[].rack` (`hits`, `add`, `keys`, `fills`, `notches`, `opened`, `vault`, `before`, `after`, `next`). `meter` sums the spin: `fills`, `vault`, `notches`, `hit`, `active`.', '');
+    L.push(`- **Golden seeds** are in \`tests/six.test.mjs\`. Each free spin records its first board's ring event in \`land\` and each tumble's in \`steps[].rack\` (\`hits\`, \`add\`, \`keys\`, \`fills\`, \`notches\`, \`opened\`, \`vault\`${inner ? ', `innerOpened`, `inner`' : ''}, \`before\`, \`after\`, \`next\`). \`meter\` sums the spin: \`fills\`, \`vault\`${inner ? ', `inner`' : ''}, \`notches\`, \`hit\`, \`active\`.`, '');
     return L.join('\n');
   }
   L.push(`- **KEY almost never doubles in Night Shift or Double Post** (${pct(b.regular.keyBonusShare, 1)} and ${pct(b.super.keyBonusShare, 1)} of bonuses with KEY racked). Their meters grow from basics and a few premiums. Making KEY land more there would add the doubling, but also variance.`);
@@ -220,7 +227,7 @@ if (!isMainThread) parentPort.postMessage(chunk(workerData));
 else if (import.meta.url === `file://${process.argv[1]}`) {
   const arg = (k, d) => (process.argv.includes(k) ? Number(process.argv[process.argv.indexOf(k) + 1]) : d), t0 = Date.now();
   const variant = process.argv.includes('--variant') ? process.argv[process.argv.indexOf('--variant') + 1] : 'flat';
-  const files = { flat: ['math/six-summary.json', 'SIX.md'], ladder: ['math/six-ladder-summary.json', 'SIX-LADDER.md'], balanced: ['math/six-balanced-summary.json', 'SIX-BALANCED.md'], steady: ['math/six-steady-summary.json', 'SIX-STEADY.md'], keyring: ['math/six-keyring-summary.json', 'SIX-KEYRING.md'], vault: ['math/six-vault-summary.json', 'SIX-VAULT.md'] }[variant];
+  const files = { flat: ['math/six-summary.json', 'SIX.md'], ladder: ['math/six-ladder-summary.json', 'SIX-LADDER.md'], balanced: ['math/six-balanced-summary.json', 'SIX-BALANCED.md'], steady: ['math/six-steady-summary.json', 'SIX-STEADY.md'], keyring: ['math/six-keyring-summary.json', 'SIX-KEYRING.md'], vault: ['math/six-vault-summary.json', 'SIX-VAULT.md'], vault2: ['math/six-vault2-summary.json', 'SIX-VAULT2.md'] }[variant];
   if (process.argv.includes('--render')) {
     writeFileSync(new URL(files[1], GAME), markdown(JSON.parse(readFileSync(new URL(files[0], GAME), 'utf8'))));
     console.log(`re-rendered ${files[1]} from ${files[0]}`);
