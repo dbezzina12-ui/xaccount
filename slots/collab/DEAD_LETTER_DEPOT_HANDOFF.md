@@ -1,6 +1,40 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-06 03:00 UTC (22:00 Cancún) · Claude → Codex / Dylan · balanced ladder (dld-six-3) per Dylan's balance pass
+**Tested SHA:** `e7f58d2` (merged with your `b047622`). `npm run test:dead-letter-depot` 41/41 (trial 14), core 131/131.
+
+**Dylan asked for:** steady mid wins, a decent Lost & Found max rate, a 1,000× minimum on Lost & Found, and Mystery at Double Post 90% / Lost & Found 10%. Built in [`engine/six.js`](../games/dead-letter-depot/engine/six.js); use `playSixRound({ mode, rng: seeded(seed), variant: 'balanced' })` (`dld-six-3`). The `ladder` and `flat` variants are unchanged.
+- **Base and Priority Mail spins draw a rack of 2 basics before landing.** Each paying group of a racked basic adds +1 to that spin's meter, which starts at 1× and multiplies the tumble subtotal once. Spin payload: `spin.rack`, `spin.multiplier` and `steps[].rack` (`hits`, `add`, `before`, `after`).
+- **Night Shift and Double Post meters stop at 100×** (were 250×), trimming rare spikes.
+- **Lost & Found pays at least 1,000×.** A bonus that ends below it is topped up when it ends (`bonus.floorTopUp`), never past the cap budget. It averages 1,680×, which is what Mystery needs at 96% for 400×.
+- **Mystery draws Double Post 90% / Lost & Found 10%.** It never draws Night Shift.
+- **Report:** [SIX-BALANCED.md](../games/dead-letter-depot/SIX-BALANCED.md). Every mode measures 96% within its 99.9% interval.
+- **Golden seeds:** 9 in `tests/six.test.mjs`, including a top-up to the minimum (Mystery 4) and a capped round (Mystery 916).
+
+**What it plays like:**
+
+| | Result |
+|---|---|
+| Base spins | hit 22.7%; 5×+ 3.4%; 10×+ 1.2%; 25×+ 1 in 344; 100×+ 1 in 1,217 |
+| Base bonus odds | Night Shift 1 in 422, Lost & Found 1 in 46,083 |
+| Night Shift (100×) | average 96×; 66% pay 25×+, 26% pay 100×+ |
+| Double Post (250×) | average 239×; 70% pay 100×+, 10% pay 500×+ |
+| Lost & Found | average 1,678×; 4.4% pay 5,000×+; max 1 in 121; 83% paid at the 1,000× minimum |
+| Mystery | max 1 in 1,285 |
+
+**Fixed:** The fit tool wrote a fitted balanced result into the flat block. It now writes to each variant's own block. Flat and ladder were restored and their reports regenerated unchanged.
+
+**Next for Codex:**
+- Bind a `balanced` playtest.
+- Show the 2-basic spin rack on base and Priority Mail spins.
+- Show the Lost & Found minimum (top-up) at bonus end.
+- Leave Night Shift out of the Mystery reveal.
+
+**Next for Claude:** the release math once Dylan settles the trial; Frank's final rig once the private layers reach me.
+**Questions for Dylan:** 83% of Lost & Found bonuses end at the 1,000× minimum, because its ladder is all-or-nothing. Fewer would sit there only with a steadier Lost & Found meter (a higher start or more spins). Keep it, or try that?
+**Blocked on:** the Frank layers (private).
+
 ## 2026-11-06 02:46 UTC · Codex → Dylan / Claude · Parcel retriggers and distinct bonus explainers
 
 Dylan requested a centre-screen parcel throw with +5 free spins and visually different bonus explainers. The retrigger now uses the parcel-holding wing, lands at screen centre, stamps the engine-awarded count onto the parcel and holds before play continues. Turbo retains a shorter throw; reduced motion keeps a readable static award. The ordinary retrigger uses no extra modal or acknowledgement.
