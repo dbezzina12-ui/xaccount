@@ -20,7 +20,7 @@
 import { compileLands, spinBoard, tierOf, seeded } from './engine.js';
 import { PAYING, PREMIUMS, LOWS, CAP, BONUSES, RETRIGGER, MAX_FREE_SPINS, MYSTERY, LAND, bonusFor } from './rules.js';
 
-export const SIX_VERSION = 'dld-six-1', LADDER_VERSION = 'dld-six-2', BALANCED_VERSION = 'dld-six-3';
+export const SIX_VERSION = 'dld-six-1', LADDER_VERSION = 'dld-six-2', BALANCED_VERSION = 'dld-six-3', STEADY_VERSION = 'dld-six-4';
 export { seeded };
 
 // The trial's landings: no stamps. Free spins land thick basics so rack hits
@@ -63,6 +63,20 @@ export const SIX_BALANCED = Object.freeze({
   hidden: Object.freeze({ pays: HIDDEN, fs: 0.012, lowScale: 1, keyWeight: 25.096, start: 1, ceiling: 1000, when: 'always', ladder: true, floor: 100000 }),
 });
 export const BALANCED_MYSTERY = Object.freeze({ regular: 0, super: 0.9, hidden: 0.1 });
+
+// The steady ladder (Dylan, 2026-11-06: "steadier for everything, going past
+// 1,000x by itself"; dld-six-4). The balanced rules with every bonus's value
+// moved from rare spikes into a higher, steadier meter: higher starts, lower
+// Night Shift and Double Post ceilings, and Lost & Found starting at 50x with
+// fewer KEYs and thicker basics, so about half its bonuses pass 1,000x
+// naturally. lowScale is fitted for every bonus.
+export const SIX_STEADY = Object.freeze({
+  base: Object.freeze({ pays: LAND.base.pays, fs: 0.0179, lowScale: 1, rack: 2 }),
+  priority: Object.freeze({ pays: LAND.base.pays, fs: 0.0298, lowScale: 1, rack: 2 }),
+  regular: Object.freeze({ pays: FREE, fs: 0.012, lowScale: 0.8789, start: 3, ceiling: 40, when: 'hit', ladder: true }),
+  super: Object.freeze({ pays: FREE, fs: 0.012, lowScale: 0.9097, start: 15, ceiling: 50, when: 'always', ladder: true }),
+  hidden: Object.freeze({ pays: HIDDEN, fs: 0.012, lowScale: 1.5512, keyWeight: 10, start: 50, ceiling: 1000, when: 'always', ladder: true, floor: 100000 }),
+});
 export const SIX_MODES = Object.freeze({
   base: Object.freeze({ title: 'Base Spin', cost: 1, kind: 'spin', land: 'base' }),
   priority: Object.freeze({ title: 'Priority Mail', cost: 3, kind: 'spin', land: 'priority' }),
@@ -81,6 +95,7 @@ export const VARIANTS = Object.freeze({
   flat: Object.freeze({ version: SIX_VERSION, spec: SIX, lands: LANDS }),
   ladder: Object.freeze({ version: LADDER_VERSION, spec: SIX_LADDER, lands: sixLands(SIX_LADDER) }),
   balanced: Object.freeze({ version: BALANCED_VERSION, spec: SIX_BALANCED, lands: sixLands(SIX_BALANCED), mystery: BALANCED_MYSTERY }),
+  steady: Object.freeze({ version: STEADY_VERSION, spec: SIX_STEADY, lands: sixLands(SIX_STEADY), mystery: BALANCED_MYSTERY }),
 });
 const NEVER = Object.freeze(Object.fromEntries(PAYING.map((s) => [s, Infinity])));
 
@@ -156,7 +171,7 @@ export function playSixSpin(land, rng, { lands, spec, record = false }) {
   return spin;
 }
 
-// variant 'flat' (dld-six-1), 'ladder' (dld-six-2) or 'balanced' (dld-six-3); tools may pass spec and lands.
+// variant 'flat' (dld-six-1), 'ladder' (dld-six-2), 'balanced' (dld-six-3) or 'steady' (dld-six-4); tools may pass spec and lands.
 export function playSixRound({ mode = 'base', rng, variant = 'flat', lands = null, spec = null, record = true } = {}) {
   const v = VARIANTS[variant];
   if (!v) throw Error(`Unknown trial variant ${variant}`);

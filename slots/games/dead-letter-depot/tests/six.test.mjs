@@ -5,7 +5,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { playSixRound, playSixBonus, selectRack, meterStep, ladderStep, ladderState, SIX, SIX_LADDER, SIX_BALANCED, BALANCED_MYSTERY, VARIANTS, SIX_VERSION, LADDER_VERSION, BALANCED_VERSION, seeded } from '../engine/six.js';
+import { playSixRound, playSixBonus, selectRack, meterStep, ladderStep, ladderState, SIX, SIX_LADDER, SIX_BALANCED, SIX_STEADY, BALANCED_MYSTERY, VARIANTS, SIX_VERSION, LADDER_VERSION, BALANCED_VERSION, STEADY_VERSION, seeded } from '../engine/six.js';
 import { settle, winOf } from '../engine/settle.js';
 import { PREMIUMS, LOWS, CAP } from '../engine/rules.js';
 import { sixHash } from '../../../tools/math/dead-letter-depot-six.mjs';
@@ -111,7 +111,15 @@ export const BALANCED_GOLDEN = [
   ['mystery', 4, 100000], ['mystery', 170, 188580], ['mystery', 1, 23040], // Lost & Found at the minimum; above it; Double Post
   ['mystery', 916, CAP],                                         // Lost & Found reaches the cap
 ];
+// Steady golden replays (dld-six-4).
+export const STEADY_GOLDEN = [
+  ['base', 134, 1440], ['base', 1672, 700],                      // the spin rack lifts a base win; natural Night Shift
+  ['nightshift', 4, 17660], ['doublepost', 1, 23680],            // steady Night Shift; Double Post
+  ['mystery', 4, 1147860], ['mystery', 89, 100000], ['mystery', 1, 23720], // Lost & Found past 1,000x by itself; at the minimum; Double Post
+  ['mystery', 4901, CAP],                                        // Lost & Found reaches the cap
+];
 test('golden replays settle to these totals', () => {
+  for (const [mode, seed, total] of STEADY_GOLDEN) assert.equal(playSixRound({ mode, rng: seeded(seed), record: false, variant: 'steady' }).total, total, `steady ${mode} ${seed}`);
   for (const [mode, seed, total] of BALANCED_GOLDEN) assert.equal(playSixRound({ mode, rng: seeded(seed), record: false, variant: 'balanced' }).total, total, `balanced ${mode} ${seed}`);
   for (const [mode, seed, total] of GOLDEN) assert.equal(playSixRound({ mode, rng: seeded(seed), record: false }).total, total, `${mode} ${seed}`);
   for (const [mode, seed, total] of LADDER_GOLDEN) assert.equal(playSixRound({ mode, rng: seeded(seed), record: false, variant: 'ladder' }).total, total, `ladder ${mode} ${seed}`);
@@ -185,7 +193,24 @@ test('balanced: Lost & Found pays at least 1,000x; Mystery draws Double Post or 
   assert.deepEqual([...tiers].sort(), ['hidden', 'super']);
 });
 
-for (const [variant, file, spec] of [['flat', 'six-summary.json', SIX], ['ladder', 'six-ladder-summary.json', SIX_LADDER], ['balanced', 'six-balanced-summary.json', SIX_BALANCED]]) test(`the ${variant} trial report was regenerated after the last trial change`, () => {
+test('steady: higher meters, lower ceilings, Lost & Found from 50x with its 1,000x minimum', () => {
+  assert.equal(playSixRound({ mode: 'base', rng: seeded(3), variant: 'steady' }).version, STEADY_VERSION);
+  let natural = 0;
+  for (let seed = 1; seed <= 300; seed++) {
+    const b = playSixBonus('hidden', seeded(seed), CAP, { spec: VARIANTS.steady.spec, lands: VARIANTS.steady.lands, record: false });
+    assert.equal(b.spins[0].meter.start, SIX_STEADY.hidden.start);
+    assert.ok(b.total >= SIX_STEADY.hidden.floor);
+    if (!b.floorTopUp) natural += 1;
+    for (const s of b.spins) assert.ok(s.meter.after <= SIX_STEADY.hidden.ceiling);
+  }
+  assert.ok(natural > 75, `${natural}/300 Lost & Found bonuses passed 1,000x by themselves`);
+  for (const tier of ['regular', 'super']) for (let seed = 1; seed <= 200; seed++) {
+    const b = playSixBonus(tier, seeded(seed), CAP, { spec: VARIANTS.steady.spec, lands: VARIANTS.steady.lands, record: false });
+    for (const s of b.spins) assert.ok(s.meter.after <= SIX_STEADY[tier].ceiling);
+  }
+});
+
+for (const [variant, file, spec] of [['flat', 'six-summary.json', SIX], ['ladder', 'six-ladder-summary.json', SIX_LADDER], ['balanced', 'six-balanced-summary.json', SIX_BALANCED], ['steady', 'six-steady-summary.json', SIX_STEADY]]) test(`the ${variant} trial report was regenerated after the last trial change`, () => {
   const s = JSON.parse(readFileSync(new URL(`../math/${file}`, import.meta.url), 'utf8'));
   assert.equal(s.source, sixHash(), `run node tools/math/dead-letter-depot-six.mjs --variant ${variant}`);
   assert.deepEqual(s.spec, JSON.parse(JSON.stringify(spec)));
