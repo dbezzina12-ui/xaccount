@@ -5,7 +5,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { playSixRound, playSixBonus, selectRack, meterStep, ladderStep, ladderState, SIX, SIX_LADDER, SIX_BALANCED, SIX_STEADY, BALANCED_MYSTERY, VARIANTS, SIX_VERSION, LADDER_VERSION, BALANCED_VERSION, STEADY_VERSION, seeded } from '../engine/six.js';
+import { playSixRound, playSixBonus, selectRack, meterStep, ladderStep, ladderState, ringStep, ringState, SIX, SIX_LADDER, SIX_BALANCED, SIX_STEADY, SIX_KEYRING, BALANCED_MYSTERY, VARIANTS, SIX_VERSION, LADDER_VERSION, BALANCED_VERSION, STEADY_VERSION, KEYRING_VERSION, seeded } from '../engine/six.js';
 import { settle, winOf } from '../engine/settle.js';
 import { PREMIUMS, LOWS, CAP } from '../engine/rules.js';
 import { sixHash } from '../../../tools/math/dead-letter-depot-six.mjs';
@@ -17,6 +17,10 @@ test('a trial round replays exactly from its seed and survives JSON', () => {
     assert.deepEqual(JSON.parse(JSON.stringify(a)), a);
     assert.equal(a.version, SIX_VERSION);
     assert.equal(playSixRound({ mode, rng: seeded(seed), record: false }).total, a.total, 'recording never changes the outcome');
+    const k = playSixRound({ mode, rng: seeded(seed), variant: 'keyring' });
+    assert.deepEqual(JSON.parse(JSON.stringify(k)), k);
+    assert.equal(k.version, KEYRING_VERSION);
+    assert.equal(playSixRound({ mode, rng: seeded(seed), variant: 'keyring', record: false }).total, k.total, 'recording never changes a key-ring outcome');
   }
 });
 
@@ -118,7 +122,17 @@ export const STEADY_GOLDEN = [
   ['mystery', 4, 1147860], ['mystery', 89, 100000], ['mystery', 1, 23720], // Lost & Found past 1,000x by itself; at the minimum; Double Post
   ['mystery', 4901, CAP],                                        // Lost & Found reaches the cap
 ];
+// Key-ring golden replays (dld-six-5).
+export const KEYRING_GOLDEN = [
+  ['base', 134, 1440], ['base', 1672, 6840],                     // the spin rack lifts a base win; natural Night Shift with ring fills
+  ['priority', 1845, 264720],                                    // natural Lost & Found
+  ['nightshift', 1, 3260], ['doublepost', 1, 10600],             // a ring fill activates a spin with no rack hit; Double Post with 3 fills
+  ['doublepost', 2913, 289480],                                  // Double Post opens the vault
+  ['mystery', 4, 220100], ['mystery', 43, 100000], ['mystery', 1, 34440], // Lost & Found past 1,000x by itself; at the minimum; Double Post
+  ['mystery', 7407, CAP],                                        // Lost & Found opens the vault and reaches the cap
+];
 test('golden replays settle to these totals', () => {
+  for (const [mode, seed, total] of KEYRING_GOLDEN) assert.equal(playSixRound({ mode, rng: seeded(seed), record: false, variant: 'keyring' }).total, total, `keyring ${mode} ${seed}`);
   for (const [mode, seed, total] of STEADY_GOLDEN) assert.equal(playSixRound({ mode, rng: seeded(seed), record: false, variant: 'steady' }).total, total, `steady ${mode} ${seed}`);
   for (const [mode, seed, total] of BALANCED_GOLDEN) assert.equal(playSixRound({ mode, rng: seeded(seed), record: false, variant: 'balanced' }).total, total, `balanced ${mode} ${seed}`);
   for (const [mode, seed, total] of GOLDEN) assert.equal(playSixRound({ mode, rng: seeded(seed), record: false }).total, total, `${mode} ${seed}`);
@@ -210,7 +224,83 @@ test('steady: higher meters, lower ceilings, Lost & Found from 50x with its 1,00
   }
 });
 
-for (const [variant, file, spec] of [['flat', 'six-summary.json', SIX], ['ladder', 'six-ladder-summary.json', SIX_LADDER], ['balanced', 'six-balanced-summary.json', SIX_BALANCED], ['steady', 'six-steady-summary.json', SIX_STEADY]]) test(`the ${variant} trial report was regenerated after the last trial change`, () => {
+test('key ring: every bonus racks KEY with two other premiums and three basics', () => {
+  for (const tier of ['regular', 'super', 'hidden']) for (let seed = 1; seed <= 300; seed++) {
+    const { rack } = playSixBonus(tier, seeded(seed), CAP, { spec: VARIANTS.keyring.spec, lands: VARIANTS.keyring.lands, record: false });
+    assert.equal(new Set(rack).size, 6);
+    assert.equal(rack.filter((s) => LOWS.includes(s)).length, 3);
+    assert.ok(rack.includes('KEY'));
+  }
+});
+
+test('key ring events: capped ladder additions, notches carry, a full ring adds, a KEY match opens the vault', () => {
+  const w = (...x) => x.map((s) => ({ s })), t = SIX_KEYRING.super;
+  const rack = ['Q', 'K', '10', 'PHONE', 'PARCEL', 'KEY'], st = ringState(rack);
+  assert.deepEqual(st, { next: { Q: 1, K: 1, 10: 1, PHONE: 3, PARCEL: 3 }, notches: 0, vault: false });
+  let e = ringStep(15, [], 3, rack, st, t);
+  assert.deepEqual([e.add, e.fills, e.notches, e.after], [0, 0, 3, 15], 'three KEYs on the first board turn three notches');
+  e = ringStep(e.after, w('Q', 'PHONE'), 2, rack, st, t);
+  assert.deepEqual([e.add, e.fills, e.notches, e.after, e.next.Q, e.next.PHONE], [4, 1, 0, 15 + 4 + t.ringAdd, 2, 6], 'additions, then two refill KEYs fill the ring');
+  e = ringStep(e.after, w('Q', 'PHONE', 'J'), 0, rack, st, t);
+  assert.deepEqual([e.add, e.after, e.next.Q, e.next.PHONE], [8, 27 + t.ringAdd, 2, 6], 'additions stop doubling at +2 and +6; unracked J never moves the meter');
+  e = ringStep(e.after, [], 11, rack, st, t);
+  assert.deepEqual([e.fills, e.notches, e.after], [2, 1, 27 + 3 * t.ringAdd], 'eleven KEYs: two full rings and one notch carried');
+  assert.equal(ringStep(95, [], 5, rack, { ...ringState(rack) }, t).after, t.ceiling, 'a ring fill stops at the ceiling');
+  e = ringStep(e.after, w('KEY'), 0, rack, st, t);
+  assert.deepEqual([e.opened, e.vault, e.after], [true, true, t.ceiling], 'a KEY match opens the vault');
+  e = ringStep(e.after, w('K'), 0, rack, st, t);
+  assert.deepEqual([e.opened, e.vault, e.after], [false, true, t.ceiling], 'the vault holds the meter at the ceiling');
+});
+
+test('key-ring bonuses replay their events and apply the meter by the tier rule', () => {
+  const seen = { fill: 0, quietRing: 0, vault: 0, floor: 0, faceValue: 0 };
+  for (const tier of ['regular', 'super', 'hidden']) for (let seed = 1; seed <= 250; seed++) {
+    const b = playSixBonus(tier, seeded(seed), CAP, { spec: VARIANTS.keyring.spec, lands: VARIANTS.keyring.lands }), t = SIX_KEYRING[tier], st = ringState(b.rack);
+    let meter = t.start, total = 0, fills = 0;
+    for (const s of b.spins) {
+      assert.equal(s.meter.start, meter);
+      const keys0 = s.board.flat().filter((c) => c.s === 'KEY').length, land = ringStep(meter, [], keys0, b.rack, st, t);
+      assert.deepEqual(s.land, land); meter = land.after;
+      let spinFills = land.fills, hit = false;
+      for (const step of s.steps) {
+        const e = ringStep(meter, step.wins, step.refills.filter((f) => f[2] === 'KEY').length, b.rack, st, t);
+        assert.deepEqual(step.rack, e); meter = e.after; spinFills += e.fills;
+        if (e.hits.some((x) => x !== 'KEY')) hit = true;
+        if (e.opened) seen.vault += 1;
+      }
+      const active = t.when === 'always' || hit || spinFills > 0 || st.vault;
+      assert.deepEqual([s.meter.after, s.meter.fills, s.meter.hit, s.meter.active, s.meter.vault], [meter, spinFills, hit, active, st.vault]);
+      assert.ok(meter <= t.ceiling);
+      assert.equal(s.multiplier, active ? meter : 1);
+      assert.equal(s.win, s.subtotal * s.multiplier);
+      if (spinFills) seen.fill += 1;
+      if (tier === 'regular' && !hit && spinFills && !st.vault) seen.quietRing += 1;
+      if (tier === 'regular' && !active && s.subtotal) seen.faceValue += 1;
+      fills += spinFills; total += s.paid;
+    }
+    assert.equal(b.ringFills, fills);
+    assert.equal(b.vault, st.vault);
+    assert.equal(b.total, Math.max(total, t.floor ? Math.min(t.floor, CAP) : 0));
+    if (b.floorTopUp) seen.floor += 1;
+  }
+  for (const [k, v] of Object.entries(seen)) if (k !== 'vault') assert.ok(v > 0, `saw ${k}`);
+});
+
+test('key ring: the vault opens on a KEY match and pays at the ceiling from then on', () => {
+  let found = 0;
+  for (let seed = 1; seed <= 6000 && found < 3; seed++) {
+    const b = playSixBonus('hidden', seeded(seed), CAP, { spec: VARIANTS.keyring.spec, lands: VARIANTS.keyring.lands, record: false });
+    if (!b.vault) continue;
+    found += 1;
+    const at = b.spins.findIndex((s) => s.meter.vault);
+    assert.equal(b.spins[at].keyHits > 0, true, 'the vault opens on the spin with the KEY match');
+    for (const s of b.spins.slice(at)) assert.deepEqual([s.meter.after, s.multiplier], [SIX_KEYRING.hidden.ceiling, SIX_KEYRING.hidden.ceiling]);
+    for (const s of b.spins.slice(0, at)) assert.equal(s.meter.vault, false);
+  }
+  assert.ok(found > 0, 'a Lost & Found vault within 6,000 seeds');
+});
+
+for (const [variant, file, spec] of [['flat', 'six-summary.json', SIX], ['ladder', 'six-ladder-summary.json', SIX_LADDER], ['balanced', 'six-balanced-summary.json', SIX_BALANCED], ['steady', 'six-steady-summary.json', SIX_STEADY], ['keyring', 'six-keyring-summary.json', SIX_KEYRING]]) test(`the ${variant} trial report was regenerated after the last trial change`, () => {
   const s = JSON.parse(readFileSync(new URL(`../math/${file}`, import.meta.url), 'utf8'));
   assert.equal(s.source, sixHash(), `run node tools/math/dead-letter-depot-six.mjs --variant ${variant}`);
   assert.deepEqual(s.spec, JSON.parse(JSON.stringify(spec)));

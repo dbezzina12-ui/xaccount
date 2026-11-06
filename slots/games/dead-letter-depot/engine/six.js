@@ -20,7 +20,7 @@
 import { compileLands, spinBoard, tierOf, seeded } from './engine.js';
 import { PAYING, PREMIUMS, LOWS, CAP, BONUSES, RETRIGGER, MAX_FREE_SPINS, MYSTERY, LAND, bonusFor } from './rules.js';
 
-export const SIX_VERSION = 'dld-six-1', LADDER_VERSION = 'dld-six-2', BALANCED_VERSION = 'dld-six-3', STEADY_VERSION = 'dld-six-4';
+export const SIX_VERSION = 'dld-six-1', LADDER_VERSION = 'dld-six-2', BALANCED_VERSION = 'dld-six-3', STEADY_VERSION = 'dld-six-4', KEYRING_VERSION = 'dld-six-5';
 export { seeded };
 
 // The trial's landings: no stamps. Free spins land thick basics so rack hits
@@ -77,6 +77,26 @@ export const SIX_STEADY = Object.freeze({
   super: Object.freeze({ pays: FREE, fs: 0.012, lowScale: 0.9097, start: 15, ceiling: 50, when: 'always', ladder: true }),
   hidden: Object.freeze({ pays: HIDDEN, fs: 0.012, lowScale: 1.5512, keyWeight: 10, start: 50, ceiling: 1000, when: 'always', ladder: true, floor: 100000 }),
 });
+// The key ring (Dylan, 2026-11-06: "smoother payouts and meaningful Key
+// action"; dld-six-5). The steady base game, Lost & Found minimum and Mystery
+// weights, plus:
+//   keyRack  every bonus racks KEY (with two of PHONE, PARCEL, ENVELOPE)
+//   addCap   the ladder's additions still double after each pay, but only up to
+//            [basic, premium]: basics +1 then +2, premiums +3 then +6
+//   ring     every KEY that lands in a bonus (first board and refills) turns one
+//            notch; each full ring of `ring` notches adds `ringAdd` to the meter.
+//            Notches carry across free spins.
+//   vault    the first KEY match (8+ KEYs paying) opens the vault: the meter goes
+//            to its ceiling and stays there for the rest of the bonus
+// KEY no longer multiplies. Night Shift applies the meter on a spin with a rack
+// hit, a ring fill or an open vault. lowScale is fitted for every bonus.
+export const SIX_KEYRING = Object.freeze({
+  base: Object.freeze({ pays: LAND.base.pays, fs: 0.0179, lowScale: 1, rack: 2 }),
+  priority: Object.freeze({ pays: LAND.base.pays, fs: 0.0298, lowScale: 1, rack: 2 }),
+  regular: Object.freeze({ pays: FREE, fs: 0.012, lowScale: 0.7798, keyWeight: 4, start: 3, ceiling: 60, when: 'hit', ladder: true, keyRack: true, addCap: Object.freeze([2, 6]), ring: 5, ringAdd: 3, vault: true }),
+  super: Object.freeze({ pays: FREE, fs: 0.012, lowScale: 0.7831, keyWeight: 4, start: 15, ceiling: 100, when: 'always', ladder: true, keyRack: true, addCap: Object.freeze([2, 6]), ring: 5, ringAdd: 6, vault: true }),
+  hidden: Object.freeze({ pays: HIDDEN, fs: 0.012, lowScale: 1.3495, keyWeight: 7, start: 40, ceiling: 1000, when: 'always', ladder: true, keyRack: true, addCap: Object.freeze([2, 6]), ring: 5, ringAdd: 25, vault: true, floor: 100000 }),
+});
 export const SIX_MODES = Object.freeze({
   base: Object.freeze({ title: 'Base Spin', cost: 1, kind: 'spin', land: 'base' }),
   priority: Object.freeze({ title: 'Priority Mail', cost: 3, kind: 'spin', land: 'priority' }),
@@ -96,6 +116,7 @@ export const VARIANTS = Object.freeze({
   ladder: Object.freeze({ version: LADDER_VERSION, spec: SIX_LADDER, lands: sixLands(SIX_LADDER) }),
   balanced: Object.freeze({ version: BALANCED_VERSION, spec: SIX_BALANCED, lands: sixLands(SIX_BALANCED), mystery: BALANCED_MYSTERY }),
   steady: Object.freeze({ version: STEADY_VERSION, spec: SIX_STEADY, lands: sixLands(SIX_STEADY), mystery: BALANCED_MYSTERY }),
+  keyring: Object.freeze({ version: KEYRING_VERSION, spec: SIX_KEYRING, lands: sixLands(SIX_KEYRING), mystery: BALANCED_MYSTERY }),
 });
 const NEVER = Object.freeze(Object.fromEntries(PAYING.map((s) => [s, Infinity])));
 
@@ -128,6 +149,45 @@ export function ladderStep(before, wins, rack, state, ceiling = Infinity) {
 }
 export const ladderState = (rack) => ({ next: Object.fromEntries(rack.filter((s) => s !== 'KEY').map((s) => [s, ADD[s]])), nextKey: 2 });
 
+// One key-ring event (dld-six-5): racked non-KEY hits add their next addition,
+// which then doubles up to t.addCap; a KEY match opens the vault; then the
+// KEYs that landed (`keys`: the first board's, or this tumble's refills) turn
+// notches, each full ring adding t.ringAdd; then the ceiling. An open vault
+// holds the meter at the ceiling. state carries across the bonus.
+export function ringStep(before, wins, keys, rack, state, t) {
+  const hits = wins.map((w) => w.s).filter((s) => rack.includes(s));
+  let add = 0;
+  for (const s of hits) if (s !== 'KEY') { add += state.next[s]; state.next[s] = Math.min(t.addCap[LOWS.includes(s) ? 0 : 1], state.next[s] * 2); }
+  const opened = hits.includes('KEY') && !state.vault;
+  if (opened) state.vault = true;
+  const notches = state.notches + keys, fills = Math.floor(notches / t.ring);
+  state.notches = notches % t.ring;
+  const after = state.vault ? t.ceiling : Math.min(t.ceiling, before + add + fills * t.ringAdd);
+  return { hits, add, keys, fills, notches: state.notches, opened, vault: state.vault, before, after, next: { ...state.next } };
+}
+export const ringState = (rack) => ({ next: ladderState(rack).next, notches: 0, vault: false });
+const keysIn = (symbols) => symbols.reduce((n, s) => n + (s === 'KEY' ? 1 : 0), 0);
+
+// A key-ring free spin: the first board's KEYs turn notches, then each tumble
+// (wins, then its refills' KEYs). The final meter multiplies the subtotal once.
+function ringSpin(tier, rng, rack, meter, budget, { lands, spec, record, state }) {
+  const r = spinBoard(tier, rng, { lands, targets: NEVER, record: true });
+  const t = spec[tier], land = ringStep(meter, [], keysIn(r.board.flat().map((c) => c.s)), rack, state, t);
+  let value = land.after, fills = land.fills, hit = false, keyHits = 0;
+  for (const step of r.steps) {
+    const e = ringStep(value, step.wins, keysIn(step.refills.map((f) => f[2])), rack, state, t);
+    value = e.after; fills += e.fills;
+    if (e.hits.some((s) => s !== 'KEY')) hit = true;
+    if (e.hits.includes('KEY')) keyHits += 1;
+    if (record) step.rack = e;
+  }
+  const active = t.when === 'always' || hit || fills > 0 || state.vault;
+  const multiplier = active ? value : 1, win = r.subtotal * multiplier, paid = Math.min(win, budget);
+  const out = { subtotal: r.subtotal, meter: { start: meter, after: value, active, hit, fills, vault: state.vault, notches: state.notches }, keyHits, multiplier, win, paid, fs: r.fs, retrigger: 0 };
+  if (record) Object.assign(out, { board: r.board, land, steps: r.steps });
+  return out;
+}
+
 function freeSpin(tier, rng, rack, meter, budget, { lands, spec, record, state }) {
   const r = spinBoard(tier, rng, { lands, targets: NEVER, record: true });
   const t = spec[tier], events = [];
@@ -141,10 +201,10 @@ function freeSpin(tier, rng, rack, meter, budget, { lands, spec, record, state }
 }
 
 export function playSixBonus(tier, rng, budget = CAP, { lands = LANDS, spec = SIX, record = true } = {}) {
-  const rack = selectRack(tier, rng), spins = [], state = spec[tier].ladder ? ladderState(rack) : null;
+  const t = spec[tier], rack = selectRack(t.keyRack ? 'hidden' : tier, rng), spins = [], state = t.ring ? ringState(rack) : t.ladder ? ladderState(rack) : null;
   let meter = spec[tier].start, awarded = BONUSES[tier].spins, total = 0;
   while (spins.length < awarded && total < budget) {
-    const s = freeSpin(tier, rng, rack, meter, budget - total, { lands, spec, record, state });
+    const s = (t.ring ? ringSpin : freeSpin)(tier, rng, rack, meter, budget - total, { lands, spec, record, state });
     meter = s.meter.after;
     if (s.fs >= RETRIGGER.fs && awarded < MAX_FREE_SPINS) { s.retrigger = Math.min(RETRIGGER.spins, MAX_FREE_SPINS - awarded); awarded += s.retrigger; }
     total += s.paid; spins.push(s);
@@ -152,7 +212,9 @@ export function playSixBonus(tier, rng, budget = CAP, { lands = LANDS, spec = SI
   // a guaranteed minimum tops the bonus up when it ends (never past the cap)
   const floorTopUp = spec[tier].floor && total < Math.min(spec[tier].floor, budget) ? Math.min(spec[tier].floor, budget) - total : 0;
   total += floorTopUp;
-  return { tier, title: BONUSES[tier].title, rack, spins, awarded, meter, total, floorTopUp, capped: total >= budget, keyHits: spins.reduce((t, s) => t + s.keyHits, 0) };
+  const out = { tier, title: BONUSES[tier].title, rack, spins, awarded, meter, total, floorTopUp, capped: total >= budget, keyHits: spins.reduce((a, s) => a + s.keyHits, 0) };
+  if (t.ring) Object.assign(out, { ringFills: spins.reduce((a, s) => a + s.meter.fills, 0), vault: state.vault });
+  return out;
 }
 
 // One base or Priority Mail spin. With a spin rack (balanced), the rack is
@@ -171,7 +233,7 @@ export function playSixSpin(land, rng, { lands, spec, record = false }) {
   return spin;
 }
 
-// variant 'flat' (dld-six-1), 'ladder' (dld-six-2), 'balanced' (dld-six-3) or 'steady' (dld-six-4); tools may pass spec and lands.
+// variant 'flat' (dld-six-1), 'ladder' (dld-six-2), 'balanced' (dld-six-3), 'steady' (dld-six-4) or 'keyring' (dld-six-5); tools may pass spec and lands.
 export function playSixRound({ mode = 'base', rng, variant = 'flat', lands = null, spec = null, record = true } = {}) {
   const v = VARIANTS[variant];
   if (!v) throw Error(`Unknown trial variant ${variant}`);
