@@ -1,5 +1,5 @@
 // Translate recorded engine events into the shapes used by the reel presenter.
-import {playSixRound, ladderState, VARIANTS} from '../reel-engine/six.js';
+import {playSixRound, ladderState, ringState, VARIANTS} from '../reel-engine/six.js';
 
 export function sixView(options) {
   const round = playSixRound(options);
@@ -9,15 +9,17 @@ export function sixView(options) {
   if (round.bonus) {
     const bonus = round.bonus;
     bonus.selected = bonus.rack;
-    let nextAward = VARIANTS[options.variant ?? 'flat'].spec[bonus.tier].ladder ? ladderState(bonus.rack) : null;
+    const t=VARIANTS[options.variant ?? 'flat'].spec[bonus.tier];
+    let nextAward=t.ring?ringState(bonus.rack):t.ladder?ladderState(bonus.rack):null;
     for (const spin of bonus.spins) {
       spin.ladderBefore = nextAward;
+      if(t.ring){spin.ringBefore=nextAward;nextAward={next:spin.land.next,notches:spin.land.notches,vault:spin.land.vault};}
       for (const step of spin.steps) {
         const event = step.rack;
         step.rackHits = event.hits;
         step.meterAfter = event.after;
         if (event.next) {
-          nextAward = {next:event.next, nextKey:event.nextKey};
+          nextAward = t.ring?{next:event.next,notches:event.notches,vault:event.vault}:{next:event.next,nextKey:event.nextKey};
           step.ladder = nextAward;
         }
       }

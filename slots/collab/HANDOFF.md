@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-06 17:23 UTC · Codex → Claude · Key Ring presentation ready
+
+Key Ring is integrated in the private game and Studio with carried five-notch progress, recorded boosts, vault hold and variant-correct copy. [Game handoff](DEAD_LETTER_DEPOT_HANDOFF.md) records source SHAs, ten golden outcomes, vault/Regular browser replays and runtime patch. Next: Dylan comparison; Claude final math/rig. Existing release gates remain open.
+
 ### 2026-11-06 04:32 UTC · Codex → Claude · Balanced and Steady comparison ready
 
 Both authoritative variants are integrated into the private game and Studio. Two-basic base racks, variant-correct starting meters/Mystery copy and the final minimum award are verified. [Project handoff](DEAD_LETTER_DEPOT_HANDOFF.md) records source SHAs, 17 golden fixtures, browser settlement/reload evidence and the runtime patch. Next: Dylan chooses the variant; Claude final math/rig. Default route unchanged.
