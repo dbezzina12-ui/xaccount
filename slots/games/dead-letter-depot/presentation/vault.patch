@@ -1,0 +1,100 @@
+diff --git a/dist/presentation/bonus-brief.mjs b/dist/presentation/bonus-brief.mjs
+index 009df0e..ecf7ec1 100644
+--- a/dist/presentation/bonus-brief.mjs
++++ b/dist/presentation/bonus-brief.mjs
+@@ -11,6 +11,7 @@ const art=Object.fromEntries(Object.keys(looks).map(tier=>[tier,new URL('../art/
+ const make=(tag,cls,text)=>{const el=document.createElement(tag);el.className=cls;if(text)el.textContent=text;return el};
+ 
+ function feature(tier,variant){
++  if(variant==='vault')return tier==='regular'?'Start at 2×. Listed basics switch your multi on; match 8+ Keys to unlock the 1,000× vault.':tier==='super'?'Start at 5×, active every spin. Match 8+ Keys to unlock the 1,000× vault.':'Start at 30×. Five landed Keys add +20; match 8+ Keys to unlock the 1,000× vault.';
+   if(variant==='keyring')return tier==='regular'?'Every five landed Keys boosts your multiplier; match 8+ Keys to open the vault.':tier==='super'?'Start at 15×; five landed Keys add +6, and an 8+ Key match opens the vault.':'Start at 40×; five landed Keys add +25, and an 8+ Key match opens the vault.';
+   if(tier==='super')return 'Start at '+(variant==='steady'?15:10)+'× with your global multiplier active on every winning spin.';
+   if(variant==='collections')return tier==='hidden'
+diff --git a/dist/reels.mjs b/dist/reels.mjs
+index 4d389ce..55f2c5b 100644
+--- a/dist/reels.mjs
++++ b/dist/reels.mjs
+@@ -23,8 +23,9 @@ const symbolId = s => assets[s] || s.toLowerCase();
+ const imageUrl = s => 'art/night-mail/symbols/' + symbolId(s) + '.webp';
+ const blank = Object.fromEntries(PAYING.map(s => [s,0]));
+ const variant = new URLSearchParams(location.search).get('playtest');
+-const keyring=variant==='keyring';
+-const modern = ['balanced','steady','keyring'].includes(variant);
++const vault=variant==='vault';
++const keyring=vault||variant==='keyring';
++const modern = ['balanced','steady','keyring','vault'].includes(variant);
+ const power = variant === 'power' || modern;
+ const engineVariant = modern ? variant : power ? 'ladder' : 'flat';
+ const spec = VARIANTS[engineVariant].spec;
+@@ -49,6 +50,11 @@ if(keyring){
+  descriptions.nightshift=tierCopy.regular='Every five landed Keys boosts the meter. Match 8+ Keys to open the vault.';
+  tierCopy.hidden='Start at 40×. Fill the Key ring to build the multi; match 8+ Keys to open the vault.';
+ }
++if(vault){
++ descriptions.nightshift=tierCopy.regular='Start at 2×. Listed basics activate your multi; match 8+ Keys to open the 1,000× vault.';
++ descriptions.doublepost=tierCopy.super='Start at 5×, active every spin. Match 8+ Keys to open the 1,000× vault.';
++ tierCopy.hidden='Start at 30×. Five landed Keys add +20; match 8+ Keys to open the 1,000× vault.';
++}
+ // Playtest credit and resume state are scoped to this tab.
+ const key = 'depot-session-' + (modern ? VARIANTS[engineVariant].version : power ? 'six-ladders-1' : trial ? 'six-trial-1' : ENGINE_VERSION);
+ let session = JSON.parse(sessionStorage.getItem(key) || 'null') || {balance:trial?1000000:100000,bet:100,mode:'base',pending:null};
+@@ -88,7 +94,7 @@ function rack(counts,targets) {
+       const item=document.createElement('div'), icon=new Image(), award=document.createElement('b');
+       item.className='six-cubby';item.dataset.id=id;
+       icon.src=imageUrl(id);icon.alt=symbolName(id);
+-      award.textContent=id==='KEY'?(keyring?'0/5':'×2'):LOWS.includes(id)?'+1':'+3';
++      award.textContent=baseRack&&vault?'×2':rackAward(id,LOWS.includes(id)?1:3);
+       item.append(icon,award);
+       if(keyring && id==='KEY'){item.classList.add('key-ring-slot');const ring=document.createElement('i');ring.className='key-ring';ring.setAttribute('aria-hidden','true');item.append(ring);}
+       return item;
+@@ -97,11 +103,19 @@ function rack(counts,targets) {
+   }
+   paintCollectionRack($('rack'),PAYING.map(id=>({id,label:id,count:counts[id],target:targets[id]})),imageUrl);
+ }
++function rackAward(id,next){
++ if(id==='KEY')return keyring?'0/5':'×2';
++ if(vault && round?.bonus){
++  const tier=round.bonus.tier;next=Math.min(next,spec[tier].addCap[LOWS.includes(id)?0:1]);
++  if(next===0)return tier==='regular'?'ON':'—';
++ }
++ return '+'+next;
++}
+ function showLadders(state){
+   if(!state)return;
+   for(const cell of $('rack').children){
+     const id=cell.dataset.id;
+-    const text=id==='KEY'?(keyring?(state.vault?'OPEN':(state.notches||0)+'/5'):('×'+state.nextKey)):'+'+state.next[id];
++    const text=id==='KEY'?(keyring?(state.vault?'OPEN':(state.notches||0)+'/5'):('×'+state.nextKey)):rackAward(id,state.next[id]);
+     cell.querySelector('b').textContent=text;
+     if(keyring && id==='KEY'){cell.style.setProperty('--notches',state.notches||0);cell.classList.toggle('vault-open',!!state.vault);cell.setAttribute('aria-label',state.vault?'Vault open for the rest of the bonus':'Key ring '+(state.notches||0)+' of 5');}
+   }
+@@ -214,16 +228,25 @@ function guide(intro){
+   }
+   if(modern)panels[0]=['PARCEL','Match eight','Eight alike pay and tumble. In base play, each listed basic that pays adds +1 to the spin multi.'];
+   if(keyring){panels[1]=['J','Build the multi','Listed basics add +1 then +2; premiums +3 then +6.'];panels[2]=['KEY','Fill the Key ring','Every landed Key adds a notch. Five notches boost the multi. Match 8+ Keys to open the vault at the meter ceiling.'];}
+-  show('<img class="guide-logo" src="art/night-mail/return-to-sender.webp" alt="Return to Sender"><h2 class="guide-title">'+(modern?(keyring?'Key Ring':variant==='steady'?'Steady ladders':'Balanced ladders'):power?'Multiplier ladders':trial?'Six-symbol playtest':intro?'Welcome to the depot':'How to play')+'</h2><div class="panels">'+panels.map(([s,t,d])=>'<section><img src="'+imageUrl(s)+'" alt=""><b>'+t+'</b><p>'+d+'</p></section>').join('')+'</div><button class="cta" id="continue">'+(intro?'Open the depot':'Back to reels')+'</button>');
++  if(vault){
++    panels[0]=['PARCEL','Match eight','Eight alike pay and tumble. Each paying group of a listed basic doubles the base-spin multi.'];
++    panels[1]=['J','Activate the multi','Regular: listed basics activate the multi. Regular and Super premiums add +1. Hidden builds +1/+2 or +3/+6.'];
++    panels[2]=['KEY','Open the vault','Five landed Keys boost your multi. Match 8+ Keys to lock in 1,000× for the rest of any bonus.'];
++  }
++  show('<img class="guide-logo" src="art/night-mail/return-to-sender.webp" alt="Return to Sender"><h2 class="guide-title">'+(modern?(vault?'Vault':keyring?'Key Ring':variant==='steady'?'Steady ladders':'Balanced ladders'):power?'Multiplier ladders':trial?'Six-symbol playtest':intro?'Welcome to the depot':'How to play')+'</h2><div class="panels">'+panels.map(([s,t,d])=>'<section><img src="'+imageUrl(s)+'" alt=""><b>'+t+'</b><p>'+d+'</p></section>').join('')+'</div><button class="cta" id="continue">'+(intro?'Open the depot':'Back to reels')+'</button>');
+   const actions=document.createElement('div');actions.className='trial-actions';$('paper').append(actions);
+   const option=(label,click)=>{const b=document.createElement('button');b.textContent=label;b.onclick=click;actions.append(b)};
+-  for(const choice of ['balanced','steady','keyring']){const link=document.createElement('a');link.href='?playtest='+choice;link.textContent=choice==='keyring'?'Try Key Ring':choice==='steady'?'Try Steady':'Try Balanced';actions.append(link);}
++  for(const choice of ['balanced','steady','keyring','vault']){const link=document.createElement('a');link.href='?playtest='+choice;link.textContent=choice==='vault'?'Try Vault':choice==='keyring'?'Try Key Ring':choice==='steady'?'Try Steady':'Try Balanced';actions.append(link);}
+   if(modern){
+     const note=document.createElement('p');note.className='trial-note';note.textContent='Bonus starts: '+spec.regular.start+'× / '+spec.super.start+'× / '+spec.hidden.start+'×. Lost & Found pays at least 1,000×. Mystery: 90% Double Post, 10% Lost & Found.';actions.before(note);
+     option('Base rack replay',()=>{modal.close();begin('base',134,true)});
+-    option('Minimum award replay',()=>{modal.close();begin('mystery',keyring?43:variant==='steady'?89:4,true)});
++    option('Minimum award replay',()=>{modal.close();begin('mystery',vault?89:keyring?43:variant==='steady'?89:4,true)});
++  }
++  if(keyring)option('Vault replay',()=>{modal.close();begin('mystery',vault?2910:7407,true)});
++  if(vault){
++    option('Night Shift vault replay',()=>{modal.close();begin('nightshift',24393,true)});
++    option('Double Post vault replay',()=>{modal.close();begin('doublepost',950,true)});
+   }
+-  if(keyring)option('Vault replay',()=>{modal.close();begin('mystery',7407,true)});
+   if(trial){
+     option(power?'Play ladder replay':'Play Key replay',()=>{modal.close();begin('mystery',modern?4:power?20:4,true)});
+     option('Random Night Shift',()=>{modal.close();begin('nightshift',undefined,true)});

@@ -6,7 +6,7 @@ Status: `todo` · `doing` · `review` (waiting on Dylan) · `done` · `blocked` 
 
 | ID | Task | Owner | Status | Notes |
 |---|---|---|---|---|
-| DLD-REELS | Return to Sender badge, bonus counters and editable layout | Codex | review | Printed postcard bonus buys and confirmations ready for Dylan; one-sentence bonus entries, parcel retriggers, illustrated wins and cumulative totals retained. Key Ring, Balanced and Steady integrated and verified; Dylan to compare/select. See latest handoff for golden, minimum-award, purchase and reload evidence. Parcel-to-camera entrance preserved. Edit the scene in [Studio](https://gamboligy-studio.djames1.chatgpt.site/dead-letter-depot-studio/index.html?view=phone&scene=base). [Test evidence and next owner](DEAD_LETTER_DEPOT_HANDOFF.md). |
+| DLD-REELS | Return to Sender badge, bonus counters and editable layout | Codex | review | Printed postcard bonus buys and confirmations ready for Dylan; one-sentence bonus entries, parcel retriggers, illustrated wins and cumulative totals retained. Vault, Key Ring, Balanced and Steady integrated and verified; Dylan to compare/select. Vault base ×2 and all-tier 1,000× ceilings checked. See latest handoff for golden, minimum-award, purchase and reload evidence. Parcel-to-camera entrance preserved. Edit the scene in [Studio](https://gamboligy-studio.djames1.chatgpt.site/dead-letter-depot-studio/index.html?view=phone&scene=base). [Test evidence and next owner](DEAD_LETTER_DEPOT_HANDOFF.md). |
 | DLD-MATH | Collections, jobs and meter engine (`dld-reels-2`), prototype math at 96%, fixtures | Claude | review | `23afe0f`; [MATH.md](../games/dead-letter-depot/MATH.md), [ENGINE.md](../games/dead-letter-depot/ENGINE.md). Awaiting Dylan on premium targets and meter starts. |
 
 ## RoboBees

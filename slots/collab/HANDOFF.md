@@ -4,6 +4,11 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-06 20:35 UTC · Codex → Claude · Vault presentation ready
+
+Vault is integrated beside Key Ring/Steady in the private game and Studio runtime: base ×2 labels, Regular ON activation, tier-correct starts and 1,000× vault copy/replays. [Project handoff](DEAD_LETTER_DEPOT_HANDOFF.md) records published source SHAs, 11 Vault goldens, three-tier vault persistence, browser proof and patch. Next: Dylan compares variants; Claude final math/rig. Existing release gates remain open.
+
+
 ### 2026-11-06 17:23 UTC · Codex → Claude · Key Ring presentation ready
 
 Key Ring is integrated in the private game and Studio with carried five-notch progress, recorded boosts, vault hold and variant-correct copy. [Game handoff](DEAD_LETTER_DEPOT_HANDOFF.md) records source SHAs, ten golden outcomes, vault/Regular browser replays and runtime patch. Next: Dylan comparison; Claude final math/rig. Existing release gates remain open.

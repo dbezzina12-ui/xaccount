@@ -1,6 +1,20 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-06 20:35 UTC (15:35 Cancún) · Codex → Dylan / Claude · Vault playtest integrated
+
+Picked up Claude’s `5a15536fa005ad9f5df53a8a2cc034191ea71abb` handoff (engine `c880a60`, merge `1ba3f95`) since verified `bdcc7ad8a8ee07f7b4eee87287f2b2e028de1c46`. Reviewed changes, release checklist/status, shared board and handoff. No open PR targeting this branch or linked in the new handoff.
+
+[Vault playtest](https://dead-letter-depot.djames1.chatgpt.site/?playtest=vault) is available alongside Key Ring, Steady and Balanced in the private game and Studio runtime. Claude’s `dld-six-6` engine is copied verbatim (SHA-256 `ac14fb21f293163a9fbbd1967ba12b78063a11355ff68788f3cc88cca6600e7c`). Base rack shows ×2. Regular basics show ON, premiums +1; Super basics show no addition. All bonus vaults use the recorded 1,000× ceiling. Updated guide, postcard shop, one-sentence entries, minimum replay and three vault replay controls. Default route and existing variants preserved; no math, settlement or rig edits.
+
+**Published private:** game `aa09941f08816a47e38207928b0e81bb179087ab`; Studio `8a174c878a5bb254c5095656d29fd8a2d500bc55`. Both deployments succeeded with owner-only audience preserved.
+
+**Evidence:** 15 presenter/ledger tests pass, including all 11 Vault golden totals, base doubling, every bonus recovery cursor, Regular activation with add=0, all three persistent 1,000× vaults, floor and cap. Earlier variant fixtures unchanged. Studio 194 pass/3 skipped; build, syntax, whitespace and nine source/build/QA byte comparisons pass. Chromium: 390×844 base rack ×2; resumed Regular 24393 shows ON/+1 labels, carried notches and cumulative 200.20 before finishing the capped spin; Super 950 shows OPEN/1,000× and ends at 25,000.00 with illustrated Max Win. Desktop 1366×768 rack/counters and short-phone 375×667 scrolling postcard shop checked. Regular entry preview fits with correct 2×/activation/1,000× copy. Fixture balance stays 10,000.00. Native `source-art/vault-qa/` retains patch, tests, notes and phone Max capture; local cursor launch pages excluded from published source.
+
+**Integration:** [presentation patch](../games/dead-letter-depot/presentation/vault.patch), updated bonus brief and Claude’s existing engine. Checklist gates remain open: producer variant choice, final math/sign-off, physical iOS/Android, audio, final rig and full release-flow/all-tier boundary coverage. These are private playtest checks, not release approval.
+
+**Next owner:** Dylan compares Vault / Key Ring / Steady. Claude owns final math and Frank’s rig; existing private-layer blocker remains. No production branch merge or unrelated game edits.
+
 ## 2026-11-06 19:15 UTC (14:15 Cancún) · Claude → Codex / Dylan · Vault (dld-six-6): medium Night Shift and Double Post with a max-win chance, easier Lost & Found max
 **Tested SHA:** `c880a60`, merged with your `bdcc7ad` as `1ba3f95`. Game suite 53/53, core 131/131. Key Ring (`dld-six-5`) outcomes are unchanged, and all 10 of its golden totals still pass.
 
