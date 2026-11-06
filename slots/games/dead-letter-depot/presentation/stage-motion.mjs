@@ -1,3 +1,4 @@
+import { mailCover, fallMail } from './mail-fall.mjs';
 import { mountFrankMotion } from './frank-motion.mjs';
 import { knockOffBadge } from './return-delivery.mjs';
 import { dwell } from './dispatch.mjs';
@@ -24,17 +25,6 @@ export function syncShift(tier){
   else delete document.body.dataset.shift;
 }
 
-function makeCover(){
-  const cover=document.createElement('div');
-  cover.className='dispatch-cover';
-  cover.setAttribute('aria-hidden','true');
-  const seal=new Image();
-  seal.src=new URL('../art/night-mail/symbols/stamp.webp',import.meta.url).href;
-  seal.alt='';
-  cover.append(seal);
-  return cover;
-}
-
 async function animate(element,frames,duration,easing){
   if(reduced.matches)return;
   const animation=element.animate(frames,{duration,easing,fill:'both'});
@@ -52,7 +42,7 @@ function label(tag,className,copy){
 export async function enterDispatch({bonus,scatters,trigger,description,spins,show,onImpact,onReveal}){
   const anchor=document.createComment('Frank stage position');
   frank.before(anchor);
-  const cover=makeCover();
+  const cover=mailCover();
   const ticket=document.createElement('section');
   ticket.className='dispatch-ticket';
   const button=label('button','cta','Start '+spins+' free spins');
@@ -66,15 +56,8 @@ export async function enterDispatch({bonus,scatters,trigger,description,spins,sh
     if(scatters.length)await dwell(reduced.matches?150:280);
     restoreParcel=await knockOffBadge(frank,onImpact);
     await dwell(reduced.matches?100:400);
-    const box=document.getElementById('held').getBoundingClientRect();
-    const x=box.left+box.width/2-window.innerWidth/2;
-    const y=box.top+box.height/2-window.innerHeight/2;
     document.body.append(cover);
-    await animate(cover,[
-      {transform:'translate('+x+'px,'+y+'px) rotate(-24deg) scale(.035)',opacity:.8},
-      {transform:'translate('+x*.43+'px,'+y*.43+'px) rotate(-10deg) scale(.25)',offset:.4},
-      {transform:'rotate(0deg) scale(1)',opacity:1}
-    ],460,'cubic-bezier(.4,.05,.56,1)');
+    await fallMail(cover);
     restoreParcel();
     frank.dispatchEvent(new CustomEvent('depot:frank',{bubbles:true,detail:{action:'bonus',tier:bonus.tier}}));
     syncShift(bonus.tier);
@@ -82,7 +65,7 @@ export async function enterDispatch({bonus,scatters,trigger,description,spins,sh
     scene.append(frank,ticket);
     document.getElementById('paper').replaceChildren(scene,cover);
     // The same actor stays alive across the cut, finishing the salute and breathing.
-    await animate(cover,[{transform:'translateY(0) rotate(0deg)'},{transform:'translateY(-122%) rotate(-5deg)'}],470,'cubic-bezier(.5,.04,.79,.32)');
+    await fallMail(cover,true);
     cover.remove();
     button.disabled=false;
     button.focus({preventScroll:true});

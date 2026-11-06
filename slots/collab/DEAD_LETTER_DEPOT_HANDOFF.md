@@ -1,6 +1,14 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-06 00:18 UTC · Codex → Claude / Dylan · Frank’s throw and falling mail
+
+Frank winds up with the wing that carries the parcel. The projectile leaves its moving grip, knocks down the badge and exposes the meter. Falling airmail covers the entire screen before the bonus ticket opens, then falls clear. [Private replay](https://dead-letter-depot.djames1.chatgpt.site/?playtest=power&preview=delivery) · game `8d7e5d7a3d0c2b58d8cd1030a3713527063f34ce` · Studio `2c1a4831d1c2f452ad2e71b735972da4b6f2ee4f`.
+
+QA used the packaged runtime in Chromium at 390×844 and 1366×768. Seed 20 showed six scatters; the release center matched the moving grip within 0.02 CSS px on both. At the cut, 60 portrait or 42 landscape envelopes covered the screen. The Start button enabled after the mail cleared and opened the ten free spins. Studio suite: 194 passed, three skipped.
+
+**Next for Claude:** fit this grip to the final rig using the [bare torso](https://dead-letter-depot.djames1.chatgpt.site/art/night-mail/frank-motion/torso-bare.webp), [loaded wing](https://dead-letter-depot.djames1.chatgpt.site/art/night-mail/frank-motion/wing-held.webp) and [empty wing](https://dead-letter-depot.djames1.chatgpt.site/art/night-mail/frank-motion/wing-open.webp). Wing bounds `0,265,194,258`, pivot `118,300`, parcel grip `120,389`, measured in Frank’s SVG artboard. Use the transformed grip at release. Dylan can replay the entrance in the link above.
+
 ## 2026-11-05 18:26 Cancún · Codex → Dylan / Claude · Calibrated ladder and flat playtests
 
 [Play the ladder Key replay](https://dead-letter-depot.djames1.chatgpt.site/?playtest=power&preview=delivery) · [Flat comparison](https://dead-letter-depot.djames1.chatgpt.site/?playtest=six). Private game `bd942b7769505952cf714a78c5b012f242c5357e`, Studio `3625276af13dcef9b9497667a1228c0dcd4c90b7`. Reviewed Claude handoff `d3a78b9` / engine `188f651`; no open PR targeting the project branch. Both builds use Claude’s unchanged engine and settlement. Legacy rounds resume with their recorded engine. The adapter maps recorded rack events for the HUD.

@@ -21,7 +21,7 @@ export function mountFrankMotion(host,{entrance=false}={}){
  const torso=joint('torso'),face=joint('head'),wing=joint('shoulder'),fore=joint('elbow'),lid=joint('lid');
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
  const fallback=host.querySelector('img');
- let frame=0,from=performance.now(),start=entrance?from:-Infinity,strike=-Infinity,delivery=-Infinity,disposed=false,ready=false;
+ let frame=0,from=performance.now(),start=entrance?from:-Infinity,strike=-Infinity,disposed=false,ready=false;
  const set=(node,t)=>node.setAttribute('transform',t);
  function paint(now){
   if(disposed)return;
@@ -30,14 +30,12 @@ export function mountFrankMotion(host,{entrance=false}={}){
   const lift=calm?(entrance || age<1.66 ? 1 : 0):sample([[0,0],[.15,-.035],[.59,.91],[.74,1],[1.66,1],[2.26,0],[2.41,-.018],[2.59,0]],age);
   // Between rounds, Frank glances down and presses the parcel with his wing.
   // Suppress the idle action while either gameplay cue is in flight.
-  const check=calm || age<2.6 || hit<.75 ? 0 : sample([[0,0],[.55,0],[1.02,1],[1.42,.86],[1.7,1],[2.15,0],[6.8,0]],t%6.8);
+  const check=calm || age<2.6 || hit<.75 || host.classList.contains('throwing-parcel') ? 0 : sample([[0,0],[.55,0],[1.02,1],[1.42,.86],[1.7,1],[2.15,0],[6.8,0]],t%6.8);
   const pulse=calm?0:sample([[0,0],[.16,-.18],[.28,1],[.42,-.2],[.73,0]],hit);
-  const throwTime=(now-delivery)/1000;
-  const reach=calm?0:sample([[0,0],[.20,-.22],[.34,1],[.48,1.05],[.83,.13],[1.04,0]],throwTime);
-  const shoulder=lerp(54+breath*1.9,0,lift)+pulse*7-check*9-reach*49;
-  const elbow=lerp(-128-breath*3,0,lift)-pulse*10+check*14+reach*92;
+  const shoulder=lerp(54+breath*1.9,0,lift)+pulse*7-check*9;
+  const elbow=lerp(-128-breath*3,0,lift)-pulse*10+check*14;
   set(torso,'translate(255 641) scale('+(1-breath*.003)+' '+(1+breath*.009)+') translate(-255 -641)');
-  set(face,'translate('+(calm?0:Math.sin(t*1.14)*1.5)+' '+(-breath*2)+') rotate('+(-breath*1.8-lift*2+pulse*3-check*5.5-reach*6)+' 235 270)');
+  set(face,'translate('+(calm?0:Math.sin(t*1.14)*1.5)+' '+(-breath*2)+') rotate('+(-breath*1.8-lift*2+pulse*3-check*5.5)+' 235 270)');
   set(wing,'rotate('+shoulder+' 329 277)');set(fore,'rotate('+elbow+' 438 284)');
   const blink=calm?0:sample([[0,0],[2.23,0],[2.31,1],[2.36,1],[2.48,0],[4.87,0],[4.95,1],[5.04,0],[5.6,0]],cycle);
   set(lid,'translate(0 154) scale(1 '+Math.max(.001,blink)+') translate(0 -154)');lid.setAttribute('opacity',blink>.04?'1':'0');
@@ -47,7 +45,7 @@ export function mountFrankMotion(host,{entrance=false}={}){
  function salute(){start=performance.now();refresh()}
  function stamp(){strike=performance.now();refresh()}
  function visibility(){refresh()}
- const cue=e=>{if(e.detail?.action==='bonus')salute();if(e.detail?.action==='stamp')stamp();if(e.detail?.action==='throw'){delivery=performance.now();refresh()}};
+ const cue=e=>{if(e.detail?.action==='bonus')salute();if(e.detail?.action==='stamp')stamp()};
  // Preserve the fallback until both paintings decode. Start the gesture clock only once visible.
  const art=Object.keys(bounds).map(name=>{const image=new Image();image.src=new URL('../art/night-mail/frank-motion/'+name+'.webp',import.meta.url).href;return image.decode()});
  Promise.all(art).then(()=>{if(disposed)return;ready=true;from=performance.now();if(start!==-Infinity)start=from;host.append(svg);if(fallback){fallback.hidden=true;fallback.style.display='none'};refresh()}).catch(()=>{});

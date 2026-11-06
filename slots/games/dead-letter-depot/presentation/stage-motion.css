@@ -22,9 +22,9 @@ main>.floor{margin-bottom:clamp(12px,3svh,32px)}
 #modal.dispatch-dialog:has(#startBonus){background:transparent}
 .dispatch-dialog::backdrop{background:transparent;backdrop-filter:none}
 .dispatch-dialog .dispatch-scene{animation:none}
-.dispatch-cover{position:fixed;inset:-6vmax;z-index:100;display:grid;place-content:center;pointer-events:none;background:linear-gradient(25deg,#ccb58f,#f8e9c9 60%,#ead7b4);border:clamp(12px,3vmin,32px) solid transparent;border-image:repeating-linear-gradient(125deg,#983f39 0 25px,#f0e4cb 25px 48px,#375762 48px 73px,#f0e4cb 73px 96px) 28}
-.dispatch-cover::before{content:'';position:absolute;inset:0;background:linear-gradient(155deg,#fdf0d6,#d3b68b);clip-path:polygon(0 0,100% 0,50% 68%);filter:drop-shadow(0 4px 2px #745c46)}
-.dispatch-cover img{position:relative;width:min(35vmin,245px);height:auto;filter:drop-shadow(0 8px 8px #73543d66)}
+.mail-cover{position:fixed;inset:0;z-index:100;overflow:hidden;pointer-events:none;isolation:isolate}
+.falling-letter{position:absolute;aspect-ratio:600/345;display:block;background-position:center;background-size:100% 100%;background-repeat:no-repeat;transform:translate(-50%,-50%) rotate(var(--tilt));will-change:transform}
+.paper-fold{background:linear-gradient(146deg,transparent 48%,#a08462 50%,transparent 51%) top left/51% 70% no-repeat,linear-gradient(214deg,transparent 48%,#a08462 50%,transparent 51%) top right/51% 70% no-repeat,#e7cc9c;border:2px solid #8a7359}
 body[data-shift] .bezel{box-shadow:0 0 0 1px #e4bc78,0 0 22px #dea6592b}
 body[data-shift=hidden] #board{background:radial-gradient(ellipse at 50% 35%,#493f50,#242436 82%)}
 body[data-shift=super] #board{background:radial-gradient(ellipse at 50% 35%,#314755,#192935 82%)}
