@@ -58,3 +58,7 @@
 
 #rack.six-rack.base-rack{grid-template-columns:repeat(2,minmax(0,1fr));width:min(45%,240px);justify-self:center}
 .trial-note{max-width:640px;margin:12px auto;color:#ead6b4;font-size:13px;line-height:1.5;text-wrap:balance}
+
+#rack .key-ring-slot{position:relative;padding-bottom:9px}#rack .key-ring-slot b{font-size:clamp(9px,1.3vmin,13px)}
+.key-ring{position:absolute;bottom:2px;left:12%;width:76%;height:5px;background:linear-gradient(to right,#f8d184 calc(var(--notches,0)*20%),#2b3536 0);clip-path:polygon(0 0,18% 0,18% 100%,0 100%,0 0,20.5% 0,38.5% 0,38.5% 100%,20.5% 100%,20.5% 0,41% 0,59% 0,59% 100%,41% 100%,41% 0,61.5% 0,79.5% 0,79.5% 100%,61.5% 100%,61.5% 0,82% 0,100% 0,100% 100%,82% 100%,82% 0)}
+#rack .vault-open{border-color:#ffe7a0;background:linear-gradient(#725324,#382c1b)}.vault-open .key-ring{background:#ffd77f}

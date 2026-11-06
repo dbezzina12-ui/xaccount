@@ -1,0 +1,174 @@
+diff --git a/presentation/bonus-brief.mjs b/presentation/bonus-brief.mjs
+index 20dc752..009df0e 100644
+--- a/presentation/bonus-brief.mjs
++++ b/presentation/bonus-brief.mjs
+@@ -11,6 +11,7 @@ const art=Object.fromEntries(Object.keys(looks).map(tier=>[tier,new URL('../art/
+ const make=(tag,cls,text)=>{const el=document.createElement(tag);el.className=cls;if(text)el.textContent=text;return el};
+ 
+ function feature(tier,variant){
++  if(variant==='keyring')return tier==='regular'?'Every five landed Keys boosts your multiplier; match 8+ Keys to open the vault.':tier==='super'?'Start at 15×; five landed Keys add +6, and an 8+ Key match opens the vault.':'Start at 40×; five landed Keys add +25, and an 8+ Key match opens the vault.';
+   if(tier==='super')return 'Start at '+(variant==='steady'?15:10)+'× with your global multiplier active on every winning spin.';
+   if(variant==='collections')return tier==='hidden'
+     ? 'Half-size collections double your entire multiplier, up to 64×.'
+diff --git a/presentation/six-view.mjs b/presentation/six-view.mjs
+index c1fc1ab..f4fc204 100644
+--- a/presentation/six-view.mjs
++++ b/presentation/six-view.mjs
+@@ -1,5 +1,5 @@
+ // Translate recorded engine events into the shapes used by the reel presenter.
+-import {playSixRound, ladderState, VARIANTS} from '../reel-engine/six.js';
++import {playSixRound, ladderState, ringState, VARIANTS} from '../reel-engine/six.js';
+ 
+ export function sixView(options) {
+   const round = playSixRound(options);
+@@ -9,15 +9,17 @@ export function sixView(options) {
+   if (round.bonus) {
+     const bonus = round.bonus;
+     bonus.selected = bonus.rack;
+-    let nextAward = VARIANTS[options.variant ?? 'flat'].spec[bonus.tier].ladder ? ladderState(bonus.rack) : null;
++    const t=VARIANTS[options.variant ?? 'flat'].spec[bonus.tier];
++    let nextAward=t.ring?ringState(bonus.rack):t.ladder?ladderState(bonus.rack):null;
+     for (const spin of bonus.spins) {
+       spin.ladderBefore = nextAward;
++      if(t.ring){spin.ringBefore=nextAward;nextAward={next:spin.land.next,notches:spin.land.notches,vault:spin.land.vault};}
+       for (const step of spin.steps) {
+         const event = step.rack;
+         step.rackHits = event.hits;
+         step.meterAfter = event.after;
+         if (event.next) {
+-          nextAward = {next:event.next, nextKey:event.nextKey};
++          nextAward = t.ring?{next:event.next,notches:event.notches,vault:event.vault}:{next:event.next,nextKey:event.nextKey};
+           step.ladder = nextAward;
+         }
+       }
+diff --git a/presentation/win-show.css b/presentation/win-show.css
+index 0a74ca2..655eb61 100644
+--- a/presentation/win-show.css
++++ b/presentation/win-show.css
+@@ -58,3 +58,7 @@
+ 
+ #rack.six-rack.base-rack{grid-template-columns:repeat(2,minmax(0,1fr));width:min(45%,240px);justify-self:center}
+ .trial-note{max-width:640px;margin:12px auto;color:#ead6b4;font-size:13px;line-height:1.5;text-wrap:balance}
++
++#rack .key-ring-slot{position:relative;padding-bottom:9px}#rack .key-ring-slot b{font-size:clamp(9px,1.3vmin,13px)}
++.key-ring{position:absolute;bottom:2px;left:12%;width:76%;height:5px;background:linear-gradient(to right,#f8d184 calc(var(--notches,0)*20%),#2b3536 0);clip-path:polygon(0 0,18% 0,18% 100%,0 100%,0 0,20.5% 0,38.5% 0,38.5% 100%,20.5% 100%,20.5% 0,41% 0,59% 0,59% 100%,41% 100%,41% 0,61.5% 0,79.5% 0,79.5% 100%,61.5% 100%,61.5% 0,82% 0,100% 0,100% 100%,82% 100%,82% 0)}
++#rack .vault-open{border-color:#ffe7a0;background:linear-gradient(#725324,#382c1b)}.vault-open .key-ring{background:#ffd77f}
+diff --git a/reels.mjs b/reels.mjs
+index cf5784c..4d389ce 100644
+--- a/reels.mjs
++++ b/reels.mjs
+@@ -23,7 +23,8 @@ const symbolId = s => assets[s] || s.toLowerCase();
+ const imageUrl = s => 'art/night-mail/symbols/' + symbolId(s) + '.webp';
+ const blank = Object.fromEntries(PAYING.map(s => [s,0]));
+ const variant = new URLSearchParams(location.search).get('playtest');
+-const modern = ['balanced','steady'].includes(variant);
++const keyring=variant==='keyring';
++const modern = ['balanced','steady','keyring'].includes(variant);
+ const power = variant === 'power' || modern;
+ const engineVariant = modern ? variant : power ? 'ladder' : 'flat';
+ const spec = VARIANTS[engineVariant].spec;
+@@ -44,6 +45,10 @@ if(modern){
+   descriptions.doublepost=tierCopy.super='Start at '+spec.super.start+'×. The global multi applies to every win.';
+   tierCopy.hidden='Start at '+spec.hidden.start+'×. Keys multiply the meter; bonus pays at least 1,000×.';
+ }
++if(keyring){
++ descriptions.nightshift=tierCopy.regular='Every five landed Keys boosts the meter. Match 8+ Keys to open the vault.';
++ tierCopy.hidden='Start at 40×. Fill the Key ring to build the multi; match 8+ Keys to open the vault.';
++}
+ // Playtest credit and resume state are scoped to this tab.
+ const key = 'depot-session-' + (modern ? VARIANTS[engineVariant].version : power ? 'six-ladders-1' : trial ? 'six-trial-1' : ENGINE_VERSION);
+ let session = JSON.parse(sessionStorage.getItem(key) || 'null') || {balance:trial?1000000:100000,bet:100,mode:'base',pending:null};
+@@ -83,8 +88,10 @@ function rack(counts,targets) {
+       const item=document.createElement('div'), icon=new Image(), award=document.createElement('b');
+       item.className='six-cubby';item.dataset.id=id;
+       icon.src=imageUrl(id);icon.alt=symbolName(id);
+-      award.textContent=id==='KEY'?'×2':LOWS.includes(id)?'+1':'+3';
+-      item.append(icon,award);return item;
++      award.textContent=id==='KEY'?(keyring?'0/5':'×2'):LOWS.includes(id)?'+1':'+3';
++      item.append(icon,award);
++      if(keyring && id==='KEY'){item.classList.add('key-ring-slot');const ring=document.createElement('i');ring.className='key-ring';ring.setAttribute('aria-hidden','true');item.append(ring);}
++      return item;
+     }));
+     return;
+   }
+@@ -94,8 +101,20 @@ function showLadders(state){
+   if(!state)return;
+   for(const cell of $('rack').children){
+     const id=cell.dataset.id;
+-    const text=id==='KEY'?('×'+state.nextKey):'+'+state.next[id];
++    const text=id==='KEY'?(keyring?(state.vault?'OPEN':(state.notches||0)+'/5'):('×'+state.nextKey)):'+'+state.next[id];
+     cell.querySelector('b').textContent=text;
++    if(keyring && id==='KEY'){cell.style.setProperty('--notches',state.notches||0);cell.classList.toggle('vault-open',!!state.vault);cell.setAttribute('aria-label',state.vault?'Vault open for the rest of the bonus':'Key ring '+(state.notches||0)+' of 5');}
++  }
++}
++async function ringBeat(event,signal){
++  if(!event)return;
++  showLadders(event);
++  meter(event.after,spec[round.bonus.tier].when==='always'||event.fills>0||event.vault||event.hits.some(id=>id!=='KEY')||$('held').classList.contains('active'));
++  if(event.opened || event.fills){
++    readout(event.opened?'VAULT OPEN · '+event.after+'× for the rest of the bonus':'KEY RING +'+event.fills*spec[round.bonus.tier].ringAdd+' · '+event.after+'×');
++    const slot=$('rack').querySelector('[data-id="KEY"]');slot?.classList.add('lit');
++    await dwell(session.turbo||signal.aborted?350:950,signal);
++    slot?.classList.remove('lit');
+   }
+ }
+ function frankCue(action,detail={}) {
+@@ -194,15 +213,17 @@ function guide(intro){
+     panels[2]=['KEY','Multiply the meter','Listed Keys double the global meter on their first match. Later Key matches multiply it by four.'];
+   }
+   if(modern)panels[0]=['PARCEL','Match eight','Eight alike pay and tumble. In base play, each listed basic that pays adds +1 to the spin multi.'];
+-  show('<img class="guide-logo" src="art/night-mail/return-to-sender.webp" alt="Return to Sender"><h2 class="guide-title">'+(modern?(variant==='steady'?'Steady ladders':'Balanced ladders'):power?'Multiplier ladders':trial?'Six-symbol playtest':intro?'Welcome to the depot':'How to play')+'</h2><div class="panels">'+panels.map(([s,t,d])=>'<section><img src="'+imageUrl(s)+'" alt=""><b>'+t+'</b><p>'+d+'</p></section>').join('')+'</div><button class="cta" id="continue">'+(intro?'Open the depot':'Back to reels')+'</button>');
++  if(keyring){panels[1]=['J','Build the multi','Listed basics add +1 then +2; premiums +3 then +6.'];panels[2]=['KEY','Fill the Key ring','Every landed Key adds a notch. Five notches boost the multi. Match 8+ Keys to open the vault at the meter ceiling.'];}
++  show('<img class="guide-logo" src="art/night-mail/return-to-sender.webp" alt="Return to Sender"><h2 class="guide-title">'+(modern?(keyring?'Key Ring':variant==='steady'?'Steady ladders':'Balanced ladders'):power?'Multiplier ladders':trial?'Six-symbol playtest':intro?'Welcome to the depot':'How to play')+'</h2><div class="panels">'+panels.map(([s,t,d])=>'<section><img src="'+imageUrl(s)+'" alt=""><b>'+t+'</b><p>'+d+'</p></section>').join('')+'</div><button class="cta" id="continue">'+(intro?'Open the depot':'Back to reels')+'</button>');
+   const actions=document.createElement('div');actions.className='trial-actions';$('paper').append(actions);
+   const option=(label,click)=>{const b=document.createElement('button');b.textContent=label;b.onclick=click;actions.append(b)};
+-  for(const choice of ['balanced','steady']){const link=document.createElement('a');link.href='?playtest='+choice;link.textContent=choice==='steady'?'Try Steady':'Try Balanced';actions.append(link);}
++  for(const choice of ['balanced','steady','keyring']){const link=document.createElement('a');link.href='?playtest='+choice;link.textContent=choice==='keyring'?'Try Key Ring':choice==='steady'?'Try Steady':'Try Balanced';actions.append(link);}
+   if(modern){
+     const note=document.createElement('p');note.className='trial-note';note.textContent='Bonus starts: '+spec.regular.start+'× / '+spec.super.start+'× / '+spec.hidden.start+'×. Lost & Found pays at least 1,000×. Mystery: 90% Double Post, 10% Lost & Found.';actions.before(note);
+     option('Base rack replay',()=>{modal.close();begin('base',134,true)});
+-    option('Minimum award replay',()=>{modal.close();begin('mystery',variant==='steady'?89:4,true)});
++    option('Minimum award replay',()=>{modal.close();begin('mystery',keyring?43:variant==='steady'?89:4,true)});
+   }
++  if(keyring)option('Vault replay',()=>{modal.close();begin('mystery',7407,true)});
+   if(trial){
+     option(power?'Play ladder replay':'Play Key replay',()=>{modal.close();begin('mystery',modern?4:power?20:4,true)});
+     option('Random Night Shift',()=>{modal.close();begin('nightshift',undefined,true)});
+@@ -276,17 +297,18 @@ async function runSpin(spin,targets,signal){
+     }});
+     if(spin.steps.length && !signal.aborted)await pause(160,signal);
+   }
++  if(keyring && spin.land)await ringBeat(spin.land,signal);
+   const announcedJobs=new Set();
+   for(const step of spin.steps){
+     draw(grid,step.cleared);readout(step.wins.map(w=>w.count+' '+w.s).join(' + ') || 'Wilds clear');
+     const filled={...counts};
+     for(const [s,n] of Object.entries(step.collect)) filled[s]+=n;
+     rack(filled,targets);
+-    if(trial && step.rackHits?.length){
++    if(trial && step.rackHits?.length && !spin.land){
+       for(const cell of $('rack').children)cell.classList.toggle('lit',step.rackHits.includes(cell.dataset.id));
+       meter(step.meterAfter,true);
+       readout(step.rackHits.map(symbolName).join(' + ')+' · '+step.meterAfter+'×');
+-      if(power){
++      if(power && !keyring){
+         const awards=[...$('rack').querySelectorAll('.lit')].map(cell=>symbolName(cell.dataset.id)+' '+cell.querySelector('b').textContent);
+         readout(awards.join(' · ')+' → '+step.meterAfter+'×');
+         if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+@@ -295,7 +317,7 @@ async function runSpin(spin,targets,signal){
+       }
+     }
+     await pause(420,signal);
+-    showLadders(step.ladder);
++    if(!spin.land)showLadders(step.ladder);
+     if(!session.turbo)await liftSymbols(board,true,signal);
+     for(const frame of frames(grid,step)){
+       if(frame.announce && !announcedJobs.has(frame.job) && hasVisibleEffect(frame.collection)){
+@@ -308,6 +330,7 @@ async function runSpin(spin,targets,signal){
+       if(frame.job) await dwell(session.turbo?140:390,signal);
+       else if(!session.turbo) await dropReels(board,frame.distances,signal);
+     }
++    if(keyring && spin.land)await ringBeat(step.rack,signal);
+     if(trial)for(const cell of $('rack').children)cell.classList.remove('lit');
+     grid=step.after;counts=step.collections;rack(counts,targets);draw(grid);
+   }

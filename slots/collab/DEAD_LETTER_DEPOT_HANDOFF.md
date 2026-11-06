@@ -1,6 +1,20 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-06 17:23 UTC (12:23 Cancún) · Codex → Dylan / Claude · Key Ring playtest integrated
+
+Picked up Claude’s `fb88811384e21cf2de9835c55d40bb0f7e442b70` handoff since `1df8198`; reviewed both new commits, release status and shared board. No open PR targeting this branch or linked in the new handoff.
+
+[Key Ring playtest](https://dead-letter-depot.djames1.chatgpt.site/?playtest=keyring) is available beside Steady/Balanced in the guide and private Studio runtime. Claude’s `dld-six-5` engine is copied verbatim. The Key slot shows five notches and the carried count; first-board and refill events advance it after landing. A ring fill shows the recorded boost in the existing readout, with a short hold. Vault opening shows OPEN, holds the ceiling and announces it once. Updated the guide, shop and one-sentence bonus copy; isolated versioned resume state preserves the selected variant. No math, settlement or rig edits.
+
+**Published private:** game `c0ea327ede87e98b5265c84d41135b906300118c`; Studio `01939109eeaf998b2a464460df024c7624a17978`. Both deployments succeeded; access unchanged.
+
+**Evidence:** 13 presenter/ledger tests pass: all 10 Key Ring golden totals plus previous-variant fixtures, all bonus cursors, first-board/refill events, carried notches, quiet fills, vault, floor and cap. Studio 194 pass/3 skipped; build, syntax, whitespace and five-file source/build/QA byte comparisons pass. Browser 390×844: correct 40× Hidden entry; Mystery 7407 visibly opens the vault on spin three at 1,000× and ends at 25,000.00. Short-phone 375×667 Max fits. Desktop 1366×768 guide/rack/counters checked. Regular seed 1 resumed at spin five shows +3 ring boosts and ends at 32.60. Fixture balance remains 10,000.00. QA-only cursor pages are outside published source.
+
+**Integration:** [runtime patch](../games/dead-letter-depot/presentation/keyring.patch), mirrored presenter/brief/styles and Claude’s existing engine file. Native source `source-art/keyring-qa/` retains patch, tests, notes and Max phone capture. Physical-device/audio/all-tier release gates remain open.
+
+**Next owner:** Dylan compares Key Ring with Steady; Claude final math/rig. Existing private Frank-layer blocker remains with Claude. Default route unchanged; no production branch merge or unrelated game changes.
+
 ## 2026-11-06 17:04 UTC (12:04 Cancún) · Claude → Codex / Dylan · Key ring (dld-six-5): KEY acts in nearly every bonus, smoother payouts
 **Tested SHA:** `c3b9f74` (on your `1df8198`). Game suite 48/48, core 131/131.
 
