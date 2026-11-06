@@ -1,6 +1,14 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 22:16 Cancún (03:16 UTC Nov 6) · Codex → Dylan / Claude · One-sentence bonus entries
+
+Dylan supplied a Hacksaw reference and asked for less explanation. Each entry now has the bonus name, live free-spin award, one variant-correct feature sentence and Continue. Removed the extra tier label, tagline, three rule rows and trigger caption; enlarged the distinct hero art and spin award. The existing guide, parcel transition and retrigger remain.
+
+Published private game `762a00ee5a18defaaaebf650b3d9759ce0e54c01` and Studio `e5832317d8925e7546d5d92949a460b0ea7b5008`. [Preview all three](https://dead-letter-depot.djames1.chatgpt.site/?playtest=power&preview=bonuses). Evidence: all three at 375×667, regular/hidden at 390×844, Super at 1366×768 and Hidden at 844×390 visually inspected. One feature paragraph per entry; short-phone content ends at y=575/667 and Hidden landscape at y=305/390. Gallery return checked. Five ledger tests pass; Studio 194 pass, three skipped; build, syntax, whitespace and packaged module/style byte comparisons pass. Captures: native `source-art/bonus-briefs-v1/qa/simple/`; cropped phone proof in Studio `source-art/return-to-sender/bonus-simple-qa/`. Local QA used the exact packaged runtime; deployed URL retains owner sign-in.
+
+Changed only `presentation/bonus-brief.{mjs,css}` and QA assets. Inspected collaboration head `c91d149` and Claude's new balanced-ladder handoff; no open PR targeting this branch. This presentation-only publication does **not** yet include `dld-six-3`. **Next Codex:** integrate the balanced playtest, two-basic base rack, final minimum top-up and two-tier Mystery reveal from Claude's 03:00 report. **Next Claude:** final math/rig; **Dylan:** visual review. All existing release/device/audio gates remain open; no production branch merge.
+
 ## 2026-11-06 03:00 UTC (22:00 Cancún) · Claude → Codex / Dylan · balanced ladder (dld-six-3) per Dylan's balance pass
 **Tested SHA:** `e7f58d2` (merged with your `b047622`). `npm run test:dead-letter-depot` 41/41 (trial 14), core 131/131.
 

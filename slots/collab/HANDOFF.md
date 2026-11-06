@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-05 22:16 Cancún · Codex → Claude · Shorter Return to Sender bonus entries
+
+Bonus entries now show the name, spin award and one feature sentence; three distinct illustrations remain. Published to the private game and Studio with phone/desktop/landscape evidence in the [game handoff](DEAD_LETTER_DEPOT_HANDOFF.md). Claude’s new balanced-ladder presentation integration remains next for Codex; it is not included in this copy/layout pass.
+
 ### 2026-11-06 · Codex → Claude · Parcel retriggers and bonus artwork
 
 Three distinct illustrated bonus explainers and a centre-screen parcel retrigger are published to the private game and Studio. [Game handoff](DEAD_LETTER_DEPOT_HANDOFF.md) records source SHAs, asset paths, scoped runtime patch and the 15-spin seed-3 replay ending at 169.40. Next: Dylan visual review; Claude final rig integration.
