@@ -1,6 +1,20 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-06 02:46 UTC · Codex → Dylan / Claude · Parcel retriggers and distinct bonus explainers
+
+Dylan requested a centre-screen parcel throw with +5 free spins and visually different bonus explainers. The retrigger now uses the parcel-holding wing, lands at screen centre, stamps the engine-awarded count onto the parcel and holds before play continues. Turbo retains a shorter throw; reduced motion keeps a readable static award. The ordinary retrigger uses no extra modal or acknowledgement.
+
+Night Shift has a teal mailbag and lantern; Double Post has gold express parcels and brass wings; Lost & Found has a violet vault and emerald master key. Each has its own palette, generated hero art, three concise rule rows and ten-spin award. Copy follows the current collections/flat/ladder variant. Existing scatter drops and the parcel-to-camera entry remain. [Bonus and retrigger previews](https://dead-letter-depot.djames1.chatgpt.site/?playtest=power&preview=bonuses) hold for review without changing credits.
+
+Published private game `6dd60d2beb4096dcdddcb223433740e59d2b9dab` and Studio `502f97e82c6f59eb0dde20e0183dda8e254eedd8`. Collaboration base `0b3fcf8`; no new Claude handoff or open PR targeting this branch.
+
+Evidence: phone and short-phone explainers inspected; Double Post/Hidden desktop and Hidden 844×390 checked. Short-phone buttons fit below y=605 in 667px, Hidden landscape at y=349 in 390px. Authoritative ladder Night Shift seed 3 in turbo showed 3 FS → +5, the throw wing, parcel centre (195,422) in 390×844, clean wing restoration and 14 spins left. Its 15-spin bonus finished at the expected 169.40 on a 1.00 bet with fixture balance unchanged. Normal retrigger preview and return were checked. Five ledger tests pass; Studio 194 passed, three skipped. Build, syntax, whitespace and all nine changed static output/source byte comparisons pass. Three WebPs decode at 1536×1024 with alpha. Physical-device and full release gates remain open.
+
+Integration: updated `presentation/{stage-motion,return-delivery,bonus-brief}` modules/styles and [runtime patch](../games/dead-letter-depot/presentation/bonus-presentation.patch). Original PNGs, prompts and representative QA captures/JSON are in private game source `source-art/bonus-briefs-v1/`; runtime heroes at `art/night-mail/bonus-briefs/{regular,super,hidden}.webp`. No engine, math, settlement or rig-coordinate changes; no unrelated game changes or production branch merge.
+
+Next owner: Dylan for visual review; Claude to preserve this presentation during final rig integration. Private access remains unchanged.
+
 ## 2026-11-06 02:20 UTC · Codex → Dylan / Claude · Illustrated win celebrations
 
 Dylan requested generated artwork beyond text. Nice, Big, Epic, Mythic, Max and Total Win now use six original transparent postal illustrations: airmail, bursting parcels, the rotary phone and brass keys. Each enters with an impact, subtle float and the existing mail burst. The live two-decimal count remains separate below. No surrounding panel. The gallery closes its own card while playing and now includes Total Win.

@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-06 · Codex → Claude · Parcel retriggers and bonus artwork
+
+Three distinct illustrated bonus explainers and a centre-screen parcel retrigger are published to the private game and Studio. [Game handoff](DEAD_LETTER_DEPOT_HANDOFF.md) records source SHAs, asset paths, scoped runtime patch and the 15-spin seed-3 replay ending at 169.40. Next: Dylan visual review; Claude final rig integration.
+
 ### 2026-11-06 · Codex → Claude · Illustrated Return to Sender wins
 
 Six generated transparent celebrations now ship in the private game and Studio. The [game handoff](DEAD_LETTER_DEPOT_HANDOFF.md) records exact source SHAs, asset paths, phone/desktop/landscape preview evidence and the scoped gallery patch. Next: Dylan visual review; Claude retain these assets during final integration.

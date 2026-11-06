@@ -1,4 +1,5 @@
 import { finishEntryBeat } from './entry-timing.mjs';
+import { dwell } from './dispatch.mjs';
 
 // Use the painted parcel's coordinates on Frank's artboard, so the throw
 // still connects after a Studio move, resize or phone rotation.
@@ -197,4 +198,47 @@ export async function clearParcelCover(cover) {
     { transform: 'none' },
     { transform: exits[flap.dataset.side] }
   ], 235, 'cubic-bezier(.3,.04,.62,.62)')));
+}
+
+// A retrigger stops in the middle of the scene; it does not open the bonus
+// ticket again. The caller passes the engine award, never a guessed five.
+export async function throwRetriggerParcel(actor,{spins,quick=false,preview=false}={}){
+  if(!Number.isFinite(spins) || spins<=0)return;
+  const layer=document.createElement(preview?'dialog':'div');
+  layer.className='retrigger-delivery';
+  layer.setAttribute('role',preview?'dialog':'status');
+  const mount=()=>{document.body.append(layer);if(preview){layer.dataset.preview='';layer.showModal()}};
+  layer.setAttribute('aria-label','+'+spins+' free spins');
+  const size=Math.min(innerWidth*.64,innerHeight*.47,350);
+  layer.style.setProperty('--parcel-size',size+'px');
+  const parcel=Object.assign(new Image(),{src:parcelArt,alt:'',className:'retrigger-parcel'});
+  const award=document.createElement('div');award.className='retrigger-award';
+  const number=document.createElement('strong');number.textContent='+'+spins;
+  const copy=document.createElement('span');copy.textContent='FREE SPINS';
+  award.append(number,copy);
+  const title=document.createElement('small');title.className='retrigger-caption';title.textContent='EXTRA DELIVERY';
+  layer.append(parcel,title,award);
+  let rig;
+  try {
+    const loaded=await ready;
+    rig=loaded && !reduced.matches && mountThrowWing(actor);
+    if(rig){
+      const release='rotate(100deg)';rig.wing.style.transform=release;
+      await move(rig.wing,[{transform:'rotate(0)'},{transform:'rotate(-17deg)',offset:.55},{transform:release}],quick?180:260,'cubic-bezier(.4,0,.55,1)');
+      const start=handPosition(rig.artboard),flight=cameraFlight(start,size);
+      Object.assign(parcel.style,{width:start.width+'px',left:start.x+'px',top:start.y+'px',transform:flight.at(-1).transform});
+      mount();rig.release();rig.wing.style.transform='rotate(12deg)';
+      await Promise.all([
+        move(parcel,flight,quick?260:370),
+        move(rig.wing,[{transform:release},{transform:'rotate(118deg)',offset:.3},{transform:'rotate(12deg)'}],290,'ease-out')
+      ]);
+      Object.assign(parcel.style,{width:size+'px',left:'50%',top:'50%',transform:'translate(-50%,-50%)'});
+    }else mount();
+    layer.dataset.landed='';
+    if(preview){
+      const button=document.createElement('button');button.className='retrigger-preview-button';button.textContent='Back to previews';layer.append(button);button.focus();
+      await new Promise(done=>{button.addEventListener('click',done,{once:true});layer.addEventListener('cancel',e=>{e.preventDefault();done()},{once:true})});
+    }else await dwell(quick?1050:1650);
+    if(!reduced.matches)await move(layer,[{opacity:1,transform:'none'},{opacity:0,transform:'translateY(-24px) scale(.94)'}],220,'ease-in');
+  }finally{rig?.restore();if(preview)layer.close();layer.remove();}
 }
