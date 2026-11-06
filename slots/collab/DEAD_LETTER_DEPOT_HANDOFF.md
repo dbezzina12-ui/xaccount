@@ -1,6 +1,24 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 22:38 Cancún (03:38 UTC Nov 6) · Codex → Dylan / Claude · Printed postcard bonus buys
+
+Dylan moved the postcard idea to the buy menu and rejected the floating prop artwork. Night Shift, Double Post and Mystery Delivery now use original printed postal scenes: moonlit depot, express mail plane and sealed sorting-room doorway. Distinct airmail borders, stock, postmarks and cost-as-postage remain readable; art stays inside each card. Confirmation keeps the same postcard, Back returns focus to the selected offer, and prices still come from the existing engine cost function.
+
+Published private game `1bf414f60ecb6f1d8be97c6c1365f17d101a6d6e` and Studio `e9408356778352081cbc519a23102b1d59d58476`. [Game → Buy Bonus](https://dead-letter-depot.djames1.chatgpt.site/?playtest=power). Evidence: 390×844, 375×667 and 1366×768 inspected; all three 512×768 images loaded. The short-phone menu scrolls to Mystery and its confirmation fits. Night Shift/Mystery confirmation and Back checked; balance remained 10,000.00. Raising bet 1.00 → 100.00 produced 10,000.00 / 25,000.00 / 40,000.00 offers; the latter two disabled with 10,000.00 available. Large prices fit; lowering the bet restored the original prices. Feature Spins tab still opens. Five ledger tests and Studio 194 pass (three skipped); build, syntax, whitespace and all five packaged file comparisons pass. Live publication is owner-private; browser QA used the exact packaged runtime.
+
+Integration: apply [postcard shop patch](../games/dead-letter-depot/presentation/postcard-shop.patch) at the runtime root and copy the three files listed in [asset manifest](../games/dead-letter-depot/art/POSTCARDS_V1.json). Private game source `source-art/postcards-v1/` retains PNG originals, generation prompts, manifest and QA captures. No bonus-explainer, engine, math, settlement, rig or unrelated-game edits; no production merge.
+
+Checked branch `cd9eaef`, release status and open PRs; no new Claude handoff or PR since the previous verification. Next owner: Dylan visual review; Codex retains the already-recorded balanced-ladder integration follow-up; Claude final rig/math. This closes the postcard presentation request, not the project or its existing release gates.
+
+## 2026-11-05 22:16 Cancún (03:16 UTC Nov 6) · Codex → Dylan / Claude · One-sentence bonus entries
+
+Dylan supplied a Hacksaw reference and asked for less explanation. Each entry now has the bonus name, live free-spin award, one variant-correct feature sentence and Continue. Removed the extra tier label, tagline, three rule rows and trigger caption; enlarged the distinct hero art and spin award. The existing guide, parcel transition and retrigger remain.
+
+Published private game `762a00ee5a18defaaaebf650b3d9759ce0e54c01` and Studio `e5832317d8925e7546d5d92949a460b0ea7b5008`. [Preview all three](https://dead-letter-depot.djames1.chatgpt.site/?playtest=power&preview=bonuses). Evidence: all three at 375×667, regular/hidden at 390×844, Super at 1366×768 and Hidden at 844×390 visually inspected. One feature paragraph per entry; short-phone content ends at y=575/667 and Hidden landscape at y=305/390. Gallery return checked. Five ledger tests pass; Studio 194 pass, three skipped; build, syntax, whitespace and packaged module/style byte comparisons pass. Captures: native `source-art/bonus-briefs-v1/qa/simple/`; cropped phone proof in Studio `source-art/return-to-sender/bonus-simple-qa/`. Local QA used the exact packaged runtime; deployed URL retains owner sign-in.
+
+Changed only `presentation/bonus-brief.{mjs,css}` and QA assets. Inspected collaboration head `c91d149` and Claude's new balanced-ladder handoff; no open PR targeting this branch. This presentation-only publication does **not** yet include `dld-six-3`. **Next Codex:** integrate the balanced playtest, two-basic base rack, final minimum top-up and two-tier Mystery reveal from Claude's 03:00 report. **Next Claude:** final math/rig; **Dylan:** visual review. All existing release/device/audio gates remain open; no production branch merge.
+
 ## 2026-11-06 03:00 UTC (22:00 Cancún) · Claude → Codex / Dylan · balanced ladder (dld-six-3) per Dylan's balance pass
 **Tested SHA:** `e7f58d2` (merged with your `b047622`). `npm run test:dead-letter-depot` 41/41 (trial 14), core 131/131.
 

@@ -1,0 +1,33 @@
+{
+  "generator": "built-in image_gen",
+  "prompts": "prompts.json",
+  "assets": [
+    {
+      "path": "dist/art/night-mail/postcards-v1/doublepost.webp",
+      "sha256": "c30295658917fbfe879585d7bb12519e7dc933ef501f6a6fea51d577d3656ad0",
+      "bytes": 101016,
+      "dimensions": [
+        512,
+        768
+      ]
+    },
+    {
+      "path": "dist/art/night-mail/postcards-v1/mystery.webp",
+      "sha256": "8a44a49e52774bd49289e239ec58c2b7a38af41b4146cfaac2559cb24b10f35a",
+      "bytes": 99342,
+      "dimensions": [
+        512,
+        768
+      ]
+    },
+    {
+      "path": "dist/art/night-mail/postcards-v1/nightshift.webp",
+      "sha256": "0e00971f2a4bd3e1af24c7fc4f83c6c7c479e4d1af59cac558b6c224ba70d75c",
+      "bytes": 121208,
+      "dimensions": [
+        512,
+        768
+      ]
+    }
+  ]
+}
