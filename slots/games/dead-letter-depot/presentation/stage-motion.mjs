@@ -1,6 +1,5 @@
-import { mailCover, fallMail } from './mail-fall.mjs';
 import { mountFrankMotion } from './frank-motion.mjs';
-import { knockOffBadge } from './return-delivery.mjs';
+import { throwParcelAtCamera, clearParcelCover } from './return-delivery.mjs';
 import { dwell } from './dispatch.mjs';
 
 const stylesheet=document.createElement('link');
@@ -42,7 +41,7 @@ function label(tag,className,copy){
 export async function enterDispatch({bonus,scatters,trigger,description,spins,show,onImpact,onReveal}){
   const anchor=document.createComment('Frank stage position');
   frank.before(anchor);
-  const cover=mailCover();
+  let cover;
   const ticket=document.createElement('section');
   ticket.className='dispatch-ticket';
   const button=label('button','cta','Start '+spins+' free spins');
@@ -54,13 +53,9 @@ export async function enterDispatch({bonus,scatters,trigger,description,spins,sh
   try {
     scatters.forEach(tile=>tile.classList.add('dispatch-scatter'));
     if(scatters.length)await dwell(reduced.matches?150:280);
-    restoreParcel=await knockOffBadge(frank,{
-      onImpact,
-      onRelease(){
-        document.body.append(cover);
-        return fallMail(cover);
-      }
-    });
+    const delivery=await throwParcelAtCamera(frank,onImpact);
+    cover=delivery.cover;
+    restoreParcel=delivery.restore;
     restoreParcel();
     frank.dispatchEvent(new CustomEvent('depot:frank',{bubbles:true,detail:{action:'bonus',tier:bonus.tier}}));
     syncShift(bonus.tier);
@@ -68,8 +63,8 @@ export async function enterDispatch({bonus,scatters,trigger,description,spins,sh
     scene.append(frank,ticket);
     document.getElementById('paper').replaceChildren(scene,cover);
     // The same actor stays alive across the cut, finishing the salute and breathing.
-    await fallMail(cover,true);
-    cover.remove();
+    await clearParcelCover(cover);
+    cover?.remove();
     button.disabled=false;
     button.focus({preventScroll:true});
     await new Promise(done=>button.addEventListener('click',done,{once:true}));
@@ -84,7 +79,7 @@ export async function enterDispatch({bonus,scatters,trigger,description,spins,sh
   } finally {
     restoreParcel();
     anchor.replaceWith(frank);
-    cover.remove();
+    cover?.remove();
     scatters.forEach(tile=>tile.classList.remove('dispatch-scatter'));
   }
 }

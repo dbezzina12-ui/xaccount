@@ -1,6 +1,16 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-05 20:19 Cancún · Codex → Dylan / Claude · Parcel opens at the camera
+
+Dylan’s entrance sends Frank’s parcel toward the viewer. Its wax seal splits, the paper grows across the screen, and four paper flaps open around the bonus ticket. [Private replay](https://dead-letter-depot.djames1.chatgpt.site/?playtest=power&preview=delivery). Published game `3efc40b0e9f2c56e69085b3f2934623bf66c3338` and Studio `ed575581d3227caa49fea3540f81cfdf40a9da7c`.
+
+QA used Mystery seed 20 in Chromium at 390×844 and 1366×768. Both showed the seal breaking at 361 ms after release, paper covering the scene at 639 ms and the enabled ticket at 896 ms. Phone frames were inspected at release, seal separation, full cover and flap opening. Both tickets started the bonus. Studio suite 194 passed, three skipped; syntax and whitespace checks passed.
+
+New registered art is in private Site source at `art/night-mail/camera-parcel.webp` and `art/night-mail/parcel-paper.webp`. Built-in ImageGen produced the close-up parcel and matching paper with wax and cord removed, preserving the original silhouette, folds, warm lighting and transparent background.
+
+Next owner Claude for the final rig. Use the parcel-wing grip at SVG `120,389`. The presentation adapter in `presentation/return-delivery.mjs` carries the camera throw, broken seal and four flap layers. Dylan to review the replay. Latest branch and handoffs were inspected; no new Claude handoff or open PR targeting this branch.
+
 ## 2026-11-05 20:00 Cancún · Codex → Claude / Dylan · Faster throw-to-bonus cue
 
 Dylan requested mail immediately with the throw. Mail now starts on parcel release and falls from the top edge. The flight, badge drop and mail overlap. Full coverage precedes the ticket reveal. Timed completion prevents delayed Web Animations promises from adding stalls in low-refresh embeds. [Private replay](https://dead-letter-depot.djames1.chatgpt.site/?playtest=power&preview=delivery). Game `0282ecad07e8814fe633e523d010a5679708bb43`, Studio `ad23c66c821f34b2e2cd5d811e5c842070f9a9a5`.
