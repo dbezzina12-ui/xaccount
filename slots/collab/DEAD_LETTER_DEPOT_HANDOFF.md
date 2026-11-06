@@ -1,6 +1,56 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-06 19:15 UTC (14:15 Cancún) · Claude → Codex / Dylan · Vault (dld-six-6): medium Night Shift and Double Post with a max-win chance, easier Lost & Found max
+**Tested SHA:** `c880a60`, merged with your `bdcc7ad` as `1ba3f95`. Game suite 53/53, core 131/131. Key Ring (`dld-six-5`) outcomes are unchanged, and all 10 of its golden totals still pass.
+
+**Dylan asked for:**
+- medium pays in Night Shift and Double Post that keep a chance at the max win;
+- decent base hits sometimes;
+- an easier Lost & Found max over decent wins and the 1,000× minimum;
+- fewer losing Night Shift and Double Post buys.
+
+Built as `variant: 'vault'` (`dld-six-6`) in [`engine/six.js`](../games/dead-letter-depot/engine/six.js). It keeps the key ring (KEY in every rack, 5 notches, notches carry), the 1,000× Lost & Found minimum and Mystery 90/10, plus:
+- **The vault is 1,000× in every bonus.** Every bonus's ceiling is 1,000×, and the first KEY match puts the meter there for the rest of the bonus. It is the max-win path everywhere.
+- **Night Shift and Double Post** land thick basics (few dead spins) under small, steady meters:
+  - Night Shift starts at 2×. A racked basic adds nothing but still switches the meter on for that spin; a racked premium adds +1; a full ring adds +1.
+  - Double Post starts at 5× and applies every spin. A racked premium adds +1; a full ring adds +1.
+- **Lost & Found** lands more KEYs (weight 9), so its vault opens about 1 in 150. It starts at 30×; a full ring adds +20. Racked symbols add +1/+2 (basics) and +3/+6 (premiums).
+- **Base and Priority Mail:** a racked basic's paying group doubles the spin meter (was +1). Basics land at ×0.96, so the base game's own return is unchanged.
+
+**Result** ([SIX-VAULT.md](../games/dead-letter-depot/SIX-VAULT.md); every mode 96% within its 99.9% interval):
+
+| | Steady | Key ring | Vault |
+|---|---|---|---|
+| Night Shift: under half its price | 46% | 39% | **21%** |
+| Night Shift: median · 25×+ · pays 0 | 55× · 75% · 1 in 161 | 66× · 80% · 1 in 124 | **80× · 96% · 1 in 12,346** |
+| Night Shift max win | never seen | never seen | **1 in 6,369** |
+| Double Post: under half its price | 32% | 30% | **16%** |
+| Double Post: median · 100×+ · pays 0 | 183× · 76% · 1 in 200 | 193× · 77% · 1 in 127 | **209× · 91% · 1 in 24,390** |
+| Double Post max win | never seen | never seen | **1 in 5,263** |
+| Lost & Found max win | 1 in 858 | 1 in 517 | **1 in 159** |
+| Lost & Found median · past 1,000× by itself | 1,024× · 51% | 1,249× · 63% | 1,132× · 57% |
+| Base 25×+ · 100×+ | 1 in 323 · 1 in 1,070 | 1 in 310 · 1 in 961 | **1 in 244 · 1 in 877** |
+| Base hit · any bonus | 22.7% · 1 in 380 | 22.7% · 1 in 380 | 21.5% · 1 in 372 |
+
+- **Paying back at least the price** stays about a third of buys (Night Shift 34%, Double Post 36%). That is set by 96% RTP plus the max-win tail. The vault moves the losing buys up close to the price instead of near zero.
+- **The other reports** are regenerated for the new source hash (same figures). They now also count 50×, 125× and 250× wins, so each lists its under-half-price share.
+
+**Payload for Codex:** the same as Key Ring, with these differences:
+- `spec[tier].ceiling` is 1,000 for every bonus, so the vault always reads 1,000×.
+- A Night Shift basic hit appears in `hits` with `add: 0`.
+- A base or Priority Mail rack event is `{ hits, factor, before, after }` (`factor` = 2^hits) instead of `{ hits, add, before, after }`.
+- Golden seeds: `VAULT_GOLDEN` in `tests/six.test.mjs`. Night Shift 24393 and Double Post 950 open the vault and reach the cap. Mystery 2910 does the same in Lost & Found. Base 134 doubles twice.
+
+**Next for Codex:** bind a `vault` playtest next to Key Ring. Show the vault at 1,000× in every bonus and the base rack doubling. Bonus copy needs Night Shift's "a racked basic switches the meter on".
+**Next for Claude:** release math once Dylan picks; Frank's final rig once the private layers reach me.
+**Questions for Dylan:**
+1. Vault, Key Ring or Steady?
+2. Lost & Found max win at 1 in 159 (median 1,132×), or keep a higher median with a rarer max (Key Ring: 1 in 517, median 1,249×)?
+3. A Night Shift or Double Post max win about 1 in 5,000–6,500 bonuses: rare enough, or more often? A more frequent vault takes from their medium wins.
+
+**Blocked on:** the Frank layers (private). Hourly checks are paused.
+
 ## 2026-11-06 17:23 UTC (12:23 Cancún) · Codex → Dylan / Claude · Key Ring playtest integrated
 
 Picked up Claude’s `fb88811384e21cf2de9835c55d40bb0f7e442b70` handoff since `1df8198`; reviewed both new commits, release status and shared board. No open PR targeting this branch or linked in the new handoff.
