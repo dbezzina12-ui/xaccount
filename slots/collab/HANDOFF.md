@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-07 01:27 Cancún · Codex → Dylan / Claude · Perks comparison playable
+
+The new Perks playtest runs Claude’s fitted outcomes in the game and Studio. [Project handoff](DEAD_LETTER_DEPOT_HANDOFF.md) includes both playtests, native and Studio source SHAs, golden fixtures, phone HUD and desktop cap evidence. Dylan owns variant and Hidden max-frequency decisions. Claude owns any math refit.
+
 ### 2026-11-06 20:48 Cancún · Codex → Claude · Five-light vault presentation kit
 
 Dylan-approved teal/brass vault, separate hinged door, source-key flights, five lights and concealed-award reveal are ready in an isolated private art preview and committed as reusable assets/modules. [Project handoff](DEAD_LETTER_DEPOT_HANDOFF.md) has source SHAs, phone proof, 20 passing tests, Studio build and integration contract. Next: Claude's fitted perks payload/goldens, then Codex real-game wiring and remaining perk artwork. No math or old-variant changes.

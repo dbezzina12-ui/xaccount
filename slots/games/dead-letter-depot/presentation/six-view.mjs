@@ -1,5 +1,5 @@
 // Translate recorded engine events into the shapes used by the reel presenter.
-import {playSixRound, ladderState, ringState, VARIANTS} from '../reel-engine/six.js';
+import {playSixRound, ladderState, ringState, VARIANTS} from '../engine/six.js';
 
 const ringView=e=>({next:e.next,notches:e.notches,vault:e.vault,...('inner' in e?{inner:e.inner}:{})});
 
@@ -8,6 +8,7 @@ export function sixView(options) {
   if(round.spin?.rack)for(const step of round.spin.steps){
     step.rackHits=step.rack.hits;step.meterAfter=step.rack.after;
   }
+  if(options.variant==='perks')return round;
   if (round.bonus) {
     const bonus = round.bonus;
     bonus.selected = bonus.rack;

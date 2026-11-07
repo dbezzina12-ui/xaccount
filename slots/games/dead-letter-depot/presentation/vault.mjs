@@ -40,7 +40,7 @@ function machine() {
 function lights(el, count) {
   [...el.querySelectorAll('.vault-lamps i')].forEach((lamp,i)=>lamp.classList.toggle('is-lit',i<count));
 }
-export function mountVault(host, {onReveal=()=>{}}={}) {
+export function mountVault(host, {onReveal=()=>{},largeAt=25,revealCaption=()=>'ADDED TO YOUR MULTIPLIER'}={}) {
   const ready=Promise.all([atlas,keyArt].map(src=>{const image=new Image();image.src=src;return image.decode();}));
   const dock = machine();host.append(dock);
   const status = document.createElement('span');status.className='vault-status';status.setAttribute('role','status');host.append(status);
@@ -48,13 +48,13 @@ export function mountVault(host, {onReveal=()=>{}}={}) {
   const lifecycle = new AbortController();
   function setNotches(count) {
     if(!Number.isInteger(count)||count<0||count>5)throw new Error('Invalid vault lights');
-    lights(dock,count);status.textContent=count+' / 5 keys';
-    dock.setAttribute('role','img');dock.setAttribute('aria-label','Vault: '+count+' of 5 keys collected');
+    lights(dock,count);status.textContent=count+' / 5 lights';
+    dock.setAttribute('role','img');dock.setAttribute('aria-label','Vault: '+count+' of 5 lights filled');
   }
   setNotches(0);
   async function flight(source, signal) {
     const rect=source.getBoundingClientRect(), target=dock.querySelector('.vault-lock-target').getBoundingClientRect();
-    const key=new Image();key.src=keyArt;key.alt='';key.className='vault-flying-key';
+    const key=new Image();key.src=source.flightArt||keyArt;key.alt='';key.className='vault-flying-key';
     const size=Math.max(34,Math.min(64,rect.width));
     const x=rect.left+rect.width/2,y=rect.top+rect.height/2,dx=target.left+target.width/2-x,dy=target.top+target.height/2-y;
     key.style.cssText=`left:${x-size/2}px;top:${y-size/2}px;width:${size}px;height:${size}px`;
@@ -82,8 +82,8 @@ export function mountVault(host, {onReveal=()=>{}}={}) {
       await animate(hero.querySelector('.vault-door'),[{transform:'scale(.86) perspective(700px) rotateY(0deg)',opacity:1},{transform:'scale(.86) perspective(700px) rotateY(-108deg)',opacity:.5}],280*time,signal);
       // The award becomes visible only after the door has opened.
       hero.querySelector('.vault-prize span').textContent=(starting?'':'+')+value.toLocaleString('en-US')+'×';
-      hero.classList.add('vault-value-shown','award-'+vaultTreatment(value));
-      caption.textContent=starting?'STARTING MULTIPLIER':'ADDED TO YOUR MULTIPLIER';
+      hero.classList.add('vault-value-shown','award-'+(value>=largeAt && value<1000?'large':vaultTreatment(value)));
+      caption.textContent=starting?'STARTING MULTIPLIER':revealCaption(value);
       status.textContent=(starting?'Starting multiplier ':'Vault adds ')+value+' times';
       await onReveal(value,{starting});
       await wait((reduced()?650:560)*time,signal);

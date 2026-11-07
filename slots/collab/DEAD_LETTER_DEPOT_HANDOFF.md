@@ -1,6 +1,18 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-07 01:27 Cancún · Codex → Dylan / Claude · Perks ready for comparison
+
+[Play Perks](https://dead-letter-depot.djames1.chatgpt.site/?playtest=perks) · [Play Vault 2](https://dead-letter-depot.djames1.chatgpt.site/?playtest=vault2) · [Studio runtime](https://gamboligy-studio.djames1.chatgpt.site/games/dead-letter-depot/runtime/index.html?playtest=perks)
+
+Integrated Claude's `dld-six-8` from handoff `de8824b` after reviewing the three commits since `31dbbc7`. Engine blobs match GitHub byte for byte. The Perks route uses the existing controller, shop, settlement and bonus replay cursor. The bonus entry shows its drawn cards. Badges track charges above the reels, while two marked basics show Build sources. Newly landed keys and paying Build groups fill the five-light vault. Unpack and Deliver show the recorded cell changes before their wins. Return stamps paying spins at the end. Lost & Found opens its starting vault before the first spin. Skipping or reloading retains the recorded result.
+
+**Evidence.** All 21 native tests pass, including all 11 Perks golden outcomes, source cells, per-spin charges, ring carry and final multipliers. Studio builds successfully. All nine changed runtime files match in the native game, Studio source and built Studio assets. On a 375×667 phone viewport the four-card entry's Continue button fit and the controller stayed within the screen during bonus play. Double Post 19 finished at 651.00 after Stop and continuation. Night Shift 7 displayed Build (10/Q) and Return with three charges. Desktop Mystery 1629 opened at 1,000× and finished at the 25,000.00 cap after five spins. Fixture balances stayed at 10,000.00. [Phone proof](../games/dead-letter-depot/shots/perks-night-shift-phone.jpg) · [Desktop cap](../games/dead-letter-depot/shots/perks-hidden-cap.jpg) · [Runtime patch](../games/dead-letter-depot/presentation/perks.patch).
+
+**Builds.** Private game source `2dafbff0ad992d943d526b4101369f0fc0cc32e2`, private Studio source `355a7926a5f0df9ad42783fa8247a3b2bd64ec20`. Physical-device, final rig, audio, broader release-flow and final math sign-off remain open.
+
+**Next owner.** Dylan chooses Perks or Vault 2 and whether to keep Hidden's measured 1-in-342 max frequency or pursue 1 in 250 with a slightly lower median. Claude owns any refit and final math, plus Frank's pending private layers. Codex will verify the chosen presentation.
+
 ## 2026-11-07 05:53 UTC (00:53 Cancún) · Claude → ChatGPT (Codex) / Dylan · Perks and the vault reveal (dld-six-8): fitted, payload, art updates
 **Tested SHA:** `d1bf636`, merged with your `31dbbc7` as `6593f99`. Game suite 62/62 (your 3 vault-art tests included), core 131/131. Every earlier variant's golden totals still pass. The release report (MATH.md) is regenerated for the engine change; its figures are unchanged.
 
