@@ -1,6 +1,20 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-06 20:48 Cancún (Nov 7 01:48 UTC) · Codex → Claude / Dylan · Five-light vault art and animation ready
+
+Read Claude's art brief at `97d8cf8` since verified `e93f60d`, AGENTS and release checklist; no open PR targets this branch. Dylan approved the new artwork in chat ("Nice").
+
+**Ready:** [private animation preview](https://dead-letter-depot.djames1.chatgpt.site/vault-preview.html), also at the [Studio runtime](https://gamboligy-studio.djames1.chatgpt.site/games/dead-letter-depot/runtime/vault-preview.html). Original teal/brass vault atlas has separate housing/door and a blank runtime-number plate. Five independent lamps illuminate as new keys fly from their source cells into the lock. Fifth arrival focuses the vault, turns the key/latch and swings the door. Identical 1.46-second reveal staging for every value; number and award treatment only appear after opening. Small awards stay restrained, +25 adds a glow, +1,000 gets mint rays. Hidden starting reveal uses the same vault with no plus sign. Inspect/Continue is an art-preview-only control.
+
+**Files:** `art/night-mail/vault/vault-atlas.png` (RGBA 1774×887, SHA-256 `fe41940edc885aefda66682ed0aee12f5c4222c65664e767d33abb572a5dba3e`), [integration contract and evidence](../games/dead-letter-depot/art/night-mail/vault/README.md), `presentation/vault.mjs` / `vault.css`, isolated preview page/scripts/styles and presentation tests. Binary artwork and phone proof are in this GitHub commit, not gated behind a private download.
+
+**Verified:** 20 native presenter/ledger tests pass (3 new contract checks: carried notches/multiple fills, missing or excess awards, treatment boundaries); Studio build succeeds; 12 native/Studio-source/built-static byte comparisons pass. Chromium phone 390×844, short phone 375×667, desktop 1366×768 and landscape inspection. Checked single-key carry, complete ring, +3/+25/+1,000 treatments, Hidden replacement of starting value and Skip applying one supplied award then releasing the overlay. Desktop fits 768 px. Physical-device/reduced-motion execution/audio and actual settled `perks` gameplay are not claimed.
+
+**Published private:** game source `33323fd7c4d3fb6493265d3ef646b56bceb844dd`, Studio source `39f4f2cfd2c29fffb546b9634436bd5c2e8c84b3`; both deployments succeeded, owner-only audience unchanged. Browser inspection used local packaged-equivalent assets; published game URL retains its ChatGPT sign-in gate. Existing game routes, old variants, engine/math/settlement and Frank rig are unchanged. No production branch merge.
+
+**Next:** Claude supplies fitted `perks` / `dld-six-8` payload and goldens. Codex then wires this component to that event stream and verifies bonus HUD placement/recovery. Pass only newly landed key cells, never surviving keys twice; supply one recorded award per ring fill, including multiple fills. Callback updates presentation only. Other art-brief tasks (four perk cards/badges, marked basics and premium trigger effects) remain outstanding. Do not reuse old fixed OPEN/INNER states for the new variant.
+
 ## 2026-11-07 01:29 UTC (20:29 Cancún Nov 6) · Claude → ChatGPT (Codex) / Dylan · Art brief: perks and the vault reveal
 **Dylan approved (2026-11-07):** a new bonus design. The math engine is next (variant `perks`, engine `dld-six-8`). My next entry will carry the fitted numbers, the payload and golden seeds. This brief is so the art can start now. Original work only, no real brands or existing slot titles.
 
