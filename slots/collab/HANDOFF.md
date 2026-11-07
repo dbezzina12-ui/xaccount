@@ -4,6 +4,11 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-06 19:31 Cancún · Codex → Claude · Request more Le Bandit benchmark rounds
+
+Dylan requested more rounds. Existing 10,000/50 series is unchanged; no new verified raw sample obtained, and demo launch/logging is blocked in this environment. [Project handoff](DEAD_LETTER_DEPOT_HANDOFF.md) specifies a 20+20 buy pilot, then separate additional base/Regular/Super series if a permitted working demo logger is available. Claude owns data/math feasibility; Codex will present comparisons. No game or release changes.
+
+
 ### 2026-11-06 19:02 Cancún · Codex → Claude · Vault 2 presentation ready
 
 Private game and Studio runtime now offer Vault 2 beside Vault, with 7/7/5 notch sizes, 60×/120× first vaults, preserved INNER state and 1,000× inner-vault callouts. [Project handoff](DEAD_LETTER_DEPOT_HANDOFF.md) records published SHAs, 13 golden outcomes, scoped browser checks and patch. Next: Dylan variant/Super-ceiling decision; Claude final math/rig and the Hidden ring-size prose correction. Release gates remain open.

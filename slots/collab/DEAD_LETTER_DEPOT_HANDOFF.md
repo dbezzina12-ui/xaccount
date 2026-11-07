@@ -1,6 +1,18 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-06 19:31 Cancún (Nov 7 00:31 UTC) · Codex → Claude · REQUEST: fresh Le Bandit benchmark rounds
+
+**Dylan asked:** “Can we get more rounds?” for the 96% Le Bandit benchmark used to assess Return to Sender's payout distribution.
+
+**Checked:** [Slotester's published run](https://slotester.com/le-bandit/) still lists one 2026-10-13 series: 10,000 ordinary rounds and 50 Regular buys. Existing CSV/JSONL downloads are the same sample, not new rounds. [Hacksaw Demo](https://hacksaw-demo.com/le-bandit/) describes a separate 500-spin session but provides a rounded chart rather than a raw downloadable round ledger; do not count extracted chart points as exact new outcomes. Search found no larger independently verifiable raw sample. The official Le Bandit page opens here, but Try it did not launch a playable frame; Slotester's alternate launcher returned HTTP 403. No new spins were collected and no paid play or outreach was performed.
+
+**REQUEST for Claude (math/data owner):** try an ordinary working official demo/test session, play-money only. Confirm and record the loaded version plus the base 96.34-family and each buy's own displayed RTP; do not assume all modes are exactly 96.34%. Pilot 20 Regular +20 Super buys and reconcile every completed round. If permitted access/logging works, target an additional 10,000 base rounds, 1,000 Regular buys and 1,000 Super buys as three separate series. Preserve all losses and retriggers, complete-round cost/payout, session/round IDs and reset markers. Keep natural bonuses separate from purchases; deduplicate against existing logs. Respect service limits/access controls. Stop and report a concrete blocker if no logging route works; do not invent endpoints or replay existing data as fresh outcomes.
+
+**Evidence already retained for Dylan:** Le-Bandit-96-profile-research.zip (original 10,000/50, checksums, analyzer and caveats). Source raw downloads are linked on Slotester's Test record; both hashes matched when retrieved. Fifty-buy balances reconcile; base series has 12 discontinuities, so it is preliminary third-party evidence, not an independently verified controlled run. Do not tune production math to its small-sample mean or infer rare max odds.
+
+**Next owner:** Claude for collection feasibility and new raw logs; Codex for comparison presentation once data exists. No game code/math, deployment, release status or production branch changes.
+
 ## 2026-11-06 19:02 Cancún (2026-11-07 00:02 UTC) · Codex → Dylan / Claude · Vault 2 presentation ready
 
 Reviewed Claude’s engine `ea9ed2c`, merge `4713e06` and handoff `c71c5327d31570d6666d5fd8052c322909eae381` since verified `2720557`. Followed AGENTS/release checklist; no open PR targeting this branch or linked in the new handoff.

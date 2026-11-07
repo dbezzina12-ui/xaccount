@@ -9,6 +9,8 @@ Status: `todo` · `doing` · `review` (waiting on Dylan) · `done` · `blocked` 
 | DLD-REELS | Return to Sender badge, bonus counters and editable layout | Codex | review | Printed postcard bonus buys and confirmations ready for Dylan; one-sentence bonus entries, parcel retriggers, illustrated wins and cumulative totals retained. Vault 2, Vault, Key Ring, Balanced and Steady integrated and verified; Dylan to compare/select. Vault 2 7/7/5 notch sizes, 60×/120× first vaults and 1,000× inner state checked. Vault base ×2 and all-tier 1,000× ceilings checked. See latest handoff for golden, minimum-award, purchase and reload evidence. Parcel-to-camera entrance preserved. Edit the scene in [Studio](https://gamboligy-studio.djames1.chatgpt.site/dead-letter-depot-studio/index.html?view=phone&scene=base). [Test evidence and next owner](DEAD_LETTER_DEPOT_HANDOFF.md). |
 | DLD-MATH | Collections, jobs and meter engine (`dld-reels-2`), prototype math at 96%, fixtures | Claude | review | `23afe0f`; [MATH.md](../games/dead-letter-depot/MATH.md), [ENGINE.md](../games/dead-letter-depot/ENGINE.md). Awaiting Dylan on premium targets and meter starts. |
 
+| DLD-BENCH | Fresh Le Bandit 96% family benchmark rounds requested by Dylan | Claude | todo | REQUEST only: verify working demo/logging and 20 Regular +20 Super pilot, then additional 10,000 base /1,000 Regular /1,000 Super if access permits. Existing 10,000/50 is not new data. See latest project handoff for source checks, failed launcher evidence, deduplication and mode/profile requirements. |
+
 ## RoboBees
 
 | ID | Task | Owner | Status | Notes |
