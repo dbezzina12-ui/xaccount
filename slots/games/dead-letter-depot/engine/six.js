@@ -20,7 +20,7 @@
 import { compileLands, spinBoard, tierOf, seeded } from './engine.js';
 import { PAYING, PREMIUMS, LOWS, CAP, BONUSES, RETRIGGER, MAX_FREE_SPINS, MYSTERY, LAND, bonusFor } from './rules.js';
 
-export const SIX_VERSION = 'dld-six-1', LADDER_VERSION = 'dld-six-2', BALANCED_VERSION = 'dld-six-3', STEADY_VERSION = 'dld-six-4', KEYRING_VERSION = 'dld-six-5', VAULT_VERSION = 'dld-six-6', VAULT2_VERSION = 'dld-six-7';
+export const SIX_VERSION = 'dld-six-1', LADDER_VERSION = 'dld-six-2', BALANCED_VERSION = 'dld-six-3', STEADY_VERSION = 'dld-six-4', KEYRING_VERSION = 'dld-six-5', VAULT_VERSION = 'dld-six-6', VAULT2_VERSION = 'dld-six-7', PERKS_VERSION = 'dld-six-8';
 export { seeded };
 
 // The trial's landings: no stamps. Free spins land thick basics so rack hits
@@ -133,6 +133,42 @@ export const SIX_VAULT2 = Object.freeze({
   super: Object.freeze({ pays: FREE, fs: 0.012, lowScale: 2.12, keyWeight: 9, start: 5, ceiling: 120, innerAt: 1000, when: 'always', ladder: true, keyRack: true, addCap: Object.freeze([0, 1]), ring: 7, ringAdd: 1, vault: true }),
   hidden: Object.freeze({ pays: HIDDEN, fs: 0.012, lowScale: 1.4908, keyWeight: 8.5, start: 30, ceiling: 1000, when: 'always', ladder: true, keyRack: true, addCap: Object.freeze([2, 6]), ring: 5, ringAdd: 20, vault: true, floor: 100000 }),
 });
+// Perks and the vault reveal (Dylan, 2026-11-07; dld-six-8). Every bonus has a
+// 5-notch key ring: every KEY that lands turns a notch, and each full ring
+// opens the vault, which reveals a multiplier drawn from the bonus's table
+// and adds it to the bonus multiplier for the rest of the bonus. Lost & Found
+// also opens a vault before its first spin (its starting multiplier). The
+// multiplier applies to every spin. Bonuses start with perks:
+//   build    two marked basics; each paying group of one turns a ring notch
+//   return   3+ ENVELOPEs on the board: the spin's wins pay twice when it ends
+//   unpack   5+ PARCELs on the board turn four more cells into its most common premium
+//   deliver  2+ PHONEs on the board bring in the symbols missing from the nearest group
+// Night Shift draws 2 of them at random; Double Post and Lost & Found get all
+// 4. A premium perk fires at most once a spin (the first check that finds
+// enough of its symbol: engine.js spinBoard perks) and at most `charges` times
+// a bonus. The counts are balanced so the four perks are worth about the same
+// in Night Shift. Draw order: the perks, Build's basics, Lost & Found's
+// opening vault, then the spins; each reveal is drawn when its ring fills,
+// after that spin's board. The base game is Vault 2's.
+export const PERKS = Object.freeze(['build', 'return', 'unpack', 'deliver']);
+export const PERK_SYMBOL = Object.freeze({ return: 'ENVELOPE', unpack: 'PARCEL', deliver: 'PHONE' });
+const table = (rows) => Object.freeze(rows.map((r) => Object.freeze(r)));
+// How many of a perk's symbol on the board fire it (balanced so the four perks
+// are worth about the same in Night Shift).
+const PERK_AT = Object.freeze({ return: 3, unpack: 5, deliver: 2 });
+// Each premium perk works at most this many times a bonus (Build is not limited).
+const CHARGES_3 = Object.freeze({ return: 3, unpack: 3, deliver: 3 }), CHARGES_2 = Object.freeze({ return: 2, unpack: 2, deliver: 2 });
+export const SIX_PERKS = Object.freeze({
+  base: Object.freeze({ pays: LAND.base.pays, fs: 0.0181, lowScale: 0.96, rack: 2, rackRule: 'double' }),
+  priority: Object.freeze({ pays: LAND.base.pays, fs: 0.03, lowScale: 0.96, rack: 2, rackRule: 'double' }),
+  regular: Object.freeze({ pays: FREE, fs: 0.012, lowScale: 1.102, keyWeight: 4, start: 2, ceiling: 1000, ring: 5, perks: 2, perkAt: PERK_AT, charges: CHARGES_3, buildMarks: 2,
+    reveal: table([[1, 75], [2, 18], [3, 4], [5, 2], [10, 0.7], [25, 0.25], [100, 0.04], [1000, 0.002]]) }),
+  super: Object.freeze({ pays: FREE, fs: 0.012, lowScale: 1.0159, keyWeight: 3.5, start: 5, ceiling: 1000, ring: 5, perks: 4, perkAt: PERK_AT, charges: CHARGES_2, buildMarks: 2,
+    reveal: table([[1, 60], [2, 25], [3, 8], [5, 4], [10, 2], [25, 0.6], [100, 0.1], [250, 0.02], [1000, 0.0014]]) }),
+  hidden: Object.freeze({ pays: HIDDEN, fs: 0.012, lowScale: 1.4615, keyWeight: 6, start: 0, ceiling: 1000, ring: 5, perks: 4, perkAt: PERK_AT, charges: CHARGES_3, buildMarks: 2, floor: 100000,
+    opening: table([[15, 25], [20, 25], [25, 20], [30, 15], [40, 8], [60, 2], [250, 0.4], [1000, 0.3]]),
+    reveal: table([[1, 40], [2, 30], [5, 15], [10, 8], [25, 4], [50, 1.5], [100, 0.5], [250, 0.1], [1000, 0.02]]) }),
+});
 export const SIX_MODES = Object.freeze({
   base: Object.freeze({ title: 'Base Spin', cost: 1, kind: 'spin', land: 'base' }),
   priority: Object.freeze({ title: 'Priority Mail', cost: 3, kind: 'spin', land: 'priority' }),
@@ -144,7 +180,7 @@ export const SIX_MYSTERY = MYSTERY;
 export const ADD = Object.freeze(Object.fromEntries(PAYING.map((s) => [s, s === 'KEY' ? 0 : LOWS.includes(s) ? 1 : 3])));
 
 export const sixLands = (spec = SIX) => compileLands(Object.fromEntries(Object.entries(spec).map(([k, l]) => [k, {
-  pays: Object.fromEntries(PAYING.map((s) => [s, LOWS.includes(s) ? l.pays[s] * l.lowScale : s === 'KEY' && l.keyWeight ? l.keyWeight : l.pays[s]])), fs: l.fs, stamp: 0,
+  pays: Object.fromEntries(PAYING.map((s) => [s, LOWS.includes(s) ? l.pays[s] * l.lowScale : s === 'KEY' ? (l.keyWeight || l.pays[s]) : l.premScale ? l.pays[s] * l.premScale : l.pays[s]])), fs: l.fs, stamp: 0,
 }])));
 const LANDS = sixLands();
 export const VARIANTS = Object.freeze({
@@ -155,6 +191,7 @@ export const VARIANTS = Object.freeze({
   keyring: Object.freeze({ version: KEYRING_VERSION, spec: SIX_KEYRING, lands: sixLands(SIX_KEYRING), mystery: BALANCED_MYSTERY }),
   vault: Object.freeze({ version: VAULT_VERSION, spec: SIX_VAULT, lands: sixLands(SIX_VAULT), mystery: BALANCED_MYSTERY }),
   vault2: Object.freeze({ version: VAULT2_VERSION, spec: SIX_VAULT2, lands: sixLands(SIX_VAULT2), mystery: BALANCED_MYSTERY }),
+  perks: Object.freeze({ version: PERKS_VERSION, spec: SIX_PERKS, lands: sixLands(SIX_PERKS), mystery: BALANCED_MYSTERY }),
 });
 const NEVER = Object.freeze(Object.fromEntries(PAYING.map((s) => [s, Infinity])));
 
@@ -231,6 +268,56 @@ function ringSpin(tier, rng, rack, meter, budget, { lands, spec, record, state }
   return out;
 }
 
+// ---- perks (dld-six-8) ----
+export const revealFrom = (rows, u) => { let r = u * rows.reduce((a, [, w]) => a + w, 0); for (const [v, w] of rows) if ((r -= w) < 0) return v; return rows.at(-1)[0]; };
+export const PERK_OF = Object.freeze(Object.fromEntries(Object.entries(PERK_SYMBOL).map(([p, s]) => [s, p])));
+export function drawPerks(t, rng) {
+  const drawn = t.perks >= PERKS.length ? [...PERKS] : sample(PERKS, t.perks, rng);
+  return PERKS.filter((p) => drawn.includes(p));
+}
+// One perk event: the KEYs that landed and each paying group of a Build basic
+// turn notches; each full ring opens the vault, whose reveal adds to the meter.
+export function perkStep(before, wins, keys, state, t, rng) {
+  const hits = state.build ? wins.map((w) => w.s).filter((s) => state.build.includes(s)) : [];
+  const notches = state.notches + keys + hits.length, fills = Math.floor(notches / t.ring), reveals = [];
+  state.notches = notches % t.ring;
+  for (let i = 0; i < fills; i++) reveals.push(revealFrom(t.reveal, rng()));
+  return { hits, keys, fills, notches: state.notches, reveals, before, after: Math.min(t.ceiling, before + reveals.reduce((a, b) => a + b, 0)) };
+}
+function perkSpin(tier, rng, meter, budget, { lands, spec, record, state, perks }) {
+  const r = spinBoard(tier, rng, { lands, targets: NEVER, record: true, perks });
+  const t = spec[tier], land = perkStep(meter, [], keysIn(r.board.flat().map((c) => c.s)), state, t, rng), reveals = [...land.reveals];
+  let value = land.after, fills = land.fills;
+  for (const step of r.steps) {
+    const e = perkStep(value, step.wins, keysIn(step.refills.map((f) => f[2])), state, t, rng);
+    value = e.after; fills += e.fills; reveals.push(...e.reveals);
+    if (record) step.rack = e;
+  }
+  const win = r.subtotal * value, paid = Math.min(win, budget);
+  const out = { subtotal: r.subtotal, meter: { start: meter, after: value, fills, notches: state.notches, active: true }, reveals, perks: (r.perks ?? []).map((f) => ({ ...f, perk: PERK_OF[f.s] })), multiplier: value, win, paid, fs: r.fs, retrigger: 0, keyHits: 0 };
+  if (record) Object.assign(out, { board: r.board, land, steps: r.steps });
+  return out;
+}
+function perkBonus(tier, rng, budget, { lands, spec, record }) {
+  const t = spec[tier], perks = drawPerks(t, rng), build = perks.includes('build') ? sample(LOWS, t.buildMarks, rng) : null;
+  const opening = t.opening ? revealFrom(t.opening, rng()) : 0, charges = Object.fromEntries(perks.filter((p) => PERK_SYMBOL[p]).map((p) => [p, t.charges[p]]));
+  const state = { build, notches: 0 }, spins = [];
+  let meter = Math.min(t.ceiling, t.start + opening), awarded = BONUSES[tier].spins, total = 0;
+  while (spins.length < awarded && total < budget) {
+    const triggers = Object.keys(charges).filter((p) => charges[p] > 0).map((p) => [PERK_SYMBOL[p], t.perkAt[p]]);
+    const s = perkSpin(tier, rng, meter, budget - total, { lands, spec, record, state, perks: triggers });
+    for (const f of s.perks) charges[f.perk] -= 1;
+    s.charges = { ...charges };
+    meter = s.meter.after;
+    if (s.fs >= RETRIGGER.fs && awarded < MAX_FREE_SPINS) { s.retrigger = Math.min(RETRIGGER.spins, MAX_FREE_SPINS - awarded); awarded += s.retrigger; }
+    total += s.paid; spins.push(s);
+  }
+  const floorTopUp = t.floor && total < Math.min(t.floor, budget) ? Math.min(t.floor, budget) - total : 0;
+  total += floorTopUp;
+  return { tier, title: BONUSES[tier].title, perks, build, rack: build ?? [], opening, spins, awarded, meter, total, floorTopUp, capped: total >= budget, keyHits: 0,
+    ringFills: spins.reduce((a, s) => a + s.meter.fills, 0), reveals: spins.flatMap((s) => s.reveals), perkFires: spins.reduce((a, s) => a + s.perks.length, 0) };
+}
+
 function freeSpin(tier, rng, rack, meter, budget, { lands, spec, record, state }) {
   const r = spinBoard(tier, rng, { lands, targets: NEVER, record: true });
   const t = spec[tier], events = [];
@@ -244,6 +331,7 @@ function freeSpin(tier, rng, rack, meter, budget, { lands, spec, record, state }
 }
 
 export function playSixBonus(tier, rng, budget = CAP, { lands = LANDS, spec = SIX, record = true } = {}) {
+  if (spec[tier].perks) return perkBonus(tier, rng, budget, { lands, spec, record });
   const t = spec[tier], rack = selectRack(t.keyRack ? 'hidden' : tier, rng), spins = [], state = t.ring ? ringState(rack) : t.ladder ? ladderState(rack) : null;
   let meter = spec[tier].start, awarded = BONUSES[tier].spins, total = 0;
   while (spins.length < awarded && total < budget) {
@@ -279,7 +367,7 @@ export function playSixSpin(land, rng, { lands, spec, record = false }) {
   return spin;
 }
 
-// variant 'flat' (dld-six-1), 'ladder' (dld-six-2), 'balanced' (dld-six-3), 'steady' (dld-six-4), 'keyring' (dld-six-5), 'vault' (dld-six-6) or 'vault2' (dld-six-7); tools may pass spec and lands.
+// variant 'flat' (dld-six-1), 'ladder' (dld-six-2), 'balanced' (dld-six-3), 'steady' (dld-six-4), 'keyring' (dld-six-5), 'vault' (dld-six-6), 'vault2' (dld-six-7) or 'perks' (dld-six-8); tools may pass spec and lands.
 export function playSixRound({ mode = 'base', rng, variant = 'flat', lands = null, spec = null, record = true } = {}) {
   const v = VARIANTS[variant];
   if (!v) throw Error(`Unknown trial variant ${variant}`);

@@ -2,8 +2,8 @@
 // Dead Letter Depot: the six-symbol bonus trial (engine/six.js). Simulates,
 // fits and reports it APART from the release math (MATH.md), on worker
 // threads, through the trial engine itself.
-//   node tools/math/dead-letter-depot-six.mjs [--variant flat|ladder|balanced|steady|keyring|vault|vault2] [--fit] [--write] [--render] [--bonus 4e5] [--spins 6e6]
-// --fit solves Night Shift and Double Post lowScale, Lost & Found keyWeight
+//   node tools/math/dead-letter-depot-six.mjs [--variant flat|ladder|balanced|steady|keyring|vault|vault2|perks] [--fit] [--write] [--render] [--bonus 4e5] [--spins 6e6]
+// --fit [--only regular,super] [--no-spins] solves Night Shift and Double Post lowScale, Lost & Found keyWeight
 // (Mystery 400x at 96%) and the base and Priority Mail FS chances; --write
 // stores them in engine/six.js. Without --fit it measures and writes
 // games/dead-letter-depot/SIX.md and math/six-summary.json.
@@ -25,12 +25,13 @@ const specWith = (patch = {}, variant = 'flat') => Object.fromEntries(Object.ent
 // ---- worker jobs ----
 export function chunk(job) {
   const variant = job.variant ?? 'flat', spec = specWith(job.patch, variant), lands = sixLands(spec), g = seeded(job.seed);
-  const o = { n: 0, floored: 0, sum: 0, sum2: 0, max: 0, capped: 0, zero: 0, over: OVER.map(() => 0), trig: { regular: 0, super: 0, hidden: 0 }, keyRack: 0, keyBonus: 0, keyHits: 0, hitSpins: 0, spins: 0, retrig: 0, meterHist: new Array(12).fill(0), tiers: {}, vals: job.job === 'bonus' && !job.noVals ? new Float64Array(job.n) : null, inners: 0, ringFills: 0, ringBonus: 0, vaults: 0, fillHist: new Array(8).fill(0), activeSpins: 0 };
+  const o = { n: 0, floored: 0, sum: 0, sum2: 0, max: 0, capped: 0, zero: 0, over: OVER.map(() => 0), trig: { regular: 0, super: 0, hidden: 0 }, keyRack: 0, keyBonus: 0, keyHits: 0, hitSpins: 0, spins: 0, retrig: 0, meterHist: new Array(12).fill(0), tiers: {}, vals: job.job === 'bonus' && !job.noVals ? new Float64Array(job.n) : null, inners: 0, fires: {}, combos: {}, revealSum: 0, openSum: 0, perkBonuses: 0, ringFills: 0, ringBonus: 0, vaults: 0, fillHist: new Array(8).fill(0), activeSpins: 0 };
   const add = (x) => { o.n++; o.sum += x; o.sum2 += x * x; if (x > o.max) o.max = x; if (!x) o.zero++; for (let j = 0; j < OVER.length; j++) if (x >= OVER[j]) o.over[j]++; };
   const noteBonus = (b) => {
     if (b.rack.includes('KEY')) { o.keyRack++; if (b.keyHits) o.keyBonus++; o.keyHits += b.keyHits; }
     for (const s of b.spins) { o.spins++; if (s.meter.hit) o.hitSpins++; if (s.meter.active) o.activeSpins++; if (s.retrigger) o.retrig++; }
     o.meterHist[Math.min(11, Math.floor(Math.log2(Math.max(1, b.meter))))]++;
+    if (b.perks) { o.perkBonuses++; o.openSum += b.opening; o.revealSum += b.reveals.reduce((a, v) => a + v, 0); for (const sp of b.spins) for (const f of sp.perks) o.fires[f.perk] = (o.fires[f.perk] ?? 0) + 1; const k = b.perks.join('+'), c = (o.combos[k] ??= [0, 0, 0]); c[0]++; c[1] += b.total / 100; if (b.total / 100 < { regular: 50, super: 125 }[b.tier]) c[2]++; }
     if (b.ringFills !== undefined) { o.ringFills += b.ringFills; if (b.ringFills) o.ringBonus++; if (b.vault) o.vaults++; o.fillHist[Math.min(7, b.ringFills)]++; }
   };
   for (let i = 0; i < job.n; i++) {
@@ -43,7 +44,9 @@ export function chunk(job) {
 }
 const merge = (a, b) => ({ ...a, n: a.n + b.n, floored: a.floored + b.floored, sum: a.sum + b.sum, sum2: a.sum2 + b.sum2, max: Math.max(a.max, b.max), capped: a.capped + b.capped, zero: a.zero + b.zero, over: a.over.map((v, j) => v + b.over[j]),
   trig: Object.fromEntries(Object.keys(a.trig).map((k) => [k, a.trig[k] + b.trig[k]])), keyRack: a.keyRack + b.keyRack, keyBonus: a.keyBonus + b.keyBonus, keyHits: a.keyHits + b.keyHits, hitSpins: a.hitSpins + b.hitSpins, spins: a.spins + b.spins, retrig: a.retrig + b.retrig,
-  meterHist: a.meterHist.map((v, j) => v + b.meterHist[j]), vals: a.vals && b.vals ? Float64Array.from([...a.vals, ...b.vals]) : null, ringFills: a.ringFills + b.ringFills, ringBonus: a.ringBonus + b.ringBonus, vaults: a.vaults + b.vaults, fillHist: a.fillHist.map((v, j) => v + b.fillHist[j]), activeSpins: (a.activeSpins ?? 0) + (b.activeSpins ?? 0), inners: (a.inners ?? 0) + (b.inners ?? 0), tiers: Object.fromEntries([...new Set([...Object.keys(a.tiers), ...Object.keys(b.tiers)])].map((k) => [k, (a.tiers[k] ?? 0) + (b.tiers[k] ?? 0)])) });
+  meterHist: a.meterHist.map((v, j) => v + b.meterHist[j]), vals: a.vals && b.vals ? Float64Array.from([...a.vals, ...b.vals]) : null, ringFills: a.ringFills + b.ringFills, ringBonus: a.ringBonus + b.ringBonus, vaults: a.vaults + b.vaults, fillHist: a.fillHist.map((v, j) => v + b.fillHist[j]), activeSpins: (a.activeSpins ?? 0) + (b.activeSpins ?? 0), inners: (a.inners ?? 0) + (b.inners ?? 0), perkBonuses: (a.perkBonuses ?? 0) + (b.perkBonuses ?? 0), revealSum: (a.revealSum ?? 0) + (b.revealSum ?? 0), openSum: (a.openSum ?? 0) + (b.openSum ?? 0),
+  fires: Object.fromEntries([...new Set([...Object.keys(a.fires ?? {}), ...Object.keys(b.fires ?? {})])].map((k) => [k, (a.fires?.[k] ?? 0) + (b.fires?.[k] ?? 0)])),
+  combos: Object.fromEntries([...new Set([...Object.keys(a.combos ?? {}), ...Object.keys(b.combos ?? {})])].map((k) => [k, [0, 1, 2].map((j) => (a.combos?.[k]?.[j] ?? 0) + (b.combos?.[k]?.[j] ?? 0))])), tiers: Object.fromEntries([...new Set([...Object.keys(a.tiers), ...Object.keys(b.tiers)])].map((k) => [k, (a.tiers[k] ?? 0) + (b.tiers[k] ?? 0)])) });
 export async function run(job, threads = availableParallelism()) {
   const per = Math.ceil(job.n / threads);
   const parts = await Promise.all(Array.from({ length: threads }, (_, w) => new Promise((resolve, reject) => {
@@ -63,18 +66,18 @@ async function solve(g, lo, hi, tol) {
   for (let i = 0; i < 14; i++) { x = (lo * fhi - hi * flo) / (fhi - flo); const fx = sign * (await g(x)); if (Math.abs(fx) < tol) break; if (fx > 0) { hi = x; fhi = fx; flo /= 2; } else { lo = x; flo = fx; fhi /= 2; } }
   return Math.round(x * 1e4) / 1e4;
 }
-export async function fit({ bonusN = 4e5, spinN = 6e6, seed = 913, variant = 'flat' } = {}) {
+export async function fit({ bonusN = 4e5, spinN = 6e6, seed = 913, variant = 'flat', only = null, spins = true } = {}) {
   const target = { regular: RTP * 100, super: RTP * 250 }, w = VARIANTS[variant].mystery ?? SIX_MYSTERY;
   target.hidden = (RTP * 400 - w.regular * target.regular - w.super * target.super) / w.hidden;
   const patch = {}, means = {};
-  const ranges = variant === 'vault2' ? [['regular', 'lowScale', 1.65, 1.95], ['super', 'lowScale', 1.95, 2.3], ['hidden', 'lowScale', 1.35, 1.65]] : variant === 'vault' ? [['regular', 'lowScale', 1.3, 2.3], ['super', 'lowScale', 1.5, 2.6], ['hidden', 'lowScale', 1.2, 1.8]] : variant === 'keyring' ? [['regular', 'lowScale', 0.65, 0.9], ['super', 'lowScale', 0.65, 0.9], ['hidden', 'lowScale', 1.25, 1.45]] : variant === 'steady' ? [['regular', 'lowScale', 0.4, 2], ['super', 'lowScale', 0.4, 2], ['hidden', 'lowScale', 0.8, 2.5]] : variant === 'balanced' ? [['regular', 'lowScale', 0.4, 2], ['super', 'lowScale', 0.4, 2], ['hidden', 'keyWeight', 10, 45]] : variant === 'ladder' ? [['regular', 'lowScale', 0.3, 1.6], ['super', 'lowScale', 0.3, 1.6], ['hidden', 'keyWeight', 3, 45]] : [['regular', 'lowScale', 0.8, 1.6], ['super', 'lowScale', 0.8, 1.6], ['hidden', 'keyWeight', 20, 45]];
-  for (const [tier, knob, lo, hi] of ranges) {
+  const ranges = variant === 'perks' ? [['regular', 'lowScale', 0.9, 1.3], ['super', 'lowScale', 0.8, 1.25], ['hidden', 'lowScale', 1.2, 1.7]] : variant === 'vault2' ? [['regular', 'lowScale', 1.65, 1.95], ['super', 'lowScale', 1.95, 2.3], ['hidden', 'lowScale', 1.35, 1.65]] : variant === 'vault' ? [['regular', 'lowScale', 1.3, 2.3], ['super', 'lowScale', 1.5, 2.6], ['hidden', 'lowScale', 1.2, 1.8]] : variant === 'keyring' ? [['regular', 'lowScale', 0.65, 0.9], ['super', 'lowScale', 0.65, 0.9], ['hidden', 'lowScale', 1.25, 1.45]] : variant === 'steady' ? [['regular', 'lowScale', 0.4, 2], ['super', 'lowScale', 0.4, 2], ['hidden', 'lowScale', 0.8, 2.5]] : variant === 'balanced' ? [['regular', 'lowScale', 0.4, 2], ['super', 'lowScale', 0.4, 2], ['hidden', 'keyWeight', 10, 45]] : variant === 'ladder' ? [['regular', 'lowScale', 0.3, 1.6], ['super', 'lowScale', 0.3, 1.6], ['hidden', 'keyWeight', 3, 45]] : [['regular', 'lowScale', 0.8, 1.6], ['super', 'lowScale', 0.8, 1.6], ['hidden', 'keyWeight', 20, 45]];
+  for (const [tier, knob, lo, hi] of ranges.filter(([t]) => !only || only.includes(t))) {
     const f = async (v) => (await run({ job: 'bonus', tier, n: bonusN, seed, variant, patch: { ...patch, [tier]: { [knob]: v } } })).mean - target[tier];
     patch[tier] = { [knob]: await solve(f, lo, hi, 0.002 * target[tier]) };
     means[tier] = (await run({ job: 'bonus', tier, n: bonusN, seed, variant, patch })).mean;
     console.log(`${tier} ${knob} ${patch[tier][knob]} -> ${means[tier].toFixed(2)}x (target ${target[tier].toFixed(2)})`);
   }
-  for (const mode of ['base', 'priority']) {
+  for (const mode of spins ? ['base', 'priority'] : []) {
     const cost = SIX_MODES[mode].cost;
     const f = async (fs) => { const s = await run({ job: 'spins', mode, n: spinN, seed, variant, patch: { ...patch, [mode]: { fs } } }); return (s.mean + Object.entries(s.trig).reduce((a, [t, c]) => a + (c / s.n) * means[t], 0)) / cost - RTP; };
     patch[mode] = { fs: await solve(f, 0.002, 0.08, 0.0005) };
@@ -84,7 +87,7 @@ export async function fit({ bonusN = 4e5, spinN = 6e6, seed = 913, variant = 'fl
 }
 function write(patch, variant = 'flat') {
   const path = new URL('engine/six.js', GAME), src = readFileSync(path, 'utf8');
-  const block = { flat: 'SIX', ladder: 'SIX_LADDER', balanced: 'SIX_BALANCED', steady: 'SIX_STEADY', keyring: 'SIX_KEYRING', vault: 'SIX_VAULT', vault2: 'SIX_VAULT2' }[variant];
+  const block = { flat: 'SIX', ladder: 'SIX_LADDER', balanced: 'SIX_BALANCED', steady: 'SIX_STEADY', keyring: 'SIX_KEYRING', vault: 'SIX_VAULT', vault2: 'SIX_VAULT2', perks: 'SIX_PERKS' }[variant];
   if (!block) throw Error(`Unknown variant ${variant}`);
   const head = `export const ${block} = Object.freeze({`, a = src.indexOf(head), b = src.indexOf('\n});', a);
   if (a < 0) throw Error(`no ${head} in six.js`);
@@ -128,7 +131,8 @@ async function report({ bonusN = 1e6, spinN = 1e7, roundN = 1e7, buyN = 1e6, see
   for (const tier of ['regular', 'super', 'hidden']) {
     const r = await run({ job: 'bonus', tier, n: bonusN, seed: seed + 1, variant });
     s.bonuses[tier] = { floorShare: r.floored / r.n, n: r.n, mean: r.mean, se: r.se, sd: r.sd, zero: r.zero / r.n, max: r.max, capped: r.capped, over: Object.fromEntries(OVER.map((x, j) => [x, r.over[j] / r.n])), keyInRack: r.keyRack / r.n, keyBonusShare: r.keyRack ? r.keyBonus / r.keyRack : 0, keyHitsPerKeyBonus: r.keyRack ? r.keyHits / r.keyRack : 0, hitSpinShare: r.hitSpins / r.spins, spins: r.spins / r.n, retriggerPerBonus: r.retrig / r.n, meterHist: r.meterHist.map((v) => v / r.n), quantiles: quantiles(r.vals) };
-    if (VARIANTS[variant].spec[tier].innerAt) {
+    if (VARIANTS[variant].spec[tier].perks) Object.assign(s.bonuses[tier], { firesPerBonus: Object.fromEntries(Object.entries(r.fires).map(([k, v]) => [k, v / r.n])), combos: Object.fromEntries(Object.entries(r.combos).map(([k, [c, t, l]]) => [k, { share: c / r.n, mean: t / c, underHalf: l / c }])), revealsPerBonus: r.ringFills / r.n, avgReveal: r.revealSum / Math.max(1, r.ringFills), avgOpening: r.openSum / r.n });
+    if (VARIANTS[variant].spec[tier].innerAt || (VARIANTS[variant].spec[tier].perks && tier !== 'hidden')) {
       const big = await run({ job: 'bonus', tier, n: 4e6, seed: seed + 5, variant, noVals: true });
       s.bonuses[tier].maxRun = { n: big.n, capped: big.capped, inners: big.inners, vaults: big.vaults };
     }
@@ -157,6 +161,7 @@ async function report({ bonusN = 1e6, spinN = 1e7, roundN = 1e7, buyN = 1e6, see
 
 function markdown(s) {
   const L = [], b = s.bonuses;
+  if (s.variant === 'perks') return perksMarkdown(s);
   const ladder = s.variant !== 'flat', inner = s.variant === 'vault2', vault = s.variant === 'vault' || inner, ring = s.variant === 'keyring' || vault, balanced = s.variant === 'balanced' || s.variant === 'steady' || ring;
   L.push(`# Dead Letter Depot · six-symbol bonus trial${inner ? ', vault 2' : vault ? ', the vault' : ring ? ', key ring' : s.variant === 'steady' ? ', steady ladder' : balanced ? ', balanced ladder' : ladder ? ', ladder variant' : ''} (separate from release math)`, '');
   L.push(`Generated by \`tools/math/dead-letter-depot-six.mjs\` · trial engine \`${s.version}\` · source \`${s.source}\` · seed ${s.seed}. **This is a producer trial.** These figures are not the release RTP in [MATH.md](MATH.md).`, '');
@@ -224,16 +229,58 @@ function markdown(s) {
   return L.join('\n');
 }
 
+function perksMarkdown(s) {
+  const L = [], b = s.bonuses, sp = s.spec, name = { regular: 'Night Shift', super: 'Double Post', hidden: 'Lost & Found' };
+  const tbl = (rows) => rows.map(([v, w]) => `+${v.toLocaleString('en-US')}× ${pct(w / rows.reduce((a, [, x]) => a + x, 0), w / rows.reduce((a, [, x]) => a + x, 0) < 0.001 ? 4 : 1)}`).join(' · ');
+  const mr = (x) => (x.maxRun ? (x.maxRun.capped ? `1 in ${Math.round(x.maxRun.n / x.maxRun.capped).toLocaleString('en-US')} (${x.maxRun.n.toLocaleString('en-US')} more bonuses)` : `not seen in ${x.maxRun.n.toLocaleString('en-US')} more bonuses`) : every(x.capped / x.n, x.n));
+  L.push('# Dead Letter Depot · six-symbol bonus trial, perks and the vault reveal (separate from release math)', '');
+  L.push(`Generated by \`tools/math/dead-letter-depot-six.mjs\` · trial engine \`${s.version}\` · source \`${s.source}\` · seed ${s.seed}. **This is a producer trial.** These figures are not the release RTP in [MATH.md](MATH.md).`, '');
+  L.push('## Rules as the trial engine settles them', '');
+  L.push('- **Board.** The same 6×5 pay-anywhere tumbles. There are no stamps and no collection jobs.');
+  L.push(`- **Base and Priority Mail spins** first draw a rack of ${sp.base.rack} basics. Each paying group of a racked basic doubles that spin's multiplier (from 1×). Their FS chance is fitted for 96%.`);
+  L.push(`- **Key ring and vault.** Every bonus has a ${sp.regular.ring}-notch key ring. Every KEY that lands (first board or refill) turns a notch, and notches carry across spins. Each full ring opens the vault: it reveals a multiplier from the bonus's table, which adds to the bonus multiplier for the rest of the bonus. The multiplier applies to every spin.`);
+  L.push(`- **Starting multiplier.** Night Shift ${sp.regular.start}×, Double Post ${sp.super.start}×. Lost & Found opens a vault before its first spin, from its opening table.`);
+  L.push(`- **Perks** (drawn when the bonus starts): Night Shift ${sp.regular.perks} of 4 at random; Double Post and Lost & Found all 4.`);
+  L.push(`  - **Build:** ${sp.regular.buildMarks} basics are marked; each paying group of one turns a key-ring notch.`);
+  L.push(`  - **Return:** ${sp.regular.perkAt.return}+ ENVELOPEs on the board: the spin's wins pay twice when it ends.`);
+  L.push(`  - **Unpack:** ${sp.regular.perkAt.unpack}+ PARCELs on the board turn four more cells into the board's most common premium.`);
+  L.push(`  - **Deliver:** ${sp.regular.perkAt.deliver}+ PHONEs on the board bring in the symbols missing from the nearest group.`);
+  L.push(`  - Each premium perk fires at most once a spin and has ${sp.regular.charges.return} charges a bonus in Night Shift and Lost & Found, ${sp.super.charges.return} in Double Post. Build is not limited.`);
+  L.push(`- **Lost & Found pays at least ${(sp.hidden.floor / 100).toLocaleString('en-US')}×.** A bonus that ends below it is topped up to it.`);
+  L.push(`- **Free-spin landings (fitted).** Night Shift basics ×${sp.regular.lowScale}, KEY ${sp.regular.keyWeight}; Double Post basics ×${sp.super.lowScale}, KEY ${sp.super.keyWeight}; Lost & Found basics ×${sp.hidden.lowScale}, KEY ${sp.hidden.keyWeight}. Mystery Delivery draws ${Object.entries(s.mystery).map(([t, w]) => `${t} ${pct(w, 0)}`).join(', ')}.`, '');
+  L.push('### Vault tables', '');
+  for (const t of ['regular', 'super', 'hidden']) L.push(`- **${name[t]}:** ${tbl(sp[t].reveal)}.`);
+  L.push(`- **Lost & Found opening vault:** ${tbl(sp.hidden.opening)}.`, '');
+  L.push('## Every mode', '', '| Mode | Cost | RTP (99.9%) | Whole-round check | Hit | Capped |', '|---|---|---|---|---|---|');
+  for (const r of Object.values(s.modes)) L.push(`| ${r.title} | ${r.cost}× | **${pct(r.rtp)}** ± ${pct(r.ci999)} | ${pct(r.rounds.rtp)} ± ${pct(r.rounds.ci999)} | ${pct(r.rounds.hit)} | ${every(r.rounds.capped / r.rounds.n, r.rounds.n)} |`);
+  L.push('', '### How often a round pays at least', '', '| Mode | ≥1× | ≥5× | ≥10× | ≥25× | ≥100× | ≥500× | ≥1,000× | ≥5,000× |', '|---|---|---|---|---|---|---|---|---|');
+  for (const r of Object.values(s.modes)) L.push(`| ${r.title} | ${[1, 5, 10, 25, 100, 500, 1000, 5000].map((x) => (r.rounds.over[x] >= 0.01 ? pct(r.rounds.over[x]) : every(r.rounds.over[x], r.rounds.n))).join(' | ')} |`);
+  const anyOf = (rates) => Object.values(rates).reduce((a, c) => a + c, 0);
+  L.push('', `Bonus entry: base ${Object.entries(s.modes.base.rates).map(([t, r]) => `${t} ${every(r)}`).join(', ')} (any bonus ${every(anyOf(s.modes.base.rates))}); Priority Mail ${Object.entries(s.modes.priority.rates).map(([t, r]) => `${t} ${every(r)}`).join(', ')} (any bonus ${every(anyOf(s.modes.priority.rates))}).`, '');
+  L.push('## Bonuses', '', '| Bonus | Average (99.9%) | SD | Median | Middle half | Pays 0 | ≥25× | ≥100× | ≥500× | ≥1,000× | ≥5,000× | Max seen | Reaches cap | Paid at the minimum | Vault reveals per bonus | Average reveal |', '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|');
+  for (const [t, x] of Object.entries(b)) L.push(`| ${name[t]} | **${x.mean.toFixed(2)}×** ± ${(Z * x.se).toFixed(2)} | ${x.sd.toFixed(0)} | ${x.quantiles[0.5].toLocaleString('en-US')}× | ${x.quantiles[0.25].toLocaleString('en-US')}–${x.quantiles[0.75].toLocaleString('en-US')}× | ${every(x.zero, x.n)} | ${pct(x.over[25], 1)} | ${pct(x.over[100], 1)} | ${pct(x.over[500], 1)} | ${pct(x.over[1000], 2)} | ${pct(x.over[5000], 2)} | ${x.max.toLocaleString('en-US')}× | ${mr(x)} | ${x.floorShare ? pct(x.floorShare, 1) : '—'} | ${x.revealsPerBonus.toFixed(2)} | +${x.avgReveal.toFixed(1)}× |`);
+  L.push('', '### Perks', '', '| Bonus | Return fires | Unpack fires | Deliver fires | (per bonus) |', '|---|---|---|---|---|');
+  for (const [t, x] of Object.entries(b)) L.push(`| ${name[t]} | ${(x.firesPerBonus.return ?? 0).toFixed(2)} | ${(x.firesPerBonus.unpack ?? 0).toFixed(2)} | ${(x.firesPerBonus.deliver ?? 0).toFixed(2)} | |`);
+  L.push('', `Night Shift by perk pair (each about 1 in 6 bonuses): ${Object.entries(b.regular.combos).sort().map(([k, c]) => `${k.replace('+', ' + ')} ${c.mean.toFixed(0)}× (under half its price ${pct(c.underHalf, 0)})`).join(' · ')}.`, '');
+  L.push('## Findings for the producer', '');
+  L.push(`- **Buys:** Night Shift (100×) pays back at least its price in ${pct(b.regular.over[100], 0)} of buys and less than half of it in ${pct(1 - b.regular.over[50], 0)}; Double Post (250×) at least its price in ${pct(b.super.over[250], 0)} and less than half in ${pct(1 - b.super.over[125], 0)}.`);
+  L.push(`- **Max wins:** Night Shift ${mr(b.regular)}, Double Post ${mr(b.super)}, Lost & Found ${every(b.hidden.capped / b.hidden.n, b.hidden.n)}.`);
+  L.push(`- **Lost & Found:** ${pct(1 - b.hidden.floorShare, 0)} of bonuses pass 1,000× by themselves; the median bonus pays ${b.hidden.quantiles[0.5].toLocaleString('en-US')}×. Its opening vault averages +${b.hidden.avgOpening.toFixed(1)}×.`);
+  L.push('- **Golden seeds** are in `tests/six.test.mjs`. A bonus records `perks`, `build`, `opening`, `reveals` and `perkFires`. Each spin records its `perks` fired (`perk`, `s`, `job`, `at`, `changes`, `symbol` or `returned`), `charges` left, `reveals`, `land` (the first board\'s ring event) and `steps[].rack` (`hits`, `keys`, `fills`, `notches`, `reveals`, `before`, `after`).', '');
+  return L.join('\n');
+}
+
 if (!isMainThread) parentPort.postMessage(chunk(workerData));
 else if (import.meta.url === `file://${process.argv[1]}`) {
   const arg = (k, d) => (process.argv.includes(k) ? Number(process.argv[process.argv.indexOf(k) + 1]) : d), t0 = Date.now();
   const variant = process.argv.includes('--variant') ? process.argv[process.argv.indexOf('--variant') + 1] : 'flat';
-  const files = { flat: ['math/six-summary.json', 'SIX.md'], ladder: ['math/six-ladder-summary.json', 'SIX-LADDER.md'], balanced: ['math/six-balanced-summary.json', 'SIX-BALANCED.md'], steady: ['math/six-steady-summary.json', 'SIX-STEADY.md'], keyring: ['math/six-keyring-summary.json', 'SIX-KEYRING.md'], vault: ['math/six-vault-summary.json', 'SIX-VAULT.md'], vault2: ['math/six-vault2-summary.json', 'SIX-VAULT2.md'] }[variant];
+  const files = { flat: ['math/six-summary.json', 'SIX.md'], ladder: ['math/six-ladder-summary.json', 'SIX-LADDER.md'], balanced: ['math/six-balanced-summary.json', 'SIX-BALANCED.md'], steady: ['math/six-steady-summary.json', 'SIX-STEADY.md'], keyring: ['math/six-keyring-summary.json', 'SIX-KEYRING.md'], vault: ['math/six-vault-summary.json', 'SIX-VAULT.md'], vault2: ['math/six-vault2-summary.json', 'SIX-VAULT2.md'], perks: ['math/six-perks-summary.json', 'SIX-PERKS.md'] }[variant];
   if (process.argv.includes('--render')) {
     writeFileSync(new URL(files[1], GAME), markdown(JSON.parse(readFileSync(new URL(files[0], GAME), 'utf8'))));
     console.log(`re-rendered ${files[1]} from ${files[0]}`);
   } else if (process.argv.includes('--fit')) {
-    const r = await fit({ bonusN: arg('--bonus', 4e5), spinN: arg('--spins', 6e6), variant });
+    const only = process.argv.includes('--only') ? process.argv[process.argv.indexOf('--only') + 1].split(',') : null;
+    const r = await fit({ bonusN: arg('--bonus', 4e5), spinN: arg('--spins', 6e6), variant, only, spins: !process.argv.includes('--no-spins') });
     if (process.argv.includes('--write')) { write(r.patch, variant); console.log('wrote engine/six.js'); }
   } else {
     const s = await report({ bonusN: arg('--bonus', 1e6), spinN: arg('--spins', 1e7), variant });

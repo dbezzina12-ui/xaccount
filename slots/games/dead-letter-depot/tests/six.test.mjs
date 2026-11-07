@@ -5,8 +5,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { playSixRound, playSixBonus, selectRack, meterStep, ladderStep, ladderState, ringStep, ringState, SIX, SIX_LADDER, SIX_BALANCED, SIX_STEADY, SIX_KEYRING, SIX_VAULT, SIX_VAULT2, BALANCED_MYSTERY, VARIANTS, SIX_VERSION, LADDER_VERSION, BALANCED_VERSION, STEADY_VERSION, KEYRING_VERSION, VAULT_VERSION, VAULT2_VERSION, seeded } from '../engine/six.js';
+import { playSixRound, playSixBonus, selectRack, meterStep, ladderStep, ladderState, ringStep, ringState, SIX, SIX_LADDER, SIX_BALANCED, SIX_STEADY, SIX_KEYRING, SIX_VAULT, SIX_VAULT2, SIX_PERKS, PERKS, PERK_SYMBOL, perkStep, revealFrom, BALANCED_MYSTERY, VARIANTS, SIX_VERSION, LADDER_VERSION, BALANCED_VERSION, STEADY_VERSION, KEYRING_VERSION, VAULT_VERSION, VAULT2_VERSION, PERKS_VERSION, seeded } from '../engine/six.js';
 import { settle, winOf } from '../engine/settle.js';
+import { spinBoard } from '../engine/engine.js';
 import { PREMIUMS, LOWS, CAP } from '../engine/rules.js';
 import { sixHash } from '../../../tools/math/dead-letter-depot-six.mjs';
 
@@ -17,7 +18,7 @@ test('a trial round replays exactly from its seed and survives JSON', () => {
     assert.deepEqual(JSON.parse(JSON.stringify(a)), a);
     assert.equal(a.version, SIX_VERSION);
     assert.equal(playSixRound({ mode, rng: seeded(seed), record: false }).total, a.total, 'recording never changes the outcome');
-    for (const [variant, version] of [['keyring', KEYRING_VERSION], ['vault', VAULT_VERSION], ['vault2', VAULT2_VERSION]]) {
+    for (const [variant, version] of [['keyring', KEYRING_VERSION], ['vault', VAULT_VERSION], ['vault2', VAULT2_VERSION], ['perks', PERKS_VERSION]]) {
       const k = playSixRound({ mode, rng: seeded(seed), variant });
       assert.deepEqual(JSON.parse(JSON.stringify(k)), k);
       assert.equal(k.version, version);
@@ -152,7 +153,17 @@ export const VAULT2_GOLDEN = [
   ['mystery', 2572, CAP],                                        // the Lost & Found vault reaches the cap
   ['nightshift', 14287, CAP], ['doublepost', 646910, CAP],       // inner vaults (a second KEY match) reach the cap
 ];
+// Perks golden replays (dld-six-8).
+export const PERKS_GOLDEN = [
+  ['base', 134, 1920], ['base', 1672, 19600],                    // the base rack doubles twice; natural Night Shift
+  ['nightshift', 7, 20660], ['nightshift', 5, 11860],            // Build + Return with Return firing; Unpack + Deliver, both firing
+  ['nightshift', 9, 27600],                                      // a +10x vault reveal
+  ['doublepost', 1, 25920], ['doublepost', 19, 65100],           // every perk fires; a +25x reveal
+  ['mystery', 89, 124940], ['mystery', 4, 100000], ['mystery', 1, 27460], // Lost & Found opens at 30x+ and passes 1,000x by itself; at the minimum; Double Post
+  ['mystery', 1629, CAP],                                        // Lost & Found opens at 1,000x and reaches the cap
+];
 test('golden replays settle to these totals', () => {
+  for (const [mode, seed, total] of PERKS_GOLDEN) assert.equal(playSixRound({ mode, rng: seeded(seed), record: false, variant: 'perks' }).total, total, `perks ${mode} ${seed}`);
   for (const [mode, seed, total] of VAULT2_GOLDEN) assert.equal(playSixRound({ mode, rng: seeded(seed), record: false, variant: 'vault2' }).total, total, `vault2 ${mode} ${seed}`);
   for (const [mode, seed, total] of VAULT_GOLDEN) assert.equal(playSixRound({ mode, rng: seeded(seed), record: false, variant: 'vault' }).total, total, `vault ${mode} ${seed}`);
   for (const [mode, seed, total] of KEYRING_GOLDEN) assert.equal(playSixRound({ mode, rng: seeded(seed), record: false, variant: 'keyring' }).total, total, `keyring ${mode} ${seed}`);
@@ -356,6 +367,84 @@ test('vault 2: the first KEY match opens the vault at the ceiling, a second open
   assert.equal('inner' in k, false, 'earlier variants keep their event shape');
 });
 
+const perkSpec = VARIANTS.perks.spec, perkLands = VARIANTS.perks.lands;
+test('perks: Night Shift draws 2 of the 4, Double Post and Lost & Found all 4; Build marks two basics; only Lost & Found opens a vault first', () => {
+  const pairs = new Set();
+  for (const tier of ['regular', 'super', 'hidden']) for (let seed = 1; seed <= 300; seed++) {
+    const b = playSixBonus(tier, seeded(seed), CAP, { spec: perkSpec, lands: perkLands, record: false });
+    assert.equal(b.perks.length, SIX_PERKS[tier].perks);
+    assert.deepEqual(b.perks, PERKS.filter((p) => b.perks.includes(p)), 'perks are listed in the canonical order');
+    if (tier === 'regular') pairs.add(b.perks.join('+'));
+    if (b.perks.includes('build')) { assert.equal(b.build.length, SIX_PERKS[tier].buildMarks); assert.ok(b.build.every((x) => LOWS.includes(x)) && new Set(b.build).size === b.build.length); } else assert.equal(b.build, null);
+    if (tier === 'hidden') assert.ok(SIX_PERKS.hidden.opening.some(([v]) => v === b.opening)); else assert.equal(b.opening, 0);
+    assert.equal(b.spins[0].meter.start, Math.min(SIX_PERKS[tier].ceiling, SIX_PERKS[tier].start + b.opening));
+  }
+  assert.equal(pairs.size, 6, 'every Night Shift pair occurs');
+});
+
+test('engine perks: each fires at most once a spin, only with enough of its symbol on the board; Return pays the spin twice', () => {
+  const seen = { return: 0, unpack: 0, deliver: 0 };
+  for (let seed = 1; seed <= 3000; seed++) {
+    const r = spinBoard('hidden', seeded(seed), { lands: perkLands, targets: Object.fromEntries(['KEY', 'PHONE', 'PARCEL', 'ENVELOPE', 'A', 'K', 'Q', 'J', '10'].map((x) => [x, Infinity])), record: true, perks: [['ENVELOPE', 3], ['PARCEL', 5], ['PHONE', 2]] });
+    const plain = spinBoard('hidden', seeded(seed), { lands: perkLands, targets: Object.fromEntries(['KEY', 'PHONE', 'PARCEL', 'ENVELOPE', 'A', 'K', 'Q', 'J', '10'].map((x) => [x, Infinity])), record: true });
+    assert.equal(new Set(r.perks.map((f) => f.s)).size, r.perks.length, 'once a spin each');
+    for (const f of r.perks) seen[f.job] += 1;
+    const ret = r.perks.find((f) => f.job === 'return');
+    if (ret) assert.equal(r.subtotal, 2 * ret.returned);
+    if (!r.perks.length) assert.deepEqual([r.subtotal, r.board], [plain.subtotal, plain.board], 'no perk, same spin');
+    if (!r.perks.length) for (const b of [r.board, ...r.steps.map((st) => st.after)]) {
+      const n = (x) => b.flat().filter((c) => c.s === x).length;
+      assert.ok(n('ENVELOPE') < 3 && n('PARCEL') < 5 && n('PHONE') < 2, 'a perk with enough symbols always fires');
+    }
+  }
+  for (const [k, v] of Object.entries(seen)) assert.ok(v > 0, `saw ${k}`);
+});
+
+test('perk events: KEYs and Build hits turn notches; each full ring reveals a multiplier that adds', () => {
+  const w = (...x) => x.map((s) => ({ s })), t = SIX_PERKS.super, st = { build: ['Q', 'K'], notches: 0 };
+  let e = perkStep(5, [], 3, st, t, () => 0.5);
+  assert.deepEqual([e.hits, e.fills, e.notches, e.reveals, e.after], [[], 0, 3, [], 5]);
+  e = perkStep(e.after, w('Q', 'J', 'K'), 1, st, t, () => 0);
+  assert.deepEqual([e.hits, e.fills, e.notches, e.reveals, e.after], [['Q', 'K'], 1, 1, [t.reveal[0][0]], 5 + t.reveal[0][0]], 'two Build hits and one KEY fill the ring; unmarked J never counts');
+  e = perkStep(e.after, [], 9, st, t, () => 0.999999);
+  assert.deepEqual([e.fills, e.notches, e.reveals], [2, 0, [t.reveal.at(-1)[0], t.reveal.at(-1)[0]]]);
+  assert.equal(e.after, t.ceiling, 'the meter stops at the ceiling');
+  assert.equal(revealFrom([[1, 1], [2, 3]], 0.24), 1);
+  assert.equal(revealFrom([[1, 1], [2, 3]], 0.26), 2);
+});
+
+test('perk bonuses replay: spin meters add their reveals, charges are kept, wins and totals add up', () => {
+  let fires = 0, reveals = 0, floors = 0;
+  for (const tier of ['regular', 'super', 'hidden']) for (let seed = 1; seed <= 150; seed++) {
+    const b = playSixBonus(tier, seeded(seed), CAP, { spec: perkSpec, lands: perkLands }), t = SIX_PERKS[tier];
+    const left = Object.fromEntries(b.perks.filter((p) => PERK_SYMBOL[p]).map((p) => [p, t.charges[p]]));
+    let meter = b.spins[0].meter.start, total = 0, fills = 0;
+    for (const s of b.spins) {
+      assert.equal(s.meter.start, meter);
+      const events = [s.land, ...s.steps.map((st) => st.rack)];
+      for (const [i, e] of events.entries()) {
+        assert.equal(e.before, i ? events[i - 1].after : meter);
+        assert.equal(e.after, Math.min(t.ceiling, e.before + e.reveals.reduce((a, v) => a + v, 0)));
+        for (const v of e.reveals) assert.ok(t.reveal.some(([x]) => x === v));
+        if (!b.build) assert.equal(e.hits.length, 0);
+      }
+      meter = s.meter.after;
+      assert.equal(meter, events.at(-1).after);
+      assert.equal(s.meter.fills, events.reduce((a, e) => a + e.fills, 0));
+      for (const f of s.perks) { assert.ok(b.perks.includes(f.perk)); left[f.perk] -= 1; assert.ok(left[f.perk] >= 0, 'never past its charges'); fires += 1; }
+      assert.deepEqual(s.charges, left);
+      assert.equal(s.multiplier, meter);
+      assert.equal(s.win, s.subtotal * meter);
+      total += s.paid; fills += s.meter.fills; reveals += s.reveals.length;
+    }
+    assert.equal(b.ringFills, fills);
+    assert.equal(b.total, total + b.floorTopUp);
+    if (t.floor) assert.ok(b.total >= t.floor);
+    if (b.floorTopUp) floors += 1;
+  }
+  assert.ok(fires > 0 && reveals > 0 && floors > 0);
+});
+
 test('vault: a racked basic doubles the base spin meter', () => {
   let doubled = 0;
   for (let seed = 1; seed <= 3000; seed++) {
@@ -370,7 +459,7 @@ test('vault: a racked basic doubles the base spin meter', () => {
   assert.ok(doubled > 10, `${doubled} base spins doubled twice or more`);
 });
 
-for (const [variant, file, spec] of [['flat', 'six-summary.json', SIX], ['ladder', 'six-ladder-summary.json', SIX_LADDER], ['balanced', 'six-balanced-summary.json', SIX_BALANCED], ['steady', 'six-steady-summary.json', SIX_STEADY], ['keyring', 'six-keyring-summary.json', SIX_KEYRING], ['vault', 'six-vault-summary.json', SIX_VAULT], ['vault2', 'six-vault2-summary.json', SIX_VAULT2]]) test(`the ${variant} trial report was regenerated after the last trial change`, () => {
+for (const [variant, file, spec] of [['flat', 'six-summary.json', SIX], ['ladder', 'six-ladder-summary.json', SIX_LADDER], ['balanced', 'six-balanced-summary.json', SIX_BALANCED], ['steady', 'six-steady-summary.json', SIX_STEADY], ['keyring', 'six-keyring-summary.json', SIX_KEYRING], ['vault', 'six-vault-summary.json', SIX_VAULT], ['vault2', 'six-vault2-summary.json', SIX_VAULT2], ['perks', 'six-perks-summary.json', SIX_PERKS]]) test(`the ${variant} trial report was regenerated after the last trial change`, () => {
   const s = JSON.parse(readFileSync(new URL(`../math/${file}`, import.meta.url), 'utf8'));
   assert.equal(s.source, sixHash(), `run node tools/math/dead-letter-depot-six.mjs --variant ${variant}`);
   assert.deepEqual(s.spec, JSON.parse(JSON.stringify(spec)));

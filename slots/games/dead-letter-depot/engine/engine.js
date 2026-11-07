@@ -162,7 +162,11 @@ function runJob(S, code) {
 }
 
 // One spin: land, opening stamps, then checks until nothing pays.
-export function spinBoard(landKind, rng, { opening = 0, record = false, lands = LANDS, targets = targetsFor('base'), collections = null, filter = 0, scheme = INCREMENT_SCHEME } = {}) {
+// perks (the six-symbol trial): [[symbol, count], ...]. The first time a check
+// finds `count` or more of that symbol on the board, its job runs once this
+// spin: before that check's wins are found, except 'return', which pays the
+// spin's wins twice when the spin ends. None by default.
+export function spinBoard(landKind, rng, { opening = 0, record = false, lands = LANDS, targets = targetsFor('base'), collections = null, filter = 0, scheme = INCREMENT_SCHEME, perks = [] } = {}) {
   const land = lands[landKind];
   if (!land) throw Error(`Unknown landing ${landKind}`);
   const col = collections ?? new Int32Array(NPAY), before = Array.from(col), filterBefore = filter;
@@ -176,8 +180,13 @@ export function spinBoard(landKind, rng, { opening = 0, record = false, lands = 
     addStamp(S, cell, openingValue(rng()), 'opening'); openingAt.push([...at(cell), S.val[cell]]);
   }
   const board = S.rec ? boardOf(S) : null;
-  const target = PAYING.map((s) => targets[s]);
+  const target = PAYING.map((s) => targets[s]), perkList = perks.map(([s, k]) => [CODE[s], k]), perked = [];
+  let returnAt = -1;
   for (; S.step < MAX_TUMBLES; ) {
+    for (const [s, k] of perkList) if (!perked.some((p) => p.code === s) && countsOf(S)[s] >= k) {
+      if (JOBS[PAYING[s]] === 'return') { perked.push({ code: s, at: S.step, s: PAYING[s], job: 'return' }); returnAt = perked.length - 1; }
+      else perked.push({ code: s, at: S.step, ...runJob(S, s) });
+    }
     const n = countsOf(S);
     let wilds = 0; for (let c = 0; c < CELLS; c++) if (S.sym[c] === WILD_CODE) wilds++;
     const joined = wilds ? best(n, ALL) : -1;
@@ -210,8 +219,10 @@ export function spinBoard(landKind, rng, { opening = 0, record = false, lands = 
     const jobs = queue.map((s) => runJob(S, s));
     if (step) Object.assign(step, { pay, drops: moved.drops, refills: moved.refills, jobs, collections: Object.fromEntries(PAYING.map((s, i) => [s, col[i]])), after: boardOf(S) }), S.rec.steps.push(step);
   }
+  if (returnAt >= 0) { perked[returnAt].returned = S.subtotal; S.subtotal *= 2; }
   let fs = 0; for (let c = 0; c < CELLS; c++) if (S.sym[c] === FS_CODE) fs++;
   const out = { subtotal: S.subtotal, stampSum: S.stampSum, stampCount: S.stampCount, clears: S.clears, fs, tumbles: S.step, filter: S.filter, collections: col };
+  if (perkList.length) out.perks = perked.map(({ code, ...p }) => p);
   if (S.rec) Object.assign(out, { board, opening: openingAt, steps: S.rec.steps, stampsAt: S.rec.stampsAt, collectionsBefore: Object.fromEntries(PAYING.map((s, i) => [s, before[i]])), filteredBefore: FILTERABLE.filter((_, i) => filterBefore & (1 << i)), filteredAfter: FILTERABLE.filter((_, i) => S.filter & (1 << i)) });
   return out;
 }
