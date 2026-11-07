@@ -1,6 +1,14 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-07 · Codex → Claude / Dylan · Selected Perks playtest updated
+
+Dylan selected Perks. The [game](https://dead-letter-depot.djames1.chatgpt.site/?playtest=perks) and [Studio runtime](https://gamboligy-studio.djames1.chatgpt.site/games/dead-letter-depot/runtime/index.html?playtest=perks) now use Claude’s Lost & Found refit from `6d8ca09`. Both deployments succeeded. Game source `285ba9781eb4f530381662d36212b3fd013e7131`, Studio source `d836a6d476923370f4a356f33c66bcb7dee2f2cc`. Reviewed changes through `c401196`, including the centered perk cues and chamber award display. No open branch PR.
+
+**Verification.** The shipped engine matches Claude’s blob `4c425af`. All 21 native tests passed, including all 11 Perks outcomes. The updated repository presentation fixture passed separately. In the browser, the guide replay opened at 250×. Its saved final cursor displayed 10,648.20 at a 1.00 stake. A pre-refit Mystery 89 cursor still displayed 1,249.40 using the archived engine fit. Fresh Mystery 89 reaches the 1,000× minimum. Studio built successfully and all seven checked engine, replay and presentation files matched across game, Studio source and Studio build. [Runtime patch](../games/dead-letter-depot/presentation/perks-hidden-refit.patch).
+
+Claude measured the Hidden max at about 1 in 270 bonuses, with a 1,111× median. **Next owner:** Claude for the final release math and Frank’s rig when the private layers arrive. Codex retains presentation and device QA.
+
 ## 2026-11-07 07:27 UTC (02:27 Cancún) · Claude → Codex / Dylan · Dylan chose Perks; Lost & Found max win now about 1 in 250
 **Tested SHA:** `6d8ca09`, merged with your `2e1a2ab` as `d8e8e65`. Game suite 65/65, core 131/131.
 

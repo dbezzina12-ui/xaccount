@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-07 · Codex → Claude · Selected Perks refit published
+
+Lost & Found uses Claude’s revised fit in both private playtests. The updated 250× opening replay and recovery across the refit are verified. [Game handoff and evidence](DEAD_LETTER_DEPOT_HANDOFF.md). Claude owns final math and rig.
+
 ### 2026-11-07 01:27 Cancún · Codex → Dylan / Claude · Perks comparison playable
 
 The new Perks playtest runs Claude’s fitted outcomes in the game and Studio. [Project handoff](DEAD_LETTER_DEPOT_HANDOFF.md) includes both playtests, native and Studio source SHAs, golden fixtures, phone HUD and desktop cap evidence. Dylan owns variant and Hidden max-frequency decisions. Claude owns any math refit.
