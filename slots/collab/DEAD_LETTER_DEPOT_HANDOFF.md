@@ -1,6 +1,102 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-07 05:53 UTC (00:53 Cancún) · Claude → ChatGPT (Codex) / Dylan · Perks and the vault reveal (dld-six-8): fitted, payload, art updates
+**Tested SHA:** `d1bf636`, merged with your `31dbbc7` as `6593f99`. Game suite 62/62 (your 3 vault-art tests included), core 131/131. Every earlier variant's golden totals still pass. The release report (MATH.md) is regenerated for the engine change; its figures are unchanged.
+
+**What Dylan chose (2026-11-07):**
+- Every bonus has the vault, and a full key ring opens it.
+- The vault reveals a random multiplier that adds to the bonus multiplier.
+- Night Shift gets 2 random perks, balanced so each is worth about the same. Double Post gets all 4. Lost & Found gets all 4 and opens a vault before spin 1.
+
+Built as `variant: 'perks'` (`dld-six-8`) in [`engine/six.js`](../games/dead-letter-depot/engine/six.js), with a small hook in [`engine/engine.js`](../games/dead-letter-depot/engine/engine.js) (`spinBoard` `perks`). The base game is Vault 2's.
+
+**Final rules (these replace the 01:29 brief where they differ)**
+- **Key ring:** 5 notches in every bonus. Every KEY that lands turns a notch. A full ring opens the vault, which reveals **+N×** from the bonus's table (in SIX-PERKS.md).
+  - Night Shift reveals are +1× 75% and +2× 18%, then rarer +3×, +5×, +10×, +25×, +100× and +1,000×.
+  - Double Post's are +1× 60% and +2× 25%, then up to +250× and +1,000×.
+  - Lost & Found's are +1× to +10× mostly, up to +1,000×.
+- **Starting multiplier:**
+  - Night Shift 2×.
+  - Double Post 5×.
+  - Lost & Found opens its vault before spin 1: +15× to +40× typically, +60× sometimes, and rarely +250× or +1,000×.
+- **Build** (changed): **two** marked basics. Each paying group of a marked basic turns a key-ring notch (it no longer adds +1 to the multiplier).
+- **Return** (changed): **3+ ENVELOPEs** on the board mean the spin's wins pay **twice** when the spin ends.
+- **Unpack** (changed count): **5+ PARCELs** on the board turn four more cells into the board's most common premium.
+- **Deliver** (changed count): **2+ PHONEs** on the board bring in the symbols missing from the nearest group.
+- **Charges** (new):
+  - Return, Unpack and Deliver each fire at most once a spin.
+  - They have **3 charges a bonus** in Night Shift and Lost & Found, and **2** in Double Post.
+  - Build has no limit.
+  - Art: a badge with pips.
+- **Night Shift** draws 2 of the 4 perks at random; the other bonuses get all 4.
+
+**Result** ([SIX-PERKS.md](../games/dead-letter-depot/SIX-PERKS.md); every mode 96% within its 99.9% interval; Night Shift and Double Post max wins measured over 4,000,000 extra bonuses each):
+
+| | Dylan's target | Vault 2 | Perks |
+|---|---|---|---|
+| Night Shift max win | 1 in 250,000 | 1 in 285,714 | **1 in 222,222** |
+| Double Post max win | 1 in 100,000 | 1 in 571,429 | **1 in 114,286** |
+| Lost & Found max win | 1 in 250 | 1 in 215 | 1 in 342 |
+| Night Shift median · under half its price | | 77× · 23% | 77× · 26% |
+| Night Shift 500×+ | | 1 in 298 | 1 in 228 |
+| Night Shift perk pairs (average) | | — | 91×–101× |
+| Double Post median · under half its price | | 200× · 19% | 198× · 24% |
+| Double Post 1,000×+ | | 1 in 281 | 1 in 149 |
+| Lost & Found median · past 1,000× by itself | | 1,179× · 59% | 1,128× · 57% |
+| Base 25×+ · any bonus | | 1 in 245 · 1 in 372 | 1 in 248 · 1 in 372 |
+
+- **The cost of the extra mechanics:** losing buys rise 3–5 points against Vault 2.
+- **Perk fires per bonus:**
+  - Night Shift: Return 1.40, Unpack 0.28, Deliver 1.48. That is across all bonuses; each perk is drawn in half of them.
+  - Double Post: Return 1.98, Unpack 0.66, Deliver 2.00.
+  - Unpack is rare but strong, so its pairs pay about the same as the others.
+
+**Payload for Codex (variant `perks`)**
+- **Bonus:**
+  - `perks` (canonical order: build, return, unpack, deliver);
+  - `build` (the two marked basics, or null);
+  - `opening` (Lost & Found's opening reveal, 0 elsewhere);
+  - `reveals` (every reveal in order), `ringFills`, `perkFires`, `floorTopUp`.
+- **Spin:**
+  - `perks`: the perks fired, each `{ perk, s, job, at, changes, symbol }`, or `{ perk, s, job: 'return', at, returned }`.
+    - `at` is the number of tumbles already done when it fired.
+    - Unpack and Deliver change the board **before** that check's wins are found. So apply `changes` (`[reel, row, from, to]`) to the board after tumble `at`; that is the first board when `at` is 0.
+    - Return applies when the spin ends: `returned` is the subtotal before it doubled, and `subtotal` already includes the doubling.
+  - `charges`: charges left after the spin.
+  - `reveals`, and `meter` (`start`, `after`, `fills`, `notches`).
+  - `land`: the first board's ring event.
+  - `steps[].rack`: ring events, each `{ hits (Build hits), keys, fills, notches, reveals, before, after }`.
+  - `multiplier` and `win`. The multiplier applies to every spin.
+- **Golden seeds:** `PERKS_GOLDEN` in `tests/six.test.mjs`.
+  - Night Shift 7 (Build + Return; Return fires 3 times).
+  - Night Shift 5 (Unpack + Deliver, both fire).
+  - Night Shift 9 (a +10× reveal).
+  - Double Post 19 (a +25× reveal).
+  - Mystery 89 (Lost & Found opens at 30× and passes 1,000× by itself).
+  - Mystery 4 (Lost & Found at the minimum).
+  - Mystery 1629 (Lost & Found opens at 1,000× and caps).
+
+**Your five-light vault (`31dbbc7`) matches the engine:**
+- Each ring event's `keys` counts only newly landed KEYs: the first board in `land`, then each tumble's refills.
+- Each ring fill has its own entry in `reveals`, including two fills in one event.
+- One addition: Build hits (`hits`) also light lamps, so a lamp can fill from a marked basic as well as from a KEY.
+
+**Art updates for ChatGPT** (on top of the 01:29 brief):
+1. **Build:** two marked basics. Its effect is a notch flying from the marked basic into the key ring, not a +1 on the multiplier.
+2. **Return:** a "pays twice" stamp at spin end.
+3. **Charges:** a badge with 3 pips (2 in Double Post) for Return, Unpack and Deliver.
+4. **Vault reveals:** most are +1× or +2×. The celebration should stay light for those and build for +10× and up.
+5. **Lost & Found's opening vault:** usually +15× to +40×.
+
+**Next for Codex:** bind a `perks` playtest beside Vault 2.
+**Next for Claude:** release math once Dylan picks; Frank's rig once the private layers arrive.
+**Questions for Dylan:**
+1. Perks or Vault 2?
+2. Lost & Found max win is 1 in 342 against a 1 in 250 target. Make it easier? That would lower its median slightly.
+
+**Blocked on:** the Frank layers (private). The Le Bandit data request is still waiting for Dylan's decision.
+
 ## 2026-11-06 20:48 Cancún (Nov 7 01:48 UTC) · Codex → Claude / Dylan · Five-light vault art and animation ready
 
 Read Claude's art brief at `97d8cf8` since verified `e93f60d`, AGENTS and release checklist; no open PR targets this branch. Dylan approved the new artwork in chat ("Nice").
