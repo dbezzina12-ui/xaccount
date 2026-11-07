@@ -4,3 +4,26 @@
  .floor:has(#rack.perk-rack:not([hidden])) #board{aspect-ratio:6/3.43}
  .perk-rack .perk-dock{width:39px}
 }
+
+.perk-announcement{
+  position:fixed;inset:0;z-index:1001;display:grid;place-items:center;pointer-events:none;
+  background:radial-gradient(ellipse at center,#06182048 15%,#06182086 85%);
+}
+.perk-notice{
+  --ink:#205348;box-sizing:border-box;position:relative;isolation:isolate;
+  width:min(82vw,350px);padding:clamp(12px,2.8vmin,22px) 18px;
+  display:grid;justify-items:center;gap:3px;text-align:center;color:#302a20;
+  background:linear-gradient(130deg,#fff1ca,#ead3a3 75%,#e2bd82);
+  border:1px solid #9b7947;outline:1px solid #b89765;outline-offset:-6px;
+  box-shadow:0 8px 25px #08191caa;
+}
+.perk-notice[data-perk=return]{--ink:#893d34}
+.perk-notice[data-perk=unpack]{--ink:#78501d}
+.perk-notice[data-perk=deliver]{--ink:#30526c}
+.perk-notice .perk-face img{width:clamp(40px,7vmin,64px);height:clamp(40px,7vmin,64px);filter:drop-shadow(0 2px 1px #51391f48)}
+.perk-notice strong{font:bold clamp(32px,6.3vmin,54px)/1 Georgia,serif;text-transform:uppercase;letter-spacing:.025em;color:var(--ink)}
+.perk-notice span{margin-top:4px;font:650 clamp(15px,2.4vmin,19px)/1.25 system-ui,sans-serif;text-wrap:balance}
+@media(prefers-reduced-motion:no-preference){
+  .perk-incoming{animation:perk-to-center .26s cubic-bezier(.18,.8,.22,1) both}
+  @keyframes perk-to-center{from{transform:translate(var(--from-x),var(--from-y)) scale(.25);opacity:.55}to{transform:none;opacity:1}}
+}

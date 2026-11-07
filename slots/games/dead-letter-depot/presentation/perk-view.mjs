@@ -1,6 +1,6 @@
 import {mountVault} from './vault.mjs';
 import {dropReels,liftSymbols} from './landing.mjs';
-import {dwell} from './dispatch.mjs';
+import {dwell,symbolName} from './dispatch.mjs';
 
 const pictures={return:'letter',unpack:'parcel',deliver:'phone'};
 const rules={build:'Marked wins light the vault',return:'3 letters · pays twice',unpack:'5 parcels · unpack premiums',deliver:'2 phones · complete a group'};
@@ -32,6 +32,42 @@ export function perkCard(id,marks,remaining,capacity,compact=false){
     card.append(pips);
   }
   card.title=rules[id];return card;
+}
+// Keep the badge and its explanation together while the spin waits for the cue.
+async function announcePerk(host,id,detail,signal,quick){
+  if(signal?.aborted)return;
+  const badge=host.querySelector('.perk-'+id);
+  const layer=document.createElement('div');
+  layer.className='perk-announcement';
+  const notice=document.createElement('div');
+  notice.className='perk-notice';
+  notice.dataset.perk=id;
+  notice.setAttribute('role','status');
+  const face=badge.querySelector('.perk-face').cloneNode(true);
+  face.setAttribute('aria-hidden','true');
+  const name=document.createElement('strong');
+  name.textContent=id;
+  const line=document.createElement('span');
+  line.textContent=detail;
+  notice.append(face,name,line);
+  layer.append(notice);
+  document.body.append(layer);
+  try{
+    const from=badge.getBoundingClientRect(), to=notice.getBoundingClientRect();
+    notice.style.setProperty('--from-x',(from.left+from.width/2-to.left-to.width/2)+'px');
+    notice.style.setProperty('--from-y',(from.top+from.height/2-to.top-to.height/2)+'px');
+    notice.classList.add('perk-incoming');
+    await dwell(quick?1600:2150,signal);
+  }finally{layer.remove();}
+}
+
+function effectText(fire){
+  if(fire.perk==='return')return 'Wins on this spin will pay twice.';
+  const n=fire.changes.length;
+  if(!n)return fire.perk==='deliver'?'No symbols needed for delivery.':'No spaces available to unpack.';
+  const symbol=symbolName(fire.changes[0][3]).toLowerCase();
+  const count=n+' '+(n===1?symbol.replace(/s$/,''):symbol);
+  return fire.perk==='unpack'?'Turn tiles into '+count+'.':'Deliver '+count+' to the reels.';
 }
 export function perkHUD(host,bonus,spinIndex,meter){
   const spin=bonus.spins[spinIndex];
@@ -80,8 +116,10 @@ export async function presentPerkSpin({spin,bonus,index,host,board,draw,meter,re
     if(!quick)await dropReels(board,null,signal);
     await hud.collect(spin.land,[...board.querySelectorAll('[data-symbol="key"]')],signal,quick);
     for(let at=0;at<=spin.steps.length;at++){
-      for(const fire of spin.perks.filter(f=>f.at===at&&f.perk!=='return')){
+      for(const fire of spin.perks.filter(f=>f.at===at)){
+        await announcePerk(host,fire.perk,effectText(fire),signal,quick);
         hud.spend(fire.perk);
+        if(fire.perk==='return')continue;
         grid=grid.map(col=>col.slice());
         for(const [x,y,,s] of fire.changes)grid[x][y]={s};
         paint();
@@ -100,6 +138,10 @@ export async function presentPerkSpin({spin,bonus,index,host,board,draw,meter,re
         const cell=tile(x,y),rect=cell.getBoundingClientRect();
         return {getBoundingClientRect:()=>rect,classList:cell.classList,flightArt:cell.querySelector('img').src};
       });
+      if(marks.length){
+        const names=step.rack.hits.map(symbolName).join(' and ');
+        await announcePerk(host,'build',names+' light '+marks.length+(marks.length===1?' vault lamp.':' vault lamps.'),signal,quick);
+      }
       await dwell(quick?50:320,signal);
       if(!quick)await liftSymbols(board,true,signal);
       grid=step.after;paint();
@@ -112,7 +154,6 @@ export async function presentPerkSpin({spin,bonus,index,host,board,draw,meter,re
       await hud.collect(step.rack,[...keys,...marks],signal,quick);
     }
     const returned=spin.perks.find(f=>f.perk==='return');
-    if(returned)hud.spend('return');
     if(returned?.returned>0){
       readout('RETURN · PAYS TWICE');
       board.classList.add('return-stamped');

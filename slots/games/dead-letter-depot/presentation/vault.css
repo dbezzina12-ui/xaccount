@@ -1,7 +1,10 @@
 .postal-vault{position:relative;width:100%;aspect-ratio:1;isolation:isolate;container-type:inline-size;filter:drop-shadow(0 6px 5px #00191ba8)}
 .vault-housing,.vault-door{position:absolute;inset:0;background-image:var(--vault-atlas);background-size:200% 100%;background-repeat:no-repeat}
 .vault-housing{background-position:left center;z-index:1}.vault-door{background-position:right center;z-index:3;transform:scale(.86);transform-origin:18% 50%;backface-visibility:visible}
-.vault-prize{position:absolute;left:24%;right:24%;top:63.6%;height:15%;display:grid;place-items:center;z-index:2;color:#44260d;text-shadow:0 1px #fff5c0;font:bold 10cqw/1 Georgia,serif;white-space:nowrap}
+.vault-prize,.vault-nameplate{position:absolute;display:grid;place-items:center;z-index:2;white-space:nowrap}
+.vault-prize{inset:25% 22% 39%;color:#ffdf86;text-shadow:0 .55cqw #624021,0 1.1cqw 1.8cqw #031411;font:bold 18cqw/1 Georgia,serif;font-variant-numeric:lining-nums tabular-nums}
+.vault-wide-value .vault-prize{font-size:12cqw;letter-spacing:-.045em}
+.vault-nameplate{inset:63.6% 25% 23.6%;color:#56310e;text-shadow:0 .35cqw #ffedb3;font:900 5.6cqw/1 Georgia,serif;letter-spacing:.10em;text-indent:.10em}
 .vault-prize span{opacity:0}.vault-value-shown .vault-prize span{opacity:1;animation:vault-number .24s ease-out both}
 .vault-is-open .vault-door{transform:scale(.86) perspective(700px) rotateY(-108deg);opacity:.5}
 .vault-lamps{position:absolute;inset:0;z-index:5;pointer-events:none}.vault-lamps i{position:absolute;width:11%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 28%,#55746b,#142d30 65%);border:.65cqw solid #a67335;box-shadow:0 .5cqw .7cqw #00181b,inset 0 0 0 .8cqw #102020;transform:translate(-50%,-50%)}

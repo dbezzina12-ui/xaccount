@@ -34,7 +34,7 @@ async function animate(el, frames, duration, signal, easing='cubic-bezier(.2,.7,
 function machine() {
   const el = document.createElement('div');
   el.className = 'postal-vault';el.style.setProperty('--vault-atlas',`url("${atlas}")`);
-  el.innerHTML = '<div class="vault-aura"></div><div class="vault-housing"></div><div class="vault-prize" aria-hidden="true"><span></span></div><div class="vault-door"></div><div class="vault-lamps" aria-hidden="true">'+Array.from({length:5},(_,i)=>'<i style="--lamp:'+i+'"></i>').join('')+'</div><div class="vault-lock-target"></div>';
+  el.innerHTML = '<div class="vault-aura"></div><div class="vault-housing"></div><div class="vault-prize" aria-hidden="true"><span></span></div><div class="vault-nameplate" aria-hidden="true">MULTI</div><div class="vault-door"></div><div class="vault-lamps" aria-hidden="true">'+Array.from({length:5},(_,i)=>'<i style="--lamp:'+i+'"></i>').join('')+'</div><div class="vault-lock-target"></div>';
   return el;
 }
 function lights(el, count) {
@@ -81,12 +81,14 @@ export function mountVault(host, {onReveal=()=>{},largeAt=25,revealCaption=()=>'
       hero.classList.add('vault-is-open');
       await animate(hero.querySelector('.vault-door'),[{transform:'scale(.86) perspective(700px) rotateY(0deg)',opacity:1},{transform:'scale(.86) perspective(700px) rotateY(-108deg)',opacity:.5}],280*time,signal);
       // The award becomes visible only after the door has opened.
-      hero.querySelector('.vault-prize span').textContent=(starting?'':'+')+value.toLocaleString('en-US')+'×';
+      const amount=(starting?'':'+')+value.toLocaleString('en-US')+'×';
+      hero.querySelector('.vault-prize span').textContent=amount;
+      hero.classList.toggle('vault-wide-value',amount.length>4);
       hero.classList.add('vault-value-shown','award-'+(value>=largeAt && value<1000?'large':vaultTreatment(value)));
       caption.textContent=starting?'STARTING MULTIPLIER':revealCaption(value);
       status.textContent=(starting?'Starting multiplier ':'Vault adds ')+value+' times';
       await onReveal(value,{starting});
-      await wait((reduced()?650:560)*time,signal);
+      await wait(quick?1100:1650,signal);
       await animate(root,[{opacity:1},{opacity:0}],180*time,signal);
     }finally {root.remove();}
   }
