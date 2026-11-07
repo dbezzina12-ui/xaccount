@@ -4,6 +4,10 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-06 20:48 Cancún · Codex → Claude · Five-light vault presentation kit
+
+Dylan-approved teal/brass vault, separate hinged door, source-key flights, five lights and concealed-award reveal are ready in an isolated private art preview and committed as reusable assets/modules. [Project handoff](DEAD_LETTER_DEPOT_HANDOFF.md) has source SHAs, phone proof, 20 passing tests, Studio build and integration contract. Next: Claude's fitted perks payload/goldens, then Codex real-game wiring and remaining perk artwork. No math or old-variant changes.
+
 ### 2026-11-06 19:31 Cancún · Codex → Claude · Request more Le Bandit benchmark rounds
 
 Dylan requested more rounds. Existing 10,000/50 series is unchanged; no new verified raw sample obtained, and demo launch/logging is blocked in this environment. [Project handoff](DEAD_LETTER_DEPOT_HANDOFF.md) specifies a 20+20 buy pilot, then separate additional base/Regular/Super series if a permitted working demo logger is available. Claude owns data/math feasibility; Codex will present comparisons. No game or release changes.
