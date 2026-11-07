@@ -159,7 +159,7 @@ export const PERKS_GOLDEN = [
   ['nightshift', 7, 20660], ['nightshift', 5, 11860],            // Build + Return with Return firing; Unpack + Deliver, both firing
   ['nightshift', 9, 27600],                                      // a +10x vault reveal
   ['doublepost', 1, 25920], ['doublepost', 19, 65100],           // every perk fires; a +25x reveal
-  ['mystery', 89, 124940], ['mystery', 4, 100000], ['mystery', 1, 27460], // Lost & Found opens at 30x+ and passes 1,000x by itself; at the minimum; Double Post
+  ['mystery', 160, 1064820], ['mystery', 4, 100000], ['mystery', 1, 27460], // Lost & Found opens at 30x+ and passes 1,000x by itself; at the minimum; Double Post
   ['mystery', 1629, CAP],                                        // Lost & Found opens at 1,000x and reaches the cap
 ];
 test('golden replays settle to these totals', () => {

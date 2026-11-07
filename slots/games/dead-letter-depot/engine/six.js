@@ -165,8 +165,8 @@ export const SIX_PERKS = Object.freeze({
     reveal: table([[1, 75], [2, 18], [3, 4], [5, 2], [10, 0.7], [25, 0.25], [100, 0.04], [1000, 0.002]]) }),
   super: Object.freeze({ pays: FREE, fs: 0.012, lowScale: 1.0159, keyWeight: 3.5, start: 5, ceiling: 1000, ring: 5, perks: 4, perkAt: PERK_AT, charges: CHARGES_2, buildMarks: 2,
     reveal: table([[1, 60], [2, 25], [3, 8], [5, 4], [10, 2], [25, 0.6], [100, 0.1], [250, 0.02], [1000, 0.0014]]) }),
-  hidden: Object.freeze({ pays: HIDDEN, fs: 0.012, lowScale: 1.4615, keyWeight: 6, start: 0, ceiling: 1000, ring: 5, perks: 4, perkAt: PERK_AT, charges: CHARGES_3, buildMarks: 2, floor: 100000,
-    opening: table([[15, 25], [20, 25], [25, 20], [30, 15], [40, 8], [60, 2], [250, 0.4], [1000, 0.3]]),
+  hidden: Object.freeze({ pays: HIDDEN, fs: 0.012, lowScale: 1.4392, keyWeight: 6, start: 0, ceiling: 1000, ring: 5, perks: 4, perkAt: PERK_AT, charges: CHARGES_3, buildMarks: 2, floor: 100000,
+    opening: table([[15, 25], [20, 25], [25, 20], [30, 15], [40, 8], [60, 2], [250, 0.4], [1000, 0.4]]),
     reveal: table([[1, 40], [2, 30], [5, 15], [10, 8], [25, 4], [50, 1.5], [100, 0.5], [250, 0.1], [1000, 0.02]]) }),
 });
 export const SIX_MODES = Object.freeze({
