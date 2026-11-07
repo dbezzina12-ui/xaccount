@@ -1,3 +1,4 @@
+import {perkCard} from './perk-view.mjs';
 const css=document.createElement('link');
 css.rel='stylesheet';css.href=new URL('./bonus-brief.css',import.meta.url).href;
 document.head.append(css);
@@ -11,6 +12,7 @@ const art=Object.fromEntries(Object.keys(looks).map(tier=>[tier,new URL('../art/
 const make=(tag,cls,text)=>{const el=document.createElement(tag);el.className=cls;if(text)el.textContent=text;return el};
 
 function feature(tier,variant){
+  if(variant==='perks')return tier==='hidden'?'Open your starting vault, then fill five lights for each new reveal.':'Fill five vault lights to grow your multiplier.';
   if(variant==='vault2' && tier!=='hidden')return tier==='regular'?'Listed basics switch your multi on. Key matches unlock 60×, then the 1,000× inner vault.':'Start at 5×, active every spin. Key matches unlock 120×, then the 1,000× inner vault.';
   if(variant==='vault2')variant='vault';
   if(variant==='vault')return tier==='regular'?'Start at 2×. Listed basics switch your multi on; match 8+ Keys to unlock the 1,000× vault.':tier==='super'?'Start at 5×, active every spin. Match 8+ Keys to unlock the 1,000× vault.':'Start at 30×. Five landed Keys add +20; match 8+ Keys to unlock the 1,000× vault.';
@@ -25,7 +27,7 @@ function feature(tier,variant){
     : 'Match 8+ listed Keys to double your entire global multiplier.';
 }
 
-export function buildBonusBrief({tier,title,spins,variant='collections',preview=false}){
+export function buildBonusBrief({tier,title,spins,bonus,variant='collections',preview=false}){
   const look=looks[tier];
   const scene=make('div','dispatch-scene bonus-explainer');scene.dataset.tier=tier;
   const visual=make('div','bonus-visual');
@@ -38,7 +40,13 @@ export function buildBonusBrief({tier,title,spins,variant='collections',preview=
   const rule=make('p','bonus-feature',feature(tier,variant));
   const button=make('button','cta',preview?'Back to previews':'Continue');
   button.id='startBonus';button.disabled=true;
-  ticket.append(heading,award,rule,button);
+  ticket.append(heading,award,rule);
+  if(variant==='perks'&&bonus?.perks){
+    const cards=make('div','perk-cards'),capacity=tier==='super'?2:3;
+    for(const id of bonus.perks)cards.append(perkCard(id,bonus.build,capacity,capacity));
+    ticket.append(cards);
+  }
+  ticket.append(button);
   scene.append(visual,ticket);
   // Warm/decode during the throw; the screen still has a readable title on failure.
   const ready=hero.decode().catch(()=>{hero.hidden=true});

@@ -36,7 +36,7 @@ export async function enterDispatch({bonus,scatters,trigger,spins,show,onImpact,
   const anchor=document.createComment('Frank stage position');
   frank.before(anchor);
   let cover;
-  const {scene,visual,button,ready}=buildBonusBrief({tier:bonus.tier,title:bonus.title,spins,trigger,variant,preview});
+  const {scene,visual,button,ready}=buildBonusBrief({bonus,tier:bonus.tier,title:bonus.title,spins,trigger,variant,preview});
   let restoreParcel=()=>{};
   try {
     scatters.forEach(tile=>tile.classList.add('dispatch-scatter'));

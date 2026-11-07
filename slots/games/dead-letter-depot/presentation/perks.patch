@@ -1,0 +1,644 @@
+diff --git a/dist/presentation/bonus-brief.mjs b/dist/presentation/bonus-brief.mjs
+index a60f23c..d3fdd5c 100644
+--- a/dist/presentation/bonus-brief.mjs
++++ b/dist/presentation/bonus-brief.mjs
+@@ -1,3 +1,4 @@
++import {perkCard} from './perk-view.mjs';
+ const css=document.createElement('link');
+ css.rel='stylesheet';css.href=new URL('./bonus-brief.css',import.meta.url).href;
+ document.head.append(css);
+@@ -11,6 +12,7 @@ const art=Object.fromEntries(Object.keys(looks).map(tier=>[tier,new URL('../art/
+ const make=(tag,cls,text)=>{const el=document.createElement(tag);el.className=cls;if(text)el.textContent=text;return el};
+ 
+ function feature(tier,variant){
++  if(variant==='perks')return tier==='hidden'?'Open your starting vault, then fill five lights for each new reveal.':'Fill five vault lights to grow your multiplier.';
+   if(variant==='vault2' && tier!=='hidden')return tier==='regular'?'Listed basics switch your multi on. Key matches unlock 60×, then the 1,000× inner vault.':'Start at 5×, active every spin. Key matches unlock 120×, then the 1,000× inner vault.';
+   if(variant==='vault2')variant='vault';
+   if(variant==='vault')return tier==='regular'?'Start at 2×. Listed basics switch your multi on; match 8+ Keys to unlock the 1,000× vault.':tier==='super'?'Start at 5×, active every spin. Match 8+ Keys to unlock the 1,000× vault.':'Start at 30×. Five landed Keys add +20; match 8+ Keys to unlock the 1,000× vault.';
+@@ -25,7 +27,7 @@ function feature(tier,variant){
+     : 'Match 8+ listed Keys to double your entire global multiplier.';
+ }
+ 
+-export function buildBonusBrief({tier,title,spins,variant='collections',preview=false}){
++export function buildBonusBrief({tier,title,spins,bonus,variant='collections',preview=false}){
+   const look=looks[tier];
+   const scene=make('div','dispatch-scene bonus-explainer');scene.dataset.tier=tier;
+   const visual=make('div','bonus-visual');
+@@ -38,7 +40,13 @@ export function buildBonusBrief({tier,title,spins,variant='collections',preview=
+   const rule=make('p','bonus-feature',feature(tier,variant));
+   const button=make('button','cta',preview?'Back to previews':'Continue');
+   button.id='startBonus';button.disabled=true;
+-  ticket.append(heading,award,rule,button);
++  ticket.append(heading,award,rule);
++  if(variant==='perks'&&bonus?.perks){
++    const cards=make('div','perk-cards'),capacity=tier==='super'?2:3;
++    for(const id of bonus.perks)cards.append(perkCard(id,bonus.build,capacity,capacity));
++    ticket.append(cards);
++  }
++  ticket.append(button);
+   scene.append(visual,ticket);
+   // Warm/decode during the throw; the screen still has a readable title on failure.
+   const ready=hero.decode().catch(()=>{hero.hidden=true});
+diff --git a/dist/presentation/perk-view.mjs b/dist/presentation/perk-view.mjs
+new file mode 100644
+index 0000000..55f7eb0
+--- /dev/null
++++ b/dist/presentation/perk-view.mjs
+@@ -0,0 +1,125 @@
++import {mountVault} from './vault.mjs';
++import {dropReels,liftSymbols} from './landing.mjs';
++import {dwell} from './dispatch.mjs';
++
++const pictures={return:'letter',unpack:'parcel',deliver:'phone'};
++const rules={build:'Marked wins light the vault',return:'3 letters · pays twice',unpack:'5 parcels · unpack premiums',deliver:'2 phones · complete a group'};
++export function perkCard(id,marks,remaining,capacity,compact=false){
++  const card=document.createElement('div');
++  card.className='perk-card perk-'+id;
++  const face=document.createElement('div');
++  face.className='perk-face';
++  const symbols=id==='build'?marks.map(s=>s.toLowerCase()):[pictures[id]];
++  for(const s of symbols){
++    const image=new Image();
++    image.src='art/night-mail/symbols/'+s+'.webp';
++    image.alt=s;
++    face.append(image);
++  }
++  const name=document.createElement('b');
++  name.textContent=id;
++  card.append(face,name);
++  if(!compact){const rule=document.createElement('small');rule.textContent=rules[id];card.append(rule);}
++  if(id!=='build'){
++    const pips=document.createElement('span');
++    pips.className='perk-pips';
++    pips.setAttribute('aria-label',remaining+' of '+capacity+' charges');
++    for(let i=0;i<capacity;i++){
++      const pip=document.createElement('i');
++      pip.classList.toggle('lit',i<remaining);
++      pips.append(pip);
++    }
++    card.append(pips);
++  }
++  card.title=rules[id];return card;
++}
++export function perkHUD(host,bonus,spinIndex,meter){
++  const spin=bonus.spins[spinIndex];
++  const capacity=bonus.tier==='super'?2:3;
++  const charges={...spin.charges};
++  for(const fire of spin.perks)charges[fire.perk]++;
++  host.className='perk-rack';
++  delete host.dataset.lineup;
++  const dock=document.createElement('div');
++  dock.className='perk-dock';
++  const badges=document.createElement('div');
++  badges.className='perk-badges';
++  function paint(){
++    badges.replaceChildren(...bonus.perks.map(id=>perkCard(id,bonus.build,charges[id],capacity,true)));
++  }
++  paint();host.replaceChildren(dock,badges);
++  let value=spin.meter.start;
++  let notches=spinIndex?bonus.spins[spinIndex-1].meter.notches:0;
++  const vault=mountVault(dock,{largeAt:10,revealCaption:n=>value+n>=1000?'MULTIPLIER AT 1,000× LIMIT':'ADDED TO YOUR MULTIPLIER',onReveal(n,{starting}){
++    value=starting?n:Math.min(1000,value+n);
++    meter(value,true);
++  }});
++  vault.setNotches(notches);
++  return {vault,spend(id){charges[id]--;paint();},async collect(event,sources,signal,quick){
++    if(sources.length){
++      await vault.collect({sources,fromNotches:notches,awards:event.reveals,signal,quick});
++    }
++    value=event.after;notches=event.notches;
++    meter(value,true);
++  }};
++}
++export async function presentPerkSpin({spin,bonus,index,host,board,draw,meter,readout,signal,quick}){
++  const hud=perkHUD(host,bonus,index,meter);
++  const tile=(x,y)=>board.children[x].children[y];
++  let grid=spin.board;
++  const paint=(hits=[])=>{
++    draw(grid,hits);
++    for(const id of bonus.build||[]){
++      for(const cell of board.querySelectorAll('[data-symbol="'+id.toLowerCase()+'"]'))cell.classList.add('perk-mark');
++    }
++  };
++  try{
++    meter(spin.meter.start,true);
++    if(!quick)await liftSymbols(board,false,signal);
++    paint();
++    if(!quick)await dropReels(board,null,signal);
++    await hud.collect(spin.land,[...board.querySelectorAll('[data-symbol="key"]')],signal,quick);
++    for(let at=0;at<=spin.steps.length;at++){
++      for(const fire of spin.perks.filter(f=>f.at===at&&f.perk!=='return')){
++        hud.spend(fire.perk);
++        grid=grid.map(col=>col.slice());
++        for(const [x,y,,s] of fire.changes)grid[x][y]={s};
++        paint();
++        for(const [x,y] of fire.changes)tile(x,y).classList.add('perk-'+fire.perk+'-arrival');
++        if(fire.changes.length){
++          readout(fire.perk==='unpack'?'Unpack · premium delivery':'Deliver · group completed');
++          await dwell(quick?180:550,signal);
++        }
++      }
++      const step=spin.steps[at];
++      if(!step)break;
++      paint(step.cleared);
++      readout(step.wins.map(w=>w.count+' '+w.s).join(' + '));
++      const marks=step.rack.hits.map(id=>{
++        const [x,y]=step.wins.find(w=>w.s===id).cells[0];
++        const cell=tile(x,y),rect=cell.getBoundingClientRect();
++        return {getBoundingClientRect:()=>rect,classList:cell.classList,flightArt:cell.querySelector('img').src};
++      });
++      await dwell(quick?50:320,signal);
++      if(!quick)await liftSymbols(board,true,signal);
++      grid=step.after;paint();
++      const distances=Array(30).fill(0),heights=Array(6).fill(0);
++      for(const [x,from,to] of step.drops)distances[to*6+x]=to-from;
++      for(const [x] of step.refills)heights[x]++;
++      for(const [x,y] of step.refills)distances[y*6+x]=heights[x];
++      if(!quick)await dropReels(board,distances,signal);
++      const keys=step.refills.filter(f=>f[2]==='KEY').map(([x,y])=>tile(x,y));
++      await hud.collect(step.rack,[...keys,...marks],signal,quick);
++    }
++    const returned=spin.perks.find(f=>f.perk==='return');
++    if(returned)hud.spend('return');
++    if(returned?.returned>0){
++      readout('RETURN · PAYS TWICE');
++      board.classList.add('return-stamped');
++      await dwell(quick?240:800,signal);
++    }
++  }finally{
++    // Keep the completed HUD visible between spins. Its host is replaced on the next spin.
++    board.classList.remove('return-stamped');
++  }
++}
+diff --git a/dist/presentation/perks.css b/dist/presentation/perks.css
+new file mode 100644
+index 0000000..1fc8920
+--- /dev/null
++++ b/dist/presentation/perks.css
+@@ -0,0 +1,6 @@
++.floor #rack.perk-rack{display:flex;align-items:center;justify-content:center;gap:6px;padding:3px;background:linear-gradient(0deg,#152b30,#254c4a);height:auto;min-height:0}.floor #rack.perk-rack[hidden]{display:none}.perk-dock{width:clamp(48px,7vh,72px);flex:none}.perk-dock .vault-status{font:700 9px/1 system-ui;letter-spacing:0;color:#f5dfad}.perk-badges,.perk-cards{display:flex;align-items:stretch;gap:4px;justify-content:center}.perk-card{position:relative;display:grid;align-content:center;justify-items:center;border-radius:4px;border:1px solid #b99c69;background:linear-gradient(145deg,#164940,#123139);color:#fff0c9;padding:2px 4px;min-width:0}.perk-card b{text-transform:uppercase;font:800 clamp(8px,1.3vh,13px)/1.1 system-ui;letter-spacing:.04em}.perk-face{display:flex;justify-content:center}.perk-face img{width:clamp(18px,3.2vh,34px);height:clamp(18px,3.2vh,34px);object-fit:contain}.perk-build .perk-face img{width:clamp(14px,2.6vh,26px)}.perk-return{background:linear-gradient(135deg,#6c3934,#442925)}.perk-unpack{background:linear-gradient(135deg,#6d522d,#453321)}.perk-deliver{background:linear-gradient(135deg,#345272,#253345)}.perk-pips{display:flex;gap:3px;margin:3px}.perk-pips i{width:5px;height:5px;border-radius:50%;background:#171d21;outline:1px solid #98794d}.perk-pips .lit{background:#f9ce81}.perk-cards{margin:5px 0;flex-wrap:wrap}.perk-cards .perk-card{max-width:23%;padding:4px}.perk-cards small{font:600 clamp(9px,1.5vh,13px)/1.15 system-ui;text-align:center}.perk-mark:after{content:'✦';position:absolute;right:3%;top:2%;color:#ffdf84;text-shadow:0 1px 2px #061613;font-weight:900}.perk-unpack-arrival img,.perk-deliver-arrival img{animation:perk-drop .4s ease-out}.perk-unpack-arrival img{animation-name:perk-pop}@keyframes perk-drop{from{transform:translate(40%,-65%);opacity:.2}}@keyframes perk-pop{from{transform:scale(.35);opacity:.2}}#board.return-stamped:after{content:'PAYS TWICE';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-9deg);border:4px double #fae2b1;border-radius:4px;background:#733c30;color:#fff2d4;padding:.3em .6em;font:900 clamp(18px,4vw,40px) Georgia;white-space:nowrap}#board.return-stamped{position:relative}
++@media(orientation:portrait) and (max-height:700px){
++ main:has(#rack.perk-rack:not([hidden])){padding-top:28px}
++ .floor:has(#rack.perk-rack:not([hidden])) #board{aspect-ratio:6/3.43}
++ .perk-rack .perk-dock{width:39px}
++}
+diff --git a/dist/presentation/six-view.mjs b/dist/presentation/six-view.mjs
+index ddc33f6..2f43b89 100644
+--- a/dist/presentation/six-view.mjs
++++ b/dist/presentation/six-view.mjs
+@@ -8,6 +8,7 @@ export function sixView(options) {
+   if(round.spin?.rack)for(const step of round.spin.steps){
+     step.rackHits=step.rack.hits;step.meterAfter=step.rack.after;
+   }
++  if(options.variant==='perks')return round;
+   if (round.bonus) {
+     const bonus = round.bonus;
+     bonus.selected = bonus.rack;
+diff --git a/dist/presentation/stage-motion.mjs b/dist/presentation/stage-motion.mjs
+index 72374ca..0ac7058 100644
+--- a/dist/presentation/stage-motion.mjs
++++ b/dist/presentation/stage-motion.mjs
+@@ -36,7 +36,7 @@ export async function enterDispatch({bonus,scatters,trigger,spins,show,onImpact,
+   const anchor=document.createComment('Frank stage position');
+   frank.before(anchor);
+   let cover;
+-  const {scene,visual,button,ready}=buildBonusBrief({tier:bonus.tier,title:bonus.title,spins,trigger,variant,preview});
++  const {scene,visual,button,ready}=buildBonusBrief({bonus,tier:bonus.tier,title:bonus.title,spins,trigger,variant,preview});
+   let restoreParcel=()=>{};
+   try {
+     scatters.forEach(tile=>tile.classList.add('dispatch-scatter'));
+diff --git a/dist/presentation/vault.mjs b/dist/presentation/vault.mjs
+index b9227ad..48fae3e 100644
+--- a/dist/presentation/vault.mjs
++++ b/dist/presentation/vault.mjs
+@@ -40,7 +40,7 @@ function machine() {
+ function lights(el, count) {
+   [...el.querySelectorAll('.vault-lamps i')].forEach((lamp,i)=>lamp.classList.toggle('is-lit',i<count));
+ }
+-export function mountVault(host, {onReveal=()=>{}}={}) {
++export function mountVault(host, {onReveal=()=>{},largeAt=25,revealCaption=()=>'ADDED TO YOUR MULTIPLIER'}={}) {
+   const ready=Promise.all([atlas,keyArt].map(src=>{const image=new Image();image.src=src;return image.decode();}));
+   const dock = machine();host.append(dock);
+   const status = document.createElement('span');status.className='vault-status';status.setAttribute('role','status');host.append(status);
+@@ -48,13 +48,13 @@ export function mountVault(host, {onReveal=()=>{}}={}) {
+   const lifecycle = new AbortController();
+   function setNotches(count) {
+     if(!Number.isInteger(count)||count<0||count>5)throw new Error('Invalid vault lights');
+-    lights(dock,count);status.textContent=count+' / 5 keys';
+-    dock.setAttribute('role','img');dock.setAttribute('aria-label','Vault: '+count+' of 5 keys collected');
++    lights(dock,count);status.textContent=count+' / 5 lights';
++    dock.setAttribute('role','img');dock.setAttribute('aria-label','Vault: '+count+' of 5 lights filled');
+   }
+   setNotches(0);
+   async function flight(source, signal) {
+     const rect=source.getBoundingClientRect(), target=dock.querySelector('.vault-lock-target').getBoundingClientRect();
+-    const key=new Image();key.src=keyArt;key.alt='';key.className='vault-flying-key';
++    const key=new Image();key.src=source.flightArt||keyArt;key.alt='';key.className='vault-flying-key';
+     const size=Math.max(34,Math.min(64,rect.width));
+     const x=rect.left+rect.width/2,y=rect.top+rect.height/2,dx=target.left+target.width/2-x,dy=target.top+target.height/2-y;
+     key.style.cssText=`left:${x-size/2}px;top:${y-size/2}px;width:${size}px;height:${size}px`;
+@@ -82,8 +82,8 @@ export function mountVault(host, {onReveal=()=>{}}={}) {
+       await animate(hero.querySelector('.vault-door'),[{transform:'scale(.86) perspective(700px) rotateY(0deg)',opacity:1},{transform:'scale(.86) perspective(700px) rotateY(-108deg)',opacity:.5}],280*time,signal);
+       // The award becomes visible only after the door has opened.
+       hero.querySelector('.vault-prize span').textContent=(starting?'':'+')+value.toLocaleString('en-US')+'×';
+-      hero.classList.add('vault-value-shown','award-'+vaultTreatment(value));
+-      caption.textContent=starting?'STARTING MULTIPLIER':'ADDED TO YOUR MULTIPLIER';
++      hero.classList.add('vault-value-shown','award-'+(value>=largeAt && value<1000?'large':vaultTreatment(value)));
++      caption.textContent=starting?'STARTING MULTIPLIER':revealCaption(value);
+       status.textContent=(starting?'Starting multiplier ':'Vault adds ')+value+' times';
+       await onReveal(value,{starting});
+       await wait((reduced()?650:560)*time,signal);
+diff --git a/dist/reel-engine/engine.js b/dist/reel-engine/engine.js
+index 5f9ee32..fba36bc 100644
+--- a/dist/reel-engine/engine.js
++++ b/dist/reel-engine/engine.js
+@@ -162,7 +162,11 @@ function runJob(S, code) {
+ }
+ 
+ // One spin: land, opening stamps, then checks until nothing pays.
+-export function spinBoard(landKind, rng, { opening = 0, record = false, lands = LANDS, targets = targetsFor('base'), collections = null, filter = 0, scheme = INCREMENT_SCHEME } = {}) {
++// perks (the six-symbol trial): [[symbol, count], ...]. The first time a check
++// finds `count` or more of that symbol on the board, its job runs once this
++// spin: before that check's wins are found, except 'return', which pays the
++// spin's wins twice when the spin ends. None by default.
++export function spinBoard(landKind, rng, { opening = 0, record = false, lands = LANDS, targets = targetsFor('base'), collections = null, filter = 0, scheme = INCREMENT_SCHEME, perks = [] } = {}) {
+   const land = lands[landKind];
+   if (!land) throw Error(`Unknown landing ${landKind}`);
+   const col = collections ?? new Int32Array(NPAY), before = Array.from(col), filterBefore = filter;
+@@ -176,8 +180,13 @@ export function spinBoard(landKind, rng, { opening = 0, record = false, lands =
+     addStamp(S, cell, openingValue(rng()), 'opening'); openingAt.push([...at(cell), S.val[cell]]);
+   }
+   const board = S.rec ? boardOf(S) : null;
+-  const target = PAYING.map((s) => targets[s]);
++  const target = PAYING.map((s) => targets[s]), perkList = perks.map(([s, k]) => [CODE[s], k]), perked = [];
++  let returnAt = -1;
+   for (; S.step < MAX_TUMBLES; ) {
++    for (const [s, k] of perkList) if (!perked.some((p) => p.code === s) && countsOf(S)[s] >= k) {
++      if (JOBS[PAYING[s]] === 'return') { perked.push({ code: s, at: S.step, s: PAYING[s], job: 'return' }); returnAt = perked.length - 1; }
++      else perked.push({ code: s, at: S.step, ...runJob(S, s) });
++    }
+     const n = countsOf(S);
+     let wilds = 0; for (let c = 0; c < CELLS; c++) if (S.sym[c] === WILD_CODE) wilds++;
+     const joined = wilds ? best(n, ALL) : -1;
+@@ -210,8 +219,10 @@ export function spinBoard(landKind, rng, { opening = 0, record = false, lands =
+     const jobs = queue.map((s) => runJob(S, s));
+     if (step) Object.assign(step, { pay, drops: moved.drops, refills: moved.refills, jobs, collections: Object.fromEntries(PAYING.map((s, i) => [s, col[i]])), after: boardOf(S) }), S.rec.steps.push(step);
+   }
++  if (returnAt >= 0) { perked[returnAt].returned = S.subtotal; S.subtotal *= 2; }
+   let fs = 0; for (let c = 0; c < CELLS; c++) if (S.sym[c] === FS_CODE) fs++;
+   const out = { subtotal: S.subtotal, stampSum: S.stampSum, stampCount: S.stampCount, clears: S.clears, fs, tumbles: S.step, filter: S.filter, collections: col };
++  if (perkList.length) out.perks = perked.map(({ code, ...p }) => p);
+   if (S.rec) Object.assign(out, { board, opening: openingAt, steps: S.rec.steps, stampsAt: S.rec.stampsAt, collectionsBefore: Object.fromEntries(PAYING.map((s, i) => [s, before[i]])), filteredBefore: FILTERABLE.filter((_, i) => filterBefore & (1 << i)), filteredAfter: FILTERABLE.filter((_, i) => S.filter & (1 << i)) });
+   return out;
+ }
+diff --git a/dist/reel-engine/six.js b/dist/reel-engine/six.js
+index b298911..67e6585 100644
+--- a/dist/reel-engine/six.js
++++ b/dist/reel-engine/six.js
+@@ -20,7 +20,7 @@
+ import { compileLands, spinBoard, tierOf, seeded } from './engine.js';
+ import { PAYING, PREMIUMS, LOWS, CAP, BONUSES, RETRIGGER, MAX_FREE_SPINS, MYSTERY, LAND, bonusFor } from './rules.js';
+ 
+-export const SIX_VERSION = 'dld-six-1', LADDER_VERSION = 'dld-six-2', BALANCED_VERSION = 'dld-six-3', STEADY_VERSION = 'dld-six-4', KEYRING_VERSION = 'dld-six-5', VAULT_VERSION = 'dld-six-6', VAULT2_VERSION = 'dld-six-7';
++export const SIX_VERSION = 'dld-six-1', LADDER_VERSION = 'dld-six-2', BALANCED_VERSION = 'dld-six-3', STEADY_VERSION = 'dld-six-4', KEYRING_VERSION = 'dld-six-5', VAULT_VERSION = 'dld-six-6', VAULT2_VERSION = 'dld-six-7', PERKS_VERSION = 'dld-six-8';
+ export { seeded };
+ 
+ // The trial's landings: no stamps. Free spins land thick basics so rack hits
+@@ -133,6 +133,42 @@ export const SIX_VAULT2 = Object.freeze({
+   super: Object.freeze({ pays: FREE, fs: 0.012, lowScale: 2.12, keyWeight: 9, start: 5, ceiling: 120, innerAt: 1000, when: 'always', ladder: true, keyRack: true, addCap: Object.freeze([0, 1]), ring: 7, ringAdd: 1, vault: true }),
+   hidden: Object.freeze({ pays: HIDDEN, fs: 0.012, lowScale: 1.4908, keyWeight: 8.5, start: 30, ceiling: 1000, when: 'always', ladder: true, keyRack: true, addCap: Object.freeze([2, 6]), ring: 5, ringAdd: 20, vault: true, floor: 100000 }),
+ });
++// Perks and the vault reveal (Dylan, 2026-11-07; dld-six-8). Every bonus has a
++// 5-notch key ring: every KEY that lands turns a notch, and each full ring
++// opens the vault, which reveals a multiplier drawn from the bonus's table
++// and adds it to the bonus multiplier for the rest of the bonus. Lost & Found
++// also opens a vault before its first spin (its starting multiplier). The
++// multiplier applies to every spin. Bonuses start with perks:
++//   build    two marked basics; each paying group of one turns a ring notch
++//   return   3+ ENVELOPEs on the board: the spin's wins pay twice when it ends
++//   unpack   5+ PARCELs on the board turn four more cells into its most common premium
++//   deliver  2+ PHONEs on the board bring in the symbols missing from the nearest group
++// Night Shift draws 2 of them at random; Double Post and Lost & Found get all
++// 4. A premium perk fires at most once a spin (the first check that finds
++// enough of its symbol: engine.js spinBoard perks) and at most `charges` times
++// a bonus. The counts are balanced so the four perks are worth about the same
++// in Night Shift. Draw order: the perks, Build's basics, Lost & Found's
++// opening vault, then the spins; each reveal is drawn when its ring fills,
++// after that spin's board. The base game is Vault 2's.
++export const PERKS = Object.freeze(['build', 'return', 'unpack', 'deliver']);
++export const PERK_SYMBOL = Object.freeze({ return: 'ENVELOPE', unpack: 'PARCEL', deliver: 'PHONE' });
++const table = (rows) => Object.freeze(rows.map((r) => Object.freeze(r)));
++// How many of a perk's symbol on the board fire it (balanced so the four perks
++// are worth about the same in Night Shift).
++const PERK_AT = Object.freeze({ return: 3, unpack: 5, deliver: 2 });
++// Each premium perk works at most this many times a bonus (Build is not limited).
++const CHARGES_3 = Object.freeze({ return: 3, unpack: 3, deliver: 3 }), CHARGES_2 = Object.freeze({ return: 2, unpack: 2, deliver: 2 });
++export const SIX_PERKS = Object.freeze({
++  base: Object.freeze({ pays: LAND.base.pays, fs: 0.0181, lowScale: 0.96, rack: 2, rackRule: 'double' }),
++  priority: Object.freeze({ pays: LAND.base.pays, fs: 0.03, lowScale: 0.96, rack: 2, rackRule: 'double' }),
++  regular: Object.freeze({ pays: FREE, fs: 0.012, lowScale: 1.102, keyWeight: 4, start: 2, ceiling: 1000, ring: 5, perks: 2, perkAt: PERK_AT, charges: CHARGES_3, buildMarks: 2,
++    reveal: table([[1, 75], [2, 18], [3, 4], [5, 2], [10, 0.7], [25, 0.25], [100, 0.04], [1000, 0.002]]) }),
++  super: Object.freeze({ pays: FREE, fs: 0.012, lowScale: 1.0159, keyWeight: 3.5, start: 5, ceiling: 1000, ring: 5, perks: 4, perkAt: PERK_AT, charges: CHARGES_2, buildMarks: 2,
++    reveal: table([[1, 60], [2, 25], [3, 8], [5, 4], [10, 2], [25, 0.6], [100, 0.1], [250, 0.02], [1000, 0.0014]]) }),
++  hidden: Object.freeze({ pays: HIDDEN, fs: 0.012, lowScale: 1.4615, keyWeight: 6, start: 0, ceiling: 1000, ring: 5, perks: 4, perkAt: PERK_AT, charges: CHARGES_3, buildMarks: 2, floor: 100000,
++    opening: table([[15, 25], [20, 25], [25, 20], [30, 15], [40, 8], [60, 2], [250, 0.4], [1000, 0.3]]),
++    reveal: table([[1, 40], [2, 30], [5, 15], [10, 8], [25, 4], [50, 1.5], [100, 0.5], [250, 0.1], [1000, 0.02]]) }),
++});
+ export const SIX_MODES = Object.freeze({
+   base: Object.freeze({ title: 'Base Spin', cost: 1, kind: 'spin', land: 'base' }),
+   priority: Object.freeze({ title: 'Priority Mail', cost: 3, kind: 'spin', land: 'priority' }),
+@@ -144,7 +180,7 @@ export const SIX_MYSTERY = MYSTERY;
+ export const ADD = Object.freeze(Object.fromEntries(PAYING.map((s) => [s, s === 'KEY' ? 0 : LOWS.includes(s) ? 1 : 3])));
+ 
+ export const sixLands = (spec = SIX) => compileLands(Object.fromEntries(Object.entries(spec).map(([k, l]) => [k, {
+-  pays: Object.fromEntries(PAYING.map((s) => [s, LOWS.includes(s) ? l.pays[s] * l.lowScale : s === 'KEY' && l.keyWeight ? l.keyWeight : l.pays[s]])), fs: l.fs, stamp: 0,
++  pays: Object.fromEntries(PAYING.map((s) => [s, LOWS.includes(s) ? l.pays[s] * l.lowScale : s === 'KEY' ? (l.keyWeight || l.pays[s]) : l.premScale ? l.pays[s] * l.premScale : l.pays[s]])), fs: l.fs, stamp: 0,
+ }])));
+ const LANDS = sixLands();
+ export const VARIANTS = Object.freeze({
+@@ -155,6 +191,7 @@ export const VARIANTS = Object.freeze({
+   keyring: Object.freeze({ version: KEYRING_VERSION, spec: SIX_KEYRING, lands: sixLands(SIX_KEYRING), mystery: BALANCED_MYSTERY }),
+   vault: Object.freeze({ version: VAULT_VERSION, spec: SIX_VAULT, lands: sixLands(SIX_VAULT), mystery: BALANCED_MYSTERY }),
+   vault2: Object.freeze({ version: VAULT2_VERSION, spec: SIX_VAULT2, lands: sixLands(SIX_VAULT2), mystery: BALANCED_MYSTERY }),
++  perks: Object.freeze({ version: PERKS_VERSION, spec: SIX_PERKS, lands: sixLands(SIX_PERKS), mystery: BALANCED_MYSTERY }),
+ });
+ const NEVER = Object.freeze(Object.fromEntries(PAYING.map((s) => [s, Infinity])));
+ 
+@@ -231,6 +268,56 @@ function ringSpin(tier, rng, rack, meter, budget, { lands, spec, record, state }
+   return out;
+ }
+ 
++// ---- perks (dld-six-8) ----
++export const revealFrom = (rows, u) => { let r = u * rows.reduce((a, [, w]) => a + w, 0); for (const [v, w] of rows) if ((r -= w) < 0) return v; return rows.at(-1)[0]; };
++export const PERK_OF = Object.freeze(Object.fromEntries(Object.entries(PERK_SYMBOL).map(([p, s]) => [s, p])));
++export function drawPerks(t, rng) {
++  const drawn = t.perks >= PERKS.length ? [...PERKS] : sample(PERKS, t.perks, rng);
++  return PERKS.filter((p) => drawn.includes(p));
++}
++// One perk event: the KEYs that landed and each paying group of a Build basic
++// turn notches; each full ring opens the vault, whose reveal adds to the meter.
++export function perkStep(before, wins, keys, state, t, rng) {
++  const hits = state.build ? wins.map((w) => w.s).filter((s) => state.build.includes(s)) : [];
++  const notches = state.notches + keys + hits.length, fills = Math.floor(notches / t.ring), reveals = [];
++  state.notches = notches % t.ring;
++  for (let i = 0; i < fills; i++) reveals.push(revealFrom(t.reveal, rng()));
++  return { hits, keys, fills, notches: state.notches, reveals, before, after: Math.min(t.ceiling, before + reveals.reduce((a, b) => a + b, 0)) };
++}
++function perkSpin(tier, rng, meter, budget, { lands, spec, record, state, perks }) {
++  const r = spinBoard(tier, rng, { lands, targets: NEVER, record: true, perks });
++  const t = spec[tier], land = perkStep(meter, [], keysIn(r.board.flat().map((c) => c.s)), state, t, rng), reveals = [...land.reveals];
++  let value = land.after, fills = land.fills;
++  for (const step of r.steps) {
++    const e = perkStep(value, step.wins, keysIn(step.refills.map((f) => f[2])), state, t, rng);
++    value = e.after; fills += e.fills; reveals.push(...e.reveals);
++    if (record) step.rack = e;
++  }
++  const win = r.subtotal * value, paid = Math.min(win, budget);
++  const out = { subtotal: r.subtotal, meter: { start: meter, after: value, fills, notches: state.notches, active: true }, reveals, perks: (r.perks ?? []).map((f) => ({ ...f, perk: PERK_OF[f.s] })), multiplier: value, win, paid, fs: r.fs, retrigger: 0, keyHits: 0 };
++  if (record) Object.assign(out, { board: r.board, land, steps: r.steps });
++  return out;
++}
++function perkBonus(tier, rng, budget, { lands, spec, record }) {
++  const t = spec[tier], perks = drawPerks(t, rng), build = perks.includes('build') ? sample(LOWS, t.buildMarks, rng) : null;
++  const opening = t.opening ? revealFrom(t.opening, rng()) : 0, charges = Object.fromEntries(perks.filter((p) => PERK_SYMBOL[p]).map((p) => [p, t.charges[p]]));
++  const state = { build, notches: 0 }, spins = [];
++  let meter = Math.min(t.ceiling, t.start + opening), awarded = BONUSES[tier].spins, total = 0;
++  while (spins.length < awarded && total < budget) {
++    const triggers = Object.keys(charges).filter((p) => charges[p] > 0).map((p) => [PERK_SYMBOL[p], t.perkAt[p]]);
++    const s = perkSpin(tier, rng, meter, budget - total, { lands, spec, record, state, perks: triggers });
++    for (const f of s.perks) charges[f.perk] -= 1;
++    s.charges = { ...charges };
++    meter = s.meter.after;
++    if (s.fs >= RETRIGGER.fs && awarded < MAX_FREE_SPINS) { s.retrigger = Math.min(RETRIGGER.spins, MAX_FREE_SPINS - awarded); awarded += s.retrigger; }
++    total += s.paid; spins.push(s);
++  }
++  const floorTopUp = t.floor && total < Math.min(t.floor, budget) ? Math.min(t.floor, budget) - total : 0;
++  total += floorTopUp;
++  return { tier, title: BONUSES[tier].title, perks, build, rack: build ?? [], opening, spins, awarded, meter, total, floorTopUp, capped: total >= budget, keyHits: 0,
++    ringFills: spins.reduce((a, s) => a + s.meter.fills, 0), reveals: spins.flatMap((s) => s.reveals), perkFires: spins.reduce((a, s) => a + s.perks.length, 0) };
++}
++
+ function freeSpin(tier, rng, rack, meter, budget, { lands, spec, record, state }) {
+   const r = spinBoard(tier, rng, { lands, targets: NEVER, record: true });
+   const t = spec[tier], events = [];
+@@ -244,6 +331,7 @@ function freeSpin(tier, rng, rack, meter, budget, { lands, spec, record, state }
+ }
+ 
+ export function playSixBonus(tier, rng, budget = CAP, { lands = LANDS, spec = SIX, record = true } = {}) {
++  if (spec[tier].perks) return perkBonus(tier, rng, budget, { lands, spec, record });
+   const t = spec[tier], rack = selectRack(t.keyRack ? 'hidden' : tier, rng), spins = [], state = t.ring ? ringState(rack) : t.ladder ? ladderState(rack) : null;
+   let meter = spec[tier].start, awarded = BONUSES[tier].spins, total = 0;
+   while (spins.length < awarded && total < budget) {
+@@ -279,7 +367,7 @@ export function playSixSpin(land, rng, { lands, spec, record = false }) {
+   return spin;
+ }
+ 
+-// variant 'flat' (dld-six-1), 'ladder' (dld-six-2), 'balanced' (dld-six-3), 'steady' (dld-six-4), 'keyring' (dld-six-5), 'vault' (dld-six-6) or 'vault2' (dld-six-7); tools may pass spec and lands.
++// variant 'flat' (dld-six-1), 'ladder' (dld-six-2), 'balanced' (dld-six-3), 'steady' (dld-six-4), 'keyring' (dld-six-5), 'vault' (dld-six-6), 'vault2' (dld-six-7) or 'perks' (dld-six-8); tools may pass spec and lands.
+ export function playSixRound({ mode = 'base', rng, variant = 'flat', lands = null, spec = null, record = true } = {}) {
+   const v = VARIANTS[variant];
+   if (!v) throw Error(`Unknown trial variant ${variant}`);
+diff --git a/dist/reels.mjs b/dist/reels.mjs
+index bfa65fa..bc78d8c 100644
+--- a/dist/reels.mjs
++++ b/dist/reels.mjs
+@@ -16,6 +16,7 @@ import { dropReels, liftSymbols, paintCollectionRack } from './presentation/land
+ import { dwell, featureBeat, collectionText, hasVisibleEffect, symbolName } from './presentation/dispatch.mjs';
+ import { frames } from './presentation/frames.mjs';
+ 
++import {perkHUD,presentPerkSpin} from './presentation/perk-view.mjs';
+ const $ = id => document.getElementById(id);
+ const modal = $('modal'), board = $('board');
+ const assets = { ST:'stamp', ENVELOPE:'letter' };
+@@ -23,10 +24,11 @@ const symbolId = s => assets[s] || s.toLowerCase();
+ const imageUrl = s => 'art/night-mail/symbols/' + symbolId(s) + '.webp';
+ const blank = Object.fromEntries(PAYING.map(s => [s,0]));
+ const variant = new URLSearchParams(location.search).get('playtest');
++const perks=variant==='perks';
+ const vault2=variant==='vault2';
+ const vault=vault2||variant==='vault';
+ const keyring=vault||variant==='keyring';
+-const modern = ['balanced','steady','keyring','vault','vault2'].includes(variant);
++const modern = ['balanced','steady','keyring','vault','vault2','perks'].includes(variant);
+ const power = variant === 'power' || modern;
+ const engineVariant = modern ? variant : power ? 'ladder' : 'flat';
+ const spec = VARIANTS[engineVariant].spec;
+@@ -60,6 +62,13 @@ if(vault2){
+  descriptions.nightshift=tierCopy.regular='Listed basics activate your multi. Key matches open 60×, then the 1,000× inner vault.';
+  descriptions.doublepost=tierCopy.super='Start at 5×, active every spin. Key matches open 120×, then the 1,000× inner vault.';
+ }
++if(perks){
++ descriptions.nightshift='Two perks and a 2× starting multiplier.';
++ descriptions.doublepost='Four perks and a 5× starting multiplier.';
++ for(const file of ['vault.css','perks.css']){
++   const css=document.createElement('link');css.rel='stylesheet';css.href='presentation/'+file;document.head.append(css);
++ }
++}
+ // Playtest credit and resume state are scoped to this tab.
+ const key = 'depot-session-' + (modern ? VARIANTS[engineVariant].version : power ? 'six-ladders-1' : trial ? 'six-trial-1' : ENGINE_VERSION);
+ let session = JSON.parse(sessionStorage.getItem(key) || 'null') || {balance:trial?1000000:100000,bet:100,mode:'base',pending:null};
+@@ -89,6 +98,7 @@ function draw(grid,hits=[]) {
+ function rack(counts,targets) {
+   const baseRack=modern && session.pending?.stage==='base' ? round?.spin?.rack : null;
+   if(!baseRack && (session.pending?.stage!=='bonus'||!round?.bonus))return;
++  if(perks && !baseRack)return;
+   if(trial){
+     const selected=baseRack||round.bonus.selected, host=$('rack');
+     const lineup=selected.join(',')+(vault2?':'+(baseRack?'base':round.bonus.tier):'');
+@@ -100,7 +110,7 @@ function rack(counts,targets) {
+       const item=document.createElement('div'), icon=new Image(), award=document.createElement('b');
+       item.className='six-cubby';item.dataset.id=id;
+       icon.src=imageUrl(id);icon.alt=symbolName(id);
+-      award.textContent=baseRack&&vault?'×2':rackAward(id,LOWS.includes(id)?1:3);
++      award.textContent=baseRack&&(vault||perks)?'×2':rackAward(id,LOWS.includes(id)?1:3);
+       item.append(icon,award);
+       if(keyring && id==='KEY'){item.classList.add('key-ring-slot');const ring=document.createElement('i');ring.className='key-ring';ring.dataset.size=String(ringSize());ring.setAttribute('aria-hidden','true');item.append(ring);}
+       return item;
+@@ -142,8 +152,8 @@ function frankCue(action,detail={}) {
+   document.querySelector('.postmaster').dispatchEvent(new CustomEvent('depot:frank',{bubbles:true,detail:{action,...detail}}));
+ }
+ function meter(value,active) {
+-  $('multi-value').textContent=value+'×';
+-  $('multi-value').setAttribute('aria-label','Global multiplier '+value+' times, '+(active?'active':'stored'));
++  $('multi-value').textContent=perks && value===0?'?':value+'×';
++  $('multi-value').setAttribute('aria-label',perks && value===0?'Starting vault sealed':'Global multiplier '+value+' times, '+(active?'active':'stored'));
+   $('multi-value').dataset.digits=String(value).length;
+   $('held').classList.toggle('active',active);
+ }
+@@ -241,15 +251,25 @@ function guide(intro){
+     panels[2]=['KEY','Open the vault','Five landed Keys boost your multi. Match 8+ Keys to lock in 1,000× for the rest of any bonus.'];
+   }
+   if(vault2)panels[2]=['KEY','Two vaults','Seven landed Keys boost Regular/Super. Match 8+ Keys for 60×/120×; a second Key match locks in 1,000×. Hidden keeps five notches and opens straight to 1,000×.'];
+-  show('<img class="guide-logo" src="art/night-mail/return-to-sender.webp" alt="Return to Sender"><h2 class="guide-title">'+(modern?(vault2?'Vault 2':vault?'Vault':keyring?'Key Ring':variant==='steady'?'Steady ladders':'Balanced ladders'):power?'Multiplier ladders':trial?'Six-symbol playtest':intro?'Welcome to the depot':'How to play')+'</h2><div class="panels">'+panels.map(([s,t,d])=>'<section><img src="'+imageUrl(s)+'" alt=""><b>'+t+'</b><p>'+d+'</p></section>').join('')+'</div><button class="cta" id="continue">'+(intro?'Open the depot':'Back to reels')+'</button>');
++  if(perks){
++    panels[0]=['J','Match eight','Listed basic wins double the base-spin multiplier.'];
++    panels[1]=['PARCEL','Draw your perks','Night Shift draws two perks. Double Post and Lost & Found get all four.'];
++    panels[2]=['KEY','Light the vault','Keys and marked Build wins light the five lamps. Each full vault adds a surprise multiplier.'];
++  }
++  show('<img class="guide-logo" src="art/night-mail/return-to-sender.webp" alt="Return to Sender"><h2 class="guide-title">'+(modern?(perks?'Perks':vault2?'Vault 2':vault?'Vault':keyring?'Key Ring':variant==='steady'?'Steady ladders':'Balanced ladders'):power?'Multiplier ladders':trial?'Six-symbol playtest':intro?'Welcome to the depot':'How to play')+'</h2><div class="panels">'+panels.map(([s,t,d])=>'<section><img src="'+imageUrl(s)+'" alt=""><b>'+t+'</b><p>'+d+'</p></section>').join('')+'</div><button class="cta" id="continue">'+(intro?'Open the depot':'Back to reels')+'</button>');
+   const actions=document.createElement('div');actions.className='trial-actions';$('paper').append(actions);
+   const option=(label,click)=>{const b=document.createElement('button');b.textContent=label;b.onclick=click;actions.append(b)};
+-  for(const choice of ['balanced','steady','keyring','vault','vault2']){const link=document.createElement('a');link.href='?playtest='+choice;link.textContent=choice==='vault2'?'Try Vault 2':choice==='vault'?'Try Vault':choice==='keyring'?'Try Key Ring':choice==='steady'?'Try Steady':'Try Balanced';actions.append(link);}
++  for(const choice of ['balanced','steady','keyring','vault','vault2','perks']){const link=document.createElement('a');link.href='?playtest='+choice;link.textContent=choice==='perks'?'Try Perks':choice==='vault2'?'Try Vault 2':choice==='vault'?'Try Vault':choice==='keyring'?'Try Key Ring':choice==='steady'?'Try Steady':'Try Balanced';actions.append(link);}
+   if(modern){
+-    const note=document.createElement('p');note.className='trial-note';note.textContent='Bonus starts: '+spec.regular.start+'× / '+spec.super.start+'× / '+spec.hidden.start+'×. Lost & Found pays at least 1,000×. Mystery: 90% Double Post, 10% Lost & Found.';actions.before(note);
++    const note=document.createElement('p');note.className='trial-note';note.textContent='Bonus starts: '+spec.regular.start+'× / '+spec.super.start+'× / '+spec.hidden.start+'×. Lost & Found pays at least 1,000×. Mystery: 90% Double Post, 10% Lost & Found.';if(perks)note.textContent='Lost & Found opens a vault before the first spin. Mystery draws Double Post (90%) or Lost & Found (10%).';actions.before(note);
+     option('Base rack replay',()=>{modal.close();begin('base',134,true)});
+     option('Minimum award replay',()=>{modal.close();begin('mystery',vault?89:keyring?43:variant==='steady'?89:4,true)});
+   }
++  if(perks){
++    for(const [label,mode,seed] of [['Build + Return','nightshift',7],['Unpack + Deliver','nightshift',5],['Night Shift +10×','nightshift',9],['Double Post +25×','doublepost',19],['Hidden opening 30×','mystery',89],['Hidden opening 1,000×','mystery',1629]]){
++      option(label,()=>{modal.close();begin(mode,seed,true)});
++    }
++  }
+   if(keyring)option('Vault replay',()=>{modal.close();begin('mystery',vault2?2572:vault?2910:7407,true)});
+   if(vault){
+     option('Night Shift vault replay',()=>{modal.close();begin('nightshift',vault2?284:24393,true)});
+@@ -260,7 +280,7 @@ function guide(intro){
+     option('Double Post inner vault',()=>{modal.close();begin('doublepost',646910,true)});
+   }
+   if(trial){
+-    option(power?'Play ladder replay':'Play Key replay',()=>{modal.close();begin('mystery',modern?4:power?20:4,true)});
++    option(perks?'Play Hidden replay':power?'Play ladder replay':'Play Key replay',()=>{modal.close();begin('mystery',modern?4:power?20:4,true)});
+     option('Random Night Shift',()=>{modal.close();begin('nightshift',undefined,true)});
+     option('Random Double Post',()=>{modal.close();begin('doublepost',undefined,true)});
+   }else{
+@@ -315,6 +335,10 @@ async function pause(ms,signal){
+   });
+ }
+ async function runSpin(spin,targets,signal){
++  if(perks && spin.land){
++    win=credits(winOf(shownTotal(round,session.pending),session.bet));paint();
++    await presentPerkSpin({spin,bonus:round.bonus,index:session.pending.next,host:$('rack'),board,draw,meter,readout,signal,quick:session.turbo});
++  }else{
+   let grid=spin.board, counts=spin.collectionsBefore || blank;
+   rack(counts,targets);meter(spin.meter?.start || 1,spin.meter && session.pending.stage==='bonus' && (BONUSES[round.bonus.tier].when==='always'||spin.ringBefore?.vault));
+   showLadders(spin.ladderBefore);
+@@ -369,6 +393,7 @@ async function runSpin(spin,targets,signal){
+     if(trial)for(const cell of $('rack').children)cell.classList.remove('lit');
+     grid=step.after;counts=step.collections;rack(counts,targets);draw(grid);
+   }
++  }
+   const paid=paidOf(spin), spinWin=credits(winOf(paid,session.bet));
+   if(spin.stampSum || spin.clears?.length)frankCue('stamp',{value:spin.meter?.after ?? spin.multiplier});
+   meter(spin.meter?.after ?? spin.multiplier,spin.meter?.active ?? (spin.multiplier>1 || spin.clears?.length>0 || spin.stampSum>0));
+@@ -383,6 +408,7 @@ async function runSpin(spin,targets,signal){
+ async function finish(){
+   const p=session.pending, result=settle(round,session.bet,p.fixture?costOf(p.mode,session.bet):p.before);
+   if(!p.fixture)session.balance=result.balance;
++  if(perks)for(const cell of board.querySelectorAll('.perk-mark'))cell.classList.remove('perk-mark');
+   session.pending=null;session.lastWin=result.win;session.lastWinBonus=!!round.bonus;
+   win=credits(result.win);save();paint();
+   if(round.bonus){
+@@ -404,6 +430,11 @@ async function play(){
+     }else if(p.stage==='bonus'){
+       const b=round.bonus, spin=b.spins[p.next];
+       $('mode').textContent=b.title.toUpperCase();
++      if(perks && p.openingPending){
++        const hud=perkHUD($('rack'),b,p.next,meter);
++        await hud.vault.revealStarting(b.opening,{signal:controller.signal,quick:session.turbo});
++        delete p.openingPending;save();
++      }
+       await runSpin(spin,b.targets,controller.signal);
+       p.next++;p.stage=p.next===b.spins.length?'end':'bonus';save();
+     }
+@@ -425,7 +456,7 @@ async function play(){
+       readout(trigger);
+       await enterDispatch({bonus,trigger,scatters,variant:trial?engineVariant:'collections',spins:BONUSES[bonus.tier].spins,
+         show,onImpact:()=>openRegister(bonus),onReveal:()=>{
+-          p.stage='bonus';save();paint();
++          p.stage='bonus';if(perks && bonus.opening)p.openingPending=true;save();paint();
+           rack(blank,bonus.targets);
+           meter(trial?spec[bonus.tier].start:BONUSES[bonus.tier].meter,BONUSES[bonus.tier].when==='always');
+           $('mode').textContent=bonus.title.toUpperCase();
+diff --git a/tests/perks.test.mjs b/tests/perks.test.mjs
+new file mode 100644
+index 0000000..209814e
+--- /dev/null
++++ b/tests/perks.test.mjs
+@@ -0,0 +1,45 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import {sixView} from '../dist/presentation/six-view.mjs';
++import {collectionPlan} from '../dist/presentation/vault.mjs';
++import {seeded} from '../dist/reel-engine/six.js';
++
++test('Perks fixtures support presenter source cells, charges, ring carry and settlement',()=>{
++  const cases=[['base',134,1920],['base',1672,19600],['nightshift',7,20660],['nightshift',5,11860],['nightshift',9,27600],['doublepost',1,25920],['doublepost',19,65100],['mystery',89,124940],['mystery',4,100000],['mystery',1,27460],['mystery',1629,2500000]];
++  for(const [mode,seed,total] of cases){
++    const round=sixView({mode,rng:seeded(seed),variant:'perks'});
++    assert.equal(round.total,total);
++    const bonus=round.bonus;
++    if(!bonus)continue;
++    let notches=0,meter=bonus.opening||(bonus.tier==='regular'?2:5);
++    let charges=Object.fromEntries(bonus.perks.filter(id=>id!=='build').map(id=>[id,bonus.tier==='super'?2:3]));
++    for(const spin of bonus.spins){
++      assert.equal(spin.meter.start,meter);
++      let grid=spin.board;
++      function ring(e,keys,marks){
++        assert.equal(e.keys,keys);
++        const plan=collectionPlan(notches,keys+marks,e.reveals);
++        notches=(notches+plan.length)%5;
++        meter=Math.min(1000,meter+e.reveals.reduce((a,b)=>a+b,0));
++        assert.equal(e.after,meter);assert.equal(e.notches,notches);
++      }
++      ring(spin.land,grid.flat().filter(c=>c.s==='KEY').length,0);
++      for(let at=0;at<=spin.steps.length;at++){
++        for(const f of spin.perks.filter(f=>f.at===at)){
++          charges[f.perk]--;
++          grid=grid.map(col=>col.slice());
++          for(const [x,y,from,to] of f.changes||[]){
++            assert.equal(grid[x][y].s,from);grid[x][y]={s:to};
++          }
++        }
++        const step=spin.steps[at];
++        if(!step)break;
++        for(const w of step.wins)for(const [x,y] of w.cells)assert.equal(grid[x][y].s,w.s);
++        ring(step.rack,step.refills.filter(f=>f[2]==='KEY').length,step.wins.filter(w=>bonus.build?.includes(w.s)).length);
++        grid=step.after;
++      }
++      assert.deepEqual(charges,spin.charges);
++      assert.equal(meter,spin.multiplier);
++    }
++  }
++});
