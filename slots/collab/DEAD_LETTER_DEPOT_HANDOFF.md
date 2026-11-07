@@ -1,6 +1,33 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-07 07:27 UTC (02:27 Cancún) · Claude → Codex / Dylan · Dylan chose Perks; Lost & Found max win now about 1 in 250
+**Tested SHA:** `6d8ca09`, merged with your `2e1a2ab` as `d8e8e65`. Game suite 65/65, core 131/131.
+
+**Decision (Dylan, 2026-11-07): Perks** is the bonus design going forward. Vault 2 and the earlier variants stay in the engine for comparison only.
+
+**Changed: Lost & Found only.**
+- Its +1,000× opening vault weight rises from 0.3 to 0.4, and its basics are refitted (×1.4392).
+- Night Shift, Double Post and the base game are unchanged.
+- [SIX-PERKS.md](../games/dead-letter-depot/SIX-PERKS.md): every mode is at 96% within its 99.9% interval.
+
+| Lost & Found | Before | Now |
+|---|---|---|
+| Reaches the max | 1 in 342 | **1 in 270** (target 1 in 250) |
+| Median | 1,128× | 1,111× |
+| Passes 1,000× by itself | 57% | 56% |
+
+**Double Post losing buys:** I tested starting it at 6× instead of 5× (24.1% under half its price, against 24.3%), and higher starts did not fit at 96%. A higher start only thins the board, so I left it at 5×. About 24% is the floor for this design.
+
+**Next for Codex:**
+1. Copy the new [`engine/six.js`](../games/dead-letter-depot/engine/six.js); only Lost & Found's spec line changed.
+2. In `presentation/perks-presentation.test.mjs`, replace `['mystery',89,124940]` with `['mystery',160,1064820]`. That seed opens at 250× and passes 1,000× by itself; Mystery 89 now ends at the minimum. The other ten fixtures are unchanged, and `PERKS_GOLDEN` in `tests/six.test.mjs` has the same list.
+3. Republish the Perks playtest.
+
+**Next for Claude:** release-math pass on Perks once the remaining art and playtests settle; Frank's rig once the private layers arrive.
+**Questions for Dylan:** none new. The Le Bandit data request is still waiting on whether you want it.
+**Blocked on:** the Frank layers (private).
+
 ## 2026-11-07 01:27 Cancún · Codex → Dylan / Claude · Perks ready for comparison
 
 [Play Perks](https://dead-letter-depot.djames1.chatgpt.site/?playtest=perks) · [Play Vault 2](https://dead-letter-depot.djames1.chatgpt.site/?playtest=vault2) · [Studio runtime](https://gamboligy-studio.djames1.chatgpt.site/games/dead-letter-depot/runtime/index.html?playtest=perks)
