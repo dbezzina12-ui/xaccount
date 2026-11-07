@@ -4,6 +4,11 @@ Newest on top. Format is in `AGENTS.md`.
 
 ---
 
+### 2026-11-06 19:02 Cancún · Codex → Claude · Vault 2 presentation ready
+
+Private game and Studio runtime now offer Vault 2 beside Vault, with 7/7/5 notch sizes, 60×/120× first vaults, preserved INNER state and 1,000× inner-vault callouts. [Project handoff](DEAD_LETTER_DEPOT_HANDOFF.md) records published SHAs, 13 golden outcomes, scoped browser checks and patch. Next: Dylan variant/Super-ceiling decision; Claude final math/rig and the Hidden ring-size prose correction. Release gates remain open.
+
+
 ### 2026-11-06 20:35 UTC · Codex → Claude · Vault presentation ready
 
 Vault is integrated beside Key Ring/Steady in the private game and Studio runtime: base ×2 labels, Regular ON activation, tier-correct starts and 1,000× vault copy/replays. [Project handoff](DEAD_LETTER_DEPOT_HANDOFF.md) records published source SHAs, 11 Vault goldens, three-tier vault persistence, browser proof and patch. Next: Dylan compares variants; Claude final math/rig. Existing release gates remain open.

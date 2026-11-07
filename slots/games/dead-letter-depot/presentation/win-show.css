@@ -62,3 +62,9 @@
 #rack .key-ring-slot{position:relative;padding-bottom:9px}#rack .key-ring-slot b{font-size:clamp(9px,1.3vmin,13px)}
 .key-ring{position:absolute;bottom:2px;left:12%;width:76%;height:5px;background:linear-gradient(to right,#f8d184 calc(var(--notches,0)*20%),#2b3536 0);clip-path:polygon(0 0,18% 0,18% 100%,0 100%,0 0,20.5% 0,38.5% 0,38.5% 100%,20.5% 100%,20.5% 0,41% 0,59% 0,59% 100%,41% 100%,41% 0,61.5% 0,79.5% 0,79.5% 100%,61.5% 100%,61.5% 0,82% 0,100% 0,100% 100%,82% 100%,82% 0)}
 #rack .vault-open{border-color:#ffe7a0;background:linear-gradient(#725324,#382c1b)}.vault-open .key-ring{background:#ffd77f}
+
+/* Vault 2 uses seven notches; earlier five-notch variants retain their mask. */
+.key-ring[data-size="7"]{clip-path:none;background:linear-gradient(to right,#f8d184 calc(var(--notches,0)*100%/7),#2b3536 0);mask:repeating-linear-gradient(to right,#000 0 calc(100%/7 - 2px),transparent calc(100%/7 - 2px) calc(100%/7))}
+#rack .vault-open .key-ring[data-size="7"]{background:#ffd77f}
+#rack .inner-open{border-color:#c1ffeb;background:linear-gradient(#245f56,#162f36)}
+#rack .inner-open .key-ring{background:#a9ffe1}

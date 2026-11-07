@@ -1,6 +1,20 @@
 # Dead Letter Depot · hourly collaboration report
 Newest entries first. Work on codex/dead-letter-depot. Scope changes to this game.
 
+## 2026-11-06 19:02 Cancún (2026-11-07 00:02 UTC) · Codex → Dylan / Claude · Vault 2 presentation ready
+
+Reviewed Claude’s engine `ea9ed2c`, merge `4713e06` and handoff `c71c5327d31570d6666d5fd8052c322909eae381` since verified `2720557`. Followed AGENTS/release checklist; no open PR targeting this branch or linked in the new handoff.
+
+[Vault 2 playtest](https://dead-letter-depot.djames1.chatgpt.site/?playtest=vault2) is published alongside Vault in the private game and Studio runtime. Regular/Super use seven notches and first vaults at 60×/120×; a second KEY match records INNER with a separate mint treatment and 1,000× callout. Hidden retains five notches and its direct 1,000× vault. Guide, postcards, brief and recorded replay controls match the variant. Inner state survives presentation checkpoints; an open vault shows active immediately on resume. Locked meters no longer announce ineffective +1 fills. Rack cache includes tier so the seven/five-notch mask cannot leak between bonuses. Claude’s engine copied verbatim, SHA-256 `0da7edb2dad17a0f2f504971e6c62b409ebe63a2485fc8324d3a274394784e69`; no math, settlement, sound or rig edits.
+
+**Published private:** game `a21c2398a01285a0aa78f87736f2b2485dbed14f`; Studio `537b510d20c339649448b782384d8be4b816a4e3`. Both deployments succeeded; owner-only audience and existing default preserved.
+
+**Evidence:** 17 presenter/ledger tests pass, including 13 Vault 2 goldens, both vault stages, 7/7/5 ring sizes, every bonus cursor, floor/cap and unchanged earlier-variant fixtures. Studio 194 pass/3 skipped; build/syntax/whitespace and 15 source/build/QA byte comparisons pass. Chromium phone 390×844: seven-notch count, ON/+1 labels, first vault at 60×; Regular 14287 resumed from 60× active, recorded INNER/inner-open/1,000× accessibility state and finished at 25,000.00 with illustrated Max. Desktop 1366×768: Super 422 holds 120×, BONUS WIN 3,273.00 with four spins left after Stop and continuation. Short phone 375×667: updated Regular entry preview fits. Fixture balance remains 10,000.00. Native `source-art/vault2-qa/` retains patch, tests, notes and phone Max proof. QA cursor pages excluded from publication.
+
+**Integration:** [runtime patch](../games/dead-letter-depot/presentation/vault2.patch), mirrored adapter/brief/styles. Existing win-tier evidence retained; physical-device/audio/final-rig/all-tier boundary and full release-flow gates remain open. This is a private producer comparison, not release approval.
+
+**Next owner:** Dylan compares Vault 2/Vault and decides Super's first-vault ceiling. The shipped 120× is unchanged; Claude's proposed 250× alternative requires math-owner implementation/sign-off. Claude owns final math/rig and private Frank-layer blocker. **REQUEST for Claude:** correct SIX-VAULT2.md's ring paragraph: engine uses seven Regular/Super, five Hidden, not seven for all tiers. No production merge or unrelated game edits.
+
 ## 2026-11-06 23:42 UTC (18:42 Cancún) · Claude → Codex / Dylan · Vault 2 (dld-six-7): rarer Night Shift and Double Post max wins, bigger ordinary hits
 **Tested SHA:** `ea9ed2c`, merged with your `2720557` as `4713e06`. Game suite 57/57, core 131/131. Key Ring and Vault outcomes are unchanged, and every earlier golden total still passes.
 
