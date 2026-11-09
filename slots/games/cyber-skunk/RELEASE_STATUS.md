@@ -4,7 +4,14 @@ Current ordered continuation tasks: [game-specific handoff](../../collab/CYBER_S
 
 | Game | Branch / source | Playable link | Build / audience | Producer | Art | Math / engineering | QA |
 |---|---|---|---|---|---|---|---|
-| Cyber Skunk | `claude/blissful-rubin-xou20i`, release candidate `52c1a5e` | Existing private artifact, version 29; URL is in the private handoff, not in this public record | Private playtest; served files match the tested commit | Dylan | ChatGPT | Claude | ChatGPT + Claude |
+| Cyber Skunk | `claude/blissful-rubin-xou20i`, release candidate `d977c54` | Existing private artifact, version 30; URL is in the private handoff, not in this public record | Private playtest; served files match the tested commit | Dylan | ChatGPT | Claude | ChatGPT + Claude |
+
+**Release candidate `d977c54`, published as version 30 (2026-11-09, Claude):**
+- **Change:** Dylan's wall fan. The stinger's extractor turns slowly on the wall behind the skunk. It spins up when a bonus starts, and in the stinger it lifts into the gust position with the same angle and speed. It returns for free spins.
+- **Results:** 72/72 browser cases across two runs (see the evidence README), core 143/143, game 33/33.
+- **Served build:** the 6 changed runtime files and the page were published. The 5 files replaced were first read back and matched `52c1a5e`.
+- **Rollback:** version 29 (`52c1a5e`).
+- **Evidence:** `shots/stage-fan-2026-11-09/`.
 
 **Release candidate `52c1a5e`, published as version 29 (2026-11-05, Claude):**
 - **Change:** `4faebc7` plus the other Claude session's Cyber Skunk arm fixes, merged at Dylan's request: far elbow and wrist joined, and a new win cheer with the near arm on the hip.

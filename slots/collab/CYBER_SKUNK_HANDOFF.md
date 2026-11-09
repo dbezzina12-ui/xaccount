@@ -2,6 +2,44 @@
 
 Newest entry first. Read alongside the [studio history](HANDOFF.md). This game-only log links the scoped batches without copying unrelated studio history or private playable URLs.
 
+## 2026-11-08 20:59 Cancún · Claude → ChatGPT (Codex), Dylan · The stinger's extractor fan now lives behind her: candidate `d977c54` (version 30)
+
+**Dylan:** "add a fan behind her that's slowly blowing, the one that is used for the stinger animation. That way once the buy happens that can spin faster and then move with the animation for the bonus transition. The one where she sprays the screen, and then the fan blows."
+
+**Did** (`claude/blissful-rubin-xou20i`, `d977c54`):
+- **Wall fan:** the stinger's extractor (the `h2-rotor.webp` blades in `extractor-case.svg`) is mounted on the wall behind the skunk, in `#stage` just before `#mascot`. It turns slowly while she idles, about one turn every 10 seconds.
+  - Desktop: left 1500, top 370, 380 wide.
+  - Phone: left 590, top 120, 360 wide, beside her head.
+- **Buy or trigger:** when a bonus starts (bought or landed), the fan spins up to about 620°/s before the stinger opens.
+- **Transition:** after she sprays the screen, the fan lifts off the wall as the main jet starts (33% of the transfer). It grows into the gust position by 51%, keeping its angle and speed, so it is one fan, not a swap. The wall mount is empty while it is away.
+- **Afterwards:** it returns behind her and turns at 110°/s during free spins, then slows back to idle when the bonus ends.
+- **Skip and reduced motion:** with skip or reduced motion it does not fly. With reduced motion it does not spin either.
+- **Code:**
+  - `runtime/stage-fan.js` (new): the spin loop, sharing its angle and speed with the transition.
+  - `runtime/pressure-transfer.js`: a `carry` option.
+  - `runtime/entry-shop.css`: the carried position, from the wall to the gust.
+  - `runtime/styles.css`: `.stage-fan` placement.
+  - `runtime/app.js`: speed changes on bonus start, after the transition and on bonus end.
+  - Cache keys: `stage-fan-1` for styles, entry-shop, launch and app; `stage-fan-2` for pressure-transfer.
+- **Tests:** two tests hard-coded the old `?v=` keys (`neon-ident-2`, `preview-1`). They now read the shipped key from `index.html`.
+
+**Checked:**
+- 72/72 browser cases across two runs. The first run hit my 25-minute timeout one case before the end; the rerun covers the fixed manifest case and that last case.
+- Core 143/143, game 33/33.
+- Desktop and phone stinger frame sheets show no page errors.
+- **Evidence:** `games/cyber-skunk/shots/stage-fan-2026-11-09/`.
+
+**Published:** the private playable is version 30. Only the page and the 6 changed runtime files were sent. The 5 replaced files were read back first and matched `52c1a5e`. **Rollback:** version 29.
+
+**Next for ChatGPT (Codex):**
+1. Merge `claude/blissful-rubin-xou20i` into your Cyber Skunk branch and republish the Vent Hall Site, so it has the wall fan.
+2. Art (optional): the wall fan reuses the stinger's rotor and case. A wall bracket or duct collar behind the case would help it read as mounted at idle. Keep the blades as a separate rotor layer so they can still spin.
+
+**Questions for Dylan:** is the idle speed right (one turn every 10 seconds), and is the size behind her right?
+**Blocked on:** nothing.
+
+---
+
 ## 2026-11-05 · Claude → ChatGPT · Everything missing is merged: candidate `52c1a5e` (version 29), please confirm
 
 **Dylan:** merge everything that is missing (the math, the arm fixes, bonuses keeping the multipliers); ChatGPT will confirm.
