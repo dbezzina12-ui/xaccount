@@ -215,6 +215,11 @@ dialog.buy-stinger::backdrop{background:transparent;backdrop-filter:none}
 @media(max-aspect-ratio:1/1){.buy-stinger[data-phase=opening] .bonus-panel-inner>*{--side:-9vw;--down:62vh}.buy-stinger[data-phase=opening] .bonus-panel-inner>:nth-child(even){--side:8vw;--down:69vh}}
 @keyframes pressure-drift{0%{opacity:0;transform:translate(5%,-5%) scale(.6)}25%{opacity:.35}100%{opacity:0;transform:translate(-62%,-35%) scale(1.28)}}
 @keyframes pressure-copy-in{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}
+/* Carried from the wall behind the operator (stage-fan.js): the extractor takes
+   over at the wall fan's size and place, then lifts into the gust position. */
+.buy-stinger[data-carry][data-phase=charging] :is(.extractor-engine,.extractor-steam){left:calc(var(--from-x) * (1 - var(--carry,0)) + var(--hx) * var(--carry,0));top:calc(var(--from-y) * (1 - var(--carry,0)) + var(--hy) * var(--carry,0));width:calc(var(--from-size) * (1 - var(--carry,0)) + var(--fan) * var(--carry,0))}
+.buy-stinger[data-carry][data-phase=charging] .extractor-steam{height:calc(var(--from-size) * (1 - var(--carry,0)) + var(--fan) * var(--carry,0))}
+.buy-stinger[data-carry][data-phase=charging] .extractor-engine{opacity:var(--lifted,0)}
 /* The fan moves from its gust origin into a smaller spot above the award. */
 .buy-stinger:is([data-phase=sealed],[data-phase=opening]) :is(.extractor-engine,.extractor-steam){left:50%;top:calc(var(--award-edge) + var(--docked-fan)/2);width:var(--docked-fan);transition:top .38s ease-out,left .38s ease-out,width .38s ease-out,height .38s ease-out}
 .buy-stinger:is([data-phase=sealed],[data-phase=opening]) .extractor-steam{height:var(--docked-fan)}

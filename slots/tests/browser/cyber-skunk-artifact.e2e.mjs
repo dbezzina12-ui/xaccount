@@ -68,7 +68,8 @@ test('artifact manifest: every exported byte matches its source',async()=>{
     const response=await fetch(url+path);assert.equal(response.status,200,path);
     assert.equal(hash(Buffer.from(await response.arrayBuffer())),expected,path);
   }
-  for(const value of ['entry-shop.css?v=neon-ident-2','launch.js?v=preview-1'])assert.ok(fragment.includes(value));
+  const shipped=await readFile(join(RT,'index.html'),'utf8');
+  for(const name of ['entry-shop.css','launch.js']){const value=shipped.match(new RegExp(name.replace('.','\\.')+'\\?v=[A-Za-z0-9._-]+'))?.[0];assert.ok(value,name);assert.ok(fragment.includes(value),value);}
   assert.ok(!fragment.includes('<head>')&&!fragment.includes('<body>'));
 });
 

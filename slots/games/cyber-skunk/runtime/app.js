@@ -1,4 +1,5 @@
-import { drawPressureTransfer } from './pressure-transfer.js?v=scatter-focus-1';
+import { drawPressureTransfer } from './pressure-transfer.js?v=stage-fan-2';
+import { stageFan, FAN_SPEED } from './stage-fan.js?v=1';
 // Cyber Skunk: the playable game. The engine settles each round before
 // anything moves (playRound returns its total and every event); this file only
 // presents those events, so skip, turbo and frame timing never change a result.
@@ -65,6 +66,7 @@ if (resumed) { state.balance += resumed.win; state.history.unshift(resumed); sta
 const audio = new GameAudio();
 audio.setMuted(state.muted); audio.setLevels(state.music / 100, state.effects / 100);
 const skunk = new Skunk($('mascot'));
+const wallFan = stageFan($('stage-fan'), { reduced });
 const studioLayoutMedia = new URLSearchParams(location.search).get('studioLayout') === 'viewport'
   ? matchMedia('(max-aspect-ratio: 20/21)') : undefined;
 
@@ -525,6 +527,7 @@ const paintWin = () => { controller.update({ win: money(state.win) }); if (state
 // ---- Bonuses ----
 async function bonusStart(e, result, mode) {
   const tier = BONUSES[e.tier], presentation = TIER[e.tier];
+  wallFan.to(FAN_SPEED.rev, .8); // the buy or trigger spins up the extractor behind her
   if (!e.natural) await spinInBonus(e.tier, result.draw?.bonus ?? 811, mode);
   // Reel strips are ordered left to right, with simultaneous symbols raised from top to bottom.
   const scatters = $('reels').querySelectorAll('.cell.scatter-cell[data-i]');
@@ -550,8 +553,12 @@ async function bonusStart(e, result, mode) {
       audio.play('charge');
       await skunk.spray();
     }
+    // The wall fan lifts into the transition unless it is skipped or reduced.
+    const carry = reduced.matches || state.skip ? null :
+      { from: wallFan.rect(), angle: () => wallFan.angle, speed: () => wallFan.speed, onLift: () => wallFan.away(true) };
+    if (!carry) wallFan.away(true);
     await drawPressureTransfer(dialog, {
-      duration: reduced.matches ? 0 : 2480 * pace(), faces, skip: () => state.skip, mist: fxSprites.mist,
+      duration: reduced.matches ? 0 : 2480 * pace(), faces, skip: () => state.skip, mist: fxSprites.mist, carry,
       getBarrel: () => {
         const tip = skunk.nozzle(), base = skunk.nozzle(0);
         if (!tip || !base) return null;
@@ -584,7 +591,8 @@ async function bonusStart(e, result, mode) {
     await wait(releaseTime);
   } finally {
     start.disabled = false; start.onclick = null; panel.inert = false; panel.hidden = true;
-    dialog.close(); dialog.oncancel = null;
+    dialog.close(); dialog.oncancel = null; delete dialog.dataset.carry;
+    wallFan.away(false); wallFan.to(state.tier ? FAN_SPEED.bonus : FAN_SPEED.idle, 1.2);
   }
 }
 const hud = (spin, of) => { $('hud-spins').textContent = `${spin} / ${of}`; $('hud-win').textContent = money(state.win); };
@@ -612,7 +620,7 @@ async function blackout(e) {
   await wait(600);
 }
 async function bonusEnd() {
-  audio.music('base');
+  audio.music('base'); wallFan.to(FAN_SPEED.idle, 2.5);
   await wait(400);
   delete app.dataset.bonus; $('bonus-hud').hidden = true; state.tier = null; gauge(0);
   setBoard(board.map((c) => ({ s: c.s })));

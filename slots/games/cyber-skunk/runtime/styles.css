@@ -57,6 +57,12 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .app[data-layout=mobile] .logo{left:40px;top:var(--cabinet-top);width:535px;translate:0 calc(var(--slack, 0px) - 100% - 12px)}
 .app[data-layout=mobile] .logo-text{font-size:112px}
 .mascot{position:absolute;z-index:3;pointer-events:none;transform:scaleX(-1)}
+/* The extractor on the wall behind the operator: idles, spins up on a bonus,
+   then lifts into the transition (stage-fan.js, pressure-transfer.js). */
+.stage-fan{position:absolute;z-index:2;aspect-ratio:1;pointer-events:none;--grade:#2a8e90;transform:perspective(1100px) rotateY(-16deg) rotateX(5deg);filter:drop-shadow(18px 27px 21px #03080aa6);transition:opacity .45s ease}
+.stage-fan[data-away]{opacity:0;transition:none}
+.app[data-layout=desktop] .stage-fan{left:1500px;top:370px;width:380px}
+.app[data-layout=mobile] .stage-fan{left:590px;top:120px;width:360px;translate:0 var(--slack, 0px)}
 .mascot-canvas{display:block;width:100%;height:100%}
 /* Mirror the operator at the right of the stage, facing the entry vent. */
 .app[data-layout=desktop] .mascot{right:-23px;top:326px;width:512px;height:640px}

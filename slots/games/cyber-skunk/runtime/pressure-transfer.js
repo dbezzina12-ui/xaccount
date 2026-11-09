@@ -1,16 +1,34 @@
 import { paintLensWater } from './lens-water.js?v=2';
 import { carryReelFaces, paintGust, windFront, shaftAngle } from './fan-gust.js?v=1';
 // The nozzle supplies the water and the extractor supplies the gust.
+// With `carry` (stage-fan.js), the extractor starts as the wall fan behind the
+// operator, keeps its angle and speed, and lifts into the gust position.
+// It lifts as the main jet starts and grows at once (ease-out) toward the camera.
+const LIFT = .33, ARRIVE = .51, easeOut = n => 1-Math.pow(1-clamp(n),3);
 const clamp = n => Math.max(0, Math.min(1, n));
 const smooth = n => { const x=clamp(n); return x*x*(3-2*x); };
 
-export function drawPressureTransfer(dialog, { duration, skip, mist, faces=[], getBarrel, onPilot, onHose, onImpact }) {
+export function drawPressureTransfer(dialog, { duration, skip, mist, faces=[], getBarrel, onPilot, onHose, onImpact, carry=null }) {
   const canvas = dialog.querySelector('.pressure-transfer');
   const ctx = canvas.getContext('2d');
   const hub = dialog.querySelector('.extractor-anchor');
   const ink = getComputedStyle(dialog).getPropertyValue('--surge').trim();
   const tier=dialog.dataset.tier;
   let moving, fanRadius=0, width=0, height=0, cx=0, cy=0, far=0, elapsed=0, last=null, struck=false, pilot=false, hose=false;
+  let lifted=false, liftAt=0, liftAngle=0, spin=0;
+  if (carry) {
+    const origin=dialog.getBoundingClientRect(), from=carry.from;
+    dialog.style.setProperty('--from-x',(from.x-origin.left).toFixed(1)+'px');
+    dialog.style.setProperty('--from-y',(from.y-origin.top).toFixed(1)+'px');
+    dialog.style.setProperty('--from-size',from.size.toFixed(1)+'px');
+    dialog.style.setProperty('--carry','0'); dialog.style.setProperty('--lifted','0');
+    dialog.dataset.carry='';
+  }
+  function lift(seconds) {
+    if (!carry || lifted) return;
+    lifted=true; liftAt=seconds; liftAngle=carry.angle(); spin=carry.speed();
+    dialog.style.setProperty('--lifted','1'); carry.onLift?.();
+  }
   function fit() {
     width=canvas.clientWidth; height=canvas.clientHeight;
     const resolution=Math.min(devicePixelRatio||1,1.6,Math.sqrt(1400000/(width*height)));
@@ -26,7 +44,14 @@ export function drawPressureTransfer(dialog, { duration, skip, mist, faces=[], g
     if (width!==canvas.clientWidth || height!==canvas.clientHeight) fit();
     const blast=smooth((t-.685)/.295), radius=far*blast;
     const front=windFront(t,far,fanRadius);
-    dialog.style.setProperty('--shaft-angle',shaftAngle(t,duration/1000,tier).toFixed(2)+'deg');
+    const seconds=t*duration/1000;
+    if (carry) {
+      if (t>=LIFT) lift(seconds);
+      dialog.style.setProperty('--carry',easeOut((t-LIFT)/(ARRIVE-LIFT)).toFixed(4));
+    }
+    // A carried fan keeps the wall fan's angle and speed under the surge.
+    const carried=lifted ? liftAngle+spin*(seconds-liftAt) : 0;
+    dialog.style.setProperty('--shaft-angle',(carried+shaftAngle(t,duration/1000,tier)).toFixed(2)+'deg');
     moving?.update(t>.56?front:0,far);
     dialog.style.setProperty('--radius',radius.toFixed(1)+'px');
     dialog.style.setProperty('--ignition',smooth((t-.39)/.15).toFixed(3));
@@ -66,6 +91,7 @@ export function drawPressureTransfer(dialog, { duration, skip, mist, faces=[], g
     paintGust(ctx,cx,cy,front,Math.min(width,height),t);
   }
   if(!duration||skip()){
+    if(carry){lift(0);dialog.style.setProperty('--carry','1');}
     dialog.style.setProperty('--radius','160vmax');dialog.style.setProperty('--ignition','1');dialog.style.setProperty('--shaft-angle','0deg');onImpact();return Promise.resolve();
   }
   if(faces.length) moving=carryReelFaces(dialog.querySelector('.gust-faces'),faces);

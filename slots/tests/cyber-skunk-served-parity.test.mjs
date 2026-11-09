@@ -33,7 +33,7 @@ test('served parity: all exported files and shipped version URLs match',async()=
 });
 test('served parity: stale versioned CSS fails even when the bare URL matches',async()=>{
   const report=await verifyAssets(subset(['entry-shop.css']),base+'stale/');assert.equal(report.status,'fail');
-  assert.ok(report.rows.some(r=>r.cacheKey==='?v=neon-ident-2'&&r.reason==='byte-mismatch'));assert.ok(report.rows.some(r=>!r.cacheKey&&r.pass));await save('stale-version',report);
+  assert.ok(report.rows.some(r=>r.cacheKey?.startsWith('?v=')&&r.reason==='byte-mismatch'),'the shipped ?v= key is checked');assert.ok(report.rows.some(r=>!r.cacheKey&&r.pass));await save('stale-version',report);
 });
 test('served parity: missing modules and incorrect module MIME fail',async()=>{
   const report=await verifyAssets(subset(['launch.js']),base+'missing/');assert.equal(report.status,'fail');assert.ok(report.rows.every(r=>r.httpStatus===404));await save('missing-module',report);
