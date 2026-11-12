@@ -1,0 +1,47 @@
+{
+  "beforeVersion": "0.7.0",
+  "afterVersion": "0.7.1",
+  "basis": "Exact complete-round integer ticket distributions. Cost is 50x base bet. Partial returns below cost remain losses.",
+  "before": {
+    "costX": 50,
+    "anyPayout": 0.88,
+    "coversCost": 0.400000017,
+    "profit": 0.396210538,
+    "mediumProbability": 0.686595362,
+    "medianWinX": 40.75,
+    "p75WinX": 59.5,
+    "p90WinX": 78,
+    "mediumShareOfReturn": 0.7354318686282867,
+    "largeShareOfReturn": 0.15597758344689627,
+    "bands": {
+      "zero": 0.12,
+      "belowHalfCost": 0.153724462,
+      "halfToUnderCost": 0.326275521,
+      "breakEven": 0.003789479,
+      "profitToDoubleCost": 0.356530362,
+      "doubleToFiveCost": 0.019671282,
+      "fiveCostOrMore": 0.020008894
+    }
+  },
+  "after": {
+    "costX": 50,
+    "anyPayout": 0.88,
+    "coversCost": 0.400000036,
+    "profit": 0.39647444,
+    "mediumProbability": 0.652043133,
+    "medianWinX": 39.6,
+    "p75WinX": 60.25,
+    "p90WinX": 79.98,
+    "mediumShareOfReturn": 0.7094282801813498,
+    "largeShareOfReturn": 0.15898280226979597,
+    "bands": {
+      "zero": 0.12,
+      "belowHalfCost": 0.182390024,
+      "halfToUnderCost": 0.29760994,
+      "breakEven": 0.003525596,
+      "profitToDoubleCost": 0.350907597,
+      "doubleToFiveCost": 0.025545538,
+      "fiveCostOrMore": 0.020021305
+    }
+  }
+}

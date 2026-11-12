@@ -1,0 +1,153 @@
+{
+  "version": "0.6.0",
+  "sourceCommit": "152f4554c331e43bc51fd07fbaf770f8727bf854",
+  "modes": {
+    "base": {
+      "costX": 1,
+      "anyPayout": 0.20972921111223447,
+      "coversCost": 0.05392296685747118,
+      "profit": 0.05164632008612648,
+      "mediumProbability": 0.029618105182981396,
+      "medianWinX": 0,
+      "p75WinX": 0,
+      "p90WinX": 0.2,
+      "mediumShareOfReturn": 0.03275996265737127,
+      "largeShareOfReturn": 0.8848619084242453,
+      "bands": {
+        "zero": 0.7902707888877656,
+        "belowHalfCost": 0.1422105449484465,
+        "halfToUnderCost": 0.013595699306316765,
+        "breakEven": 0.0022766467713446936,
+        "profitToDoubleCost": 0.01374575910531994,
+        "doubleToFiveCost": 0.01936712463529657,
+        "fiveCostOrMore": 0.018533436345509975
+      }
+    },
+    "enhanced": {
+      "costX": 3,
+      "anyPayout": 0.2502386557091172,
+      "coversCost": 0.061164034679067954,
+      "profit": 0.05810424895969278,
+      "mediumProbability": 0.04202421476950998,
+      "medianWinX": 0,
+      "p75WinX": 0.04,
+      "p90WinX": 0.7,
+      "mediumShareOfReturn": 0.04471352589378963,
+      "largeShareOfReturn": 0.8830812161222256,
+      "bands": {
+        "zero": 0.7497613442908827,
+        "belowHalfCost": 0.167507108907324,
+        "halfToUnderCost": 0.021567512122725247,
+        "breakEven": 0.0030597857193751716,
+        "profitToDoubleCost": 0.017396916927409568,
+        "doubleToFiveCost": 0.01795806808949257,
+        "fiveCostOrMore": 0.022749263942790646
+      }
+    },
+    "duel": {
+      "costX": 50,
+      "anyPayout": 0.4589037310000009,
+      "coversCost": 0.1099159980000049,
+      "profit": 0.10974493000000489,
+      "mediumProbability": 0.09324533200000029,
+      "medianWinX": 0,
+      "p75WinX": 5.5,
+      "p90WinX": 57.6,
+      "mediumShareOfReturn": 0.10011934879774681,
+      "largeShareOfReturn": 0.7654250145103992,
+      "bands": {
+        "zero": 0.5410962689999992,
+        "belowHalfCost": 0.29718823899999736,
+        "halfToUnderCost": 0.0517994939999986,
+        "breakEven": 0.0001710680000000088,
+        "profitToDoubleCost": 0.04127477000000168,
+        "doubleToFiveCost": 0.031817916000001494,
+        "fiveCostOrMore": 0.0366522440000017
+      }
+    },
+    "showdown": {
+      "costX": 100,
+      "anyPayout": 0.9880128480000001,
+      "coversCost": 0.2477449460000005,
+      "profit": 0.2476856270000005,
+      "mediumProbability": 0.271611954999999,
+      "medianWinX": 28.75,
+      "p75WinX": 98.99,
+      "p90WinX": 237.18,
+      "mediumShareOfReturn": 0.29460577400639076,
+      "largeShareOfReturn": 0.3315567218567893,
+      "bands": {
+        "zero": 0.011987151999999824,
+        "belowHalfCost": 0.5948221860000001,
+        "halfToUnderCost": 0.1454457159999995,
+        "breakEven": 0.000059319000000002005,
+        "profitToDoubleCost": 0.12610691999999957,
+        "doubleToFiveCost": 0.08807752199999944,
+        "fiveCostOrMore": 0.03350118500000149
+      }
+    },
+    "lastStand": {
+      "costX": 250,
+      "anyPayout": 0.9268677099999993,
+      "coversCost": 0.13787743999999963,
+      "profit": 0.13787743999999963,
+      "mediumProbability": 0.10827525099999877,
+      "medianWinX": 6.8,
+      "p75WinX": 73.96,
+      "p90WinX": 417.05,
+      "mediumShareOfReturn": 0.11739741896750093,
+      "largeShareOfReturn": 0.6769799825348504,
+      "bands": {
+        "zero": 0.0731322900000006,
+        "belowHalfCost": 0.730518526,
+        "halfToUnderCost": 0.05847174399999976,
+        "breakEven": 0,
+        "profitToDoubleCost": 0.049803506999999,
+        "doubleToFiveCost": 0.04641147700000119,
+        "fiveCostOrMore": 0.041662455999999445
+      }
+    },
+    "mystery": {
+      "costX": 250,
+      "anyPayout": 0.9524395168000133,
+      "coversCost": 0.15842395360061887,
+      "profit": 0.15842395360061887,
+      "mediumProbability": 0.1339703421998976,
+      "medianWinX": 17.69,
+      "p75WinX": 110.89,
+      "p90WinX": 501.6,
+      "mediumShareOfReturn": 0.14224655525529564,
+      "largeShareOfReturn": 0.5967421747498912,
+      "bands": {
+        "zero": 0.04756048319998676,
+        "belowHalfCost": 0.7177438882994536,
+        "halfToUnderCost": 0.07627167489994072,
+        "breakEven": 0,
+        "profitToDoubleCost": 0.05769866729995689,
+        "doubleToFiveCost": 0.05913697459995104,
+        "fiveCostOrMore": 0.04158831170071093
+      }
+    },
+    "godMode": {
+      "costX": 250,
+      "anyPayout": 0.9380052259999563,
+      "coversCost": 0.5203722639997257,
+      "profit": 0.5203722639997257,
+      "mediumProbability": 0.12594698300007037,
+      "medianWinX": 367.8,
+      "p75WinX": 936.56,
+      "p90WinX": 2027.6,
+      "mediumShareOfReturn": 0.051290127133199935,
+      "largeShareOfReturn": 0.7009990474252606,
+      "bands": {
+        "zero": 0.0619947740000437,
+        "belowHalfCost": 0.3791797850002105,
+        "halfToUnderCost": 0.03845317700002008,
+        "breakEven": 0,
+        "profitToDoubleCost": 0.08749380600005029,
+        "doubleToFiveCost": 0.24957817700013957,
+        "fiveCostOrMore": 0.18330028099953585
+      }
+    }
+  }
+}

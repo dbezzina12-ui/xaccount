@@ -1,0 +1,156 @@
+{
+  "beforeVersion": "0.11.0",
+  "afterVersion": "0.12.0",
+  "basis": "Exact integer-ticket probabilities of complete God Mode bonuses. The 250x cost-recovery reference is the Mystery Buy price, not a direct God Mode purchase. No player inputs enter calibration.",
+  "preservedPools": {
+    "base": true,
+    "enhanced": true,
+    "duel": true,
+    "regular": true,
+    "super": true
+  },
+  "before": {
+    "rounds": 240000,
+    "meanWinX": 815.9999999931799,
+    "hitRate": 0.999999904,
+    "maxWinProbability": 0.005104034,
+    "maxWinOneIn": 195.92345975751726,
+    "distribution": {
+      "costX": 250,
+      "anyPayout": 0.999999904,
+      "coversCost": 0.927111458,
+      "profit": 0.927111458,
+      "mediumProbability": 0.562984986,
+      "medianWinX": 415.28,
+      "p75WinX": 620.76,
+      "p90WinX": 896.48,
+      "mediumShareOfReturn": 0.22993777108426247,
+      "largeShareOfReturn": 0.4673478555116756,
+      "bands": {
+        "zero": 9.6e-8,
+        "belowHalfCost": 0.00672397,
+        "halfToUnderCost": 0.066164476,
+        "breakEven": 0,
+        "profitToDoubleCost": 0.49682051,
+        "doubleToFiveCost": 0.368830711,
+        "fiveCostOrMore": 0.061460237
+      }
+    },
+    "bossRoundProbability": 0.2,
+    "bossRoundOneIn": 5,
+    "maxDuelReelProbabilities": {
+      "1": 0.3,
+      "2": 0.65,
+      "3": 0.045,
+      "4": 0.0045,
+      "5": 0.0005
+    },
+    "additionalDuelProbability": 0.7,
+    "effectiveOutcomeCount": 3331.8246720439593,
+    "mostLikelyOutcomeProbability": 0.002,
+    "startingReelProbabilities": [
+      0.006037498,
+      0.002384963,
+      0.005545197,
+      0.152374807,
+      0.833657535
+    ],
+    "forcedLastSpinArrivalProbability": 0.686982809
+  },
+  "after": {
+    "rounds": 240000,
+    "meanWinX": 815.99999999811,
+    "hitRate": 0.999941771,
+    "maxWinProbability": 0.005104034,
+    "maxWinOneIn": 195.92345975751726,
+    "distribution": {
+      "costX": 250,
+      "anyPayout": 0.999941771,
+      "coversCost": 0.974959825,
+      "profit": 0.974787175,
+      "mediumProbability": 0.681666422,
+      "medianWinX": 421.6,
+      "p75WinX": 523.6,
+      "p90WinX": 784.8,
+      "mediumShareOfReturn": 0.3111383136651937,
+      "largeShareOfReturn": 0.5061871991002533,
+      "bands": {
+        "zero": 0.000058229,
+        "belowHalfCost": 0.000003683,
+        "halfToUnderCost": 0.024978263,
+        "breakEven": 0.00017265,
+        "profitToDoubleCost": 0.656515509,
+        "doubleToFiveCost": 0.244051147,
+        "fiveCostOrMore": 0.074220519
+      }
+    },
+    "bossRoundProbability": 0.2,
+    "bossRoundOneIn": 5,
+    "maxDuelReelProbabilities": {
+      "1": 0.3,
+      "2": 0.65,
+      "3": 0.045,
+      "4": 0.0045,
+      "5": 0.0005
+    },
+    "additionalDuelProbability": 0.7,
+    "startingReelProbabilities": [
+      0.1,
+      0.15,
+      0.15,
+      0.3,
+      0.3
+    ],
+    "firstAdditionalBySpin": {
+      "1": 0,
+      "2": 0.196476762,
+      "3": 0.186426925,
+      "4": 0.134813098,
+      "5": 0.090597481,
+      "6": 0.091685734,
+      "7": 0,
+      "8": 0,
+      "9": 0,
+      "10": 0
+    },
+    "effectiveOutcomeCount": 1373.072920396438,
+    "mostLikelyOutcomeProbability": 0.002,
+    "meanFirstAdditionalSpinGivenAdditional": 3.563697857142857
+  },
+  "modes": {
+    "base": {
+      "cost": 1,
+      "rtp": 0.9599998691283822
+    },
+    "enhanced": {
+      "cost": 3,
+      "rtp": 0.9599998691308889,
+      "bonusChanceMultiplier": 3
+    },
+    "duel": {
+      "cost": 50,
+      "rtp": 0.9599999999907999
+    },
+    "bonus": {
+      "cost": 100,
+      "rtp": 0.9599997161415
+    },
+    "super": {
+      "cost": 250,
+      "rtp": 0.9599997166828399
+    },
+    "mystery": {
+      "cost": 250,
+      "rtp": 0.959999812923304,
+      "probabilities": {
+        "regular": 0.4,
+        "super": 0.5,
+        "hidden": 0.1
+      }
+    }
+  },
+  "mystery": {
+    "godMaxWinOneIn": 1959.2345975751728,
+    "allTierMaxWinOneIn": 1871.2455796501292
+  }
+}

@@ -1,0 +1,293 @@
+{
+  "version": "0.11.0",
+  "basis": "Exact complete-round probabilities from the prototype ticket pools. God Mode is conditional, not a directly purchasable mode. This is a local mathematical check, not Engine certification or approval.",
+  "guidanceSource": "https://stake-engine.com/docs/approval-guidelines/math-verification",
+  "guidanceReadDate": "2026-09-10",
+  "maxBaseBet": 500,
+  "maximumCashPayout": 12500000,
+  "maximumRoundCost": 125000,
+  "preservedPools": {
+    "base": true,
+    "enhanced": true,
+    "hidden": true
+  },
+  "modes": {
+    "base": {
+      "costX": 1,
+      "rtp": 0.959999869128208,
+      "maxWinOneIn": 4293324.22547504,
+      "maxWinRtpPercentagePoints": 0.582299371933268,
+      "before": {
+        "maxWinOneIn": 5540149.216715327,
+        "medianWinX": 0.18,
+        "coversCost": 0.25300011328077593,
+        "profit": 0.2144973528351815
+      },
+      "after": {
+        "medianWinX": 0.18,
+        "coversCost": 0.25300011328077743,
+        "profit": 0.2144973528351831
+      },
+      "thresholdProbabilities": {
+        "500": 0.000031355014594700686,
+        "1000": 0.0000031436871089303237,
+        "5000": 0.0000011532499548577038
+      },
+      "rawStandardDeviation": 16.514561595583334,
+      "standardDeviationPerCost": 16.514561595583334,
+      "cvarWorstPointOnePercent": 231.69951794583395,
+      "cvarPerCost": 231.69951794583395,
+      "returnAbove40CostShare": 0.48081122144882105,
+      "returnAbove10000Share": 0.006136459427131412,
+      "p5000": 0.0000011532499548577038,
+      "p10000": 2.3798438861590524e-7,
+      "mostLikelyOutcomeProbability": 0.000996215136,
+      "checks": {
+        "rtpBand": true,
+        "maxWinGuidance": true,
+        "nonzeroProbability": true,
+        "cvarPerCost": true,
+        "cvarAbsoluteTwoStar": true,
+        "cvarAbsoluteThreeStar": true,
+        "baseVolatility": true,
+        "tail5000TwoStar": true,
+        "tail10000TwoStar": true,
+        "tailReturn40CostTwoStar": true,
+        "tailReturn10000TwoStar": true,
+        "tailReturnSumTwoStar": true
+      }
+    },
+    "enhanced": {
+      "costX": 3,
+      "rtp": 0.9599998691307148,
+      "maxWinOneIn": 1431108.0751583467,
+      "maxWinRtpPercentagePoints": 0.582299371933268,
+      "before": {
+        "maxWinOneIn": 1846716.4055717755,
+        "medianWinX": 0.72,
+        "coversCost": 0.22936014776644081,
+        "profit": 0.1927968691465884
+      },
+      "after": {
+        "medianWinX": 0.72,
+        "coversCost": 0.22936014776643776,
+        "profit": 0.19279686914658517
+      },
+      "thresholdProbabilities": {
+        "500": 0.00009401304378410206,
+        "1000": 0.00000942706132679097,
+        "5000": 0.000003459749864573111
+      },
+      "rawStandardDeviation": 28.57378352543463,
+      "standardDeviationPerCost": 9.524594508478211,
+      "cvarWorstPointOnePercent": 370.15329634702556,
+      "cvarPerCost": 123.38443211567518,
+      "returnAbove40CostShare": 0.2875991435639653,
+      "returnAbove10000Share": 0.006136459427119525,
+      "p5000": 0.000003459749864573111,
+      "p10000": 7.139531658523768e-7,
+      "mostLikelyOutcomeProbability": 0.000725951772,
+      "checks": {
+        "rtpBand": true,
+        "maxWinGuidance": true,
+        "nonzeroProbability": true,
+        "cvarPerCost": true,
+        "cvarAbsoluteTwoStar": true,
+        "cvarAbsoluteThreeStar": true,
+        "baseVolatility": true,
+        "tail5000TwoStar": true,
+        "tail10000TwoStar": true,
+        "tailReturn40CostTwoStar": true,
+        "tailReturn10000TwoStar": true,
+        "tailReturnSumTwoStar": true
+      }
+    },
+    "duel": {
+      "costX": 50,
+      "rtp": 0.9599999999907999,
+      "maxWinOneIn": 49999.99999999999,
+      "maxWinRtpPercentagePoints": 1.0000000000000002,
+      "before": {
+        "maxWinOneIn": 6849315.06849315,
+        "medianWinX": 43,
+        "coversCost": 0.44999997999993613,
+        "profit": 0.44244465299993535
+      },
+      "after": {
+        "medianWinX": 42.8,
+        "coversCost": 0.4500000019999368,
+        "profit": 0.44209165099993575
+      },
+      "thresholdProbabilities": {
+        "500": 0.001208778,
+        "1000": 0.000228194,
+        "5000": 0.000023664
+      },
+      "rawStandardDeviation": 123.11205686871628,
+      "standardDeviationPerCost": 2.462241137374326,
+      "cvarWorstPointOnePercent": 1422.6842266001438,
+      "cvarPerCost": 28.453684532002875,
+      "returnAbove40CostShare": 0.012044984010948692,
+      "returnAbove10000Share": 0.010752843602603037,
+      "p5000": 0.000023664,
+      "p10000": 0.000021081999999998664,
+      "mostLikelyOutcomeProbability": 0.008,
+      "checks": {
+        "rtpBand": true,
+        "maxWinGuidance": true,
+        "nonzeroProbability": true,
+        "cvarPerCost": true,
+        "cvarAbsoluteTwoStar": true,
+        "cvarAbsoluteThreeStar": true,
+        "baseVolatility": true,
+        "tail5000TwoStar": true,
+        "tail10000TwoStar": true,
+        "tailReturn40CostTwoStar": true,
+        "tailReturn10000TwoStar": true,
+        "tailReturnSumTwoStar": true
+      }
+    },
+    "showdown": {
+      "costX": 100,
+      "rtp": 0.9599997161415,
+      "maxWinOneIn": 99999.99999999999,
+      "maxWinRtpPercentagePoints": 0.25000000000000006,
+      "before": {
+        "maxWinOneIn": 20000000,
+        "medianWinX": 91.06,
+        "coversCost": 0.44999998399999386,
+        "profit": 0.44999998399999386
+      },
+      "after": {
+        "medianWinX": 91.05,
+        "coversCost": 0.4499999919999903,
+        "profit": 0.4499999919999903
+      },
+      "thresholdProbabilities": {
+        "500": 0.000021827,
+        "1000": 0.000012183,
+        "5000": 0.000010104
+      },
+      "rawStandardDeviation": 91.89116411290738,
+      "standardDeviationPerCost": 0.9189116411290738,
+      "cvarWorstPointOnePercent": 607.9412804200977,
+      "cvarPerCost": 6.0794128042009765,
+      "returnAbove40CostShare": 0.002615376607705086,
+      "returnAbove10000Share": 0.002605061004029905,
+      "p5000": 0.000010104,
+      "p10000": 0.000010007000000000004,
+      "mostLikelyOutcomeProbability": 0.000563226,
+      "checks": {
+        "rtpBand": true,
+        "maxWinGuidance": true,
+        "nonzeroProbability": true,
+        "cvarPerCost": true,
+        "cvarAbsoluteTwoStar": true,
+        "cvarAbsoluteThreeStar": true,
+        "baseVolatility": true,
+        "tail5000TwoStar": true,
+        "tail10000TwoStar": true,
+        "tailReturn40CostTwoStar": true,
+        "tailReturn10000TwoStar": true,
+        "tailReturnSumTwoStar": true
+      }
+    },
+    "lastStand": {
+      "costX": 250,
+      "rtp": 0.9599997166828399,
+      "maxWinOneIn": 24999.999999999996,
+      "maxWinRtpPercentagePoints": 0.4000000000000001,
+      "before": {
+        "maxWinOneIn": 90909090.90909092,
+        "medianWinX": 224.63,
+        "coversCost": 0.4499999939999943,
+        "profit": 0.4499999939999943
+      },
+      "after": {
+        "medianWinX": 224.4,
+        "coversCost": 0.44999999399999785,
+        "profit": 0.44999999399999785
+      },
+      "thresholdProbabilities": {
+        "500": 0.037171183,
+        "1000": 0.000266321,
+        "5000": 0.000040962
+      },
+      "rawStandardDeviation": 201.66681389732472,
+      "standardDeviationPerCost": 0.8066672555892989,
+      "cvarWorstPointOnePercent": 1928.4405339499492,
+      "cvarPerCost": 7.713762135799797,
+      "returnAbove40CostShare": 0.0041799242190877686,
+      "returnAbove10000Share": 0.0041799242190877686,
+      "p5000": 0.000040962,
+      "p10000": 0.000040236000000000514,
+      "mostLikelyOutcomeProbability": 0.000564944,
+      "checks": {
+        "rtpBand": true,
+        "maxWinGuidance": true,
+        "nonzeroProbability": true,
+        "cvarPerCost": true,
+        "cvarAbsoluteTwoStar": true,
+        "cvarAbsoluteThreeStar": true,
+        "baseVolatility": true,
+        "tail5000TwoStar": true,
+        "tail10000TwoStar": true,
+        "tailReturn40CostTwoStar": true,
+        "tailReturn10000TwoStar": true,
+        "tailReturnSumTwoStar": true
+      }
+    },
+    "mystery": {
+      "costX": 250,
+      "rtp": 0.9599998129213321,
+      "maxWinOneIn": 1871.2455796501292,
+      "maxWinRtpPercentagePoints": 5.344034000000001,
+      "before": {
+        "maxWinOneIn": 1959.136718159963,
+        "medianWinX": 151.12,
+        "coversCost": 0.320491190401304,
+        "profit": 0.320484742001304
+      },
+      "after": {
+        "medianWinX": 150.65,
+        "coversCost": 0.32037150200130354,
+        "profit": 0.3203652676013035
+      },
+      "thresholdProbabilities": {
+        "500": 0.061623417099999994,
+        "1000": 0.0085834428,
+        "5000": 0.0031377560000000002
+      },
+      "rawStandardDeviation": 688.7166137962228,
+      "standardDeviationPerCost": 2.754866455184891,
+      "cvarWorstPointOnePercent": 16840.21714406067,
+      "cvarPerCost": 67.36086857624268,
+      "returnAbove40CostShare": 0.056456094257227266,
+      "returnAbove10000Share": 0.056456094257227266,
+      "p5000": 0.0031377560000000002,
+      "p10000": 0.0005485015000007269,
+      "mostLikelyOutcomeProbability": 0.000282472,
+      "checks": {
+        "rtpBand": true,
+        "maxWinGuidance": true,
+        "nonzeroProbability": true,
+        "cvarPerCost": true,
+        "cvarAbsoluteTwoStar": true,
+        "cvarAbsoluteThreeStar": true,
+        "baseVolatility": true,
+        "tail5000TwoStar": true,
+        "tail10000TwoStar": true,
+        "tailReturn40CostTwoStar": true,
+        "tailReturn10000TwoStar": true,
+        "tailReturnSumTwoStar": true
+      }
+    }
+  },
+  "requestedBetExposure": {
+    "twoStarStartingExposureFits": true,
+    "twoStarStartingRoundCostFits": false,
+    "threeStarStartingExposureFits": true,
+    "threeStarStartingRoundCostFits": true,
+    "note": "The $500 prototype base bet means a $125,000 highest-priced purchase and $12.5 million cap. It exceeds the published 2-Star starting round-cost allowance, but fits the 3-Star starting cost/exposure allowances before other review adjustments. Engine assigns the actual production bet template."
+  }
+}

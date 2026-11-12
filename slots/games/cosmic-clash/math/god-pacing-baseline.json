@@ -1,0 +1,92 @@
+{
+  "date": "2026-09-19",
+  "version": "0.11.0",
+  "forcedLastSpinArrivalProbability": 0.686982809,
+  "startingReelProbabilities": [
+    0.006037498,
+    0.002384963,
+    0.005545197,
+    0.152374807,
+    0.833657535
+  ],
+  "hidden": {
+    "rounds": 240000,
+    "meanWinX": 815.9999999931799,
+    "hitRate": 0.999999904,
+    "maxWinProbability": 0.005104034,
+    "maxWinOneIn": 195.92345975751726,
+    "distribution": {
+      "costX": 250,
+      "anyPayout": 0.999999904,
+      "coversCost": 0.927111458,
+      "profit": 0.927111458,
+      "mediumProbability": 0.562984986,
+      "medianWinX": 415.28,
+      "p75WinX": 620.76,
+      "p90WinX": 896.48,
+      "mediumShareOfReturn": 0.22993777108426247,
+      "largeShareOfReturn": 0.4673478555116756,
+      "bands": {
+        "zero": 9.6e-8,
+        "belowHalfCost": 0.00672397,
+        "halfToUnderCost": 0.066164476,
+        "breakEven": 0,
+        "profitToDoubleCost": 0.49682051,
+        "doubleToFiveCost": 0.368830711,
+        "fiveCostOrMore": 0.061460237
+      }
+    },
+    "bossRoundProbability": 0.2,
+    "bossRoundOneIn": 5,
+    "maxDuelReelProbabilities": {
+      "1": 0.3,
+      "2": 0.65,
+      "3": 0.045,
+      "4": 0.0045,
+      "5": 0.0005
+    },
+    "additionalDuelProbability": 0.7,
+    "effectiveOutcomeCount": 3331.8246720439593,
+    "mostLikelyOutcomeProbability": 0.002
+  },
+  "modes": {
+    "base": {
+      "cost": 1,
+      "rtp": 0.959999869128208
+    },
+    "enhanced": {
+      "cost": 3,
+      "rtp": 0.9599998691307147,
+      "bonusChanceMultiplier": 3
+    },
+    "duel": {
+      "cost": 50,
+      "rtp": 0.9599999999907999
+    },
+    "bonus": {
+      "cost": 100,
+      "rtp": 0.9599997161415
+    },
+    "super": {
+      "cost": 250,
+      "rtp": 0.9599997166828399
+    },
+    "mystery": {
+      "cost": 250,
+      "rtp": 0.9599998129213321,
+      "probabilities": {
+        "regular": 0.4,
+        "super": 0.5,
+        "hidden": 0.1
+      }
+    }
+  },
+  "poolHashes": {
+    "base": "5b0a24f06184b0b1040a705e3991979f7a6e27f74f2e8b9994f5ef199ee4ddcc",
+    "enhanced": "8d19a3e94f34b045e5cb393edbb1e45f5af516a7c54410e49e344e9c636fc0df",
+    "duel": "3e4823989b78606cdede21915e60e260709abfda44e8aeffe77f4bf8d8092afe",
+    "regular": "2b8b9e1a820a0d5eedcd151e8633e83dc3c57d03af3be69e5eb632b1a62b94f5",
+    "super": "51bdf463e9200a8b024c73231887a3ce57a28fb178365b35b4e63e223b575d7d",
+    "hidden": "57f265cb08e30338f95aab323f1181eeca8c05ff47494a644afc5e2b75669846"
+  }
+}

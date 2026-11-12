@@ -1,0 +1,25 @@
+{
+  "modelVersion": "0.6.0",
+  "outcomesSha256": "153c089eb9c00d78f82b809bce73c6375247122c53e60aaf9b359495a4fabd74",
+  "basis": "Exact weighted complete Duel Spin rounds, including free life respins. Cash examples use $1 base bet and $50 paid cost. No math changes made during this audit.",
+  "current": {
+    "costInBaseBets": 50,
+    "probabilities": {
+      "zero": 0.541096269,
+      "positiveBelowCost": 0.348987733,
+      "breakEven": 0.000171068,
+      "profit": 0.10974493
+    },
+    "meanReturnInBaseBets": 48.00000000002
+  },
+  "beforeLetterUpdate": {
+    "costInBaseBets": 50,
+    "probabilities": {
+      "zero": 0.541054248,
+      "positiveBelowCost": 0.349010959,
+      "breakEven": 0.000171099,
+      "profit": 0.109763694
+    },
+    "meanReturnInBaseBets": 48.000000000010004
+  }
+}

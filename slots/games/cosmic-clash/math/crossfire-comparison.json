@@ -1,0 +1,80 @@
+{
+  "beforeVersion": "0.7.1",
+  "afterVersion": "0.8.0",
+  "basis": "Exact complete-round integer ticket distributions; returns below the 50x Duel Spin price are net losses.",
+  "before": {
+    "rounds": 20000,
+    "meanWinX": 47.99999999981,
+    "hitRate": 0.88,
+    "maxWinProbability": 2.01e-07,
+    "maxWinOneIn": 4975124.378109452,
+    "distribution": {
+      "costX": 50,
+      "anyPayout": 0.88,
+      "coversCost": 0.400000036,
+      "profit": 0.39647444,
+      "mediumProbability": 0.652043133,
+      "medianWinX": 39.6,
+      "p75WinX": 60.25,
+      "p90WinX": 79.98,
+      "mediumShareOfReturn": 0.7094282801813498,
+      "largeShareOfReturn": 0.15898280226979597,
+      "bands": {
+        "zero": 0.12,
+        "belowHalfCost": 0.182390024,
+        "halfToUnderCost": 0.29760994,
+        "breakEven": 0.003525596,
+        "profitToDoubleCost": 0.350907597,
+        "doubleToFiveCost": 0.025545538,
+        "fiveCostOrMore": 0.020021305
+      }
+    },
+    "bossRoundProbability": 0.112016275,
+    "bossRoundOneIn": 8.92727418404156,
+    "initialReelProbabilities": {
+      "2": 0.82,
+      "3": 0.16,
+      "4": 0.019,
+      "5": 0.001
+    },
+    "livesProbability": 0.01
+  },
+  "after": {
+    "rounds": 20000,
+    "meanWinX": 47.99999999961,
+    "hitRate": 0.88,
+    "maxWinProbability": 2.8e-07,
+    "maxWinOneIn": 3571428.5714285714,
+    "distribution": {
+      "costX": 50,
+      "anyPayout": 0.88,
+      "coversCost": 0.399999972,
+      "profit": 0.395728325,
+      "mediumProbability": 0.677398254,
+      "medianWinX": 39.6,
+      "p75WinX": 57.4,
+      "p90WinX": 74.48,
+      "mediumShareOfReturn": 0.7041623994007213,
+      "largeShareOfReturn": 0.17119737108472433,
+      "bands": {
+        "zero": 0.12,
+        "belowHalfCost": 0.156387198,
+        "halfToUnderCost": 0.32361283,
+        "breakEven": 0.004271647,
+        "profitToDoubleCost": 0.349513777,
+        "doubleToFiveCost": 0.026210475,
+        "fiveCostOrMore": 0.020004073
+      }
+    },
+    "bossRoundProbability": 0.115629661,
+    "bossRoundOneIn": 8.64830002398779,
+    "initialReelProbabilities": {
+      "2": 0.82,
+      "3": 0.16,
+      "4": 0.019,
+      "5": 0.001
+    },
+    "crossfireRoundProbability": 0.0668702,
+    "livesProbability": 0.01
+  }
+}

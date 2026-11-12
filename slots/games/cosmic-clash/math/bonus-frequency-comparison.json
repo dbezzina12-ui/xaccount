@@ -1,0 +1,169 @@
+{
+  "beforeVersion": "0.9.0",
+  "afterVersion": "0.10.0",
+  "basis": "Exact weighted complete-round distributions. Base and Enhanced pool metrics exclude triggered bonuses. Opening connection metrics count ordinary paylines using each Duel reel on the opening spin; different wilds may contribute to different lines. No per-player changes.",
+  "allocation": {
+    "before": {
+      "naturalBonusOneIn": 327.1180896303565,
+      "enhancedBonusOneIn": 109.03936321011885,
+      "bonusShareOfReturn": 0.37544993211888206
+    },
+    "after": {
+      "naturalBonusOneIn": 249.99999999999994,
+      "enhancedBonusOneIn": 83.33333333333331,
+      "bonusShareOfReturn": 0.4912658746594031
+    }
+  },
+  "pools": {
+    "base": {
+      "before": {
+        "anyPayout": 0.55,
+        "coversCost": 0.249999974,
+        "profit": 0.218968452,
+        "meanWinX": 0.60140649967,
+        "medianWinX": 0.2,
+        "largeShareOfReturn": 0.12568290853436961
+      },
+      "after": {
+        "anyPayout": 0.55,
+        "coversCost": 0.250000114,
+        "profit": 0.211342724,
+        "meanWinX": 0.49034607516999995,
+        "medianWinX": 0.17,
+        "largeShareOfReturn": 0.015211813406304907
+      }
+    },
+    "enhanced": {
+      "before": {
+        "anyPayout": 0.65,
+        "coversCost": 0.219999941,
+        "profit": 0.19151536,
+        "meanWinX": 1.81535259845,
+        "medianWinX": 0.84,
+        "largeShareOfReturn": 0.09637984454887098
+      },
+      "after": {
+        "anyPayout": 0.65,
+        "coversCost": 0.220000151,
+        "profit": 0.182992784,
+        "meanWinX": 1.48294946621,
+        "medianWinX": 0.72,
+        "largeShareOfReturn": 0.007897084578296487
+      }
+    },
+    "duel": {
+      "before": {
+        "anyPayout": 0.9,
+        "coversCost": 0.450000014,
+        "profit": 0.440583996,
+        "meanWinX": 47.99999999971,
+        "medianWinX": 43,
+        "largeShareOfReturn": 0.04020447379795124,
+        "openingConnections": {
+          "anyWildPays": 0.896977462,
+          "allWildsPay": 0.832187507,
+          "bothWildsPayGivenTwo": 0.8278072
+        }
+      },
+      "after": {
+        "anyPayout": 0.9,
+        "coversCost": 0.44999998,
+        "profit": 0.442444653,
+        "meanWinX": 47.9999999993,
+        "medianWinX": 43,
+        "largeShareOfReturn": 0.040171614333502505,
+        "openingConnections": {
+          "anyWildPays": 0.899078055,
+          "allWildsPay": 0.871897141,
+          "bothWildsPayGivenTwo": 0.8701377182926829
+        }
+      }
+    },
+    "regular": {
+      "before": {
+        "anyPayout": 1,
+        "coversCost": 0.449999984,
+        "profit": 0.449999984,
+        "meanWinX": 95.99996779903,
+        "medianWinX": 91.06,
+        "largeShareOfReturn": 0.00012446616654095098
+      },
+      "after": {
+        "anyPayout": 1,
+        "coversCost": 0.449999984,
+        "profit": 0.449999984,
+        "meanWinX": 95.99996779903,
+        "medianWinX": 91.06,
+        "largeShareOfReturn": 0.00012446616654095098
+      }
+    },
+    "super": {
+      "before": {
+        "anyPayout": 0.999999988,
+        "coversCost": 0.449999994,
+        "profit": 0.449999994,
+        "meanWinX": 239.9999472806,
+        "medianWinX": 224.63,
+        "largeShareOfReturn": 0.0002021021827279409
+      },
+      "after": {
+        "anyPayout": 0.999999988,
+        "coversCost": 0.449999994,
+        "profit": 0.449999994,
+        "meanWinX": 239.9999472806,
+        "medianWinX": 224.63,
+        "largeShareOfReturn": 0.0002021021827279409
+      }
+    },
+    "hidden": {
+      "before": {
+        "anyPayout": 0.999999904,
+        "coversCost": 0.927111458,
+        "profit": 0.927111458,
+        "meanWinX": 815.9999999931799,
+        "medianWinX": 415.28,
+        "largeShareOfReturn": 0.4673478555116756
+      },
+      "after": {
+        "anyPayout": 0.999999904,
+        "coversCost": 0.927111458,
+        "profit": 0.927111458,
+        "meanWinX": 815.9999999931799,
+        "medianWinX": 415.28,
+        "largeShareOfReturn": 0.4673478555116756
+      }
+    }
+  },
+  "modeRtp": {
+    "base": {
+      "cost": 1,
+      "rtp": 0.9599998634696404
+    },
+    "enhanced": {
+      "cost": 3,
+      "rtp": 0.9599998634721469,
+      "bonusChanceMultiplier": 3
+    },
+    "duel": {
+      "cost": 50,
+      "rtp": 0.959999999986
+    },
+    "bonus": {
+      "cost": 100,
+      "rtp": 0.9599996779903001
+    },
+    "super": {
+      "cost": 250,
+      "rtp": 0.9599997891224
+    },
+    "mystery": {
+      "cost": 250,
+      "rtp": 0.9599998430369201,
+      "probabilities": {
+        "regular": 0.4,
+        "super": 0.5,
+        "hidden": 0.1
+      }
+    }
+  }
+}

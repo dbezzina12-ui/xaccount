@@ -1,0 +1,175 @@
+{
+  "beforeVersion": "0.8.0",
+  "afterVersion": "0.9.0",
+  "basis": "Exact fixed-pool complete-round probabilities. Base and Enhanced pool figures exclude naturally triggered bonus rounds. Bonus pools compare complete bonuses with their purchase prices; God Mode has no direct buy, and uses 250x only as a reference. All amounts are multiples of the base bet. A return below the paid price is a net loss.",
+  "allocation": {
+    "before": {
+      "bonusProbability": 0.004540000000000001,
+      "bonusOneIn": 220.2643171806167,
+      "enhancedBonusOneIn": 73.42143906020557,
+      "bonusShareOfBaseReturn": 0.5589998717545708,
+      "ordinaryShareOfBaseReturn": 0.4410001282454292
+    },
+    "after": {
+      "bonusProbability": 0.0030570000000000003,
+      "bonusOneIn": 327.1180896303565,
+      "enhancedBonusOneIn": 109.03936321011885,
+      "bonusShareOfBaseReturn": 0.37544993211888206,
+      "ordinaryShareOfBaseReturn": 0.624550067881118
+    }
+  },
+  "pools": {
+    "base": {
+      "costX": 1,
+      "before": {
+        "meanWinX": 0.42529082032,
+        "anyPayout": 0.45,
+        "coversCost": 0.145497837,
+        "profit": 0.136338213,
+        "medianWinX": 0,
+        "mediumProbability": 0.18640343,
+        "maxWinOneIn": null
+      },
+      "after": {
+        "meanWinX": 0.60140649967,
+        "anyPayout": 0.55,
+        "coversCost": 0.249999974,
+        "profit": 0.218968452,
+        "medianWinX": 0.2,
+        "mediumProbability": 0.284950522,
+        "maxWinOneIn": null
+      }
+    },
+    "enhanced": {
+      "costX": 3,
+      "before": {
+        "meanWinX": 1.28761734828,
+        "anyPayout": 0.6,
+        "coversCost": 0.135195861,
+        "profit": 0.120859409,
+        "medianWinX": 0.78,
+        "mediumProbability": 0.325018394,
+        "maxWinOneIn": null
+      },
+      "after": {
+        "meanWinX": 1.81535259845,
+        "anyPayout": 0.65,
+        "coversCost": 0.219999941,
+        "profit": 0.19151536,
+        "medianWinX": 0.84,
+        "mediumProbability": 0.315408343,
+        "maxWinOneIn": null
+      }
+    },
+    "duel": {
+      "costX": 50,
+      "before": {
+        "meanWinX": 47.99999999961,
+        "anyPayout": 0.88,
+        "coversCost": 0.399999972,
+        "profit": 0.395728325,
+        "medianWinX": 39.6,
+        "mediumProbability": 0.677398254,
+        "maxWinOneIn": 3571428.5714285714
+      },
+      "after": {
+        "meanWinX": 47.99999999971,
+        "anyPayout": 0.9,
+        "coversCost": 0.450000014,
+        "profit": 0.440583996,
+        "medianWinX": 43,
+        "mediumProbability": 0.674304776,
+        "maxWinOneIn": 6849315.06849315
+      }
+    },
+    "regular": {
+      "costX": 100,
+      "before": {
+        "meanWinX": 95.99995978486,
+        "anyPayout": 1,
+        "coversCost": 0.378770503,
+        "profit": 0.378536571,
+        "medianWinX": 83.9,
+        "mediumProbability": 0.770997856,
+        "maxWinOneIn": 20000000
+      },
+      "after": {
+        "meanWinX": 95.99996779903,
+        "anyPayout": 1,
+        "coversCost": 0.449999984,
+        "profit": 0.449999984,
+        "medianWinX": 91.06,
+        "mediumProbability": 0.800924638,
+        "maxWinOneIn": 20000000
+      }
+    },
+    "super": {
+      "costX": 250,
+      "before": {
+        "meanWinX": 239.99976336307998,
+        "anyPayout": 0.999999988,
+        "coversCost": 0.364081918,
+        "profit": 0.363828991,
+        "medianWinX": 202.56,
+        "mediumProbability": 0.713174737,
+        "maxWinOneIn": 11627906.976744186
+      },
+      "after": {
+        "meanWinX": 239.9999472806,
+        "anyPayout": 0.999999988,
+        "coversCost": 0.449999994,
+        "profit": 0.449999994,
+        "medianWinX": 224.63,
+        "mediumProbability": 0.761521577,
+        "maxWinOneIn": 90909090.90909092
+      }
+    },
+    "hidden": {
+      "costX": 250,
+      "before": {
+        "meanWinX": 815.99999999967,
+        "anyPayout": 0.99999988,
+        "coversCost": 0.569254833,
+        "profit": 0.569250285,
+        "medianWinX": 429.17,
+        "mediumProbability": 0.270053626,
+        "maxWinOneIn": 198.25295530724154
+      },
+      "after": {
+        "meanWinX": 815.9999999931799,
+        "anyPayout": 0.999999904,
+        "coversCost": 0.927111458,
+        "profit": 0.927111458,
+        "medianWinX": 415.28,
+        "mediumProbability": 0.562984986,
+        "maxWinOneIn": 195.92345975751726
+      }
+    }
+  },
+  "modeRtp": {
+    "base": {
+      "before": 0.9599997208167139,
+      "after": 0.9599998956603039
+    },
+    "enhanced": {
+      "before": 0.9599997208197756,
+      "after": 0.9599998955829999
+    },
+    "duel": {
+      "before": 0.9599999999922,
+      "after": 0.9599999999941999
+    },
+    "bonus": {
+      "before": 0.9599995978486,
+      "after": 0.9599996779903001
+    },
+    "super": {
+      "before": 0.95999905345232,
+      "after": 0.9599997891224
+    },
+    "mystery": {
+      "before": 0.9599994623818039,
+      "after": 0.9599998430369201
+    }
+  }
+}

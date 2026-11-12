@@ -1,0 +1,259 @@
+{
+  "version": "0.9.0",
+  "method": "50 fixed paylines. Winner-keeps ordinary duels, stronger symbol pays, more ordinary-spin return and explicit cost-recovery targets. Protected Showdown cap, Boss appearances, God Mode reel counts and Duel Spin reel/life frequencies. Prototype model; not certified.",
+  "limits": {
+    "maxWinX": 25000,
+    "normalReelMultiplier": 256,
+    "godReelMultiplier": 1024
+  },
+  "natural": {
+    "regular": 0.0027,
+    "super": 0.00033,
+    "hidden": 0.000027
+  },
+  "enhanced": {
+    "natural": {
+      "regular": 0.0081,
+      "super": 0.00099,
+      "hidden": 0.00008099999999999999
+    },
+    "plainProbability": 0.990829
+  },
+  "pools": {
+    "base": {
+      "rounds": 20000,
+      "meanWinX": 0.60140649967,
+      "hitRate": 0.55,
+      "maxWinProbability": 0,
+      "maxWinOneIn": null,
+      "distribution": {
+        "costX": 1,
+        "anyPayout": 0.55,
+        "coversCost": 0.249999974,
+        "profit": 0.218968452,
+        "mediumProbability": 0.284950522,
+        "medianWinX": 0.2,
+        "p75WinX": 0.99,
+        "p90WinX": 1.52,
+        "mediumShareOfReturn": 0.5235058572409127,
+        "largeShareOfReturn": 0.12568290853436961,
+        "bands": {
+          "zero": 0.45,
+          "belowHalfCost": 0.205037829,
+          "halfToUnderCost": 0.094962197,
+          "breakEven": 0.031031522,
+          "profitToDoubleCost": 0.158956803,
+          "doubleToFiveCost": 0.055788474,
+          "fiveCostOrMore": 0.004223175
+        }
+      },
+      "bossRoundProbability": 0.008,
+      "bossRoundOneIn": 125
+    },
+    "enhanced": {
+      "rounds": 20000,
+      "meanWinX": 1.81535259845,
+      "hitRate": 0.65,
+      "maxWinProbability": 0,
+      "maxWinOneIn": null,
+      "distribution": {
+        "costX": 3,
+        "anyPayout": 0.65,
+        "coversCost": 0.219999941,
+        "profit": 0.19151536,
+        "mediumProbability": 0.315408343,
+        "medianWinX": 0.84,
+        "p75WinX": 2.4,
+        "p90WinX": 4.5,
+        "mediumShareOfReturn": 0.5247406329620747,
+        "largeShareOfReturn": 0.09637984454887098,
+        "bands": {
+          "zero": 0.35,
+          "belowHalfCost": 0.273952556,
+          "halfToUnderCost": 0.156047503,
+          "breakEven": 0.028484581,
+          "profitToDoubleCost": 0.130876259,
+          "doubleToFiveCost": 0.058051721,
+          "fiveCostOrMore": 0.00258738
+        }
+      },
+      "bossRoundProbability": 0.008,
+      "bossRoundOneIn": 125
+    },
+    "duel": {
+      "rounds": 20000,
+      "meanWinX": 47.99999999971,
+      "hitRate": 0.9,
+      "maxWinProbability": 1.46e-7,
+      "maxWinOneIn": 6849315.06849315,
+      "distribution": {
+        "costX": 50,
+        "anyPayout": 0.9,
+        "coversCost": 0.450000014,
+        "profit": 0.440583996,
+        "mediumProbability": 0.674304776,
+        "medianWinX": 43,
+        "p75WinX": 60.97,
+        "p90WinX": 79.5,
+        "mediumShareOfReturn": 0.7251261172177142,
+        "largeShareOfReturn": 0.04020447379795124,
+        "bands": {
+          "zero": 0.1,
+          "belowHalfCost": 0.165575227,
+          "halfToUnderCost": 0.284424759,
+          "breakEven": 0.009416018,
+          "profitToDoubleCost": 0.380463999,
+          "doubleToFiveCost": 0.05611478,
+          "fiveCostOrMore": 0.004005217
+        }
+      },
+      "bossRoundProbability": 0.09865672,
+      "bossRoundOneIn": 10.13615696933772,
+      "initialReelProbabilities": {
+        "2": 0.82,
+        "3": 0.16,
+        "4": 0.019,
+        "5": 0.001
+      },
+      "crossfireRoundProbability": 0.083203826,
+      "livesProbability": 0.01,
+      "openingConnections": {
+        "anyWildPays": 0.896977462,
+        "allWildsPay": 0.832187507,
+        "bothWildsPayGivenTwo": 0.8278072
+      }
+    },
+    "regular": {
+      "rounds": 12000,
+      "meanWinX": 95.99996779903,
+      "hitRate": 1,
+      "maxWinProbability": 5e-8,
+      "maxWinOneIn": 20000000,
+      "distribution": {
+        "costX": 100,
+        "anyPayout": 1,
+        "coversCost": 0.449999984,
+        "profit": 0.449999984,
+        "mediumProbability": 0.800924638,
+        "medianWinX": 91.06,
+        "p75WinX": 123.26,
+        "p90WinX": 156.53,
+        "mediumShareOfReturn": 0.8637232185844318,
+        "largeShareOfReturn": 0.00012446616654095098,
+        "bands": {
+          "zero": 0,
+          "belowHalfCost": 0.171113367,
+          "halfToUnderCost": 0.378886649,
+          "breakEven": 0,
+          "profitToDoubleCost": 0.422037989,
+          "doubleToFiveCost": 0.027949159,
+          "fiveCostOrMore": 0.000012836
+        }
+      },
+      "bossRoundProbability": 0.25,
+      "bossRoundOneIn": 4
+    },
+    "super": {
+      "rounds": 14000,
+      "meanWinX": 239.9999472806,
+      "hitRate": 0.999999988,
+      "maxWinProbability": 1.1e-8,
+      "maxWinOneIn": 90909090.90909092,
+      "distribution": {
+        "costX": 250,
+        "anyPayout": 0.999999988,
+        "coversCost": 0.449999994,
+        "profit": 0.449999994,
+        "mediumProbability": 0.761521577,
+        "medianWinX": 224.63,
+        "p75WinX": 309.84,
+        "p90WinX": 403.75,
+        "mediumShareOfReturn": 0.8269021231980158,
+        "largeShareOfReturn": 0.0002021021827279409,
+        "bands": {
+          "zero": 1.2e-8,
+          "belowHalfCost": 0.199808618,
+          "halfToUnderCost": 0.350191376,
+          "breakEven": 0,
+          "profitToDoubleCost": 0.411330201,
+          "doubleToFiveCost": 0.038641988,
+          "fiveCostOrMore": 0.000027805
+        }
+      },
+      "bossRoundProbability": 0.2,
+      "bossRoundOneIn": 5
+    },
+    "hidden": {
+      "rounds": 240000,
+      "meanWinX": 815.9999999931799,
+      "hitRate": 0.999999904,
+      "maxWinProbability": 0.005104034,
+      "maxWinOneIn": 195.92345975751726,
+      "distribution": {
+        "costX": 250,
+        "anyPayout": 0.999999904,
+        "coversCost": 0.927111458,
+        "profit": 0.927111458,
+        "mediumProbability": 0.562984986,
+        "medianWinX": 415.28,
+        "p75WinX": 620.76,
+        "p90WinX": 896.48,
+        "mediumShareOfReturn": 0.22993777108426247,
+        "largeShareOfReturn": 0.4673478555116756,
+        "bands": {
+          "zero": 9.6e-8,
+          "belowHalfCost": 0.00672397,
+          "halfToUnderCost": 0.066164476,
+          "breakEven": 0,
+          "profitToDoubleCost": 0.49682051,
+          "doubleToFiveCost": 0.368830711,
+          "fiveCostOrMore": 0.061460237
+        }
+      },
+      "bossRoundProbability": 0.2,
+      "bossRoundOneIn": 5,
+      "maxDuelReelProbabilities": {
+        "1": 0.3,
+        "2": 0.65,
+        "3": 0.045,
+        "4": 0.0045,
+        "5": 0.0005
+      },
+      "additionalDuelProbability": 0.7,
+      "effectiveOutcomeCount": 3331.8246720439593,
+      "mostLikelyOutcomeProbability": 0.002
+    }
+  },
+  "modes": {
+    "base": {
+      "cost": 1,
+      "rtp": 0.9599998956603039
+    },
+    "enhanced": {
+      "cost": 3,
+      "rtp": 0.9599998955829999,
+      "bonusChanceMultiplier": 3
+    },
+    "duel": {
+      "cost": 50,
+      "rtp": 0.9599999999941999
+    },
+    "bonus": {
+      "cost": 100,
+      "rtp": 0.9599996779903001
+    },
+    "super": {
+      "cost": 250,
+      "rtp": 0.9599997891224
+    },
+    "mystery": {
+      "cost": 250,
+      "rtp": 0.9599998430369201,
+      "probabilities": {
+        "regular": 0.4,
+        "super": 0.5,
+        "hidden": 0.1
+      }
+    }
+  }
+}
