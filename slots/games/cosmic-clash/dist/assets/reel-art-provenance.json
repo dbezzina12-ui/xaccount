@@ -1,0 +1,68 @@
+{
+  "generation": "exactly two requests in one parallel batch; no retries or variants",
+  "assets": [
+    {
+      "file": "golden-w.png",
+      "prompt": "Use case: stylized-concept\nAsset type: a single polished slot-game symbol for Bounty Breakers.\nGenerate one square 1024x1024 PNG with a genuinely transparent background, preserving alpha.\nSubject and exact text: one large uppercase \"W\" only, centered and filling about 82% of the canvas. A very bold, chunky block letter with thick easily readable strokes, matching a cel-shaded sci-fi loot alphabet. Front face is rich metallic yellow-gold and orange; strong pale-gold beveled highlights, angular dark charcoal extruded edges, and a clean heavy dark ink outline. Shallow chunky metal depth, with crisp graphic planes and a polished hand-inked game illustration finish. Keep the recognizable W silhouette clear when rendered at 60 pixels.\nComposition: isolated letter, straight upright, nearly front-on, balanced generous transparent breathing room on all sides.\nConstraints: no badge, no backplate, no disc, no frame, no background artwork, no shadow outside the letter, no sparkles, no rays, no particles, no gems, no extra letters, no other text, no watermark. The transparent areas within and around the W must be truly transparent.",
+      "source_path": "/workspace/scratch/193538a31926/generated_images/exec-a7774660-04ec-4ee5-b075-01e3038bfc25.png",
+      "path": "/workspace/scratch/193538a31926/reel-art/golden-w.png",
+      "tool": "image_gen.imagegen",
+      "mode": "built-in",
+      "requested_dimensions": [
+        1024,
+        1024
+      ],
+      "referenced_image_paths": [],
+      "source_images_inspected": [
+        "/workspace/sites/bounty-breakers/dist/assets/bounty-symbols.png",
+        "/workspace/sites/bounty-breakers/dist/assets/bounty-portraits.png"
+      ],
+      "sha256": "403d97b427f94d196cee5edda9db2fb14fbb4ef8847e2a6c5add1cabc6dd93d2",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "image_mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "bytes": 1559494,
+      "unchanged_png_bytes": true,
+      "inspection_notes": "Single gold W; transparent alpha confirmed. Built-in tool returned 1254x1254 despite 1024x1024 requested; original bytes retained without resizing, per instruction."
+    },
+    {
+      "file": "duel-fighters.png",
+      "prompt": "Use case: identity-preserve\nAsset type: cel-shaded game character sprite sheet for a narrow vertical full-reel duel symbol.\nInput image: bounty-portraits.png is the identity and art-style reference. Preserve the two original recognizable character designs, but change their poses and the canvas arrangement exactly as specified.\nCreate one portrait PNG, exactly 1024x1536, with exactly TWO equal-width side-by-side tall portrait panels. Left panel is x=0 to 511; right panel is x=512 to 1023. No borders, no divider artwork. Both panels have the same uniform near-black background.\nLEFT PANEL: the original HUMAN HUNTER. Spiky dark-brown hair, exposed intense human eyes, industrial gray lower-face respirator with orange side detail, high-collared battered bright orange jacket, dark undershirt and gloves. Show upright head and upper torso. His gloved arm holds a chunky futuristic ORANGE pulse revolver aimed straight DOWN toward the BOTTOM CENTER of HIS OWN LEFT PANEL. The gun barrel axis must visibly point downward, nearly vertical, with muzzle below grip. Keep his face unobstructed and his body upright, never upside down. Place the downward-pointing gun in the lower center of his panel so its firing direction is unmistakable.\nRIGHT PANEL: the original ROBOT OUTLAW. Angular silver-gray robotic face, narrow glowing cyan eye slit, dark charcoal broad-brimmed cowboy hat with metal hatband, cyan high-collared coat, silver mechanical arm armor and hands. Show upright head and upper torso. His articulated hand holds a chunky futuristic CYAN pulse revolver aimed straight UP toward the TOP CENTER of HIS OWN RIGHT PANEL. The barrel axis must visibly point upward, nearly vertical, with muzzle above grip. Keep face recognizable and body upright, never upside down. Place the upward-pointing gun in the upper center of his panel so its firing direction is unmistakable.\nImportant intended use: these two side-by-side panels will be cut apart and stacked by CSS: Hunter ABOVE Outlaw. Therefore Hunter shoots DOWN and Outlaw shoots UP so their shots would travel vertically toward each other. Do not draw them shooting sideways at each other in this sprite sheet.\nFraming: each silhouette stays within its own half; no crossing the center panel boundary. Head, torso, hands and gun must remain visible in a narrow 1:2.5 portrait crop. Compact, clean silhouettes, strong orange-versus-cyan color contrast, crisp thick ink contours, hard cel shading, sparse scuffed metal detail matching the reference.\nConstraints: exactly two characters, one per panel. Both remain upright. No rotated bodies, no horizontal aiming, no letters, no words, no UI, no frames, no bullets, no muzzle flashes, no laser beams, no smoke, no extra objects, no watermark.",
+      "source_path": "/workspace/scratch/193538a31926/generated_images/exec-d02e5068-a92f-495b-886a-5e9921884fa9.png",
+      "path": "/workspace/scratch/193538a31926/reel-art/duel-fighters.png",
+      "tool": "image_gen.imagegen",
+      "mode": "built-in",
+      "requested_dimensions": [
+        1024,
+        1536
+      ],
+      "referenced_image_paths": [
+        "/workspace/sites/bounty-breakers/dist/assets/bounty-portraits.png"
+      ],
+      "source_images_inspected": [
+        "/workspace/sites/bounty-breakers/dist/assets/bounty-symbols.png",
+        "/workspace/sites/bounty-breakers/dist/assets/bounty-portraits.png"
+      ],
+      "sha256": "b5882eaf3875bb664ab869f3975db7adebbc6bd89c9ab47d44bbee60bba239c2",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "image_mode": "RGB",
+      "alpha_extrema": null,
+      "bytes": 2477724,
+      "unchanged_png_bytes": true,
+      "inspection_notes": "Two equal-width portrait panels; Hunter at left aims down, Outlaw at right aims up; identities retained; no text or flashes. Original 1024x1536 bytes retained."
+    }
+  ],
+  "reference_sha256": {
+    "/workspace/sites/bounty-breakers/dist/assets/bounty-symbols.png": "7f03564b9c8dcd1e9bb775cc59f381d55217041f594d55038900a027cd097ce9",
+    "/workspace/sites/bounty-breakers/dist/assets/bounty-portraits.png": "179eae526b338d55656ee082f728e610500b736e0287ff707bdfcd98846f6b2b"
+  }
+}

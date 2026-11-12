@@ -1,0 +1,13 @@
+/* Anticipation highlights settled scatters and the next unrevealed reel. */
+#reel-stage{overflow:hidden}
+#reel-stage.bonus-tease .reel:not(.teasing) .symbol-cell:not([data-name=SCATTER]){filter:brightness(.62);transition:filter .2s}
+#reel-stage .scatter-locked{background:radial-gradient(ellipse,#ffc05455,transparent 72%);box-shadow:inset 0 0 0 1px #ffd06b88}
+#reel-stage .scatter-locked .symbol-art{animation:vaultCharge .8s ease-in-out infinite alternate;transform-origin:center}
+#reel-stage .reel.tease-next::after{border:2px solid #ffe7ac;background:linear-gradient(180deg,transparent 20%,#ffe29922 48%,transparent 70%);background-size:100% 220%;animation:reelScanner 1.1s linear infinite;box-shadow:inset 0 0 22px #f8ac3855}
+#reel-stage.bonus-triggering .reels,#reel-stage.bonus-triggering .duel-overlays{animation:bonusCamera .85s cubic-bezier(.2,.7,.3,1) both}
+#reel-stage.bonus-triggering::after{content:'';position:absolute;inset:0;z-index:12;pointer-events:none;border:3px solid #ffe3a1;box-shadow:inset 0 0 48px #ffbf5b88;background:radial-gradient(ellipse,#fff0c344,transparent 70%);animation:bonusImpact .85s ease-out both}
+@keyframes vaultCharge{from{transform:scale(1);filter:brightness(1.05)}to{transform:scale(1.07);filter:brightness(1.28) drop-shadow(0 0 5px #ffca65)}}
+@keyframes reelScanner{from{background-position:0 180%;border-color:#b88d45}to{background-position:0 -40%;border-color:#ffe7ac}}
+@keyframes bonusCamera{0%{transform:scale(1)}35%{transform:scale(1.045)}65%{transform:scale(1.045)}100%{transform:scale(1)}}
+@keyframes bonusImpact{0%{opacity:0}15%{opacity:1}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){#reel-stage .scatter-locked .symbol-art,#reel-stage .reel.tease-next::after,#reel-stage.bonus-triggering .reels,#reel-stage.bonus-triggering .duel-overlays,#reel-stage.bonus-triggering::after{animation:none;transform:none}}

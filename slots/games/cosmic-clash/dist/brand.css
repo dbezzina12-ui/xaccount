@@ -1,0 +1,34 @@
+/* One compact title composition, using the original logo and character art. */
+.masthead{--masthead-size:clamp(92px,14svh,152px);height:var(--masthead-size);padding:0 12px 4px;isolation:isolate;overflow:hidden}
+.masthead-assembly{position:relative;display:flex;align-items:center;justify-content:center;width:min(100%,calc(var(--masthead-size)*4.45));height:100%;isolation:isolate}
+.masthead-assembly::before{content:'';position:absolute;inset:10% 0 7%;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 22% 65%,#e7852229,transparent 48%),radial-gradient(ellipse at 78% 65%,#30d4f128,transparent 48%),linear-gradient(90deg,transparent,#06101cec 22% 78%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12% 88%,transparent)}
+.game-logo.image-logo{display:block;line-height:0;letter-spacing:normal;transform:none;filter:none;margin:0}
+.image-logo img{display:block;width:100%;height:100%;object-fit:contain}
+.masthead .image-logo{position:relative;z-index:2;width:min(80%,calc(var(--masthead-size)*2.77));height:auto;aspect-ratio:1794/627;overflow:hidden;filter:drop-shadow(0 3px 2px #02060b) drop-shadow(0 7px 8px #0007)}
+.masthead .image-logo img{position:absolute;width:107.0792%;height:130.622%;left:-3.5117%;top:-15.63%;max-width:none;object-fit:fill}
+.masthead-character{display:none;pointer-events:none}
+.intro .image-logo{width:min(84vw,500px);height:clamp(106px,22svh,205px);margin-inline:auto}
+/* The cast, title and reels share the page environment; no rectangular banner. */
+.header-cast{display:none}
+@media(max-width:760px){
+ .topline{width:100%;padding-inline:14px;letter-spacing:1px;color:#bed0dc;position:relative;z-index:3;background:none}
+ .topline>span:first-child,.topline #demo-label{font-size:12px;letter-spacing:1px}
+ .game .masthead{--mobile-header-height:clamp(128px,23svh,210px);height:var(--mobile-header-height);padding:0;flex:0 0 auto;overflow:hidden}
+ .game .masthead-assembly{width:100%;height:100%;align-items:flex-end}
+ .masthead-assembly::before{content:none}
+ .header-cast{display:block;position:absolute;inset:0;overflow:hidden;mask-image:linear-gradient(#000 0 78%,transparent 100%)}
+ .header-actor{--portrait-size:calc(var(--mobile-header-height)*3);position:absolute;top:0;width:var(--portrait-size);height:var(--portrait-size);filter:brightness(.84) saturate(.75)}
+ .header-hunter{left:calc(23% - var(--portrait-size)*.48)}
+ .header-outlaw{left:calc(77% - var(--portrait-size)*.5)}
+ .game .masthead .image-logo{width:min(78%,390px);height:auto;aspect-ratio:1794/627;margin-bottom:0;filter:drop-shadow(0 3px 3px #02050a);transform:none}
+ .game .masthead .image-logo img{position:absolute;width:107.0792%;height:130.622%;left:-3.5117%;top:-15.63%;max-width:none;object-fit:fill}
+}
+@media(max-height:640px) and (min-width:761px){.masthead{--masthead-size:82px}.intro .image-logo{height:115px}}
+@media(max-height:500px) and (orientation:landscape){.masthead{--masthead-size:58px}.masthead-assembly{width:min(100%,calc(var(--masthead-size)*4))}.masthead .image-logo{width:min(68%,calc((var(--masthead-size) - 6px)*2.77));transform:none}.intro .image-logo{width:min(40vw,320px);height:90px}}
+
+.masthead picture{display:block;width:100%;height:100%}
+@media(max-width:760px) and (max-height:500px) and (orientation:landscape){
+ .game .masthead{--mobile-header-height:65px}
+ .game .masthead .image-logo{width:175px}
+ .header-cast{max-width:420px;left:50%;width:100%;transform:translateX(-50%)}
+}

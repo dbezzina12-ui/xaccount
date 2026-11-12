@@ -1,0 +1,54 @@
+{
+  "generation_method": "built-in image_gen__imagegen",
+  "requested_size": "1024x1024",
+  "reference_inspected": "/workspace/sites/bounty-breakers/dist/assets/bounty-symbols.png",
+  "reference_usage": "visually inspected for style; no image attached to generation requests",
+  "batch": "Two distinct calls in one parallel Promise.allSettled batch. No retries or variants.",
+  "post_processing": "None; original PNG bytes copied unchanged.",
+  "assets": [
+    {
+      "name": "duel-badge",
+      "prompt": "Use case: stylized-concept\nAsset type: original Bounty Breakers slot game feature symbol, a standalone raster game loot icon.\nPrimary request: DUEL BADGE, represented only by crossed chunky science-fiction pulse revolvers: one orange weapon and one cyan weapon crossed on a striking gunmetal badge backing, with a small red targeting gem at the center. NO LETTERS OR TEXT ANYWHERE.\nStyle/medium: polished cel-shaded 3D video-game loot illustration with very thick confident black ink outlines, angular beveled metal panels, slightly distressed edges, hard graphic shadows, white and orange edge highlights, saturated cyan emissive accents. Match the visual language of a futuristic bounty-hunter slot game with chunky silhouettes and premium metallic objects. Not pixel art, not photorealistic.\nComposition/framing: exactly one centered cohesive symbol on a square 1024x1024 canvas. All parts entirely in frame with about 10 percent breathing room on each edge; subject occupies about 80 percent of the canvas. Clear symmetrical crossed weapon silhouette that remains instantly readable at 70px. Avoid fussy microdetails.\nScene/backdrop: genuinely transparent alpha background, clean cutout with no ground plane, no cast shadow outside the object, no scene or border. If transparency is not supported, use a perfectly uniform near-black #0b1520 background.\nColor palette: rich orange and bright cyan weapons; charcoal gunmetal badge; small vivid red targeting gem; crisp pale metal highlights.\nConstraints: original design without franchise marks. No skull needed. No letters VS, no letters, numbers, wording, captions, typography, logos, watermark, UI, or additional symbols. The entire image must be just the single duel badge object.",
+      "source": "/workspace/scratch/193538a31926/generated_images/exec-781b32ee-7696-4bd2-b223-860d6cc0bdec.png",
+      "path": "/workspace/scratch/193538a31926/feature-art/duel-badge.png",
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        47,
+        1211,
+        1254
+      ],
+      "sha256": "b0391918673e851cbc2bd76818d5c4f70422c04589206dde98c700eb3f125d4c"
+    },
+    {
+      "name": "bounty-vault",
+      "prompt": "Use case: stylized-concept\nAsset type: original Bounty Breakers slot game scatter symbol, a standalone raster game loot icon.\nPrimary request: BOUNTY VAULT represented only as a compact armored high-tech treasure crate, a valuable futuristic bounty cache. Gold-orange armored shell, thick gunmetal corner guards and heavy hinges, bright cyan glowing energy spilling from a slightly open lid. The chest is the hero, with a boldly readable silhouette. NO LETTERS OR TEXT ANYWHERE.\nStyle/medium: polished cel-shaded 3D video-game loot illustration with very thick confident black ink outlines, angular beveled metal panels, slightly distressed edges, hard graphic shadows, white and orange edge highlights, saturated cyan emissive accents. Match the visual language of a futuristic bounty-hunter slot game with chunky silhouettes and premium metallic objects. Not pixel art, not photorealistic.\nComposition/framing: exactly one centered cohesive symbol in a clear three-quarter view on a square 1024x1024 canvas. All parts including the cyan glow entirely in frame with about 10 percent breathing room on each edge; subject occupies about 80 percent of the canvas. Lid slightly ajar and cyan energy clearly visible through the opening. Strong compact silhouette instantly readable at 70px. Avoid fussy microdetails.\nScene/backdrop: genuinely transparent alpha background, clean cutout with no ground plane, no cast shadow outside the object, no scene or border. If transparency is not supported, use a perfectly uniform near-black #0b1520 background.\nColor palette: luminous gold orange shell, charcoal gunmetal trim, brilliant cyan energy and small pale edge highlights.\nConstraints: original design without franchise marks. No letters, numbers, wording, captions, typography, logos, watermark, UI, or additional symbols. The entire image must be just the single bounty vault object.",
+      "source": "/workspace/scratch/193538a31926/generated_images/exec-05a42858-bdf6-4a0c-b528-8324b1c7d5b1.png",
+      "path": "/workspace/scratch/193538a31926/feature-art/bounty-vault.png",
+      "actual_dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        21,
+        1230,
+        1210
+      ],
+      "sha256": "1ca6bbc1c68b2f1b92e087f2f8e718e3dc12fba64e33cd1e66cbf6959dbafb64"
+    }
+  ]
+}

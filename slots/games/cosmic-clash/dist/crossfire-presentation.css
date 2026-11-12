@@ -1,0 +1,24 @@
+.crossfire-effects{position:absolute;inset:0;z-index:12;pointer-events:none;overflow:hidden;isolation:isolate}
+.crossfire-pistol{position:absolute;will-change:transform;pointer-events:none}
+.crossfire-pistol-body{position:absolute;inset:0;will-change:transform}
+.crossfire-pistol img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 5px 5px #0008)}
+.crossfire-muzzle{position:absolute;width:24%;aspect-ratio:1;translate:-50% -50%;opacity:0;background:radial-gradient(ellipse,#fffde7 0 8%,#fff0b8bb 13%,#ffc15888 25%,#ff7c271c 46%,transparent 68%);filter:brightness(1.4)}
+.crossfire-hit{position:absolute;width:clamp(24px,9vw,62px);aspect-ratio:1;border:2px solid #ffe4a5;border-radius:50%;background:radial-gradient(circle,#fff7d9 0 5%,#ffb95177 12%,transparent 59%);box-shadow:inset 0 0 10px #ffbb5440;pointer-events:none}
+@media(prefers-reduced-motion:reduce){.crossfire-effects{display:none}}
+
+/* A readable announcement, then a compact header during the actual shots. */
+.duel-announcement{position:absolute;z-index:18;left:50%;right:auto;top:36%;width:91%;padding:0;background:none;color:#fff2d8;text-align:center;font-style:normal;letter-spacing:0;font-size:inherit;text-shadow:none;pointer-events:none;transform:translate(-50%,-50%);animation:none;filter:drop-shadow(0 6px 5px #020509d9);transition:top .32s cubic-bezier(.2,.75,.25,1),transform .32s cubic-bezier(.2,.75,.25,1),opacity .2s}
+.crossfire-plaque{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:2.6cqw 7cqw 2.3cqw;isolation:isolate}
+.crossfire-plaque::before,.crossfire-plaque::after{content:'';position:absolute;inset:0;z-index:-1;clip-path:polygon(5% 0,95% 0,100% 19%,100% 81%,95% 100%,5% 100%,0 81%,0 19%)}
+.crossfire-plaque::before{background:linear-gradient(115deg,#61e8ff,#bbc7ce 17%,#f8d188 32%,#fff3c5 50%,#b57b3e 76%,#ffb650);box-shadow:0 0 20px #ffaa5580}
+.crossfire-plaque::after{inset:2px;background:linear-gradient(110deg,#183642ee,#090f1afa 33%,#231b24fa 67%,#533124ee)}
+.crossfire-title{display:block;font-size:clamp(24px,10.8cqw,72px);line-height:.94;font-weight:800;font-style:italic;letter-spacing:.025em;padding-right:.03em;color:#fff4d8;text-shadow:0 2px 0 #b47735,0 4px 0 #31171b,0 0 18px #ffba4645}
+.crossfire-detail{font-size:clamp(10px,2.25cqw,15px);line-height:1.2;font-weight:800;letter-spacing:.18em;padding-left:.18em;color:#f0c985}
+.crossfire-streak{position:absolute;width:30%;left:35%;top:0;bottom:0}
+.crossfire-streak::before,.crossfire-streak::after{content:'';position:absolute;left:0;right:0;top:0;height:2px;background:#fff6d3;box-shadow:0 0 8px #fff0c4,0 0 15px #ffad45}
+.crossfire-streak::after{top:auto;bottom:0;background:#edc981;opacity:.65}
+.duel-announcement:not([hidden])[data-phase=intro] .crossfire-plaque{animation:crossfireTitleStrike .38s cubic-bezier(.16,.8,.24,1) both}
+.duel-announcement[data-phase=firing]{top:10%;transform:translate(-50%,-50%) scale(.66)}
+.duel-announcement[data-phase=out]{opacity:0;transform:translate(-50%,-65%) scale(.64)}
+@keyframes crossfireTitleStrike{0%{opacity:0;transform:scale(1.2) translateY(-6px)}60%{opacity:1;transform:scale(.98)}100%{opacity:1;transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.duel-announcement{transition:none}.duel-announcement .crossfire-plaque{animation:none!important}}

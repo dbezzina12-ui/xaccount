@@ -1,0 +1,71 @@
+{
+  "hunter": {
+    "job_id": "d7aaa85f-66f5-4a93-accf-69487a2efe41",
+    "source_url": "https://d8j0ntlcm91z4.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/hf_20260915_233134_d7aaa85f-66f5-4a93-accf-69487a2efe41.mp4",
+    "frames": 96,
+    "fps": 24,
+    "columns": 8,
+    "rows": 12,
+    "tile_width": 160,
+    "tile_height": 320,
+    "source_width": 720,
+    "source_height": 1280,
+    "crop": [
+      0,
+      66,
+      720,
+      1280
+    ],
+    "scaled_size": [
+      152,
+      256
+    ],
+    "treatment": "Magenta matte removed. A fixed crop and uniform scale across all frames fit the complete performance inside a 160x320 transparent tile; no character deformation or per-frame resizing."
+  },
+  "outlaw": {
+    "job_id": "de30dc4c-f637-4484-83d7-7448e879c765",
+    "source_url": "https://d8j0ntlcm91z4.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/hf_20260915_233134_de30dc4c-f637-4484-83d7-7448e879c765.mp4",
+    "frames": 96,
+    "fps": 24,
+    "columns": 8,
+    "rows": 12,
+    "tile_width": 160,
+    "tile_height": 320,
+    "source_width": 720,
+    "source_height": 1280,
+    "crop": [
+      44,
+      4,
+      720,
+      1094
+    ],
+    "scaled_size": [
+      152,
+      245
+    ],
+    "treatment": "Magenta matte removed. A fixed crop and uniform scale across all frames fit the complete performance inside a 160x320 transparent tile; no character deformation or per-frame resizing."
+  },
+  "boss": {
+    "job_id": "b51e8971-6d6d-48ce-974a-14b09480eb60",
+    "source_url": "https://d8j0ntlcm91z4.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/hf_20260915_233134_b51e8971-6d6d-48ce-974a-14b09480eb60.mp4",
+    "frames": 96,
+    "fps": 24,
+    "columns": 8,
+    "rows": 12,
+    "tile_width": 160,
+    "tile_height": 320,
+    "source_width": 720,
+    "source_height": 1280,
+    "crop": [
+      20,
+      13,
+      696,
+      1214
+    ],
+    "scaled_size": [
+      152,
+      270
+    ],
+    "treatment": "Magenta matte removed. A fixed crop and uniform scale across all frames fit the complete performance inside a 160x320 transparent tile; no character deformation or per-frame resizing."
+  }
+}

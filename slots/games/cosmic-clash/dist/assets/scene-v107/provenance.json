@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-09",
+  "generator": "OpenAI built-in image generation",
+  "direction": "Cinematic comic frontier spaceport at night; warm amber practical lamps on left and cyan machinery on right; tangible dusty paving under characters; quiet central reel area.",
+  "references": [
+    "../scene-v70/frontier-clean.webp",
+    "../scene-v70/hunter.webp",
+    "../scene-v70/outlaw.webp"
+  ],
+  "delivery": "Desktop 1672x941, portrait 948x1659. WebP quality 91 format conversion only; no resizing, crops, or painted pixel edits after generation.",
+  "assets": [
+    {
+      "file": "spaceport-desktop.webp",
+      "sha256": "63ae3f2a971a553f961e146c810be1f5046c1b1fbb90350f25de5ff91b1661e0",
+      "bytes": 431524
+    },
+    {
+      "file": "spaceport-mobile.webp",
+      "sha256": "75b3fe91bd144c2aab48129524003ee574abafed0d972c3e8b4f4ab18784a7c3",
+      "bytes": 417464
+    }
+  ]
+}

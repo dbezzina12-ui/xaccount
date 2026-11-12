@@ -1,0 +1,32 @@
+/* Original cel artwork: crop atlas cells only at display time. */
+.symbol-art.atlas-art{aspect-ratio:1;mask-image:none;overflow:hidden;max-width:96%;height:92%;border-radius:12%}
+.atlas-art img{position:absolute;max-width:none;object-fit:fill;filter:none}
+.pay-symbol .symbol-art.atlas-art{height:90px;max-width:100%}
+.symbol-cell[data-name=SCATTER]::after{content:none}
+.symbol-cell[data-name=SCATTER] .atlas-art{height:98%;max-width:100%;border-radius:8%;filter:drop-shadow(0 0 5px #ffcc5555)}
+.duel-card .wild-emblem{aspect-ratio:1}
+.duel-card .wild-emblem .atlas-art{width:100%;height:100%;max-width:none}
+.duel-card .wild-emblem .atlas-art img{position:absolute;max-width:none;filter:none}
+.guide-art{display:block;width:80px;height:80px}
+.guide-art .atlas-art,.intro-badge .atlas-art{width:100%;height:100%;max-width:none}
+.feature-card .card-emblem .atlas-art{width:122px;height:122px;max-width:100%;margin:0 auto}
+.word-paytable{display:grid;grid-template-columns:minmax(180px,1fr) minmax(0,1fr);align-items:center;gap:22px;padding:20px;border:1px solid #ad8144;background:linear-gradient(120deg,#2d2116,#111d29);border-radius:5px;margin:24px 0}
+.word-symbols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px}
+.word-symbols .atlas-art{width:100%;height:auto;max-width:none}
+.info .word-paytable h3{margin:0 0 8px;color:#ffc56a;font-size:24px}
+.word-paytable strong{display:block;font-size:28px;color:#fff1ca;font-variant-numeric:tabular-nums}
+.word-paytable strong span{display:block;font-size:16px;color:#7de4ec;letter-spacing:.5px}
+.word-paytable p{font-size:16px;line-height:1.3;color:#c4d2dc;margin-top:10px}
+.symbol-cell.word-winning{box-shadow:inset 0 0 0 2px #ffe49a,0 0 12px #ffc25666;background:#a974252d}
+.symbol-cell.word-booster{box-shadow:inset 0 0 0 2px #ffe49a}
+/* Filter each ordinary cell, never the reel: arriving scatters retain colour. */
+.reel.teasing .symbol-cell:not([data-name=SCATTER]){filter:grayscale(1) brightness(.32);transition:filter .22s ease-out}
+.reel.teasing .symbol-cell[data-name=SCATTER]{filter:none;background:radial-gradient(ellipse,#e8aa3e66,transparent 75%)}
+.reel.teasing .symbol-cell[data-name=SCATTER] .atlas-art{filter:brightness(1.18) drop-shadow(0 0 6px #ffd76b99)}
+.reel.tease-next::after{content:'';position:absolute;inset:0;z-index:3;pointer-events:none;border:2px solid #ffe7a3;box-shadow:inset 0 0 18px #ffbd4755;animation:scatterFocus 1s ease-in-out infinite alternate}
+.reel-stage.bonus-tease{border-color:#a68e51;box-shadow:0 0 0 2px #030811,0 0 28px #ffc25633}
+@keyframes scatterFocus{from{opacity:.45}to{opacity:1}}
+@media(max-width:760px){.pay-symbol .symbol-art.atlas-art{height:72px}}
+@media(max-width:600px){.word-paytable{grid-template-columns:1fr;padding:16px;gap:14px;text-align:center}.word-symbols{max-width:320px;margin:auto;width:100%}.word-paytable strong span{display:inline-block;margin-left:14px}}
+@media(max-width:480px){.pay-symbol .symbol-art.atlas-art{height:83px}.feature-card .card-emblem .atlas-art{width:65px;height:65px}.feature-card.selected .card-emblem .atlas-art{width:122px;height:122px}}
+@media(prefers-reduced-motion:reduce){.reel.tease-next::after{animation:none}.reel.teasing .symbol-cell:not([data-name=SCATTER]){transition:none}}

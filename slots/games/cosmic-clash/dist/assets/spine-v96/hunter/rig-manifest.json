@@ -1,0 +1,166 @@
+{
+  "name": "hunter",
+  "version": "4.3.26",
+  "facing": 1,
+  "canvas": [
+    1024,
+    1536
+  ],
+  "origin": [
+    520,
+    1465
+  ],
+  "textureSize": [
+    1254,
+    1254
+  ],
+  "parts": [
+    {
+      "name": "body",
+      "bone": "root",
+      "texture": "body-clean",
+      "textureBounds": [
+        0,
+        0,
+        1024,
+        1536
+      ]
+    },
+    {
+      "name": "shoot_upper",
+      "bone": "shoot_upper",
+      "texture": "parts",
+      "textureBounds": [
+        48,
+        477.8,
+        251,
+        601
+      ],
+      "jointRegistration": {
+        "proximalUV": [
+          0.61,
+          0.23
+        ],
+        "distalUV": [
+          0.28,
+          0.85
+        ],
+        "length": 194.73315,
+        "clothStartUV": 0.56,
+        "shoulderOverlap": -30,
+        "socket": "chest anchored, blended below pauldron"
+      }
+    },
+    {
+      "name": "shoulder_cover",
+      "bone": "chest",
+      "texture": "body-clean",
+      "textureBounds": [
+        0,
+        0,
+        1024,
+        1536
+      ],
+      "outline": "Traced concave armour rim and upper strap hardware; constrained triangulation preserves the cut."
+    },
+    {
+      "name": "shoot_forearm",
+      "bone": "shoot_forearm",
+      "texture": "parts",
+      "textureBounds": [
+        417,
+        336,
+        568,
+        584
+      ],
+      "jointRegistration": {
+        "proximalUV": [
+          0.38,
+          0.15
+        ],
+        "distalUV": [
+          0.65,
+          0.84
+        ],
+        "length": 172.13076
+      }
+    },
+    {
+      "name": "grip_closed",
+      "bone": "revolver",
+      "texture": "grip-closed",
+      "textureBounds": [
+        425,
+        0,
+        1774,
+        887
+      ]
+    }
+  ],
+  "arm": {
+    "shoulder": [
+      -157,
+      1142
+    ],
+    "elbow": [
+      -262,
+      978
+    ],
+    "wrist": [
+      -235,
+      808
+    ],
+    "upperLength": 194.7331507473753,
+    "foreLength": 172.13076424625552,
+    "upperRotation": -122.62915583571558,
+    "foreRotation": -80.97545937377727
+  },
+  "muzzleLocal": [
+    209.82819218691031,
+    67.69067760869598
+  ],
+  "gunSetupLocalRotation": 2.97546,
+  "shootGunBaseOffset": 0,
+  "artSHA256": "e1710ce50436af951c06af32d61b498e0f57062e6344e2734c50ab1b0239e32b",
+  "status": "Body-motion revision; native verification is recorded separately in validation/native-report.json.",
+  "aimDriver": "wrist",
+  "wristToGripLocal": [
+    58.0,
+    0
+  ],
+  "shootWristBaseOffset": -4.378605186883078,
+  "gripLocked": true,
+  "rigRevision": "original body with separate shooting arm, breathing idle, stronger coat sway and delayed recoil follow-through",
+  "bodyPlate": true,
+  "bodyArtSHA256": "c9d3da54c7766be0d0dc5ee2a7cce57f5bd305c67c648383c4440e9e372af0a5",
+  "animationTiming": {
+    "idle": 4,
+    "draw": 0.75,
+    "shoot": 0.78,
+    "holster": 0.95,
+    "aimSweep": 5.8,
+    "previewFPS": 60
+  },
+  "gripArt": {
+    "size": [
+      1774,
+      887
+    ],
+    "wrist": [
+      465,
+      570
+    ],
+    "muzzle": [
+      1740,
+      262
+    ],
+    "bounds": [
+      425,
+      0,
+      1774,
+      887
+    ],
+    "scale": 0.21
+  },
+  "gripArtSHA256": "9c87fef111e77f389a30b0d5c5ef72a9f304b2d07c4c099361f41d71327882d5"
+}

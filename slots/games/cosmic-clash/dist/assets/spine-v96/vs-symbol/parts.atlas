@@ -1,0 +1,6 @@
+images/slider-front.png
+size: 1254, 1254
+filter: Linear, Linear
+pma: false
+slider-front
+ bounds: 0, 0, 1254, 1254

@@ -1,0 +1,7 @@
+// Shared artwork for reels, the guide, and the payline inspector.
+export function featureArt(name) {
+  if (name === 'VS') return '<span class="symbol-art feature-symbol-art vs-symbol-art" aria-hidden="true"><span class="vs-core"><img class="vs-metal-icon" src="./assets/frontier-ink/features/vs.svg?v=2" alt="" draggable="false"><svg class="vs-fuse" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><g transform="translate(256 250) scale(1.065) translate(-256 -250)" fill="none" stroke-width="10" stroke-linecap="round"><path class="vs-charge warm" d="M84 74 L124 57 L242 62 L260 54 L285 42 L403 37 L446 63 L466 98 L450 208 L456 275 L433 400 L397 442 L270 451 L239 442 L117 450 L64 416 L39 369 L52 245 L40 207 Z" pathLength="100"/><path class="vs-charge cold" d="M84 74 L124 57 L242 62 L260 54 L285 42 L403 37 L446 63 L466 98 L450 208 L456 275 L433 400 L397 442 L270 451 L239 442 L117 450 L64 416 L39 369 L52 245 L40 207 Z" pathLength="100"/></g></svg></span></span>';
+  if (name === 'SCATTER') return '<span class="symbol-art feature-symbol-art fs-vault-art" aria-hidden="true"><span class="fs-letter-motion"><img src="./assets/frontier-ink/features/signal-fs.webp" alt="" draggable="false"></span></span>';
+  if (name === 'WILD') return '<span class="symbol-art feature-symbol-art wild-symbol-art" aria-hidden="true"><img src="./assets/frontier-ink/features/wild.svg" alt="" draggable="false"></span>';
+  return null;
+}

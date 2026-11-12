@@ -1,0 +1,364 @@
+{
+  "generated_at": "2026-09-10",
+  "image_count": 3,
+  "requests_per_asset": 1,
+  "retries": 0,
+  "postprocessing": "None; files copied byte for byte.",
+  "assets": [
+    {
+      "name": "cel-premium-atlas",
+      "prompt": "Use case: stylized-concept. Asset type: production sprite atlas for the Bounty Breakers game. Input image 1 is a STYLE AND SUBJECT REFERENCE ONLY: selected cel-shaded concept. Extract and redraw its symbol art into a clean evenly spaced atlas. Preserve that exact bold inked black outline style, angular hard cel shading, chunky beveled graphic forms, vivid saturated colors and immense small-scale legibility. This is a game sprite sheet, not a presentation. Background must be perfectly uniform flat near-black navy #080e17 edge to edge, opaque. No transparency, checkerboard, texture, gradient, ground shadow, global glow or lighting on the background. Each icon stays fully contained within its own equal cell with at least 12 percent cell-edge safe margin on every side. Center icons inside their cells, matched optical weight and size. Cell borders are imaginary and must not be drawn. No title, subtitle, caption, label, grid lines, frames, cards, winning highlights, interface, prices, numbers, watermarks or extra symbols. Keep internal icon highlights crisp and local.\nOutput image is SQUARE, 2 by 2 equal square cells. Exactly FOUR separate isolated objects. Top left: the reference's masked armored cowboy head, broad dark cowboy hat with gold trim, orange glowing eye slit, metal face mask, angular red scarf; head and scarf only. Top right: the reference's single cyan pulse revolver, pointing upward-right, steel and charcoal frame, cyan energy barrel and small brown grip. Bottom left: the reference's single red energy dagger, diagonal point down-left, red blade and dark handle up-right, no surrounding aura. Bottom right: the reference's thick gold-rim cyan bounty chip with a crisp cyan cowboy silhouette in its dark cyan center, no text. No lettering anywhere. Every icon is separate, all four outer silhouettes fit well inside their equal quadrants with 12% safety margin.",
+      "mode": "built-in image_gen",
+      "reference": "/workspace/scratch/193538a31926/generated_images/exec-04d6e9b0-da6f-4039-9a2e-1c643f353f66.png",
+      "source": "/workspace/scratch/193538a31926/generated_images/exec-c269329a-792c-4686-9bd1-4005690b093c.png",
+      "destination": "/workspace/scratch/193538a31926/cel-symbol-assets/cel-premium-atlas.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "sha256": "ddf74646ac9d5eea65b819e57ba2c1e6a2bcd0cd595188ee40c3888f6fc3346c",
+      "copied_sha256_matches_source": true,
+      "cells": [
+        {
+          "subject": "cowboy",
+          "cell_bounds_xyxy_exclusive": [
+            0,
+            0,
+            627,
+            627
+          ],
+          "normalized_xywh": [
+            0.0,
+            0.0,
+            0.5,
+            0.5
+          ],
+          "bright_art_bounds_xyxy_exclusive": [
+            71,
+            69,
+            588,
+            589
+          ],
+          "bright_art_cell_margin_left_top_right_bottom": [
+            0.113,
+            0.11,
+            0.062,
+            0.061
+          ]
+        },
+        {
+          "subject": "revolver",
+          "cell_bounds_xyxy_exclusive": [
+            627,
+            0,
+            1254,
+            627
+          ],
+          "normalized_xywh": [
+            0.5,
+            0.0,
+            0.5,
+            0.5
+          ],
+          "bright_art_bounds_xyxy_exclusive": [
+            650,
+            99,
+            1194,
+            552
+          ],
+          "bright_art_cell_margin_left_top_right_bottom": [
+            0.037,
+            0.158,
+            0.096,
+            0.12
+          ]
+        },
+        {
+          "subject": "dagger",
+          "cell_bounds_xyxy_exclusive": [
+            0,
+            627,
+            627,
+            1254
+          ],
+          "normalized_xywh": [
+            0.0,
+            0.5,
+            0.5,
+            0.5
+          ],
+          "bright_art_bounds_xyxy_exclusive": [
+            82,
+            646,
+            550,
+            1167
+          ],
+          "bright_art_cell_margin_left_top_right_bottom": [
+            0.131,
+            0.03,
+            0.123,
+            0.139
+          ]
+        },
+        {
+          "subject": "chip",
+          "cell_bounds_xyxy_exclusive": [
+            627,
+            627,
+            1254,
+            1254
+          ],
+          "normalized_xywh": [
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ],
+          "bright_art_bounds_xyxy_exclusive": [
+            699,
+            639,
+            1151,
+            1158
+          ],
+          "bright_art_cell_margin_left_top_right_bottom": [
+            0.115,
+            0.019,
+            0.164,
+            0.153
+          ]
+        }
+      ]
+    },
+    {
+      "name": "cel-duel-letter-atlas",
+      "prompt": "Use case: stylized-concept. Asset type: production sprite atlas for the Bounty Breakers game. Input image 1 is a STYLE AND SUBJECT REFERENCE ONLY: selected cel-shaded concept. Extract and redraw its symbol art into a clean evenly spaced atlas. Preserve that exact bold inked black outline style, angular hard cel shading, chunky beveled graphic forms, vivid saturated colors and immense small-scale legibility. This is a game sprite sheet, not a presentation. Background must be perfectly uniform flat near-black navy #080e17 edge to edge, opaque. No transparency, checkerboard, texture, gradient, ground shadow, global glow or lighting on the background. Each icon stays fully contained within its own equal cell with at least 12 percent cell-edge safe margin on every side. Center icons inside their cells, matched optical weight and size. Cell borders are imaginary and must not be drawn. No title, subtitle, caption, label, grid lines, frames, cards, winning highlights, interface, prices, numbers, watermarks or extra symbols. Keep internal icon highlights crisp and local.\nOutput image is SQUARE, 2 by 2 equal square cells. Exactly FOUR single-letter icons using the bold beveled western block letter style from the reference. Top left: one RED letter \"D\" with a SMALL gold sheriff star nestled inside its counter. Top right: one BLUE letter \"U\". Bottom left: one PURPLE letter \"E\" with a TINY purple gem inset, keeping all three E bars clearly legible. Bottom right: one GREEN letter \"L\". These letters should be thick, vibrant and readable as D U E L at tiny slot-symbol scale, with bright bevel facets and heavy black contours. Exactly one legible uppercase letter per cell. No A, K, Q or J anywhere. No words, duplicate letters or any extra text. Every letter stays inside its equal quadrant with at least 12% safe margin, matched cap height and optical weight.",
+      "mode": "built-in image_gen",
+      "reference": "/workspace/scratch/193538a31926/generated_images/exec-04d6e9b0-da6f-4039-9a2e-1c643f353f66.png",
+      "source": "/workspace/scratch/193538a31926/generated_images/exec-5c13d85e-1bad-4ec0-8deb-9902ea9c6b22.png",
+      "destination": "/workspace/scratch/193538a31926/cel-symbol-assets/cel-duel-letter-atlas.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "sha256": "8f2decd8d9ac7ea45878d5ed11e03faa1128d9eaf88b51c7d08a0bbfd590a421",
+      "copied_sha256_matches_source": true,
+      "cells": [
+        {
+          "subject": "D",
+          "cell_bounds_xyxy_exclusive": [
+            0,
+            0,
+            627,
+            627
+          ],
+          "normalized_xywh": [
+            0.0,
+            0.0,
+            0.5,
+            0.5
+          ],
+          "bright_art_bounds_xyxy_exclusive": [
+            94,
+            103,
+            547,
+            543
+          ],
+          "bright_art_cell_margin_left_top_right_bottom": [
+            0.15,
+            0.164,
+            0.128,
+            0.134
+          ]
+        },
+        {
+          "subject": "U",
+          "cell_bounds_xyxy_exclusive": [
+            627,
+            0,
+            1254,
+            627
+          ],
+          "normalized_xywh": [
+            0.5,
+            0.0,
+            0.5,
+            0.5
+          ],
+          "bright_art_bounds_xyxy_exclusive": [
+            701,
+            105,
+            1162,
+            547
+          ],
+          "bright_art_cell_margin_left_top_right_bottom": [
+            0.118,
+            0.167,
+            0.147,
+            0.128
+          ]
+        },
+        {
+          "subject": "E",
+          "cell_bounds_xyxy_exclusive": [
+            0,
+            627,
+            627,
+            1254
+          ],
+          "normalized_xywh": [
+            0.0,
+            0.5,
+            0.5,
+            0.5
+          ],
+          "bright_art_bounds_xyxy_exclusive": [
+            90,
+            683,
+            547,
+            1131
+          ],
+          "bright_art_cell_margin_left_top_right_bottom": [
+            0.144,
+            0.089,
+            0.128,
+            0.196
+          ]
+        },
+        {
+          "subject": "L",
+          "cell_bounds_xyxy_exclusive": [
+            627,
+            627,
+            1254,
+            1254
+          ],
+          "normalized_xywh": [
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ],
+          "bright_art_bounds_xyxy_exclusive": [
+            705,
+            683,
+            1168,
+            1133
+          ],
+          "bright_art_cell_margin_left_top_right_bottom": [
+            0.124,
+            0.089,
+            0.137,
+            0.193
+          ]
+        }
+      ]
+    },
+    {
+      "name": "cel-feature-atlas",
+      "prompt": "Use case: stylized-concept. Asset type: production sprite atlas for the Bounty Breakers game. Input image 1 is a STYLE AND SUBJECT REFERENCE ONLY: selected cel-shaded concept. Extract and redraw its symbol art into a clean evenly spaced atlas. Preserve that exact bold inked black outline style, angular hard cel shading, chunky beveled graphic forms, vivid saturated colors and immense small-scale legibility. This is a game sprite sheet, not a presentation. Background must be perfectly uniform flat near-black navy #080e17 edge to edge, opaque. No transparency, checkerboard, texture, gradient, ground shadow, global glow or lighting on the background. Each icon stays fully contained within its own equal cell with at least 12 percent cell-edge safe margin on every side. Center icons inside their cells, matched optical weight and size. Cell borders are imaginary and must not be drawn. No title, subtitle, caption, label, grid lines, frames, cards, winning highlights, interface, prices, numbers, watermarks or extra symbols. Keep internal icon highlights crisp and local.\nOutput is a WIDE 3:1 aspect ratio image, three equal SQUARE cells in a SINGLE HORIZONTAL ROW. Exactly THREE symbols. Left cell: the reference's Duel icon consisting of exactly two chunky crossed pulse revolvers, orange barrel upper-left and cyan barrel upper-right, brown grips lower-left and lower-right, central crossing crisp and readable; no numbers, no plaques, no lettering on this icon, no exterior starburst. Center cell: a single huge bold GOLDEN uppercase \"W\", western block letter with crisp gold bevels and heavy black outlines, restrained gold sheriff-badge-like backing fully contained inside cell. Right cell: the reference's OPEN GOLD VAULT / chest, its lid raised with cyan inner light kept inside the opening; inside the opening render the exact word \"SCATTER\" VERY LARGE, in one perfectly legible straight horizontal line. SCATTER spelling S-C-A-T-T-E-R; exactly seven letters, no other word. Make SCATTER text the dominant feature of the open vault: ivory fill, gold outline, bold condensed upright type, dark separation so it stays readable at small scale. Each entire symbol including vault lid and letters must have at least 12% of its cell as safety margin to every cell edge. No text anywhere except center W and right SCATTER. Do not imitate the reference page's 25x, UI, labels or decorative background.",
+      "mode": "built-in image_gen",
+      "reference": "/workspace/scratch/193538a31926/generated_images/exec-04d6e9b0-da6f-4039-9a2e-1c643f353f66.png",
+      "source": "/workspace/scratch/193538a31926/generated_images/exec-607faa8f-b916-4eda-8615-8de2ffdbc987.png",
+      "destination": "/workspace/scratch/193538a31926/cel-symbol-assets/cel-feature-atlas.png",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "sha256": "8b8a34a9a107cbd916c531cb7a95b4ea52fb3f072969bee9d3112b42960945b7",
+      "copied_sha256_matches_source": true,
+      "cells": [
+        {
+          "subject": "duel",
+          "cell_bounds_xyxy_exclusive": [
+            0,
+            0,
+            724,
+            724
+          ],
+          "normalized_xywh": [
+            0.0,
+            0.0,
+            0.3333333333333333,
+            1.0
+          ],
+          "bright_art_bounds_xyxy_exclusive": [
+            57,
+            110,
+            677,
+            633
+          ],
+          "bright_art_cell_margin_left_top_right_bottom": [
+            0.079,
+            0.152,
+            0.065,
+            0.126
+          ]
+        },
+        {
+          "subject": "wild_w",
+          "cell_bounds_xyxy_exclusive": [
+            724,
+            0,
+            1448,
+            724
+          ],
+          "normalized_xywh": [
+            0.3333333333333333,
+            0.0,
+            0.3333333333333333,
+            1.0
+          ],
+          "bright_art_bounds_xyxy_exclusive": [
+            775,
+            53,
+            1398,
+            642
+          ],
+          "bright_art_cell_margin_left_top_right_bottom": [
+            0.07,
+            0.073,
+            0.069,
+            0.113
+          ]
+        },
+        {
+          "subject": "scatter",
+          "cell_bounds_xyxy_exclusive": [
+            1448,
+            0,
+            2172,
+            724
+          ],
+          "normalized_xywh": [
+            0.6666666666666666,
+            0.0,
+            0.3333333333333333,
+            1.0
+          ],
+          "bright_art_bounds_xyxy_exclusive": [
+            1498,
+            80,
+            2124,
+            653
+          ],
+          "bright_art_cell_margin_left_top_right_bottom": [
+            0.069,
+            0.11,
+            0.066,
+            0.098
+          ]
+        }
+      ]
+    }
+  ],
+  "qa": {
+    "subjects": "All requested subjects and counts correct. D U E L and W legible. SCATTER spelled correctly in one line.",
+    "flaws": [
+      "Background is opaque near-black navy with subtle variation; not perfectly uniform #080e17.",
+      "Requested 12% safe margin not consistently achieved. Use full cells for source crop and add CSS inset if required; do not tight-crop art.",
+      "Star in D and gem in E are larger than small/tiny prompt target. E is still recognizable but gem partially obscures center bar.",
+      "Dagger retains a narrow red glow. Scatter cyan light spills slightly around opening."
+    ],
+    "inspection": "Visual inspection plus read-only pixel/dimension measurements. Bright-art bounds exclude dark black outline and therefore overestimate actual safety margin."
+  }
+}

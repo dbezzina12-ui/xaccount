@@ -1,0 +1,66 @@
+/* Light-only idle for settled winners. Portraits and all readouts stay fixed. */
+#duel-overlays > .duel-card {
+  --winner-light-duration: 7.6s;
+  --winner-light-delay: -.4s;
+  --winner-glint-duration: 12s;
+  --winner-glint-delay: -1s;
+  --winner-light-color: #ff902e;
+}
+#duel-overlays > .duel-card[data-reel="1"] { --winner-light-duration: 8.4s; --winner-light-delay: -3s; --winner-glint-duration: 13.5s; --winner-glint-delay: -5s; }
+#duel-overlays > .duel-card[data-reel="2"] { --winner-light-duration: 7.1s; --winner-light-delay: -5.4s; --winner-glint-duration: 11.5s; --winner-glint-delay: -8.5s; }
+#duel-overlays > .duel-card[data-reel="3"] { --winner-light-duration: 9.2s; --winner-light-delay: -1.8s; --winner-glint-duration: 14s; --winner-glint-delay: -3.5s; }
+#duel-overlays > .duel-card[data-reel="4"] { --winner-light-duration: 8s; --winner-light-delay: -4.1s; --winner-glint-duration: 12.7s; --winner-glint-delay: -10s; }
+#duel-overlays > .duel-card.winner-outlaw { --winner-light-color: #49dfff; }
+#duel-overlays > .duel-card.boss { --winner-light-color: #ff4934; --winner-light-duration: 9.6s; }
+
+@media (prefers-reduced-motion: no-preference) {
+  #duel-overlays > .duel-card > .duel-portrait::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    background-image: var(--winner-portrait-lights, none);
+    background-position: inherit;
+    background-size: inherit;
+    background-repeat: no-repeat;
+    mix-blend-mode: screen;
+    filter: drop-shadow(0 0 3px var(--winner-light-color));
+  }
+  #duel-overlays > .duel-card.boss > .duel-portrait::after {
+    background-image: var(--winner-boss-lights, none);
+  }
+  #duel-overlays > .duel-card > .wild-emblem::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(112deg, transparent 43%, #ffe6b24d 47%, #fff6db 50%, #ffe6b24d 53%, transparent 57%) 140% 0 / 250% 100% no-repeat;
+    -webkit-mask: url('./assets/frontier-ink/features/wild.svg') center / contain no-repeat;
+    mask: url('./assets/frontier-ink/features/wild.svg') center / contain no-repeat;
+    mix-blend-mode: screen;
+  }
+  #duel-overlays > .duel-card:not(.pending-duel):not(.vs-opening):not(.dueling):not(.defeated) > .duel-portrait::after {
+    animation: winnerLightIdle var(--winner-light-duration) ease-in-out var(--winner-light-delay) infinite;
+  }
+  #duel-overlays > .duel-card:not(.pending-duel):not(.vs-opening):not(.dueling):not(.defeated) > .wild-emblem::after {
+    animation: winnerMetalGlint var(--winner-glint-duration) linear var(--winner-glint-delay) infinite;
+  }
+}
+
+@keyframes winnerLightIdle {
+  0%, 100% { opacity: .08; }
+  18% { opacity: .08; }
+  32% { opacity: .34; }
+  48% { opacity: .12; }
+  72% { opacity: .12; }
+  83% { opacity: .23; }
+  94% { opacity: .08; }
+}
+@keyframes winnerMetalGlint {
+  0%, 80% { opacity: 0; background-position: 140% 0; }
+  82% { opacity: .45; background-position: 120% 0; }
+  92% { opacity: .45; background-position: -20% 0; }
+  94%, 100% { opacity: 0; background-position: -40% 0; }
+}

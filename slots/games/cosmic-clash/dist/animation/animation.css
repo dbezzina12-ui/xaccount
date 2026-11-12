@@ -1,0 +1,12 @@
+.spine-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.scene-actor-motion>.spine-canvas{filter:var(--actor-grade,brightness(.89) saturate(.84) contrast(.97))}
+.spine-shot-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:21;pointer-events:none}
+.spine-atmosphere{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none;filter:saturate(.86) brightness(.84)}
+.fs-vault-art.spine-ready>:not(canvas){visibility:hidden;animation:none}
+.fs-vault-art.spine-ready .fs-letter-motion,.fs-vault-art.spine-ready .fs-letter-motion::after{animation:none}
+.spine-vs-screen{perspective:none}
+.duel-card.vs-opening>.reel-fight{background:transparent}
+.duel-card.vs-opening .fight-boss-label{visibility:hidden}
+.vs-fight-border{position:absolute;inset:.5px;z-index:9;pointer-events:none;border:1.5px solid #ffdfa0;box-shadow:inset 0 0 0 1px #8c3d1e,0 0 3px #ff9e3b}
+.duel-card.vs-opening .vs-fight-border{visibility:hidden}
+.vs-video-reveal{z-index:1}

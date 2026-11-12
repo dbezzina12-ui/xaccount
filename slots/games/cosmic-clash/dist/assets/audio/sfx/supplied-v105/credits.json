@@ -1,0 +1,126 @@
+{
+  "source": "User-supplied sounds.zip, 2026-10-02",
+  "processing": "Constant gain to -3 dBFS source peak; MP3 VBR quality 2. No trimming, pitch changes, time stretching or added reverb.",
+  "files": [
+    {
+      "file": "nice-win.mp3",
+      "source": "sounds/nice win.wav",
+      "seconds": 2.471156,
+      "gainDB": 0.4,
+      "sourceSha256": "07870c01cfec42b7e68595402b607d2c79c61d28cd3932ef7f0c49864bb3d217",
+      "sha256": "19cc1caa4923bec1806dd8af61914eb3120434e65710f41d393440c2ce74676d"
+    },
+    {
+      "file": "big-win.mp3",
+      "source": "sounds/big win.wav",
+      "seconds": 3.081723,
+      "gainDB": -1.8,
+      "sourceSha256": "23d4f046c9bed32c3829e8bb1a4a07c7b17794e7a8dbf09c8644e9f0430292fb",
+      "sha256": "032827138338f7ad7f2a018a537669ad5057f414028f699cbc2906054d8d5905"
+    },
+    {
+      "file": "epic-win.mp3",
+      "source": "sounds/epic win.wav",
+      "seconds": 5.038458,
+      "gainDB": -2.7,
+      "sourceSha256": "cab390502c682e58df7c0e37ce9106c6ff9c60babe2ddf6b62703fabfe6e53bc",
+      "sha256": "ef6fe9c87e4f5f3aaaf771495ffa68372681ac1d41f8f6f127db173720021c42"
+    },
+    {
+      "file": "max-win.mp3",
+      "source": "sounds/max win.wav",
+      "seconds": 3.740385,
+      "gainDB": -2.6,
+      "sourceSha256": "16942cbe7cd77a61a3c3ab19e8c17f8d7e6064ad8e83c3fffbe95aafd7af8424",
+      "sha256": "15211e1b5590d0775eb6a7926cdc4e08f32f34bfa37c8f986ba632dcacdbd7d0"
+    },
+    {
+      "file": "buy-bonus-button.mp3",
+      "source": "sounds/buy bonus button.wav",
+      "seconds": 1.831723,
+      "gainDB": 0.0,
+      "sourceSha256": "28d92f3623c28533a8c08a6aa944a326f412465984bc3552242f26b28a60e472",
+      "sha256": "fa7911eca309b23e4c83b51b07bee01ad3d2706f761f0d4885444cadda1bd509"
+    },
+    {
+      "file": "coin-up.mp3",
+      "source": "sounds/coin up.wav",
+      "seconds": 1.081723,
+      "gainDB": -0.1,
+      "sourceSha256": "36a214a94ee684a1574e18be698f3a1c046bc313ec5b21b107c14f833d384a96",
+      "sha256": "a7e14c151a1d67f763e6a5844751af42fdbe56dbf51d4bf3572c654525ae2c78"
+    },
+    {
+      "file": "coin-down.mp3",
+      "source": "sounds/coin down.wav",
+      "seconds": 1.081723,
+      "gainDB": 0.7,
+      "sourceSha256": "ec6e55c17a2dfaf4e176afa77ad3754da039c53bff70eddadb69c67083d03df2",
+      "sha256": "68bcc0bf6e5d4589407a7f5407903a892757f9f1ef1ac93aa08a715016c8c1a9"
+    },
+    {
+      "file": "reel-landing-1.mp3",
+      "source": "sounds/reel landing 1.wav",
+      "seconds": 0.259615,
+      "gainDB": 7.8,
+      "sourceSha256": "3b331c53349c1d03cbf6c792f3c3544266e465cd6e4e7ff2536c3c9699a4d4af",
+      "sha256": "4d9473c4bd7e4cda67939f7d6b1c4eac9754039d9bc35dd9459f408227b318b0"
+    },
+    {
+      "file": "reel-landing-2.mp3",
+      "source": "sounds/reel landing 2.wav",
+      "seconds": 0.259615,
+      "gainDB": 7.6,
+      "sourceSha256": "1f59617d37a07a7df13a00aeee364b04a4b6260f8696d6b67d56de1de9c6e112",
+      "sha256": "0ec566d1f3d877a2fd39af660d010101d43d85f1957822d3ccd3357436e358cb"
+    },
+    {
+      "file": "reel-landing-3.mp3",
+      "source": "sounds/reel landing 3.wav",
+      "seconds": 0.259615,
+      "gainDB": 7.6,
+      "sourceSha256": "cf0a23f5325985891bffaf2745680e362f4812daa760f3b31fd46fab5c455ac4",
+      "sha256": "a84f8e0fe65fe8a01ed0db78510e84b7505bd7825c16162a3f8e0c9a76456efd"
+    },
+    {
+      "file": "reel-landing-4.mp3",
+      "source": "sounds/reel landing 4.wav",
+      "seconds": 0.269229,
+      "gainDB": 7.5,
+      "sourceSha256": "4adc004a30300427b205e1c90954fb8b77fcb3eaef6413e57c6dcdb73dcfe61c",
+      "sha256": "04599bf2f5c117b621aeb7d32204718f0493fe6d2292d4afc18adac3d362bd71"
+    },
+    {
+      "file": "reel-landing-5.mp3",
+      "source": "sounds/reel landing 5.wav",
+      "seconds": 0.245193,
+      "gainDB": 7.5,
+      "sourceSha256": "bbaadbf185752d3857652dc2c3fdc6f15d9a1eeb4d999d0a2292997ef2141fcb",
+      "sha256": "d56e765059b5a7b209d02793023db470d56d2608539dadeb44a155937a23605e"
+    },
+    {
+      "file": "slide-to-open-vs.mp3",
+      "source": "sounds/slide to open vs.wav",
+      "seconds": 2.182698,
+      "gainDB": -2.6,
+      "sourceSha256": "48011474f92b5cb242f5ff4a3952e88946882678c58926f86649b6444be72566",
+      "sha256": "3b6381bf3982209a76aa25f0317b081961c4ddddae31dac133450afcd0d3a355"
+    },
+    {
+      "file": "space-revolver-version-1.mp3",
+      "source": "sounds/space revolver version 1.wav",
+      "seconds": 0.774036,
+      "gainDB": 1.7,
+      "sourceSha256": "023ae4ab988ecc0634c5037f5dfc664d21955ddf9c504c356d3d0de95ce3f05e",
+      "sha256": "71bab3361c6e35d9d72cf28f7a54d7d750c2a649a7b49ba9043285fe3b55406d"
+    },
+    {
+      "file": "space-revolver-version-2.mp3",
+      "source": "sounds/space revolver version 2.wav",
+      "seconds": 0.774036,
+      "gainDB": -2.4,
+      "sourceSha256": "1b308bb142d85fdbff6dc31f6a131865813ac1cc7d453db1c8fc63dc46ef5a80",
+      "sha256": "67dd57f9a39514fa26ac6660dedcd82e7b1748ba5fa7123fa2c5672bcee0cdfa"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+images/parts.png
+size: 1254, 1254
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+pma: false
+parts
+  rotate: false
+  xy: 0, 0
+  size: 1254, 1254
+  orig: 1254, 1254
+  offset: 0, 0
+  index: -1
+
+images/grip-closed.png
+size: 1774, 887
+filter: Linear, Linear
+pma: false
+grip-closed
+ bounds: 0, 0, 1774, 887
+
+images/body-clean.png
+size: 1024, 1536
+filter: Linear, Linear
+pma: false
+body-clean
+ bounds: 0, 0, 1024, 1536

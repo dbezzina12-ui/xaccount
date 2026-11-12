@@ -1,0 +1,56 @@
+{
+  "name": "vs-symbol",
+  "version": "4.3.26",
+  "canvas": [
+    1254,
+    1254
+  ],
+  "origin": [
+    627,
+    627
+  ],
+  "status": "Imported, saved and exported in Spine Professional 4.3.26; native pose/cue validation passed. Offline composition reviewed; live browser review pending.",
+  "description": "Whole VS emblem punches forward with an additive flash; a growing framed mask reveals the existing full-reel fight.",
+  "textures": {
+    "slider-front": {
+      "size": [
+        1254,
+        1254
+      ],
+      "sha256": "19b9dc4385e797ec20349a78650e9c2e13fc49b1dbaf1660eb8b5dba8e0ac5e3"
+    }
+  },
+  "clips": [
+    "idle",
+    "land",
+    "open",
+    "reset"
+  ],
+  "events": [
+    "vs_land",
+    "vs_charge",
+    "vs_lock",
+    "vs_release",
+    "vs_expand",
+    "vs_reveal",
+    "vs_complete"
+  ],
+  "duration": 0.66,
+  "releaseAt": 0.22,
+  "expandAt": 0.22,
+  "clearAt": 0.5,
+  "revealAt": 0.6,
+  "openingStyle": "whole-emblem punch, energy sweep, expanding gold fight frame",
+  "progressBone": "reveal_progress",
+  "progressSourcePixels": 1000,
+  "revealContent": "host-prepared full-reel fight video; no inner illustration",
+  "revealSocket": "root",
+  "hostEffects": "Curved energy sweep, growing frame and multiplier travel use integration/vs-reel-opening.mjs.",
+  "openingViewport": {
+    "x": -627,
+    "y": -3135,
+    "width": 1254,
+    "height": 6270
+  },
+  "artTreatment": "Frontier Ink; registered illustrated texture replacements. Bone setup, mesh geometry and clip timings retained."
+}

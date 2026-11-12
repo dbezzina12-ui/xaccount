@@ -1,0 +1,24 @@
+{
+  "name": "mobile-crossfire",
+  "version": "4.3.26",
+  "canvas": [
+    1254,
+    1254
+  ],
+  "origin": [
+    0,
+    1254
+  ],
+  "pivotUV": [
+    0.46,
+    0.61
+  ],
+  "muzzleUV": [
+    0.87,
+    0.145
+  ],
+  "boreDegrees": -38,
+  "maxAimDegrees": 65,
+  "artSHA256": "3312f7dd1e227b7e551366b9036e8d25afeaeeeee6ac42163005410cc87400e3",
+  "status": "Native Spine 4.3.26 import/save/export validated; live game integration pending."
+}

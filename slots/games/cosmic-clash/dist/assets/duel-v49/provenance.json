@@ -1,0 +1,61 @@
+{
+  "attempts": [
+    {
+      "accepted": false,
+      "estimatedCredits": 15,
+      "job_id": "b70b390d-b6be-46a2-9d2d-4cfbdbbe1fe9",
+      "params": {
+        "aspect_ratio": "9:16",
+        "bitrate_mode": "standard",
+        "count": 1,
+        "duration": 5,
+        "generate_audio": false,
+        "medias": [
+          {
+            "role": "video",
+            "value": "73f95d38-8912-49b8-9416-358873461795"
+          },
+          {
+            "role": "video",
+            "value": "83e80ab7-8595-406c-a8c2-b0a94a024cdc"
+          }
+        ],
+        "mode": "omni_reference",
+        "model": "seedance_2_5",
+        "prompt": "Create a complete single-shot overhead duel in exactly the same illustrated style, environment and close-up framing as the reference videos. FIRST reference supplies the EXACT two characters and their appearances: TOP is the imposing gold armored BOSS with red V visor, broad gold pauldrons, black undersuit, gold revolver and flowing ochre cape; BOTTOM is the cyan/teal Outlaw with a dark broad-brim cowboy hat, detailed teal trench coat and glowing cyan revolver. SECOND reference supplies ONLY the winning/losing action: the BOTTOM OUTLAW is hit and collapses, while the TOP fighter wins. The TOP fighter in the output MUST be the GOLD ARMORED BOSS from the first reference throughout. There is no orange Hunter in this video.\n\nEXACT OUTCOME: GOLD BOSS WINS, CYAN OUTLAW LOSES. The Boss remains in the same upright fighting stance near the top for the entire shot, only his arms recoil and his cape blows. The Outlaw at the bottom is the ONLY character hit and the ONLY character that falls. His body visibly recoils, tumbles backward toward the lower edge and lands on his back. He remains down. The Boss stays upright with his smoking gold revolver trained down toward the defeated Outlaw. Never use the Boss's defeat movement from the first reference.\n\nKeep the handsome detailed painted comic / cel-shaded ink style, rich slate-blue corridor floor with ochre side edging, warm and cool highlights, wind-blown coats, crisp gold armor detail and character scale. Fixed close overhead camera and unchanged background for the entire video. Characters on the vertical centerline. Intended center crop is a narrow 1:5 slot reel, so faces, weapons and defeat action stay within the central third of the portrait. Keep close character scale and faces clearly visible; no wide establishing shot or zoom.\n\nTimeline: 0–1 second tense standoff and whipping fabric; 1–2 seconds snappy natural-speed gun draw and brief exchange; 2–3.5 seconds Boss's decisive shot sends ONLY the bottom Outlaw backward onto the ground; 3.5–5 seconds hold the defeated Outlaw and victorious upright Boss. Energetic, decisive real-time movement, not slow motion. Continuous complete shot with no cuts, black flashes, scene changes, dissolves, labels, text, resurrection, extra opponents or gore. No full-frame white flash; muzzle flashes remain small and local to the guns.",
+        "resolution": "480p"
+      },
+      "reason": "Both Boss and Outlaw fall; rejected in visual review.",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/hf_20260916_011233_b70b390d-b6be-46a2-9d2d-4cfbdbbe1fe9.mp4"
+    },
+    {
+      "estimatedCredits": 15.12,
+      "job_id": "0fe829dd-186a-46a1-9e65-8481cf322bde",
+      "params": {
+        "bitrate_mode": "standard",
+        "count": 1,
+        "generate_audio": false,
+        "medias": [
+          {
+            "role": "video",
+            "value": "83e80ab7-8595-406c-a8c2-b0a94a024cdc"
+          }
+        ],
+        "mode": "video_edit",
+        "model": "seedance_2_5",
+        "prompt": "Edit ONLY the physical appearance of the TOP ORANGE HUNTER in the supplied video into the GOLD ARMORED BOSS. This is a character-appearance replacement; preserve the supplied video shot and the exact motion, body pose, orientation, position, scale and performance of the TOP fighter in EVERY FRAME.\n\nReplace the top fighter's orange leather torso and arms with detailed burnished gold armor over a black undersuit, broad angular gold shoulder plates, gold gauntlets, and a sealed gold helmet with a sharp glowing RED V-shaped visor. Replace his orange coat tails with a flowing dark ochre cape. He still holds the same gold revolver pointed downward along the corridor. Preserve the top fighter's exact original hunched standing posture: camera sees the TOP of his helmet, his shoulders, back and gun arm from directly overhead. His face must never turn toward the camera and his torso must never turn into a front-facing body lying on the ground.\n\nThe original TOP fighter wins and REMAINS UPRIGHT. Keep that exact outcome. The original BOTTOM cyan Outlaw is shot, falls backward and remains down. Preserve ALL of the bottom Outlaw's original pixels, clothing, hat, gun, performance and fall. Preserve the entire slate-blue floor, ochre edges, lighting, framing, overhead locked camera, muzzle flashes, continuous timing and wind-blown coat motion.\n\nOnly the TOP fighter's visual identity changes to the armored Boss. TOP BOSS DOES NOT FALL, DOES NOT LIE DOWN, DOES NOT GET KNOCKED BACK, DOES NOT CHANGE POSTURE INTO A FRONT-FACING POSE. His stance at the end must match the standing top winner in the original footage exactly. The bottom Outlaw is the only loser. Keep the high-detail cel-shaded painted comic artwork, strong ink outlines and rich gold metallic surfaces. No shot changes, cuts, new backgrounds, camera movement, text or additional people.",
+        "resolution": "480p"
+      },
+      "status": "completed",
+      "accepted": true,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/hf_20260916_012126_0fe829dd-186a-46a1-9e65-8481cf322bde.mp4",
+      "review": "Gold Boss remains standing throughout; only the bottom Outlaw falls. Original corridor and continuous framing preserved."
+    }
+  ],
+  "estimatedTotalCredits": 30.12,
+  "notes": "Complete continuous source clip; no temporal cuts. Normal playback is 1.5x across all four duel clips, Turbo capped at 4x. Game outcomes and math are unchanged.",
+  "purpose": "Dedicated gold Boss victory over Outlaw",
+  "runtimePlaybackRate": 1.5,
+  "version": 49,
+  "acceptedJobId": "0fe829dd-186a-46a1-9e65-8481cf322bde"
+}

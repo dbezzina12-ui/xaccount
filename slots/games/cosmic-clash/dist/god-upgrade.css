@@ -1,0 +1,8 @@
+.god-double-token{position:absolute;z-index:14;left:50%;top:44%;width:88%;max-width:108px;aspect-ratio:1.05;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;line-height:1;font-weight:800;pointer-events:none;white-space:nowrap;transform:translate(-50%,-50%);filter:drop-shadow(0 4px 3px #050710e6) drop-shadow(0 0 9px #b64cff88);isolation:isolate}
+.god-double-token::before,.god-double-token::after{content:'';position:absolute;z-index:-1;inset:0;clip-path:polygon(14% 0,86% 0,100% 14%,100% 86%,86% 100%,14% 100%,0 86%,0 14%)}
+.god-double-token::before{background:linear-gradient(145deg,#fff3c8,#dba760 23%,#bb78ec 46%,#f5d9ff 54%,#8050a5 77%,#f9d89a)}
+.god-double-token::after{inset:3px;background:linear-gradient(155deg,#64417a,#291436 45%,#160d24 60%,#462853);box-shadow:inset 0 0 13px #d891fa66}
+.god-double-value{display:block;font-size:clamp(26px,9cqw,66px);font-weight:800;font-style:italic;letter-spacing:-.07em;padding-right:.05em;color:#fff4d6;text-shadow:0 2px 0 #ac6d2b,0 4px 0 #261231,0 0 10px #d797ff75}
+.god-double-caption{font-size:clamp(8px,1.8cqw,12px);font-weight:800;letter-spacing:.14em;padding-left:.14em;color:#ead4ff}
+.god-reveal-face{position:absolute;inset:0;z-index:7;overflow:hidden;background:#172735;pointer-events:none}
+.god-reveal-face::after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 45%,#080e17b3)}

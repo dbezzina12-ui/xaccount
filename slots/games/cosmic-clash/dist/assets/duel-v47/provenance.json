@@ -1,0 +1,68 @@
+{
+  "asset": "Bounty Breakers dueling-floor backdrop v47",
+  "model": "gpt_image_2_5",
+  "job_id": "3155aac7-92ca-42ad-976e-f2b4bc39506c",
+  "generated_image_count": 1,
+  "generation_parameters": {
+    "aspect_ratio": "9:16",
+    "background": "opaque",
+    "count": 1,
+    "model": "gpt_image_2_5",
+    "prompt": "Create a single premium illustrated empty dueling-floor background for Bounty Breakers, in a rich hand-painted comic / cel-shaded game-art style. Strictly orthographic DIRECTLY OVERHEAD camera looking vertically down, flat rectangular ground plane, no perspective convergence, no horizon. A long, very narrow uninterrupted steel-blue/slate dueling lane runs from the exact top to the exact bottom. Its central painted floor has restrained nuanced slate blue, storm blue, muted cyan-grey, smoky charcoal facets and subtle broad painterly shading, a few tiny irregular pale worn chips, sparse hairline cracks and uneven tiny scuffs; visually interesting but calm and clear for placing game characters. High-quality deliberate illustrated brush shapes and crisp ink-edged structure, no photographic realism, no pixel art, no sterile vector diagram. Composition is designed for a 1:5 central crop: the complete narrow dueling lane, INCLUDING its narrow side edging, must occupy approximately the CENTER 36% of this 9:16 portrait. Put the two thin dark charcoal rail edges at about x=32% and x=68% of the overall image width; immediately inside each rail include only a very narrow band of weathered muted ochre / warm brown. The inside slate-blue playing floor fills most of that central strip. The center 20-25% has subtle varied painted floor detail throughout its entire height. Extend understated weathered side-deck structure out beyond those rails to the outside of the full portrait, but keep all large detail outside the central crop. Straight parallel rails maintain identical separation top to bottom. The yellow-brown bands must be very thin, aged, broken in small spots; do not create broad tan areas. Entire surface feels like one cohesive continuous illustrated arena deck with an irregular natural distribution of wear. Sparse seams only, not a tiled grid and no repeated modules. Even ambient lighting with gentle painted value depth and minor contact shading beside the rails. Absolutely empty floor: NO people, NO characters, NO animals, NO character shadows, NO guns, NO props, NO bodies, NO bullet shells, NO buildings, NO sky, NO mountains, NO furniture, NO UI, NO borders around the image, NO letters, NO numbers, NO text, NO logos, NO icons, NO watermarks. No dramatic light beam, no spotlight, no center emblem, no target, no focal object. Opaque background, polished illustrated mobile-game environment art.",
+    "quality": "high",
+    "resolution": "1k",
+    "use_unlim": false,
+    "variant": "flare"
+  },
+  "source_url": "https://d8j0ntlcm91z4.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/hf_20260916_002655_3155aac7-92ca-42ad-976e-f2b4bc39506c.png",
+  "estimated_credits": 2,
+  "actual_credits": 2,
+  "reference_used": false,
+  "reference_note": "A proposed frame extraction/upload from existing Higgsfield video was blocked by automatic approval review before execution. No reference media was uploaded or supplied. Continued with text-only generation; no generation retry.",
+  "files": [
+    {
+      "path": "dueling-floor-original.png",
+      "width": 752,
+      "height": 1344,
+      "role": "Unmodified full-resolution generated portrait"
+    },
+    {
+      "path": "dueling-floor-runtime-256x1280.webp",
+      "width": 256,
+      "height": 1280,
+      "role": "Exact 1:5 runtime crop",
+      "source_crop": [
+        242,
+        2,
+        510,
+        1342
+      ],
+      "resampling": "Proportional Lanczos downscale from 268x1340",
+      "quality": 92,
+      "media_id": "8cb0a090-d3af-48dc-8186-4d7e49f11400"
+    },
+    {
+      "path": "dueling-floor-with-rails.webp",
+      "width": 340,
+      "height": 1344,
+      "role": "Optional wider crop preserving ochre edging and dark rails",
+      "source_crop": [
+        206,
+        0,
+        546,
+        1344
+      ],
+      "resampling": "None",
+      "quality": 92,
+      "media_id": "8d5ef678-0df9-4cf1-8b5b-bb1654dc3379"
+    }
+  ],
+  "inspection": "Original and both exported WebPs visually inspected. Premium illustrated continuous slate-blue floor; no tile repeats, no stretch, no characters, guns, UI, text or logos. Exact 1:5 crop excludes edging and rails because the generated lane was wider than prompted. Wider crop preserves edging and rails. No further images generated.",
+  "credits_used": 2,
+  "runtime_file": "defeat-background.webp",
+  "original_file": "background-source.png",
+  "sha256": {
+    "background-source.png": "a86c5ae191786a43a77c3e393efe714c4817db73bb0f419f9d07f9ed1468562d",
+    "defeat-background.webp": "ff384896efcec59e7a28277566cb15bb9755935c149b1220fa0efbe7760ab8d0"
+  }
+}

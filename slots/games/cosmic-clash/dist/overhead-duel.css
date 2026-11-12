@@ -1,0 +1,59 @@
+/* One continuous outcome-specific video, clipped only by the reel boundary. */
+.reel-fight{container-type:inline-size;perspective:none;background:#111a20;isolation:isolate}
+.fight-cube{position:absolute;inset:0;transform:none;transform-style:flat;transition:none}
+.arena-face,.winner-face{position:absolute;inset:0;overflow:hidden;transform:none;backface-visibility:visible}
+.arena-face{container-type:size;background:#273640;opacity:1}
+.reel-fight .arena-face .reel-opponent{container-type:size;height:50%!important;left:0;right:0;border:0!important;background:none;overflow:visible;transition:none;z-index:2;opacity:1;filter:none}
+.duel-motion{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;object-position:center;background:#273640}
+.reel-fight[data-incumbent=outlaw] .duel-motion{rotate:180deg}
+.reel-fight .arena-face .opponent-top{top:0;bottom:auto}
+.reel-fight .arena-face .opponent-bottom{bottom:0;top:auto}
+.reel-fight .fight-frame{display:none}
+/* Larger numerals in compact bevelled plates; long values fit the same reel. */
+.reel-fight .arena-face .reel-opponent{--fight-accent:#ffc275;--fight-ink:#fff4da}
+.reel-fight .arena-face .opponent-bottom{--fight-accent:#70e5fa;--fight-ink:#e2fcff}
+.reel-fight[data-incumbent=outlaw] .arena-face .opponent-top{--fight-accent:#70e5fa;--fight-ink:#e2fcff}
+.reel-fight[data-incumbent=outlaw] .arena-face .opponent-bottom{--fight-accent:#ffc275;--fight-ink:#fff4da}
+.reel-fight .arena-face .fight-value{left:4%;right:4%;isolation:isolate;font-size:clamp(15px,36cqw,46px);font-weight:800;font-variant-numeric:tabular-nums;line-height:.94;letter-spacing:-.04em;white-space:nowrap;padding:3px 2px 5px;color:var(--fight-ink);background:linear-gradient(145deg,var(--fight-accent),#637580 46%,#243643 75%,var(--fight-accent));clip-path:polygon(6px 0,calc(100% - 6px) 0,100% 6px,100% calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,0 calc(100% - 6px),0 6px);text-shadow:0 2px 1px #000,0 0 9px color-mix(in srgb,var(--fight-accent),transparent 78%)}
+.reel-fight .arena-face .fight-value::before{content:'';position:absolute;inset:1px;z-index:-1;background:linear-gradient(180deg,#29404a 0%,#13242f 44%,#061019 100%);clip-path:inherit}
+.reel-fight .arena-face .fight-value::after{content:'';position:absolute;bottom:2px;left:25%;right:25%;height:1px;background:var(--fight-accent);opacity:.8}
+.reel-fight .arena-face .fight-value[data-digits="3"]{font-size:clamp(14px,31cqw,40px)}
+.reel-fight .arena-face .fight-value[data-digits="4"]{font-size:clamp(13px,26cqw,34px)}
+.reel-fight .opponent-top .fight-value{top:1.5%;bottom:auto}
+.reel-fight .opponent-bottom .fight-value{bottom:1.5%;top:auto}
+.reel-fight[data-boss=true] .opponent-top .fight-value{--fight-accent:#ffe185;--fight-ink:#fff8d8;color:var(--fight-ink);text-shadow:0 2px 1px #231600,0 0 9px #ffd45c38}
+.reel-fight .reel-beam,.reel-fight .reel-muzzle,.reel-fight .reel-impact{display:none}
+.reel-fight .fight-boss-label{z-index:4;top:12%;left:10%;right:10%;font-size:clamp(10px,16cqw,20px);line-height:1;padding:4px 0;border:1px solid #dba74a99;border-radius:3px;background:linear-gradient(#574023,#20190f);color:#ffe599;letter-spacing:.1em;box-shadow:0 2px 4px #0007}
+.reel-fight[data-phase=boss-arrival] .fight-boss-label{top:39%;font-size:clamp(14px,20cqw,25px);padding:12px 0}
+.reel-fight[data-boss=true] .arena-face::after{content:'';position:absolute;inset:0;z-index:3;pointer-events:none;box-shadow:inset 0 0 18px #ffd45c66;border:1px solid #ffdf71}
+.winner-face{z-index:5;opacity:0;pointer-events:none;background:#08131b;will-change:opacity;transition:opacity calc(.16s * var(--fight-pace)) cubic-bezier(.2,.65,.3,1)}
+.winner-face-portrait{position:absolute;inset:0;background:url('./assets/comic-v64/portraits.webp') 23% center/auto 100% no-repeat;filter:saturate(.95)}
+.reel-fight[data-victor=outlaw] .winner-face-portrait{background-position:80% center}
+.reel-fight[data-winner-boss=true] .winner-face-portrait{background-image:url('./assets/boss-fighter.png');background-size:cover;background-position:center}
+.winner-face::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(#040b131a,transparent 45%,#040b13e6 100%)}
+/* Keep the last video frame opaque underneath the result dissolve. */
+.reel-fight:is([data-phase=winner-hold],[data-phase=transfer],[data-phase=life-loss],[data-phase=result]) .winner-face{opacity:1}
+.reel-fight .winner-face .reel-result{opacity:1;z-index:6;bottom:7%;top:auto;animation:none;background:linear-gradient(transparent,#030a13cc 25%);padding:14px 2px 8px;color:#fff1cd}
+.reel-fight .winner-face .reel-result strong{font-size:clamp(10px,14cqw,19px);letter-spacing:.025em}
+.reel-fight .winner-face .reel-result small{font-size:clamp(10px,14cqw,18px);line-height:1.1;margin:5px 0}
+.reel-fight .winner-face .reel-result b{font-size:clamp(17px,27cqw,40px);line-height:1;letter-spacing:-.03em}
+.reel-fight[data-phase=duel]{animation:none}
+.reel-fight[data-phase=standoff]::after{opacity:0}
+.reel-fight[data-phase=impact]{animation:none}
+.reel-fight[data-phase=impact]::after{animation:none;opacity:0}
+
+@media(prefers-reduced-motion:reduce){.reel-fight,.reel-fight *{animation:none!important;transition:none!important}}
+
+/* Reserve a separate life rail; combat plates never occupy its space. */
+.duel-card:has(.duel-lives:not(:empty)){--life-rail-space:26px}
+.duel-card .duel-lives:not(:empty){bottom:4px;left:6%;right:6%;height:18px;min-height:18px;padding:5px 4px;gap:4px;align-items:center;z-index:10;opacity:1;background:#06131ff2;border:1px solid #4a788b;border-radius:3px;box-shadow:0 2px 5px #0009}
+.duel-card .duel-lives i{height:6px;min-width:0;box-shadow:0 0 5px #4be4ed88}
+.duel-card .duel-lives i.empty{background:#253641;box-shadow:inset 0 0 0 1px #577180}
+.duel-card .duel-lives .infinity{font-size:18px;line-height:1}
+.duel-card:has(.duel-lives:not(:empty)) .opponent-bottom .fight-value{bottom:var(--life-rail-space)}
+.duel-card:has(.duel-lives:not(:empty)) .winner-face .reel-result{bottom:max(7%,var(--life-rail-space))}
+.duel-card:has(.duel-lives:not(:empty)) .wild-multiplier{bottom:max(12%,var(--life-rail-space))}
+
+/* Full-reel face-off opens over a prepared frame; no pulsing portrait beneath. */
+.duel-card.dueling .duel-portrait{animation:none}
+.duel-card.focused{box-shadow:none}

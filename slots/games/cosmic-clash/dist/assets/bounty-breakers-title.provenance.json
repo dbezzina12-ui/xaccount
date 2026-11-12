@@ -1,0 +1,15 @@
+{
+  "asset": "/workspace/scratch/193538a31926/title-art/bounty-breakers-title.png",
+  "generation_tool": "built-in image_gen.imagegen",
+  "generation_calls": 1,
+  "generation_type": "original text-to-image; no reference images",
+  "source": "/workspace/scratch/193538a31926/generated_images/exec-9b4d4a3a-4981-4cdb-a24f-20015db0b2d1.png",
+  "dimensions": [1921, 819],
+  "mode": "RGBA",
+  "sha256": "eb5912215823c571ec1a2fd720a62289a756769ecaaed546affb8ccd165c7008",
+  "alpha_extrema": [0, 255],
+  "fully_transparent_pixels": 653541,
+  "total_pixels": 1573299,
+  "post_processing": "None. Byte-for-byte copy of original PNG, preserving alpha and embedded provenance.",
+  "prompt_file": "/workspace/scratch/193538a31926/title-art/bounty-breakers-title.prompt.txt"
+}

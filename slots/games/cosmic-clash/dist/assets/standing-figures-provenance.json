@@ -1,0 +1,246 @@
+{
+  "tool": "image_gen.imagegen",
+  "mode": "fresh generation",
+  "references": [],
+  "parallel_batch": true,
+  "pixel_modifications": false,
+  "transfer_method": "Original generated PNG data URLs decoded directly to bytes without re-encoding or image editing.",
+  "assets": [
+    {
+      "name": "hunter",
+      "path": "/workspace/scratch/193538a31926/finished-fighters/hunter-black-final.png",
+      "byte_count": 1306650,
+      "sha256": "be516c7ffe4e16ae6e4d6cbada706d3208b7ff4c17743c99404ed216c27bce04",
+      "prompt": "Use case: stylized-concept\nAsset type: full-body 3D video game character sprite for Bounty Breakers.\nScene/backdrop: a perfectly solid uniform RGB black (#000000) canvas everywhere beyond the character. Every outer border pixel is pure black. No floor, no ground plane, no pedestal, no atmospheric haze, no background lighting, no vignette, no scenery.\nSubject: Hunter, a confident standing sci-fi bounty hunter facing slightly right in a relaxed ready stance. Young adult man with spiky brown hair, intense eyes and a rugged metal half-face respirator. Worn orange tactical long jacket with high collar, orange shoulder and forearm armor, dark chest armor, tactical belt and pouches, charcoal trousers, black armored boots and black gloves. One detailed futuristic revolver lowered at his side, pointed toward the bottom of the frame. Keep hands and fingers natural and clear.\nStyle/medium: premium dimensional 3D video game character studio render, detailed modeled geometry and convincing material surfaces, realistic cloth folds, worn painted metal, leather, small scratches. Not a drawing or illustration.\nLighting: controlled studio key light and narrow orange edge highlights confined to the figure, readable dark materials and dimensional shading. Strong clean silhouette.\nComposition/framing: tall portrait, one complete standing figure, entire hair/head and both boots fully within frame, no cropping. Character fills about 85\u201390 percent of frame height with clear space above the hair and below the boots.\nConstraints: one character only, no lettering, no graphic design, no banner, no logos, no watermark, no extra limbs, no props other than the worn gear and single lowered revolver. Background must remain perfectly solid pure #000000.",
+      "inspection": {
+        "bit_depth": 8,
+        "border_colors": [
+          [
+            "0,0,0",
+            4279
+          ],
+          [
+            "1,1,1",
+            279
+          ],
+          [
+            "1,0,0",
+            218
+          ],
+          [
+            "1,1,0",
+            156
+          ],
+          [
+            "0,1,0",
+            119
+          ],
+          [
+            "0,1,1",
+            29
+          ],
+          [
+            "0,0,1",
+            28
+          ],
+          [
+            "1,0,1",
+            8
+          ]
+        ],
+        "border_pixel_count": 5116,
+        "border_unique_colors": 8,
+        "corner_patch_colors": [
+          [
+            "0,0,0",
+            14681
+          ],
+          [
+            "1,0,0",
+            785
+          ],
+          [
+            "1,1,0",
+            452
+          ],
+          [
+            "1,1,1",
+            307
+          ],
+          [
+            "0,1,0",
+            94
+          ],
+          [
+            "0,1,1",
+            32
+          ],
+          [
+            "0,0,1",
+            25
+          ],
+          [
+            "1,0,1",
+            8
+          ]
+        ],
+        "corner_patch_pixel_count": 16384,
+        "corner_patch_unique_colors": 8,
+        "corners": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ]
+        ],
+        "dimensions": [
+          1024,
+          1536
+        ],
+        "inspection_method": "Read-only PNG decoding of original tool data URL in JS; no pixel modifications.",
+        "mode": "RGB",
+        "png_color_type": 2,
+        "uniform_pure_black_border": false,
+        "uniform_pure_black_corner_patches": false
+      }
+    },
+    {
+      "name": "outlaw",
+      "path": "/workspace/scratch/193538a31926/finished-fighters/outlaw-black-final.png",
+      "byte_count": 1299159,
+      "sha256": "f6eda26585903ebc2cf81467a1012097839987b3354e14d2301333c374c57030",
+      "prompt": "Use case: stylized-concept\nAsset type: full-body 3D video game character sprite for Bounty Breakers.\nScene/backdrop: a perfectly solid uniform RGB black (#000000) canvas everywhere beyond the character. Every outer border pixel is pure black. No floor, no ground plane, no pedestal, no atmospheric haze, no background lighting, no vignette, no scenery.\nSubject: Outlaw, a formidable standing sci-fi robot cowboy facing slightly left in a relaxed ready stance. Broad-brimmed black cowboy hat, angular robotic metal mask face and small glowing cyan eyes. Charcoal long coat with cyan piping and restrained cyan armor accents, dark segmented mechanical chest armor, tactical belt and pouches, charcoal trousers, black armored cowboy boots and mechanical gloved hands. One detailed futuristic revolver lowered at his side, pointed toward the bottom of the frame. Keep hands and fingers natural and clear.\nStyle/medium: premium dimensional 3D video game character studio render, detailed modeled geometry and convincing material surfaces, realistic cloth folds, worn painted metal, leather, small scratches. Not a drawing or illustration.\nLighting: controlled studio key light and narrow cyan edge highlights confined to the figure, readable dark materials and dimensional shading. Strong clean silhouette.\nComposition/framing: tall portrait, one complete standing figure, entire hat and both boots fully within frame, no cropping. Character fills about 85\u201390 percent of frame height with clear space above the hat and below the boots.\nConstraints: one character only, no lettering, no graphic design, no banner, no logos, no watermark, no extra limbs, no props other than the worn gear and single lowered revolver. Background must remain perfectly solid pure #000000.",
+      "inspection": {
+        "bit_depth": 8,
+        "border_colors": [
+          [
+            "0,0,0",
+            4312
+          ],
+          [
+            "1,1,1",
+            309
+          ],
+          [
+            "1,0,0",
+            189
+          ],
+          [
+            "1,1,0",
+            132
+          ],
+          [
+            "0,1,0",
+            111
+          ],
+          [
+            "0,0,1",
+            32
+          ],
+          [
+            "0,1,1",
+            22
+          ],
+          [
+            "1,0,1",
+            9
+          ]
+        ],
+        "border_pixel_count": 5116,
+        "border_unique_colors": 8,
+        "corner_patch_colors": [
+          [
+            "0,0,0",
+            14872
+          ],
+          [
+            "1,0,0",
+            633
+          ],
+          [
+            "1,1,0",
+            402
+          ],
+          [
+            "1,1,1",
+            338
+          ],
+          [
+            "0,1,0",
+            63
+          ],
+          [
+            "0,0,1",
+            31
+          ],
+          [
+            "0,1,1",
+            30
+          ],
+          [
+            "1,0,1",
+            15
+          ]
+        ],
+        "corner_patch_pixel_count": 16384,
+        "corner_patch_unique_colors": 8,
+        "corners": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ]
+        ],
+        "dimensions": [
+          1024,
+          1536
+        ],
+        "inspection_method": "Read-only PNG decoding of original tool data URL in JS; no pixel modifications.",
+        "mode": "RGB",
+        "png_color_type": 2,
+        "uniform_pure_black_border": false,
+        "uniform_pure_black_corner_patches": false
+      }
+    }
+  ],
+  "integration": {
+    "hunter": "hunter-figure.png",
+    "outlaw": "outlaw-figure.png",
+    "method": "Generated character PNG bytes preserved. Separate generated luminance mattes hide the black backdrop; original character colours use normal compositing. Outlaw and its matte are mirrored together by CSS for inward-facing pose.",
+    "display": "Full-body desktop figures with subtle idle transforms; cropped head/shoulder views in mobile header.",
+    "mattes": [
+      "hunter-matte.png",
+      "outlaw-matte.png"
+    ]
+  }
+}

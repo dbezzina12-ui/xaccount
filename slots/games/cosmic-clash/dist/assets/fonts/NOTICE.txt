@@ -1,0 +1,4 @@
+Barlow Semi Condensed by Jeremy Tribby.
+Source: https://github.com/google/fonts/tree/main/ofl/barlowsemicondensed
+Licensed under SIL Open Font License 1.1; see OFL.txt.
+Regular (400), SemiBold (600) and ExtraBold (800), converted from upstream TTF to WOFF without subsetting or design changes.

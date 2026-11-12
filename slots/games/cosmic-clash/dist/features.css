@@ -1,0 +1,71 @@
+/* Feature status occupies the existing gap above the controls. The game stays
+   inside its viewport; only the shop and information dialogs may scroll. */
+.game[data-feature=enhanced]{--feature:#ff941f}
+.game[data-feature=superAnte]{--feature:#cf91ff}
+.game[data-feature=duel]{--feature:#58e3ee}
+.feature-banner{position:absolute;inset:auto 0 calc(100% + 12px);height:22px;display:flex;align-items:center;justify-content:center;background:var(--feature);color:#06121b;font-size:12px;font-weight:800;letter-spacing:.65px;line-height:1.1;text-align:center;padding:3px 10px;pointer-events:none}
+.game:not([data-feature=base]) .bet-box strong{color:var(--feature)}
+.game:not([data-feature=base]) .spin-button{background:var(--feature);border-color:#fff5;color:#071018}
+.game:not([data-feature=base]) .spin-button.continue svg{color:#071018}
+.game:not([data-feature=base]) .buy-button{background:#111c25;border-color:var(--feature);color:var(--feature)}
+.game:not([data-feature=base]) .buy-button svg{display:none}
+.shop{width:min(96vw,1240px);background:#080e17f7}
+.shop .modal-heading{padding-inline:24px}
+.shop .modal-heading h2{font-size:clamp(27px,3.1vw,38px)}
+.shop .bonus-cards{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.shop .bonus-card{background:#101b27;color:#ecf4f8;border:1px solid #3e5365;border-top:2px solid var(--card);min-height:0;box-shadow:0 8px 24px #0004;border-radius:5px;display:flex;flex-direction:column}
+.shop .bonus-card[data-mode=duel]{--card:#58e3ee}
+.shop .card-content{display:flex;flex-direction:column;align-items:stretch;gap:0;padding:12px;text-align:center}
+.shop .card-emblem{width:100%;margin:0 0 17px;letter-spacing:0;font-style:normal;text-shadow:none}
+.shop .card-emblem>img{width:100%;height:auto;aspect-ratio:1;object-fit:contain;border-radius:3px;display:block;background:transparent}
+.shop .feature-card .card-emblem>img{padding:0;background:transparent}
+.shop .card-emblem small{font-size:13px;line-height:1.2;font-weight:800;letter-spacing:1px;color:var(--card);margin:10px 0 0}
+.shop .bonus-card h3{font-size:25px;line-height:1.05;letter-spacing:-.3px}
+.shop .bonus-card .card-content>small{font-size:13px;color:#9fbbcc;margin-top:7px;line-height:1.2}
+.shop .bonus-card p{font-size:16px;line-height:1.3;margin:12px 0 18px;max-width:none;color:#bfd0dc}
+.shop .card-price{font-size:28px;line-height:1.2;font-variant-numeric:tabular-nums;margin-top:auto}
+.shop .card-price span{display:block;color:#9cb1bf;font-size:12px;letter-spacing:1px;font-weight:600;margin-top:3px}
+.shop .card-action{font-size:21px;min-height:50px;border:0}
+.shop .bonus-cards.selected{grid-template-columns:minmax(0,320px);justify-content:center}
+.shop .bonus-card.selected .card-content{display:flex;text-align:center}
+.shop .bonus-card.selected .card-emblem{width:min(100%,200px);margin:0 auto 18px}
+.shop .bonus-card.selected p{margin-bottom:20px}
+.splash-mark{width:30cqw;height:30cqw;flex:none;margin-bottom:2cqw}
+.splash-mark img{mask-image:radial-gradient(ellipse,#000 63%,transparent 76%)}
+@media(max-width:1100px) and (min-width:761px){
+ .shop .bonus-cards{grid-template-columns:repeat(6,minmax(0,1fr))}
+ .shop .bonus-card{grid-column:span 2}
+ .shop .feature-card{grid-column:span 3}
+ .shop .feature-card .card-content{display:grid;grid-template-columns:104px minmax(0,1fr);gap:5px 14px;text-align:left}
+ .shop .feature-card .card-emblem{grid-row:1/5;margin:0}
+ .shop .feature-card .card-price{grid-column:2}
+ .shop .feature-card p{margin:5px 0 8px}
+ .shop .bonus-card.selected{grid-column:auto}
+}
+@media(max-width:760px){
+ .feature-banner{font-size:12px;letter-spacing:.3px;inset-inline:8px}
+ .shop{padding:50px 14px 22px}
+ .shop .bonus-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .shop .card-content{padding:12px}
+ .shop .card-emblem>img{max-height:200px}
+ .shop .bonus-card h3{font-size:24px}
+ .shop .bonus-card p{font-size:16px}
+ .shop .bonus-cards.selected{grid-template-columns:minmax(0,320px)}
+}
+@media(max-width:480px){
+ .shop .bonus-cards{grid-template-columns:minmax(0,1fr)}
+ .shop .card-content{display:grid;grid-template-columns:94px minmax(0,1fr);gap:5px 13px;text-align:left;padding:14px}
+ .shop .card-emblem{grid-column:1;grid-row:1/5;align-self:center;margin:0}
+ .shop .card-emblem small{font-size:12px;letter-spacing:.4px}
+ .shop .card-content>h3,.shop .card-content>small,.shop .card-content>p,.shop .card-content>.card-price{grid-column:2}
+ .shop .bonus-card .card-content>small{margin-top:0}
+ .shop .bonus-card p{margin:5px 0 7px;font-size:15px}
+ .shop .card-price{font-size:25px}
+ .shop .card-price span{display:inline;margin-left:6px}
+ .shop .card-action{min-height:46px;font-size:20px}
+ .shop .bonus-card.selected .card-content{display:flex;gap:0}
+ .shop .bonus-card.selected .card-emblem{margin:0 auto 15px}
+}
+@media(max-height:500px) and (orientation:landscape){
+ .feature-banner{height:18px;bottom:calc(100% + 4px)}
+}

@@ -1,0 +1,57 @@
+{
+  "name": "vs-symbol",
+  "version": "4.3.26",
+  "canvas": [
+    1254,
+    1254
+  ],
+  "origin": [
+    627,
+    627
+  ],
+  "status": "Prepared import rig and starter motion; native editor review pending.",
+  "description": "Horizontal centre seam; rigid halves slide to the reel edges, directly revealing the existing full-reel fight video.",
+  "textures": {
+    "slider-front": {
+      "size": [
+        1254,
+        1254
+      ],
+      "sha256": "509f03e91128ed75e4e77aeab1d746423973aac42e1d0429798b8804be9bc0ce"
+    }
+  },
+  "clips": [
+    "idle",
+    "land",
+    "open",
+    "reset"
+  ],
+  "events": [
+    "vs_land",
+    "vs_charge",
+    "vs_lock",
+    "vs_release",
+    "vs_expand",
+    "vs_reveal",
+    "vs_complete"
+  ],
+  "partitionArea": 1572516,
+  "partitionError": 0,
+  "duration": 1.38,
+  "releaseAt": 0.22,
+  "revealAt": 0.98,
+  "expandAt": 0.22,
+  "clearAt": 0.96,
+  "rotationDegrees": 0,
+  "openingStyle": "horizontal split; rigid top and bottom vertical slide",
+  "splitY": 627,
+  "travelSourcePixels": 3135,
+  "revealContent": "host-prepared full-reel fight video; no inner illustration",
+  "revealSocket": "root",
+  "openingViewport": {
+    "x": -627,
+    "y": -3135,
+    "width": 1254,
+    "height": 6270
+  }
+}

@@ -1,0 +1,15 @@
+/* Dry ink, oxidized enamel and dusty teal felt. The shared controller and all
+   motion/feedback classes keep their original sizing and interaction rules. */
+.game::before{filter:saturate(.88) brightness(.90)}
+
+
+.game .machine .reels,.game .machine .duel-overlays{gap:2px}
+.game .machine .reel{background:linear-gradient(90deg,#172a31,#294047 45%,#1b3037);box-shadow:inset 1px 0 #61757024,inset -1px 0 #030f1680}
+.game .machine .symbol-cell:not(.winning):not(.line-active):not(.temporary):not(.word-winning):not(.word-lit):not(.scatter-locked){background:radial-gradient(ellipse at 50% 48%,#68838026,transparent 73%);border-bottom-color:#a2c2b20b}
+.game .machine .symbol-cell:nth-child(even):not(.winning):not(.line-active):not(.temporary):not(.word-winning):not(.word-lit):not(.scatter-locked){background:#334244}
+.game .machine .symbol-cell .symbol-art.atlas-art{border-radius:0}
+.game .machine .slot-shell .board-top{color:#eadab8}
+.game .machine .board-top #bonus-remaining{color:#cedbd2}
+.game .machine .line-guide-button{color:#eadbb9}
+.game .scene-actor,.game .scene-actor[data-actor=outlaw]{--actor-grade:saturate(.91) contrast(1.04) brightness(.97)}
+.game .spine-atmosphere{opacity:.55}

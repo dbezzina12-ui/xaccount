@@ -1,0 +1,22 @@
+/* Illustrated tier badges retain live, accessible payout text below them. */
+.win-copy{padding:3cqw 4cqw;gap:0}
+.win-copy>p{margin-bottom:1cqw;font-size:2.3cqw}
+.win-art{display:block;width:92%;height:48cqw;flex:0 0 auto;object-fit:contain;filter:drop-shadow(0 4px 9px #0009);margin:0 0 1cqw}
+.win-art>img{width:100%;height:100%;object-fit:contain;display:block}
+.win-art[hidden]{display:none}
+.has-win-art #win-title{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.has-win-art .win-copy>strong{font-size:min(12cqw,calc(125cqw / var(--win-digits,8)))}
+.has-win-art .win-copy>span{margin:1cqw 0 2cqw}
+.has-win-art .win-copy .primary{margin-top:2cqw;padding:2cqw 5cqw}
+.win-dialog[data-phase=finale] .win-art{animation:winArtSettle .45s ease-out}
+@keyframes winArtSettle{from{transform:scale(.94);filter:drop-shadow(0 0 14px #ffe6a866)}to{transform:scale(1);filter:drop-shadow(0 4px 9px #0009)}}
+@media(prefers-reduced-motion:reduce){.win-dialog .win-art{animation:none!important}}
+/* Matte print field leaves the character badge and the live payout as the two focal points. */
+.win-dialog.has-win-art{--win-paper:#ffda8c;--win-wash:#4c372b;background:radial-gradient(ellipse at 50% 44%,var(--win-wash) 0%,#202b31 58%,#111d24f7 95%)}
+.win-dialog.has-win-art[data-tier=big]{--win-paper:#a8ece0;--win-wash:#284c50}
+.win-dialog.has-win-art[data-tier=super],.win-dialog.has-win-art[data-tier=relic]{--win-paper:#ffdc80;--win-wash:#57432c}
+.win-dialog.has-win-art[data-tier=max]{--win-paper:#fff2b4;--win-wash:#68412c}
+.win-dialog.has-win-art::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,#0c171e7a .7px,transparent 1px) 0 0/5px 5px;mask-image:radial-gradient(ellipse,transparent 29%,#000 88%)}
+.has-win-art .win-copy>p{font-weight:800;color:#e4d4b5;letter-spacing:.14em}
+.has-win-art .win-copy>strong{color:#fff4d7;text-shadow:0 .35cqw 0 #12191d}
+.has-win-art .win-copy>span{font-weight:800;color:var(--win-paper)}

@@ -1,0 +1,167 @@
+/* Size the whole slot inside the space left by the title and control panel.
+   The arena is a size container, so cqh measures that space, not the viewport. */
+.masthead {
+  height: auto;
+  padding: 7px 18px 11px;
+}
+
+.masthead .game-logo {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  margin: 0;
+  line-height: 1;
+  letter-spacing: -.02em;
+  transform: none;
+}
+
+.masthead .game-logo span,
+.masthead .game-logo strong {
+  width: max-content;
+  line-height: 1;
+  transform: skew(-4deg);
+  letter-spacing: -.02em;
+}
+
+.masthead .game-logo span { font-size: clamp(30px, 4.2svh, 48px); }
+.masthead .game-logo strong { font-size: clamp(36px, 4.8svh, 55px); }
+
+.arena {
+  container-type: size;
+  flex: 1 1 0;
+  margin: 0 auto;
+  padding: 6px 18px 18px;
+  --reel-limit: 630px;
+  --caption-space: 80px;
+}
+
+.arena .slot-shell {
+  width: min(100%, calc(100cqh - var(--caption-space)), var(--reel-limit));
+  max-height: 100cqh;
+  display: flex;
+  flex-direction: column;
+}
+
+.slot-shell .reel-stage {
+  flex: 0 1 auto;
+  min-height: 0;
+}
+
+.slot-shell .board-top {
+  flex: 0 0 auto;
+  min-height: 32px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 5px 10px;
+  font-size: 14px;
+  line-height: 1.15;
+  letter-spacing: .5px;
+}
+
+.board-top #mode-label { text-align: left; overflow-wrap: anywhere; }
+.board-top #bonus-remaining { text-align: right; overflow-wrap: anywhere; }
+
+.slot-shell .board-bottom {
+  flex: 0 0 auto;
+  min-height: 48px;
+  padding: 7px 10px;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: .3px;
+  color: #d4e2ec;
+  background: #070d18f2;
+  border-bottom: 1px solid #50708366;
+}
+
+.board-bottom #status {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: visible;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  text-align: center;
+}
+
+.board-bottom #round-badge {
+  flex: 0 0 auto;
+  margin-left: 0;
+  font-size: 12px;
+  text-align: right;
+}
+
+@media (min-width: 1400px) {
+  .arena { --reel-limit: 680px; }
+}
+
+@media (max-width: 760px) {
+  .masthead { padding: 6px 14px 10px; }
+  .masthead .game-logo span { font-size: clamp(26px, 3.6svh, 32px); }
+  .masthead .game-logo strong { font-size: clamp(32px, 4.4svh, 40px); }
+  .arena {
+    --reel-limit: 570px;
+    padding: 2px 9px 16px;
+  }
+  .slot-shell .board-top {
+    padding-inline: 7px;
+    gap: 6px;
+    font-size: 13px;
+    letter-spacing: .2px;
+  }
+  .slot-shell .board-bottom {
+    padding-inline: 8px;
+    gap: 7px;
+    font-size: 13px;
+  }
+  /* Keep the original controls, including their full safe-area padding. */
+  .console { height: calc(140px + max(8px, env(safe-area-inset-bottom))); }
+}
+
+@media (max-height: 640px) and (min-width: 761px) {
+  .masthead { padding-block: 3px 7px; }
+  .masthead .game-logo span { font-size: 27px; }
+  .masthead .game-logo strong { font-size: 33px; }
+  .arena { --reel-limit: 520px; }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .masthead { padding-block: 2px 5px; }
+  .masthead .game-logo { gap: 1px; }
+  .masthead .game-logo span { font-size: 20px; }
+  .masthead .game-logo strong { font-size: 25px; }
+  .arena {
+    --reel-limit: 480px;
+    --caption-space: 66px;
+    padding: 0 8px 10px;
+  }
+  .slot-shell .board-top {
+    min-height: 28px;
+    padding: 3px 6px;
+    font-size: 12px;
+  }
+  .slot-shell .board-bottom {
+    min-height: 38px;
+    padding: 4px 6px;
+    font-size: 12px;
+  }
+  .console { height: 63px; }
+}
+
+/* Full amounts stay legible at the $500 base bet, including feature costs. */
+.console .money{container-type:inline-size}
+.console .money strong{font-size:clamp(12px,calc(185cqw / var(--money-digits,8)),23px);white-space:nowrap;overflow:visible;text-overflow:clip;letter-spacing:-.025em}
+@media(max-width:760px){.console .money strong{font-size:clamp(12px,calc(185cqw / var(--money-digits,8)),20px)}}
+
+/* Give desktop play space back to the cabinet; features never change it. */
+@media(min-width:761px) and (min-height:541px){
+ .game .topline{height:22px;min-height:22px;flex:0 0 22px}
+ .game .masthead{--masthead-size:clamp(88px,10svh,110px);height:var(--masthead-size);padding:0 12px 2px;flex:0 0 var(--masthead-size)}
+ .game .arena{--reel-limit:760px;--caption-space:70px;padding:2px 18px 14px}
+ .game .slot-shell .board-top{height:28px;min-height:28px;padding-block:2px}
+ .game .slot-shell .board-bottom{height:40px;min-height:40px;padding:2px 9px}
+ .game .board-bottom #status{font-size:12px;line-height:1.05}
+ .game .slot-shell{width:min(100%,calc(100cqh - var(--caption-space)),var(--reel-limit))}
+}

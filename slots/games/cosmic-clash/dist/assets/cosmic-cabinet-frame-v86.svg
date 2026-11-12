@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+<defs><linearGradient id="rail"><stop stop-color="#8b9390"/><stop offset=".2" stop-color="#465155"/><stop offset=".7" stop-color="#1e2a32"/><stop offset="1" stop-color="#9baba9"/></linearGradient></defs>
+<path d="M2 0H238V220L220 238H20L2 220Z" fill="#061018" stroke="#060c10" stroke-width="4"/>
+<path d="M5 0H235V218L218 235H22L5 218Z M18 0V214L27 222H213L222 214V0Z" fill="url(#rail)" fill-rule="evenodd" stroke="#a0a9a3" stroke-width="1.5"/>
+<path d="M21 0V211L30 219H210L219 211V0" fill="none" stroke="#050d13" stroke-width="7"/>
+<path d="M9 47V77" stroke="#ecaf55" stroke-width="2"/><path d="M231 47V77" stroke="#61ccdf" stroke-width="2"/>
+<path d="M9 82V94" stroke="#9b6e3f" stroke-width="2"/><path d="M231 82V94" stroke="#347789" stroke-width="2"/>
+<path d="M7 197H15V216L25 227H47V231H21L7 218ZM233 197H225V216L215 227H193V231H219L233 218Z" fill="#71838b"/>
+<path d="M56 228H93L99 233H141L147 228H184" fill="none" stroke="#8aa5b1" stroke-width="1.5"/>
+<path d="M104 230H136" stroke="#67b9c9" stroke-width="2"/>
+</svg>

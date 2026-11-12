@@ -1,0 +1,8 @@
+.mobile-crossfire{position:absolute;inset:0;z-index:20;pointer-events:none;overflow:hidden;isolation:isolate}
+.mobile-crossfire-arm{position:absolute;left:0;top:0;will-change:transform}
+.mobile-crossfire-grip{position:absolute;inset:0;will-change:transform}
+.mobile-crossfire-grip img{display:block;width:100%;height:100%;filter:drop-shadow(0 7px 5px #0006)}
+.mobile-crossfire-flash{position:absolute;width:19%;aspect-ratio:1;translate:-50% -50%;opacity:0;background:radial-gradient(ellipse,#fffde0 0 9%,#ffec97d9 18%,#ff931b82 35%,transparent 67%)}
+.mobile-crossfire-impact{position:absolute;width:13%;aspect-ratio:1;translate:-50% -50%;border:2px solid #ffe4ab;border-radius:50%;background:radial-gradient(circle,#fff5c7 0 6%,#ffaa3960 26%,transparent 65%)}
+.mobile-crossfire-smoke{position:absolute;width:12%;aspect-ratio:1;opacity:0;background:radial-gradient(ellipse,#b8c6d0a0,transparent 68%);pointer-events:none}
+@media(prefers-reduced-motion:reduce){.mobile-crossfire{display:none}}

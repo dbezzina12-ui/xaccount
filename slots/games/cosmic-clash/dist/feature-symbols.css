@@ -1,0 +1,71 @@
+.symbol-art.feature-symbol-art{aspect-ratio:1;mask-image:none;overflow:visible;height:94%;max-width:98%;border-radius:0}
+.feature-symbol-art>img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:none}
+.symbol-cell[data-name=VS] .vs-symbol-art{height:98%;max-width:100%;translate:none;filter:drop-shadow(0 1px 2px #0007)}
+.vs-symbol-art .vs-metal-icon{object-fit:contain}
+.symbol-cell[data-name=SCATTER] .fs-vault-art{height:98%;max-width:100%;filter:drop-shadow(0 0 3px #ffc44a40)}
+.symbol-cell[data-name=SCATTER]::after{content:none}
+.fs-letter-motion{position:absolute;inset:4%;width:92%;height:92%;transform-origin:50% 50%;animation:fsVaultFloat 4.8s ease-in-out infinite}
+.fs-letter-motion>img{position:static;display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 2px #43ecff40)}
+.fs-letter-motion::after{content:'';position:absolute;inset:0;background:linear-gradient(110deg,transparent 37%,#fffdd89c 49%,transparent 61%) -180% 0/220% 100% no-repeat;mask:url('./assets/frontier-ink/features/signal-fs.webp') center/contain no-repeat;mix-blend-mode:screen;opacity:0;animation:fsVaultShine 4.8s linear infinite;pointer-events:none}
+.guide-art .feature-symbol-art,.intro-badge .feature-symbol-art{width:100%;height:100%;max-width:none}
+.guide-cell .feature-symbol-art{height:auto;width:95%;max-width:none}
+.feature-card .card-emblem .feature-symbol-art{width:122px;height:122px;max-width:100%;margin:auto}
+.reel-track .fs-letter-motion,.reel-track .fs-letter-motion::after{animation:none}
+.reel.teasing .symbol-cell[data-name=SCATTER] .fs-vault-art{filter:brightness(1.12) drop-shadow(0 0 5px #ffdd7890)}
+@keyframes fsVaultFloat{
+  0%,9.58%,54.79%,100%{transform:translateY(0) rotate(0) scale(1)}
+  15.21%{transform:translateY(2.15%) rotate(-1.5deg) scale(1.035,.94)}
+  18.96%{transform:translateY(-6.14%) rotate(.8deg) scale(.985,1.035)}
+  24.38%{transform:translateY(-9.82%) rotate(1.5deg) scale(1.025)}
+  29.17%{transform:translateY(-9.21%) rotate(.7deg) scale(1.02)}
+  35.63%{transform:translateY(1.84%) rotate(-.8deg) scale(1.05,.94)}
+  40.42%{transform:translateY(-3.99%) rotate(.6deg) scale(.995,1.03)}
+  45.42%{transform:translateY(.92%) rotate(-.3deg) scale(1.018,.98)}
+  49.58%{transform:translateY(-.92%) rotate(.1deg) scale(.997,1.01)}
+}
+@keyframes fsVaultShine{
+  0%,37%{opacity:0;background-position:180% 0}
+  40%{opacity:.6}
+  54%{opacity:.6}
+  56%,100%{opacity:0;background-position:-80% 0}
+}
+/* The original VS lands as a symbol, then hinges open over the duel photo. */
+.reel-panel{position:relative}
+.vs-doors{position:absolute;inset:0;z-index:11;pointer-events:none;overflow:hidden;perspective:650px;contain:paint}
+.vs-door{position:absolute;background-image:url('./assets/crossfire-v91/vs-fire.png');background-repeat:no-repeat;will-change:transform;backface-visibility:hidden}
+.vs-door-top{background-position:top left;transform-origin:50% 0}
+.vs-door-bottom{background-position:bottom left;transform-origin:50% 100%}
+.duel-card.pending-duel{visibility:hidden;animation:none;box-shadow:none}
+.duel-card.vs-unlocked:not(.lost){animation:none}
+.duel-card.vs-opening{visibility:visible;animation:none;box-shadow:none;background:transparent;border-color:transparent;will-change:clip-path}
+.duel-card.vs-opening::after{opacity:0}
+.duel-card.vs-opening>:not(.reel-fight):not(.vs-doors):not(.god-reveal-face){visibility:hidden}
+@media(prefers-reduced-motion:reduce){.fs-letter-motion,.fs-letter-motion::after{animation:none}}
+
+/* Two charges chase the enamel rim while the badge rocks in place. The
+   measured outer box stays still for the Spine duel handoff. */
+.vs-symbol-art>.vs-core,.vs-core>.vs-metal-icon,.vs-core>.vs-fuse{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.vs-core>.vs-metal-icon{object-fit:contain}
+.vs-fuse{display:none}
+@media(prefers-reduced-motion:no-preference){
+ .vs-core{animation:duelHover 2.4s ease-in-out infinite}
+ .vs-fuse{display:block}
+ .vs-charge{stroke-dasharray:10 90;animation:duelCurrent 2.4s linear infinite}
+ .vs-charge.warm{stroke:#ffd385}
+ .vs-charge.cold{stroke:#91f3e5;animation-delay:-1.2s}
+ .reel-track .vs-core{animation:none}
+ .reel-track .vs-fuse{display:none}
+}
+@keyframes duelCurrent{from{stroke-dashoffset:0}to{stroke-dashoffset:-100}}
+@keyframes duelHover{0%,100%{transform:translateY(.5%) rotate(-1.4deg) scale(.983)}50%{transform:translateY(-1.8%) rotate(1.4deg) scale(1)}}
+/* A single travelling stroke goes around the combined FS silhouette. The
+   overlay uses the same art bounds as the fallback image and follows the
+   live mesh during landing, tease and bonus clips. */
+.fs-letter-motion,.fs-letter-motion::after{animation:none}
+.fs-letter-motion::after{content:none}
+@media(prefers-reduced-motion:no-preference){
+ .fs-vault-art::after{content:'';position:absolute;inset:4%;z-index:3;pointer-events:none;background:url('./assets/frontier-ink/features/fs-orbit.svg') center/contain no-repeat;transform:var(--fs-orbit-pose,none)}
+ .reel-track .fs-vault-art::after{content:none}
+ .fs-vault-art.fs-touchdown{animation:fsOrbitContact .36s ease-out 1}
+}
+@keyframes fsOrbitContact{0%,100%{filter:none}26%{filter:brightness(1.18) drop-shadow(0 0 3px #64daffc0)}}

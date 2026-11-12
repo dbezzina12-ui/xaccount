@@ -1,0 +1,63 @@
+/* Cosmic Clash: an armoured shell, recessed reel bed and a single metal sill. */
+.game{height:100svh;height:100dvh;overflow:hidden}
+.game .arena{width:100%;max-width:none;min-width:0;min-height:0;padding:12px 26px 14px;gap:0;align-items:center;justify-content:center;container-type:normal}
+.machine{--cabinet-inset:10.265%;--cabinet-sill:4.415%;--cabinet-top:32px;--cabinet-bottom:0px;--cabinet-ratio:1.12;--cabinet-cap:131.97px;position:relative;flex:none;width:var(--cabinet-width,min(90vw,700px));max-width:100%;min-width:0}
+/* The nine-slice shell follows the real reel rectangle, including rotated phones. */
+.game .machine .slot-shell{width:100%;max-height:none;min-width:0;padding:0 var(--cabinet-inset) var(--cabinet-sill);margin:0;position:relative;isolation:isolate;border:0;border-radius:0;background:none;box-shadow:none;overflow:visible;filter:drop-shadow(0 9px 8px #0008)}
+.game .machine .slot-shell::before{content:'';position:absolute;inset:var(--cabinet-cap) 0 0;box-shadow:none;background:none;border-radius:0;border:solid transparent;border-width:0 var(--cabinet-inset) var(--cabinet-sill);border-image:url('./assets/frontier-ink/signal-rails.webp') 0 94 40 92 / 0 var(--cabinet-inset) var(--cabinet-sill) stretch;z-index:6;pointer-events:none}
+.game .machine .slot-shell::after{content:'';position:absolute;inset:calc(var(--cabinet-cap) - 1px) var(--cabinet-inset) var(--cabinet-sill);background:#172b33;clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0 calc(100% - 14px),0 12px);z-index:-1;pointer-events:none}
+.cabinet-title{flex:0 0 var(--cabinet-cap);position:relative;display:block;height:var(--cabinet-cap);min-height:var(--cabinet-cap);width:calc(100% + 2*var(--cabinet-inset));margin:0 calc(-1*var(--cabinet-inset));background:none;border:0;border-radius:0;pointer-events:none;z-index:7}
+.cabinet-title::after{content:none}
+.cabinet-title h1{position:static;inset:auto;width:100%;height:100%;margin:0;overflow:visible;filter:none;line-height:0}
+.cabinet-title img{display:block;width:100%;height:auto;aspect-ratio:906 / 223;max-width:none;object-fit:contain}
+.game .machine .slot-shell .board-top{height:var(--cabinet-top);min-height:var(--cabinet-top);padding:1px 10px 6px;border:0;background:none;box-shadow:none;font-size:10px;color:#b8c1c6;letter-spacing:.02em}
+.game .machine .board-top #bonus-remaining{color:#a2b9c1}
+.cabinet-announcements{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important;pointer-events:none}
+.game .machine .slot-shell .reel-stage{aspect-ratio:var(--cabinet-ratio);height:auto;flex:0 0 auto;min-height:0;border:0;background:#13242c;box-shadow:0 0 0 2px #091a22,0 0 0 3px #72807880,inset 0 0 20px #0008}
+.game .machine .slot-shell .reel-stage::before{content:'';position:absolute;inset:0;box-shadow:inset 0 7px 10px -4px #000b,inset 0 -6px 9px -6px #020d18;pointer-events:none;z-index:7}
+.game .machine .reels,.game .machine .duel-overlays{padding:1px;gap:2px}
+.game .machine .reel{border:0;background:#111c23}
+.game .machine .symbol-cell{margin:0;border:0;border-bottom:1px solid #9caeb00e;border-radius:0;background:#101a21;box-shadow:none}
+.game .machine .symbol-cell:nth-child(even){background:#121d25}
+.game .machine .symbol-art.atlas-art{height:94%;max-width:96%;border-radius:4%}
+.game .machine .symbol-cell.line-active,.game .machine .symbol-cell.winning{background:#43362466;box-shadow:inset 0 0 0 1px #e9bb5d}
+.game .machine .symbol-cell.temporary{background:#60387988;box-shadow:inset 0 0 0 1px #d9b0ff}
+.game .machine #controller{width:100%;max-width:none;padding-inline:0;padding-top:8px;padding-bottom:8px;margin:0}
+.game-guide .guide-brand{height:auto;aspect-ratio:906 / 223;width:min(620px,90vw);max-width:90vw;margin-block:12px}
+.game-guide .guide-brand img{display:block;width:100%;height:auto}
+/* The desktop marquee sits on a low crossbeam. Give the five reel rows
+   the height, and give the controls a span independent of the cabinet. */
+.game:has(.machine > #controller[data-layout=desktop]) .topline{position:absolute;inset:0 0 auto;height:20px;min-height:0;pointer-events:none}
+.game:has(.machine > #controller[data-layout=desktop]) .arena{padding:8px 18px 5px}
+.game .machine #controller[data-layout=desktop]{width:var(--cabinet-deck,100%);left:50%;position:relative;transform:translateX(-50%);z-index:8}
+/* All nine sections now sample the same continuous metal casting. */
+.game .machine .slot-shell::before{inset:0;border-width:var(--cabinet-cap) var(--cabinet-inset) var(--cabinet-sill);border-image:url('./assets/frontier-ink/frontier-shell.webp') 223 94 40 92 / var(--cabinet-cap) var(--cabinet-inset) var(--cabinet-sill) stretch}
+.cabinet-title h1 img{opacity:0}
+@media(max-width:760px), (pointer:coarse) and (hover:none){
+ .game .arena{padding:5px 10px 10px}
+ .game>#controller[data-layout=mobile]{width:100%;max-width:none;flex:none;margin:0;position:relative;left:auto;transform:none;padding:3px max(10px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));z-index:10}
+ .game .machine .slot-shell .board-top{font-size:9px}
+}
+@media(max-height:540px) and (orientation:landscape){
+ .game .topline{height:18px;min-height:18px;flex:0 0 18px}
+ .game .arena{padding:3px 10px 5px}
+ .game>#controller[data-layout=mobile]{padding-top:3px;padding-bottom:max(5px,env(safe-area-inset-bottom))}
+}
+/* A menu above the left end of the bar, using the existing game settings. */
+dialog.overlay.settings{position:fixed;inset:auto auto var(--menu-bottom,110px) var(--menu-left,20px);margin:0;width:250px;max-width:calc(100vw - 20px);max-height:calc(100svh - var(--menu-bottom,110px) - 12px);padding:14px 0 8px;background:#101112;border:1px solid #484b4e66;border-radius:3px;box-shadow:0 8px 28px #0008;overflow-y:auto}
+dialog.overlay.settings::backdrop{background:#0002;backdrop-filter:none}
+.settings #settings-title{font-size:11px;letter-spacing:.12em;margin:0 20px 8px;color:#949a9f;line-height:24px}
+.settings .close{right:9px;top:7px;width:30px;height:30px;background:none;border:0;padding:5px}.settings .close svg{width:20px;height:20px}
+.settings .settings-grid{display:flex;flex-direction:column;gap:0;margin:0}
+.settings .settings-grid button{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:17px;min-height:52px;padding:12px 22px;border:0;border-radius:0;background:none;color:#fff;text-align:left;font-size:16px;font-weight:700;letter-spacing:0;box-shadow:none}
+.settings .settings-grid button svg{width:23px;height:23px;flex:none;fill:none;stroke:currentColor;stroke-width:1.9}
+.settings .settings-grid button[aria-pressed=false]{color:#a1a4a7}.settings .settings-grid button[aria-pressed=true]{color:#fff}.settings .settings-grid button[aria-pressed=true]::after{content:'';margin-left:auto;width:6px;height:6px;flex:none;border-radius:50%;background:#f5bc51}
+.settings .settings-grid button:hover{background:#ffffff0b}.settings .settings-grid #effects-button,.settings .settings-grid #music-button{min-height:52px}
+.settings .menu-extra{border-top:1px solid #ffffff14;margin-top:8px;padding:0 18px}.settings .menu-extra summary{cursor:pointer;padding:14px 0;font-size:11px;color:#a6a9ad;letter-spacing:.025em}.settings .audio-mixer{margin:0;padding:10px 0 14px;background:none;border:0;gap:12px}.settings .audio-mixer label,.settings .audio-mixer output{font-size:12px}.settings #reset-button{font-size:11px;padding:10px 7px;margin-bottom:5px;width:100%;background:#ffffff09;border:1px solid #ffffff20;color:#c4c8cc}.settings #audio-note:empty{display:none}.settings #audio-note{margin:8px 18px;font-size:12px}
+
+/* Clickable Bet opens the same compact menu treatment as Settings. */
+dialog.overlay.bet-dialog{position:fixed;inset:auto auto var(--menu-bottom,100px) var(--menu-left,20px);margin:0;width:260px;max-width:calc(100vw - 20px);max-height:calc(100svh - var(--menu-bottom,100px) - 12px);padding:16px 0 8px;border:1px solid #595f6366;border-radius:4px;background:#101315;box-shadow:0 8px 28px #0009;overflow:hidden;display:none;flex-direction:column}
+dialog.overlay.bet-dialog[open]{display:flex}.bet-dialog::backdrop{background:#0002;backdrop-filter:none}.bet-dialog .close{right:10px;top:10px;width:28px;height:28px;padding:5px;border:0;background:none}.bet-dialog .close svg{width:18px;height:18px}
+.bet-dialog h2{font-size:15px;letter-spacing:.06em;margin:0 18px 8px;color:#fff}.bet-dialog #bet-picker-note{margin:0 18px 10px;max-width:210px;font-size:12px;line-height:1.3;color:#a5afb6}
+.bet-options{position:relative;overflow-y:auto;overscroll-behavior:contain;max-height:340px;min-height:0;scrollbar-width:thin;scrollbar-color:#7a858d #151a1e;padding:0 8px}
+.bet-option{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;min-height:46px;padding:9px 10px;border:1px solid transparent;border-radius:3px;background:none;text-align:left;color:#e6edf0;font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}.bet-option small{display:block;color:#9ba9b2;font-size:11px;font-weight:500;line-height:1.3}.bet-option .bet-check{color:var(--picker-accent,#f5bc51);font-size:22px;opacity:0}.bet-option[aria-pressed=true]{background:#ffffff0a;border-color:var(--picker-accent,#f5bc51);color:var(--picker-accent,#f5bc51)}.bet-option[aria-pressed=true] .bet-check{opacity:1}.bet-option:hover{background:#ffffff10}.bet-option:focus-visible{outline:2px solid #fff;outline-offset:-3px}

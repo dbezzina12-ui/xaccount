@@ -1,0 +1,102 @@
+/* The intro is a feature showcase in the game's own illustrated metalwork. */
+.boot .game-guide.intro{display:flex;flex-direction:column;justify-content:safe center;align-items:center;gap:clamp(10px,1.8svh,20px);padding:20px 5vw;overflow:auto;height:100%;min-height:0;background:#080d12;isolation:isolate}
+.intro-backdrop{position:absolute;inset:0;z-index:-2;pointer-events:none;background:url('./assets/comic-v64/portraits.webp') center 35% / cover no-repeat;filter:grayscale(.9) brightness(.49) contrast(1.13);opacity:.84}
+.boot .game-guide.intro::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 50% 48%,#06101c91 12%,#0c152747 52%,#02070cad 100%),linear-gradient(0deg,#03080fdd,transparent 28%,#080f1638)}
+.boot .game-guide.intro::after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.12;background:radial-gradient(#c2d3df 1px,transparent 1px) 0 0 / 5px 5px;mask-image:linear-gradient(90deg,#000,transparent 38%,transparent 62%,#000)}
+.game-guide.intro .guide-brand{position:relative;flex:none;width:min(650px,57vw,78svh);max-width:100%;height:auto;aspect-ratio:2143 / 516;margin:0 0 3px;filter:drop-shadow(0 8px 12px #0009)}
+.guide-brand img{display:block;width:100%;height:auto;object-fit:contain}
+.welcome-cards{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(22px,3vw,48px);width:min(100%,1080px);align-items:stretch}
+.welcome-card{--accent:#ffbc4a;--feature-wash:#d47b1533;position:relative;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;isolation:isolate;background:none;border:0;border-radius:0;box-shadow:none;padding:0}
+.welcome-card[data-intro-feature=super]{--accent:#67e1ed;--feature-wash:#268ca638}
+.welcome-card[data-intro-feature=crossfire]{--accent:#d3a4ff;--feature-wash:#8a4ac238}
+.welcome-card[hidden]{display:none!important}
+.feature-visual{position:relative;display:flex;align-items:flex-end;justify-content:center;width:100%;height:clamp(180px,32svh,320px);isolation:isolate}
+.feature-visual::before{content:'';position:absolute;inset:6% -9% -5%;z-index:-1;background:radial-gradient(ellipse at center bottom,var(--feature-wash),transparent 68%);pointer-events:none}
+.guide-stage{position:relative;width:calc(100% - 22px);height:100%;aspect-ratio:auto;flex:none;pointer-events:none;isolation:isolate;overflow:hidden;border:0;background:none;box-shadow:none;mask-image:linear-gradient(transparent,#000 8%,#000 98%)}
+.guide-stage .reels,.guide-stage .duel-overlays{padding:0;gap:3px}
+.guide-stage .reel{border:0;background:#09131cb8}
+.guide-stage .symbol-cell{background:#111b2466;border:0;border-bottom:1px solid #bdd1e317}
+.guide-stage .symbol-art.atlas-art{height:94%;aspect-ratio:1;border-radius:0;mask:none}
+/* Focus the first two demonstrations on three large reels, retaining the
+   original landed VS and shared door/video reveal geometry. */
+.guide-focus .reels,.guide-focus .duel-overlays{width:166.6667%;left:-33.33335%;right:auto}
+.guide-focus .reel-panel{grid-template-rows:repeat(3,minmax(0,1fr))}
+.guide-focus .symbol-cell:first-child,.guide-focus .symbol-cell:last-child{display:none}
+.guide-focus .reel:nth-child(2),.guide-focus .reel:nth-child(4){filter:brightness(.55) saturate(.6)}
+.guide-focus .reel:nth-child(3){background:#111b24}
+.guide-stage .duel-card{border:1px solid var(--accent);box-shadow:0 0 16px var(--feature-wash);animation:none}
+.guide-stage .wild-multiplier{font-size:clamp(27px,12cqw,42px)}
+.guide-stage .duel-lives:not(:empty){left:3%;right:3%;padding:5px 3px;gap:4px;border-radius:0}
+.guide-stage .duel-lives i{height:8px;max-width:none}
+.guide-stage .wild-tag{font-size:clamp(10px,3.8cqw,13px)}
+.guide-stage .crossfire-hit{width:17%}
+.welcome-card[data-intro-feature=crossfire] .guide-stage{height:92%}
+.welcome-card[data-intro-feature=crossfire] .wild-multiplier{font-size:clamp(19px,8cqw,29px)}
+.feature-life-count{position:absolute;right:1%;top:13%;display:flex;flex-direction:column;align-items:center;justify-content:center;width:76px;height:91px;transform:rotate(8deg);color:#061a24;background:#6ee0ec;border:3px solid #182f3c;outline:2px solid #9df5fc;box-shadow:4px 5px 0 #02080b99;font-weight:800;line-height:.95;pointer-events:none}
+.feature-life-count strong{font-size:57px;line-height:.9}.feature-life-count span{font-size:18px;letter-spacing:.06em;margin-top:4px}
+.feature-stamp{position:absolute;right:-19px;top:-2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:110px;height:110px;transform:rotate(11deg);color:#fff7ef;background:#3a182d;border:4px solid #df7197;outline:3px solid #090e17;box-shadow:5px 6px 0 #02070c99;font-weight:800;line-height:.87;pointer-events:none}
+.feature-stamp span{font-size:11px;letter-spacing:.02em}.feature-stamp strong{font-size:34px;text-shadow:2px 3px #070b13}
+.feature-plaque{position:relative;align-self:stretch;flex:1;display:flex;flex-direction:column;align-items:center;min-height:203px;padding:12px 11px 6px;border-style:solid;border-width:0 10px 12px;border-image:url('./assets/cosmic-rails-painted-v88.svg') 0 82 92 82 / 0 10px 12px stretch;background:linear-gradient(var(--feature-wash),#131b22 48%,#11171eee);background-clip:padding-box;box-shadow:0 10px 15px #0006}
+.feature-plaque::before{content:'';position:absolute;top:0;left:-10px;right:-10px;height:5px;background:linear-gradient(#c0c7cb,#3e484f 45%,#1c272c 70%,var(--accent));box-shadow:0 -1px 0 #d8e0e766}
+.welcome-kicker{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--accent);margin:0 0 5px;line-height:1.2}
+.welcome-card h2{font-size:clamp(26px,2.6vw,35px);font-weight:800;line-height:1;color:var(--accent);text-shadow:2px 3px 0 #03070c;margin:0 0 15px;letter-spacing:-.02em}
+.welcome-description{font-size:clamp(17px,1.5vw,21px);font-weight:600;line-height:1.23;color:#e0e1de;margin:0;max-width:310px;text-shadow:0 1px 1px #000}
+.demo-state{width:100%;min-height:32px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--accent);line-height:1.2;padding:7px 0 0;margin-top:auto;opacity:.85;background:none}
+.intro-footer{display:flex;flex-direction:column;align-items:center;gap:4px;flex:none;width:min(100%,550px)}
+.intro-footer .primary{width:100%;min-height:46px;padding:4px 12px;font-size:clamp(24px,2.5vw,34px);font-weight:800;line-height:1.1;letter-spacing:.025em;border:0;border-radius:0;background:none;box-shadow:none;color:#fff;text-shadow:0 3px 0 #000,0 0 14px #000}
+.intro-footer .primary:hover{color:#ffe1a7;background:none;filter:none}
+.intro-footer .primary:focus-visible{outline:2px solid #ffcf78;outline-offset:2px}
+.intro-footer small{font-size:11px;font-weight:600;letter-spacing:.08em;line-height:1.4;color:#94a1aa;text-align:center}
+.intro-footer small i{font-style:normal;margin-inline:5px;color:#eeb668}
+.continue-mobile,.guide-nav{display:none}
+@media(max-width:760px){
+ .boot .game-guide.intro{padding:14px 20px max(14px,env(safe-area-inset-bottom));gap:8px}
+ .intro-backdrop{background-position:48% center;opacity:.64;filter:grayscale(.9) brightness(.38)}
+ .game-guide.intro .guide-brand{width:min(100%,440px);margin:0 0 4px}
+ .welcome-cards{display:block;width:min(100%,360px)}
+ .feature-visual{height:clamp(170px,30svh,280px)}
+ .guide-stage{width:calc(100% - 30px)}
+ .feature-plaque{min-height:184px;padding:10px 12px 5px}
+ .welcome-kicker{font-size:11px;margin-bottom:5px}
+ .welcome-card h2{font-size:29px;margin-bottom:11px}
+ .welcome-description{font-size:18px;line-height:1.23}
+ .demo-state{font-size:10px;min-height:29px}
+ .feature-life-count{right:4%;top:13%;width:65px;height:79px}.feature-life-count strong{font-size:47px}.feature-life-count span{font-size:16px}
+ .feature-stamp{right:0;top:0;width:94px;height:94px}.feature-stamp strong{font-size:29px}.feature-stamp span{font-size:10px}
+ .guide-nav{display:flex;align-items:center;justify-content:space-between;width:min(100%,240px);height:38px;gap:14px;flex:none}
+ .guide-nav>button{width:38px;height:38px;padding:0;border:0;background:#050d1580;border-radius:50%;font-size:30px;line-height:1;color:#e9eef0}
+ .guide-dots{display:flex;gap:5px}.guide-dots button{width:32px;height:32px;display:grid;place-items:center;background:none;border:0;padding:0}
+ .guide-dots button::after{content:'';width:8px;height:8px;border-radius:50%;background:#637784}
+ .guide-dots button[aria-current=step]::after{background:#ffc46c;width:22px;border-radius:4px}
+ .intro-footer .primary{font-size:27px;min-height:42px}.intro-footer small{font-size:9px;letter-spacing:.025em}
+ .continue-desktop{display:none}.continue-mobile{display:inline}
+}
+@media(max-height:650px) and (min-width:761px){
+ .boot .game-guide.intro{padding:10px 5vw;gap:9px}
+ .game-guide.intro .guide-brand{width:min(480px,60svh)}
+ .feature-visual{height:27svh}
+ .feature-plaque{min-height:181px;padding-top:10px}.welcome-card h2{font-size:26px;margin-bottom:10px}.welcome-description{font-size:17px}.demo-state{font-size:10px;min-height:28px}
+ .feature-stamp{width:87px;height:87px;right:-10px}.feature-stamp strong{font-size:26px}.feature-stamp span{font-size:9px}
+ .feature-life-count{width:60px;height:74px}.feature-life-count strong{font-size:44px}.feature-life-count span{font-size:15px}
+ .intro-footer .primary{font-size:26px;min-height:36px}
+}
+@media(max-height:440px) and (min-width:761px){
+ .game-guide.intro .guide-brand{width:205px}
+ .welcome-cards{width:min(100%,850px);gap:24px}
+ .feature-visual{height:25svh}.feature-plaque{min-height:151px;padding:8px 7px 3px}
+ .welcome-kicker{font-size:9px}.welcome-card h2{font-size:22px;margin-bottom:8px}.welcome-description{font-size:14px}.demo-state{font-size:9px;min-height:23px}
+ .feature-life-count{width:43px;height:55px}.feature-life-count strong{font-size:33px}.feature-life-count span{font-size:11px}
+ .feature-stamp{width:65px;height:65px;border-width:3px;gap:3px}.feature-stamp strong{font-size:20px}.feature-stamp span{font-size:7px}
+ .intro-footer .primary{font-size:22px;min-height:30px}.intro-footer small{font-size:9px}
+}
+@media(max-width:760px) and (orientation:landscape){
+ .boot .game-guide.intro{gap:5px;padding:9px 20px}
+ .game-guide.intro .guide-brand{width:210px}
+ .welcome-cards{width:min(100%,580px)}
+ .welcome-card{display:grid;grid-template-columns:180px minmax(0,1fr);align-items:center}
+ .feature-visual{height:175px}.feature-plaque{min-height:175px}.welcome-card h2{font-size:24px}.welcome-description{font-size:16px}
+ .feature-life-count{right:1%;width:45px;height:59px}.feature-life-count strong{font-size:35px}.feature-life-count span{font-size:11px}
+ .feature-stamp{width:62px;height:62px;right:0;top:0;border-width:2px;gap:3px}.feature-stamp strong{font-size:19px}.feature-stamp span{font-size:7px}
+ .guide-nav{height:30px}.guide-nav>button{height:30px;width:34px}
+ .intro-footer .primary{font-size:23px;min-height:30px}.intro-footer small{display:none}
+}

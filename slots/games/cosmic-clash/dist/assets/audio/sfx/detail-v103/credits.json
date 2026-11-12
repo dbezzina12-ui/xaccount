@@ -1,0 +1,79 @@
+{
+  "source": "Original deterministic synthesis; scripts/render-detail-sfx.py",
+  "externalSamples": false,
+  "sampleRate": 48000,
+  "files": [
+    {
+      "name": "reel-stop-1",
+      "description": "Short weighted reel latch, three alternating mechanical takes",
+      "seconds": 0.34,
+      "peakDB": -3.08,
+      "rmsDB": -19.07,
+      "sha256": "60b7486ed787d78960572c522896bf80e237054daa7cf971b9bb9967f797552a"
+    },
+    {
+      "name": "reel-stop-2",
+      "description": "Short weighted reel latch, three alternating mechanical takes",
+      "seconds": 0.34,
+      "peakDB": -3.14,
+      "rmsDB": -20.66,
+      "sha256": "d5e33da486adefe7aa93620a4a92eb5dab458e6a34c5cf13825225c534bd22a7"
+    },
+    {
+      "name": "reel-stop-3",
+      "description": "Short weighted reel latch, three alternating mechanical takes",
+      "seconds": 0.34,
+      "peakDB": -3.12,
+      "rmsDB": -20.03,
+      "sha256": "5f2ce6827806108ab7626c84b70189665e8aaf590dee803b6bdd1f65422cc109"
+    },
+    {
+      "name": "spin-engage",
+      "description": "Mechanical engagement, low body and brief filtered servo movement",
+      "seconds": 0.59,
+      "peakDB": -3.11,
+      "rmsDB": -19.99,
+      "sha256": "7ef9e55b05fa30fa65a1c484e23d02a1e981ae84dc1f05fa873051455a6ff679"
+    },
+    {
+      "name": "ui-confirm",
+      "description": "Restrained dry control detent",
+      "seconds": 0.15,
+      "peakDB": -3.07,
+      "rmsDB": -22.21,
+      "sha256": "ebb51d3fbeed2b3c0affb5118b26e06467e0d5b648de7df01fb5fb3d84eaa83e"
+    },
+    {
+      "name": "god-boost",
+      "description": "God Mode multiplier impact, rising energy partials and short crystal decay",
+      "seconds": 0.94,
+      "peakDB": -3.18,
+      "rmsDB": -20.25,
+      "sha256": "7f83fe290ec8b1e854ae5f1408302e456af31d7422d440c54ae6822397148bb9"
+    },
+    {
+      "name": "crossfire-arm",
+      "description": "Crossfire title impact, two metallic arming latches and a short pneumatic release",
+      "seconds": 1.04,
+      "peakDB": -3.13,
+      "rmsDB": -20.28,
+      "sha256": "dd551270629852a44420a136528bd7ba2ff8415b42db162dfa4b300f1e60ac77"
+    },
+    {
+      "name": "coin-up",
+      "description": "Four crisp metallic coin strikes stepping up for the winning duel value",
+      "seconds": 0.67,
+      "peakDB": -3.12,
+      "rmsDB": -15.27,
+      "sha256": "68d0f7fd6d58900208d621e83c91e65c7693b462ef7a8a2631400e2be695f70c"
+    },
+    {
+      "name": "coin-down",
+      "description": "Four crisp metallic coin strikes stepping down for the winning duel value",
+      "seconds": 0.67,
+      "peakDB": -3.09,
+      "rmsDB": -15.54,
+      "sha256": "c36ec301e1dd96781bc936e885470e0afac390cf528e848644e7600fedc0262a"
+    }
+  ]
+}

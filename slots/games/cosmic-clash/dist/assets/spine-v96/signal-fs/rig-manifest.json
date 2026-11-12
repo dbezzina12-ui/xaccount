@@ -1,0 +1,26 @@
+{
+  "canvas": [
+    512,
+    512
+  ],
+  "origin": [
+    256,
+    256
+  ],
+  "clips": [
+    "idle",
+    "land",
+    "tease",
+    "bonus_trigger",
+    "reset"
+  ],
+  "events": [
+    "fs_land",
+    "fs_tease",
+    "fs_charge",
+    "fs_trigger",
+    "fs_complete"
+  ],
+  "name": "signal-fs",
+  "description": "Freestanding Signal Clash letters with the existing feature cues."
+}

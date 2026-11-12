@@ -1,0 +1,69 @@
+{
+  "name": "fs-vault",
+  "version": "4.3.26",
+  "canvas": [
+    512,
+    512
+  ],
+  "origin": [
+    256,
+    256
+  ],
+  "status": "Prepared import rig and starter motion; native editor review pending.",
+  "description": "Clean complete body and detached lid artwork, registered at the two rear hinges. The body rear rim occludes the lid tabs; lid pitches around the hinge without cut light-ray fragments.",
+  "textures": {
+    "vault-parts-v2": {
+      "size": [
+        1774,
+        887
+      ],
+      "sha256": "69fbe45fd20e4bd151cb13d5cf0018a1de3036bff898d8821fabd0c60d93e78c"
+    },
+    "letters": {
+      "size": [
+        512,
+        360
+      ],
+      "sha256": "62b875328a794a226099e337bd0f184a4b5503ac82a1269190b8bf411dd0fa25"
+    }
+  },
+  "clips": [
+    "idle",
+    "land",
+    "tease",
+    "bonus_trigger",
+    "reset"
+  ],
+  "events": [
+    "fs_land",
+    "fs_tease",
+    "fs_charge",
+    "fs_trigger",
+    "fs_complete"
+  ],
+  "lidSourcePose": "already open",
+  "lidPivot": [
+    285,
+    199
+  ],
+  "lettersBounds": [
+    101.333,
+    121.396,
+    309.333,
+    217.5
+  ],
+  "artRevision": 2,
+  "bodyPlacement": [
+    0.53,
+    0.53,
+    10,
+    35
+  ],
+  "lidPlacement": [
+    0.474,
+    0.52,
+    -343.77,
+    -71.4
+  ],
+  "artTreatment": "Foundry: gunmetal vault, brass fittings and separately bevelled cast-gold letters, drawn in the registered attachment coordinates."
+}

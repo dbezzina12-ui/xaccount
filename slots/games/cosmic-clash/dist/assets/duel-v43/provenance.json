@@ -1,0 +1,144 @@
+{
+  "behavior": "Three solo performances are synchronized by the recorded duel result. Opening shooter misses, winner replies; only the loser plays knockdown frames, held for 350ms before original winner portrait appears.",
+  "credits_total": 78,
+  "frames": {
+    "boss": {
+      "aim": 38,
+      "defeat": [
+        44,
+        76
+      ],
+      "draw": [
+        0,
+        16
+      ],
+      "fire": [
+        17,
+        31
+      ]
+    },
+    "hunter": {
+      "aim": 42,
+      "defeat": [
+        62,
+        94
+      ],
+      "draw": [
+        0,
+        18
+      ],
+      "fire": [
+        19,
+        36
+      ]
+    },
+    "outlaw": {
+      "aim": 42,
+      "defeat": [
+        55,
+        77
+      ],
+      "draw": [
+        0,
+        15
+      ],
+      "fire": [
+        16,
+        31
+      ]
+    }
+  },
+  "jobs": [
+    {
+      "index": 0,
+      "job_id": "d7aaa85f-66f5-4a93-accf-69487a2efe41",
+      "model": "seedance_2_5",
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/hf_20260915_233134_d7aaa85f-66f5-4a93-accf-69487a2efe41.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://d2ol7oe51mr4n9.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/8da8587e-07b0-45e0-9c12-ec34389c696b.png",
+      "type": "video"
+    },
+    {
+      "index": 1,
+      "job_id": "de30dc4c-f637-4484-83d7-7448e879c765",
+      "model": "seedance_2_5",
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/hf_20260915_233134_de30dc4c-f637-4484-83d7-7448e879c765.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://d2ol7oe51mr4n9.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/78653c2c-2aea-446a-bdca-5cd4e8688768.png",
+      "type": "video"
+    },
+    {
+      "index": 2,
+      "job_id": "b51e8971-6d6d-48ce-974a-14b09480eb60",
+      "model": "seedance_2_5",
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/hf_20260915_233134_b51e8971-6d6d-48ce-974a-14b09480eb60.mp4",
+      "status": "completed",
+      "type": "video"
+    }
+  ],
+  "model": "seedance_2_5",
+  "provider": "Higgsfield",
+  "reference_policy": "Hunter and Outlaw use crops of the prior Higgsfield-generated duel, already hosted by Higgsfield. Boss uses a written brief. No original private repository artwork was uploaded.",
+  "requests": [
+    {
+      "index": 0,
+      "params": {
+        "aspect_ratio": "9:16",
+        "count": 1,
+        "duration": 4,
+        "generate_audio": false,
+        "medias": [
+          {
+            "role": "image",
+            "value": "8da8587e-07b0-45e0-9c12-ec34389c696b"
+          }
+        ],
+        "mode": "omni_reference",
+        "model": "seedance_2_5",
+        "prompt": "THE HUNTER: match the reference character only: athletic male with short swept-back dark brown hair, orange leather long coat, dark shirt, black trousers and black boots, gold/orange sci-fi revolver. Preserve his face, outfit and proportions.\nCreate a production-ready single-character game animation sprite on a perfectly flat pure magenta (#FF00FF) background. ONE character ONLY, no opponent, no environment, no text, no UI. Fixed orthographic camera looking straight DOWN from directly above, matching the top-down overhead angle in reference. Character always faces the BOTTOM edge of the screen, gun aims toward bottom. Never switch to front view. Crisp premium comic book cel shading and bold black outlines; not realistic photography. Background completely uniform magenta, no shadows on backdrop, no gradient, no magenta on character.\n4-second action with distinct phases: 0.0\u20130.6s character stands at center, slightly crouched, raises revolver and aims down-screen; 0.6\u20131.0s fires ONE brief bright muzzle flash, hand recoils and returns to aim; 1.0\u20131.7s HOLD the upright aiming pose completely still; at 1.8s a SINGLE unseen hit strikes his chest from offscreen below: shoulders snap backwards, feet lift, whole body is forcefully knocked backwards toward the TOP of frame and falls onto his back. 2.8\u20134.0s he remains defeated flat on his back, motionless, no standing back up. The fall is real articulated body movement with bending knees and arms, not sliding/rotating a flat drawing. No blood, no gore. All limbs, weapon, coat, muzzle flash and entire fall remain fully inside the frame with generous 12% safe margins. Frame a large readable character, standing body centered x50% y55%, plenty of space above for fall. Full character visible throughout. Camera completely locked: no zoom, pan, shake, cuts or fade.",
+        "resolution": "720p"
+      }
+    },
+    {
+      "index": 1,
+      "params": {
+        "aspect_ratio": "9:16",
+        "count": 1,
+        "duration": 4,
+        "generate_audio": false,
+        "medias": [
+          {
+            "role": "image",
+            "value": "78653c2c-2aea-446a-bdca-5cd4e8688768"
+          }
+        ],
+        "mode": "omni_reference",
+        "model": "seedance_2_5",
+        "prompt": "THE OUTLAW: match the reference character only: teal/cyan futuristic outlaw in a dark broad-brim cowboy hat, turquoise long trench coat, dark trousers, black gloves and boots, mechanical robot facial details, glowing cyan sci-fi revolver. Preserve his costume, hat and proportions.\nCreate a production-ready single-character game animation sprite on a perfectly flat pure magenta (#FF00FF) background. ONE character ONLY, no opponent, no environment, no text, no UI. Fixed orthographic camera looking straight DOWN from directly above, matching the top-down overhead angle in reference. Character always faces the BOTTOM edge of the screen, gun aims toward bottom. Never switch to front view. Crisp premium comic book cel shading and bold black outlines; not realistic photography. Background completely uniform magenta, no shadows on backdrop, no gradient, no magenta on character.\n4-second action with distinct phases: 0.0\u20130.6s character stands at center, slightly crouched, raises revolver and aims down-screen; 0.6\u20131.0s fires ONE brief bright muzzle flash, hand recoils and returns to aim; 1.0\u20131.7s HOLD the upright aiming pose completely still; at 1.8s a SINGLE unseen hit strikes his chest from offscreen below: shoulders snap backwards, feet lift, whole body is forcefully knocked backwards toward the TOP of frame and falls onto his back. 2.8\u20134.0s he remains defeated flat on his back, motionless, no standing back up. The fall is real articulated body movement with bending knees and arms, not sliding/rotating a flat drawing. No blood, no gore. All limbs, weapon, coat, muzzle flash and entire fall remain fully inside the frame with generous 12% safe margins. Frame a large readable character, standing body centered x50% y55%, plenty of space above for fall. Full character visible throughout. Camera completely locked: no zoom, pan, shake, cuts or fade.",
+        "resolution": "720p"
+      }
+    },
+    {
+      "index": 2,
+      "params": {
+        "aspect_ratio": "9:16",
+        "count": 1,
+        "duration": 4,
+        "generate_audio": false,
+        "mode": "t2v",
+        "model": "seedance_2_5",
+        "prompt": "THE BOSS: one massive intimidating futuristic armored warrior, faceted solid gold full helmet with pointed angular crest and thin bright red V-shaped visor, no exposed human face, no cowboy hat. Broad sculpted gold shoulder pauldrons, gold armored chest and limbs over black undersuit, black gloves, heavy gold/black boots, long gold sci-fi pulse pistol. Bold black outlines, rich cel-shaded comic video game art with bold orange/gold highlights and deep navy shadows.\nCreate a production-ready single-character game animation sprite on a perfectly flat pure magenta (#FF00FF) background. ONE character ONLY, no opponent, no environment, no text, no UI. Fixed orthographic camera looking straight DOWN from directly above, the camera sees the helmet top and shoulders. Character always faces the BOTTOM edge of the screen, gun aims toward bottom. Never switch to front view. Crisp premium comic book cel shading and bold black outlines; not realistic photography. Background completely uniform magenta, no shadows on backdrop, no gradient, no magenta on character.\n4-second action with distinct phases: 0.0\u20130.6s character stands at center, slightly crouched, raises revolver and aims down-screen; 0.6\u20131.0s fires ONE brief bright muzzle flash, hand recoils and returns to aim; 1.0\u20131.7s HOLD the upright aiming pose completely still; at 1.8s a SINGLE unseen hit strikes his chest from offscreen below: shoulders snap backwards, feet lift, whole body is forcefully knocked backwards toward the TOP of frame and falls onto his back. 2.8\u20134.0s he remains defeated flat on his back, motionless, no standing back up. The fall is real articulated body movement with bending knees and arms, not sliding/rotating a flat drawing. No blood, no gore. All limbs, weapon, coat, muzzle flash and entire fall remain fully inside the frame with generous 12% safe margins. Frame a large readable character, standing body centered x50% y55%, plenty of space above for fall. Full character visible throughout. Camera completely locked: no zoom, pan, shake, cuts or fade.",
+        "resolution": "720p"
+      }
+    }
+  ],
+  "version": 43,
+  "sha256": {
+    "hunter-source.mp4": "cbb24c771b8304abe90b0bb68024fbc8a1cf2731c37cca15c7518deda415d143",
+    "boss.webp": "5dc901e59700b12cbd07703d5650d7f3aee364c9920311b65bf2668ad52267ef",
+    "outlaw-source.mp4": "f7261755650b9de0fe9f1bae85cd57d64f6b5c9aec840d2b81d0fc5668bd7e8e",
+    "outlaw.webp": "bcd2fb60b46fd9ff69be7f9d984b24ee9bedabf554571b29a4c7f74d66626995",
+    "hunter.webp": "b0792ae29da28a4a6fce6e7e25daf89c14e7797d5103d82ecb63333130cfa1fa",
+    "boss-source.mp4": "deaa0f69e89473cce5f427f6b95d63d3f13f916f4901db53067f9df6e3067cb4"
+  }
+}

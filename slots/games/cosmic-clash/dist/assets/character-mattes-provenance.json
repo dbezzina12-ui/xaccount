@@ -1,0 +1,281 @@
+{
+  "method": "Built-in image_gen image edit",
+  "requestsIssued": 2,
+  "retries": 0,
+  "pixelProcessing": "None. Original generated PNG bytes copied unchanged.",
+  "requests": [
+    {
+      "name": "hunter",
+      "prompt": "Use case: precise-object-edit\nAsset type: exact silhouette luminance matte for CSS masking.\nInput image 1 is the sole edit target. Extract its precise character segmentation as a flat RGB black-and-white mask. This is matte extraction, not new art.\nPrimary request: Replace EVERY character pixel with solid pure white #FFFFFF, including every dark garment, armor piece, hair or hat, head, torso, coat, both arms, hands, the entire gun, both legs, and both boots. There must be no internal details, no dark regions inside the character, no shading and no textures. All empty background and actual empty gaps between limbs, fingers, and coat must be solid pure black #000000.\nComposition/framing: Preserve the input's exact 1024x1536 canvas, original 2:3 aspect ratio, character pose, scale, position, and outer contour at the same pixel coordinates. Trace the existing outline faithfully, including small projections, gun muzzle, hair or hat rim, fingertips, coat hem and boot soles. Do not translate, crop, resize, enlarge, shrink, reshape, or redesign the silhouette.\nColor palette: pure white silhouette on pure black background only. A thin anti-aliased boundary is acceptable.\nAvoid: transparency, translucency, gradients, halos, cast shadows, floor shadows, checkerboards, any lighting, any internal lines/details, any added objects, text or watermark.\nReturn only the complete flat segmentation matte image.\nSubject identification: the orange-coated, tousled-haired masked bounty hunter. Include every strand/tuft in the original visible hair boundary and all darkest pants/chest/boots in the pure white interior.",
+      "source": "/workspace/sites/bounty-breakers/dist/assets/hunter-figure.png",
+      "output": "/workspace/scratch/193538a31926/character-mattes/hunter-matte.png",
+      "generatedSource": "/workspace/scratch/193538a31926/generated_images/exec-9d8bfdb4-7b7a-4d25-bc20-dc867537a589.png"
+    },
+    {
+      "name": "outlaw",
+      "prompt": "Use case: precise-object-edit\nAsset type: exact silhouette luminance matte for CSS masking.\nInput image 1 is the sole edit target. Extract its precise character segmentation as a flat RGB black-and-white mask. This is matte extraction, not new art.\nPrimary request: Replace EVERY character pixel with solid pure white #FFFFFF, including every dark garment, armor piece, hair or hat, head, torso, coat, both arms, hands, the entire gun, both legs, and both boots. There must be no internal details, no dark regions inside the character, no shading and no textures. All empty background and actual empty gaps between limbs, fingers, and coat must be solid pure black #000000.\nComposition/framing: Preserve the input's exact 1024x1536 canvas, original 2:3 aspect ratio, character pose, scale, position, and outer contour at the same pixel coordinates. Trace the existing outline faithfully, including small projections, gun muzzle, hair or hat rim, fingertips, coat hem and boot soles. Do not translate, crop, resize, enlarge, shrink, reshape, or redesign the silhouette.\nColor palette: pure white silhouette on pure black background only. A thin anti-aliased boundary is acceptable.\nAvoid: transparency, translucency, gradients, halos, cast shadows, floor shadows, checkerboards, any lighting, any internal lines/details, any added objects, text or watermark.\nReturn only the complete flat segmentation matte image.\nSubject identification: the black-coated robotic outlaw wearing a wide-brimmed cowboy hat. Include the exact hat outline, mechanical face, all darkest coat/chest/pants/boots and the whole gun in the pure white interior.",
+      "source": "/workspace/sites/bounty-breakers/dist/assets/outlaw-figure.png",
+      "output": "/workspace/scratch/193538a31926/character-mattes/outlaw-matte.png",
+      "generatedSource": "/workspace/scratch/193538a31926/generated_images/exec-244f9545-b4eb-46fd-8a48-4cedea27dee9.png"
+    }
+  ],
+  "validation": [
+    {
+      "name": "hunter",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "mode": "RGB",
+      "sha256": "a64bd4967c4bcf0be267f4ae58cfe4187061e75108332ccbfa14401428611764",
+      "copiedBytesMatch": true,
+      "foregroundBoundingBox": [
+        204,
+        19,
+        785,
+        1494
+      ],
+      "interiorChannelMin": 182,
+      "interiorChannelMean": 253.97868734366298,
+      "interiorPureWhiteFraction": 0.08529702926540389,
+      "interiorBelow250Fraction": 1.1048551755835844e-05,
+      "exteriorChannelMax": 7,
+      "exteriorMean": 0.0683503620993571,
+      "strongSourcePixelsMaskedOutCount": 5544,
+      "strongSourcePixelsMaskedOutFraction": 0.01262910434501328,
+      "strongSourceThreshold": 20,
+      "points": {
+        "(500, 400)": [
+          254,
+          254,
+          254
+        ],
+        "(550, 600)": [
+          254,
+          254,
+          254
+        ],
+        "(600, 950)": [
+          253,
+          254,
+          253
+        ],
+        "(350, 1300)": [
+          253,
+          253,
+          253
+        ],
+        "(100, 100)": [
+          0,
+          0,
+          0
+        ],
+        "(900, 1400)": [
+          0,
+          0,
+          0
+        ]
+      },
+      "sourceThreshold20BoundingBox": [
+        203,
+        19,
+        786,
+        1494
+      ],
+      "strongSourcePixelsOutsideMatteByMoreThan4px": 89,
+      "strongSourcePixelsOutsideMatteByMoreThan8px": 5,
+      "strongSourceMissingDistance95Percentile": 3.0,
+      "sourceAndMatteCenterGapSamples": {
+        "(512, 800)": {
+          "source": [
+            24,
+            19,
+            17
+          ],
+          "matte": [
+            254,
+            254,
+            254
+          ]
+        },
+        "(512, 900)": {
+          "source": [
+            26,
+            8,
+            3
+          ],
+          "matte": [
+            254,
+            254,
+            254
+          ]
+        },
+        "(520, 1000)": {
+          "source": [
+            48,
+            20,
+            6
+          ],
+          "matte": [
+            254,
+            254,
+            254
+          ]
+        },
+        "(505, 1050)": {
+          "source": [
+            61,
+            28,
+            12
+          ],
+          "matte": [
+            255,
+            254,
+            254
+          ]
+        },
+        "(510, 1100)": {
+          "source": [
+            0,
+            0,
+            0
+          ],
+          "matte": [
+            1,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "name": "outlaw",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "mode": "RGB",
+      "sha256": "3cc7fb1dafb50092630c4424e3d40adcad3d3c2051d8fedba32ae04b6705e49a",
+      "copiedBytesMatch": true,
+      "foregroundBoundingBox": [
+        191,
+        26,
+        794,
+        1454
+      ],
+      "interiorChannelMin": 232,
+      "interiorChannelMean": 253.97877932680078,
+      "interiorPureWhiteFraction": 0.08678916195298023,
+      "interiorBelow250Fraction": 3.8759220455178594e-05,
+      "exteriorChannelMax": 7,
+      "exteriorMean": 0.06278557520943148,
+      "strongSourcePixelsMaskedOutCount": 5496,
+      "strongSourcePixelsMaskedOutFraction": 0.01642420837467277,
+      "strongSourceThreshold": 20,
+      "points": {
+        "(500, 400)": [
+          254,
+          254,
+          254
+        ],
+        "(550, 600)": [
+          254,
+          254,
+          254
+        ],
+        "(600, 950)": [
+          253,
+          254,
+          254
+        ],
+        "(350, 1300)": [
+          253,
+          253,
+          253
+        ],
+        "(100, 100)": [
+          0,
+          0,
+          0
+        ],
+        "(900, 1400)": [
+          0,
+          0,
+          0
+        ]
+      },
+      "sourceThreshold20BoundingBox": [
+        190,
+        26,
+        794,
+        1454
+      ],
+      "strongSourcePixelsOutsideMatteByMoreThan4px": 127,
+      "strongSourcePixelsOutsideMatteByMoreThan8px": 14,
+      "strongSourceMissingDistance95Percentile": 3.1622776601683795,
+      "sourceAndMatteCenterGapSamples": {
+        "(512, 800)": {
+          "source": [
+            0,
+            0,
+            0
+          ],
+          "matte": [
+            5,
+            4,
+            4
+          ]
+        },
+        "(512, 900)": {
+          "source": [
+            2,
+            2,
+            2
+          ],
+          "matte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "(520, 1000)": {
+          "source": [
+            4,
+            4,
+            4
+          ],
+          "matte": [
+            1,
+            1,
+            0
+          ]
+        },
+        "(505, 1050)": {
+          "source": [
+            6,
+            6,
+            5
+          ],
+          "matte": [
+            247,
+            247,
+            247
+          ]
+        },
+        "(510, 1100)": {
+          "source": [
+            18,
+            17,
+            15
+          ],
+          "matte": [
+            252,
+            252,
+            251
+          ]
+        }
+      }
+    }
+  ],
+  "integration": "Unchanged generated luminance matte PNGs applied with CSS mask-mode: luminance. Original RGB character sprites use normal compositing at opacity 1. Interior matte values are near-white (mean 253.98/255), with antialiased contours."
+}

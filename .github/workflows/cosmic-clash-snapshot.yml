@@ -1,4 +1,4 @@
-name: Import pinned Cosmic Clash release once
+name: Rebuild pinned Cosmic Clash math baseline
 on:
   push:
     branches: [codex/cosmic-clash]
@@ -6,21 +6,24 @@ on:
 permissions:
   contents: write
 jobs:
-  import:
-    if: github.event.head_commit.message == 'Materialize the verified Cosmic Clash release on the handoff branch'
+  reconstruct:
+    if: github.event.head_commit.message == 'Restore the readable game source and reproduce its baseline math catalog'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           ref: ${{ github.sha }}
-      - name: Restore verified released files
-        run: python3 slots/games/cosmic-clash/scripts/restore-release.py
-      - name: Save only the restored game
+      - name: Rebuild using only checked-in source
+        working-directory: slots/games/cosmic-clash
+        run: |
+          npm run math
+          test "$(git hash-object dist/outcomes.json)" = "c20f72b298852df519c0f629e578edb5a5907c0a"
+      - name: Commit exact catalog on this branch
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -f slots/games/cosmic-clash/dist
+          git add -f slots/games/cosmic-clash/dist/outcomes.json
           git rm .github/workflows/cosmic-clash-snapshot.yml
-          git commit -m 'Check in verified Cosmic Clash release files'
+          git commit -m 'Track the exact shipped Cosmic Clash outcome catalog'
           git push origin HEAD:refs/heads/codex/cosmic-clash

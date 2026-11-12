@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
+<defs><filter id="feather" x="-40%" y="-25%" width="180%" height="150%"><feGaussianBlur stdDeviation="4"/></filter></defs>
+<!-- Interior fabric only: original silhouettes, faces, weapons and legs stay sharp. -->
+<g fill="white" filter="url(#feather)">
+<path d="M136 318 L143 328 L113 387 L99 419 L97 396 Z"/>
+<path d="M252 340 L264 354 L285 422 L270 426 Z"/>
+<path d="M674 345 L683 342 L683 390 L669 420 L660 415 Z"/>
+<path d="M795 331 L809 347 L847 415 L828 437 L814 418 Z"/>
+</g></svg>

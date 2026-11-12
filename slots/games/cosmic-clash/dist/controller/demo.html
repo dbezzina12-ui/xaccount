@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Controller · Gamboligy Games</title>
+<style>html{color-scheme:dark}body{margin:0;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;background:#10161d;color:#ecf1f5;font:16px system-ui,sans-serif}h1{font-size:22px;letter-spacing:-.02em;margin:0}header{text-align:center}header p{font-size:14px;color:#99a8b5;margin:8px 0}#status{min-height:38px;margin:0 16px;text-align:center;color:#b9c9d4;font-size:14px;max-width:540px}#controller{width:min(100%,820px)}dialog{border:1px solid #6e7e89;border-radius:10px;padding:22px;background:#17242e;color:#fff;max-width:min(88vw,380px)}dialog::backdrop{background:#0009}dialog button{font:inherit;padding:10px 14px;border:1px solid #6e7e89;border-radius:5px;background:#233643;color:#fff;cursor:pointer}dialog h2{margin-top:0;font-size:22px}dialog p{line-height:1.5}body>footer{font-size:12px;color:#748593}</style></head><body>
+<header><h1>Controller</h1><p>Gamboligy Games · v2.7.1</p></header>
+<div id="controller"></div><p id="status" role="status">Try the controls. This preview does not place bets.</p>
+<dialog id="details"><h2 id="details-title"></h2><p id="details-copy"></p><form method="dialog"><button>Close</button></form></dialog>
+<footer>Play · Buy Bonus · Bet +/− · Autoplay · Menu</footer>
+<script type="module">
+import {mountController} from './controller.js?v=mobile-slim-20261018';
+const status=document.getElementById('status'),dialog=document.getElementById('details');let bet=1,timer,autoTimer;
+const cash=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n);
+const show=(title,copy)=>{document.getElementById('details-title').textContent=title;document.getElementById('details-copy').textContent=copy;dialog.showModal();};
+const finish=()=>{clearTimeout(timer);controller.update({busy:false,holding:true});status.textContent='The result remains visible before the next play.';timer=setTimeout(()=>controller.update({holding:false}),700);};
+const controller=mountController(document.getElementById('controller'),{initial:{ready:true,balance:'$10,000.00',bet:cash(bet),win:'$0.00'},onAction(action){
+ const state=controller.state;
+ if(action==='play'){if(state.busy){finish();return;}controller.update({busy:true});status.textContent='Play begins. The same button now shows Stop and reveals the result.';timer=setTimeout(finish,state.turbo?350:1400);}
+ else if(action==='betMinus'||action==='betPlus'){bet=Math.max(.2,Math.min(500,bet+(action==='betMinus'?-.2:.2)));controller.update({bet:cash(bet),canDecrease:bet>.2,canIncrease:bet<500});status.textContent=`Bet: ${cash(bet)}`;}
+ else if(action==='auto'){
+  if(state.autoActive){clearInterval(autoTimer);controller.update({autoActive:false,remaining:0});status.textContent='Autoplay stopped.';return;}
+  controller.update({autoActive:true,remaining:10});status.textContent='Autoplay counter preview. Press the square to stop.';
+  autoTimer=setInterval(()=>{const left=controller.state.remaining-1;controller.update({remaining:left,autoActive:left>0});if(!left){clearInterval(autoTimer);status.textContent='Autoplay complete.';}},900);
+ }else if(action==='bet')show('Bet size','Connect this panel to the game’s scrollable bet picker. Use the game’s allowed stakes and show feature spin costs.');
+ else if(action==='buy'){const active=!state.buyActive;controller.update({buyActive:active,featureColor:active?'#ff941f':null});status.textContent=active?'Enhanced Spins active. Play and Bet keep the feature color after this message clears.':'Feature disabled.';}
+ else if(action==='turbo'){controller.update({turbo:!state.turbo});status.textContent=state.turbo?'Turbo off.':'Turbo on.';}
+ else if(action==='sound'){controller.update({muted:!state.muted});status.textContent=state.muted?'Sound on.':'Sound muted.';}
+ else if(action==='settings')show('Settings','Connect this menu to the current game’s Sound, Music, Turbo, History and Info controls.');
+}});
+</script></body></html>

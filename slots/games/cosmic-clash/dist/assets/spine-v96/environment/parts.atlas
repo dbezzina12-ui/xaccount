@@ -1,0 +1,13 @@
+images/scene.png
+size: 1672, 941
+filter: Linear, Linear
+pma: false
+scene
+ bounds: 0, 0, 1672, 941
+
+images/atmosphere.png
+size: 1254, 1254
+filter: Linear, Linear
+pma: false
+atmosphere
+ bounds: 0, 0, 1254, 1254

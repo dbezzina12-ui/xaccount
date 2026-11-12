@@ -1,0 +1,64 @@
+{
+  "version": 42,
+  "duel": {
+    "provider": "Higgsfield",
+    "model": "seedance_2_5",
+    "job_id": "8d58e85a-4593-4dd0-84b0-0c78489e5ef8",
+    "credits": 26,
+    "source": "duel-source.mp4",
+    "duration": 4.042,
+    "source_dimensions": [
+      720,
+      1280
+    ],
+    "atlas": {
+      "frames": 96,
+      "fps": 24,
+      "columns": 8,
+      "rows": 12,
+      "frame_width": 128,
+      "frame_height": 640
+    },
+    "treatment": "Centered 256x1280 crop at uniform half scale. Original camera framing remains proportionate. Faces and guns visible; coat edges may extend beyond camera. No generated outcome. Game reveals recorded winner afterward.",
+    "references": "Text brief only; no private character artwork uploaded as a generation reference."
+  },
+  "counter": {
+    "provider": "Higgsfield",
+    "model": "gpt_image_2_5",
+    "job_id": "0d991135-21ab-4e6b-bc45-24f30c9f4524",
+    "credits": 1,
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "treatment": "Checkerboard removed to genuine alpha in Higgsfield sandbox. Dynamic number and label remain live HTML.",
+    "display_bounds": [
+      375,
+      337,
+      265,
+      93
+    ]
+  },
+  "sha256": {
+    "gun-counter.png": "89db15c8215eb5deaaa15f19e3d665a276b864d0e02d86fb0f29c40023be9c6f",
+    "duel-poster.webp": "3544617c0e19740172e6cd3ff5a9163aff658214519f5d62a593379a2ef3bb32",
+    "duel-source.mp4": "cda96c26bcce3c2641ef37ccd1af798a8f3a2d42ba1510eafb57d86acbdbd989",
+    "duel-motion.webp": "67aef1b2179ef88802a51c6ffcb973b9024043c4bfb1f7933f4bb19a74dcf2ec"
+  },
+  "v45_floor_patch": {
+    "source_job_id": "8d58e85a-4593-4dd0-84b0-0c78489e5ef8",
+    "source_frame": 0,
+    "crop": [
+      232,
+      540,
+      256,
+      160
+    ],
+    "output_dimensions": [
+      128,
+      80
+    ],
+    "processing": "Fixed floor-only crop, uniform half-size scale, lossless WebP; processed in Higgsfield sandbox without generation.",
+    "sha256": "409827aea1c438ec5f70a9c56099985e9fe8458ac126fe15600f081b94959821"
+  }
+}

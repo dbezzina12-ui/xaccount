@@ -1,0 +1,13 @@
+Active music supplied by the project owner: Galactic Slot Loop.mp3 (main game) and Bonus Music.MP3 (all bonus scenes). Original uploaded audio bytes preserved in galactic-slot.mp3 and bonus-music.mp3.
+
+Legacy soundtrack information:
+BOUNTY BREAKERS — ORIGINAL GAME SOUNDTRACK
+
+Created for Gamboligy Games, September 2026.
+Four original 140 BPM, D-minor chiptune / dubstep arrangements:
+Neon Bounty / VS Protocol / Last Life / God Mode: Overclock.
+
+All drum, bass, pad and chip-lead sounds were synthesized from oscillators and noise.
+No third-party recordings, samples, vocals or melodies are included.
+Compositions, arrangements and the reproducible renderer were created for this project.
+Rendered as stereo 44.1 kHz, 192 kbps MP3 loops.

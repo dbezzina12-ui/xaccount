@@ -1,0 +1,82 @@
+{
+  "audio": false,
+  "clips": [
+    {
+      "index": 1,
+      "job_id": "ea72e0b1-968f-48b4-8ac5-19612c173cc6",
+      "loser": "hunter",
+      "params": {
+        "aspect_ratio": "9:16",
+        "bitrate_mode": "standard",
+        "count": 1,
+        "duration": 5,
+        "generate_audio": false,
+        "medias": [
+          {
+            "role": "video",
+            "value": "8d58e85a-4593-4dd0-84b0-0c78489e5ef8"
+          }
+        ],
+        "mode": "omni_reference",
+        "model": "seedance_2_5",
+        "prompt": "Regenerate the referenced original duel as a single seamless 5-second continuous shot with a decisive one-person knockdown ending. Match the reference's handsome high-detail painted comic / cel-shaded graphic style, thick precise ink outlines, rich slate-blue corridor floor with brown ochre side edging, strong warm/cool rim lighting, character scale, overhead camera angle, close-up framing and wonderfully detailed long jackets blowing in the wind. Fixed close overhead camera. Two opponents aligned vertically on the center axis, top opponent faces down toward bottom opponent, bottom opponent faces up toward top. This will be center-cropped into a very narrow tall slot-game reel: keep both faces, gun hands and the decisive knockdown centered in the central third of the portrait, while coat tails can flare into the outer thirds. Keep the close-up character scale from the reference, no camera pullback, no distant tiny figures. Identical background throughout. Preserve faces and clothing consistently.\nTimeline: first 1 second tense close standoff, wind whipping coat tails; 1-2 seconds quick dramatic revolver exchange with bright brief muzzle flashes; 2-4 seconds ONLY THE SPECIFIED LOSER visibly recoils, gets knocked backward and collapses onto the ground while the winner stays planted upright, gun smoking; last second clearly hold this decided outcome with the loser remaining down and the winner still standing. The visible fall must be smooth and unambiguous, not a freeze or disappearance. No gore. No cut, no black flash, no fade, no transition, no background change, no labels, no text, no camera roll, no added opponents, no dual knockdown, no resurrection.\nTop character is the reference's orange/brown leather-coated Hunter with swept dark brown hair, dark face mask and gold/orange revolver. Bottom character is the reference's cyan/teal-coated Outlaw with dark broad-brim cowboy hat and luminous cyan revolver. EXACT OUTCOME: TOP ORANGE HUNTER LOSES. The bottom cyan Outlaw's shot hits top Hunter, who recoils and collapses backward near the top of the frame. Bottom cyan Outlaw stays upright and victorious.",
+        "resolution": "480p"
+      },
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/hf_20260916_004930_ea72e0b1-968f-48b4-8ac5-19612c173cc6.mp4"
+    },
+    {
+      "index": 2,
+      "job_id": "83e80ab7-8595-406c-a8c2-b0a94a024cdc",
+      "loser": "outlaw",
+      "params": {
+        "aspect_ratio": "9:16",
+        "bitrate_mode": "standard",
+        "count": 1,
+        "duration": 5,
+        "generate_audio": false,
+        "medias": [
+          {
+            "role": "video",
+            "value": "8d58e85a-4593-4dd0-84b0-0c78489e5ef8"
+          }
+        ],
+        "mode": "omni_reference",
+        "model": "seedance_2_5",
+        "prompt": "Regenerate the referenced original duel as a single seamless 5-second continuous shot with a decisive one-person knockdown ending. Match the reference's handsome high-detail painted comic / cel-shaded graphic style, thick precise ink outlines, rich slate-blue corridor floor with brown ochre side edging, strong warm/cool rim lighting, character scale, overhead camera angle, close-up framing and wonderfully detailed long jackets blowing in the wind. Fixed close overhead camera. Two opponents aligned vertically on the center axis, top opponent faces down toward bottom opponent, bottom opponent faces up toward top. This will be center-cropped into a very narrow tall slot-game reel: keep both faces, gun hands and the decisive knockdown centered in the central third of the portrait, while coat tails can flare into the outer thirds. Keep the close-up character scale from the reference, no camera pullback, no distant tiny figures. Identical background throughout. Preserve faces and clothing consistently.\nTimeline: first 1 second tense close standoff, wind whipping coat tails; 1-2 seconds quick dramatic revolver exchange with bright brief muzzle flashes; 2-4 seconds ONLY THE SPECIFIED LOSER visibly recoils, gets knocked backward and collapses onto the ground while the winner stays planted upright, gun smoking; last second clearly hold this decided outcome with the loser remaining down and the winner still standing. The visible fall must be smooth and unambiguous, not a freeze or disappearance. No gore. No cut, no black flash, no fade, no transition, no background change, no labels, no text, no camera roll, no added opponents, no dual knockdown, no resurrection.\nTop character is the reference's orange/brown leather-coated Hunter with swept dark brown hair, dark face mask and gold/orange revolver. Bottom character is the reference's cyan/teal-coated Outlaw with dark broad-brim cowboy hat and luminous cyan revolver. EXACT OUTCOME: BOTTOM CYAN OUTLAW LOSES. The top orange Hunter's shot hits bottom Outlaw, who recoils and collapses backward near the bottom of the frame. Top orange Hunter stays upright and victorious.",
+        "resolution": "480p"
+      },
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/hf_20260916_004930_83e80ab7-8595-406c-a8c2-b0a94a024cdc.mp4"
+    },
+    {
+      "index": 3,
+      "job_id": "73f95d38-8912-49b8-9416-358873461795",
+      "loser": "boss",
+      "params": {
+        "aspect_ratio": "9:16",
+        "bitrate_mode": "standard",
+        "count": 1,
+        "duration": 5,
+        "generate_audio": false,
+        "medias": [
+          {
+            "role": "video",
+            "value": "8d58e85a-4593-4dd0-84b0-0c78489e5ef8"
+          }
+        ],
+        "mode": "omni_reference",
+        "model": "seedance_2_5",
+        "prompt": "Regenerate the referenced original duel as a single seamless 5-second continuous shot with a decisive one-person knockdown ending. Match the reference's handsome high-detail painted comic / cel-shaded graphic style, thick precise ink outlines, rich slate-blue corridor floor with brown ochre side edging, strong warm/cool rim lighting, character scale, overhead camera angle, close-up framing and wonderfully detailed long jackets blowing in the wind. Fixed close overhead camera. Two opponents aligned vertically on the center axis, top opponent faces down toward bottom opponent, bottom opponent faces up toward top. This will be center-cropped into a very narrow tall slot-game reel: keep both faces, gun hands and the decisive knockdown centered in the central third of the portrait, while coat tails can flare into the outer thirds. Keep the close-up character scale from the reference, no camera pullback, no distant tiny figures. Identical background throughout. Preserve faces and clothing consistently.\nTimeline: first 1 second tense close standoff, wind whipping coat tails; 1-2 seconds quick dramatic revolver exchange with bright brief muzzle flashes; 2-4 seconds ONLY THE SPECIFIED LOSER visibly recoils, gets knocked backward and collapses onto the ground while the winner stays planted upright, gun smoking; last second clearly hold this decided outcome with the loser remaining down and the winner still standing. The visible fall must be smooth and unambiguous, not a freeze or disappearance. No gore. No cut, no black flash, no fade, no transition, no background change, no labels, no text, no camera roll, no added opponents, no dual knockdown, no resurrection.\nKeep the bottom character exactly the reference's cyan/teal-coated Outlaw with dark broad-brim cowboy hat and luminous cyan revolver. Replace ONLY the top Hunter with the armored Boss: imposing burnished GOLD armor, broad gold shoulder plates, black undersuit, sealed gold helmet with bright red V-shaped visor, gold revolver, flowing dark ochre battle coat. Keep the exact same overhead scale, environment and painted comic style as reference. EXACT OUTCOME: TOP GOLD BOSS LOSES. The bottom cyan Outlaw's shot hits the gold Boss, who recoils heavily and collapses backward near the top of the frame. Bottom cyan Outlaw stays upright and victorious.",
+        "resolution": "480p"
+      },
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/hf_20260916_004930_73f95d38-8912-49b8-9416-358873461795.mp4"
+    }
+  ],
+  "duration": 5,
+  "estimatedCreditsPerClip": 15,
+  "estimatedTotalCredits": 45,
+  "model": "seedance_2_5",
+  "presentation": "One complete native video per duel, no temporal edits or composited fall. Outlaw-incumbent fights rotate the entire scene 180 degrees. Three loser clips; Boss victories retain the existing shared champion scene and gold Boss HUD before the Boss portrait.",
+  "referenceJob": "8d58e85a-4593-4dd0-84b0-0c78489e5ef8",
+  "resolution": "480p",
+  "version": 48
+}

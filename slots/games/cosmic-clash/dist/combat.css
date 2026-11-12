@@ -1,0 +1,162 @@
+/* Dedicated transparent loot symbols, shared by the reels, rules and intro. */
+.symbol-art.feature-art{aspect-ratio:1;mask-image:none;overflow:visible;height:94%;max-width:98%}
+.symbol-art.feature-art img{position:static;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 2px #0009)}
+.symbol-cell[data-name=SCATTER]{background:radial-gradient(ellipse,#14778255,transparent 75%)}
+.symbol-cell[data-name=SCATTER]::after{content:'BONUS';bottom:2%;font-size:1.85cqw;color:#f7e4ad;text-shadow:0 2px 2px #000,0 0 5px #000}
+.symbol-cell[data-name=VS]{background:radial-gradient(ellipse,#1d2a3660,transparent 75%);z-index:1}
+.symbol-cell[data-name=VS] .symbol-art{height:88%;filter:drop-shadow(0 0 3px #52faff);translate:0 -3%}
+.duel-symbol-label{position:absolute;bottom:2%;left:10%;right:10%;text-align:center;z-index:2;font-size:clamp(12px,2cqw,15px);font-weight:800;letter-spacing:.08em;line-height:1;background:#06232bde;color:#c6ffff;text-shadow:0 0 6px #10e9ff;border-bottom:1px solid #a5ffff}
+.symbol-cell[data-name=WILD] .symbol-art{filter:drop-shadow(0 0 5px #ffb83855)}
+.duel-card .wild-emblem{position:absolute;top:3%;left:13%;width:74%;z-index:8;display:block;pointer-events:none}
+.duel-card .wild-emblem img{display:block;width:100%;height:auto;filter:drop-shadow(0 3px 3px #000a)}
+.duel-card .wild-multiplier{z-index:9}
+.duel-card .duel-lives{z-index:9}
+.duel-card.dueling .wild-emblem,.duel-card.dueling .wild-multiplier{opacity:0}
+.duel-card.dueling .duel-lives{opacity:.35}
+.duel-card.focused{border-color:#ffdda0;box-shadow:0 0 15px #ffc05a55}
+.splash-mark{width:25cqw;height:25cqw;margin-bottom:1cqw}
+.splash-mark img{display:block;width:100%;height:100%;object-fit:contain}
+.intro-duel>span{width:100px;height:100px;display:block;filter:drop-shadow(0 5px 5px #000b)}
+.intro-duel>span img{width:100%;height:100%;object-fit:contain}
+.card-emblem>img{width:100px;max-width:100%;height:90px;object-fit:contain;display:block;margin:auto}
+.feature-guide{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0}
+.feature-guide article{display:grid;grid-template-columns:80px minmax(0,1fr);gap:12px;align-items:center;border:1px solid #334454;padding:12px;background:#101a25}
+.feature-guide img{width:80px;height:80px;object-fit:contain}
+.feature-guide h4{font-size:19px;color:var(--orange);margin:0}
+.feature-guide p{font-size:15px;line-height:1.25;color:#b7cad5;margin:5px 0 0}
+
+/* Combat stays inside the existing expanded reel, clipped to its borders. */
+.reel-fight{position:absolute;inset:0;z-index:7;overflow:hidden;pointer-events:none;background:#0a121b;--fight-pace:1}
+.reel-opponent{position:absolute;left:0;right:0;height:48%;overflow:hidden;isolation:isolate}
+.opponent-top{top:0;background:#241a11;border-bottom:1px solid #e9984877}
+.opponent-bottom{bottom:0;background:#0b202a;border-top:1px solid #49dce877}
+.fight-figure{position:absolute;inset:0;background-image:url('./assets/duel-fighters.png');background-repeat:no-repeat;background-size:200% 100%;transform-origin:center;will-change:transform}
+.opponent-top .fight-figure{background-position:left center}
+.opponent-bottom .fight-figure{background-position:right center}
+.fight-value{position:absolute;left:0;right:0;text-align:center;z-index:2;font-size:clamp(18px,4.8cqw,35px);font-weight:800;line-height:1;color:#ffe5a4;text-shadow:1px 2px 1px #000,0 0 7px #000;padding:3px 0;background:linear-gradient(90deg,transparent,#030a1399,transparent)}
+.opponent-top .fight-value{top:2%}
+.opponent-bottom .fight-value{bottom:3%;color:#b7f5ff}
+.reel-beam{position:absolute;width:3px;height:32%;z-index:4;border-radius:100%;opacity:0}
+.beam-down{top:45%;left:60%;transform-origin:top center;background:linear-gradient(#ff993d,#fff8c8);box-shadow:0 0 6px 2px #ffaf4977}
+.beam-up{bottom:45%;left:22%;transform-origin:bottom center;background:linear-gradient(#d1fcff,#39c9ed);box-shadow:0 0 6px 2px #5fdffe77}
+.reel-muzzle{position:absolute;width:55%;aspect-ratio:1;translate:-50% -50%;z-index:5;opacity:0}
+.muzzle-top{top:45%;left:60%;background:radial-gradient(circle,#fffadd 8%,#ffb356aa 25%,transparent 70%)}
+.muzzle-bottom{top:55%;left:22%;background:radial-gradient(circle,#e8fdff 8%,#51d4f3aa 25%,transparent 70%)}
+.reel-impact{position:absolute;top:76%;left:60%;width:85%;aspect-ratio:1;translate:-50% -50%;z-index:5;opacity:0;border:2px solid #ffe3ac;border-radius:50%;box-shadow:inset 0 0 10px #ffad55,0 0 12px #ffad55}
+.reel-fight[data-winner=outlaw] .reel-impact{top:24%;left:22%;border-color:#baf4ff;box-shadow:inset 0 0 10px #5fcfe7,0 0 12px #5fcfe7}
+.reel-result{position:absolute;top:44%;left:0;right:0;z-index:6;text-align:center;padding:6px 2px;color:#ffe2a0;opacity:0;background:linear-gradient(0deg,#0a121bf5,#101a28f5);border-block:1px solid #ffcd6866}
+.reel-result strong{display:block;font-size:clamp(12px,2.3cqw,17px);font-weight:800;line-height:1.1;overflow-wrap:anywhere}
+.reel-result b{display:block;font-size:clamp(14px,3.2cqw,24px);line-height:1.15;color:white;margin-top:3px;overflow-wrap:anywhere}
+.reel-fight[data-tier=hidden] .reel-result{color:#e3c0ff;border-color:#dcaaff88}
+.reel-fight[data-phase=draw] .opponent-top .fight-figure{animation:reelDrawTop calc(.42s * var(--fight-pace)) ease-out both}
+.reel-fight[data-phase=draw] .opponent-bottom .fight-figure{animation:reelDrawBottom calc(.42s * var(--fight-pace)) ease-out both}
+.reel-fight[data-phase=fire-top] .beam-down,.reel-fight[data-phase=fire-bottom] .beam-up{animation:verticalShot calc(.22s * var(--fight-pace)) ease-out both}
+.reel-fight[data-phase=fire-top] .muzzle-top,.reel-fight[data-phase=fire-bottom] .muzzle-bottom{animation:reelMuzzle calc(.22s * var(--fight-pace)) ease-out both}
+.reel-fight[data-phase=fire-top] .opponent-top .fight-figure{animation:reelRecoilTop calc(.22s * var(--fight-pace)) ease-out}
+.reel-fight[data-phase=fire-bottom] .opponent-bottom .fight-figure{animation:reelRecoilBottom calc(.22s * var(--fight-pace)) ease-out}
+.reel-fight[data-phase=impact] .reel-impact{animation:reelImpact calc(.3s * var(--fight-pace)) ease-out both}
+.reel-fight[data-phase=impact][data-winner=hunter] .opponent-bottom .fight-figure,.reel-fight[data-phase=result][data-winner=hunter] .opponent-bottom .fight-figure{transform:translateY(7%);filter:brightness(.45) saturate(.35);transition:transform .12s,filter .12s}
+.reel-fight[data-phase=impact][data-winner=outlaw] .opponent-top .fight-figure,.reel-fight[data-phase=result][data-winner=outlaw] .opponent-top .fight-figure{transform:translateY(-7%);filter:brightness(.45) saturate(.35);transition:transform .12s,filter .12s}
+.reel-fight[data-phase=result] .fight-value{opacity:0}
+.reel-fight[data-phase=result] .reel-result{animation:reelVerdict calc(.18s * var(--fight-pace)) ease-out both}
+.shot.exchange{height:5px;background:#edddff;box-shadow:0 0 9px 4px #bd75f6}
+.duel-announcement{top:25%;font-size:7cqw}
+@keyframes reelDrawTop{from{transform:translateY(-18%);opacity:.3}to{transform:translateY(0);opacity:1}}
+@keyframes reelDrawBottom{from{transform:translateY(18%);opacity:.3}to{transform:translateY(0);opacity:1}}
+@keyframes verticalShot{0%{opacity:1;scale:1 .05}70%{opacity:1;scale:1 1}100%{opacity:0;scale:1 1}}
+@keyframes reelMuzzle{0%{opacity:0;scale:.3}30%{opacity:1;scale:1}100%{opacity:0;scale:1.3}}
+@keyframes reelRecoilTop{35%{transform:translateY(-4%)}100%{transform:translateY(0)}}
+@keyframes reelRecoilBottom{35%{transform:translateY(4%)}100%{transform:translateY(0)}}
+@keyframes reelImpact{from{opacity:1;scale:.1}to{opacity:0;scale:1.25}}
+@keyframes reelVerdict{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:480px){.card-emblem>img{height:65px}.feature-guide{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.reel-fight *{animation:none!important;transition:none!important}.reel-fight{display:none}.shot{animation:none;opacity:0}}
+
+/* Gold identifies the Boss; other fighter multipliers remain white/cyan. */
+.duel-card:not(.boss) .wild-multiplier{color:#f4faff;text-shadow:2px 3px #111,0 0 15px #5dcde944}
+.duel-card.boss{border-color:#ffce4c;box-shadow:0 0 15px #e6a72a55}
+.duel-card.boss .duel-portrait{background-image:url('./assets/boss-fighter.png');background-size:cover;background-position:center}
+.duel-card.boss .wild-multiplier{color:#ffdf59;text-shadow:2px 3px #442707,0 0 15px #ffb92f77}
+.boss-tag{display:none;position:absolute;top:22%;left:0;right:0;text-align:center;z-index:8;color:#ffdf67;font-size:clamp(12px,2.4cqw,17px);font-weight:800;letter-spacing:.12em;text-shadow:0 2px 3px #000}
+.duel-card.boss .boss-tag{display:block}
+.duel-card.dueling .boss-tag{opacity:0}
+.fight-boss-label{display:none;position:absolute;top:19%;left:0;right:0;z-index:3;text-align:center;color:#ffe17d;background:#4d330ad9;letter-spacing:.08em;font-weight:800;font-size:clamp(12px,2.4cqw,17px)}
+.reel-fight[data-boss=true] .fight-boss-label{display:block}
+.reel-fight[data-boss=true] .opponent-top .fight-figure{background-image:url('./assets/boss-fighter.png');background-size:100% 100%;background-position:center}
+.reel-fight .opponent-top .fight-value{color:#f4faff}
+.reel-fight[data-boss=true] .opponent-top .fight-value{color:#ffdc59;text-shadow:0 2px 2px #472c08,0 0 8px #ffbf4288}
+.reel-fight[data-boss=true] .beam-down,.reel-fight[data-boss=true] .muzzle-top{left:52%}
+.reel-fight[data-operation=multiply] .reel-result{color:#ffe065;border-color:#ffda6b;background:#302208f5}
+.reel-result small{display:block;font-size:clamp(12px,2.3cqw,17px);line-height:1.2;color:#d4e7ee;margin:4px 0;font-variant-numeric:tabular-nums}
+.stolen-multiplier{position:absolute;left:50%;top:92%;translate:-50% -50%;z-index:7;padding:3px 5px;border-radius:3px;border:1px solid #b8f5ff;background:#09222ce8;color:#c6faff;font-weight:800;font-size:clamp(18px,4cqw,29px);line-height:1;white-space:nowrap;opacity:0;pointer-events:none;box-shadow:0 0 10px #45dcff88}
+.reel-fight[data-operation=multiply] .stolen-multiplier{color:#ffe78b;border-color:#ffe37a;background:#372506eb;box-shadow:0 0 12px #ffce5388}
+.reel-fight[data-phase=transfer][data-winner=hunter] .stolen-multiplier{animation:stealUp calc(.7s * var(--fight-pace)) ease-in-out both}
+.reel-fight[data-phase=transfer][data-winner=outlaw] .stolen-multiplier{animation:stealDown calc(.7s * var(--fight-pace)) ease-in-out both}
+.reel-fight[data-phase=transfer][data-winner=hunter] .opponent-bottom .fight-value,.reel-fight[data-phase=transfer][data-winner=outlaw] .opponent-top .fight-value{opacity:0}
+.reel-fight:is([data-phase=transfer],[data-phase=life-loss])[data-winner=hunter] .opponent-bottom .fight-figure{transform:translateY(7%);filter:brightness(.45) saturate(.35)}
+.reel-fight:is([data-phase=transfer],[data-phase=life-loss])[data-winner=outlaw] .opponent-top .fight-figure{transform:translateY(-7%);filter:brightness(.45) saturate(.35)}
+@keyframes stealUp{0%{top:92%;opacity:1;scale:1}75%{opacity:1;scale:1.12}100%{top:6%;opacity:0;scale:.65}}
+@keyframes stealDown{0%{top:6%;opacity:1;scale:1}75%{opacity:1;scale:1.12}100%{top:92%;opacity:0;scale:.65}}
+@media(prefers-reduced-motion:reduce){.symbol-cell[data-name=VS]::before{animation:none}.stolen-multiplier{animation:none!important;opacity:0}}
+
+/* A new gold Boss announces itself within its own reel, before shooting. */
+.reel-fight[data-phase=boss-arrival]{box-shadow:inset 0 0 30px #ffbc3677}
+.reel-fight[data-phase=boss-arrival] .fight-boss-label{top:40%;padding:12px 0;color:#fff0b0;background:#533308ed;border-block:2px solid #ffe47b;font-size:clamp(18px,4cqw,29px);text-shadow:0 2px #322002}
+.reel-fight[data-phase=boss-arrival] .opponent-bottom{opacity:.25}
+.reel-fight[data-operation=double] .reel-result{color:#e0bdff;border-color:#d1a4ff;background:#211236f5}
+.reel-fight[data-operation=double] .stolen-multiplier{color:#eedcff;border-color:#dab6ff;background:#2c1949ef;box-shadow:0 0 12px #b17afc88}
+.reel-fight[data-phase=transfer][data-operation=double] .stolen-multiplier{animation:godDouble calc(.7s * var(--fight-pace)) ease-in-out both}
+@keyframes godDouble{0%{top:50%;opacity:0;scale:.6}25%{top:50%;opacity:1;scale:1.1}70%{opacity:1}100%{top:6%;opacity:0;scale:.7}}
+
+/* Leave room for four-digit God Mode values on narrow reels. */
+.duel-card.immortal .wild-multiplier{font-size:clamp(17px,6cqw,45px);letter-spacing:-.025em}
+
+/* Persistent reels can change owners without stealing a multiplier. */
+.reel-fight[data-incumbent=outlaw] .opponent-top .fight-figure{background-position:right center}
+.reel-fight[data-incumbent=outlaw] .opponent-bottom .fight-figure{background-position:left center}
+.reel-fight[data-phase=winner-hold][data-winner=hunter] .opponent-bottom,.reel-fight[data-phase=winner-hold][data-winner=outlaw] .opponent-top{opacity:.25}
+.reel-fight[data-phase=winner-hold][data-winner=hunter] .opponent-top .fight-value,.reel-fight[data-phase=winner-hold][data-winner=outlaw] .opponent-bottom .fight-value{color:white;text-shadow:0 0 10px #ffdf84}
+
+/* A single contained showdown: opening, standoff, exchange, winner takeover. */
+.reel-fight[hidden]{display:none}
+.reel-fight{background:#050b12}
+.reel-opponent{height:50%;transition:height calc(.38s * var(--fight-pace)) cubic-bezier(.2,.75,.2,1),opacity calc(.22s * var(--fight-pace)) ease,filter calc(.22s * var(--fight-pace)) ease}
+.opponent-top{border-bottom:1px solid #efb371}
+.opponent-bottom{border-top:1px solid #86e9f7}
+.fight-figure{transform-origin:50% 50%;background-size:200% 100%}
+.reel-fight[data-phase=draw]{animation:showdownOpen calc(.3s * var(--fight-pace)) cubic-bezier(.12,.8,.3,1) both}
+.reel-fight[data-phase=draw] .opponent-top .fight-figure{animation:showdownEnterTop calc(.3s * var(--fight-pace)) ease-out both}
+.reel-fight[data-phase=draw] .opponent-bottom .fight-figure{animation:showdownEnterBottom calc(.3s * var(--fight-pace)) ease-out both}
+.reel-fight[data-phase=standoff] .fight-figure{animation:showdownAim calc(.65s * var(--fight-pace)) ease-out both}
+.reel-fight::after{content:'';position:absolute;inset:0;z-index:5;background:#fff1d1;opacity:0;pointer-events:none}
+.reel-fight[data-phase=impact]::after{animation:showdownFlash calc(.18s * var(--fight-pace)) ease-out both}
+.reel-fight[data-phase=impact]{animation:showdownHit calc(.22s * var(--fight-pace)) ease-out both}
+.reel-impact{border:none;box-shadow:none;background:radial-gradient(circle,#fff9db 0 8%,#ffb34d99 15%,transparent 62%)}
+.reel-fight[data-winner=outlaw] .reel-impact{border:none;box-shadow:none;background:radial-gradient(circle,#ecffff 0 8%,#69d8fa99 15%,transparent 62%)}
+.reel-fight:is([data-phase=winner-hold],[data-phase=transfer],[data-phase=life-loss],[data-phase=result])[data-winner=hunter] .opponent-bottom,
+.reel-fight:is([data-phase=winner-hold],[data-phase=transfer],[data-phase=life-loss],[data-phase=result])[data-winner=outlaw] .opponent-top{opacity:0;filter:brightness(.15);height:0}
+.reel-fight:is([data-phase=winner-hold],[data-phase=transfer],[data-phase=life-loss],[data-phase=result])[data-winner=hunter] .opponent-top,
+.reel-fight:is([data-phase=winner-hold],[data-phase=transfer],[data-phase=life-loss],[data-phase=result])[data-winner=outlaw] .opponent-bottom{height:100%;border:0;opacity:1}
+.reel-fight:is([data-phase=winner-hold],[data-phase=transfer],[data-phase=life-loss],[data-phase=result]) .fight-figure{animation:none;transform:none;filter:none}
+.reel-fight:is([data-phase=winner-hold],[data-phase=transfer],[data-phase=life-loss],[data-phase=result]) .fight-value{opacity:0}
+.reel-result{top:auto;bottom:10%;padding:10px 1px;background:linear-gradient(transparent,#030a13e8 25% 85%,transparent);border:0!important;color:#fff1d2}
+.reel-result strong{font-size:clamp(11px,2cqw,15px);letter-spacing:.06em}
+.reel-result b{font-size:clamp(18px,5cqw,36px);margin-top:5px;text-shadow:0 2px 2px #000,0 0 15px #ffa13f66}
+.reel-result small:empty{display:none}
+.reel-fight[data-phase=result] .reel-result{animation:showdownLock calc(.25s * var(--fight-pace)) ease-out both}
+.reel-fight[data-phase=transfer] .stolen-multiplier{display:none}
+.reel-fight[data-boss=true] .opponent-top .fight-figure{background-position:center!important}
+@keyframes showdownOpen{0%{clip-path:inset(48% 0);filter:brightness(2)}65%{filter:brightness(1.15)}100%{clip-path:inset(0);filter:brightness(1)}}
+@keyframes showdownEnterTop{from{transform:translateY(-30%)}to{transform:translateY(0)}}
+@keyframes showdownEnterBottom{from{transform:translateY(30%)}to{transform:translateY(0)}}
+@keyframes showdownAim{from{transform:scale(1)}to{transform:scale(1.035)}}
+@keyframes showdownFlash{0%{opacity:.42}100%{opacity:0}}
+@keyframes showdownHit{0%,100%{translate:0}25%{translate:2px -2px}55%{translate:-2px 1px}80%{translate:1px 0}}
+@keyframes showdownLock{0%{opacity:0;transform:scale(1.18)}65%{opacity:1;transform:scale(.97)}100%{opacity:1;transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.reel-fight,.reel-fight::after,.reel-fight *{animation:none!important;transition:none!important}}
+
+/* Preserve each atlas tile's native 512:1536 ratio throughout takeover. */
+.fight-frame{position:absolute;inset:0;container-type:size;overflow:hidden}
+.reel-fight .fight-figure{inset:auto;left:50%;top:50%;translate:-50% -50%;width:max(100cqw,33.333333cqh);height:max(100cqh,300cqw);background-size:200% 100%}
+/* The single Boss portrait has its own native 793:1983 proportions. */
+.reel-fight[data-boss=true] .opponent-top .fight-figure{width:max(100cqw,39.989914cqh);height:max(100cqh,250.063052cqw);background-size:100% 100%}

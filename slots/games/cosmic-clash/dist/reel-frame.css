@@ -1,0 +1,11 @@
+/* Machined frontier cabinet: one continuous frame, header and status rail. */
+.game .slot-shell{--frame-metal:#948270;--frame-light:#d5ba89;isolation:isolate;background:#09121c;box-shadow:0 12px 28px #000b}
+.game .slot-shell::before{content:'';position:absolute;inset:-5px;pointer-events:none;z-index:5;border:2px solid var(--frame-metal);border-radius:6px;box-shadow:inset 0 0 0 2px #111c25,0 0 0 1px #040a10,0 2px 0 2px #04080c,0 0 14px #0008}
+.game .slot-shell::after{content:'';position:absolute;inset:-5px;pointer-events:none;z-index:6;border-radius:6px;background:linear-gradient(var(--frame-light),var(--frame-light)) left top/25px 3px no-repeat,linear-gradient(var(--frame-light),var(--frame-light)) left top/3px 25px no-repeat,linear-gradient(var(--frame-light),var(--frame-light)) right top/25px 3px no-repeat,linear-gradient(var(--frame-light),var(--frame-light)) right top/3px 25px no-repeat,linear-gradient(#7895a3,#7895a3) left bottom/25px 3px no-repeat,linear-gradient(#7895a3,#7895a3) left bottom/3px 25px no-repeat,linear-gradient(#7895a3,#7895a3) right bottom/25px 3px no-repeat,linear-gradient(#7895a3,#7895a3) right bottom/3px 25px no-repeat}
+.game .slot-shell .board-top{height:32px;min-height:32px;padding-block:3px;border-top:0;border-bottom:1px solid #a78e5d99;background:linear-gradient(180deg,#35414a,#15232e 45%,#0c1822);box-shadow:inset 0 1px #d7e4e529;color:#d9c29c}
+.game .board-top #bonus-remaining{font-size:clamp(9px,1.8vw,12px);letter-spacing:.025em;color:#9eb9c7}
+.game .slot-shell .reel-stage{border:2px solid #354955;box-shadow:inset 0 0 0 1px #020811,0 0 0 1px #030910;background:#070e17}
+.game .slot-shell .board-bottom{background:linear-gradient(180deg,#172631,#0a141e);border-top:1px solid #526773;border-bottom:0;box-shadow:inset 0 -1px #71859444;color:#c5d6de}
+.game .reel{border-right-color:#405463}
+@media(max-width:760px){.game .slot-shell::before,.game .slot-shell::after{inset:-4px}.game .slot-shell .board-top{padding-inline:6px;gap:5px}.game .board-top #mode-label{font-size:11px;letter-spacing:.02em}}
+@media(max-height:500px) and (orientation:landscape){.game .slot-shell .board-top{height:28px;min-height:28px;padding-block:2px}}

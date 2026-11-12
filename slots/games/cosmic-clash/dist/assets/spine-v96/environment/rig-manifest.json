@@ -1,0 +1,53 @@
+{
+  "name": "environment",
+  "version": "4.3.26",
+  "canvas": [
+    1672,
+    941
+  ],
+  "origin": [
+    0,
+    941
+  ],
+  "status": "Native Spine 4.3.26 import/save/export validated; live game integration pending.",
+  "description": "Fixed scene, eased near-cloud drift, low ground dust and independent soft lamp flicker. Separate shot illumination.",
+  "textures": {
+    "scene": {
+      "size": [
+        1672,
+        941
+      ],
+      "sha256": "89881c6eeffa4603a9eda31575b74eef80b5cfccc499729c0ae22e1c5f503def"
+    },
+    "atmosphere": {
+      "size": [
+        1254,
+        1254
+      ],
+      "sha256": "889d616750d444724f4f98086beb68bf96ddb3286df54de24b6c6cc45ea4fcac"
+    }
+  },
+  "clips": [
+    "ambient",
+    "shot_left",
+    "shot_right",
+    "still"
+  ],
+  "events": [
+    "environment_flash"
+  ],
+  "ambientSeconds": 60,
+  "prewarmSeconds": 12,
+  "scenePixelDimensions": [
+    1672,
+    941
+  ],
+  "staticElements": [
+    "original clouds",
+    "moon",
+    "windmill",
+    "buildings",
+    "canyon"
+  ],
+  "performance": "Pause offscreen; reduced motion uses still. Reuse current scene crop/cover transform."
+}

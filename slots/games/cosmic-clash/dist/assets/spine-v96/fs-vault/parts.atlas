@@ -1,0 +1,13 @@
+../../frontier-ink/features/vault-page.png
+size: 1774, 887
+filter: Linear, Linear
+pma: false
+vault-parts-v2
+ bounds: 0, 0, 1774, 887
+
+../../frontier-ink/features/fs-page.png
+size: 512, 360
+filter: Linear, Linear
+pma: false
+letters
+ bounds: 0, 0, 512, 360

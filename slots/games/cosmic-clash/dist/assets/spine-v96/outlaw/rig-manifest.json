@@ -1,0 +1,166 @@
+{
+  "name": "outlaw",
+  "version": "4.3.26",
+  "facing": -1,
+  "canvas": [
+    1024,
+    1536
+  ],
+  "origin": [
+    540,
+    1498
+  ],
+  "textureSize": [
+    1254,
+    1254
+  ],
+  "parts": [
+    {
+      "name": "body",
+      "bone": "root",
+      "texture": "body-clean",
+      "textureBounds": [
+        0,
+        0,
+        1024,
+        1536
+      ]
+    },
+    {
+      "name": "shoot_upper",
+      "bone": "shoot_upper",
+      "texture": "parts",
+      "textureBounds": [
+        98,
+        475.20000000000005,
+        279,
+        594
+      ],
+      "jointRegistration": {
+        "proximalUV": [
+          0.39,
+          0.23
+        ],
+        "distalUV": [
+          0.7,
+          0.84
+        ],
+        "length": 187.83237,
+        "clothStartUV": 0.56,
+        "shoulderOverlap": -30,
+        "socket": "chest anchored, blended below pauldron"
+      }
+    },
+    {
+      "name": "shoulder_cover",
+      "bone": "chest",
+      "texture": "body-clean",
+      "textureBounds": [
+        0,
+        0,
+        1024,
+        1536
+      ],
+      "outline": "Traced concave armour rim and upper strap hardware; constrained triangulation preserves the cut."
+    },
+    {
+      "name": "shoot_forearm",
+      "bone": "shoot_forearm",
+      "texture": "parts",
+      "textureBounds": [
+        434,
+        348,
+        555,
+        593
+      ],
+      "jointRegistration": {
+        "proximalUV": [
+          0.57,
+          0.15
+        ],
+        "distalUV": [
+          0.47,
+          0.85
+        ],
+        "length": 186.90372
+      }
+    },
+    {
+      "name": "grip_closed",
+      "bone": "revolver",
+      "texture": "grip-closed",
+      "textureBounds": [
+        0,
+        0,
+        1380,
+        887
+      ]
+    }
+  ],
+  "arm": {
+    "shoulder": [
+      136,
+      1118
+    ],
+    "elbow": [
+      236,
+      959
+    ],
+    "wrist": [
+      198,
+      776
+    ],
+    "upperLength": 187.83237207680682,
+    "foreLength": 186.90371852908652,
+    "upperRotation": -57.832947414224144,
+    "foreRotation": -101.7307753322874
+  },
+  "muzzleLocal": [
+    -211.8506402750428,
+    57.39252797107174
+  ],
+  "gunSetupLocalRotation": 179.73078,
+  "shootGunBaseOffset": 0,
+  "artSHA256": "d30702346c9fc9fe5be6115eae4e5e283161f69485908229f8c0722923fd2ffd",
+  "status": "Body-motion revision; native verification is recorded separately in validation/native-report.json.",
+  "aimDriver": "wrist",
+  "wristToGripLocal": [
+    58.0,
+    0
+  ],
+  "shootWristBaseOffset": 8.560445703940502,
+  "gripLocked": true,
+  "rigRevision": "original body, breathing idle, coat sway and recoil; corrected Outlaw shoulder overlap",
+  "bodyPlate": true,
+  "bodyArtSHA256": "29874f12164bd44bff24cf3eed2ef612d4f6aa9cc3d587c73c3c589697e4a25a",
+  "animationTiming": {
+    "idle": 4,
+    "draw": 0.75,
+    "shoot": 0.78,
+    "holster": 0.95,
+    "aimSweep": 5.8,
+    "previewFPS": 60
+  },
+  "gripArt": {
+    "size": [
+      1774,
+      887
+    ],
+    "wrist": [
+      1340,
+      590
+    ],
+    "muzzle": [
+      55,
+      318
+    ],
+    "bounds": [
+      0,
+      0,
+      1380,
+      887
+    ],
+    "scale": 0.21
+  },
+  "gripArtSHA256": "630f11b755d4429ebc6aa62f4422edaf3b9708f34b3b17db7d3746baba8124bb"
+}
