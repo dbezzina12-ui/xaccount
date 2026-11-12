@@ -1,0 +1,92 @@
+{
+  "project": "Bounty Breakers",
+  "created": "2026-09-19",
+  "generator": "Built-in image_gen.imagegen",
+  "calls": 3,
+  "retries": 0,
+  "variants": 0,
+  "postprocessing": "None. Byte-for-byte copies of generated PNGs.",
+  "references": [
+    {
+      "path": "/workspace/scratch/2f98639b0397/upload/01-1789785421595.jpg",
+      "role": "Rendering style guidance only; no screenshot UI/lettering/characters copied"
+    },
+    {
+      "path": "/workspace/scratch/2f98639b0397/bounty-breakers/dist/assets/bounty-portraits.png",
+      "role": "Original character identity and portrait composition"
+    },
+    {
+      "path": "/workspace/scratch/2f98639b0397/bounty-breakers/dist/assets/frontier-cartoon-desktop.png",
+      "role": "Western scenery motifs and desktop composition only"
+    }
+  ],
+  "assets": [
+    {
+      "asset": "desktop",
+      "source": "/workspace/scratch/2f98639b0397/generated_images/exec-365fd241-88b5-46e2-b635-bbc2b62d31f4.png",
+      "output": "frontier-comic-desktop.png",
+      "prompt": "Use case: illustration-story. Asset type: finished 16:9 landscape background illustration for the western sci-fi arcade game Bounty Breakers. Render at 2560x1440 or highest practical resolution maintaining precisely 16:9.\n\nINPUT ROLES: Image 1 (Fist of Destruction game screenshot) is RENDERING STYLE GUIDANCE ONLY: confident comic ink contours, adult muscular/athletic proportions, dimensional illustrated cloth and metal, crisp angular three-tone cel shading and controlled highlights. Do not copy its characters, UI, lettering, framing, logos or exact scenery. Image 2 (two realistic comic portraits on black) is CHARACTER IDENTITY ONLY: use its Hunter face, hair, metal respirator, orange armor-coat and its robotic Outlaw head, wide cowboy hat and cyan accents; simplify its scratch/grunge detail into clean cel-shaded shapes. Image 3 (cartoon western scene) is COMPOSITION AND WESTERN MOTIFS ONLY. Completely replace its squat cartoon proportions and paper-flat surface treatment.\n\nMake one cohesive premium 2D arcade-comic scene, with two large adult-proportioned characters painted into the same dusty ground, lighting, and perspective. LEFT HUNTER: adult human male, brown tousled hair, natural-size intense eyes and thick visible eyebrows above a solid angular steel respirator covering his lower face, orange long armored coat, broad shoulders, dark fitted tactical armor, gloves, belt, holster, and boots. RIGHT OUTLAW: adult-proportioned robot cowboy, angular steel skull-like face, narrow cyan glowing eyes, broad black cowboy hat, dark charcoal duster, dark tactical armor with restrained cyan edge accents, belt, holster, and boots. The Outlaw's coat remains predominantly dark. Use strong relaxed showdown poses, subtly turned inward, weapons holstered or held down at low-ready. These are the same original two characters shown in image 2, dressed fully.\n\nCOMPOSITION: Hunter body centered at x16%, Outlaw at x84%, each body confined approximately to the outer 27% of the frame. Heads near y20%, boots near y94%; full hair, full hat brims and all boots comfortably inside the canvas. Tall adult silhouettes approximately 7 to 7.5 heads high, broad shoulders, substantial natural hands, no oversized heads or eyes. Leave center 44% quiet and dark with no important objects, available behind separately rendered live reels. Do not paint a slot machine or anything in that central reserved space. Simple dusty street perspective runs through the middle into layered mesas. Wooden frontier porches with visibly inked dimensional boards at edges, restrained metal science-fiction details, left windmill, right cyan-lit futuristic tower and wooden water tank, distant mesas, large amber moon in upper-left. Deep blue/teal dusk, orange porch lamps, believable warm reflected light beneath characters, modest cyan rim lighting on Outlaw. Draw ground shadows so both characters belong to this scene. Bold clean shape hierarchy and clear foreground, midground and distant depth.\n\nVISUAL FINISH: Premium adult action-comic game illustration, thick-to-thin confident ink contours, angular three-tone cel-shaded values, controlled highlights on shaped metal plates, cloth folds illustrated as large deliberate planes. Rich dimensional drawn forms, restrained texture, strong readable silhouettes. Do not use soft painted gradients as primary shading.\n\nNo text, letters, logos, UI, reels, labels, frames, borders or additional people. Avoid chibi, bobbleheads, South Park aesthetic, paper cutouts, flat puppets, cute cartoons, giant anime eyes, photorealism, CGI/3D rendering, soft painterly fantasy, excessive tiny scratches or noisy grunge.",
+      "path": "/workspace/scratch/2f98639b0397/comic-frontier-final/frontier-comic-desktop.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2223442,
+      "sha256": "4ce9845fd4cae471864b62b62ae33f820e0996e8111e22c42b3a9d88065f0e93"
+    },
+    {
+      "asset": "portrait",
+      "source": "/workspace/scratch/2f98639b0397/generated_images/exec-b2002f03-183b-44dd-a638-c06ca8336313.png",
+      "output": "frontier-comic-portrait.png",
+      "prompt": "Use case: illustration-story. Asset type: finished 9:16 portrait environment-only background illustration for the western sci-fi arcade game Bounty Breakers. Render at 1440x2560 or highest practical resolution maintaining precisely 9:16.\n\nINPUT ROLES: Image 1 (Fist of Destruction game screenshot) is RENDERING STYLE GUIDANCE ONLY: bold comic ink contours, angular three-tone cel shading, dimensional illustrated materials and controlled highlights. Do not copy characters, UI, lettering, framing, logos or exact scenery. Image 2 (two character portraits) provides ONLY the orange/cyan western-sci-fi palette family: do NOT include either character in this output. Image 3 (cartoon western scene) supplies ENVIRONMENT MOTIFS ONLY: blue-teal frontier dusk, amber upper-left moon, left wooden windmill, right cyan sci-fi tower and water tank, wood porches, mesas and dusty street. Replace its paper-flat surface style with premium dimensional arcade-comic illustration.\n\nCreate a completely unpopulated environment in the same western sci-fi world. No cast, no silhouettes of people, no animals. Inked wooden frontier porches hug left/right edges, with crisp dimensional planks and railings, orange lamps, restrained metal science-fiction details, and angular stones. A modest wooden windmill at left, an amber moon in the upper-left sky, a cyan-lit futuristic tower near upper-right with a wooden water tank along right edge. Multiple layers of angular mesas recede through blue and teal atmospheric depth. The dusty frontier street flows in perspective from the distant middle into the lower half of the image and fills its bottom edge; natural simple rocks and sparse western scrub stay near the borders.\n\nCOMPOSITION: Tall 9:16 mobile game backdrop, carefully composed for portrait. Keep the center 60% of the width quiet, dark, low contrast and unobstructed, suitable behind separate title and live reels. Richer illustrated detail is restricted to top and edge regions; do not put a bright focal object in the central reserved area. Blue-teal dusk with subdued street values, warm amber moonlight, small orange lamp pools along edges and cyan glow near right tower. Deliberate foreground/midground/background separation without dense tiny detail.\n\nVISUAL FINISH: Premium 2D adult arcade-comic illustration matching the rendering language of reference 1: confident thick-to-thin ink contours, crisp angular three-tone cel shading, bold clean shapes, dimensional illustrated wood, cloth-free environment and metal. Simple controlled highlights, restrained texture, angular rocks and clear spatial depth. No smooth CGI render, no photography, no soft painterly fantasy, no paper-cutout look, no South Park aesthetic, no noisy grunge or excessive tiny scratches.\n\nAbsolutely no characters, people, animals, text, letters, logos, UI, slot reels, symbols, title, frame or border.",
+      "path": "/workspace/scratch/2f98639b0397/comic-frontier-final/frontier-comic-portrait.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 2233373,
+      "sha256": "04acfd469d1053a552bab44b094e5bff9e5818ff1324043aca409856c1054f3a"
+    },
+    {
+      "asset": "portraits",
+      "source": "/workspace/scratch/2f98639b0397/generated_images/exec-6a6e9e2e-50c4-40cc-af28-14e568c51b6d.png",
+      "output": "bounty-comic-portraits.png",
+      "prompt": "Use case: illustration-story. Asset type: finished matched character portrait sheet for western sci-fi arcade game Bounty Breakers. Create exactly TWO half-body portraits on a 3:2 landscape canvas, render 1536x1024 or larger maintaining precisely 3:2.\n\nINPUT ROLES: Image 1 (Fist of Destruction game screenshot) is RENDERING STYLE GUIDANCE ONLY: adult action-comic anatomy, bold confident ink contours, dimensional illustrated surfaces, crisp angular three-tone cel shading and controlled highlights. Do not copy its characters, UI, lettering, frames or scenery. Image 2 (existing Bounty Breakers portrait sheet) is STRICT CHARACTER IDENTITY AND EXACT COMPOSITION REFERENCE: retain the two-character order, head locations, inward revolver poses, clothing and head identities. Image 3 (existing western scene) supplies ONLY the dusk game palette and dark Outlaw costume direction. Do not use its squat cartoon anatomy or background.\n\nExactly TWO matched half-body portraits in EQUAL left and right halves on solid black/dark charcoal neutral background. No line or dividing border between the halves. LEFT HALF is the HUNTER: adult male human, tousled brown hair, natural-sized eyes and strong thick brows fully visible, angular solid steel respirator over lower face with mechanical cheek details, orange high-collared armored long coat, dark tactical chest armor, strong broad shoulders and gloved hands. RIGHT HALF is the OUTLAW: robot cowboy with angular steel skull-like face, narrow glowing cyan eyes, wide black cowboy hat, dark charcoal high-collared duster, steel armor and restrained cyan highlights. Predominantly dark cloth, not a fully bright cyan jacket. Keep consistent orange Hunter and cyan Outlaw identity cues.\n\nPreserve image 2 composition exactly: Hunter's head centered around normalized x0.25/y0.25, Outlaw's head centered around x0.75/y0.25; Hunter occupies the entire left half, Outlaw the entire right half. Upper torsos fill their half from heads down to bottom edge. Both hold their own sci-fi revolver with bent arm toward the center, matching original inward-facing low-ready portrait poses and proportions of gun placement. The orange-accented Hunter gun points right and the cyan-accented Outlaw gun points left. Heads/hats and shoulders have strong readable silhouettes. Full top of Hunter hair and Outlaw hat are inside frame. Large portrait busts, adult athletic broad-shouldered proportions, normal-sized eyes, anatomically sensible hands. The original solid metal Hunter mask and robot skull must remain clearly distinct. These are the same two characters who stand in the companion frontier scene, not new designs.\n\nVISUAL FINISH: Retain original identity and composition while restyling to premium clean 2D arcade-comic illustration. Confident thick-to-thin ink contours; crisp angular three-tone cel shading; shaped dimensional cloth and metal; controlled broad specular highlights; orange rim light on Hunter and cyan rim light on Outlaw; reduced grunge. Large intentional shadow planes, moderately simplified surface paneling. No tiny scratch noise. Drawn forms should feel solid and dimensional. No photorealism, CGI or soft painterly style. No South Park aesthetic, paper-cutout puppets, chibi anatomy, bobbleheads, giant anime eyes or cute rounded faces.\n\nExactly two portraits only. Solid black/dark charcoal background. No transparency needed. No scenery, no dividing border, no frames, no text, no labels, no letters, no UI, no logos.",
+      "path": "/workspace/scratch/2f98639b0397/comic-frontier-final/bounty-comic-portraits.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 2133201,
+      "sha256": "d6f1a06c1846677c8f628e49d92f4004df47d1e948950e40f9b6117ce402459f"
+    }
+  ],
+  "site_exports": [
+    {
+      "file": "dist/assets/comic-v64/frontier-desktop.webp",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "bytes": 400632,
+      "sha256": "52a71f81bb92acc32940e4794d512dca821edf4a2accdbb94c8e0358ef5eff51"
+    },
+    {
+      "file": "dist/assets/comic-v64/frontier-mobile.webp",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "bytes": 397924,
+      "sha256": "028f937d10d89ac6f4926c1eb168d42b51dee99feb6ac31dc0a6a9f1ec4fcd81"
+    },
+    {
+      "file": "dist/assets/comic-v64/portraits.webp",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "bytes": 345162,
+      "sha256": "80988b293f6b3835b33a34e156b37c849fd6bfc8976e5c45f4f8444cf64dd497"
+    }
+  ],
+  "integration": {
+    "scene": "Desktop shared environment and cast; matching tall scene on phones/narrow tablets.",
+    "portraits": "Hunter/Outlaw expanded wilds and duel winner presentation.",
+    "existing_animation": "Animated title and duel takes retained."
+  }
+}

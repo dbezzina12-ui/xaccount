@@ -1,0 +1,41 @@
+{
+  "job_id": "a368d8c7-599f-498d-87d7-c175579ff330",
+  "provider": "Higgsfield",
+  "model": "seedance_2_5",
+  "master_url": "https://d8j0ntlcm91z4.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/hf_20260919_004133_a368d8c7-599f-498d-87d7-c175579ff330.mp4",
+  "source_attachment": "1789778317515.png",
+  "source_media_id": "bdadda67-4004-4f8c-a573-e22fcff6d5bb",
+  "keyframe_media_id": "26286e03-6736-493b-8422-7407dd53b811",
+  "params": {
+    "model": "seedance_2_5",
+    "mode": "omni_reference",
+    "duration": 6,
+    "aspect_ratio": "21:9",
+    "resolution": "1080p",
+    "bitrate_mode": "high",
+    "generate_audio": false,
+    "count": 1,
+    "use_unlim": false,
+    "medias": [
+      {
+        "role": "start_image",
+        "value": "26286e03-6736-493b-8422-7407dd53b811"
+      },
+      {
+        "role": "end_image",
+        "value": "26286e03-6736-493b-8422-7407dd53b811"
+      }
+    ],
+    "prompt": "Animate the EXACT supplied two-line BOUNTY BREAKERS game logo as a premium subtle 2D cartoon idle loop, with perfect graphic identity and exact lettering preserved throughout. BOUNTY stays gold with the fractured sheriff-star O, BREAKERS stays cyan-blue, and all custom angular beveled letter shapes, dark-metal backing, bullets, proportions and spacing remain identical to the reference. This is animation of existing artwork, not a redesign. Entire logo stays fully visible and centered at the same scale, anchored in place. Camera completely locked; absolutely no zoom, pan, perspective rotation, crop, scene change, new words, or new elements. Six-second seamless loop: 0-0.6s calm identical hold; 0.6-1.4s an extremely subtle 1-percent cartoon squash-and-settle through the whole solid logo without individual letter deformation; 1.6-2.5s one small crisp golden specular glint crosses the star and top beveled gold edges; 2.5-3.6s existing thin blue lightning cracks briefly brighten and flicker across BREAKERS, contained inside the existing letter silhouettes; 3.6-5.2s settle calmly to original; 5.2-6s exact starting pose and lighting for a clean loop. Motion should be clearly visible but tasteful and controlled, suitable for a slot game masthead. No big flashes, no detached sparks, no particles, no smoke, no extra damage, no exploding letters. IMPORTANT: background is a uniform pure chroma-key green RGB 0,255,0 on every frame, identical to the reference, without any gradient, texture, vignette, shadow or lighting effects on the background. Preserve clean crisp cutout edges. Silent."
+  },
+  "delivery": {
+    "desktop": "1080x432 transparent animated WebP",
+    "mobile": "720x288 transparent animated WebP",
+    "poster": "1080x432 transparent PNG",
+    "fps": 20,
+    "duration_seconds": 6,
+    "loop": true,
+    "reduced_motion": "Static PNG through the first picture source",
+    "processing": "scripts/encode-title.py removes chroma green, crops safe margins, and blends the last 8 frames to the exact first pose."
+  }
+}

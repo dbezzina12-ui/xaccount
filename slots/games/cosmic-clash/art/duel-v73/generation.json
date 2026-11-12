@@ -1,0 +1,210 @@
+{
+  "images": [
+    "exec-9f8f6f8a-e0bf-431c-8672-8173caf20e49.png",
+    "exec-b242eda0-1ea3-499f-8cb0-015fd1c99d67.png",
+    "exec-ec4216fc-51d4-4037-9a78-d07e6bca93cd.png"
+  ],
+  "videos": {
+    "jobs": [
+      {
+        "index": 0,
+        "job_id": "559e17de-bfd3-4a61-87a4-52ead7adb623",
+        "status": "pending",
+        "adjustments": {
+          "medias[0].role": {
+            "requested": "image",
+            "used": "image_references",
+            "reason": "Seedance 2.5 backend expects schema-key media roles"
+          }
+        }
+      },
+      {
+        "index": 1,
+        "job_id": "a6dcef84-995e-4be5-b7d5-6ecaafdc1877",
+        "status": "pending",
+        "adjustments": {
+          "medias[0].role": {
+            "requested": "image",
+            "used": "image_references",
+            "reason": "Seedance 2.5 backend expects schema-key media roles"
+          }
+        }
+      },
+      {
+        "index": 2,
+        "job_id": "206e3fe1-525b-4ef8-8dac-21760c41ad13",
+        "status": "pending",
+        "adjustments": {
+          "medias[0].role": {
+            "requested": "image",
+            "used": "image_references",
+            "reason": "Seedance 2.5 backend expects schema-key media roles"
+          }
+        }
+      },
+      {
+        "index": 3,
+        "job_id": "e746bd5b-3d43-474b-a5ab-fafd0d165be9",
+        "status": "pending",
+        "adjustments": {
+          "medias[0].role": {
+            "requested": "image",
+            "used": "image_references",
+            "reason": "Seedance 2.5 backend expects schema-key media roles"
+          }
+        }
+      }
+    ],
+    "submitted_count": 4,
+    "failed_count": 0
+  },
+  "briefs": [
+    {
+      "index": 0,
+      "key": "outlaw-loses",
+      "boss": false,
+      "prompt": "A crisp mature hand-inked cel-shaded arcade comic western duel, no photorealism. Use the reference for exact orange respirator Hunter / black-hatted cyan robot Outlaw / gold red-visor Boss identities, armor, corridor and overhead style. SINGLE UNINTERRUPTED LOCKED OVERHEAD SHOT. Portrait vertical arena. Both opponents ALWAYS fit entirely inside central 34% of frame width throughout, at y22% and y78%, facing each other inward vertically, weapons initially HOLSTERED. Correct the lower character to face UP toward the upper opponent from frame one; no turn-around. Never zoom, pan, cut, shake, rotate, or change framing. One fast quickdraw, EXACTLY ONE gunshot total from ONLY the winner. Loser NEVER reaches for, draws, aims, or fires a gun. No exchange of fire. No blood, wounds or gore. 0-.5s tense stillness with both holstered; .5-.9s winner alone draws; at .9s EXACTLY ONE tiny muzzle flash and thin bullet streak hits other fighter; 1-1.6s loser jolts and collapses backwards along vertical corridor, fully inside center34% width; 1.6-4s winner stays standing and motionless, loser remains down. Preserve crisp outlines, proportions and colors. No UI or text, no bloom, no haze, no screen flash. TOP orange-coated Hunter WINS. TOP Hunter draws and fires DOWN once. BOTTOM cyan robot Outlaw keeps gun HOLSTERED, is struck, falls backward DOWN. Hunter remains standing at TOP."
+    },
+    {
+      "index": 1,
+      "key": "hunter-loses",
+      "boss": false,
+      "prompt": "A crisp mature hand-inked cel-shaded arcade comic western duel, no photorealism. Use the reference for exact orange respirator Hunter / black-hatted cyan robot Outlaw / gold red-visor Boss identities, armor, corridor and overhead style. SINGLE UNINTERRUPTED LOCKED OVERHEAD SHOT. Portrait vertical arena. Both opponents ALWAYS fit entirely inside central 34% of frame width throughout, at y22% and y78%, facing each other inward vertically, weapons initially HOLSTERED. Correct the lower character to face UP toward the upper opponent from frame one; no turn-around. Never zoom, pan, cut, shake, rotate, or change framing. One fast quickdraw, EXACTLY ONE gunshot total from ONLY the winner. Loser NEVER reaches for, draws, aims, or fires a gun. No exchange of fire. No blood, wounds or gore. 0-.5s tense stillness with both holstered; .5-.9s winner alone draws; at .9s EXACTLY ONE tiny muzzle flash and thin bullet streak hits other fighter; 1-1.6s loser jolts and collapses backwards along vertical corridor, fully inside center34% width; 1.6-4s winner stays standing and motionless, loser remains down. Preserve crisp outlines, proportions and colors. No UI or text, no bloom, no haze, no screen flash. BOTTOM cyan robot Outlaw WINS. BOTTOM Outlaw draws and fires UP once. TOP orange-coated Hunter keeps gun HOLSTERED, is struck, falls backward UP. Outlaw remains standing at BOTTOM."
+    },
+    {
+      "index": 2,
+      "key": "boss-loses",
+      "boss": true,
+      "prompt": "A crisp mature hand-inked cel-shaded arcade comic western duel, no photorealism. Use the reference for exact orange respirator Hunter / black-hatted cyan robot Outlaw / gold red-visor Boss identities, armor, corridor and overhead style. SINGLE UNINTERRUPTED LOCKED OVERHEAD SHOT. Portrait vertical arena. Both opponents ALWAYS fit entirely inside central 34% of frame width throughout, at y22% and y78%, facing each other inward vertically, weapons initially HOLSTERED. Correct the lower character to face UP toward the upper opponent from frame one; no turn-around. Never zoom, pan, cut, shake, rotate, or change framing. One fast quickdraw, EXACTLY ONE gunshot total from ONLY the winner. Loser NEVER reaches for, draws, aims, or fires a gun. No exchange of fire. No blood, wounds or gore. 0-.5s tense stillness with both holstered; .5-.9s winner alone draws; at .9s EXACTLY ONE tiny muzzle flash and thin bullet streak hits other fighter; 1-1.6s loser jolts and collapses backwards along vertical corridor, fully inside center34% width; 1.6-4s winner stays standing and motionless, loser remains down. Preserve crisp outlines, proportions and colors. No UI or text, no bloom, no haze, no screen flash. BOTTOM cyan robot Outlaw WINS. BOTTOM Outlaw draws and fires UP once. TOP GOLD armored red-visor BOSS keeps gun HOLSTERED, is struck, falls backward UP. Outlaw remains standing at BOTTOM. No orange Hunter in this clip."
+    },
+    {
+      "index": 3,
+      "key": "boss-wins",
+      "boss": true,
+      "prompt": "A crisp mature hand-inked cel-shaded arcade comic western duel, no photorealism. Use the reference for exact orange respirator Hunter / black-hatted cyan robot Outlaw / gold red-visor Boss identities, armor, corridor and overhead style. SINGLE UNINTERRUPTED LOCKED OVERHEAD SHOT. Portrait vertical arena. Both opponents ALWAYS fit entirely inside central 34% of frame width throughout, at y22% and y78%, facing each other inward vertically, weapons initially HOLSTERED. Correct the lower character to face UP toward the upper opponent from frame one; no turn-around. Never zoom, pan, cut, shake, rotate, or change framing. One fast quickdraw, EXACTLY ONE gunshot total from ONLY the winner. Loser NEVER reaches for, draws, aims, or fires a gun. No exchange of fire. No blood, wounds or gore. 0-.5s tense stillness with both holstered; .5-.9s winner alone draws; at .9s EXACTLY ONE tiny muzzle flash and thin bullet streak hits other fighter; 1-1.6s loser jolts and collapses backwards along vertical corridor, fully inside center34% width; 1.6-4s winner stays standing and motionless, loser remains down. Preserve crisp outlines, proportions and colors. No UI or text, no bloom, no haze, no screen flash. TOP GOLD armored red-visor BOSS WINS. TOP Boss draws and fires DOWN once. BOTTOM cyan robot Outlaw keeps gun HOLSTERED, is struck, falls backward DOWN. Boss remains standing at TOP. No orange Hunter in this clip."
+    }
+  ],
+  "correction_jobs": {
+    "jobs": [
+      {
+        "index": 4,
+        "status": "submission_failed",
+        "error": "Out of credits on ultimate (annual) plan in Private workspace.",
+        "adjustments": {
+          "medias[0].role": {
+            "requested": "video",
+            "used": "video_references",
+            "reason": "Seedance 2.5 backend expects schema-key media roles"
+          },
+          "medias[1].role": {
+            "requested": "image",
+            "used": "image_references",
+            "reason": "Seedance 2.5 backend expects schema-key media roles"
+          }
+        }
+      },
+      {
+        "index": 5,
+        "job_id": "d53ac5f2-9b0d-4a7f-a513-232b83457707",
+        "status": "pending",
+        "adjustments": {
+          "medias[0].role": {
+            "requested": "video",
+            "used": "video_references",
+            "reason": "Seedance 2.5 backend expects schema-key media roles"
+          },
+          "medias[1].role": {
+            "requested": "image",
+            "used": "image_references",
+            "reason": "Seedance 2.5 backend expects schema-key media roles"
+          }
+        }
+      }
+    ],
+    "submitted_count": 1,
+    "failed_count": 1
+  },
+  "correction_prompt": "Edit the supplied video while preserving its exact camera, frame composition, timing, single gunshot and motions. Change ONLY the TOP GOLD ARMORED FIGHTER into the orange-coated human HUNTER from the TOP of the reference image: short dark brown spiky hair, steel respirator covering mouth, orange long western coat, black gloves and trousers, orange sci-fi revolver. Remove all gold helmet and gold armor from this top fighter. Keep exactly the source top fighter's animation, pose and movement, including whether he shoots or falls. Keep the BOTTOM black-hatted CYAN ROBOT OUTLAW EXACTLY as in the source video, facing UP, with the same actions. Do NOT use the lower character's pose from the still reference. Preserve the single winning shooter and the same losing fighter as source. Only the source winner draws, EXACTLY ONE gunshot total, the loser does not draw. Preserve mature inked cel-shaded style, scene colors, steel corridor, locked overhead shot. No extra shot or flash, no cuts, no camera movement, no text.",
+  "final": {
+    "jobs": [
+      {
+        "index": 0,
+        "job_id": "559e17de-bfd3-4a61-87a4-52ead7adb623",
+        "status": "completed",
+        "type": "video",
+        "model": "seedance_2_5",
+        "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/hf_20260920_172819_559e17de-bfd3-4a61-87a4-52ead7adb623.mp4"
+      },
+      {
+        "index": 1,
+        "job_id": "a6dcef84-995e-4be5-b7d5-6ecaafdc1877",
+        "status": "completed",
+        "type": "video",
+        "model": "seedance_2_5",
+        "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/hf_20260920_172819_a6dcef84-995e-4be5-b7d5-6ecaafdc1877.mp4"
+      },
+      {
+        "index": 2,
+        "job_id": "206e3fe1-525b-4ef8-8dac-21760c41ad13",
+        "status": "completed",
+        "type": "video",
+        "model": "seedance_2_5",
+        "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/hf_20260920_172820_206e3fe1-525b-4ef8-8dac-21760c41ad13.mp4"
+      },
+      {
+        "index": 3,
+        "job_id": "e746bd5b-3d43-474b-a5ab-fafd0d165be9",
+        "status": "completed",
+        "type": "video",
+        "model": "seedance_2_5",
+        "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/hf_20260920_172820_e746bd5b-3d43-474b-a5ab-fafd0d165be9.mp4"
+      },
+      {
+        "index": 4,
+        "job_id": "afe4472b-3e88-4698-b112-98cc5d5a0f33",
+        "status": "completed",
+        "type": "video",
+        "model": "seedance_2_5",
+        "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/hf_20260920_173601_afe4472b-3e88-4698-b112-98cc5d5a0f33.mp4"
+      },
+      {
+        "index": 5,
+        "job_id": "d53ac5f2-9b0d-4a7f-a513-232b83457707",
+        "status": "completed",
+        "type": "video",
+        "model": "seedance_2_5",
+        "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_32RbRyFdno23w22UW0nPddiySWt/hf_20260920_173450_d53ac5f2-9b0d-4a7f-a513-232b83457707.mp4"
+      }
+    ],
+    "selected": {
+      "hunterLoses": 5,
+      "outlawLoses": 4,
+      "bossLoses": 2,
+      "bossWins": 3
+    },
+    "remainingCredits": 8.51,
+    "retry": {
+      "jobs": [
+        {
+          "index": 4,
+          "job_id": "afe4472b-3e88-4698-b112-98cc5d5a0f33",
+          "status": "pending",
+          "adjustments": {
+            "medias[0].role": {
+              "requested": "video",
+              "used": "video_references",
+              "reason": "Seedance 2.5 backend expects schema-key media roles"
+            },
+            "medias[1].role": {
+              "requested": "image",
+              "used": "image_references",
+              "reason": "Seedance 2.5 backend expects schema-key media roles"
+            }
+          }
+        }
+      ],
+      "submitted_count": 1,
+      "failed_count": 0
+    }
+  }
+}

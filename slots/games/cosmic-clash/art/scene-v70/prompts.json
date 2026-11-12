@@ -1,0 +1,19 @@
+{
+  "tool": "built-in image_gen",
+  "reference": "dist/assets/comic-v64/frontier-desktop.webp",
+  "date": "2026-09-19",
+  "assets": [
+    {
+      "file": "frontier-clean.png",
+      "prompt": "Use case: precise-object-edit\nAsset type: clean game environment background for Bounty Breakers.\nInput image 1 is the edit target. Remove BOTH foreground characters COMPLETELY: the orange-coated masked human on the left and the black-coated robot cowboy on the right. Inpaint their entire silhouettes and shadows with the same illustrated western street, matching wooden buildings and porches, rocks, desert plants, and shadowed terrain. The remaining scene is an empty western town at night. Preserve the identical orange moon, windmill, distant mesas, cyan science-fiction tower, water tower, sky, palette, camera angle, composition, arcade comic ink linework, and cel shading. Keep all originally visible environment content unchanged. Landscape 16:9 output, ideally 2048x1152 or larger practical. No people or robots anywhere, no new characters, no UI, no added text, no watermark."
+    },
+    {
+      "file": "hunter.png",
+      "prompt": "Use case: background-extraction\nAsset type: independent full-body game actor, PNG with TRUE alpha transparency.\nInput image 1 is the edit target. Extract ONLY the exact orange-coated masked dark-haired adult human on the LEFT, onto a genuinely transparent background. Preserve this character's exact identity, adult proportions, pose looking right/inward, costume, orange long coat, dark layered body armor, respirator mask, hair, weapon/holster, belts, gloves, knee guards and boots. Preserve exact illustration linework, cel shading and warm/cool lighting. Include his ENTIRE silhouette: all hair, coat tails, both boots, and gun, fully inside the canvas. Same pose, no redesign or animation. Portrait canvas 1024x1536 or larger practical, with small transparent breathing room around full silhouette and the actor filling most of the height. Transparent pixels must have actual zero alpha, not a painted transparency simulation. NO other character, no environment, no ground, no drop shadow, no backdrop, no checkerboard, no text, no watermark."
+    },
+    {
+      "file": "outlaw.png",
+      "prompt": "Use case: background-extraction\nAsset type: independent full-body game actor, PNG with TRUE alpha transparency.\nInput image 1 is the edit target. Extract ONLY the exact black-coated robot cowboy on the RIGHT, onto a genuinely transparent background. Preserve this character's exact identity, adult proportions, pose looking left/inward, costume, black long coat, wide cowboy hat and full hat brim, metallic mask, cyan eyes/details, armor, gloves, belts, weapons/holsters, mechanical knee/shin armor and boots. Preserve exact illustration linework, cel shading and warm/cool lighting. Include the ENTIRE silhouette: full hat brim, all coat tails, weapons, and both boots fully inside the canvas. Same pose, no redesign or animation. Portrait canvas 1024x1536 or larger practical, with small transparent breathing room around full silhouette and the actor filling most of the height. Transparent pixels must have actual zero alpha, not a painted transparency simulation. NO other character, no environment, no ground, no drop shadow, no backdrop, no checkerboard, no text, no watermark."
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "job_id": "5cb16c41-7752-4f91-a389-cb282fa245e7",
+  "aspect_ratio": "16:9",
+  "count": 1,
+  "duration": 5,
+  "generate_audio": false,
+  "medias": [
+    {
+      "role": "start_image",
+      "value": "d0ac1925-9231-464e-bdb4-ce0d0bd51083"
+    },
+    {
+      "role": "end_image",
+      "value": "d0ac1925-9231-464e-bdb4-ce0d0bd51083"
+    }
+  ],
+  "mode": "omni_reference",
+  "model": "seedance_2_5",
+  "prompt": "Animate this exact illustrated sci-fi western game background as a very subtle seamless ambient loop. LOCKED OFF CAMERA, identical composition for the whole shot. The two standing characters stay completely still: same face, head, hands, guns, stance and body size. Animate ONLY their long coat tails and loose jacket fabric gently fluttering in a light breeze, small slow natural fabric ripples with believable weight, not waving wildly. Everything else is frozen: sky, moon, buildings, ground, lighting. Preserve the original painted details, colors and character identities. No camera movement, zoom, parallax, reframing, walking, action, shooting, face morphing, new objects, text, cuts, flashes or audio. Both coats return smoothly to the exact starting resting shape by the end for continuous looping. Restrained premium idle animation behind slot reels; nearly a still image.",
+  "resolution": "720p"
+}

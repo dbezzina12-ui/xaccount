@@ -1,0 +1,4 @@
+node_modules/
+build/
+math/publish_files/
+*.zip

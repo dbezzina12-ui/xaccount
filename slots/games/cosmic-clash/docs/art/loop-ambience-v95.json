@@ -1,0 +1,79 @@
+[
+  {
+    "track": "base",
+    "source": "Outlaw Protocol (1).mp3",
+    "source_start_seconds": 32.18289583333333,
+    "source_end_seconds": 154.8201875,
+    "loop_seconds": 122.63729166666667,
+    "crossfade_seconds": 0.65,
+    "interval_seconds": [
+      30.2,
+      30.8,
+      30.800000000000004,
+      30.837291666666673
+    ],
+    "events": [
+      {
+        "peak_seconds": 0.18,
+        "variant": 1,
+        "rms_below_music_db": -26.899722664224296,
+        "peak": 0.05499999597668648
+      },
+      {
+        "peak_seconds": 30.38,
+        "variant": 2,
+        "rms_below_music_db": -27.588560930782045,
+        "peak": 0.054999999701976776
+      },
+      {
+        "peak_seconds": 61.18,
+        "variant": 3,
+        "rms_below_music_db": -26.871126778837553,
+        "peak": 0.055000003427267075
+      },
+      {
+        "peak_seconds": 91.98,
+        "variant": 2,
+        "rms_below_music_db": -28.810416870396942,
+        "peak": 0.054999999701976776
+      }
+    ],
+    "output_peak": 0.8350651264190674,
+    "seam_sample_delta": 0.0075324177742004395
+  },
+  {
+    "track": "bonus",
+    "source": "Outlaw Protocol - Start at 22 seconds.mp3",
+    "source_start_seconds": 24.659583333333334,
+    "source_end_seconds": 141.4315,
+    "loop_seconds": 116.77191666666667,
+    "crossfade_seconds": 0.65,
+    "interval_seconds": [
+      38.5,
+      38.9,
+      39.37191666666668
+    ],
+    "events": [
+      {
+        "peak_seconds": 0.18,
+        "variant": 1,
+        "rms_below_music_db": -27.047714804094376,
+        "peak": 0.05499999597668648
+      },
+      {
+        "peak_seconds": 38.68,
+        "variant": 3,
+        "rms_below_music_db": -26.2481832186999,
+        "peak": 0.055000003427267075
+      },
+      {
+        "peak_seconds": 77.58,
+        "variant": 2,
+        "rms_below_music_db": -27.792952917721024,
+        "peak": 0.054999999701976776
+      }
+    ],
+    "output_peak": 0.7887795567512512,
+    "seam_sample_delta": 0.013289928436279297
+  }
+]

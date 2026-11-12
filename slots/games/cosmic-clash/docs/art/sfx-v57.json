@@ -1,0 +1,21 @@
+{
+  "source": "User supplied",
+  "encoding": "160 kbps MP3, full clip duration retained",
+  "files": {
+    "max-win": "Max Win Sound.wav",
+    "multi-increase": "Multi Increase.wav",
+    "multi-appears": "Multiplier Appears.wav",
+    "nice-win": "Nice Win.wav",
+    "regular-win": "Regular Win.wav",
+    "reload": "Reload Sound.wav",
+    "shot": "Revolver Shot.wav",
+    "big-win": "Big Win.wav",
+    "bonus-buy": "Bonus Buy Button.wav",
+    "bonus-trigger": "Bonus Trigger.wav",
+    "duel-land": "Duel Symbol Lands.mp3",
+    "duel-tease": "Duel Tease.wav",
+    "duel-trigger": "Duel Trigger.mp3",
+    "epic-win": "Epic Win.wav",
+    "free-spin-start": "Free Spin Start.wav"
+  }
+}
