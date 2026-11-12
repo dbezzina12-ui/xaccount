@@ -1,0 +1,103 @@
+/* The menu sits in the spaceport, over the reel cabinet. */
+#shop {
+ --cream:#f4e2c5; --ink:#17120e; --teal:#41bcb2; --amber:#f1ad23;
+ width:100%; max-width:none; height:100%; max-height:none; margin:0; padding:0;
+ border:0; color:var(--cream); background:transparent; overflow:auto; overscroll-behavior:contain;
+ font:600 16px/1.2 Barlow,sans-serif; scrollbar-color:#79664e #101719;
+}
+#shop::backdrop {background:linear-gradient(180deg,#06101965,#10141138 55%,#0d090b9a),url('./assets/frontier-ink/dusk-wide.webp') center/cover}
+#shop [hidden] {display:none!important}
+#shop button {font-family:inherit; cursor:pointer}
+#shop :is(button,summary):focus-visible {outline:3px solid #fff;outline-offset:3px}
+#shop button:disabled {opacity:.55;cursor:default}
+.shop-shell {box-sizing:border-box;min-height:100%;max-width:1530px;margin:auto;display:flex;flex-direction:column;justify-content:center;
+ gap:clamp(12px,2.6vh,28px);padding:clamp(12px,2.8vh,30px) clamp(16px,3.5vw,68px)}
+.shop-header {position:relative;display:flex;align-items:center;justify-content:center}
+.shop-header h2 {margin:0;line-height:0}
+.shop-header img {display:block;width:min(56vw,640px,68vh);height:auto;filter:drop-shadow(0 5px 5px #000a)}
+.visually-hidden {position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.shop-close {position:absolute;right:0;top:0;display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:#0e1a1fea;border:1px solid #d8c9a477;color:#f9ebce}
+.shop-close svg {width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:2.3}
+.shop-groups {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(12px,1.8vw,30px)}
+.contract-group {min-width:0;display:flex;flex-direction:column;--accent:var(--amber)}
+.contract-group[data-category=features] {--accent:var(--teal)}
+.contract-group h3 {display:flex;align-items:center;gap:10px;margin:0 4% 12px;color:#ffeed6;text-shadow:0 2px 5px #000;font-size:clamp(20px,2.3vw,36px);line-height:1;letter-spacing:.015em;text-transform:uppercase;font-weight:800;-webkit-text-stroke:.45px}
+.contract-group h3::before,.contract-group h3::after {content:"";flex:1;height:10px;border-top:2px solid var(--accent);transform:translateY(5px)}
+.contract-group h3::before {border-left:2px solid var(--accent);border-radius:10px 0 0}
+.contract-group h3::after {border-right:2px solid var(--accent);border-radius:0 10px 0 0}
+.contract-list {display:grid;flex:1;align-items:stretch;gap:clamp(6px,.6vw,12px);grid-template-columns:repeat(3,minmax(0,1fr))}
+.super-ante-art {position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(ellipse at 50% 70%,#ffcb65 0%,#b265b3 23%,#572d69 54%,#1d1634 90%)}
+.super-ante-art i {position:absolute;inset:12% 15% 8%;background:url('./assets/frontier-ink/features/signal-fs.webp') center/contain no-repeat;filter:drop-shadow(0 5px 4px #211127)}
+.super-ante-art i:not(:last-child) {inset:10% 22% 10%;border:2px solid #edcc82;border-radius:11px;background:repeating-linear-gradient(145deg,transparent 0 8px,#ead19828 9px 10px),linear-gradient(135deg,#987143,#3f264e 46%,#493559);box-shadow:inset 0 0 0 3px #442640,0 3px 7px #211127}
+.super-ante-art i:first-child {transform:translateX(-22%) rotate(-14deg)}
+.super-ante-art i:nth-child(2) {transform:translateX(22%) rotate(14deg)}
+.super-ante-art i:last-child {inset:12% 16%;filter:drop-shadow(0 3px 2px #211127)}
+.contract[data-mode=superAnte] {border-color:#b787ce}
+.contract {min-width:0;display:flex;flex-direction:column;overflow:hidden;border-radius:clamp(15px,2vw,32px);border:2px solid color-mix(in srgb,var(--accent) 63%,#543e38);background:#302522;box-shadow:0 5px 0 #251b15,0 12px 25px #0008}
+.contract-art {display:block;width:100%;height:auto;aspect-ratio:1.65;object-fit:cover}
+.contract-paper {position:relative;margin-top:-5px;flex:1;display:flex;flex-direction:column;align-items:stretch;
+ padding:clamp(11px,1.25vw,20px);border-radius:clamp(12px,1.8vw,26px) clamp(12px,1.8vw,26px) 0 0;
+ color:var(--ink);background:linear-gradient(115deg,#fae9cd,#f2dfbd 58%,#f8e7ca);box-shadow:inset 0 3px #fff3e3}
+.contract h4 {display:grid;place-content:center;min-height:2em;margin:0 0 .35em;font-size:clamp(23px,2.45vw,41px);font-weight:800;line-height:.94;letter-spacing:-.035em;text-transform:uppercase;text-align:center;-webkit-text-stroke:.65px}
+.contract-stats {padding:0;margin:0 0 auto;font-size:clamp(13px,1.14vw,19px);line-height:1.4;font-variant-numeric:tabular-nums}
+.contract-stats div {display:flex;align-items:baseline;justify-content:space-between;gap:3px}
+.contract-stats dt,.contract-stats dd {margin:0}
+.contract-stats dt::first-letter {text-transform:uppercase}
+.contract-stats dd {font-weight:800;white-space:nowrap}
+.contract-price {padding-top:7px;margin:12px 0 8px;border-top:1px solid #8b7553a1;text-align:center;font-weight:800;font-size:clamp(25px,2.5vw,42px);line-height:1.05;letter-spacing:-.035em;-webkit-text-stroke:.6px}
+.contract-price small {font:inherit;font-size:.77em;text-transform:uppercase}
+.contract-action {min-height:43px;width:100%;padding:5px;border-radius:16px;border:1px solid #ea9b11;border-bottom:3px solid #a46708;background:linear-gradient(160deg,#ffc445,#e6a01b);color:#17120e;font-size:clamp(21px,2vw,30px);font-weight:800;line-height:1;text-transform:uppercase;-webkit-text-stroke:.5px}
+[data-category=features] .contract-action {background:linear-gradient(160deg,#63cfc2,#28a59f);border-color:#45b6ad;border-bottom-color:#197c78}
+.contract-action:hover:enabled {filter:brightness(1.09)}
+.contract-action:active:enabled {transform:translateY(1px)}
+.shop-footer {display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.shop-wager,.shop-footer .preview-options,.shop-back,.shop-switch {background:#101a1cec;color:#fff1dc;border:1px solid #bca8877a;border-radius:14px;box-shadow:0 3px 8px #0004}
+.shop-wager {display:flex;align-items:center;gap:10px;padding:5px 8px}
+.shop-wager span,.shop-footer summary,.shop-back {font-size:15px;font-weight:800}
+.shop-wager strong {font-size:21px;min-width:46px;text-align:center}
+.shop-wager button {width:35px;height:35px;border-radius:9px;border:1px solid #99938266;background:#314047;color:#ffeed6;font-size:23px;line-height:1}
+.shop-footer .preview-options {margin:0;padding:0;text-align:center}
+.shop-footer summary {padding:12px;cursor:pointer}
+.shop-footer .preview-options div {margin:0 8px 8px}
+.shop-switch {display:none}
+.shop-back {align-self:center;padding:10px 20px}
+#shop.confirming .shop-groups {display:block;width:min(100%,350px);margin:0 auto}
+#shop.confirming .contract-list {display:block}
+#shop.confirming .contract-art {max-height:130px}
+#shop.confirming .shop-switch {display:none}
+@media(min-width:1031px) and (max-height:700px) {
+ .shop-shell {gap:10px;padding-block:10px}.shop-header img {width:min(36vw,380px)}.contract-art {max-height:16.5vh}.contract h4 {min-height:1em;font-size:clamp(21px,2vw,28px)}.contract-paper {padding:10px}.contract-price {margin-top:8px}
+}
+@media(max-width:1030px) {
+ #shop::backdrop {background:linear-gradient(#0b1b2099,#180e18a6),url('./assets/frontier-ink/dusk-portrait.webp') center/cover}
+ .shop-shell {max-width:650px;justify-content:flex-start;gap:14px;padding:14px max(12px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom))}
+ .shop-header img {width:min(69vw,410px)}.shop-close {width:40px;height:40px}
+ .shop-groups {display:block}.shop-switch {display:flex;justify-content:center;align-self:center;width:min(100%,370px);padding:4px}
+ .shop-switch button {flex:1;min-height:42px;border:0;color:#ecddc8;background:transparent;border-radius:10px;font-size:18px;font-weight:800}
+ .shop-switch button[aria-pressed=true] {background:var(--teal);color:var(--ink)}.shop-switch [data-group=bonuses][aria-pressed=true] {background:var(--amber)}
+ :not(.confirming)>.shop-shell .shop-groups[data-group=features] [data-category=bonuses],:not(.confirming)>.shop-shell .shop-groups[data-group=bonuses] [data-category=features] {display:none}
+ .contract-group h3 {font-size:22px}.shop-groups .contract-list {gap:8px}
+ .contract h4 {font-size:clamp(23px,4.8vw,32px)}.contract-stats {font-size:clamp(14px,2.9vw,17px)}
+ .contract-paper {padding:10px}.contract-price {font-size:28px}.contract-action {font-size:21px;min-height:44px}
+ .shop-footer {gap:8px}.shop-header {min-height:50px}.shop-wager button {min-height:40px;min-width:40px}
+ #shop:not(.confirming) .contract-group h3 {display:none}
+}
+@media(max-width:570px) {
+ [data-category=features] .contract-list {grid-template-columns:repeat(2,minmax(0,1fr))}
+ [data-category=features] [data-mode=duel] {grid-column:1/-1;display:grid;grid-template-columns:32% minmax(0,1fr)}
+ [data-category=features] [data-mode=duel] .contract-art {height:100%;object-fit:cover}
+ [data-category=features] [data-mode=duel] .contract-paper {border-radius:12px 0 0 12px;margin:0 0 0 -6px}
+ [data-category=features] [data-mode=duel] h4 {min-height:0}
+ [data-category=bonuses] .contract-list {grid-template-columns:1fr}
+ #shop:not(.confirming) [data-category=bonuses] .contract {display:grid;grid-template-columns:32% minmax(0,1fr)}
+ #shop:not(.confirming) [data-category=bonuses] .contract-art {width:100%;height:100%;object-fit:cover}
+ #shop:not(.confirming) [data-category=bonuses] .contract-paper {border-radius:12px 0 0 12px;margin:0 0 0 -6px;padding:9px 12px}
+ #shop:not(.confirming) [data-category=bonuses] h4 {display:block;min-height:0;text-align:left;margin-bottom:4px}
+ #shop:not(.confirming) [data-category=bonuses] .contract-price {font-size:22px;margin:5px 0;padding-top:4px}
+ #shop:not(.confirming) [data-category=bonuses] .contract-action {min-height:42px}
+ .contract-stats {line-height:1.4}
+}
+@media(max-width:370px) {
+ [data-category=features] .contract-paper {padding:8px 6px}
+ .contract-stats {font-size:13px}.shop-shell {padding-inline:8px}
+}
